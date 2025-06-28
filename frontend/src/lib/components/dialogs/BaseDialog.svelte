@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { StringUtils } from '$lib/ts/string-utils';
-	import { onClickOutside } from 'runed';
 	import type { Snippet } from 'svelte';
 
 	let dialog = $state<HTMLDialogElement>()!;
@@ -11,23 +10,13 @@
 		children: Snippet;
 		dialogId?: string;
 	}>();
-	const clickOutside = onClickOutside(
-		() => dialog,
-		() => {
-			dialog.close();
-			clickOutside.stop();
-		},
-		{ immediate: false }
-	);
 
 	export function open() {
 		dialog.showModal();
-		clickOutside.start();
 	}
 
 	export function close() {
 		dialog.close();
-		clickOutside.stop();
 	}
 </script>
 
@@ -39,22 +28,22 @@
 
 <style>
 	dialog {
-		max-width: unset;
-		max-height: unset;
-		padding: 0;
-		outline: none;
-		border: none;
-		background: none;
 		position: fixed;
 		top: 50%;
 		left: 50%;
+		max-width: unset;
+		max-height: unset;
+		padding: 0;
+		border: none;
+		background: none;
 		transform: translate(-50%, -50%);
-		overflow: visible; 
+		outline: none;
+		overflow: visible;
 	}
 	.dialog-content {
 		position: relative;
-		background-color: var(--back);
 		border-radius: 0.875rem;
+		background-color: var(--back);
 		box-shadow: var(--shadow);
 	}
 </style>

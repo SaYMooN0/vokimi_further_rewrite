@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { SignInDialogState } from '../../sign-in-dialog';
+	import SignInDialogConfirmButton from './c_states_shared/SignInDialogConfirmButton.svelte';
+	import SignInDialogHeader from './c_states_shared/SignInDialogHeader.svelte';
 	import SignInDialogInput from './c_states_shared/SignInDialogInput.svelte';
+	import SignInDialogLink from './c_states_shared/SignInDialogLink.svelte';
 
 	interface Props {
 		email: string;
@@ -9,8 +12,10 @@
 	}
 	let { email = $bindable(), password = $bindable(), changeState }: Props = $props();
 	let userName = $state('');
-
+	async function confirmRegister() {}
 </script>
+
+<SignInDialogHeader text="Create Vokimi account" />
 <SignInDialogInput type="text" fieldName="Username" bind:value={userName}>
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
 		<path
@@ -103,3 +108,13 @@
 		/>
 	</svg>
 </SignInDialogInput>
+<div class="gap" />
+
+<SignInDialogLink text="I already have an account" onClick={() => changeState('login')} />
+<SignInDialogConfirmButton text="Register" onclick={() => confirmRegister()} />
+
+<style>
+	.gap {
+		margin-top: auto;
+	}
+</style>

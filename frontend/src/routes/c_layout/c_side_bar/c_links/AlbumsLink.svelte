@@ -48,9 +48,11 @@
 		transform-origin: center;
 		transform: none;
 	}
+
 	path[data-custom='0'].hov {
 		animation: a0 0.6s forwards;
 	}
+
 	path[data-custom='1'].hov {
 		animation: a1 0.6s forwards;
 	}
@@ -58,35 +60,42 @@
 	path[data-custom='2'].hov {
 		animation: a2 0.6s forwards;
 	}
+
 	@keyframes a0 {
 		0%{
             transform: translateY(0) scale(1);
         }
+
 		40% {
 			transform: translateY(-5px) scale(1.1);
 		}
+
 		100% {
 			transform: translate(0) scale(1);
 		}
 	}
+
 	@keyframes a1 {
 		10%,
 		50% {
 			opacity: 0;
 			transform: translateY(3px);
 		}
+
 		60%,
 		100% {
 			opacity: 1;
 			transform: translate(0);
 		}
 	}
+
 	@keyframes a2 {
 		00%,
 		40% {
 			opacity: 0;
 			transform: translateY(3px);
 		}
+
 		80%,
 		100% {
 			opacity: 1;

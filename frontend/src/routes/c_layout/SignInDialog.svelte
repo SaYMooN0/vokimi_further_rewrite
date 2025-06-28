@@ -29,7 +29,9 @@
 
 <style>
 	:global(.dialog-content) {
-		height: 28rem;
 		width: 26rem;
+		height: 30rem;
+		display: flex;
+		flex-direction: column;
 	}
 </style>

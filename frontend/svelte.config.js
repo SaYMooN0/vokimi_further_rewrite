@@ -24,7 +24,6 @@ const config = {
 		},
 	},
 	vitePlugin: {
-		dynamicCompileOptions: ({ filename }) => ({ runes: !filename.includes('node_modules') }),
 	},
 };
 

@@ -22,33 +22,30 @@
 <style>
 	.input-field {
 		position: relative;
-		margin: 1rem 0 0.5rem 0;
+		margin: 0.75rem 0 0.5rem 0;
 	}
 
 	.input-field label {
 		position: absolute;
-		left: 0.75rem;
 		top: 50%;
+		left: 0.75rem;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		gap: 0.25rem;
 		padding: 0 0.125rem;
+		border: none;
+		border-radius: 100rem;
 		background-color: transparent;
+		background-color: var(--back);
 		color: var(--muted-foreground);
+		font-size: 1.125rem;
 		transition: all 0.3s ease;
 		transform: translateY(-50%);
 		pointer-events: none;
-		background-color: var(--back);
-		border: none;
-		border-radius: 100rem;
-		font-size: 1.125rem;
 	}
 
-	:global(.input-field label > svg) {
-		height: 1.375rem;
-		transition: inherit;
-	}
+	
 
 	.input-field input {
 		width: 100%;
@@ -72,5 +69,10 @@
 		top: 0;
 		color: var(--primary);
 		transform: translateY(-50%) scale(0.95);
+	}
+	:global(.input-field label > svg) {
+		height: 1.375rem;
+		transition: inherit;
+		color: inherit;
 	}
 </style>

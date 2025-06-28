@@ -10,10 +10,6 @@
   --muted-foreground: #585e7a;
   --accent: #e6dfff;
   --accent-foreground: #4d4c8e;
-  --destructive: #ef4444;
-  --destructive-foreground: #fff;
-  --border: #bcc0cc;
-  --input: #d1d5db;
   --font-family: "Rubik", sans-serif;
   --radius: 0.5rem;
   --shadow-xs: 0 1px 3px 0px hsl(0deg 0% 0% / 5%);
@@ -24,6 +20,9 @@
   --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 0% / 25%);
 
   background-color: var(--back);
+  --err-back: #ffebeb;
+
+  --err-foreground: #f04545;
 }
 
 * {
@@ -40,6 +39,8 @@ a {
 input,
 textarea {
   font-family: var(--font-family);
+  color: var(--text);
+
 }
 
 .unselectable {

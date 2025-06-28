@@ -35,20 +35,29 @@
 	:global(dialog > .dialog-content) {
 		padding: 2.5rem;
 	}
+
 	.dialog-close-btn {
 		position: absolute;
-		height: 1.5rem;
+		top: 0.75rem;
+		right: 0.75rem;
 		width: 1.5rem;
+		height: 1.5rem;
 		padding: 0.125rem;
 		border: none;
 		border-radius: 0.25rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		top: 0.75rem;
-		right: 0.75rem;
+		cursor: pointer;
 	}
+
 	.dialog-close-btn:hover {
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
+		transform: scale(1.04);
+		box-shadow: var(--shadow-xs);
+	}
+	.dialog-close-btn:active {
+		box-shadow: var(--shadow);
+		transform: scale(0.98);
 	}
 </style>

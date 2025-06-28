@@ -29,18 +29,18 @@
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.25rem;
 		background-color: var(--muted);
+		color: var(--primary);
 		font-weight: 450;
+		transition: transform 0.12s ease-in;
 		cursor: pointer;
 		grid-template-columns: 1.5rem 1fr;
-		transition: transform 0.12s ease-in;
-		color: var(--primary);
 		outline-color: var(--primary);
 		
 	}
 
 	.link:hover {
-		box-shadow: var(--shadow-xs);
 		background-color: var(--accent);
+		box-shadow: var(--shadow-xs);
 	}
 	
 

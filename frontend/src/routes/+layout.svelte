@@ -3,6 +3,7 @@
 	import SideBar from './c_layout/SideBar.svelte';
 	import SignInDialog from './c_layout/SignInDialog.svelte';
 	import { registerSignInDialogOpenFunction, type SignInDialogState } from './sign-in-dialog';
+	import AppToaster from './c_layout/AppToaster.svelte';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
@@ -12,6 +13,7 @@
 </script>
 
 <SignInDialog bind:this={signInDialog} />
+<AppToaster />
 <div class="page" class:full-width={isFullWidthMode}>
 	<div class="width-limit">
 		<SideBar />

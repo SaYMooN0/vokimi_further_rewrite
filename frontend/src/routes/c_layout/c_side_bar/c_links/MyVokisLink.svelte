@@ -39,10 +39,12 @@
 		transform-origin: center;
         transform: none;
 	}
+
 	path[data-custom='0'].hov {
 		animation: a0 0.6s forwards;
 
 	}
+
 	path[data-custom='1'].hov {
 		animation: a1 0.6s forwards;
 	}
@@ -51,22 +53,27 @@
 		0% {
 			transform: translateY(3px) scale(0.7);
 		}
+
 		50% {
 			transform: translateY(0) scale(0.9) rotate(10deg);
 		}
+
 		100% {
 			transform: translateY(0) scale(1) rotate(0deg);
 		}
 	}
+
 	@keyframes a1 {
         0%{
 			opacity: 0.2;
             transform: translate(4px, -4px) scale(0.1) rotate(10deg);
         }
+
 		40% {
 			opacity: 0.8;
 			transform: translate(2px, -0) scale(0.9) rotate(-5deg);
 		}
+
 		99% {
 			opacity: 1;
 			transform: translate(0, 0) scale(1) rotate(0deg);

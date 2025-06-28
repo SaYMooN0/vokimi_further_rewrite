@@ -38,22 +38,26 @@
 <style>
 	svg.hov {
 		transform-origin: top;
-		animation: rotateAnimation 0.6s ease-in-out;
+		animation: rotate-animation 0.6s ease-in-out;
 	}
 
-	@keyframes rotateAnimation {
+	@keyframes rotate-animation {
 		0% {
 			transform: rotate(0deg);
 		}
+
 		20% {
 			transform: rotate(-10deg);
 		}
+
 		40% {
 			transform: rotate(10deg);
 		}
+
 		60% {
 			transform: rotate(-10deg);
 		}
+
 		100% {
 			transform: rotate(0deg);
 		}

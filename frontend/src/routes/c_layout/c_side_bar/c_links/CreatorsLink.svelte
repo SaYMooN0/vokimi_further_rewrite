@@ -76,9 +76,11 @@
 		transform-origin: center;
 		transform: none;
 	}
+
 	path[data-custom='0'].hov {
 		animation: a0 0.6s forwards;
 	}
+
 	path[data-custom='1'].hov {
 		animation: a1 0.6s forwards;
 	}
@@ -86,38 +88,46 @@
 	path[data-custom='2'].hov {
 		animation: a2 0.6s forwards;
 	}
+
 	@keyframes a0 {
 		0% {
-			transform: translateY(6px) scale(0.5);
 			opacity: 0;
+			transform: translateY(6px) scale(0.5);
 		}
+
 		80% {
 			opacity: 1;
-			transform: translateY(0px) scale(1);
+			transform: translateY(0) scale(1);
 		}
 	}
+
 	@keyframes a1 {
 		0%,
 		20% {
-			transform: translate(2px, 1px) scale(0.6);
 			opacity: 0;
+			transform: translate(2px, 1px) scale(0.6);
 		}
+
 		80% {
 			opacity: 1;
 		}
+
 		100% {
 			transform: translate(0, 0) scale(1);
 		}
 	}
+
 	@keyframes a2 {
 		0%,
 		40% {
-			transform: translate(-3px, 2px) scale(0.6);
 			opacity: 0;
+			transform: translate(-3px, 2px) scale(0.6);
 		}
+
 		80% {
 			opacity: 1;
 		}
+
 		100% {
 			transform: translate(0, 0) scale(1);
 		}
