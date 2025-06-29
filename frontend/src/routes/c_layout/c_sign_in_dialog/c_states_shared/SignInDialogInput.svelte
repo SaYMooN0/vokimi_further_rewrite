@@ -57,6 +57,8 @@
 		font-size: 1.125rem;
 		letter-spacing: 1px;
 		outline: none;
+		box-shadow: var(--shadow-md);
+
 	}
 
 	.input-field input:focus,

@@ -13,7 +13,6 @@
 </script>
 
 <SignInDialog bind:this={signInDialog} />
-<AppToaster />
 <div class="page" class:full-width={isFullWidthMode}>
 	<div class="width-limit">
 		<SideBar />
@@ -22,6 +21,7 @@
 		</div>
 	</div>
 </div>
+<AppToaster />
 
 <style>
 	.page {

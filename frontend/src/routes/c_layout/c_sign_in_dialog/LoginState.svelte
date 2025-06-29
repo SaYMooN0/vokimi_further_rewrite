@@ -5,13 +5,45 @@
 	import SignInDialogInput from './c_states_shared/SignInDialogInput.svelte';
 	import SignInDialogLink from './c_states_shared/SignInDialogLink.svelte';
 	import SignInDialogConfirmButton from './c_states_shared/SignInDialogConfirmButton.svelte';
+	import { ApiAuth } from '$lib/ts/backend-services';
+	import type { Err } from '$lib/ts/err';
+	import { StringUtils } from '$lib/ts/string-utils';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	interface Props {
 		email: string;
 		password: string;
 		changeState: (val: SignInDialogState) => void;
 	}
 	let { email = $bindable(), password = $bindable(), changeState }: Props = $props();
-	async function confirmLogin() {}
+	let isLoading = $state(false);
+	let errs: Err[] = $state([]);
+	async function confirmLogin() {
+		validateForm();
+		if (errs.length > 0) {
+			return;
+		}
+		const response = await ApiAuth.fetchJsonResponse(
+			'/login',
+			ApiAuth.requestJsonOptions({ email, password })
+		);
+		if (response.isSuccess) {
+			window.location.reload();
+		} else {
+			errs = response.errors;
+		}
+	}
+	function validateForm(): Err[] {
+		errs = [];
+		if (StringUtils.isNullOrWhiteSpace(email)) {
+			errs.push({ message: 'Email is required' });
+		} else if (email.indexOf('@') === -1) {
+			errs.push({ message: 'Email is invalid' });
+		}
+		if (StringUtils.isNullOrWhiteSpace(password)) {
+			errs.push({ message: 'Password is required' });
+		}
+		return errs;
+	}
 </script>
 
 <SignInDialogHeader text="Log into your account" />
@@ -83,11 +115,15 @@
 		toast.error("Sorry, this feature isn't implemented yet");
 	}}
 />
-<SignInDialogLink text="I don't have an account yet" onClick={() => changeState('register')} />
-<SignInDialogConfirmButton text="Log in" onclick={() => confirmLogin()} />
+<SignInDialogLink text="I don't have an account yet" onClick={() => changeState('signup')} />
+<DefaultErrBlock errList={errs} />
+<SignInDialogConfirmButton text="Log in" onclick={() => confirmLogin()} {isLoading} />
 
 <style>
 	.gap {
 		margin-top: auto;
+	}
+	:global(.err-block) {
+		margin-top: 0.375rem;
 	}
 </style>

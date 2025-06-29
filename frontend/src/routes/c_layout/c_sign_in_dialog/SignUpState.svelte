@@ -1,4 +1,8 @@
 <script lang="ts">
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import { ApiAuth } from '$lib/ts/backend-services';
+	import type { Err } from '$lib/ts/err';
+	import { StringUtils } from '$lib/ts/string-utils';
 	import type { SignInDialogState } from '../../sign-in-dialog';
 	import SignInDialogConfirmButton from './c_states_shared/SignInDialogConfirmButton.svelte';
 	import SignInDialogHeader from './c_states_shared/SignInDialogHeader.svelte';
@@ -12,7 +16,42 @@
 	}
 	let { email = $bindable(), password = $bindable(), changeState }: Props = $props();
 	let userName = $state('');
-	async function confirmRegister() {}
+	let errs: Err[] = $state([]);
+	let isLoading = $state(false);
+
+	async function confirmSignUp() {
+		validateForm();
+		if (errs.length > 0) {
+			return;
+		}
+		console.log('signing up', email, password, userName);
+		const response = await ApiAuth.fetchJsonResponse(
+			'/sign-up',
+			ApiAuth.requestJsonOptions({ email, password, userName })
+		);
+		console.log('resp', response);
+
+		if (response.isSuccess) {
+			window.location.reload();
+		} else {
+			errs = response.errors;
+		}
+	}
+	function validateForm(): Err[] {
+		errs = [];
+		if (StringUtils.isNullOrWhiteSpace(email)) {
+			errs.push({ message: 'Email is required' });
+		} else if (email.indexOf('@') === -1) {
+			errs.push({ message: 'Email is invalid' });
+		}
+		if (StringUtils.isNullOrWhiteSpace(password)) {
+			errs.push({ message: 'Password is required' });
+		}
+		if (StringUtils.isNullOrWhiteSpace(userName)) {
+			errs.push({ message: 'Username is required', details: 'Fill the username field' });
+		}
+		return errs;
+	}
 </script>
 
 <SignInDialogHeader text="Create Vokimi account" />
@@ -111,10 +150,14 @@
 <div class="gap" />
 
 <SignInDialogLink text="I already have an account" onClick={() => changeState('login')} />
-<SignInDialogConfirmButton text="Register" onclick={() => confirmRegister()} />
+<DefaultErrBlock errList={errs} />
+<SignInDialogConfirmButton text="Register" onclick={() => confirmSignUp()} {isLoading} />
 
 <style>
 	.gap {
 		margin-top: auto;
+	}
+	:global(.err-block) {
+		margin-top: 0.25rem;
 	}
 </style>

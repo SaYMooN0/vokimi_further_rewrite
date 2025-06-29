@@ -1,16 +1,24 @@
 <script lang="ts">
-	const { onclick, text }: { onclick: () => void; text: string } = $props<{
-		onclick: () => void;
-		text: string;
-	}>();
+	const { onclick, text, isLoading }: { onclick: () => void; text: string; isLoading: boolean } =
+		$props<{
+			onclick: () => void;
+			text: string;
+			isLoading: boolean;
+		}>();
 </script>
 
-<button class="confirm-btn unselectable" onclick={() => onclick()} type="submit">{text}</button>
+<button class="confirm-btn unselectable" onclick={() => onclick()} type="submit" disabled={isLoading}>
+	{#if isLoading}
+		Loading...
+	{:else}
+		{text}
+	{/if}
+</button>
 
 <style>
 	.confirm-btn {
 		width: 92%;
-		height: 2.25rem;
+		min-height: 2.25rem;
 		margin: 1rem auto 0 auto;
 		border: none;
 		border-radius: 0.25rem;

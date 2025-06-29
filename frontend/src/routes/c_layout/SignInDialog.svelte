@@ -1,15 +1,15 @@
 <script lang="ts">
 	import LoginState from './c_sign_in_dialog/LoginState.svelte';
-	import RegisterState from './c_sign_in_dialog/RegisterState.svelte';
+	import RegisterState from './c_sign_in_dialog/SignUpState.svelte';
 	import type { SignInDialogState } from '../sign-in-dialog';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
+	import ConfirmationLinkState from './c_sign_in_dialog/ConfirmationLinkState.svelte';
 
 	export function open(state: SignInDialogState | null = null) {
 		dialog.open();
 		if (state) {
 			dialogState = state;
 		}
-		console.log(dialogState);
 	}
 	let dialogState = $state<SignInDialogState>('login');
 	let dialog = $state<DialogWithCloseButton>()!;
@@ -17,20 +17,22 @@
 	let password = $state('');
 </script>
 
-<DialogWithCloseButton bind:this={dialog}>
+<DialogWithCloseButton bind:this={dialog} dialogId="sign-in-dialog">
 	{#if dialogState === 'login'}
 		<LoginState bind:email bind:password changeState={(val) => (dialogState = val)} />
-	{:else if dialogState === 'register'}
+	{:else if dialogState === 'signup'}
 		<RegisterState bind:email bind:password changeState={(val) => (dialogState = val)} />
+	{:else if dialogState === 'confirmation-sent'}
+		<ConfirmationLinkState {email} />
 	{:else}
 		<RegisterState bind:email bind:password changeState={(val) => (dialogState = val)} />
 	{/if}
 </DialogWithCloseButton>
 
 <style>
-	:global(.dialog-content) {
+	:global(#sign-in-dialog) {
 		width: 26rem;
-		height: 30rem;
+		height: 34rem;
 		display: flex;
 		flex-direction: column;
 	}

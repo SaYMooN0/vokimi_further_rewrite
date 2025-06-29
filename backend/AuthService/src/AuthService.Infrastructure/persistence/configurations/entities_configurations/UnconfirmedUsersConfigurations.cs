@@ -20,10 +20,10 @@ internal class UnconfirmedUsersConfigurations : IEntityTypeConfiguration<Unconfi
 
         builder
             .Property(x => x.Email)
-            .HasConversion<EmailConverter>();  
-        
+            .HasConversion<EmailConverter>();
+
         builder
-            .Property(x => x.Username)
+            .Property(x => x.UserName)
             .HasConversion<AppUserNameConverter>();
 
         builder

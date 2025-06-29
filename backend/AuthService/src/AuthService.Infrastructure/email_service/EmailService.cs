@@ -43,7 +43,7 @@ internal class EmailService : IEmailService
     ) {
         try {
             MimeMessage message = new();
-            message.From.Add(new MailboxAddress("DoneZo", _username));
+            message.From.Add(new MailboxAddress("Vokimi", _username));
             message.To.Add(new MailboxAddress("", to.ToString()));
             message.Subject = subject;
             message.Body = new TextPart("html") { Text = body };

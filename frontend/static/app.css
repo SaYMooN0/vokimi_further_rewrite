@@ -10,6 +10,9 @@
   --muted-foreground: #585e7a;
   --accent: #e6dfff;
   --accent-foreground: #4d4c8e;
+  --err-back: #ffe9e9;
+  --err-foreground: #f04545;
+  --err-shadow: 0 1px 3px 0px hsl(0deg 84% 50% / 8%), 0 1px 2px -1px hsl(0deg 84% 50% / 8%);
   --font-family: "Rubik", sans-serif;
   --radius: 0.5rem;
   --shadow-xs: 0 1px 3px 0px hsl(0deg 0% 0% / 5%);
@@ -20,9 +23,6 @@
   --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 0% / 25%);
 
   background-color: var(--back);
-  --err-back: #ffebeb;
-
-  --err-foreground: #f04545;
 }
 
 * {

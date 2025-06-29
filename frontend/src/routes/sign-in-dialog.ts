@@ -1,6 +1,6 @@
 import { getContext, setContext } from 'svelte';
 
-export type SignInDialogState = 'login' | 'register';
+export type SignInDialogState = 'login' | 'signup' | 'confirmation-sent';
 
 
 const key = "open-sign-in-dialog-function";

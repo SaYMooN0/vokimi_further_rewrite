@@ -8,7 +8,7 @@
 {#snippet unauthenticated()}
 	<div class="sign-in-btns">
 		<button class="login-btn" onclick={() => openSignInDialog('login')}>Login</button>
-		<button class="register-btn" onclick={() => openSignInDialog('register')}>Register</button>
+		<button class="signup-btn" onclick={() => openSignInDialog('signup')}>Sign up</button>
 	</div>
 {/snippet}
 {#snippet authenticated()}
@@ -50,13 +50,13 @@
 		color: var(--primary);
 	}
 
-	.register-btn {
+	.signup-btn {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 
 	}
 
-	.register-btn:hover {
+	.signup-btn:hover {
 		background-color: var(--primary-hov);
 	}
 </style>

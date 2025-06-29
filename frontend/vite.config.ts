@@ -45,7 +45,31 @@ function checkFiles(dir: string, insideCFolder: boolean) {
 		}
 	}
 }
+function createProxyEntry(
+	basePath: string,
+	port: number,
+	customRewrite?: (path: string) => string
+) {
+	const regex = `^${basePath}`;
+	const rewritePrefix = basePath.replace(/^\/api\/[^/]+/, '');
+
+	return {
+		[regex]: {
+			target: `http://localhost:${port}/`,
+			secure: false,
+			changeOrigin: true,
+			rewrite: customRewrite ?? ((path) => path.replace(new RegExp(regex), rewritePrefix)),
+		},
+	};
+}
 
 export default defineConfig({
-	plugins: [sveltekit(), devtoolsJson(), forbiddenFileStructurePlugin()]
+	plugins: [sveltekit(), devtoolsJson(), forbiddenFileStructurePlugin()],
+	server: {
+		proxy: {
+			...createProxyEntry('/api/auth', 5177),
+			...createProxyEntry('/api/voki-creation/core', 5180),
+			...createProxyEntry('/api/voki-creation/general', 5181),
+		}
+	}
 });
