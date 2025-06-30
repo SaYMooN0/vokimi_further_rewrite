@@ -1,9 +1,9 @@
 <script lang="ts">
 	import LoginState from './c_sign_in_dialog/LoginState.svelte';
-	import RegisterState from './c_sign_in_dialog/SignUpState.svelte';
 	import type { SignInDialogState } from '../sign-in-dialog';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import ConfirmationLinkState from './c_sign_in_dialog/ConfirmationLinkState.svelte';
+	import SignUpState from './c_sign_in_dialog/SignUpState.svelte';
 
 	export function open(state: SignInDialogState | null = null) {
 		dialog.open();
@@ -21,19 +21,19 @@
 	{#if dialogState === 'login'}
 		<LoginState bind:email bind:password changeState={(val) => (dialogState = val)} />
 	{:else if dialogState === 'signup'}
-		<RegisterState bind:email bind:password changeState={(val) => (dialogState = val)} />
+		<SignUpState bind:email bind:password changeState={(val) => (dialogState = val)} />
 	{:else if dialogState === 'confirmation-sent'}
 		<ConfirmationLinkState {email} />
 	{:else}
-		<RegisterState bind:email bind:password changeState={(val) => (dialogState = val)} />
+		<SignUpState bind:email bind:password changeState={(val) => (dialogState = val)} />
 	{/if}
 </DialogWithCloseButton>
 
 <style>
 	:global(#sign-in-dialog) {
-		width: 26rem;
-		height: 34rem;
 		display: flex;
 		flex-direction: column;
+		width: 28rem;
+		height: 34rem;
 	}
 </style>

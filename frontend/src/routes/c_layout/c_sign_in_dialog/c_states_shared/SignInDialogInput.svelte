@@ -22,7 +22,7 @@
 <style>
 	.input-field {
 		position: relative;
-		margin: 0.75rem 0 0.5rem 0;
+		margin: 0.75rem 0 0.5rem;
 	}
 
 	.input-field label {
@@ -72,9 +72,10 @@
 		color: var(--primary);
 		transform: translateY(-50%) scale(0.95);
 	}
+
 	:global(.input-field label > svg) {
 		height: 1.375rem;
-		transition: inherit;
 		color: inherit;
+		transition: inherit;
 	}
 </style>

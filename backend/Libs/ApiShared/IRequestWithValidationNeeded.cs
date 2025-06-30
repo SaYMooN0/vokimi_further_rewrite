@@ -1,6 +1,4 @@
-﻿using SharedKernel.errs;
-
-namespace ApiShared;
+﻿namespace ApiShared;
 
 public interface IRequestWithValidationNeeded
 {

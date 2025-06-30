@@ -3,3 +3,7 @@ global using SharedKernel.errs;
 global using SharedKernel.errs.utils;
 global using SharedKernel.domain.events;
 global using SharedKernel.exceptions;
+global using ApplicationShared.messaging;
+global using AuthService.Domain.common;
+global using AuthService.Domain.common.interfaces.repositories;
+global using SharedKernel.common;

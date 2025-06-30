@@ -24,17 +24,15 @@
 		if (errs.length > 0) {
 			return;
 		}
-		console.log('signing up', email, password, userName);
-		const response = await ApiAuth.fetchJsonResponse(
+		const response = await ApiAuth.fetchVoidResponse(
 			'/sign-up',
 			ApiAuth.requestJsonOptions({ email, password, userName })
 		);
-		console.log('resp', response);
 
 		if (response.isSuccess) {
-			window.location.reload();
+			changeState('confirmation-sent');
 		} else {
-			errs = response.errors;
+			errs = response.errs;
 		}
 	}
 	function validateForm(): Err[] {
@@ -151,12 +149,13 @@
 
 <SignInDialogLink text="I already have an account" onClick={() => changeState('login')} />
 <DefaultErrBlock errList={errs} />
-<SignInDialogConfirmButton text="Register" onclick={() => confirmSignUp()} {isLoading} />
+<SignInDialogConfirmButton text="Sign Up" onclick={() => confirmSignUp()} {isLoading} />
 
 <style>
 	.gap {
 		margin-top: auto;
 	}
+
 	:global(.err-block) {
 		margin-top: 0.25rem;
 	}

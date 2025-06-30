@@ -29,7 +29,7 @@
 		if (response.isSuccess) {
 			window.location.reload();
 		} else {
-			errs = response.errors;
+			errs = response.errs;
 		}
 	}
 	function validateForm(): Err[] {
@@ -123,6 +123,7 @@
 	.gap {
 		margin-top: auto;
 	}
+
 	:global(.err-block) {
 		margin-top: 0.375rem;
 	}

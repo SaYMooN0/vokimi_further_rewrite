@@ -3,3 +3,8 @@ global using ApiShared.extensions;
 global using ApplicationShared.messaging;
 global using AuthService.Api.contracts;
 global using SharedKernel.domain.ids;
+global using AuthService.Domain.common;
+global using AuthService.Domain.rules;
+global using SharedKernel.common;
+global using SharedKernel.errs;
+global using SharedKernel.errs.utils;

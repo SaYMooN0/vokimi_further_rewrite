@@ -1,9 +1,4 @@
-﻿using ApiShared;
-using AuthService.Domain.common;
-using SharedKernel.errs;
-using SharedKernel.errs.utils;
-
-namespace AuthService.Api.contracts;
+﻿namespace AuthService.Api.contracts;
 
 internal class ConfirmRegistrationRequest : IRequestWithValidationNeeded
 {
@@ -18,9 +13,7 @@ internal class ConfirmRegistrationRequest : IRequestWithValidationNeeded
         }
 
         if (string.IsNullOrWhiteSpace(ConfirmationCode)) {
-            return ErrFactory.NoValue.Common(
-                "Incorrect confirmation data", "Provided confirmation code is empty"
-            );
+            return ErrFactory.NoValue.Common("Incorrect confirmation data", "Provided confirmation code is empty");
         }
 
         return ErrOrNothing.Nothing;

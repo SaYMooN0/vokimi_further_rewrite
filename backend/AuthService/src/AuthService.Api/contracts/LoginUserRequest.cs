@@ -1,9 +1,4 @@
-﻿using ApiShared;
-using AuthService.Domain.common;
-using SharedKernel.errs;
-using SharedKernel.errs.utils;
-
-namespace AuthService.Api.contracts;
+﻿namespace AuthService.Api.contracts;
 
 internal class LoginUserRequest : IRequestWithValidationNeeded
 {

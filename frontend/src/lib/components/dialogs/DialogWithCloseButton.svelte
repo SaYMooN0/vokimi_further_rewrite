@@ -33,7 +33,7 @@
 
 <style>
 	:global(dialog > .dialog-content) {
-		padding: 2.5rem;
+		padding: 2.25rem;
 	}
 
 	.dialog-close-btn {
@@ -47,17 +47,21 @@
 		border-radius: 0.25rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
+		box-shadow: var(--shadow);
 		cursor: pointer;
 	}
-
+	.dialog-close-btn > :global(svg path) {
+		stroke-width: 2.2;
+		transform: 0.02s;
+	}
 	.dialog-close-btn:hover {
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		transform: scale(1.04);
-		box-shadow: var(--shadow-xs);
 	}
-	.dialog-close-btn:active {
-		box-shadow: var(--shadow);
-		transform: scale(0.98);
+	.dialog-close-btn:hover > :global(svg path) {
+		stroke-width: 2.5;
+	}
+	.dialog-close-btn:active > :global(svg path) {
+		stroke-width: 2.2;
 	}
 </style>

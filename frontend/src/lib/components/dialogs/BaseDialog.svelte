@@ -40,6 +40,7 @@
 		outline: none;
 		overflow: visible;
 	}
+
 	.dialog-content {
 		position: relative;
 		border-radius: 0.875rem;

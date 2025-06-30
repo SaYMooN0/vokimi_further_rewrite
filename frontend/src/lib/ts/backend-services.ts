@@ -3,10 +3,10 @@ import { ErrUtils, type Err } from "./err";
 
 export type ResponseResult<T> =
     | { isSuccess: true; data: T }
-    | { isSuccess: false; errors: Err[] };
+    | { isSuccess: false; errs: Err[] };
 export type ResponseVoidResult =
     | { isSuccess: true }
-    | { isSuccess: false; errors: Err[] };
+    | { isSuccess: false; errs: Err[] };
 
 class BackendService {
     private _baseUrl: string;
@@ -25,28 +25,25 @@ class BackendService {
 
     public async fetchJsonResponse<T>(url: string, options: RequestInit): Promise<ResponseResult<T>> {
         try {
-            console.log("in try", url, options);
 
             const response = await fetch(this._baseUrl + url, {
                 ...options,
                 credentials: 'include'
             });
-            console.log("-------------", response);
+
             if (response.ok) {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);
                 return { isSuccess: true, data };
             }
+            const errs = await this.parseErrResponse(response);
 
-            const errors = await this.parseErrResponse(response);
-            return { isSuccess: false, errors };
+            return { isSuccess: false, errs };
 
         } catch (e: any) {
-            console.log("catch", e);
-
             return {
                 isSuccess: false,
-                errors: [ErrUtils.createUnknown("Error: " + e.message)]
+                errs: [ErrUtils.createUnknown("Error: " + e.message)]
             };
         }
     }
@@ -61,13 +58,13 @@ class BackendService {
                 return { isSuccess: true };
             }
 
-            const errors = await this.parseErrResponse(response);
-            return { isSuccess: false, errors };
+            const errs = await this.parseErrResponse(response);
+            return { isSuccess: false, errs };
 
         } catch (e: any) {
             return {
                 isSuccess: false,
-                errors: [ErrUtils.createUnknown("Error: " + e.message)]
+                errs: [ErrUtils.createUnknown("Error: " + e.message)]
             };
         }
     }
@@ -87,28 +84,29 @@ class BackendService {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);
                 return { isSuccess: true, data };
+
             }
 
             const contentType = response.headers.get("content-type");
             if (contentType?.includes("application/json")) {
                 const json = await response.json();
-                if (Array.isArray(json.errors)) {
+                if (Array.isArray(json.errs)) {
                     return {
                         isSuccess: false,
-                        errors: json.errors.map(ErrUtils.fromPlain)
+                        errs: json.errs.map(ErrUtils.fromPlain)
                     };
                 }
             }
 
             return {
                 isSuccess: false,
-                errors: [ErrUtils.createUnknown("Response was not valid JSON with an 'errors' array")]
+                errs: [ErrUtils.createUnknown("Response was not valid JSON with an 'errs' array")]
             };
 
         } catch (e: any) {
             return {
                 isSuccess: false,
-                errors: [ErrUtils.createUnknown("Exception: " + e.message)]
+                errs: [ErrUtils.createUnknown("Exception: " + e.message)]
             };
         }
     }
@@ -128,12 +126,10 @@ class BackendService {
         if (contentType?.includes("application/json")) {
             try {
                 const json = await response.json();
-
-                if (!Array.isArray(json.errors)) {
-                    return [ErrUtils.createUnknown("Expected 'errors' array in response")];
+                if (!Array.isArray(json.errs)) {
+                    return [ErrUtils.createUnknown("Expected 'errs' array in response")];
                 }
-
-                return json.errors.map(ErrUtils.fromPlain);
+                return json.errs.map(ErrUtils.fromPlain);
             } catch {
                 return [ErrUtils.createUnknown("Failed to parse JSON error response")];
             }

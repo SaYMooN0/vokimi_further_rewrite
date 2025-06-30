@@ -25,7 +25,7 @@
 		flex-direction: column;
 		justify-content: space-between;
 		height: 100vh;
-		padding: 4rem 0 2rem 0;
+		padding: 4rem 0 2rem;
 	}
 
 	.links {

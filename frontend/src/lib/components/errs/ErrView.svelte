@@ -55,22 +55,23 @@
 		box-sizing: border-box;
 		padding: 0.125rem 0.5rem;
 		border-radius: 0.25rem;
-		box-shadow: var(--err-shadow);
 		background-color: var(--err-back);
 		color: var(--err-foreground);
+		box-shadow: var(--err-shadow);
 	}
 
 	.err-message {
 		display: grid;
-		grid-template-columns: 1fr 1.5rem;
 		align-items: center;
 		min-height: 1.5rem;
 		margin: 0;
+		color: inherit;
 		font-size: 1rem;
 		font-weight: 440;
+		grid-template-columns: 1fr 1.5rem;
 		word-break: normal;
 		overflow-wrap: anywhere;
-		color: inherit;
+		min-width: 22rem;
 	}
 
 	.err-message > svg {
@@ -93,10 +94,10 @@
 		margin: 0.125rem 0 0.125rem 0.25rem;
 		color: inherit;
 		font-size: 1rem;
+		font-weight: 420;
 		opacity: 1;
 		transition: all 0.2s ease;
 		interpolate-size: allow-keywords;
-		font-weight: 420;
 	}
 
 	.hidden {

@@ -1,9 +1,5 @@
-﻿using ApplicationShared.messaging;
-using AuthService.Domain.common;
-using AuthService.Domain.common.interfaces;
-using AuthService.Domain.common.interfaces.repositories;
+﻿using AuthService.Domain.common.interfaces;
 using AuthService.Domain.unconfirmed_user_aggregate;
-using SharedKernel.common;
 
 namespace AuthService.Application.unconfirmed_users.commands;
 

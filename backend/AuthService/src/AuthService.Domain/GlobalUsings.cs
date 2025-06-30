@@ -4,3 +4,4 @@ global using SharedKernel.errs.utils;
 global using SharedKernel.common;
 global using SharedKernel.domain;
 global using AuthService.Domain.common;
+global using SharedKernel.domain.events;

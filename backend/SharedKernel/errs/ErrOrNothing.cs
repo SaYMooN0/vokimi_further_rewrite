@@ -21,7 +21,7 @@ public class ErrOrNothing
     }
 
     public static implicit operator ErrOrNothing(Err err) => new(err);
-    public static readonly ErrOrNothing Nothing = new ErrOrNothing(null);
+    public static ErrOrNothing Nothing => new(null);
 
     public override string ToString() =>
         _err is null
@@ -29,7 +29,7 @@ public class ErrOrNothing
             : $"[ErrOrNothing]: \n{_err}";
 
     public void AddNext(Err next) {
-        if (_err is null) {
+        if (this._err is null) {
             _err = next;
         }
         else {
@@ -53,14 +53,14 @@ public class ErrOrNothing
         return this;
     }
 
-    public void AddNextIfErr(ErrOrNothing errOrNothing) {
-        if (errOrNothing.IsErr(out var err)) {
+    public void AddNextIfErr(ErrOrNothing next) {
+        if (next.IsErr(out var err)) {
             AddNext(err);
         }
     }
 
-    public ErrOrNothing WithNextIfErr(ErrOrNothing errOrNothing) {
-        AddNextIfErr(errOrNothing);
+    public ErrOrNothing WithNextIfErr(ErrOrNothing next) {
+        AddNextIfErr(next);
         return this;
     }
 

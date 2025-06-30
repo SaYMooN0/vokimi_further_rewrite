@@ -1,6 +1,4 @@
-﻿using SharedKernel.errs;
-
-namespace SharedKernel.exceptions;
+﻿namespace SharedKernel.exceptions;
 
 public class UnexpectedBehaviourException : Exception
 {

@@ -5,15 +5,19 @@
 </script>
 
 <SignInDialogHeader text="Check your inbox" />
-<p class="msg">Confirmation link has been sent to</p>
-<p class="email">{email}</p>
+<p class="msg">Thank you for signing up. Confirmation link has been sent to <span>{email}</span></p>
+<p class="email"></p>
 
 <style>
 	.msg {
-		font-size: 1.25rem;
+		font-size: 2rem;
+		font-weight: 410;
+		text-align: center;
+		margin: 1rem 0 0 0;
 	}
-	.email {
-		font-size: 1.25rem;
+
+	span {
 		color: var(--primary);
+		font-size: 2rem;
 	}
 </style>

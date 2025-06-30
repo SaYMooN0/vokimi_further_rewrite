@@ -20,24 +20,28 @@ public class Err
     }
 
     public override string ToString() {
-        StringBuilder sb = new();
-        AppendToString(sb, 1);
+        var sb = new StringBuilder();
+        var current = this;
+        int index = 1;
+
+        while (current is not null) {
+            sb.AppendLine($"[Error {index}]");
+            sb.AppendLine($"Code: {current.Code}");
+            sb.AppendLine($"Message: {current.Message}");
+
+            if (!string.IsNullOrEmpty(current.Details)) {
+                sb.AppendLine($"Details: {current.Details}");
+            }
+
+            sb.AppendLine();
+
+            current = current.Next;
+            index++;
+        }
+
         return sb.ToString();
     }
 
-    private void AppendToString(StringBuilder sb, int index) {
-        sb.AppendLine($"[Error {index}]");
-        sb.AppendLine($"Code: {Code}");
-        sb.AppendLine($"Message: {Message}");
-
-        if (!string.IsNullOrEmpty(Details))
-            sb.AppendLine($"Details: {Details}");
-
-        if (Next is not null) {
-            sb.AppendLine();
-            Next.AppendToString(sb, index + 1);
-        }
-    }
 
     public void AddNext(Err next) {
         var current = this;

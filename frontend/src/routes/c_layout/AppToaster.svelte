@@ -99,11 +99,13 @@
 		--error-bg: var(--err-back) !important;
 		--error-text: var(--err-foreground) !important;
 	}
+
 	:global .my-toaster {
 		.base-toast {
 			height: var(--initial-height) !important;
 			padding: 1.5rem 1rem !important;
 		}
+
 		.toast-icon {
 			width: 1.5rem !important;
 			height: 1.5rem !important;

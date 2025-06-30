@@ -14,6 +14,8 @@ public class Email : ValueObject
         if (!IsStringValidEmail(email)) {
             InvalidConstructorArgumentException.ThrowErr(ErrFactory.IncorrectFormat("Email format"));
         }
+
+        _email = email;
     }
 
     private const string EmailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";

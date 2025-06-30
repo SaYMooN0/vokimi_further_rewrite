@@ -17,22 +17,27 @@ internal class ExceptionHandlingMiddleware
         _logger = logger;
     }
 
+    private static readonly Err ServerError = new("Server error occurred. Please try again later");
+
     public async Task InvokeAsync(HttpContext context) {
         try {
             await _next(context);
         }
         catch (InvalidConstructorArgumentException ex) {
-            await CustomResults.ErrorResponse(ex.Err).ExecuteAsync(context);
+            _logger.LogCritical(ex.Err.ToString());
+            await CustomResults.ErrorResponse(new Err("Server error. Please try again later")).ExecuteAsync(context);
             return;
         }
         catch (UnexpectedBehaviourException ex) {
             var e = new Err(message: ex.Message, code: ex.ErrCode, ex.Details);
-            await CustomResults.ErrorResponse(e).ExecuteAsync(context);
+            _logger.LogCritical(e.ToString());
+            await CustomResults.ErrorResponse(ServerError).ExecuteAsync(context);
             return;
         }
         catch (Exception ex) {
-            Err e = new(message: "Server error occurred. Please try again later");
-            await CustomResults.ErrorResponse(e).ExecuteAsync(context);
+            _logger.LogCritical(ex.ToString());
+
+            await CustomResults.ErrorResponse(ServerError).ExecuteAsync(context);
             return;
         }
     }
