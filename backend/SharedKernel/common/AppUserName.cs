@@ -6,7 +6,7 @@ public class AppUserName : ValueObject
 {
     private readonly string _value;
 
-    private AppUserName(string value) {
+    public AppUserName(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(CheckForErr(value));
         _value = value;
     }

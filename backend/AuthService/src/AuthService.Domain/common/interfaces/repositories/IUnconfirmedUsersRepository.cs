@@ -9,4 +9,5 @@ public interface IUnconfirmedUsersRepository
     Task Update(UnconfirmedUser unconfirmedUser);
     Task Delete(UnconfirmedUser unconfirmedUser);
 
+    Task<UnconfirmedUser?> GetById(UnconfirmedUserId unconfirmedUserId);
 }

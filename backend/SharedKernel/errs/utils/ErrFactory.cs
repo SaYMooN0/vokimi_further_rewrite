@@ -47,10 +47,10 @@ public static class ErrFactory
         public static Err Common(string msg = "Not found", string? details = null) =>
             new(msg, ErrCodes.NotFound.Common, details);
 
-        public static Err UserId(string msg = "User not found", string? details = null) =>
+        public static Err User(string msg = "User not found", string? details = null) =>
             new(msg, ErrCodes.NotFound.User, details);
 
-        public static Err VokiId(string msg = "Voki not found", string? details = null) =>
+        public static Err Voki(string msg = "Voki not found", string? details = null) =>
             new(msg, ErrCodes.NotFound.Voki, details);
 
         public static Err GeneralVokiId(string msg = "General Voki not found", string? details = null) =>

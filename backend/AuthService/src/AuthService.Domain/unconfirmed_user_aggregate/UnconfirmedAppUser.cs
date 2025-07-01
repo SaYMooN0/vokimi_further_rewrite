@@ -56,4 +56,12 @@ public class UnconfirmedUser : AggregateRoot<UnconfirmedUserId>
         AddDomainEvent(new UnconfirmedUserChangedEvent(Id, UserName, Email, ConfirmationCode));
         return ErrOrNothing.Nothing;
     }
+
+    public ErrOrNothing TryConfirm(string confirmationCode) {
+        if (confirmationCode != this.ConfirmationCode) {
+            return ErrFactory.Unspecified("Unable to confirm user. Incorrect confirmation data was provided");
+        }
+
+        return ErrOrNothing.Nothing;
+    }
 }

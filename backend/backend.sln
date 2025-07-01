@@ -32,6 +32,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureShared", "Lib
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApplicationShared", "Libs\ApplicationShared\ApplicationShared.csproj", "{24A9E580-A468-408B-9024-74A65B174255}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralVokiCreationService.Application", "VokiCreationServicesCollection\GeneralVokiCreationService\src\GeneralVokiCreationService.Application\GeneralVokiCreationService.Application.csproj", "{1595E421-C80B-4804-928F-C39A0C115516}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralVokiCreationService.Infrastructure", "VokiCreationServicesCollection\GeneralVokiCreationService\src\GeneralVokiCreationService.Infrastructure\GeneralVokiCreationService.Infrastructure.csproj", "{8304995F-1582-4BC5-B76A-DEDA284686F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralVokiCreationService.Api", "VokiCreationServicesCollection\GeneralVokiCreationService\src\GeneralVokiCreationService.Api\GeneralVokiCreationService.Api.csproj", "{9D20957E-CDC1-4E4A-9C26-EFDBA95F4BE9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreVokiCreationService", "CoreVokiCreationService", "{A3B27B20-693C-4EEB-8E64-C796CF219B72}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FEE113DF-892E-4209-9111-600C055C2D51}"
+	ProjectSection(SolutionItems) = preProject
+		extensions\WebApplicationExtensions.cs = extensions\WebApplicationExtensions.cs
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreVokiCreationService.Api", "VokiCreationServicesCollection\CoreVokiCreationService\src\CoreVokiCreationService.Api\CoreVokiCreationService.Api.csproj", "{83438AB8-62A9-485C-A5F2-89CE7177DAA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreVokiCreationService.Application", "VokiCreationServicesCollection\CoreVokiCreationService\src\CoreVokiCreationService.Application\CoreVokiCreationService.Application.csproj", "{31791F5C-0F3C-490F-8791-328E1B8C584E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreVokiCreationService.Domain", "VokiCreationServicesCollection\CoreVokiCreationService\src\CoreVokiCreationService.Domain\CoreVokiCreationService.Domain.csproj", "{4DFD7E7F-3CD5-4D9A-9DBA-2C9E738471C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreVokiCreationService.Infrastructure", "VokiCreationServicesCollection\CoreVokiCreationService\src\CoreVokiCreationService.Infrastructure\CoreVokiCreationService.Infrastructure.csproj", "{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +71,15 @@ Global
 		{327F1116-D36D-4392-9540-C08ADB560D9D} = {D19B225D-D1A8-40C2-9DE4-FBFB4BAF9DA0}
 		{8E2E8459-9E0E-48C6-B37B-01D2B4A73AB5} = {D19B225D-D1A8-40C2-9DE4-FBFB4BAF9DA0}
 		{24A9E580-A468-408B-9024-74A65B174255} = {D19B225D-D1A8-40C2-9DE4-FBFB4BAF9DA0}
+		{1595E421-C80B-4804-928F-C39A0C115516} = {3C693F4E-C548-4594-B908-C6449754DC64}
+		{8304995F-1582-4BC5-B76A-DEDA284686F7} = {3C693F4E-C548-4594-B908-C6449754DC64}
+		{9D20957E-CDC1-4E4A-9C26-EFDBA95F4BE9} = {3C693F4E-C548-4594-B908-C6449754DC64}
+		{A3B27B20-693C-4EEB-8E64-C796CF219B72} = {B26070E2-D6BD-4847-8626-CCE5D7FD4EEE}
+		{FEE113DF-892E-4209-9111-600C055C2D51} = {A3B27B20-693C-4EEB-8E64-C796CF219B72}
+		{83438AB8-62A9-485C-A5F2-89CE7177DAA3} = {FEE113DF-892E-4209-9111-600C055C2D51}
+		{31791F5C-0F3C-490F-8791-328E1B8C584E} = {FEE113DF-892E-4209-9111-600C055C2D51}
+		{4DFD7E7F-3CD5-4D9A-9DBA-2C9E738471C4} = {FEE113DF-892E-4209-9111-600C055C2D51}
+		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C} = {FEE113DF-892E-4209-9111-600C055C2D51}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2CAB55A2-15A7-401C-94C6-F8B273B50F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -88,5 +118,33 @@ Global
 		{24A9E580-A468-408B-9024-74A65B174255}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24A9E580-A468-408B-9024-74A65B174255}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24A9E580-A468-408B-9024-74A65B174255}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1595E421-C80B-4804-928F-C39A0C115516}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1595E421-C80B-4804-928F-C39A0C115516}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1595E421-C80B-4804-928F-C39A0C115516}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1595E421-C80B-4804-928F-C39A0C115516}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8304995F-1582-4BC5-B76A-DEDA284686F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8304995F-1582-4BC5-B76A-DEDA284686F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8304995F-1582-4BC5-B76A-DEDA284686F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8304995F-1582-4BC5-B76A-DEDA284686F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D20957E-CDC1-4E4A-9C26-EFDBA95F4BE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D20957E-CDC1-4E4A-9C26-EFDBA95F4BE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D20957E-CDC1-4E4A-9C26-EFDBA95F4BE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D20957E-CDC1-4E4A-9C26-EFDBA95F4BE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83438AB8-62A9-485C-A5F2-89CE7177DAA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83438AB8-62A9-485C-A5F2-89CE7177DAA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83438AB8-62A9-485C-A5F2-89CE7177DAA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83438AB8-62A9-485C-A5F2-89CE7177DAA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31791F5C-0F3C-490F-8791-328E1B8C584E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31791F5C-0F3C-490F-8791-328E1B8C584E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31791F5C-0F3C-490F-8791-328E1B8C584E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31791F5C-0F3C-490F-8791-328E1B8C584E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DFD7E7F-3CD5-4D9A-9DBA-2C9E738471C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DFD7E7F-3CD5-4D9A-9DBA-2C9E738471C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DFD7E7F-3CD5-4D9A-9DBA-2C9E738471C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DFD7E7F-3CD5-4D9A-9DBA-2C9E738471C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

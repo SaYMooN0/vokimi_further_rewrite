@@ -1,8 +1,8 @@
 ﻿using System.Text.Json.Serialization;
-using AuthService.Infrastructure;
+using ApiShared;
 using SharedKernel.auth;
 
-namespace AuthService.Api;
+namespace CoreVokiCreationService.Api;
 
 public static class DependencyInjection
 {
@@ -14,23 +14,16 @@ public static class DependencyInjection
         services.ConfigureHttpJsonOptions(options => {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
-
         return services;
     }
 
     private static IServiceCollection AddFrontend(this IServiceCollection services, IConfiguration configuration) {
-        var frontendConfig = configuration.GetSection("FrontendConfig").Get<FrontendConfig>();
-        if (frontendConfig is null) {
-            throw new Exception("FrontendConfig is not configured");
-        }
-
-        services.AddSingleton(frontendConfig);
-
+        var frontendUrl = configuration["FrontendUrl"] ?? throw new Exception("FrontendUrl is not configured");
 
         services.AddCors(options => {
             options.AddPolicy("AllowFrontend", policy => {
                 policy
-                    .WithOrigins(frontendConfig.BaseUrl)
+                    .WithOrigins(frontendUrl)
                     .AllowAnyHeader()
                     .AllowAnyMethod()
                     .AllowCredentials();
