@@ -10,7 +10,7 @@
 		margin: 0.5rem auto 0;
 		border-radius: 0.375rem;
 		background-color: transparent;
-		color: var(--muted-foreground);
+		color: var(--secondary-foreground);
 		font-size: 1rem;
 		text-decoration: underline;
 		transition: all 0.12s ease;
@@ -18,7 +18,7 @@
 	}
 
 	p:hover {
-		background-color: var(--muted);
+		background-color: var(--secondary);
 		color: var(--primary);
 	}
 

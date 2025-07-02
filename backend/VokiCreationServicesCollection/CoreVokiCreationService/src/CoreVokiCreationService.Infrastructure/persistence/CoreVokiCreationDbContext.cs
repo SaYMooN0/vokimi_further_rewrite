@@ -1,4 +1,6 @@
-﻿using InfrastructureShared.domain_events_publisher;
+﻿using CoreVokiCreationService.Domain.app_user_aggregate;
+using CoreVokiCreationService.Domain.draft_voki_aggregate;
+using InfrastructureShared.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreVokiCreationService.Infrastructure.persistence;
@@ -13,6 +15,8 @@ public class CoreVokiCreationDbContext : DbContext
         _publisher = publisher;
     }
 
+    public DbSet<AppUser> AppUsers { get; init; } = null!;
+    public DbSet<DraftVoki> Vokis { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoreVokiCreationDbContext).Assembly);

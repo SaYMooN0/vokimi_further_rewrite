@@ -4,6 +4,7 @@
 	import SignInDialog from './c_layout/SignInDialog.svelte';
 	import { registerSignInDialogOpenFunction, type SignInDialogState } from './sign-in-dialog';
 	import AppToaster from './c_layout/AppToaster.svelte';
+	import vokiTypesIconsSprite from '$lib/icons/voki-types.svg?raw';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
@@ -12,6 +13,9 @@
 	registerSignInDialogOpenFunction((state: SignInDialogState) => signInDialog.open(state));
 </script>
 
+<div class="sprites">
+	{@html vokiTypesIconsSprite}
+</div>
 <SignInDialog bind:this={signInDialog} />
 <div class="page" class:full-width={isFullWidthMode}>
 	<div class="width-limit">
@@ -24,16 +28,21 @@
 <AppToaster />
 
 <style>
+	.sprites {
+		display: none;
+	}
+
 	.page {
 		display: flex;
 		flex-direction: column;
 		width: 100%;
 
-		--width-limit: min(74rem, 100%);
+		--width-limit: min(78rem, 100%);
 	}
 
 	.width-limit {
 		display: grid;
+		gap: 1rem;
 		width: var(--width-limit);
 		margin: 0 auto;
 		grid-template-columns: auto 1fr;

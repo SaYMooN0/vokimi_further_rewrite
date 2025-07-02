@@ -6,5 +6,8 @@
         "runed",
         "sonner",
         "Vokis"
-    ]
+    ],
+    "files.associations": {
+        "*.svg": "html"
+    }
 }

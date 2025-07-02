@@ -38,7 +38,7 @@
 		border-radius: 100rem;
 		background-color: transparent;
 		background-color: var(--back);
-		color: var(--muted-foreground);
+		color: var(--secondary-foreground);
 		font-size: 1.125rem;
 		transition: all 0.3s ease;
 		transform: translateY(-50%);
@@ -51,7 +51,7 @@
 		width: 100%;
 		box-sizing: border-box;
 		padding: 0.625rem 1rem;
-		border: solid 0.125rem var(--muted-foreground);
+		border: solid 0.125rem var(--secondary-foreground);
 		border-radius: 8px;
 		background-color: var(--back);
 		font-size: 1.125rem;

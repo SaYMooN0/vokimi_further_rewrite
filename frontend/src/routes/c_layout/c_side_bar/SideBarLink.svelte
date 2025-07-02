@@ -28,21 +28,20 @@
 		gap: 0.5rem;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.25rem;
-		background-color: var(--muted);
+		background-color: var(--secondary);
 		color: var(--primary);
+		font-size: 1.125rem;
 		font-weight: 450;
 		transition: transform 0.12s ease-in;
 		cursor: pointer;
-		grid-template-columns: 1.5rem 1fr;
+		grid-template-columns: 1.675rem 1fr;
 		outline-color: var(--primary);
-		
 	}
 
 	.link:hover {
 		background-color: var(--accent);
 		box-shadow: var(--shadow-xs);
 	}
-	
 
 	.link * {
 		cursor: inherit;

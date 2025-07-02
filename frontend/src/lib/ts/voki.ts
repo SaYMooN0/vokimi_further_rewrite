@@ -1,0 +1,1 @@
+export type VokiType = 'general' | 'scoring' | 'tier-list';

@@ -45,22 +45,26 @@
 		padding: 0.125rem;
 		border: none;
 		border-radius: 0.25rem;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
 		box-shadow: var(--shadow);
 		cursor: pointer;
 	}
+
 	.dialog-close-btn > :global(svg path) {
 		stroke-width: 2.2;
-		transform: 0.02s;
+		transition: stroke-width 0.06s ease-in;
 	}
+
 	.dialog-close-btn:hover {
-		background-color: var(--secondary);
-		color: var(--secondary-foreground);
+		background-color: var(--muted);
+		color: var(--muted-foreground);
 	}
+
 	.dialog-close-btn:hover > :global(svg path) {
 		stroke-width: 2.5;
 	}
+
 	.dialog-close-btn:active > :global(svg path) {
 		stroke-width: 2.2;
 	}

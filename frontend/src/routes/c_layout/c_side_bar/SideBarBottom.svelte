@@ -27,7 +27,7 @@
 		height: 2rem;
 		border: none;
 		border-radius: 0.25rem;
-		font-size: 1.0625rem;
+		font-size: 1.25rem;
 		font-weight: 500;
 		letter-spacing: 0.5px;
 		box-shadow: var(--shadow);
@@ -40,8 +40,8 @@
 	}
 
 	.login-btn {
-		background-color: var(--secondary);
-		color: var(--secondary-foreground);
+		background-color: var(--muted);
+		color: var(--muted-foreground);
 
 	}
 

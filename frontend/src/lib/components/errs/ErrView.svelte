@@ -63,6 +63,7 @@
 	.err-message {
 		display: grid;
 		align-items: center;
+		min-width: 22rem;
 		min-height: 1.5rem;
 		margin: 0;
 		color: inherit;
@@ -71,7 +72,6 @@
 		grid-template-columns: 1fr 1.5rem;
 		word-break: normal;
 		overflow-wrap: anywhere;
-		min-width: 22rem;
 	}
 
 	.err-message > svg {

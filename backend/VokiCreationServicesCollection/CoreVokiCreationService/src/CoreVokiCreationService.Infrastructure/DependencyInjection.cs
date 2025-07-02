@@ -1,5 +1,7 @@
-﻿using CoreVokiCreationService.Infrastructure.integration_events;
+﻿using CoreVokiCreationService.Domain.common.interfaces.repositories;
+using CoreVokiCreationService.Infrastructure.integration_events;
 using CoreVokiCreationService.Infrastructure.persistence;
+using CoreVokiCreationService.Infrastructure.persistence.repositories;
 using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
 using MassTransit;
@@ -99,6 +101,10 @@ public static class DependencyInjection
         string dbConnectionString = configuration.GetConnectionString("CoreVokiCreationServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<CoreVokiCreationDbContext>(options => options.UseNpgsql(dbConnectionString));
+
+        services.AddScoped<IAppUsersRepository, AppUsersRepository>();
+        services.AddScoped<IDraftVokiRepository, DraftVokiRepository>();
+
         return services;
     }
 }

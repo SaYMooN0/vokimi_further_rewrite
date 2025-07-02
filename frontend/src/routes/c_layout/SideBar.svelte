@@ -21,6 +21,8 @@
 
 <style>
 	.sidebar {
+		position: sticky;
+		top: 0;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -29,7 +31,7 @@
 	}
 
 	.links {
-		--sidebar-width: 12rem;
+		--sidebar-width: 12.5rem;
 
 		display: flex;
 		flex-direction: column;

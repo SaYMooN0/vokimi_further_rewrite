@@ -10,10 +10,10 @@
 
 <style>
 	.msg {
+		margin: 1rem 0 0;
 		font-size: 2rem;
 		font-weight: 410;
 		text-align: center;
-		margin: 1rem 0 0 0;
 	}
 
 	span {

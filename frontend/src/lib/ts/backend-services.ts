@@ -139,5 +139,5 @@ class BackendService {
     }
 }
 export const ApiAuth = new BackendService('/api/auth');
-export const ApiVokiCore = new BackendService('/api/voki-creation/core');
-export const ApiVokiGeneral = new BackendService('/api/voki-creation/general');
+export const ApiVokiCreationCore = new BackendService('/api/voki-creation/core');
+export const ApiVokiCreationGeneral = new BackendService('/api/voki-creation/general');
