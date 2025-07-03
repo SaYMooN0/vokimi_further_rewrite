@@ -1,3 +1,9 @@
-﻿namespace CoreVokiCreationService.Domain.common.interfaces.repositories;
+﻿using GeneralVokiCreationService.Domain.draft_voki_aggregate;
 
-public interface IDraftVokiRepository { }
+namespace GeneralVokiCreationService.Domain.repositories;
+
+public interface IDraftVokiRepository
+{
+    Task Add(DraftVoki voki);
+
+}

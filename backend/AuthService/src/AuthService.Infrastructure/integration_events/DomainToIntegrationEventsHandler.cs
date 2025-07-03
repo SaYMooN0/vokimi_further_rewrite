@@ -3,7 +3,7 @@ using SharedKernel.integration_events;
 
 namespace AuthService.Infrastructure.integration_events;
 
-internal class DomainToIntegrationEventsHandler :
+internal class DomainToIntegrationEventsHandler : BaseDomainToIntegrationEventsHandler,
     IDomainEventHandler<NewAppUserCreatedEvent>
 // and all other domain events that need to be published as integration events
 {
@@ -14,8 +14,8 @@ internal class DomainToIntegrationEventsHandler :
     }
 
 
-    public async Task Handle(NewAppUserCreatedEvent e, CancellationToken cancellationToken) =>
+    public async Task Handle(NewAppUserCreatedEvent e, CancellationToken ct) =>
         await _integrationEventPublisher.Publish(new NewAppUserCreatedIntegrationEvent(
             e.CreatedUserId
-        ), cancellationToken);
+        ), ct);
 }

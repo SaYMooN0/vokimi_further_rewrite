@@ -9,27 +9,37 @@ public sealed class DomainEventsPublisher(IServiceProvider serviceProvider) : ID
     private static readonly ConcurrentDictionary<Type, Type> HandlerTypeDictionary = new();
     private static readonly ConcurrentDictionary<Type, Type> WrapperTypeDictionary = new();
 
-    public async Task Publish(
-        IDomainEvent domainEvent,
-        CancellationToken cancellationToken = default
-    ) {
+    public async Task Publish(IDomainEvent domainEvent, CancellationToken cancellationToken = default) {
         using IServiceScope scope = serviceProvider.CreateScope();
 
         Type domainEventType = domainEvent.GetType();
         Type handlerType = HandlerTypeDictionary.GetOrAdd(
             domainEventType,
-            et => typeof(IDomainEventHandler<>).MakeGenericType(et));
+            et => typeof(IDomainEventHandler<>).MakeGenericType(et)
+        );
 
         IEnumerable<object?> handlers = scope.ServiceProvider.GetServices(handlerType);
 
-        foreach (object? handler in handlers) {
-            if (handler is null) {
-                continue;
+        List<object> regularHandlers = [];
+        BaseDomainToIntegrationEventsHandler? lastHandler = null;
+
+        foreach (var handler in handlers) {
+            if (handler is BaseDomainToIntegrationEventsHandler domainToIntegrationEventsHandler) {
+                lastHandler = domainToIntegrationEventsHandler;
             }
+            else if (handler is not null) {
+                regularHandlers.Add(handler);
+            }
+        }
 
+        foreach (var handler in regularHandlers) {
             var handlerWrapper = HandlerWrapper.Create(handler, domainEventType);
-
             await handlerWrapper.Handle(domainEvent, cancellationToken);
+        }
+
+        if (lastHandler is not null) {
+            var wrapper = HandlerWrapper.Create(lastHandler, domainEventType);
+            await wrapper.Handle(domainEvent, cancellationToken);
         }
     }
 

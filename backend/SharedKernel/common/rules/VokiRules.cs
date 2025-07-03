@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.rules;
+﻿namespace SharedKernel.common.rules;
 
 public class VokiRules
 {

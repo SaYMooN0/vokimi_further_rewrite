@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using InfrastructureShared.persistence.value_converters;
+﻿using InfrastructureShared.persistence.value_converters;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InfrastructureShared.persistence.extensions;
@@ -20,4 +19,12 @@ public static class PropertyBuilderExtensions
             new GuidBasedIdHashSetComparer<T>()
         );
     }
+    // public static PropertyBuilder<ImmutableHashSet<T>> HasGuidBasedIdsHashSetConversion<T>(
+    //     this PropertyBuilder<ImmutableHashSet<T>> builder
+    // ) where T : GuidBasedId {
+    //     return builder.HasConversion(
+    //         new GuidBasedIdImmutableHashSetHashSetConverter<T>(),
+    //         new GuidBasedIdImmutableHashSetHashSetComparer<T>()
+    //     );
+    // }
 }

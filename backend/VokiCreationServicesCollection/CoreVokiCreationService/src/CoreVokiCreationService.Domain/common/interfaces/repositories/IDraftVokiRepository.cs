@@ -1,3 +1,9 @@
-﻿namespace CoreVokiCreationService.Domain.common.interfaces.repositories;
+﻿using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
-public interface IDraftVokiRepository { }
+namespace CoreVokiCreationService.Domain.common.interfaces.repositories;
+
+public interface IDraftVokiRepository
+{
+    Task Add(DraftVoki voki);
+    Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId);
+}

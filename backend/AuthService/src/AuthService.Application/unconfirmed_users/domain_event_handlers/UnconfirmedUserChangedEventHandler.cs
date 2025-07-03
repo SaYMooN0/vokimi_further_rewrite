@@ -12,7 +12,7 @@ public class UnconfirmedUserChangedEventHandler : IDomainEventHandler<Unconfirme
         _emailService = emailService;
     }
 
-    public async Task Handle(UnconfirmedUserChangedEvent e, CancellationToken cancellationToken) {
+    public async Task Handle(UnconfirmedUserChangedEvent e, CancellationToken ct) {
         var sendingErr = await _emailService.SendRegistrationConfirmationLink(
             e.Email, e.Username, e.UserId, e.ConfirmationCode
         );

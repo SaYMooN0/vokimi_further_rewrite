@@ -1,5 +1,4 @@
-﻿using CoreVokiCreationService.Domain.common.interfaces.repositories;
-using GeneralVokiCreationService.Domain.app_user_aggregate;
+﻿using GeneralVokiCreationService.Domain.app_user_aggregate;
 using GeneralVokiCreationService.Domain.repositories;
 using MassTransit;
 using SharedKernel.integration_events;

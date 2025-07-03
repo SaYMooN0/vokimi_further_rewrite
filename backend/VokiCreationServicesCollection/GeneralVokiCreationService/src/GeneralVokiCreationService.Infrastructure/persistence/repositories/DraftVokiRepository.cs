@@ -1,4 +1,5 @@
-﻿using CoreVokiCreationService.Domain.common.interfaces.repositories;
+﻿using GeneralVokiCreationService.Domain.draft_voki_aggregate;
+using GeneralVokiCreationService.Domain.repositories;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.repositories;
 
@@ -8,5 +9,10 @@ internal class DraftVokiRepository : IDraftVokiRepository
 
     public DraftVokiRepository(GeneralVokiCreationDbContext db) {
         _db = db;
+    }
+
+    public Task Add(DraftVoki voki) {
+        _db.Vokis.Add(voki);
+        return _db.SaveChangesAsync();
     }
 }

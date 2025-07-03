@@ -1,21 +1,27 @@
 ﻿using System.Collections.Immutable;
+using SharedKernel.common.rules;
+using SharedKernel.domain;
+using SharedKernel.domain.ids;
+using SharedKernel.errs;
+using SharedKernel.errs.utils;
 using SharedKernel.exceptions;
-using SharedKernel.rules;
 
-namespace GeneralVokiCreationService.Domain.draft_voki_aggregate;
+namespace DraftVokisLib;
 
 public class VokiCoAuthorIdsSet : ValueObject
 {
-    public ImmutableHashSet<AppUserId> Ids { get; }
+    private readonly ImmutableHashSet<AppUserId> _ids;
 
     public VokiCoAuthorIdsSet(ImmutableHashSet<AppUserId> ids) {
         InvalidConstructorArgumentException.ThrowIfErr(CheckForErr(ids));
-        Ids = ids;
+        _ids = ids;
     }
-    public override IEnumerable<object> GetEqualityComponents() => Ids;
+
+    public override IEnumerable<object> GetEqualityComponents() => _ids;
 
     public static VokiCoAuthorIdsSet Empty => new(ImmutableHashSet<AppUserId>.Empty);
-    public bool Contains(AppUserId id) => Ids.Contains(id);
+    public bool Contains(AppUserId id) => _ids.Contains(id);
+    public int Count => _ids.Count;
 
     public static ErrOr<VokiCoAuthorIdsSet> Create(ImmutableHashSet<AppUserId> ids) {
         if (CheckForErr(ids).IsErr(out var err)) {
@@ -31,5 +37,4 @@ public class VokiCoAuthorIdsSet : ValueObject
             $"A Voki can have at most {VokiRules.MaxCoAuthors} co-authors",
             $"Current count is {ids.Count}")
         : ErrOrNothing.Nothing;
-
 }

@@ -35,8 +35,8 @@ public class Program
         
         using (var serviceScope = app.Services.CreateScope()) {
             var db = serviceScope.ServiceProvider.GetRequiredService<AuthDbContext>();
-            // db.Database.EnsureDeleted();
-            // db.Database.EnsureCreated();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
         }
 
         app.AllowFrontendCors();
