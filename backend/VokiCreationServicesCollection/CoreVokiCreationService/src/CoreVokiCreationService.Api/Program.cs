@@ -1,4 +1,3 @@
-using ApiShared;
 using CoreVokiCreationService.Api.extensions;
 using CoreVokiCreationService.Application;
 using CoreVokiCreationService.Infrastructure;
@@ -36,7 +35,7 @@ public class Program
 
         using (var serviceScope = app.Services.CreateScope()) {
             var db = serviceScope.ServiceProvider.GetRequiredService<CoreVokiCreationDbContext>();
-            db.Database.EnsureDeleted();
+            // db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
         }
         

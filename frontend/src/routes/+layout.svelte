@@ -20,7 +20,7 @@
 <div class="page" class:full-width={isFullWidthMode}>
 	<div class="width-limit">
 		<SideBar />
-		<div class="page-content">
+		<div id="page-content">
 			{@render children()}
 		</div>
 	</div>
@@ -30,6 +30,7 @@
 <style>
 	.sprites {
 		display: none;
+		height: 0;
 	}
 
 	.page {
@@ -44,6 +45,7 @@
 		display: grid;
 		gap: 1rem;
 		width: var(--width-limit);
+		height: 100%;
 		margin: 0 auto;
 		grid-template-columns: auto 1fr;
 	}

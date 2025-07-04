@@ -1,10 +1,12 @@
-﻿using CoreVokiCreationService.Domain.draft_voki_aggregate;
+﻿using DraftVokisLib;
+using GeneralVokiCreationService.Domain.draft_voki_aggregate;
+using GeneralVokiCreationService.Infrastructure.persistence.value_converters;
 using InfrastructureShared.persistence.extensions;
 using InfrastructureShared.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CoreVokiCreationService.Infrastructure.persistence.entities_configurations;
+namespace GeneralVokiCreationService.Infrastructure.persistence.entities_configurations;
 
 public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
 {
@@ -28,11 +30,8 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
             .HasGuidBasedIdConversion();
 
         builder
-            .Property(x => x.CoAuthorsIds)
-            .HasGuidBasedIdsImmutableHashSetConversion();
+            .Property<VokiCoAuthorIdsSet>("VokiCoAuthorIdsSet")
+            .HasConversion<VokiCoAuthorIdsSetConverter>();
 
-        builder
-            .Property(x => x.InvitedForCoAuthorUserIds)
-            .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }

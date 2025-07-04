@@ -1,11 +1,13 @@
-<h1>Draft vokis page</h1>
-<div class="content-item"></div>
-<div class="content-item"></div>
-<div class="content-item"></div>
-<div class="content-item"></div>
-<div class="content-item"></div>
-<div class="content-item"></div>
-<div class="content-item"></div>
+<div>
+	<h1>Draft vokis page</h1>
+	<div class="content-item"></div>
+	<div class="content-item"></div>
+	<div class="content-item"></div>
+	<div class="content-item"></div>
+	<div class="content-item"></div>
+	<div class="content-item"></div>
+	<div class="content-item"></div>
+</div>
 
 <style>
 	.content-item {

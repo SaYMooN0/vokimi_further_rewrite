@@ -6,6 +6,9 @@
 	import SignUpState from './c_sign_in_dialog/SignUpState.svelte';
 
 	export function open(state: SignInDialogState | null = null) {
+		signUpState?.clear();
+		loginState?.clear();
+
 		dialog.open();
 		if (state) {
 			dialogState = state;
@@ -15,13 +18,26 @@
 	let dialog = $state<DialogWithCloseButton>()!;
 	let email = $state('');
 	let password = $state('');
+
+	let signUpState = $state<SignUpState>();
+	let loginState = $state<LoginState>();
 </script>
 
 <DialogWithCloseButton bind:this={dialog} dialogId="sign-in-dialog">
 	{#if dialogState === 'login'}
-		<LoginState bind:email bind:password changeState={(val) => (dialogState = val)} />
+		<LoginState
+			bind:this={loginState}
+			bind:email
+			bind:password
+			changeState={(val) => (dialogState = val)}
+		/>
 	{:else if dialogState === 'signup'}
-		<SignUpState bind:email bind:password changeState={(val) => (dialogState = val)} />
+		<SignUpState
+			bind:this={signUpState}
+			bind:email
+			bind:password
+			changeState={(val) => (dialogState = val)}
+		/>
 	{:else if dialogState === 'confirmation-sent'}
 		<ConfirmationLinkState {email} />
 	{:else}
@@ -30,7 +46,7 @@
 </DialogWithCloseButton>
 
 <style>
-	:global(#sign-in-dialog) {
+	:global(#sign-in-dialog .dialog-content) {
 		display: flex;
 		flex-direction: column;
 		width: 28rem;

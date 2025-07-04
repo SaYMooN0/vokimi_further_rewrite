@@ -14,6 +14,9 @@
 		<use href="#{type}-voki-type-icon" />
 	</svg>
 	<p>{name}</p>
+	<div class="indicator" class:selected={isSelected}>
+		<span />
+	</div>
 </div>
 
 <style>
@@ -21,32 +24,26 @@
 		display: grid;
 		justify-content: center;
 		place-items: center center;
-		width: 12rem;
+		width: 10rem;
 		height: 10rem;
-		padding: 1rem 0;
-		border: 0.25rem solid transparent;
+		padding: 0.5rem 0;
 		border-radius: 0.75rem;
 		background-color: var(--secondary);
-		transition:
-			transform 0.15s ease,
-			border-color 0.08s ease;
+		transition: all 0.16s ease;
 		cursor: pointer;
-		grid-template-rows: 4rem 1fr;
+		grid-template-rows: auto 1fr auto;
+		box-shadow: var(--shadow);
 	}
-
 	.card:hover {
-		transform: scale(1.07);
-	}
-
-	.card.selected {
-		border-color: var(--primary);
-		transform: scale(1.15);
+		transform: scale(1.06);
 	}
 
 	.card > :global(svg) {
-		height: 100%;
+		margin-top: 1rem;
+		height: 3.5rem;
+		aspect-ratio: 1/1;
 		color: var(--primary);
-		stroke-width: 1.6;
+		stroke-width: 1.7;
 	}
 
 	.card > p {
@@ -54,5 +51,31 @@
 		font-size: 1.5rem;
 		font-weight: 500;
 		cursor: inherit;
+	}
+	.indicator {
+		height: 1.5rem;
+		border: 0.1875rem solid var(--muted);
+		border-radius: 1.5rem;
+		aspect-ratio: 1/1;
+		background-color: var(--muted);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition: box-shadow 0.04s ease-in;
+	}
+	.card:hover .indicator {
+		box-shadow: var(--shadow);
+	}
+	.indicator.selected {
+		border-color: var(--primary);
+	}
+	.indicator span {
+		height: 70%;
+		display: block;
+		aspect-ratio: 1/1;
+	}
+	.indicator.selected span {
+		background-color: var(--primary);
+		border-radius: 1.5rem;
 	}
 </style>

@@ -1,5 +1,7 @@
-﻿using GeneralVokiCreationService.Infrastructure.integration_events;
+﻿using GeneralVokiCreationService.Domain.repositories;
+using GeneralVokiCreationService.Infrastructure.integration_events;
 using GeneralVokiCreationService.Infrastructure.persistence;
+using GeneralVokiCreationService.Infrastructure.persistence.repositories;
 using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
 using MassTransit;
@@ -71,7 +73,7 @@ public static class DependencyInjection
 
                 var serviceName = configuration["ServiceName"] ??
                                   throw new ArgumentNullException("ServiceName is not provided");
-                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName));
+                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName+":"));
 
                 cfg.UseMessageRetry(
                     r => { r.Interval(retryCount, TimeSpan.FromSeconds(retryIntervalSeconds)); }
@@ -99,6 +101,10 @@ public static class DependencyInjection
         string dbConnectionString = configuration.GetConnectionString("GeneralVokiCreationServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<GeneralVokiCreationDbContext>(options => options.UseNpgsql(dbConnectionString));
+        
+        services.AddScoped<IAppUsersRepository, AppUsersRepository>();
+        services.AddScoped<IDraftVokiRepository, DraftVokiRepository>();
+        
         return services;
     }
 }

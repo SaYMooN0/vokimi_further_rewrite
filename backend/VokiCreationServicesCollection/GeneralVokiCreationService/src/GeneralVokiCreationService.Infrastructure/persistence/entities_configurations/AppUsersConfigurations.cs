@@ -1,9 +1,10 @@
-﻿using CoreVokiCreationService.Domain.app_user_aggregate;
+﻿using System.Collections.Immutable;
+using GeneralVokiCreationService.Domain.app_user_aggregate;
 using InfrastructureShared.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CoreVokiCreationService.Infrastructure.persistence.entities_configurations;
+namespace GeneralVokiCreationService.Infrastructure.persistence.entities_configurations;
 
 internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 {

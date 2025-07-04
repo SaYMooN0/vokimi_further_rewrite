@@ -18,6 +18,7 @@ public class GeneralDraftVokiInitializedIntegrationEventHandler : IConsumer<Gene
             context.Message.VokiId,
             context.Message.PrimaryAuthorId,
             context.Message.VokiName,
+            context.Message.CoverPath,
             context.Message.CreationDate
         );
         await _draftVokiRepository.Add(newVoki);

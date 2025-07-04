@@ -6,5 +6,6 @@ public record class GeneralDraftVokiInitializedIntegrationEvent(
     VokiId VokiId,
     AppUserId PrimaryAuthorId,
     VokiName VokiName,
+    VokiCoverPath CoverPath,
     DateTime CreationDate
 ) : IIntegrationEvent;

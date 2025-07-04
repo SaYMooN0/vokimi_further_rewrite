@@ -18,11 +18,14 @@ internal class DomainToIntegrationEventsHandler : BaseDomainToIntegrationEventsH
     public async Task Handle(NewDraftVokiInitializedEvent e, CancellationToken ct) {
         IIntegrationEvent integrationEvent = e.VokiType.Match<IIntegrationEvent>(
             onGeneral: () => new GeneralDraftVokiInitializedIntegrationEvent(
-                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.CreationDate),
+                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.VokiCoverPath, e.CreationDate
+            ),
             onTierList: () => new TierListDraftVokiInitializedIntegrationEvent(
-                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.CreationDate),
+                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.VokiCoverPath, e.CreationDate
+            ),
             onScoring: () => new ScoringDraftVokiInitializedIntegrationEvent(
-                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.CreationDate)
+                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.VokiCoverPath, e.CreationDate
+            )
         );
         await _integrationEventPublisher.Publish(integrationEvent, ct);
     }

@@ -73,7 +73,7 @@ public static class DependencyInjection
 
                 var serviceName = configuration["ServiceName"] ??
                                   throw new ArgumentNullException("ServiceName is not provided");
-                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName));
+                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName+":"));
 
                 cfg.UseMessageRetry(
                     r => { r.Interval(retryCount, TimeSpan.FromSeconds(retryIntervalSeconds)); }

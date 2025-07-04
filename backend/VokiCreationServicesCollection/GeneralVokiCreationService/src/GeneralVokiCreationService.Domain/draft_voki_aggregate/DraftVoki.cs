@@ -4,19 +4,26 @@ using SharedKernel.common.vokis;
 
 namespace GeneralVokiCreationService.Domain.draft_voki_aggregate;
 
-public class DraftVoki : BaseDraftVoki
+public sealed class DraftVoki : BaseDraftVoki
 {
-    protected DraftVoki() : base() { }
+    private DraftVoki() : base() { }
 
-    protected DraftVoki(VokiId vokiId, AppUserId primaryAuthorId, VokiName vokiName, DateTime creationDate) : base(
-        vokiId,
-        primaryAuthorId,
-        vokiName,
+    private DraftVoki(
+        VokiId vokiId, AppUserId primaryAuthorId,
+        VokiName name, VokiCoverPath coverPath,
+        DateTime creationDate
+    ) : base(
+        vokiId, primaryAuthorId,
+        name, coverPath,
         creationDate
     ) { }
 
-    public static DraftVoki Create(VokiId vokiId, AppUserId primaryAuthorId, VokiName vokiName, DateTime creationDate) {
-        DraftVoki newVoki = new(vokiId, primaryAuthorId, vokiName, creationDate);
+    public static DraftVoki Create(
+        VokiId vokiId, AppUserId primaryAuthorId,
+        VokiName name, VokiCoverPath coverPath,
+        DateTime creationDate
+    ) {
+        DraftVoki newVoki = new(vokiId, primaryAuthorId, name, coverPath, creationDate);
         newVoki.AddDomainEvent(new NewDraftVokiInitializedEvent(newVoki.Id));
         return newVoki;
     }

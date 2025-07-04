@@ -17,12 +17,16 @@
 	let { email = $bindable(), password = $bindable(), changeState }: Props = $props();
 	let isLoading = $state(false);
 	let errs: Err[] = $state([]);
+
+	export function clear() {
+		errs = [];
+	}
 	async function confirmLogin() {
 		validateForm();
 		if (errs.length > 0) {
 			return;
 		}
-		const response = await ApiAuth.fetchJsonResponse(
+		const response = await ApiAuth.fetchVoidResponse(
 			'/login',
 			ApiAuth.requestJsonOptions({ email, password })
 		);
@@ -116,7 +120,7 @@
 	}}
 />
 <SignInDialogLink text="I don't have an account yet" onClick={() => changeState('signup')} />
-<DefaultErrBlock errList={errs} />
+<DefaultErrBlock errList={errs} containerId="login-err-block" />
 <SignInDialogConfirmButton text="Log in" onclick={() => confirmLogin()} {isLoading} />
 
 <style>
@@ -124,7 +128,7 @@
 		margin-top: auto;
 	}
 
-	:global(.err-block) {
+	:global(#login-err-block) {
 		margin-top: 0.375rem;
 	}
 </style>

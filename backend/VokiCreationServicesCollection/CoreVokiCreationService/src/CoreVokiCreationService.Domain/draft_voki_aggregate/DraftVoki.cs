@@ -38,7 +38,6 @@ public class DraftVoki : AggregateRoot<VokiId>
         return newVoki;
     }
     // public ErrOrNothing InviteNewCoAuthor() { }
-    //
     // public ErrOrNothing CancelCoAuthorInvite() { }
     // public ErrOrNothing AddCoAuthor() { }
     // public ErrOrNothing RemoveCoAuthor() { }

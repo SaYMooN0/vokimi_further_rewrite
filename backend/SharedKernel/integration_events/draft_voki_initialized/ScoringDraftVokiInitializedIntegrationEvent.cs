@@ -6,5 +6,6 @@ public record class ScoringDraftVokiInitializedIntegrationEvent(
     VokiId VokiId,
     AppUserId PrimaryCreatorId,
     VokiName VokiName,
+    VokiCoverPath CoverPath,
     DateTime CreationDate
 ) : IIntegrationEvent;

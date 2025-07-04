@@ -19,6 +19,10 @@
 	let errs: Err[] = $state([]);
 	let isLoading = $state(false);
 
+	export function clear() {
+		errs = [];
+	}
+
 	async function confirmSignUp() {
 		validateForm();
 		if (errs.length > 0) {
@@ -148,7 +152,7 @@
 <div class="gap" />
 
 <SignInDialogLink text="I already have an account" onClick={() => changeState('login')} />
-<DefaultErrBlock errList={errs} />
+<DefaultErrBlock errList={errs} containerId="sign-up-err-block" />
 <SignInDialogConfirmButton text="Sign Up" onclick={() => confirmSignUp()} {isLoading} />
 
 <style>
@@ -156,7 +160,7 @@
 		margin-top: auto;
 	}
 
-	:global(.err-block) {
-		margin-top: 0.25rem;
+	:global(#sign-up-err-block) {
+		margin-top: 0.375rem;
 	}
 </style>

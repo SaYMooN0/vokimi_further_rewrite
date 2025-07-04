@@ -20,8 +20,8 @@
 	}
 </script>
 
-<dialog bind:this={dialog}>
-	<div class="dialog-content" id={dialogId}>
+<dialog bind:this={dialog} id={dialogId}>
+	<div class="dialog-content">
 		{@render children()}
 	</div>
 </dialog>

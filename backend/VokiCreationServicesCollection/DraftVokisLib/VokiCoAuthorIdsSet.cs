@@ -37,4 +37,6 @@ public class VokiCoAuthorIdsSet : ValueObject
             $"A Voki can have at most {VokiRules.MaxCoAuthors} co-authors",
             $"Current count is {ids.Count}")
         : ErrOrNothing.Nothing;
+
+    public AppUserId[] ToArray() => _ids.ToArray();
 }

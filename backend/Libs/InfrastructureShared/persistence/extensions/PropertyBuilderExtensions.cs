@@ -1,4 +1,6 @@
-﻿using InfrastructureShared.persistence.value_converters;
+﻿using System.Collections.Immutable;
+using InfrastructureShared.persistence.value_converters;
+using InfrastructureShared.persistence.value_converters.guid_based_ids;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace InfrastructureShared.persistence.extensions;
@@ -19,12 +21,13 @@ public static class PropertyBuilderExtensions
             new GuidBasedIdHashSetComparer<T>()
         );
     }
-    // public static PropertyBuilder<ImmutableHashSet<T>> HasGuidBasedIdsHashSetConversion<T>(
-    //     this PropertyBuilder<ImmutableHashSet<T>> builder
-    // ) where T : GuidBasedId {
-    //     return builder.HasConversion(
-    //         new GuidBasedIdImmutableHashSetHashSetConverter<T>(),
-    //         new GuidBasedIdImmutableHashSetHashSetComparer<T>()
-    //     );
-    // }
+
+    public static PropertyBuilder<ImmutableHashSet<T>> HasGuidBasedIdsImmutableHashSetConversion<T>(
+        this PropertyBuilder<ImmutableHashSet<T>> builder
+    ) where T : GuidBasedId {
+        return builder.HasConversion(
+            new GuidBasedIdImmutableHashSetConverter<T>(),
+            new GuidBasedIdImmutableHashSetComparer<T>()
+        );
+    }
 }

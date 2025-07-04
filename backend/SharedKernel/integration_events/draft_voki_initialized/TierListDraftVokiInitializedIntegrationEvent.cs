@@ -6,5 +6,6 @@ public record class TierListDraftVokiInitializedIntegrationEvent(
     VokiId VokiId,
     AppUserId PrimaryCreatorId,
     VokiName VokiName,
+    VokiCoverPath CoverPath,
     DateTime CreationDate
 ) : IIntegrationEvent;
