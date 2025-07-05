@@ -23,7 +23,7 @@ public static class RootHandlers
         PingUserAuthQuery query = new();
         var result = await handler.Handle(query, ct);
     
-        return CustomResults.FromErrOr(result, (userId) => Results.Json(new { UserId = userId }));
+        return CustomResults.FromErrOr(result, (userId) => Results.Json(new { UserId = userId.ToString() }));
     }
 
     private static async Task<IResult> RegisterUser(

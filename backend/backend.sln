@@ -41,9 +41,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreVokiCreationService", "CoreVokiCreationService", "{A3B27B20-693C-4EEB-8E64-C796CF219B72}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FEE113DF-892E-4209-9111-600C055C2D51}"
-	ProjectSection(SolutionItems) = preProject
-		extensions\WebApplicationExtensions.cs = extensions\WebApplicationExtensions.cs
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreVokiCreationService.Api", "VokiCreationServicesCollection\CoreVokiCreationService\src\CoreVokiCreationService.Api\CoreVokiCreationService.Api.csproj", "{83438AB8-62A9-485C-A5F2-89CE7177DAA3}"
 EndProject
@@ -54,6 +51,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreVokiCreationService.Infrastructure", "VokiCreationServicesCollection\CoreVokiCreationService\src\CoreVokiCreationService.Infrastructure\CoreVokiCreationService.Infrastructure.csproj", "{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DraftVokisLib", "VokiCreationServicesCollection\DraftVokisLib\DraftVokisLib.csproj", "{8DAC7999-82B4-4DED-94ED-35377F8A4FE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationsService", "NotificationsService", "{D2BCCD5D-A559-44F1-B14B-16091A2C567E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2CA97717-2D9A-4A7C-B65C-A631EA04F3A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1C3514D6-12CC-4840-AB72-E0F7A6A44CEC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +86,8 @@ Global
 		{4DFD7E7F-3CD5-4D9A-9DBA-2C9E738471C4} = {FEE113DF-892E-4209-9111-600C055C2D51}
 		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C} = {FEE113DF-892E-4209-9111-600C055C2D51}
 		{8DAC7999-82B4-4DED-94ED-35377F8A4FE8} = {B26070E2-D6BD-4847-8626-CCE5D7FD4EEE}
+		{2CA97717-2D9A-4A7C-B65C-A631EA04F3A0} = {D2BCCD5D-A559-44F1-B14B-16091A2C567E}
+		{1C3514D6-12CC-4840-AB72-E0F7A6A44CEC} = {D2BCCD5D-A559-44F1-B14B-16091A2C567E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2CAB55A2-15A7-401C-94C6-F8B273B50F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

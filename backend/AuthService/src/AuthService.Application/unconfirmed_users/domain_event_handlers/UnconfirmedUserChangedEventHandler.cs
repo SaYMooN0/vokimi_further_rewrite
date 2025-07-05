@@ -16,12 +16,9 @@ public class UnconfirmedUserChangedEventHandler : IDomainEventHandler<Unconfirme
         var sendingErr = await _emailService.SendRegistrationConfirmationLink(
             e.Email, e.Username, e.UserId, e.ConfirmationCode
         );
-
-        if (sendingErr.IsErr(out var err)) {
-            throw new UnexpectedBehaviourException(
-                "Unable to send email confirmation link. Please try again later",
-                details: err.Message
-            );
-        }
+        
+        UnexpectedBehaviourException.ThrowIfErr(
+            sendingErr, "Unable to send email confirmation link. Please try again later"
+        );
     }
 }

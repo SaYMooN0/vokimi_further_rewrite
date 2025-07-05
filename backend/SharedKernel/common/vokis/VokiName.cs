@@ -4,8 +4,8 @@ public sealed class VokiName : ValueObject
 {
     private readonly string _value;
 
-    public VokiName(string value) {
-        InvalidConstructorArgumentException.ThrowIfErr(CheckForErr(value));
+    private VokiName(string value) {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(value));
         _value = value;
     }
 

@@ -1,1 +1,1 @@
-export type VokiType = 'general' | 'scoring' | 'tier-list';
+export type VokiType = 'General' | 'Scoring' | 'TierList';

@@ -30,7 +30,7 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
             .HasGuidBasedIdConversion();
 
         builder
-            .Property<VokiCoAuthorIdsSet>("VokiCoAuthorIdsSet")
+            .Property<VokiCoAuthorIdsSet>("CoAuthors")
             .HasConversion<VokiCoAuthorIdsSetConverter>();
 
     }

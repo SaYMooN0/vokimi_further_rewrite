@@ -2,4 +2,4 @@
 
 namespace DraftVokisLib.events;
 
-public record class NewDraftVokiInitializedEvent(VokiId VokiId) : IDomainEvent;
+public record class NewDraftVokiInitializedEvent(VokiId VokiId, AppUserId PrimaryAuthorId) : IDomainEvent;

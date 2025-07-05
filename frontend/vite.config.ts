@@ -50,18 +50,18 @@ function createProxyEntry(
 	port: number,
 	customRewrite?: (path: string) => string
 ) {
-	const regex = `^${basePath}`;
-	const rewritePrefix = basePath.replace(/^\/api\/[^/]+/, '');
+	const basePathRegex = `^${basePath}`;
 
 	return {
-		[regex]: {
+		[basePathRegex]: {
 			target: `http://localhost:${port}/`,
 			secure: false,
 			changeOrigin: true,
-			rewrite: customRewrite ?? ((path) => path.replace(new RegExp(regex), rewritePrefix)),
+			rewrite: customRewrite ?? ((path) => path.replace(new RegExp(basePathRegex), '')),
 		},
 	};
 }
+
 
 export default defineConfig({
 	plugins: [sveltekit(), devtoolsJson(), forbiddenFileStructurePlugin()],

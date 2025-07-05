@@ -19,29 +19,6 @@ public class Err
         Details = details;
     }
 
-    public override string ToString() {
-        var sb = new StringBuilder();
-        var current = this;
-        int index = 1;
-
-        while (current is not null) {
-            sb.AppendLine($"[Error {index}]");
-            sb.AppendLine($"Code: {current.Code}");
-            sb.AppendLine($"Message: {current.Message}");
-
-            if (!string.IsNullOrEmpty(current.Details)) {
-                sb.AppendLine($"Details: {current.Details}");
-            }
-
-            sb.AppendLine();
-
-            current = current.Next;
-            index++;
-        }
-
-        return sb.ToString();
-    }
-
 
     public void AddNext(Err next) {
         var current = this;
@@ -69,5 +46,79 @@ public class Err
         }
 
         return this;
+    }
+
+    public override string ToString() {
+        var sb = new StringBuilder();
+        var current = this;
+        int index = 1;
+
+        while (current is not null) {
+            sb.AppendLine($"[Error {index}]");
+            sb.AppendLine($"Code: {current.Code}");
+            sb.AppendLine($"Message: {current.Message}");
+
+            if (!string.IsNullOrEmpty(current.Details)) {
+                sb.AppendLine($"Details: {current.Details}");
+            }
+
+            sb.AppendLine();
+
+            current = current.Next;
+            index++;
+        }
+
+        return sb.ToString();
+    }
+
+    public string ToStringWithField(string fieldName, object? fieldValue) {
+        var sb = new StringBuilder();
+        var current = this;
+        int index = 1;
+
+        while (current is not null) {
+            sb.AppendLine($"[Error {index}]");
+            sb.AppendLine($"Code: {current.Code}");
+            sb.AppendLine($"Message: {current.Message}");
+
+            if (!string.IsNullOrEmpty(current.Details)) {
+                sb.AppendLine($"Details: {current.Details}");
+            }
+
+            sb.AppendLine($"{fieldName}: {fieldValue?.ToString() ?? "null"}");
+            sb.AppendLine();
+
+            current = current.Next;
+            index++;
+        }
+
+        return sb.ToString();
+    }
+    public string ToStringWithFields(params (string Name, object? Value)[] fields)
+    {
+        var sb = new StringBuilder();
+        var current = this;
+        int index = 1;
+
+        while (current is not null) {
+            sb.AppendLine($"[Error {index}]");
+            sb.AppendLine($"Code: {current.Code}");
+            sb.AppendLine($"Message: {current.Message}");
+
+            if (!string.IsNullOrEmpty(current.Details)) {
+                sb.AppendLine($"Details: {current.Details}");
+            }
+
+            foreach (var (name, value) in fields) {
+                sb.AppendLine($"{name}: {value?.ToString() ?? "null"}");
+            }
+
+            sb.AppendLine();
+
+            current = current.Next;
+            index++;
+        }
+
+        return sb.ToString();
     }
 }

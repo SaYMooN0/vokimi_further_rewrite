@@ -1,6 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace SharedKernel.exceptions;
+﻿namespace SharedKernel.exceptions;
 
 public class InvalidConstructorArgumentException : Exception
 {
@@ -12,16 +10,13 @@ public class InvalidConstructorArgumentException : Exception
         Caller = caller;
     }
 
-    public static void ThrowIfErr(
-        ErrOrNothing possibleErr,
-        [CallerMemberName] string memberName = ""
-    ) {
+    public static void ThrowIfErr(object caller, ErrOrNothing possibleErr) {
         if (possibleErr.IsErr(out var err)) {
-            throw new InvalidConstructorArgumentException(err, memberName);
+            throw new InvalidConstructorArgumentException(err, caller.GetType().Name);
         }
     }
 
     public static void ThrowErr(
-        Err err, [CallerMemberName] string memberName = ""
-    ) => throw new InvalidConstructorArgumentException(err, memberName);
+        object caller, Err err
+    ) => throw new InvalidConstructorArgumentException(err, caller.GetType().Name);
 }

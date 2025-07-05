@@ -16,7 +16,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         VokiId vokiId, AppUserId primaryAuthorId,
         VokiName name, VokiCoverPath coverPath,
         DateTime creationDate
-        ) {
+    ) {
         Id = vokiId;
         PrimaryAuthorId = primaryAuthorId;
         Name = name;

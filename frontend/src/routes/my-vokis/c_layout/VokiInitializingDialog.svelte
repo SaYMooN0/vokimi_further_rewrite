@@ -5,12 +5,13 @@
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import { ApiVokiCreationCore } from '$lib/ts/backend-services';
 	import type { Err } from '$lib/ts/err';
+	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { StringUtils } from '$lib/ts/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
 	import VokiTypeCard from './c_initializing_dialog/VokiTypeCard.svelte';
 
 	let dialog = $state<DialogWithCloseButton>()!;
-	let selectedVokiType = $state<VokiType>('general');
+	let selectedVokiType = $state<VokiType>('General');
 	let vokiName = $state('');
 	let errs: Err[] = $state([]);
 
@@ -24,12 +25,13 @@
 		if (errs.length > 0) {
 			return;
 		}
-		const response = await ApiVokiCreationCore.fetchJsonResponse<{ initializedVokiId: string }>(
+		const response = await ApiVokiCreationCore.fetchJsonResponse<{ id: string; type: VokiType }>(
 			'/initialize-new-voki',
-			ApiVokiCreationCore.requestJsonOptions({ newVokiName: vokiName, vokiType: selectedVokiType })
+			RequestJsonOptions.POST({ newVokiName: vokiName, vokiType: selectedVokiType })
 		);
 		if (response.isSuccess) {
-			goto(`/voki-creation/${response.data.initializedVokiId}`);
+			const type = StringUtils.pascalToKebab(response.data.type);
+			goto(`/voki-creation/${type}/${response.data.id}`);
 		} else {
 			errs = response.errs;
 		}
@@ -39,7 +41,7 @@
 		if (StringUtils.isNullOrWhiteSpace(vokiName)) {
 			errs.push({ message: 'Voki name cannot be empty' });
 		}
-		if (selectedVokiType != 'general') {
+		if (selectedVokiType != 'General') {
 			errs.push({ message: 'Unsupported voki type' });
 		}
 		return errs;
@@ -51,21 +53,21 @@
 	<div class="voki-type-container">
 		<VokiTypeCard
 			name="General"
-			type="general"
-			isSelected={selectedVokiType === 'general'}
-			onclick={() => (selectedVokiType = 'general')}
+			type="General"
+			isSelected={selectedVokiType === 'General'}
+			onclick={() => (selectedVokiType = 'General')}
 		/>
 		<VokiTypeCard
 			name="Tier List"
-			type="tier-list"
-			isSelected={selectedVokiType === 'tier-list'}
-			onclick={() => (selectedVokiType = 'tier-list')}
+			type="TierList"
+			isSelected={selectedVokiType === 'TierList'}
+			onclick={() => (selectedVokiType = 'TierList')}
 		/>
 		<VokiTypeCard
 			name="Scoring"
-			type="scoring"
-			isSelected={selectedVokiType === 'scoring'}
-			onclick={() => (selectedVokiType = 'scoring')}
+			type="Scoring"
+			isSelected={selectedVokiType === 'Scoring'}
+			onclick={() => (selectedVokiType = 'Scoring')}
 		/>
 	</div>
 	<p class="subheading">Input Voki name</p>

@@ -1,11 +1,10 @@
 ﻿using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.vokis;
-using SharedKernel.integration_events;
 using SharedKernel.integration_events.draft_voki_initialized;
 
 namespace CoreVokiCreationService.Infrastructure.integration_events;
 
-internal class DomainToIntegrationEventsHandler : BaseDomainToIntegrationEventsHandler,
+internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler,
     IDomainEventHandler<NewDraftVokiInitializedEvent>
 // and all other domain events that need to be published as integration events
 {
@@ -16,17 +15,19 @@ internal class DomainToIntegrationEventsHandler : BaseDomainToIntegrationEventsH
     }
 
     public async Task Handle(NewDraftVokiInitializedEvent e, CancellationToken ct) {
-        IIntegrationEvent integrationEvent = e.VokiType.Match<IIntegrationEvent>(
-            onGeneral: () => new GeneralDraftVokiInitializedIntegrationEvent(
-                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.VokiCoverPath, e.CreationDate
-            ),
-            onTierList: () => new TierListDraftVokiInitializedIntegrationEvent(
-                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.VokiCoverPath, e.CreationDate
-            ),
-            onScoring: () => new ScoringDraftVokiInitializedIntegrationEvent(
-                e.VokiId, e.PrimaryCreatorId, e.VokiName, e.VokiCoverPath, e.CreationDate
-            )
+        await e.VokiType.Match(
+            onGeneral: async () => await _integrationEventPublisher.Publish(
+                new GeneralDraftVokiInitializedIntegrationEvent(
+                    e.VokiId, e.PrimaryAuthorId, e.VokiName.ToString(), e.VokiCoverPath, e.CreationDate
+                ), ct),
+            onTierList: async () => await _integrationEventPublisher.Publish(
+                new TierListDraftVokiInitializedIntegrationEvent(
+                    e.VokiId, e.PrimaryAuthorId, e.VokiName.ToString(), e.VokiCoverPath, e.CreationDate
+                ), ct),
+            onScoring: async () => await _integrationEventPublisher.Publish(
+                new ScoringDraftVokiInitializedIntegrationEvent(
+                    e.VokiId, e.PrimaryAuthorId, e.VokiName.ToString(), e.VokiCoverPath, e.CreationDate
+                ), ct)
         );
-        await _integrationEventPublisher.Publish(integrationEvent, ct);
     }
 }

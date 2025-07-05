@@ -2,6 +2,7 @@
 using CoreVokiCreationService.Api.contracts;
 using CoreVokiCreationService.Application.draft_vokis.commands;
 using CoreVokiCreationService.Application.draft_vokis.queries;
+using SharedKernel.common.vokis;
 
 namespace CoreVokiCreationService.Api.endpoints;
 
@@ -18,7 +19,8 @@ public static class RootHandlers
     }
 
     private static async Task<IResult> InitializeNewVoki(
-        HttpContext httpContext, CancellationToken ct, ICommandHandler<InitializeNewVokiCommand, VokiId> handler
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<InitializeNewVokiCommand, (VokiId Id, VokiType Type)> handler
     ) {
         var request = httpContext.GetValidatedRequest<InitializeNewVokiRequest>();
 
@@ -26,7 +28,10 @@ public static class RootHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result,
-            (id) => CustomResults.Created(new { InitializedVokiId = id })
+            (voki) => CustomResults.Created(new {
+                Id = voki.Id.ToString(),
+                Type = voki.Type
+            })
         );
     }
 

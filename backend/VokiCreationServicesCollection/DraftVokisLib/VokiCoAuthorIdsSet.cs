@@ -1,9 +1,5 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel.common.rules;
-using SharedKernel.domain;
-using SharedKernel.domain.ids;
-using SharedKernel.errs;
-using SharedKernel.errs.utils;
 using SharedKernel.exceptions;
 
 namespace DraftVokisLib;
@@ -12,8 +8,8 @@ public class VokiCoAuthorIdsSet : ValueObject
 {
     private readonly ImmutableHashSet<AppUserId> _ids;
 
-    public VokiCoAuthorIdsSet(ImmutableHashSet<AppUserId> ids) {
-        InvalidConstructorArgumentException.ThrowIfErr(CheckForErr(ids));
+    private VokiCoAuthorIdsSet(ImmutableHashSet<AppUserId> ids) {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(ids));
         _ids = ids;
     }
 

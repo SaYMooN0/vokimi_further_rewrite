@@ -3,7 +3,7 @@ using SharedKernel.integration_events;
 
 namespace AuthService.Infrastructure.integration_events;
 
-internal class DomainToIntegrationEventsHandler : BaseDomainToIntegrationEventsHandler,
+internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler,
     IDomainEventHandler<NewAppUserCreatedEvent>
 // and all other domain events that need to be published as integration events
 {

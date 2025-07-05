@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { StringUtils } from '$lib/ts/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
 	interface Props {
 		type: VokiType;
@@ -11,7 +12,7 @@
 
 <div class="card" class:selected={isSelected} {onclick}>
 	<svg>
-		<use href="#{type}-voki-type-icon" />
+		<use href="#{StringUtils.pascalToKebab(type)}-voki-type-icon" />
 	</svg>
 	<p>{name}</p>
 	<div class="indicator" class:selected={isSelected}>

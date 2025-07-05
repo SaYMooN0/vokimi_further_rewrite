@@ -1,23 +1,35 @@
 ﻿namespace SharedKernel.exceptions;
 
+using System.Runtime.CompilerServices;
+
 public class UnexpectedBehaviourException : Exception
 {
-    public string? Details { get; }
-    public ushort ErrCode { get; }
+    public Err Err { get; }
+    public string Caller { get; }
+    public string? UserMessage { get; }
 
-    public UnexpectedBehaviourException(
-        string message,
-        string? details = null,
-        ushort errCode = ErrCodes.Unspecified,
-        Exception? innerException = null
-    ) :
-        base(message, innerException) {
-        Details = details;
-        ErrCode = errCode;
+    private UnexpectedBehaviourException(Err err, string caller, string? userMessage)
+        : base(err.Message) {
+        Err = err;
+        Caller = caller;
+        UserMessage = userMessage;
     }
 
-    public UnexpectedBehaviourException(Err err) : base(err.Message) {
-        Details = err.Details;
-        ErrCode = err.Code;
+    public static void ThrowIfErr(
+        ErrOrNothing possibleErr,
+        string? userMessage = null,
+        [CallerMemberName] string caller = ""
+    ) {
+        if (possibleErr.IsErr(out var err)) {
+            throw new UnexpectedBehaviourException(err, caller, userMessage);
+        }
+    }
+
+    public static void ThrowErr(
+        Err err,
+        string? userMessage = null,
+        [CallerMemberName] string caller = ""
+    ) {
+        throw new UnexpectedBehaviourException(err, caller, userMessage);
     }
 }

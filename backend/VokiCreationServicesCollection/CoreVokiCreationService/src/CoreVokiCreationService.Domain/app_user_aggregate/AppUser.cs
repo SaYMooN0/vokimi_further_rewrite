@@ -1,11 +1,9 @@
-﻿using System.Collections.Immutable;
-
-namespace CoreVokiCreationService.Domain.app_user_aggregate;
+﻿namespace CoreVokiCreationService.Domain.app_user_aggregate;
 
 public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
-    private ImmutableHashSet<VokiId> InitializedVokiIds { get; init; }
+    public ImmutableHashSet<VokiId> InitializedVokiIds { get; private set; }
     private ImmutableHashSet<VokiId> CoAuthoredVokiIds { get; init; }
     //invite ids
 
@@ -13,5 +11,14 @@ public class AppUser : AggregateRoot<AppUserId>
         Id = id;
         InitializedVokiIds = [];
         CoAuthoredVokiIds = [];
+    }
+
+    public ErrOrNothing AddInitializedVoki(VokiId vokiId) {
+        if (InitializedVokiIds.Contains(vokiId)) {
+            return ErrFactory.Conflict("New Voki is already listed as initialized by this user");
+        }
+
+        InitializedVokiIds = InitializedVokiIds.Add(vokiId);
+        return ErrOrNothing.Nothing;
     }
 }

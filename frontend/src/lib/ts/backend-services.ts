@@ -14,15 +14,6 @@ class BackendService {
     constructor(baseUrl: string) {
         this._baseUrl = baseUrl;
     }
-
-    public requestJsonOptions(data: any, method = "POST"): RequestInit {
-        return {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        };
-    }
-
     public async fetchJsonResponse<T>(url: string, options: RequestInit): Promise<ResponseResult<T>> {
         try {
 

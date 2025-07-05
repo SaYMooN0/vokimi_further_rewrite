@@ -1,6 +1,6 @@
 ﻿namespace GeneralVokiCreationService.Infrastructure.integration_events;
 
-internal class DomainToIntegrationEventsHandler : BaseDomainToIntegrationEventsHandler
+internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler
 // and all other domain events that need to be published as integration events
 {
     private readonly IIntegrationEventPublisher _integrationEventPublisher;

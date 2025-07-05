@@ -14,4 +14,7 @@ export namespace StringUtils {
     export function rndStrWithPref(prefix: string, length: number = 8): string {
         return prefix + rndStr(length);
     }
+    export function pascalToKebab(input: string): string {
+        return input.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+    }
 }

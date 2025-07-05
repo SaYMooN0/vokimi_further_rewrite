@@ -24,7 +24,7 @@ public sealed class DraftVoki : BaseDraftVoki
         DateTime creationDate
     ) {
         DraftVoki newVoki = new(vokiId, primaryAuthorId, name, coverPath, creationDate);
-        newVoki.AddDomainEvent(new NewDraftVokiInitializedEvent(newVoki.Id));
+        newVoki.AddDomainEvent(new NewDraftVokiInitializedEvent(newVoki.Id, newVoki.PrimaryAuthorId));
         return newVoki;
     }
 }

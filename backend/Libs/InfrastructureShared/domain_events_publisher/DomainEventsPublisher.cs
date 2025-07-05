@@ -21,10 +21,10 @@ public sealed class DomainEventsPublisher(IServiceProvider serviceProvider) : ID
         IEnumerable<object?> handlers = scope.ServiceProvider.GetServices(handlerType);
 
         List<object> regularHandlers = [];
-        BaseDomainToIntegrationEventsHandler? lastHandler = null;
+        IDomainToIntegrationEventsHandler? lastHandler = null;
 
         foreach (var handler in handlers) {
-            if (handler is BaseDomainToIntegrationEventsHandler domainToIntegrationEventsHandler) {
+            if (handler is IDomainToIntegrationEventsHandler domainToIntegrationEventsHandler) {
                 lastHandler = domainToIntegrationEventsHandler;
             }
             else if (handler is not null) {

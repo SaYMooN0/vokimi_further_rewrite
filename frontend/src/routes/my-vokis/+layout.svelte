@@ -4,45 +4,53 @@
 	import type { Snippet } from 'svelte';
 	import { page } from '$app/state';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import AuthView from '$lib/components/AuthView.svelte';
+	import PageSignInRequired from '$lib/components/PageSignInRequired.svelte';
 
 	const { children }: { children: Snippet } = $props();
 	let vokiInitializingDialog = $state<VokiInitializingDialog>()!;
 </script>
 
-<div class="links-container">
-	<MyVokisLink
-		text="Draft Vokis"
-		href="/my-vokis/draft"
-		isCurrent={page.data.currentTab === 'draft'}
-	/>
-	<MyVokisLink
-		text="Published Vokis"
-		href="/my-vokis/published"
-		isCurrent={page.data.currentTab === 'published'}
-	/>
-</div>
-<div class="my-vokis-page-content">
-	{@render children()}
-</div>
-<PrimaryButton onclick={() => vokiInitializingDialog.open()}
-	>Create new voki
-	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-		<path
-			d="M21.5 12C21.5 7.52166 21.5 5.28249 20.1088 3.89124C18.7175 2.5 16.4783 2.5 12 2.5C7.52166 2.5 5.28249 2.5 3.89124 3.89124C2.5 5.28249 2.5 7.52166 2.5 12C2.5 16.4783 2.5 18.7175 3.89124 20.1088C5.28249 21.5 7.52166 21.5 12 21.5C16.4783 21.5 18.7175 21.5 20.1088 20.1088C21.5 18.7175 21.5 16.4783 21.5 12Z"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linejoin="round"
-		></path>
-		<path
-			d="M10 8L13.3322 11.0203C14.2226 11.8273 14.2226 12.1727 13.3322 12.9797L10 16"
-			stroke="currentColor"
-			stroke-width="2"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		></path>
-	</svg>
-</PrimaryButton>
-<VokiInitializingDialog bind:this={vokiInitializingDialog} />
+<AuthView {unauthenticated} {authenticated} />
+{#snippet unauthenticated()}
+	<PageSignInRequired />
+{/snippet}
+{#snippet authenticated()}
+	<div class="links-container">
+		<MyVokisLink
+			text="Draft Vokis"
+			href="/my-vokis/draft"
+			isCurrent={page.data.currentTab === 'draft'}
+		/>
+		<MyVokisLink
+			text="Published Vokis"
+			href="/my-vokis/published"
+			isCurrent={page.data.currentTab === 'published'}
+		/>
+	</div>
+	<div class="my-vokis-page-content">
+		{@render children()}
+	</div>
+	<PrimaryButton onclick={() => vokiInitializingDialog.open()}
+		>Create new voki
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+			<path
+				d="M21.5 12C21.5 7.52166 21.5 5.28249 20.1088 3.89124C18.7175 2.5 16.4783 2.5 12 2.5C7.52166 2.5 5.28249 2.5 3.89124 3.89124C2.5 5.28249 2.5 7.52166 2.5 12C2.5 16.4783 2.5 18.7175 3.89124 20.1088C5.28249 21.5 7.52166 21.5 12 21.5C16.4783 21.5 18.7175 21.5 20.1088 20.1088C21.5 18.7175 21.5 16.4783 21.5 12Z"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linejoin="round"
+			></path>
+			<path
+				d="M10 8L13.3322 11.0203C14.2226 11.8273 14.2226 12.1727 13.3322 12.9797L10 16"
+				stroke="currentColor"
+				stroke-width="2"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			></path>
+		</svg>
+	</PrimaryButton>
+	<VokiInitializingDialog bind:this={vokiInitializingDialog} />
+{/snippet}
 
 <style>
 	:global(#page-content) {

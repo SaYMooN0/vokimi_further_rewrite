@@ -24,14 +24,21 @@ internal class ExceptionHandlingMiddleware
             await _next(context);
         }
         catch (InvalidConstructorArgumentException ex) {
-            _logger.LogCritical(ex.Err.ToString());
-            await CustomResults.ErrorResponse(new Err("Server error. Please try again later")).ExecuteAsync(context);
+            _logger.LogCritical(ex.Err.ToStringWithField("Caller", ex.Caller));
+            await CustomResults.ErrorResponse(ServerError).ExecuteAsync(context);
             return;
         }
         catch (UnexpectedBehaviourException ex) {
-            var e = new Err(message: ex.Message, code: ex.ErrCode, ex.Details);
-            _logger.LogCritical(e.ToString());
-            await CustomResults.ErrorResponse(ServerError).ExecuteAsync(context);
+            _logger.LogCritical(ex.Err.ToStringWithFields(
+                ("Caller", ex.Caller),
+                ("UserMessage", ex.UserMessage)
+            ));
+
+            Err errToReturn = string.IsNullOrEmpty(ex.UserMessage)
+                ? ServerError
+                : ErrFactory.Unspecified(ex.UserMessage);
+
+            await CustomResults.ErrorResponse(errToReturn).ExecuteAsync(context);
             return;
         }
         catch (Exception ex) {

@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { getAuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import type { Snippet } from 'svelte';
+
 	type AuthStoreData = { isAuthenticated: () => boolean };
 	const {
 		loading = null,
@@ -10,15 +12,12 @@
 		authenticated?: Snippet<[AuthStoreData]>;
 		unauthenticated?: Snippet;
 	}>();
-	async function getAuthData() {
-		return { isAuthenticated: () => false };
-	}
 </script>
 
-{#await getAuthData()}
+{#await getAuthStore()}
 	{@render loading?.()}
 {:then authData}
-	{#if authData !== null && authData.isAuthenticated()}
+	{#if authData !== null && authData.isAuthenticated}
 		{@render authenticated?.(authData)}
 	{:else}
 		{@render unauthenticated?.()}

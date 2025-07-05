@@ -7,6 +7,6 @@ public record NewDraftVokiInitializedEvent(
     VokiType VokiType,
     VokiName VokiName,
     VokiCoverPath VokiCoverPath,    
-    AppUserId PrimaryCreatorId,
+    AppUserId PrimaryAuthorId,
     DateTime CreationDate
 ) : IDomainEvent;

@@ -12,7 +12,7 @@ public class Email : ValueObject
 
     private Email(string email) {
         if (!IsStringValidEmail(email)) {
-            InvalidConstructorArgumentException.ThrowErr(ErrFactory.IncorrectFormat("Email format"));
+            InvalidConstructorArgumentException.ThrowErr(this, ErrFactory.IncorrectFormat("Email format"));
         }
 
         _email = email;

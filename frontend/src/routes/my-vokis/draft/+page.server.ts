@@ -7,7 +7,7 @@ export const load: ServerLoad = async ({ cookies, fetch }) => {
         maxAge: 3 * 24 * 3600 // 3 days
     });
     const response = await ApiVokiCreationCore.serverFetchJsonResponse<{ vokiIds: string[] }>(
-        fetch, '/draft-vokis', { method: 'GET' }
+        fetch, '/draft-voki-ids', { method: 'GET' }
     );
     console.log(response);
     return {

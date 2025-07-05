@@ -5,7 +5,7 @@ namespace SharedKernel.integration_events.draft_voki_initialized;
 public record class GeneralDraftVokiInitializedIntegrationEvent(
     VokiId VokiId,
     AppUserId PrimaryAuthorId,
-    VokiName VokiName,
+    string VokiName,
     VokiCoverPath CoverPath,
     DateTime CreationDate
 ) : IIntegrationEvent;

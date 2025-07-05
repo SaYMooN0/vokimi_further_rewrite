@@ -6,9 +6,11 @@ using SharedKernel.common.vokis;
 
 namespace CoreVokiCreationService.Application.draft_vokis.commands;
 
-public sealed record InitializeNewVokiCommand(VokiType VokiType, VokiName VokiName) : ICommand<VokiId>;
+public sealed record InitializeNewVokiCommand(VokiType VokiType, VokiName VokiName)
+    : ICommand<(VokiId Id, VokiType Type)>;
 
-internal sealed class InitializeNewVokiCommandHandler : ICommandHandler<InitializeNewVokiCommand, VokiId>
+internal sealed class InitializeNewVokiCommandHandler :
+    ICommandHandler<InitializeNewVokiCommand, (VokiId Id, VokiType Type)>
 {
     private readonly IUserContext _userContext;
     private readonly IDraftVokiRepository _draftVokiRepository;
@@ -24,10 +26,11 @@ internal sealed class InitializeNewVokiCommandHandler : ICommandHandler<Initiali
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOr<VokiId>> Handle(InitializeNewVokiCommand command, CancellationToken ct) {
+    public async Task<ErrOr<(VokiId Id, VokiType Type)>>
+        Handle(InitializeNewVokiCommand command, CancellationToken ct) {
         AppUserId authorId = _userContext.AuthenticatedUserId;
         DraftVoki voki = DraftVoki.Create(command.VokiName, command.VokiType, authorId, _dateTimeProvider.UtcNow);
         await _draftVokiRepository.Add(voki);
-        return voki.Id;
+        return (voki.Id, voki.Type);
     }
 }
