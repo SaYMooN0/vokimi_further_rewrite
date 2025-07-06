@@ -33,5 +33,8 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
             .Property<VokiCoAuthorIdsSet>("CoAuthors")
             .HasConversion<VokiCoAuthorIdsSetConverter>();
 
+        builder
+            .Property(x => x.CreationDate);
+
     }
 }

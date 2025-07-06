@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SharedKernel.domain.ids;
 
-namespace InfrastructureShared.persistence.value_converters;
+namespace InfrastructureShared.persistence.value_converters.guid_based_ids;
 
 public class GuidBasedIdConverter<TId> : ValueConverter<TId, Guid> where TId : GuidBasedId
 {

@@ -14,7 +14,8 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
         builder
             .Property(x => x.Id)
             .ValueGeneratedNever()
-            .HasGuidBasedIdConversion();
+            .HasGuidBasedIdConversion()
+            .HasColumnName("Id");
 
         builder
             .Property(x => x.Name)
@@ -25,14 +26,20 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
         builder
             .Property(x => x.PrimaryAuthorId)
             .ValueGeneratedNever()
-            .HasGuidBasedIdConversion();
+            .HasGuidBasedIdConversion()
+            .HasColumnName("PrimaryAuthorId");
 
         builder
             .Property(x => x.CoAuthorsIds)
-            .HasGuidBasedIdsImmutableHashSetConversion();
+            .HasGuidBasedIdsImmutableHashSetConversion()
+            .HasColumnName("CoAuthorsIds");
 
         builder
             .Property(x => x.InvitedForCoAuthorUserIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
+        
+        builder
+            .Property(x => x.CreationDate)
+            .HasColumnName("CreationDate");
     }
 }

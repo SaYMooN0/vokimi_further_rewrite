@@ -6,4 +6,5 @@ public interface IDraftVokiRepository
 {
     Task Add(DraftVoki voki);
     Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId);
+    Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId);
 }

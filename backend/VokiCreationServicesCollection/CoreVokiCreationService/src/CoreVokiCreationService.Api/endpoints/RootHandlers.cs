@@ -41,8 +41,8 @@ public static class RootHandlers
         ListUserVokiIdsQuery query = new();
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result,
-            (vokiIds) => Results.Json(new { UserVokiIds = vokiIds })
-        );
+        return CustomResults.FromErrOr(result, (vokiIds) => Results.Json(
+            new { VokiIds = vokiIds.Select(v => v.ToString()).ToArray() }
+        ));
     }
 }

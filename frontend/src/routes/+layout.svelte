@@ -2,7 +2,10 @@
 	import { type Snippet } from 'svelte';
 	import SideBar from './c_layout/SideBar.svelte';
 	import SignInDialog from './c_layout/SignInDialog.svelte';
-	import { registerSignInDialogOpenFunction, type SignInDialogState } from '../lib/ts/contexts/sign-in-dialog';
+	import {
+		registerSignInDialogOpenFunction,
+		type SignInDialogState
+	} from '../lib/ts/contexts/sign-in-dialog';
 	import AppToaster from './c_layout/AppToaster.svelte';
 	import vokiTypesIconsSprite from '$lib/icons/voki-types.svg?raw';
 
@@ -37,7 +40,7 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
-
+		box-sizing: border-box;
 		--width-limit: min(78rem, 100%);
 	}
 

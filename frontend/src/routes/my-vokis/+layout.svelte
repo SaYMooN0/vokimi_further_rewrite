@@ -66,12 +66,11 @@
 		width: fit-content;
 		height: 100%;
 		box-sizing: border-box;
-		padding: 0.75rem 5rem;
+		padding: 0.75rem 3.5rem;
 		margin: 0 auto;
 		border-radius: 2rem;
 		background-color: var(--back);
 		grid-template-columns: 1fr 1fr;
-		box-sizing: border-box;
 	}
 	.my-vokis-page-content {
 		justify-self: top;

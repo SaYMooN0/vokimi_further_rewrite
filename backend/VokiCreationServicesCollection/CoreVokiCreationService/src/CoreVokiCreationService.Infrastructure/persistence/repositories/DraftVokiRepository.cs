@@ -19,7 +19,17 @@ internal class DraftVokiRepository : IDraftVokiRepository
 
     public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId) =>
         _db.Vokis
-            .Where(v => v.PrimaryAuthorId == userId || v.CoAuthorsIds.Contains(userId))
-            .Select(s => s.Id)
+            .FromSqlInterpolated($@"
+                SELECT ""Id"", ""PrimaryAuthorId"", ""CoAuthorsIds"", ""CreationDate""
+                FROM ""Vokis""
+                WHERE {userId.Value} = ""PrimaryAuthorId""
+                   OR {userId.Value} = ANY(""CoAuthorsIds"")
+                ORDER BY ""CreationDate"" DESC
+            ")
+            .Select(v => v.Id)
             .ToArrayAsync();
+
+    public Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId) => _db.Vokis
+        .AsNoTracking()
+        .FirstOrDefaultAsync(v => v.Id == vokiId);
 }

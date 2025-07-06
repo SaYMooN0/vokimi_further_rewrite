@@ -53,7 +53,6 @@ export async function getAuthStore(): Promise<AuthStore> {
 
     if (expired) {
         if (ongoingRefresh) {
-            console.log("ongoing refresh");
             return await ongoingRefresh;
         }
         ongoingRefresh = forceGetAuthStore().finally(() => {
@@ -61,17 +60,14 @@ export async function getAuthStore(): Promise<AuthStore> {
         });
         return await ongoingRefresh;
     }
-    console.log("returning", authStore);
     return authStore;
 }
 export async function forceGetAuthStore(): Promise<AuthStore> {
     const pingedUserData = await pingUser();
     if (pingedUserData !== null) {
-        console.log("force refreshed", authStore);
         authStore.update(pingedUserData.userId);
     }
     else {
-        console.log("set empty")
         authStore.setEmpty();
     }
     return authStore;

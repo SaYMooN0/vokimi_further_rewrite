@@ -5,6 +5,7 @@
 	import { ErrUtils } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { getSignInDialogOpenFunction } from '$lib/ts/contexts/sign-in-dialog';
+	import { goto } from '$app/navigation';
 
 	let userId: string = page.params.userId;
 	let confirmationCode: string = page.params.confirmationCode;
@@ -16,6 +17,10 @@
 			RequestJsonOptions.POST({ userId, confirmationCode })
 		);
 	}
+	function openDialogToLogin() {
+		goto('/');
+		openSignInDialog('login');
+	}
 </script>
 
 <div class="view-container">
@@ -24,7 +29,7 @@
 	{:then response}
 		{#if response.isSuccess}
 			<h1>You have successfully confirmed your email</h1>
-			<PrimaryButton onclick={() => openSignInDialog('login')}
+			<PrimaryButton onclick={() => openDialogToLogin()}
 				>Now you can log into your account</PrimaryButton
 			>
 		{:else}
