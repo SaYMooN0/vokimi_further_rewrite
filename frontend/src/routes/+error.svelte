@@ -9,6 +9,5 @@
 	h1 {
 		margin: 8rem auto;
 		text-align: center;
-        
 	}
 </style>

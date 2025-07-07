@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Domain.draft_voki_aggregate;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.repositories;
 using MassTransit;
 using SharedKernel.common.vokis;
@@ -8,20 +8,20 @@ namespace GeneralVokiCreationService.Application.draft_vokis.integration_event_h
 
 public class GeneralDraftVokiInitializedIntegrationEventHandler : IConsumer<GeneralDraftVokiInitializedIntegrationEvent>
 {
-    private readonly IDraftVokiRepository _draftVokiRepository;
+    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
 
-    public GeneralDraftVokiInitializedIntegrationEventHandler(IDraftVokiRepository draftVokiRepository) {
-        _draftVokiRepository = draftVokiRepository;
+    public GeneralDraftVokiInitializedIntegrationEventHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
+        _draftGeneralVokiRepository = draftGeneralVokiRepository;
     }
 
     public async Task Consume(ConsumeContext<GeneralDraftVokiInitializedIntegrationEvent> context) {
-        DraftVoki newVoki = DraftVoki.Create(
+        DraftGeneralVoki newGeneralVoki = DraftGeneralVoki.Create(
             context.Message.VokiId,
             context.Message.PrimaryAuthorId,
             VokiName.Create(context.Message.VokiName).AsSuccess(),
             context.Message.CoverPath,
             context.Message.CreationDate
         );
-        await _draftVokiRepository.Add(newVoki);
+        await _draftGeneralVokiRepository.Add(newGeneralVoki);
     }
 }

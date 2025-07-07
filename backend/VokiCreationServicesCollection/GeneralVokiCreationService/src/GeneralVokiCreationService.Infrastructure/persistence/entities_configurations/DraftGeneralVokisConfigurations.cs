@@ -1,5 +1,5 @@
 ﻿using DraftVokisLib;
-using GeneralVokiCreationService.Domain.draft_voki_aggregate;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Infrastructure.persistence.value_converters;
 using InfrastructureShared.persistence.extensions;
 using InfrastructureShared.persistence.value_converters;
@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.entities_configurations;
 
-public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
+public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGeneralVoki>
 {
-    public void Configure(EntityTypeBuilder<DraftVoki> builder) {
+    public void Configure(EntityTypeBuilder<DraftGeneralVoki> builder) {
         builder
             .HasKey(x => x.Id);
         builder
@@ -23,6 +23,8 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
             .HasConversion<VokiNameConverter>();
 
         builder.Ignore(x => x.CoverPath);
+        builder.Ignore(x => x.Details);
+        builder.Ignore(x => x.Tags);
         
         builder
             .Property(x => x.PrimaryAuthorId)

@@ -8,7 +8,7 @@ public class DraftVoki : AggregateRoot<VokiId>
     private DraftVoki() { }
     public VokiType Type { get; }
     public VokiName Name { get; private set; }
-    public VokiCoverPath CoverPath { get; private set; }
+    public VokiCoverPath CoverPath { get; private set; } = new VokiCoverPath();
     public AppUserId PrimaryAuthorId { get; }
     public ImmutableHashSet<AppUserId> CoAuthorsIds { get; private set; }
     public ImmutableHashSet<AppUserId> InvitedForCoAuthorUserIds { get; private set; }

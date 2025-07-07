@@ -70,7 +70,6 @@ class BackendService {
                 ...options,
                 credentials: 'include'
             });
-
             if (response.ok) {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);

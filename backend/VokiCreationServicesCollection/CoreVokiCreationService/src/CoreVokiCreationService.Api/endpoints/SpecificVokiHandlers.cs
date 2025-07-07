@@ -1,28 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SharedKernel.common.vokis;
+﻿using CoreVokiCreationService.Api.contracts.vokis_brief_info;
+using CoreVokiCreationService.Application.draft_vokis.queries;
+using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
 namespace CoreVokiCreationService.Api.endpoints;
 
 public static class SpecificVokiHandlers
 {
     internal static void MapSpecificVokiHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/draft-vokis/{draft-voki-id}/");
+        var group = endpoints.MapGroup("/vokis/{vokiId}/");
 
         group.WithGroupAuthenticationRequired();
 
-        // group.MapPut("/invite-co-author", InviteCoAuthor)
+        // group.MapPatch("/invite-co-author", InviteCoAuthor)
         //     .WithRequestValidation<InviteCoAuthorRequest>();
-        group.MapGet("/brief-info", GetVokiBriefData);
+        group.MapGet("/brief-info", GetVokiBriefInfo);
         // group.MapGet("/view-data-for-co-author-invited", GetVokiViewDataForCoAuthorInvitedUser); 
     }
 
-    private static async Task<IResult> GetVokiBriefData(
+    private static async Task<IResult> GetVokiBriefInfo(
+        HttpContext httpContext, CancellationToken ct,
+        IQueryHandler<GetVokiQuery, DraftVoki> handler
     ) {
-        return Results.Json(new {
-            Id = "dsm",
-            Name = Guid.NewGuid().ToString(),
-            PrimaryAuthorId = Guid.NewGuid().ToString(),
-            Type = VokiType.General
-        });
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+
+        GetVokiQuery query = new(vokiId);
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOr(result, (voki) => Results.Json(
+            VokiBriefInfoResponse.FromVoki(voki)
+        ));
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using SharedKernel.exceptions;
 
 namespace ApiShared.extensions;
 
@@ -16,5 +17,17 @@ public static class HttpContextExtensions
         }
 
         throw new InvalidCastException("Request type mismatch");
+    }
+
+    public static VokiId GetVokiIdFromRoute(this HttpContext context) {
+        var vokiIdString = context.Request.RouteValues["vokiId"]?.ToString() ?? "";
+        if (!Guid.TryParse(vokiIdString, out var guid)) {
+            UnexpectedBehaviourException.ThrowErr(ErrFactory.IncorrectFormat(
+                "Invalid voki id",
+                "Couldn't parse voki id from route"
+            ));
+        }
+
+        return new VokiId(guid);
     }
 }

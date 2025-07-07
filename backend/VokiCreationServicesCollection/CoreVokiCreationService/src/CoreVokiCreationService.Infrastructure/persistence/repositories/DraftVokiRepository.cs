@@ -32,4 +32,9 @@ internal class DraftVokiRepository : IDraftVokiRepository
     public Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId) => _db.Vokis
         .AsNoTracking()
         .FirstOrDefaultAsync(v => v.Id == vokiId);
+
+    public Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds) => 
+        _db.Vokis.AsNoTracking()
+            .Where(v=> queryVokiIds.Contains(v.Id))
+            .ToArrayAsync();
 }

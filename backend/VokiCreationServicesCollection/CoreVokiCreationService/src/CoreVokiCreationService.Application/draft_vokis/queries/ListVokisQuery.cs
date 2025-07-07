@@ -1,6 +1,25 @@
-﻿namespace CoreVokiCreationService.Application.draft_vokis.queries;
+﻿using System.Collections.Immutable;
+using CoreVokiCreationService.Application.pipeline_behaviors;
+using CoreVokiCreationService.Domain.common.interfaces.repositories;
+using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
-public class ListVokisQuery
+namespace CoreVokiCreationService.Application.draft_vokis.queries;
+
+public sealed record ListVokisQuery(VokiId[] VokiIds) :
+    IQuery<DraftVoki[]>,
+    IWithMultipleVokiAccessValidationStep;
+
+internal sealed class ListVokisQueryHandler : IQueryHandler<ListVokisQuery, DraftVoki[]>
 {
-    
+    private readonly IDraftVokiRepository _draftVokiRepository;
+
+    public ListVokisQueryHandler(IDraftVokiRepository draftVokiRepository) {
+        _draftVokiRepository = draftVokiRepository;
+    }
+
+    public async Task<ErrOr<DraftVoki[]>> Handle(
+        ListVokisQuery query, CancellationToken cancellationToken
+    ) {
+        return await _draftVokiRepository.GetMultipleByIdAsNoTracking(query.VokiIds);
+    }
 }

@@ -17,16 +17,14 @@ public class ListVokisBriefInfoRequest : IRequestWithValidationNeeded
             );
         }
 
-        string[] incorrectIds = Ids.Where(id => !Guid.TryParse(id, out _)).ToArray();
-        if (incorrectIds.Length > 0) {
-            return ErrFactory.IncorrectFormat(
-                $"Some ({incorrectIds.Length}) of provided ids were incorrect",
-                $"Incorrect ids: {string.Join(", ", incorrectIds)}"
-            );
-        }
-
-        return ErrOrNothing.Nothing;
+        bool anyCorrect = Ids.Any(id => Guid.TryParse(id, out _));
+        return anyCorrect
+            ? ErrOrNothing.Nothing
+            : ErrFactory.IncorrectFormat($"All ({Ids.Length}) of provided ids were incorrect");
     }
 
-    public VokiId[] ParsedVokiIds => Ids.Select(i => new VokiId(new(i))).ToArray();
+    public VokiId[] ParsedVokiIds => Ids
+        .Where(i => Guid.TryParse(i, out var _))
+        .Select(i => new VokiId(new(i)))
+        .ToArray();
 }

@@ -1,5 +1,6 @@
 ﻿using CoreVokiCreationService.Domain.app_user_aggregate;
 using CoreVokiCreationService.Domain.common.interfaces.repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace CoreVokiCreationService.Infrastructure.persistence.repositories;
 
@@ -23,4 +24,9 @@ internal class AppUsersRepository : IAppUsersRepository
         _db.Update(user);
         await _db.SaveChangesAsync();
     }
+
+    public Task<AppUser?> GetByIdAsNoTracking(AppUserId userId) =>
+        _db.AppUsers
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == userId);
 }

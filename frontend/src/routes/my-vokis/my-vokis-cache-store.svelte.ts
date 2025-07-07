@@ -4,9 +4,11 @@ import type { VokiType } from "$lib/ts/voki";
 
 type DraftVokiBriefInfo = {
     id: string;
-    name: string;
-    primaryAuthorId: string;
     type: VokiType;
+    name: string;
+    cover: string;
+    primaryAuthorId: string;
+    coAuthorsCount: number;
 };
 
 type CachedVokiEntry = {
@@ -17,18 +19,16 @@ type CachedVokiEntry = {
 const CACHE_SIZE = 100;
 const TTL_MS = 5 * 60 * 1000;
 
-export namespace MyVokisCache {
+export namespace MyVokisCacheStore {
     const cache: Record<string, CachedVokiEntry> = $state({});
     const ongoingRequests: Record<string, Promise<DraftVokiBriefInfo | null>> = {};
 
     export async function Get(id: string): Promise<DraftVokiBriefInfo | null> {
         const cached = cache[id];
         const now = new Date();
-
         if (cached && now.getTime() - cached.lastFetched.getTime() <= TTL_MS) {
             return cached.info;
         }
-
         if (ongoingRequests[id] != null) {
             return await ongoingRequests[id];
         }
@@ -39,6 +39,7 @@ export namespace MyVokisCache {
         try {
             return await request;
         } finally {
+            console.log("finished request", id);
             delete ongoingRequests[id];
         }
     }
@@ -47,7 +48,7 @@ export namespace MyVokisCache {
         const response = await ApiVokiCreationCore.fetchJsonResponse<DraftVokiBriefInfo>(
             `/vokis/${id}/brief-info`, { method: "GET" }
         );
-
+        console.log("response", id);
         if (response.isSuccess && response.data) {
             insertOrReplace(response.data);
             return response.data;
@@ -58,24 +59,23 @@ export namespace MyVokisCache {
 
     export async function EnsureExist(ids: string[]): Promise<void> {
         if (ids.length === 0) { return; }
-
         const now = new Date();
 
         const needsFetch = ids.filter(id =>
             (!cache[id] || now.getTime() - cache[id].lastFetched.getTime() > TTL_MS)
         );
 
-        if (needsFetch.length === 0) {return;}
+        if (needsFetch.length === 0) { return; }
 
         const limitedIds = needsFetch.slice(0, CACHE_SIZE);
 
-        const response = await ApiVokiCreationCore.fetchJsonResponse<DraftVokiBriefInfo[]>(
-            `/vokis/list-brief-info`,
+        const response = await ApiVokiCreationCore.fetchJsonResponse<{ vokis: DraftVokiBriefInfo[] }>(
+            `/vokis/brief-info`,
             RequestJsonOptions.POST({ ids: limitedIds })
         );
 
         if (response.isSuccess && response.data) {
-            for (const info of response.data) {
+            for (const info of response.data.vokis) {
                 insertOrReplace(info);
             }
         }

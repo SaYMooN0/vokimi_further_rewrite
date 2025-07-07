@@ -4,7 +4,7 @@ public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
     public ImmutableHashSet<VokiId> InitializedVokiIds { get; private set; }
-    private ImmutableHashSet<VokiId> CoAuthoredVokiIds { get; init; }
+    public ImmutableHashSet<VokiId> CoAuthoredVokiIds { get; private set; }
     //invite ids
 
     public AppUser(AppUserId id) {

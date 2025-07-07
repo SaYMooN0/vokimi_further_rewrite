@@ -1,5 +1,5 @@
 ﻿using GeneralVokiCreationService.Domain.app_user_aggregate;
-using GeneralVokiCreationService.Domain.draft_voki_aggregate;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using InfrastructureShared.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +15,7 @@ public class GeneralVokiCreationDbContext : DbContext
         _publisher = publisher;
     }
     public DbSet<AppUser> AppUsers { get; init; } = null!;
-    public DbSet<DraftVoki> Vokis { get; init; } = null!;
+    public DbSet<DraftGeneralVoki> Vokis { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GeneralVokiCreationDbContext).Assembly);

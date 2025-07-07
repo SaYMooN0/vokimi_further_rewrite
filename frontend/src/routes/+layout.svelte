@@ -41,7 +41,7 @@
 		flex-direction: column;
 		width: 100%;
 		box-sizing: border-box;
-		--width-limit: min(78rem, 100%);
+		--width-limit: min(92rem, 100%);
 	}
 
 	.width-limit {

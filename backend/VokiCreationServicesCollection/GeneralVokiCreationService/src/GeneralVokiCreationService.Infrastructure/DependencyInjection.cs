@@ -103,7 +103,7 @@ public static class DependencyInjection
         services.AddDbContext<GeneralVokiCreationDbContext>(options => options.UseNpgsql(dbConnectionString));
         
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
-        services.AddScoped<IDraftVokiRepository, DraftVokiRepository>();
+        services.AddScoped<IDraftGeneralVokiRepository, DraftGeneralVokiRepository>();
         
         return services;
     }

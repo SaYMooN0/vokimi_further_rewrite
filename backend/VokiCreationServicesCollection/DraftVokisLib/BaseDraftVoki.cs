@@ -1,4 +1,5 @@
-﻿using SharedKernel.common.vokis;
+﻿using SharedKernel.common;
+using SharedKernel.common.vokis;
 
 namespace DraftVokisLib;
 
@@ -9,8 +10,10 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     protected VokiCoAuthorIdsSet CoAuthors { get; private set; }
     public VokiName Name { get; private set; }
     public VokiCoverPath CoverPath { get; private set; }
-    public DateTime CreationDate { get; }
+    public VokiDetails Details { get; private set; }
+    public VokiTagsSet Tags { get; private set; }
 
+    public DateTime CreationDate { get; }
 
     protected BaseDraftVoki(
         VokiId vokiId, AppUserId primaryAuthorId,
@@ -19,9 +22,13 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     ) {
         Id = vokiId;
         PrimaryAuthorId = primaryAuthorId;
+        CoAuthors = VokiCoAuthorIdsSet.Empty;
+
         Name = name;
         CoverPath = coverPath;
-        CoAuthors = VokiCoAuthorIdsSet.Empty;
+        Details=VokiDetails.Default;
+        Tags = VokiTagsSet.Empty;
+
         CreationDate = creationDate;
     }
 
