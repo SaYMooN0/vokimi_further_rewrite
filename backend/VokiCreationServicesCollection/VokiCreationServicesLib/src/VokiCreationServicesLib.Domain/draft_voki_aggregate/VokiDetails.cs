@@ -1,6 +1,6 @@
 ﻿using SharedKernel.common;
 
-namespace DraftVokisLib;
+namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 public record class VokiDetails(
     VokiDescription Description,

@@ -50,13 +50,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreVokiCreationService.Dom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreVokiCreationService.Infrastructure", "VokiCreationServicesCollection\CoreVokiCreationService\src\CoreVokiCreationService.Infrastructure\CoreVokiCreationService.Infrastructure.csproj", "{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DraftVokisLib", "VokiCreationServicesCollection\DraftVokisLib\DraftVokisLib.csproj", "{8DAC7999-82B4-4DED-94ED-35377F8A4FE8}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NotificationsService", "NotificationsService", "{D2BCCD5D-A559-44F1-B14B-16091A2C567E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2CA97717-2D9A-4A7C-B65C-A631EA04F3A0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1C3514D6-12CC-4840-AB72-E0F7A6A44CEC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VokiCreationServicesLib", "VokiCreationServicesLib", "{3AFCC62E-88DC-4F0D-9C6C-CFFC4FFB207E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokiCreationServicesLib.Domain", "VokiCreationServicesCollection\VokiCreationServicesLib\src\VokiCreationServicesLib.Domain\VokiCreationServicesLib.Domain.csproj", "{46C08EAF-C814-4138-AC61-9830BABB2129}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokiCreationServicesLib.Infrastructure", "VokiCreationServicesCollection\VokiCreationServicesLib\src\VokiCreationServicesLib.Infrastructure\VokiCreationServicesLib.Infrastructure.csproj", "{53D5C6DF-82DA-49E5-84F9-B326DBAE5064}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,9 +89,11 @@ Global
 		{31791F5C-0F3C-490F-8791-328E1B8C584E} = {FEE113DF-892E-4209-9111-600C055C2D51}
 		{4DFD7E7F-3CD5-4D9A-9DBA-2C9E738471C4} = {FEE113DF-892E-4209-9111-600C055C2D51}
 		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C} = {FEE113DF-892E-4209-9111-600C055C2D51}
-		{8DAC7999-82B4-4DED-94ED-35377F8A4FE8} = {B26070E2-D6BD-4847-8626-CCE5D7FD4EEE}
 		{2CA97717-2D9A-4A7C-B65C-A631EA04F3A0} = {D2BCCD5D-A559-44F1-B14B-16091A2C567E}
 		{1C3514D6-12CC-4840-AB72-E0F7A6A44CEC} = {D2BCCD5D-A559-44F1-B14B-16091A2C567E}
+		{3AFCC62E-88DC-4F0D-9C6C-CFFC4FFB207E} = {B26070E2-D6BD-4847-8626-CCE5D7FD4EEE}
+		{46C08EAF-C814-4138-AC61-9830BABB2129} = {3AFCC62E-88DC-4F0D-9C6C-CFFC4FFB207E}
+		{53D5C6DF-82DA-49E5-84F9-B326DBAE5064} = {3AFCC62E-88DC-4F0D-9C6C-CFFC4FFB207E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2CAB55A2-15A7-401C-94C6-F8B273B50F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -154,9 +160,13 @@ Global
 		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AE05B8AC-9950-4A9E-BE7F-6A10693CC54C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DAC7999-82B4-4DED-94ED-35377F8A4FE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DAC7999-82B4-4DED-94ED-35377F8A4FE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DAC7999-82B4-4DED-94ED-35377F8A4FE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DAC7999-82B4-4DED-94ED-35377F8A4FE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46C08EAF-C814-4138-AC61-9830BABB2129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46C08EAF-C814-4138-AC61-9830BABB2129}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46C08EAF-C814-4138-AC61-9830BABB2129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46C08EAF-C814-4138-AC61-9830BABB2129}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53D5C6DF-82DA-49E5-84F9-B326DBAE5064}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53D5C6DF-82DA-49E5-84F9-B326DBAE5064}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53D5C6DF-82DA-49E5-84F9-B326DBAE5064}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53D5C6DF-82DA-49E5-84F9-B326DBAE5064}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

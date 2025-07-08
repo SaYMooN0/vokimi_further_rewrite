@@ -2,7 +2,7 @@
 using SharedKernel.common.rules;
 using SharedKernel.exceptions;
 
-namespace DraftVokisLib;
+namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 public class VokiCoAuthorIdsSet : ValueObject
 {

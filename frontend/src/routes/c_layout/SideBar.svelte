@@ -27,7 +27,7 @@
 		flex-direction: column;
 		justify-content: space-between;
 		height: 100vh;
-		padding: 4rem 0 2rem;
+		padding: var(--side-bar-links-top-padding) 0 2rem 0;
 	}
 
 	.links {

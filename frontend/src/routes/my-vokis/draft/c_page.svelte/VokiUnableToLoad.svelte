@@ -9,21 +9,22 @@
 
 <style>
 	.unable-to-load {
-		padding: 2rem 1rem;
-		align-self: center;
-		justify-self: center;
-		background-color: var(--err-back);
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
-		color: var(--err-foreground);
+		align-items: center;
+		padding: 2rem 1rem;
 		border-radius: 0.5rem;
+		background-color: var(--err-back);
+		color: var(--err-foreground);
+		place-self: center center;
 	}
+
 	.unable-to-load h1 {
 		font-size: 1.25rem;
 		font-weight: 450;
 	}
+
 	.unable-to-load label {
 		margin-top: 0.5rem;
 		font-size: 1rem;

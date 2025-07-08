@@ -5,20 +5,20 @@
 
 <style>
 	.skeleton-item {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: var(--voki-cover-name-gap);
+		width: 100%;
 	}
 
 	.skeleton-cover,
 	.skeleton-name {
-		width: 100%;
-		background-color: var(--secondary);
-		border-radius: var(--voki-cover-border-radius);
 		position: relative;
-		overflow: hidden;
+		width: 100%;
+		border-radius: var(--voki-cover-border-radius);
+		background-color: var(--secondary);
 		color: var(--primary);
+		overflow: hidden;
 	}
 
 	.skeleton-cover {
@@ -30,17 +30,17 @@
 	}
 
 	.shimmer::before {
-		content: '';
 		position: absolute;
-		inset: 0;
-		transform: translateX(-90%);
 		background: linear-gradient(
 			to right,
 			transparent 0%,
 			color-mix(in srgb, var(--secondary-foreground) 10%, var(--secondary) 10%) 50%,
 			transparent 100%
 		);
+		transform: translateX(-90%);
 		animation: shimmer 2s infinite;
+		content: '';
+		inset: 0;
 	}
 
 	@keyframes shimmer {

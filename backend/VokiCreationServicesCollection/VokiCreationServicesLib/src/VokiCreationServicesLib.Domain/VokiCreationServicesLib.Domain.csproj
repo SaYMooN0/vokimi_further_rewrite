@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\SharedKernel\SharedKernel.csproj" />
-      <ProjectReference Include="..\..\..\VokiCreationServicesLib\src\VokiCreationServicesLib.Domain\VokiCreationServicesLib.Domain.csproj" />
     </ItemGroup>
 
 </Project>

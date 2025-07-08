@@ -2,19 +2,19 @@
 
 public sealed class VokiName : ValueObject
 {
-    private readonly string _value;
+    private string Value { get; }
 
-    private VokiName(string value) {
+    public VokiName(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(value));
-        _value = value;
+        Value = value;
     }
 
     public const int MinLength = 3;
     public const int MaxLength = 500;
 
-    public override string ToString() => _value;
+    public override string ToString() => Value;
 
-    public override IEnumerable<object> GetEqualityComponents() => [_value];
+    public override IEnumerable<object> GetEqualityComponents() => [Value];
 
     public static ErrOr<VokiName> Create(string value) =>
         CheckForErr(value).IsErr(out var err) ? err : new VokiName(value);

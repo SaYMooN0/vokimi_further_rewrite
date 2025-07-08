@@ -24,26 +24,27 @@
 	.card {
 		display: grid;
 		justify-content: center;
-		place-items: center center;
 		width: 10rem;
 		height: 10rem;
 		padding: 0.5rem 0;
 		border-radius: 0.75rem;
 		background-color: var(--secondary);
+		box-shadow: var(--shadow);
 		transition: all 0.16s ease;
 		cursor: pointer;
+		place-items: center center;
 		grid-template-rows: auto 1fr auto;
-		box-shadow: var(--shadow);
 	}
+
 	.card:hover {
 		transform: scale(1.06);
 	}
 
 	.card > :global(svg) {
-		margin-top: 1rem;
 		height: 3.5rem;
-		aspect-ratio: 1/1;
+		margin-top: 1rem;
 		color: var(--primary);
+		aspect-ratio: 1/1;
 		stroke-width: 1.7;
 	}
 
@@ -53,30 +54,35 @@
 		font-weight: 500;
 		cursor: inherit;
 	}
+
 	.indicator {
-		height: 1.5rem;
-		border: 0.1875rem solid var(--muted);
-		border-radius: 1.5rem;
-		aspect-ratio: 1/1;
-		background-color: var(--muted);
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		height: 1.5rem;
+		border: 0.1875rem solid var(--muted);
+		border-radius: 1.5rem;
+		background-color: var(--muted);
 		transition: box-shadow 0.04s ease-in;
+		aspect-ratio: 1/1;
 	}
+
 	.card:hover .indicator {
 		box-shadow: var(--shadow);
 	}
+
 	.indicator.selected {
 		border-color: var(--primary);
 	}
+
 	.indicator span {
-		height: 70%;
 		display: block;
+		height: 70%;
 		aspect-ratio: 1/1;
 	}
+
 	.indicator.selected span {
-		background-color: var(--primary);
 		border-radius: 1.5rem;
+		background-color: var(--primary);
 	}
 </style>

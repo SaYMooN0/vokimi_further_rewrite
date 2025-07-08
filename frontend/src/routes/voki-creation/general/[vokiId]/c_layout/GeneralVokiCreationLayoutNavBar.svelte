@@ -10,31 +10,61 @@
 
 <VokiCreationLayoutNavBar
 	links={[
-		{ icon: mainIcon, name: 'Main', href: withBasePath('main') },
+		{ icon: authorsIcon, name: 'Authors', href: withBasePath('authors') },
+		{ icon: mainIcon, name: 'Main Info', href: withBasePath('main') },
 		{ icon: questionIcon, name: 'Questions', href: withBasePath('questions') },
-		{ icon: resultsIcon, name: 'Results', href: withBasePath('results') }
+		{ icon: resultsIcon, name: 'Results', href: withBasePath('results') },
+		{ icon: publishingIcon, name: 'Publishing', href: withBasePath('publishing') }
 	]}
 />
-
+{#snippet authorsIcon()}
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+		<path
+			d="M13 11C13 8.79086 11.2091 7 9 7C6.79086 7 5 8.79086 5 11C5 13.2091 6.79086 15 9 15C11.2091 15 13 13.2091 13 11Z"
+			stroke="currentColor"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		></path>
+		<path
+			d="M11.0386 7.55773C11.0131 7.37547 11 7.18927 11 7C11 4.79086 12.7909 3 15 3C17.2091 3 19 4.79086 19 7C19 9.20914 17.2091 11 15 11C14.2554 11 13.5584 10.7966 12.9614 10.4423"
+			stroke="currentColor"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		></path>
+		<path
+			d="M15 21C15 17.6863 12.3137 15 9 15C5.68629 15 3 17.6863 3 21"
+			stroke="currentColor"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		></path>
+		<path
+			d="M21 17C21 13.6863 18.3137 11 15 11"
+			stroke="currentColor"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		></path>
+	</svg>
+{/snippet}
 {#snippet mainIcon()}
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
 		<path
-			d="M12 22H10.5C6.72873 22 4.8431 22 3.67153 20.8284C2.49995 19.6568 2.49997 17.7712 2.5 13.9999L2.50004 9.99993C2.50007 6.22872 2.50008 4.34312 3.67166 3.17156C4.84323 2 6.72883 2 10.5 2H11.4999C15.2712 2 17.1568 2 18.3284 3.17157C19.4999 4.34315 19.4999 6.22876 19.4999 10V11"
+			d="M3 17H19"
 			stroke="currentColor"
 			stroke-linecap="round"
 			stroke-linejoin="round"
-		/>
+		></path>
 		<path
-			d="M7 7H15M7 12H11.5"
+			d="M3 21H12"
 			stroke="currentColor"
 			stroke-linecap="round"
 			stroke-linejoin="round"
-		/>
+		></path>
 		<path
-			d="M17.5 20.7727C19.2673 20.7727 20.7 19.3075 20.7 17.5C20.7 15.6925 19.2673 14.2273 17.5 14.2273M17.5 20.7727C15.7327 20.7727 14.3 19.3075 14.3 17.5C14.3 15.6925 15.7327 14.2273 17.5 14.2273M17.5 20.7727V22M17.5 14.2273V13M14.5913 15.7149L13.5004 15.0455M21.5 19.9545L20.4092 19.2851M20.4087 15.7149L21.4996 15.0455M13.5 19.9545L14.5908 19.2851"
+			d="M3 8C3 5.64298 3 4.46447 3.73223 3.73223C4.46447 3 5.64298 3 8 3H16C18.357 3 19.5355 3 20.2678 3.73223C21 4.46447 21 5.64298 21 8C21 10.357 21 11.5355 20.2678 12.2678C19.5355 13 18.357 13 16 13H8C5.64298 13 4.46447 13 3.73223 12.2678C3 11.5355 3 10.357 3 8Z"
 			stroke="currentColor"
 			stroke-linecap="round"
-		/>
+			stroke-linejoin="round"
+		></path>
 	</svg>
 {/snippet}
 
@@ -67,6 +97,21 @@
 		/>
 		<path
 			d="M21.4955 11C21.4955 11 21.5 11.3395 21.5 12C21.5 16.4784 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4784 2.5 12C2.5 7.52169 2.5 5.28252 3.89124 3.89127C5.28249 2.50003 7.52166 2.50003 12 2.50003L13 2.5"
+			stroke="currentColor"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		/>
+	</svg>
+{/snippet}
+{#snippet publishingIcon()}
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+		<path
+			d="M18 7C18.7745 7.16058 19.3588 7.42859 19.8284 7.87589C21 8.99181 21 10.7879 21 14.38C21 17.9721 21 19.7681 19.8284 20.8841C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8841C3 19.7681 3 17.9721 3 14.38C3 10.7879 3 8.99181 4.17157 7.87589C4.64118 7.42859 5.2255 7.16058 6 7"
+			stroke="currentColor"
+			stroke-linecap="round"
+		/>
+		<path
+			d="M12.0253 2.00052L12 14M12.0253 2.00052C11.8627 1.99379 11.6991 2.05191 11.5533 2.17492C10.6469 2.94006 9 4.92886 9 4.92886M12.0253 2.00052C12.1711 2.00657 12.3162 2.06476 12.4468 2.17508C13.3531 2.94037 15 4.92886 15 4.92886"
 			stroke="currentColor"
 			stroke-linecap="round"
 			stroke-linejoin="round"

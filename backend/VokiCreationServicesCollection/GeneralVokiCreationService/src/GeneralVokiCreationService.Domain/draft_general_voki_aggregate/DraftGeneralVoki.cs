@@ -1,6 +1,6 @@
-﻿using DraftVokisLib;
-using DraftVokisLib.events;
-using SharedKernel.common.vokis;
+﻿using SharedKernel.common.vokis;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 

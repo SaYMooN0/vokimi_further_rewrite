@@ -26,10 +26,10 @@
 		font-size: 1.5rem;
 		font-weight: 420;
 		letter-spacing: 0.25px;
-		transition: background-color 0.08s ease-in-out;
-		cursor: pointer;
-		transition: all 0.12s ease;
 		box-shadow: var(--shadow-md);
+		transition: background-color 0.08s ease-in-out;
+		transition: all 0.12s ease;
+		cursor: pointer;
 
 	}
 

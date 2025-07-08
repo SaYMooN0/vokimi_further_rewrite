@@ -1,6 +1,6 @@
 ﻿using SharedKernel.exceptions;
 
-namespace DraftVokisLib;
+namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 public sealed class VokiDescription : ValueObject
 {

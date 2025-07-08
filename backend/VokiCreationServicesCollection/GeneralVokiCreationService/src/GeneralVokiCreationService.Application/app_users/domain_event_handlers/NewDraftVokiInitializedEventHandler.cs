@@ -1,6 +1,6 @@
-﻿using DraftVokisLib.events;
-using GeneralVokiCreationService.Domain.app_user_aggregate;
+﻿using GeneralVokiCreationService.Domain.app_user_aggregate;
 using GeneralVokiCreationService.Domain.repositories;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 
 namespace GeneralVokiCreationService.Application.app_users.domain_event_handlers;
 

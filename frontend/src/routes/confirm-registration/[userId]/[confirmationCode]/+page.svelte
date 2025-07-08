@@ -53,13 +53,14 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		margin: 10rem auto 0 auto;
+		margin: 10rem auto 0;
 	}
+
 	h1 {
 		font-size: 2.5rem;
-		letter-spacing: 0.5px;
 		font-weight: 500;
 		text-align: center;
+		letter-spacing: 0.5px;
 	}
 
 	.error-h {
@@ -67,8 +68,8 @@
 	}
 
 	.err-view {
-		margin-top: 1rem;
 		padding: 0.75rem 1rem;
+		margin-top: 1rem;
 		border-radius: 0.5rem;
 		background-color: var(--err-back);
 		color: var(--err-foreground);

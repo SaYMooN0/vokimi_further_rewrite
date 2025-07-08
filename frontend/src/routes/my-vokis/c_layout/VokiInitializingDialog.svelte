@@ -80,15 +80,16 @@
 <style>
 	:global(#voki-initializing-dialog .dialog-content) {
 		display: flex;
-		align-items: center;
 		flex-direction: column;
+		align-items: center;
 		padding: 0 4rem;
 	}
+
 	.subheading {
-		margin: 2.5rem 0 1rem 0;
+		width: fit-content;
+		margin: 2.5rem 0 1rem;
 		font-size: 2rem;
 		font-weight: 500;
-		width: fit-content;
 	}
 
 	.voki-type-container {
@@ -100,28 +101,30 @@
 	.name-input {
 		width: 100%;
 		height: 2.5rem;
+		padding: 0.125rem 0.5rem;
 		border: none;
+		border: 0.2rem solid transparent;
 		border-radius: 0.5rem;
 		background-color: var(--secondary);
 		color: var(--text);
-		box-shadow: var(--shadow);
-
 		font-size: 1.5rem;
 		font-weight: 420;
 		letter-spacing: 0.25px;
-		padding: 0.125rem 0.5rem;
-		border: 0.2rem solid transparent;
+		box-shadow: var(--shadow);
 		transition: background-color 0.08s ease-in-out;
 	}
+
 	.name-input:focus {
 		outline: none;
 		border-color: var(--primary);
 	}
+
 	:global(#voki-initializing-dialog .err-block) {
-		margin: 1rem 1rem;
+		margin: 1rem;
 	}
+
 	:global(#voki-initializing-dialog .primary-btn) {
-		margin: auto auto 2rem auto;
 		padding: 0.25rem 1.5rem;
+		margin: auto auto 2rem;
 	}
 </style>

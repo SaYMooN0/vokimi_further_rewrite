@@ -1,7 +1,6 @@
-﻿using SharedKernel.common;
-using SharedKernel.common.vokis;
+﻿using SharedKernel.common.vokis;
 
-namespace DraftVokisLib;
+namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 public abstract class BaseDraftVoki : AggregateRoot<VokiId>
 {

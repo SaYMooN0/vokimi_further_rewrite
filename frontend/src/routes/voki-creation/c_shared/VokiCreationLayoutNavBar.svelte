@@ -10,19 +10,43 @@
 </script>
 
 <div class="nav-bar">
-	start
 	{#each links as link}
-		<a href={link.href}>{link.name}</a>
+		<a href={link.href} data-sveltekit-preload-data="off">
+			{@render link.icon()}
+			{link.name}
+		</a>
 	{/each}
-	end
 </div>
 
 <style>
 	.nav-bar {
 		display: flex;
 		flex-direction: row;
-		justify-content: space-between;
+		justify-content: center;
+		gap: 3rem;
 		width: 100%;
-		background-color: darkblue;
+	}
+
+	.nav-bar a {
+		font-size: 1.25rem;
+		font-weight: 450;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+		padding: 0.25rem 1.5rem;
+		border-radius: 2rem;
+	}
+	.nav-bar a:hover {
+		background-color: var(--accent);
+		color: var(--primary);
+	}
+	.nav-bar a :global(svg) {
+		height: 1.5rem;
+		margin-right: 0.5rem;
+	}
+	.nav-bar a :global(svg path) {
+		stroke-width: 2;
 	}
 </style>

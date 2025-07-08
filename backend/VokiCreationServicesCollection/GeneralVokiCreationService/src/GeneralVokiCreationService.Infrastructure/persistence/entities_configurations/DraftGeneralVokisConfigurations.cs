@@ -1,10 +1,11 @@
-﻿using DraftVokisLib;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Infrastructure.persistence.value_converters;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using InfrastructureShared.persistence.extensions;
 using InfrastructureShared.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate;
+using VokiCreationServicesLib.Infrastructure.persistence;
+using VokiCreationServicesLib.Infrastructure.persistence.value_converters;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.entities_configurations;
 
@@ -23,9 +24,23 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
             .HasConversion<VokiNameConverter>();
 
         builder.Ignore(x => x.CoverPath);
-        builder.Ignore(x => x.Details);
-        builder.Ignore(x => x.Tags);
+
+        builder
+            .ComplexProperty(x => x.Details,
+                b => {
+                    b.Property(d => d.Language).HasColumnName("Details_Language");
+                    b.Property(d => d.IsAgeRestricted).HasColumnName("Details_IsAgeRestricted");
+                    b
+                        .Property(d => d.Description)
+                        .HasColumnName("Details_Description")
+                        .HasConversion<VokiDescriptionConverter>();
+                }
+            );
         
+        builder
+            .Property(x => x.Tags)
+            .HasVokiTagsSetConversion();
+
         builder
             .Property(x => x.PrimaryAuthorId)
             .ValueGeneratedNever()
@@ -37,6 +52,5 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
 
         builder
             .Property(x => x.CreationDate);
-
     }
 }

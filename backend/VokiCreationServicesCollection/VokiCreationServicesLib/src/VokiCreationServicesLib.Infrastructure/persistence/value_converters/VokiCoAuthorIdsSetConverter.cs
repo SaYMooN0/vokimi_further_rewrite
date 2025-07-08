@@ -1,8 +1,9 @@
 ﻿using System.Collections.Immutable;
-using DraftVokisLib;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using SharedKernel.domain.ids;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
-namespace GeneralVokiCreationService.Infrastructure.persistence.value_converters;
+namespace VokiCreationServicesLib.Infrastructure.persistence.value_converters;
 
 public class VokiCoAuthorIdsSetConverter : ValueConverter<VokiCoAuthorIdsSet, Guid[]>
 {

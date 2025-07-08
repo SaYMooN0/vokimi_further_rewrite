@@ -41,6 +41,8 @@
 		flex-direction: column;
 		width: 100%;
 		box-sizing: border-box;
+
+		--side-bar-links-top-padding: 4rem;
 		--width-limit: min(92rem, 100%);
 	}
 

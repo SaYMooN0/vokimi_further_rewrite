@@ -63,9 +63,10 @@
 <style>
 	.vokis-container {
 		display: flex;
-		gap: 1rem;
 		display: grid;
+		gap: 1rem;
 		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+
 		--voki-cover-aspect-ratio: 1.5/1;
 		--voki-name-max-height: 2.4rem;
 		--voki-cover-name-gap: 0.5rem;
@@ -73,49 +74,55 @@
 	}
 
 	.voki-item {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: var(--voki-cover-name-gap);
-		cursor: pointer;
+		width: 100%;
 		border-radius: var(--voki-cover-border-radius);
+		cursor: pointer;
 	}
 
 	.voki-item:not(:has(.primary-author-span:hover)):active {
 		background-color: var(--secondary);
 	}
+
 	.voki-cover {
 		width: 100%;
-		aspect-ratio: var(--voki-cover-aspect-ratio);
-		background-color: var(--muted);
 		border-radius: var(--voki-cover-border-radius);
+		background-color: var(--muted);
+		aspect-ratio: var(--voki-cover-aspect-ratio);
 	}
+
 	.bottom-items {
-		padding: 0 0.25rem 0.25rem 0.25rem;
+		padding: 0 0.25rem 0.25rem;
 	}
+
 	.voki-name {
-		-webkit-line-clamp: 2;
 		display: -webkit-box;
 		display: box;
+		max-height: var(--voki-name-max-height);
+		color: var(--text);
+		font-size: 1.125rem;
+		font-weight: 420;
+		line-height: calc(var(--voki-name-max-height) / 2);
+		letter-spacing: 0.12px;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		line-height: calc(var(--voki-name-max-height) / 2);
-		font-weight: 420;
-		max-height: var(--voki-name-max-height);
-		font-size: 1.125rem;
-		letter-spacing: 0.12px;
-		color: var(--text);
 	}
+
 	.voki-item:not(:has(.primary-author-span:hover)):hover .voki-name {
 		text-decoration: underline;
 		text-decoration-thickness: 2px;
 	}
+
 	.authors p {
-		font-size: 0.875rem;
-		color: var(--secondary-foreground);
-		overflow: hidden;
 		display: block;
+		color: var(--secondary-foreground);
+		font-size: 0.875rem;
+		overflow: hidden;
 	}
 
 	.primary-author {
@@ -126,12 +133,13 @@
 		color: var(--primary);
 		font-weight: 450;
 	}
+
 	.primary-author-span:hover {
 		text-decoration: underline;
 	}
+
 	.co-authors {
 		white-space: nowrap;
-
 		text-overflow: ellipsis;
 	}
 </style>
