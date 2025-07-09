@@ -1,5 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.repositories;
 
@@ -11,8 +12,20 @@ internal class DraftGeneralVokiRepository : IDraftGeneralVokiRepository
         _db = db;
     }
 
-    public Task Add(DraftGeneralVoki generalVoki) {
-        _db.Vokis.Add(generalVoki);
+    public Task Add(DraftGeneralVoki voki) {
+        _db.Vokis.Add(voki);
         return _db.SaveChangesAsync();
     }
+
+    public Task Update(DraftGeneralVoki voki) {
+        _db.Vokis.Update(voki);
+        return _db.SaveChangesAsync();
+    }
+
+    public Task<DraftGeneralVoki?> GetByIdAsNoTracking(VokiId vokiId) => _db.Vokis
+        .AsNoTracking()
+        .FirstOrDefaultAsync(v => v.Id == vokiId);
+
+    public Task<DraftGeneralVoki?> GetById(VokiId vokiId) => _db.Vokis
+        .FirstOrDefaultAsync(v => v.Id == vokiId);
 }

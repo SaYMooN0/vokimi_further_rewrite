@@ -1,4 +1,5 @@
 ﻿using CoreVokiCreationService.Domain.draft_voki_aggregate;
+using CoreVokiCreationService.Infrastructure.persistence.value_converters;
 using InfrastructureShared.persistence.extensions;
 using InfrastructureShared.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,9 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
             .Property(x => x.Name)
             .HasConversion<VokiNameConverter>();
 
-        builder.Ignore(x => x.CoverPath);
+        builder
+            .Property(x => x.Cover)
+            .HasConversion<DraftVokiCoverKeyConverter>();
         
         builder
             .Property(x => x.PrimaryAuthorId)

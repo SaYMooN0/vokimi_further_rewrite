@@ -29,7 +29,7 @@
 	{:then response}
 		{#if response.isSuccess}
 			<h1>You have successfully confirmed your email</h1>
-			<PrimaryButton onclick={() => openDialogToLogin()}
+			<PrimaryButton onclick={() => openDialogToLogin()} class="login-btn"
 				>Now you can log into your account</PrimaryButton
 			>
 		{:else}
@@ -79,5 +79,8 @@
 	.err-view p {
 		margin: 0.5rem 0 0 0.25rem;
 		color: var(--err-foreground);
+	}
+	.view-container > :global(.login-btn) {
+		margin-top: 2rem;
 	}
 </style>

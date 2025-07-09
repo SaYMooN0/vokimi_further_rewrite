@@ -7,8 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\Libs\InfrastructureShared\InfrastructureShared.csproj" />
-      <ProjectReference Include="..\VokiCreationServicesLib.Application\VokiCreationServicesLib.Application.csproj" />
+      <ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="published_voki_cover\" />
     </ItemGroup>
 
 </Project>

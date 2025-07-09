@@ -16,7 +16,7 @@ public record class VokiBriefInfoResponse(
         v.Id.ToString(),
         v.Type,
         v.Name.ToString(),
-        v.CoverPath.ToString(),
+        v.Cover.ToString(),
         v.PrimaryAuthorId.ToString(),
         v.CoAuthorsIds.Count
     );

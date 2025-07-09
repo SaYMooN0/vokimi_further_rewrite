@@ -1,5 +1,6 @@
 ﻿using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.vokis;
+using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace CoreVokiCreationService.Domain.draft_voki_aggregate;
 
@@ -8,7 +9,7 @@ public class DraftVoki : AggregateRoot<VokiId>
     private DraftVoki() { }
     public VokiType Type { get; }
     public VokiName Name { get; private set; }
-    public VokiCoverPath CoverPath { get; private set; } = new VokiCoverPath();
+    public DraftVokiCoverKey Cover { get; private set; }
     public AppUserId PrimaryAuthorId { get; }
     public ImmutableHashSet<AppUserId> CoAuthorsIds { get; private set; }
     public ImmutableHashSet<AppUserId> InvitedForCoAuthorUserIds { get; private set; }
@@ -18,7 +19,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         Id = id;
         Type = type;
         Name = name;
-        CoverPath = VokiCoverPath.Default;
+        Cover = DraftVokiCoverKey.Default;
         PrimaryAuthorId = primaryAuthorId;
         CreationDate = creationDate;
         CoAuthorsIds = [];
@@ -31,7 +32,7 @@ public class DraftVoki : AggregateRoot<VokiId>
             newVoki.Id,
             newVoki.Type,
             newVoki.Name,
-            newVoki.CoverPath,
+            newVoki.Cover,
             newVoki.PrimaryAuthorId,
             newVoki.CreationDate
         ));

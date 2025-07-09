@@ -1,6 +1,6 @@
 ﻿using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.vokis;
-using SharedKernel.integration_events.draft_voki_initialized;
+using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
 
 namespace CoreVokiCreationService.Infrastructure.integration_events;
 
@@ -15,19 +15,15 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
     }
 
     public async Task Handle(NewDraftVokiInitializedEvent e, CancellationToken ct) {
-        await e.VokiType.Match(
+        await e.Type.Match(
             onGeneral: async () => await _integrationEventPublisher.Publish(
                 new GeneralDraftVokiInitializedIntegrationEvent(
-                    e.VokiId, e.PrimaryAuthorId, e.VokiName.ToString(), e.VokiCoverPath, e.CreationDate
+                    e.VokiId, e.PrimaryAuthorId, e.Name, e.Cover.Value, e.CreationDate
                 ), ct),
             onTierList: async () => await _integrationEventPublisher.Publish(
-                new TierListDraftVokiInitializedIntegrationEvent(
-                    e.VokiId, e.PrimaryAuthorId, e.VokiName.ToString(), e.VokiCoverPath, e.CreationDate
-                ), ct),
+                new TierListDraftVokiInitializedIntegrationEvent(), ct),
             onScoring: async () => await _integrationEventPublisher.Publish(
-                new ScoringDraftVokiInitializedIntegrationEvent(
-                    e.VokiId, e.PrimaryAuthorId, e.VokiName.ToString(), e.VokiCoverPath, e.CreationDate
-                ), ct)
+                new ScoringDraftVokiInitializedIntegrationEvent(), ct)
         );
     }
 }

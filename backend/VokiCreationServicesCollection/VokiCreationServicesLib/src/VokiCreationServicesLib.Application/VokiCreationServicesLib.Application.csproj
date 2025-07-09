@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\Libs\InfrastructureShared\InfrastructureShared.csproj" />
-      <ProjectReference Include="..\VokiCreationServicesLib.Application\VokiCreationServicesLib.Application.csproj" />
+      <ProjectReference Include="..\..\..\..\Libs\ApplicationShared\ApplicationShared.csproj" />
+      <ProjectReference Include="..\VokiCreationServicesLib.Domain\VokiCreationServicesLib.Domain.csproj" />
     </ItemGroup>
 
 </Project>

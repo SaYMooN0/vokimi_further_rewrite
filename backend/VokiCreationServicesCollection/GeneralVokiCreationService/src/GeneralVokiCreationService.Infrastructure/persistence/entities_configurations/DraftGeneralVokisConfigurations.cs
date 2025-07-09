@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Infrastructure.persistence;
 using VokiCreationServicesLib.Infrastructure.persistence.value_converters;
+using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.entities_configurations;
 
@@ -23,7 +24,9 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
             .Property(x => x.Name)
             .HasConversion<VokiNameConverter>();
 
-        builder.Ignore(x => x.CoverPath);
+        builder
+            .Property(x => x.Cover)
+            .HasConversion<StorageKeyConverter<DraftVokiCoverKey>>();
 
         builder
             .ComplexProperty(x => x.Details,

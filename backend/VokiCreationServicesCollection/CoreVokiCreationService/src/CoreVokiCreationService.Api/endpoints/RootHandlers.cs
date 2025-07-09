@@ -13,9 +13,19 @@ public static class RootHandlers
 
         group.WithGroupAuthenticationRequired();
 
+        group.MapGet("/list-user-voki-ids", ListUserVokiIds);
         group.MapPost("/initialize-new-voki", InitializeNewVoki)
             .WithRequestValidation<InitializeNewVokiRequest>();
-        group.MapGet("/list-user-voki-ids", ListUserVokiIds);
+    }
+    private static async Task<IResult> ListUserVokiIds(
+        CancellationToken ct, IQueryHandler<ListUserVokiIdsQuery, ImmutableArray<VokiId>> handler
+    ) {
+        ListUserVokiIdsQuery query = new();
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOr(result, (vokiIds) => Results.Json(
+            new { VokiIds = vokiIds.Select(v => v.ToString()).ToArray() }
+        ));
     }
 
     private static async Task<IResult> InitializeNewVoki(
@@ -33,16 +43,5 @@ public static class RootHandlers
                 Type = voki.Type
             })
         );
-    }
-
-    private static async Task<IResult> ListUserVokiIds(
-        CancellationToken ct, IQueryHandler<ListUserVokiIdsQuery, ImmutableArray<VokiId>> handler
-    ) {
-        ListUserVokiIdsQuery query = new();
-        var result = await handler.Handle(query, ct);
-
-        return CustomResults.FromErrOr(result, (vokiIds) => Results.Json(
-            new { VokiIds = vokiIds.Select(v => v.ToString()).ToArray() }
-        ));
     }
 }

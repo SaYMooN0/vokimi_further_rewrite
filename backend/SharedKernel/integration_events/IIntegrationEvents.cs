@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using SharedKernel.integration_events.draft_voki_initialized;
+using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
 
 namespace SharedKernel.integration_events;
 

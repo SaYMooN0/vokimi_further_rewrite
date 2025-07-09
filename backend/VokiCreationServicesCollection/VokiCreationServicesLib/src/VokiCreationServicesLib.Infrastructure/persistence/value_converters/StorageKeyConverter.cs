@@ -1,0 +1,13 @@
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using VokimiStorageKeysLib;
+
+namespace VokiCreationServicesLib.Infrastructure.persistence.value_converters;
+
+
+public class StorageKeyConverter<T> : ValueConverter<T, string> where T : BaseStorageKey
+{
+    public StorageKeyConverter() : base(
+        id => id.Value,
+        value => (T)Activator.CreateInstance(typeof(T), value)
+    ) { }
+}

@@ -1,4 +1,6 @@
 ﻿using SharedKernel.common.vokis;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
+using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
@@ -8,7 +10,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     public AppUserId PrimaryAuthorId { get; }
     protected VokiCoAuthorIdsSet CoAuthors { get; private set; }
     public VokiName Name { get; private set; }
-    public VokiCoverPath CoverPath { get; private set; }
+    public DraftVokiCoverKey Cover { get; private set; }
     public VokiDetails Details { get; private set; }
     public VokiTagsSet Tags { get; private set; }
 
@@ -16,7 +18,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
 
     protected BaseDraftVoki(
         VokiId vokiId, AppUserId primaryAuthorId,
-        VokiName name, VokiCoverPath coverPath,
+        VokiName name, DraftVokiCoverKey cover,
         DateTime creationDate
     ) {
         Id = vokiId;
@@ -24,8 +26,8 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         CoAuthors = VokiCoAuthorIdsSet.Empty;
 
         Name = name;
-        CoverPath = coverPath;
-        Details=VokiDetails.Default;
+        Cover = cover;
+        Details = VokiDetails.Default;
         Tags = VokiTagsSet.Empty;
 
         CreationDate = creationDate;
@@ -38,5 +40,13 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
 
         CoAuthors = newCoAuthorsSet;
         return ErrOrNothing.Nothing;
+    }
+
+    public bool HasAccessToEdit(AppUserId userId) =>
+        userId == PrimaryAuthorId || CoAuthors.Contains(userId);
+
+    public void UpdateName(VokiName newVokiName) {
+        Name = newVokiName;
+        AddDomainEvent(new VokiNameUpdatedEvent(Id, Name));
     }
 }

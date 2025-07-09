@@ -24,6 +24,15 @@ public class UnexpectedBehaviourException : Exception
             throw new UnexpectedBehaviourException(err, caller, userMessage);
         }
     }
+    public static void ThrowIfErr<T>(
+        ErrOr<T> possibleErr,
+        string? userMessage = null,
+        [CallerMemberName] string caller = ""
+    ) {
+        if (possibleErr.IsErr(out var err)) {
+            throw new UnexpectedBehaviourException(err, caller, userMessage);
+        }
+    }
 
     public static void ThrowErr(
         Err err,
