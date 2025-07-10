@@ -1,6 +1,7 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.repositories;
 using MassTransit;
+using SharedKernel.common.vokis;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
 using VokimiStorageKeysLib.draft_voki_cover;
 
@@ -18,7 +19,7 @@ public class GeneralDraftVokiInitializedIntegrationEventHandler : IConsumer<Gene
         DraftGeneralVoki newGeneralVoki = DraftGeneralVoki.Create(
             context.Message.VokiId,
             context.Message.PrimaryAuthorId,
-            context.Message.VokiName,
+            new VokiName(  context.Message.VokiName),
             new DraftVokiCoverKey(context.Message.Cover),
             context.Message.CreationDate
         );

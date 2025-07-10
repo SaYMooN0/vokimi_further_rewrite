@@ -8,4 +8,6 @@ public interface IDraftVokiRepository
     Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId);
     Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId);
     Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds);
+    Task<DraftVoki?> GetById(VokiId vokiId);
+    Task Update(DraftVoki voki);
 }

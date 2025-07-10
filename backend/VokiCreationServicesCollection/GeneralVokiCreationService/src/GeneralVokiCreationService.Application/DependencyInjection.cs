@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using VokiCreationServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiCreationService.Application;
 
@@ -26,6 +27,11 @@ public static class DependencyInjection
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
+        
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(VokiAccessValidationStepHandler.QueryHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>), typeof(VokiAccessValidationStepHandler.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(VokiAccessValidationStepHandler.CommandBaseHandler<>));
+        
         return services;
     }
 }

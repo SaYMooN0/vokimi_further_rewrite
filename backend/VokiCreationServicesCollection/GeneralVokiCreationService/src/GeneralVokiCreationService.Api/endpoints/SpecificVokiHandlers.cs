@@ -3,6 +3,7 @@ using GeneralVokiCreationService.Application.draft_vokis.commands;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel.common.vokis;
+using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -15,9 +16,9 @@ public static class SpecificVokiHandlers
 
         group.MapGet("/main-info", GetVokiMainInfo);
         group.MapPatch("/update-name", UpdateVokiName);
-        // group.MapPatch("/set-cover-to-default", SetVokiCoverToDefault);
-        // group.MapPatch("/update-cover", UpdateVokiCover)
-        //     .WithRequestValidation<UpdateVokiCoverRequest>();
+        group.MapPatch("/set-cover-to-default", SetVokiCoverToDefault);
+        group.MapPatch("/update-cover", UpdateVokiCover)
+            .WithRequestValidation<UpdateVokiCoverRequest>();
         // group.MapPatch("/update-details", UpdateVokiDetails)
         //     .WithRequestValidation<UpdateVokiDetailsRequest>();
     }
@@ -48,6 +49,36 @@ public static class SpecificVokiHandlers
 
         return CustomResults.FromErrOr(result, (name) => CustomResults.Created(
             new { NewVokiName = name.ToString() }
+        ));
+    }
+
+    private static async Task<IResult> SetVokiCoverToDefault(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<SetVokiCoverToDefaultCommand, DraftVokiCoverKey> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        var request = httpContext.GetValidatedRequest<UpdateVokiNameRequest>();
+
+        SetVokiCoverToDefaultCommand command = new(id);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (key) => CustomResults.Created(
+            new { NewVokiCover = key.ToString() }
+        ));
+    }
+
+    private static async Task<IResult> UpdateVokiCover(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<UpdateVokiCoverCommand, DraftVokiCoverKey> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        var request = httpContext.GetValidatedRequest<UpdateVokiCoverRequest>();
+
+        UpdateVokiCoverCommand command = new(id, request.ParsedCoverKey);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (key) => CustomResults.Created(
+            new { NewVokiCover = key.ToString() }
         ));
     }
 }

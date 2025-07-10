@@ -20,7 +20,7 @@ internal class DraftVokiRepository : IDraftVokiRepository
     public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId) =>
         _db.Vokis
             .FromSqlInterpolated($@"
-                SELECT ""Id"", ""PrimaryAuthorId"", ""CoAuthorsIds"", ""CreationDate""
+                SELECT ""Id"", ""PrimaryAuthorId"", ""Co AuthorsIds"", ""CreationDate""
                 FROM ""Vokis""
                 WHERE {userId.Value} = ""PrimaryAuthorId""
                    OR {userId.Value} = ANY(""CoAuthorsIds"")
@@ -33,8 +33,16 @@ internal class DraftVokiRepository : IDraftVokiRepository
         .AsNoTracking()
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 
-    public Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds) => 
+    public Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds) =>
         _db.Vokis.AsNoTracking()
-            .Where(v=> queryVokiIds.Contains(v.Id))
+            .Where(v => queryVokiIds.Contains(v.Id))
             .ToArrayAsync();
+
+    public Task<DraftVoki?> GetById(VokiId vokiId) => _db.Vokis
+        .FirstOrDefaultAsync(v => v.Id == vokiId);
+
+    public async Task Update(DraftVoki voki) {
+        _db.Vokis.Update(voki);
+        await _db.SaveChangesAsync();
+    }
 }

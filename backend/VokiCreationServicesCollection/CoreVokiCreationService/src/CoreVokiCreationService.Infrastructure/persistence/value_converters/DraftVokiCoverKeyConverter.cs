@@ -6,7 +6,7 @@ namespace CoreVokiCreationService.Infrastructure.persistence.value_converters;
 public class DraftVokiCoverKeyConverter : ValueConverter<DraftVokiCoverKey, string>
 {
     public DraftVokiCoverKeyConverter() : base(
-        id => id.Value,
+        id => id.ToString(),
         value => new DraftVokiCoverKey(value)
     ) { }
 }

@@ -18,7 +18,7 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
         await e.Type.Match(
             onGeneral: async () => await _integrationEventPublisher.Publish(
                 new GeneralDraftVokiInitializedIntegrationEvent(
-                    e.VokiId, e.PrimaryAuthorId, e.Name, e.Cover.Value, e.CreationDate
+                    e.VokiId, e.PrimaryAuthorId, e.Name.ToString(), e.Cover.ToString(), e.CreationDate
                 ), ct),
             onTierList: async () => await _integrationEventPublisher.Publish(
                 new TierListDraftVokiInitializedIntegrationEvent(), ct),

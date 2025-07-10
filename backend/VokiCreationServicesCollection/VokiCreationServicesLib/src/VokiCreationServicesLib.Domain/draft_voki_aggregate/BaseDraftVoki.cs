@@ -1,4 +1,5 @@
 ﻿using SharedKernel.common.vokis;
+using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokimiStorageKeysLib.draft_voki_cover;
 
@@ -48,5 +49,22 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     public void UpdateName(VokiName newVokiName) {
         Name = newVokiName;
         AddDomainEvent(new VokiNameUpdatedEvent(Id, Name));
+    }
+
+    public ErrOrNothing UpdateCover(DraftVokiCoverKey newCover) {
+        if (!newCover.IsWithId(this.Id)) {
+            return ErrFactory.Conflict(
+                "This cover does not belong to this Voki", $"Voki id: {Id}, cover voki id: {newCover.VokiId}"
+            );
+        }
+
+        this.Cover = newCover;
+        AddDomainEvent(new VokiCoverUpdatedEvent(Id, Cover));
+        return ErrOrNothing.Nothing;
+    }
+
+    public void SetCoverToDefault() {
+        ErrOrNothing res = UpdateCover(DraftVokiCoverKey.Default);
+        UnexpectedBehaviourException.ThrowIfErr(res);
     }
 }

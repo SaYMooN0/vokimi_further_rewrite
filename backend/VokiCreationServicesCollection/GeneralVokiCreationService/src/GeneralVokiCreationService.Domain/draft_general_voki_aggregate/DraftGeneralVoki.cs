@@ -1,4 +1,5 @@
 ﻿using SharedKernel.common.vokis;
+using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokimiStorageKeysLib.draft_voki_cover;
@@ -30,4 +31,5 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return newGeneralVoki;
     }
 
+   
 }

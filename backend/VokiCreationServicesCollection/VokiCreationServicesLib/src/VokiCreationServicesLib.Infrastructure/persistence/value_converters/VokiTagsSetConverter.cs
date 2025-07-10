@@ -10,7 +10,7 @@ public class VokiTagsSetConverter : ValueConverter<VokiTagsSet, string[]>
 {
     public VokiTagsSetConverter()
         : base(
-            set => set.Tags.Select(id => id.ToString()).ToArray(),
+            set => set.Value.Select(id => id.ToString()).ToArray(),
             tags => VokiTagsSet.Create(
                 tags.Select(t => new VokiTagId(t)).ToImmutableHashSet()
             ).AsSuccess()
@@ -20,9 +20,9 @@ public class VokiTagsSetConverter : ValueConverter<VokiTagsSet, string[]>
 internal class VokiTagsSetComparer : ValueComparer<VokiTagsSet>
 {
     public VokiTagsSetComparer() : base(
-        (set1, set2) => set1.Tags.SetEquals(set2.Tags),
-        set => set.Tags.Aggregate(0, (hash, tagId) => HashCode.Combine(hash, tagId.GetHashCode())),
-        set => VokiTagsSet.Create(set.Tags.ToImmutableHashSet()).AsSuccess()
+        (set1, set2) => set1.Value.SetEquals(set2.Value),
+        set => set.Value.Aggregate(0, (hash, tagId) => HashCode.Combine(hash, tagId.GetHashCode())),
+        set => VokiTagsSet.Create(set.Value.ToImmutableHashSet()).AsSuccess()
     )
     { }
 }

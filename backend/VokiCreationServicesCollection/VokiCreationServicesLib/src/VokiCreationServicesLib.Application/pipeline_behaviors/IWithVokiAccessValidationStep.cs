@@ -19,9 +19,9 @@ public interface IWithVokiAccessValidationStep
     );
 }
 
-internal static class VokiAccessValidationStepHandler
+public static class VokiAccessValidationStepHandler
 {
-    internal sealed class CommandHandler<TCommand, TResponse> : ICommandHandler<TCommand, TResponse> where TCommand :
+    public sealed class CommandHandler<TCommand, TResponse> : ICommandHandler<TCommand, TResponse> where TCommand :
         ICommand<TResponse>,
         IWithVokiAccessValidationStep
     {
@@ -53,7 +53,7 @@ internal static class VokiAccessValidationStepHandler
         }
     }
 
-    internal sealed class CommandBaseHandler<TCommand> : ICommandHandler<TCommand> where TCommand :
+    public sealed class CommandBaseHandler<TCommand> : ICommandHandler<TCommand> where TCommand :
         ICommand,
         IWithVokiAccessValidationStep
     {
@@ -86,7 +86,7 @@ internal static class VokiAccessValidationStepHandler
         }
     }
 
-    internal sealed class QueryHandler<TQuery, TResponse> : IQueryHandler<TQuery, TResponse> where TQuery :
+    public sealed class QueryHandler<TQuery, TResponse> : IQueryHandler<TQuery, TResponse> where TQuery :
         IQuery<TResponse>,
         IWithVokiAccessValidationStep
     {

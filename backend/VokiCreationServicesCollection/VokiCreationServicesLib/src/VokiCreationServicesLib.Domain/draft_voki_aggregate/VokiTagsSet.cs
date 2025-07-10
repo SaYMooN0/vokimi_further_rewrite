@@ -6,11 +6,11 @@ namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 public class VokiTagsSet : ValueObject
 {
     public const int MaxTagsForVokiCount = 120;
-    public ImmutableHashSet<VokiTagId> Tags { get; }
+    public ImmutableHashSet<VokiTagId> Value { get; }
 
-    private VokiTagsSet(ImmutableHashSet<VokiTagId> tags) {
-        InvalidConstructorArgumentException.ThrowIfErr(this, CheckTagsSetForErr(tags));
-        Tags = tags;
+    private VokiTagsSet(ImmutableHashSet<VokiTagId> value) {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckTagsSetForErr(value));
+        Value = value;
     }
 
     public static ErrOr<VokiTagsSet> Create(ImmutableHashSet<VokiTagId> tags) {
@@ -32,6 +32,6 @@ public class VokiTagsSet : ValueObject
         return ErrOrNothing.Nothing;
     }
 
-    public override IEnumerable<object> GetEqualityComponents() => Tags;
+    public override IEnumerable<object> GetEqualityComponents() => Value;
     public static VokiTagsSet Empty => new(ImmutableHashSet<VokiTagId>.Empty);
 }

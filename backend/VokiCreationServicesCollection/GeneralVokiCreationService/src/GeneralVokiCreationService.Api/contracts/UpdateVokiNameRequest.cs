@@ -7,5 +7,5 @@ public class UpdateVokiNameRequest : IRequestWithValidationNeeded
     public string NewVokiName { get; init; }
     public ErrOrNothing Validate() => VokiName.CheckForErr(NewVokiName);
 
-    public VokiName ParsedVokiName => VokiName.Create(NewVokiName).AsSuccess();
+    public VokiName ParsedVokiName => new(NewVokiName);
 }

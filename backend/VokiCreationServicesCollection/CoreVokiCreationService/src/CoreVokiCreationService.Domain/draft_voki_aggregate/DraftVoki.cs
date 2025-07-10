@@ -45,4 +45,19 @@ public class DraftVoki : AggregateRoot<VokiId>
     // public ErrOrNothing RemoveCoAuthor() { }
     public bool HasAccessToEdit(AppUserId userId) =>
         userId == PrimaryAuthorId || CoAuthorsIds.Contains(userId);
+
+    public ErrOrNothing UpdateCover(DraftVokiCoverKey newCover) {
+        if (!newCover.IsWithId(this.Id)) {
+            return ErrFactory.Conflict(
+                "This cover does not belong to this Voki", $"Voki id: {Id}, cover voki id: {newCover.VokiId}"
+            );
+        }
+
+        this.Cover = newCover;
+        return ErrOrNothing.Nothing;
+    }
+
+    public void UpdateName(VokiName newName) {
+        Name = newName;
+    }
 }

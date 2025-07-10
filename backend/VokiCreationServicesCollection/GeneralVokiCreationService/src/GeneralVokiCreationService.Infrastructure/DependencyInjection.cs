@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.auth;
+using VokiCreationServicesLib.Domain.repositories;
 
 namespace GeneralVokiCreationService.Infrastructure;
 
@@ -104,6 +105,7 @@ public static class DependencyInjection
         
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IDraftGeneralVokiRepository, DraftGeneralVokiRepository>();
+        services.AddScoped<IDraftVokiRepository, DraftGeneralVokiRepository>();
         
         return services;
     }
