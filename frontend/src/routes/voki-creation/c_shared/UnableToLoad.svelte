@@ -13,9 +13,9 @@
 <style>
 	.unable-to-load {
 		display: flex;
-		width: 60rem;
 		flex-direction: column;
 		justify-content: center;
+		width: 60rem;
 		margin: 4rem auto;
 	}
 </style>

@@ -7,9 +7,9 @@
 	import SignInDialogConfirmButton from './c_states_shared/SignInDialogConfirmButton.svelte';
 	import { ApiAuth } from '$lib/ts/backend-services';
 	import type { Err } from '$lib/ts/err';
-	import { StringUtils } from '$lib/ts/string-utils';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 	interface Props {
 		email: string;
 		password: string;

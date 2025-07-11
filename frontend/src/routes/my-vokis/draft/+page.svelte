@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { StringUtils } from '$lib/ts/string-utils';
+	import { ApiVokimiStorage } from '$lib/ts/storage-service';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { MyVokisCacheStore } from '../my-vokis-cache-store.svelte';
 	import type { PageProps } from './$types';
 	import VokiSkeletonItem from './c_page.svelte/VokiSkeletonItem.svelte';
@@ -30,7 +31,7 @@
 							href="/voki-creation/{StringUtils.pascalToKebab(voki.type)}/{vokiId}"
 							class="voki-item"
 						>
-							<div class="voki-cover"></div>
+							<img class="voki-cover" src={ApiVokimiStorage.fileSrc(voki.cover)} alt="voki cover" />
 							<div class="bottom-items">
 								<p class="voki-name">
 									{voki?.name}
@@ -89,7 +90,8 @@
 	.voki-cover {
 		width: 100%;
 		border-radius: var(--voki-cover-border-radius);
-		background-color: var(--muted);
+
+		/* background-color: var(--muted); */
 		aspect-ratio: var(--voki-cover-aspect-ratio);
 	}
 

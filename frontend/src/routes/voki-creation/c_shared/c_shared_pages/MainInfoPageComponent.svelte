@@ -5,7 +5,10 @@
 	import VokiCreationName from './c_main_info/VokiCreationName.svelte';
 	import VokiCreationTags from './c_main_info/VokiCreationTags.svelte';
 
-	let { mainInfo }: { mainInfo: VokiMainInfo } = $props<{ mainInfo: VokiMainInfo }>();
+	let { mainInfo, vokiId }: { mainInfo: VokiMainInfo; vokiId: string } = $props<{
+		mainInfo: VokiMainInfo;
+		vokiId: string;
+	}>();
 </script>
 
 <h1>Main info page</h1>
@@ -17,13 +20,13 @@
 		<VokiCreationDetails details={mainInfo.details} />
 	</div>
 	<div class="cover-section">
-		<VokiCreationCover cover={mainInfo.cover} />
+		<VokiCreationCover cover={mainInfo.cover} {vokiId} />
 	</div>
 </div>
 
 <style>
 	.main-info-page-container {
 		display: grid;
-		grid-template-columns: 1fr 20rem;
+		grid-template-columns: 1fr auto;
 	}
 </style>

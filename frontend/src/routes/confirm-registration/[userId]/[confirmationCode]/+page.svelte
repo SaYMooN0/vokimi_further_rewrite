@@ -80,6 +80,7 @@
 		margin: 0.5rem 0 0 0.25rem;
 		color: var(--err-foreground);
 	}
+
 	.view-container > :global(.login-btn) {
 		margin-top: 2rem;
 	}

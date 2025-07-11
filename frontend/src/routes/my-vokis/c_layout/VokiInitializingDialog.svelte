@@ -6,7 +6,7 @@
 	import { ApiVokiCreationCore } from '$lib/ts/backend-services';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import { StringUtils } from '$lib/ts/string-utils';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
 	import VokiTypeCard from './c_initializing_dialog/VokiTypeCard.svelte';
 

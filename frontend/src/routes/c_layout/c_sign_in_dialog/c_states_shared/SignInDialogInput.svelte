@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { StringUtils } from '$lib/ts/string-utils';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { Snippet } from 'svelte';
 	interface Props {
 		type?: 'text' | 'password' | 'email';

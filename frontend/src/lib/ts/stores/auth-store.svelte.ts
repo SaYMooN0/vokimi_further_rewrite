@@ -1,5 +1,5 @@
 import { ApiAuth } from "../backend-services";
-import { StringUtils } from "../string-utils";
+import { StringUtils } from "../utils/string-utils";
 
 
 const EMPTY_DATE = new Date(1970, 0, 1);

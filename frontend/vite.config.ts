@@ -68,6 +68,7 @@ export default defineConfig({
 	server: {
 		proxy: {
 			...createProxyEntry('/api/auth', 5177),
+			...createProxyEntry('/api/voki-storage', 5178),
 			...createProxyEntry('/api/voki-creation/core', 5180),
 			...createProxyEntry('/api/voki-creation/general', 5181),
 		}

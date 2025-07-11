@@ -6,5 +6,5 @@ export const load: ServerLoad = async ({ params, fetch }) => {
     const response = await ApiVokiCreationGeneral.serverFetchJsonResponse<VokiMainInfo>(
         fetch, `/vokis/${params.vokiId}/main-info`, { method: 'GET' }
     );
-    return { ...response };
+    return { ...response, vokiId: params.vokiId };
 }

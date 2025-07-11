@@ -2,8 +2,12 @@
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.auth;
+using SharedKernel.domain.ids;
+using SharedKernel.errs;
+using SharedKernel.errs.utils;
+using VokimiStorageService.config;
 
-namespace InfrastructureShared.auth;
+namespace VokimiStorageService;
 
 public class TokenParser : ITokenParser
 {

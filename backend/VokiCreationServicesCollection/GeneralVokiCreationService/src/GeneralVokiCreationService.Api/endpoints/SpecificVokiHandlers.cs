@@ -57,8 +57,7 @@ public static class SpecificVokiHandlers
         ICommandHandler<SetVokiCoverToDefaultCommand, DraftVokiCoverKey> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
-        var request = httpContext.GetValidatedRequest<UpdateVokiNameRequest>();
-
+        
         SetVokiCoverToDefaultCommand command = new(id);
         var result = await handler.Handle(command, ct);
 

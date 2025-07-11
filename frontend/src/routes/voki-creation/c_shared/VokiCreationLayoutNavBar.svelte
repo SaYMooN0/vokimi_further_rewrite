@@ -28,24 +28,27 @@
 	}
 
 	.nav-bar a {
-		font-size: 1.25rem;
-		font-weight: 450;
 		display: flex;
-		align-items: center;
 		flex-direction: row;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
+		align-items: center;
 		padding: 0.25rem 1.5rem;
 		border-radius: 2rem;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+		font-size: 1.25rem;
+		font-weight: 450;
 	}
+
 	.nav-bar a:hover {
 		background-color: var(--accent);
 		color: var(--primary);
 	}
+
 	.nav-bar a :global(svg) {
 		height: 1.5rem;
 		margin-right: 0.5rem;
 	}
+
 	.nav-bar a :global(svg path) {
 		stroke-width: 2;
 	}

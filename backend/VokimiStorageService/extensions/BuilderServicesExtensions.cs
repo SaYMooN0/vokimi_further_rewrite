@@ -1,7 +1,10 @@
-﻿using Amazon.Runtime;
+﻿using Amazon;
+using Amazon.Runtime;
 using Amazon.S3;
 using ApiShared;
 using SharedKernel.auth;
+using VokimiStorageService.config;
+using VokimiStorageService.storage_service.buckets;
 
 namespace VokimiStorageService.extensions;
 
@@ -13,17 +16,29 @@ internal static class BuilderServicesExtensions
     }
 
     internal static void AddS3Storage(this IServiceCollection services, IConfiguration configuration) {
-        string serviceUrl = configuration["S3:ServiceURL"] ?? throw new Exception("S3:ServiceURL is not set");
-        string accessKey = configuration["S3:AccessKey"] ?? throw new Exception("S3:AccessKey is not set");
-        string secretKey = configuration["S3:SecretKey"] ?? throw new Exception("S3:SecretKey is not set");
-        string bucketName = configuration["S3:BucketName"] ?? throw new Exception("S3:BucketName is not set");
-
-
+        var s3Config = configuration.GetSection("S3").Get<S3Config>();
+        if (s3Config is null) {
+            throw new Exception("S3 is not configured");
+        }
 
         services.AddSingleton<IAmazonS3>(_ => new AmazonS3Client(
-            new BasicAWSCredentials(accessKey, secretKey),
-            new AmazonS3Config { ServiceURL = serviceUrl }
+            new BasicAWSCredentials(s3Config.AccessKey, s3Config.SecretKey),
+            new AmazonS3Config { ServiceURL = s3Config.ServiceUrl }
         ));
-        // services.AddScoped(sp => new VokimiStorageService(sp.GetRequiredService<IAmazonS3>(), bucketName));
+
+        string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
+        services.AddSingleton(new MainBucketNameProvider(mainBucketName));
+        services.AddScoped<MainStorageBucket>();
+    }
+
+    public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
+        var jwtTokenConfig = configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
+        if (jwtTokenConfig is null) {
+            throw new Exception("JWT token config not configured");
+        }
+
+        services.AddSingleton(jwtTokenConfig);
+        services.AddScoped<ITokenParser, TokenParser>();
+        return services;
     }
 }

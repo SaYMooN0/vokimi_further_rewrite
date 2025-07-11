@@ -10,11 +10,11 @@
 <style>
 	h1 {
 		display: flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		height: var(--side-bar-links-top-padding);
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
-		height: var(--side-bar-links-top-padding);
         font-weight: 440;
 	}
 

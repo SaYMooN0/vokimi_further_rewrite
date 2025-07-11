@@ -10,6 +10,7 @@ public class Program
 
         builder.ConfigureLogging();
 
+        builder.Services.AddAuth(builder.Configuration);
         builder.Services.AddUserContext();
         builder.Services.AddS3Storage(builder.Configuration);
 

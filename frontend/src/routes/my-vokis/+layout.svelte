@@ -58,9 +58,9 @@
 	.my-vokis-page {
 		position: relative;
 		display: grid;
+		height: 100vh;
 		padding-bottom: 2rem;
 		grid-template-rows: auto 1fr;
-		height: 100vh;
 	}
 
 	.links-container {
@@ -68,8 +68,8 @@
 		gap: 1rem;
 		width: fit-content;
 		height: 100%;
-		box-sizing: border-box;
 		height: var(--side-bar-links-top-padding);
+		box-sizing: border-box;
 		padding: 1rem 3.5rem;
 		margin: 0 auto;
 		border-radius: 2rem;
@@ -96,6 +96,7 @@
 		box-shadow: var(--shadow-xl);
 		transform: translateX(-50%);
 	}
+
 	:global(.my-vokis-page > .create-new-voki-btn:active) {
 		transform: translateX(-50%) scale(0.96);
 	}

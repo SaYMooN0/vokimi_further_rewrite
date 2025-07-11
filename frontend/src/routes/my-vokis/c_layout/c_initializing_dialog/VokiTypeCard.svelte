@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { StringUtils } from '$lib/ts/string-utils';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
 	interface Props {
 		type: VokiType;

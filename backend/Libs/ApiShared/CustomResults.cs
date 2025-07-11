@@ -20,4 +20,7 @@ public class CustomResults
         Results.Json(responseObject, statusCode: StatusCodes.Status201Created);
 
     public static IResult Deleted() => Results.StatusCode(StatusCodes.Status202Accepted);
+
+    public static IResult WithFileKey(string key) =>
+        Results.Json(new { Key = key }, statusCode: StatusCodes.Status200OK);
 }

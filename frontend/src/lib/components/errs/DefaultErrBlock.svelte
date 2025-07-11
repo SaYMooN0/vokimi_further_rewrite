@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
-	import { StringUtils } from '$lib/ts/string-utils';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import ErrView from './ErrView.svelte';
 
 	let {
