@@ -11,8 +11,6 @@
 	}>();
 </script>
 
-<h1>Main info page</h1>
-
 <div class="main-info-page-container">
 	<div class="main-section">
 		<VokiCreationName vokiName={mainInfo.name} />
@@ -28,5 +26,6 @@
 	.main-info-page-container {
 		display: grid;
 		grid-template-columns: 1fr auto;
+		gap: 1.5rem;
 	}
 </style>

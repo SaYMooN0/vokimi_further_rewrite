@@ -25,6 +25,7 @@
 		justify-content: center;
 		gap: 3rem;
 		width: 100%;
+		margin-bottom: 1rem;
 	}
 
 	.nav-bar a {

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import {  ApiVokiCreationGeneral } from '$lib/ts/backend-services';
+	import { ApiVokiCreationGeneral } from '$lib/ts/backend-services';
 	import { ApiVokimiStorage } from '$lib/ts/storage-service';
 	import { toast } from 'svelte-sonner';
 
@@ -54,27 +54,34 @@
 		border-radius: 1rem;
 		object-fit: contain;
 	}
+
 	.img-btn {
-		height: 2rem;
-		width: 100%;
 		display: flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 2rem;
 		border: none;
 		border-radius: 0.25rem;
 		font-size: 1.25rem;
+		box-shadow: var(--shadow);
 		cursor: pointer;
+		font-weight: 420;
+		letter-spacing: 0.2px;
 	}
+
 	.change-btn {
 		margin-top: 1rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
+
 	.set-default-btn {
 		margin-top: 0.5rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 	}
+
 	.set-default-btn:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);

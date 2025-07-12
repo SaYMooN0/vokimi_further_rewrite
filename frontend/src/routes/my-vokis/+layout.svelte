@@ -78,7 +78,6 @@
 	}
 
 	.my-vokis-page-content {
-		justify-self: top;
 		overflow-y: auto;
 		scrollbar-gutter: stable;
 	}
