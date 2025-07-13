@@ -3,6 +3,7 @@
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
+	import MainInfoSectionButton from './c_sections_shared/MainInfoSectionButton.svelte';
 
 	let { vokiName }: { vokiName: string } = $props<{ vokiName: string }>();
 
@@ -34,7 +35,7 @@
 			<VokiCreationFieldName fieldName="Voki name:" />
 			<label class="voki-name-value">{vokiName}</label>
 		</p>
-		<button class="section-btn edit-btn" onclick={() => (isEditing = true)}>Edit voki name</button>
+		<MainInfoSectionButton text="Edit voki name" onclick={() => (isEditing = true)} />
 	{/if}
 </div>
 
@@ -42,7 +43,6 @@
 	.voki-name-section {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 		align-items: center;
 		width: 100%;
 	}
@@ -114,19 +114,5 @@
 		color: var(--text);
 		font-size: 1.5rem;
 		font-weight: 500;
-	}
-	.voki-name-section:hover .edit-btn {
-		text-decoration: underline;
-		text-decoration-thickness: 1.4px;
-		text-underline-offset: 0.2rem;
-	}
-	.edit-btn {
-		justify-self: right;
-		margin: 0 1rem 0 auto;
-		background-color: var(--primary);
-		color: var(--primary-foreground);
-	}
-	.edit-btn:hover {
-		background-color: var(--primary-hov);
 	}
 </style>

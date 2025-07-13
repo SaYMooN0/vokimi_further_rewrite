@@ -67,10 +67,16 @@ export default defineConfig({
 	plugins: [sveltekit(), devtoolsJson(), forbiddenFileStructurePlugin()],
 	server: {
 		proxy: {
+			//common
 			...createProxyEntry('/api/auth', 5177),
 			...createProxyEntry('/api/voki-storage', 5178),
+			//voki creation
 			...createProxyEntry('/api/voki-creation/core', 5180),
 			...createProxyEntry('/api/voki-creation/general', 5181),
+			//voki taking
+			// ...createProxyEntry(, 5191),
+			//other
+			...createProxyEntry('/api/tags', 5201),
 		}
 	}
 });
