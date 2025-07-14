@@ -1,11 +1,11 @@
 ﻿using System.Collections.Immutable;
+using SharedKernel.common.rules;
 using SharedKernel.exceptions;
 
 namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 public class VokiTagsSet : ValueObject
 {
-    public const int MaxTagsForVokiCount = 120;
     public ImmutableHashSet<VokiTagId> Value { get; }
 
     private VokiTagsSet(ImmutableHashSet<VokiTagId> value) {
@@ -22,9 +22,13 @@ public class VokiTagsSet : ValueObject
     }
 
     public static ErrOrNothing CheckTagsSetForErr(ImmutableHashSet<VokiTagId> tags) {
-        if (tags.Count > MaxTagsForVokiCount) {
+        if (tags is null) {
+            return ErrFactory.NoValue.Common("Tags list is null");
+        }
+
+        if (tags.Count > VokiRules.MaxTagsForVokiCount) {
             return ErrFactory.LimitExceeded(
-                $"Too many tags selected. Voki cannot have more than {MaxTagsForVokiCount} tags",
+                $"Too many tags selected. Voki cannot have more than {VokiRules.MaxTagsForVokiCount} tags",
                 $"Tags selected: {tags.Count}"
             );
         }

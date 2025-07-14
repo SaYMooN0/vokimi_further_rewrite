@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { TextareaAutosize } from 'runed';
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import MainInfoSectionButton from './c_sections_shared/MainInfoSectionButton.svelte';
 
-	let { vokiName }: { vokiName: string } = $props<{ vokiName: string }>();
+	let { vokiName, vokiId }: { vokiName: string; vokiId: string } = $props<{
+		vokiName: string;
+		vokiId: string;
+	}>();
 
 	let textarea = $state<HTMLTextAreaElement>(null!);
 	let newName = $state(vokiName);
@@ -27,15 +29,15 @@
 			name={StringUtils.rndStr()}
 		/>
 		<div class="btns-container">
-			<button onclick={() => (isEditing = false)} class="section-btn cancel-btn">Cancel</button>
-			<button onclick={() => saveChanges()} class="section-btn save-btn">Save</button>
+			<button onclick={() => (isEditing = false)} class="cancel-btn">Cancel</button>
+			<button onclick={() => saveChanges()} class="save-btn">Save</button>
 		</div>
 	{:else}
 		<p class="voki-name-p">
 			<VokiCreationFieldName fieldName="Voki name:" />
 			<label class="voki-name-value">{vokiName}</label>
 		</p>
-		<MainInfoSectionButton text="Edit voki name" onclick={() => (isEditing = true)} />
+		<MainInfoSectionButton text="Edit name" onclick={() => (isEditing = true)} />
 	{/if}
 </div>
 
@@ -46,16 +48,7 @@
 		align-items: center;
 		width: 100%;
 	}
-	.section-btn {
-		border: none;
-		border-radius: 0.25rem;
-		font-size: 1.125rem;
-		font-weight: 450;
-		letter-spacing: 0.2px;
-		cursor: pointer;
-		transition: transform 0.12s ease-in;
-		padding: 0.25rem 0.75rem;
-	}
+
 	.voki-name-section > :global(.edit-field-name) {
 		width: 100%;
 		margin-bottom: 0.375rem;
@@ -70,6 +63,7 @@
 		font-size: 1.25rem;
 		width: 100%;
 		box-sizing: border-box;
+		font-weight: 500;
 	}
 	.name-input:hover {
 		outline-color: var(--secondary-foreground);
@@ -89,6 +83,14 @@
 
 	.btns-container button {
 		width: 7rem;
+		border: none;
+		border-radius: 0.25rem;
+		font-size: 1.125rem;
+		font-weight: 450;
+		letter-spacing: 0.2px;
+		cursor: pointer;
+		transition: transform 0.12s ease-in;
+		height: 2rem;
 	}
 	.cancel-btn {
 		font-weight: 480;

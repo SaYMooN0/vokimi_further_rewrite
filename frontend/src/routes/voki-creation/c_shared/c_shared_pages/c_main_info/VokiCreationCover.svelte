@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { ApiVokiCreationGeneral } from '$lib/ts/backend-services';
-	import { ApiVokimiStorage } from '$lib/ts/storage-service';
+	import { ApiVokimiStorage } from '$lib/ts/backend-communication/storage-service';
 	import { toast } from 'svelte-sonner';
+	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
 
 	let { cover, vokiId }: { cover: string; vokiId: string } = $props<{
 		cover: string;
@@ -14,11 +14,10 @@
 			// await updateCover(input.files[0]);
 		}
 	}
+	const api = getVokiCreationPageApiService();
+
 	async function changeImageToDefault() {
-		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ newVokiCover: string }>(
-			`/vokis/${vokiId}/set-cover-to-default`,
-			{ method: 'PATCH' }
-		);
+		const response = await api.setVokiCoverToDefault(vokiId);
 		if (response.isSuccess) {
 			cover = response.data.newVokiCover;
 		} else {

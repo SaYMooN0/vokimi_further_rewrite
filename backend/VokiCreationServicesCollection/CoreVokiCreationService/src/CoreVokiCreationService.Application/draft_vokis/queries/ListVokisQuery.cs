@@ -18,7 +18,7 @@ internal sealed class ListVokisQueryHandler : IQueryHandler<ListVokisQuery, Draf
     }
 
     public async Task<ErrOr<DraftVoki[]>> Handle(
-        ListVokisQuery query, CancellationToken cancellationToken
+        ListVokisQuery query, CancellationToken ct
     ) {
         return await _draftVokiRepository.GetMultipleByIdAsNoTracking(query.VokiIds);
     }

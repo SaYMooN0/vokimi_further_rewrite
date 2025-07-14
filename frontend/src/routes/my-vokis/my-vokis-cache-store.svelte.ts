@@ -1,4 +1,4 @@
-import { ApiVokiCreationCore } from "$lib/ts/backend-services";
+import { ApiVokiCreationCore } from "$lib/ts/backend-communication/backend-services";
 import { RequestJsonOptions } from "$lib/ts/request-json-options";
 import type { VokiType } from "$lib/ts/voki";
 

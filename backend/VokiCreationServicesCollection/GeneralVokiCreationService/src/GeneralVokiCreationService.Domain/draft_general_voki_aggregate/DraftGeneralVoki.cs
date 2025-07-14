@@ -31,5 +31,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return newGeneralVoki;
     }
 
-   
+
+  
 }

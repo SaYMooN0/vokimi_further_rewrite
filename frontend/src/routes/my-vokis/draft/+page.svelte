@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { ApiVokimiStorage } from '$lib/ts/storage-service';
+	import { ApiVokimiStorage } from '$lib/ts/backend-communication/storage-service';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { MyVokisCacheStore } from '../my-vokis-cache-store.svelte';
 	import type { PageProps } from './$types';

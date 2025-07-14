@@ -15,12 +15,12 @@
 		color: var(--primary-foreground);
 		border: none;
 		border-radius: 0.25rem;
-		font-size: 1.125rem;
+		font-size: 1.25rem;
 		font-weight: 450;
 		letter-spacing: 0.15px;
 		cursor: pointer;
 		transition: transform 0.12s ease-in;
-		width: 10rem;
+		width: 9.5rem;
 		height: 2rem;
 	}
 	.btn:hover {

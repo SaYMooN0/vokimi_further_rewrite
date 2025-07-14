@@ -1,4 +1,4 @@
-import { ApiAuth } from "../backend-services";
+import { ApiAuth } from "../backend-communication/backend-services";
 import { StringUtils } from "../utils/string-utils";
 
 

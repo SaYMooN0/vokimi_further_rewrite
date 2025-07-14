@@ -1,4 +1,4 @@
-import { ApiVokiCreationCore } from "$lib/ts/backend-services";
+import { ApiVokiCreationCore } from "$lib/ts/backend-communication/backend-services";
 import type { ServerLoad } from "@sveltejs/kit";
 
 export const load: ServerLoad = async ({ cookies, fetch }) => {

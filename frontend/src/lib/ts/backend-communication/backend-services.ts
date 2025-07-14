@@ -1,14 +1,10 @@
-import { DateUtils } from "./utils/date-utils";
-import { ErrUtils, type Err } from "./err";
+import { DateUtils } from "../utils/date-utils";
+import { ErrUtils, type Err } from "../err";
+import type { ResponseResult, ResponseVoidResult } from "./result-types";
 
-export type ResponseResult<T> =
-    | { isSuccess: true; data: T }
-    | { isSuccess: false; errs: Err[] };
-export type ResponseVoidResult =
-    | { isSuccess: true }
-    | { isSuccess: false; errs: Err[] };
 
-class BackendService {
+
+export class BackendService {
     private _baseUrl: string;
 
     constructor(baseUrl: string) {
@@ -130,4 +126,3 @@ class BackendService {
 }
 export const ApiAuth = new BackendService('/api/auth');
 export const ApiVokiCreationCore = new BackendService('/api/voki-creation/core');
-export const ApiVokiCreationGeneral = new BackendService('/api/voki-creation/general');

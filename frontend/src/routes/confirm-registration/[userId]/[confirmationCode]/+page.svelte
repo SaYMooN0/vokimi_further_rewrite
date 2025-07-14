@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
-	import { ApiAuth } from '$lib/ts/backend-services';
 	import { ErrUtils } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import { getSignInDialogOpenFunction } from '$lib/ts/contexts/sign-in-dialog';
+	import { getSignInDialogOpenFunction } from '../../../c_layout/c_sign_in_dialog/sign-in-dialog-context';
 	import { goto } from '$app/navigation';
+	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
 
 	let userId: string = page.params.userId;
 	let confirmationCode: string = page.params.confirmationCode;

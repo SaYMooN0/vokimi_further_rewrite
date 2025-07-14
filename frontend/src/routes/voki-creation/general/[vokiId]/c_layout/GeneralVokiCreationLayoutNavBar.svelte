@@ -1,6 +1,6 @@
 <script lang="ts">
-	import VokiCreationLayoutNavBar from '../../../c_shared/VokiCreationLayoutNavBar.svelte';
 	import { page } from '$app/state';
+	import VokiCreationLayoutNavBar from '../../../c_layout/VokiCreationLayoutNavBar.svelte';
 
 	let vokiId: string = page.params.vokiId;
 	function withBasePath(path: string) {

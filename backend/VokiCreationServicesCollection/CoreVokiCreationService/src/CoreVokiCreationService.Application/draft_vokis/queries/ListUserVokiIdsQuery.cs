@@ -16,7 +16,7 @@ internal sealed class ListUserVokiIdsQueryHandler : IQueryHandler<ListUserVokiId
         _userContext = userContext;
     }
 
-    public async Task<ErrOr<ImmutableArray<VokiId>>> Handle(ListUserVokiIdsQuery query, CancellationToken cancellationToken) {
+    public async Task<ErrOr<ImmutableArray<VokiId>>> Handle(ListUserVokiIdsQuery query, CancellationToken ct) {
         AppUserId userId = _userContext.AuthenticatedUserId;
         return (await _draftVokiRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(userId)).ToImmutableArray();
     }

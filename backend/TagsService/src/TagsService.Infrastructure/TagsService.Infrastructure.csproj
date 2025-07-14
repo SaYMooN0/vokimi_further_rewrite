@@ -7,8 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Libs\InfrastructureShared\InfrastructureShared.csproj" />
-      <ProjectReference Include="..\TagsService.Application\TagsService.Application.csproj" />
+        <ProjectReference Include="..\..\..\Libs\InfrastructureShared\InfrastructureShared.csproj"/>
+        <ProjectReference Include="..\TagsService.Application\TagsService.Application.csproj"/>
     </ItemGroup>
-
+    <ItemGroup>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3"/>
+    </ItemGroup>
 </Project>

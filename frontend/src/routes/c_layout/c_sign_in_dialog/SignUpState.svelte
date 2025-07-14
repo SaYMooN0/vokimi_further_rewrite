@@ -1,14 +1,14 @@
 <script lang="ts">
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { ApiAuth } from '$lib/ts/backend-services';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { SignInDialogState } from '../../../lib/ts/contexts/sign-in-dialog';
+	import type { SignInDialogState } from './sign-in-dialog-context';
 	import SignInDialogConfirmButton from './c_states_shared/SignInDialogConfirmButton.svelte';
 	import SignInDialogHeader from './c_states_shared/SignInDialogHeader.svelte';
 	import SignInDialogInput from './c_states_shared/SignInDialogInput.svelte';
 	import SignInDialogLink from './c_states_shared/SignInDialogLink.svelte';
+	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
 
 	interface Props {
 		email: string;

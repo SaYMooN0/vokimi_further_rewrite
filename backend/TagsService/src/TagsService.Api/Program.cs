@@ -1,4 +1,7 @@
-using ApiShared;
+using InfrastructureShared;
+using TagsService.Api.extensions;
+using TagsService.Application;
+using TagsService.Infrastructure;
 
 namespace TagsService.Api;
 
@@ -7,16 +10,16 @@ public class Program
     public static void Main(string[] args) {
         var builder = WebApplication.CreateBuilder(args);
 
-        // builder.ConfigureLogging();
+        builder.ConfigureLogging();
         
-        // builder.Services
-        //     .AddPresentation(builder.Configuration)
-        //     .AddApplication()
-        //     .AddInfrastructure(builder.Configuration)
-        //     ;
+        builder.Services
+            .AddPresentation(builder.Configuration)
+            .AddApplication()
+            .AddInfrastructure(builder.Configuration)
+            ;
 
         var app = builder.Build();
-        // app.AddInfrastructureMiddleware();
+        app.AddInfrastructureMiddleware();
 
         if (app.Environment.IsDevelopment()) {
             app.MapOpenApi();
@@ -27,7 +30,7 @@ public class Program
 
         app.AddExceptionHandlingMiddleware();
 
-        // app.MapEndpoints();
+        app.MapEndpoints();
         
         using (var serviceScope = app.Services.CreateScope()) {
             // var db = serviceScope.ServiceProvider.GetRequiredService<TagsDbContext>();
@@ -35,7 +38,7 @@ public class Program
             // db.Database.EnsureCreated();
         }
 
-        // app.AllowFrontendCors();
+        app.AllowFrontendCors();
         app.Run();
     }
 }

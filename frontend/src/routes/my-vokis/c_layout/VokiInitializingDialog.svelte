@@ -3,7 +3,7 @@
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
-	import { ApiVokiCreationCore } from '$lib/ts/backend-services';
+	import { ApiVokiCreationCore } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { StringUtils } from '$lib/ts/utils/string-utils';

@@ -14,7 +14,7 @@ internal sealed class PingUserAuthQueryHandler : IQueryHandler<PingUserAuthQuery
         _userContext = userContext;
     }
 
-    public async Task<ErrOr<AppUserId>> Handle(PingUserAuthQuery query, CancellationToken cancellationToken) {
+    public async Task<ErrOr<AppUserId>> Handle(PingUserAuthQuery query, CancellationToken ct) {
         var idFromToken = _userContext.UserIdFromToken();
         if (idFromToken.IsErr(out var err)) {
             return ErrFactory.AuthRequired("User is not authenticated", err.Message);

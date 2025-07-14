@@ -16,7 +16,7 @@ internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, DraftVok
         _draftVokiRepository = draftVokiRepository;
     }
 
-    public async Task<ErrOr<DraftVoki>> Handle(GetVokiQuery query, CancellationToken cancellationToken) {
+    public async Task<ErrOr<DraftVoki>> Handle(GetVokiQuery query, CancellationToken ct) {
         DraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(query.VokiId);
         if (voki is null) {
             return ErrFactory.NotFound.Voki(

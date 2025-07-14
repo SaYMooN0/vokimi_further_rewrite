@@ -1,6 +1,6 @@
-import type { ResponseResult } from "./backend-services";
-import { ErrUtils, type Err } from "./err";
-import { StringUtils } from "./utils/string-utils";
+import { ErrUtils, type Err } from "../err";
+import { StringUtils } from "../utils/string-utils";
+import type { ResponseResult } from "./result-types";
 
 class VokimiStorageService {
     private _baseUrl: string;
