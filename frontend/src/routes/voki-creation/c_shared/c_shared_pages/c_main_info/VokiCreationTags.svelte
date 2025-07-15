@@ -23,7 +23,7 @@
 			<FieldNotSetLabel text="No tags selected" className="no-tags" />
 		{:else}
 			{#each tags as tag}
-				<label class="tag">{tag}</label>
+				<label class="tag">#{tag}</label>
 			{/each}
 		{/if}
 	</p>
@@ -36,13 +36,23 @@
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
+		margin-top: 1.5rem;
 	}
+
 	.tags-list {
-		width: 100%;
-	}
-	.tags-list:has(:global(.no-tags)) {
 		display: flex;
+		flex-flow: row wrap;
 		align-items: center;
-		flex-direction: row;
+		width: 100%;
+		row-gap: 0.375rem;
+	}
+
+	.tag {
+		padding: 0.125rem 0.375rem;
+		margin-left: 0.375rem;
+		border-radius: 0.25rem;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+		font-size: 1rem;
 	}
 </style>

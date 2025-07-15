@@ -1,10 +1,19 @@
-<svg ids="common-cross-icon" viewBox="0 0 24 24" fill="none">
+<svg id="common-minus-icon" color="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
     <path d="M20 12L4 12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
 </svg>
-<svg id="common-check-icon" viewBox="0 0 24 24" fill="none">
+<svg id="common-cross-icon" color="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <path d="M18 6L6.00081 17.9992M17.9992 18L6 6.00085" stroke="currentColor" stroke-linecap="round"
+        stroke-linejoin="round" />
+</svg>
+<svg id="common-check-icon" color="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
     <path d="M5 14.5C5 14.5 6.5 14.5 8.5 18C8.5 18 14.0588 8.83333 19 7" stroke="currentColor" stroke-linecap="round"
         stroke-linejoin="round" />
 </svg>
-<svg id="common-plus-icon" viewBox="0 0 24 24" fill="none">
+<svg id="common-plus-icon" color="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
     <path d="M12 4V20M20 12H4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+</svg>
+<svg id="common-more-icon" color="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+    <path d="M11.992 12H12.001" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M11.9842 18H11.9932" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M11.9998 6H12.0088" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
 </svg>

@@ -14,18 +14,19 @@
 
 <style>
 	.not-set {
-		margin-left: 0.5rem;
-		background-color: var(--secondary);
-		color: var(--secondary-foreground);
-		padding: 0.25rem 0.75rem;
-		width: fit-content;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		border-radius: 0.5rem;
 		gap: 0.25rem;
+		width: fit-content;
+		padding: 0.25rem 0.75rem;
+		margin-left: 0.5rem;
+		border-radius: 0.5rem;
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
 		font-weight: 440;
 	}
+
 	.not-set > svg {
 		height: 1.25rem;
 		aspect-ratio: 1/1;

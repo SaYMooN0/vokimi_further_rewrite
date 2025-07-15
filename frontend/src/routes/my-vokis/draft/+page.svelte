@@ -3,6 +3,7 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import { ApiVokimiStorage } from '$lib/ts/backend-communication/storage-service';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
+	import { toast } from 'svelte-sonner';
 	import { MyVokisCacheStore } from '../my-vokis-cache-store.svelte';
 	import type { PageProps } from './$types';
 	import VokiSkeletonItem from './c_page.svelte/VokiSkeletonItem.svelte';
@@ -33,23 +34,40 @@
 						>
 							<img class="voki-cover" src={ApiVokimiStorage.fileSrc(voki.cover)} alt="voki cover" />
 							<div class="bottom-items">
-								<p class="voki-name">
-									{voki?.name}
-								</p>
+								<div class="name-line">
+									<p class="voki-name">
+										{voki?.name}
+									</p>
+									<svg
+										class="voki-more-btn interactable"
+										onclick={(e) => {
+											e.preventDefault();
+											toast.error("Voki more button isn't implemented yet");
+										}}
+									>
+										<use href="#common-more-icon" />
+									</svg>
+								</div>
 								<div class="authors">
-									<p class="primary-author">
-										Primary author: <span
-											class="primary-author-span"
+									by: <span
+										class="primary-author-span interactable"
+										onclick={(e) => {
+											e.preventDefault();
+											goto(`/user/${voki.primaryAuthorId}`);
+										}}>{voki.primaryAuthorId}</span
+									>
+									{#if voki.coAuthorsCount > 0}
+										<div
+											class="co-authors interactable"
 											onclick={(e) => {
 												e.preventDefault();
-												goto(`/user/${voki.primaryAuthorId}`);
-											}}>{voki.primaryAuthorId}</span
+												toast.error(
+													'You cannot see co-authors here yet. Please open voki creation page'
+												);
+											}}
 										>
-									</p>
-									{#if voki.coAuthorsCount > 0}
-										<p class="co-authors">{voki.coAuthorsCount} Co-Authors</p>
-									{:else}
-										<p class="co-authors">No Co-Authors</p>
+											+ {voki.coAuthorsCount}
+										</div>
 									{/if}
 								</div>
 							</div>
@@ -83,26 +101,30 @@
 		cursor: pointer;
 	}
 
-	.voki-item:not(:has(.primary-author-span:hover)):active {
+	.voki-item:not(:has(.interactable:hover)):active {
 		background-color: var(--secondary);
 	}
 
 	.voki-cover {
 		width: 100%;
 		border-radius: var(--voki-cover-border-radius);
-
-		/* background-color: var(--muted); */
 		aspect-ratio: var(--voki-cover-aspect-ratio);
 	}
 
 	.bottom-items {
-		padding: 0 0.25rem 0.25rem;
+		padding: 0 0 0.25rem;
+	}
+
+	.name-line {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: start;
 	}
 
 	.voki-name {
+		display: flex;
 		display: -webkit-box;
-		display: box;
-		max-height: var(--voki-name-max-height);
+		flex-direction: row;
 		color: var(--text);
 		font-size: 1.125rem;
 		font-weight: 420;
@@ -115,23 +137,37 @@
 		overflow: hidden;
 	}
 
-	.voki-item:not(:has(.primary-author-span:hover)):hover .voki-name {
+	.voki-item:not(:has(.interactable:hover)):hover .voki-name {
 		text-decoration: underline;
 		text-decoration-thickness: 2px;
 	}
 
-	.authors p {
-		display: block;
+	.voki-more-btn {
+		height: calc(var(--voki-name-max-height) * 0.55);
+		border-radius: 0.25rem;
+		color: var(--text);
+		aspect-ratio: 1/1;
+		stroke-width: 3.2;
+	}
+
+	.voki-more-btn:hover {
+		background-color: var(--muted);
+	}
+
+	.authors {
+		display: grid;
+		align-items: center;
 		color: var(--secondary-foreground);
 		font-size: 0.875rem;
 		overflow: hidden;
-	}
-
-	.primary-author {
-		white-space: nowrap;
+		grid-template-columns: auto 1fr auto;
 	}
 
 	.primary-author-span {
+		margin-left: 0.25rem;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 		color: var(--primary);
 		font-weight: 450;
 	}
@@ -141,7 +177,16 @@
 	}
 
 	.co-authors {
-		white-space: nowrap;
-		text-overflow: ellipsis;
+		padding: 0 0.25rem;
+		margin: 0.125rem 0.25rem 0.125rem 0;
+		border-radius: 0.25rem;
+		font-weight: 440;
+		letter-spacing: -1.2px;
+		box-shadow: var(--shadow);
+		transition: all 0.06s ease-in;
+	}
+
+	.co-authors:hover {
+		background-color: var(--secondary);
 	}
 </style>

@@ -1,9 +1,11 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
+	import { getVokiCreationPageApiService } from '../../../../voki-creation-page-context';
 	import TagOperatingDisplay from './TagOperatingDisplay.svelte';
 	import TagsDialogSearchBar from './TagsDialogSearchBar.svelte';
 
@@ -19,13 +21,12 @@
 	let errs = $state<Err[]>([]);
 	let tagsToChooseFrom: string[] = $state([]);
 	let chosenTags = $state<string[]>([]);
+	const vokiCreationApi = getVokiCreationPageApiService();
 
 	async function saveData() {
-		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
-			newTags: string[];
-		}>(`/vokis/${vokiId}/update-tags`, RequestJsonOptions.PATCH({ newTags: chosenTags }));
-
+		const response = await vokiCreationApi.updateVokiTags(vokiId, chosenTags);
 		if (response.isSuccess) {
+			console.log(response.data.newTags);
 			updateParent(response.data.newTags);
 			dialogElement.close();
 		} else {
@@ -33,8 +34,9 @@
 		}
 	}
 	export function open(tags: string[]) {
-		chosenTags = tags;
+		chosenTags = tags ?? [];
 		dialogElement.open();
+		errs = [];
 	}
 	function removeTag(tag: string) {
 		chosenTags = chosenTags.filter((t) => t !== tag);
@@ -48,9 +50,12 @@
 
 <DialogWithCloseButton bind:this={dialogElement} dialogId="voki-creation-tags-dialog">
 	<div class="main-part">
-		<TagsDialogSearchBar bind:searchedTags={tagsToChooseFrom} />
+		<TagsDialogSearchBar
+			bind:searchedTags={tagsToChooseFrom}
+			setErrs={(errors) => (errs = errors)}
+		/>
 		<label class="chosen-tags-label">
-			Tags chosen: ({chosenTags.length})
+			Tags chosen ({chosenTags.length})
 		</label>
 		<div class="tags-ops-list">
 			{#each tagsToChooseFrom as tag}
@@ -75,21 +80,56 @@
 		</div>
 	</div>
 	<div class="bottom-part">
-		<label class="continue-typing">
+		<p class="continue-typing">
 			If you don't find the tag you need continue entering the name of the tag
-		</label>
-		<DefaultErrBlock errList={errs} />
-
-		<button class="save-btn" onclick={() => saveData()}>Save</button>
+		</p>
+		{#if errs.length > 0}
+			<DefaultErrBlock errList={errs} />
+		{/if}
+		<PrimaryButton onclick={() => saveData()}>Save</PrimaryButton>
 	</div>
 </DialogWithCloseButton>
 
 <style>
 	.main-part {
 		display: grid;
-		grid-template-columns: 30rem 30rem;
-		grid-template-rows: 2rem 1fr;
-		min-height: 30rem;
+		place-items: center center;
+		gap: 1rem;
+		min-height: 20rem;
 		max-height: 80vh;
+		grid-template-columns: 28rem 28rem;
+		grid-template-rows: 2rem 1fr;
+	}
+
+	.chosen-tags-label {
+		font-size: 1.5rem;
+		font-weight: 420;
+	}
+
+	.tags-ops-list {
+		width: 100%;
+		height: 100%;
+		height: 26rem;
+		scrollbar-gutter: stable;
+		overflow-y: auto;
+	}
+
+	.bottom-part {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	.bottom-part > :global(.err-block) {
+		margin: 0 0 1rem;
+	}
+
+	.continue-typing {
+		margin: 1rem 0;
+		color: var(--muted-foreground);
+		font-size: 1rem;
+		text-align: center;
 	}
 </style>

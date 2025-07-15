@@ -9,20 +9,21 @@
 
 <style>
 	.btn {
-		justify-self: right;
-		margin: 0 1rem 0 auto;
-		background-color: var(--primary);
-		color: var(--primary-foreground);
+		width: 9.5rem;
+		height: 2rem;
+		margin: 0.5rem 1rem 0 auto;
 		border: none;
 		border-radius: 0.25rem;
+		background-color: var(--primary);
+		color: var(--primary-foreground);
 		font-size: 1.25rem;
 		font-weight: 450;
 		letter-spacing: 0.15px;
-		cursor: pointer;
 		transition: transform 0.12s ease-in;
-		width: 9.5rem;
-		height: 2rem;
+		cursor: pointer;
+		justify-self: right;
 	}
+
 	.btn:hover {
 		background-color: var(--primary-hov);
 	}

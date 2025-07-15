@@ -2,6 +2,7 @@ using InfrastructureShared;
 using TagsService.Api.extensions;
 using TagsService.Application;
 using TagsService.Infrastructure;
+using TagsService.Infrastructure.persistence;
 
 namespace TagsService.Api;
 
@@ -33,9 +34,9 @@ public class Program
         app.MapEndpoints();
         
         using (var serviceScope = app.Services.CreateScope()) {
-            // var db = serviceScope.ServiceProvider.GetRequiredService<TagsDbContext>();
-            // db.Database.EnsureDeleted();
-            // db.Database.EnsureCreated();
+            var db = serviceScope.ServiceProvider.GetRequiredService<TagsDbContext>();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
         }
 
         app.AllowFrontendCors();

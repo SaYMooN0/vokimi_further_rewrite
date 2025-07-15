@@ -48,7 +48,7 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
     public async updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newName: string; }>> {
         return await this.fetchJsonResponse<{ newName: string; }>(
             `/vokis/${vokiId}/update-name`,
-            RequestJsonOptions.PATCH({ newName })
+            RequestJsonOptions.PATCH({newName })
         );
     }
 

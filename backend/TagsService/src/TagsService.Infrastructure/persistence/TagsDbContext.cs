@@ -4,12 +4,12 @@ using TagsService.Domain.voki_tag_aggregate;
 
 namespace TagsService.Infrastructure.persistence;
 
-public class CoreVokiCreationDbContext : DbContext
+public class TagsDbContext : DbContext
 {
     private readonly IDomainEventsPublisher _publisher;
 
-    public CoreVokiCreationDbContext(
-        DbContextOptions<CoreVokiCreationDbContext> options, IDomainEventsPublisher publisher
+    public TagsDbContext(
+        DbContextOptions<TagsDbContext> options, IDomainEventsPublisher publisher
     ) : base(options) {
         _publisher = publisher;
     }
@@ -17,7 +17,7 @@ public class CoreVokiCreationDbContext : DbContext
     public DbSet<VokiTag> VokiTags { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(CoreVokiCreationDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TagsDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 

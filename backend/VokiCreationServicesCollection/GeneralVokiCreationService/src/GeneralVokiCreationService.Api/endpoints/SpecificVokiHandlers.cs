@@ -22,7 +22,8 @@ public static class SpecificVokiHandlers
         group.MapPatch("/update-cover", UpdateVokiCover)
             .WithRequestValidation<UpdateVokiCoverRequest>();
 
-        group.MapPatch("/update-name", UpdateVokiName);
+        group.MapPatch("/update-name", UpdateVokiName)
+            .WithRequestValidation<UpdateVokiNameRequest>();
         group.MapPatch("/update-details", UpdateVokiDetails)
             .WithRequestValidation<UpdateVokiDetailsRequest>();
         group.MapPatch("/update-tags", UpdateVokiTags)
@@ -97,7 +98,9 @@ public static class SpecificVokiHandlers
         UpdateVokiDetailsCommand command = new(id, request.ParsedDetails);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (details => Results.Json(details)));
+        return CustomResults.FromErrOr(result, details =>
+            Results.Json(VokiDetailsResponse.FromDetails(details))
+        );
     }
 
     private static async Task<IResult> UpdateVokiTags(
@@ -111,7 +114,7 @@ public static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (tagsSet) => Results.Json(
-            new { Tags = tagsSet.Value.Select(t=>t.ToString()).ToArray() }
+            new { NewTags = tagsSet.Value.Select(t => t.ToString()).ToArray() }
         ));
     }
 }

@@ -14,10 +14,10 @@
 			// await updateCover(input.files[0]);
 		}
 	}
-	const api = getVokiCreationPageApiService();
+	const vokiCreationApi = getVokiCreationPageApiService();
 
 	async function changeImageToDefault() {
-		const response = await api.setVokiCoverToDefault(vokiId);
+		const response = await vokiCreationApi.setVokiCoverToDefault(vokiId);
 		if (response.isSuccess) {
 			cover = response.data.newVokiCover;
 		} else {
@@ -63,10 +63,10 @@
 		border: none;
 		border-radius: 0.25rem;
 		font-size: 1.25rem;
-		box-shadow: var(--shadow);
-		cursor: pointer;
 		font-weight: 420;
 		letter-spacing: 0.2px;
+		box-shadow: var(--shadow);
+		cursor: pointer;
 	}
 
 	.change-btn {

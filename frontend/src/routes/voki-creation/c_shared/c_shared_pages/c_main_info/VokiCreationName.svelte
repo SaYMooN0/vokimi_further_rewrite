@@ -3,6 +3,10 @@
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import MainInfoSectionButton from './c_sections_shared/MainInfoSectionButton.svelte';
+	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
+	import type { Err } from '$lib/ts/err';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import MainInfoSectionSaveAndCancelButtons from './c_sections_shared/MainInfoSectionSaveAndCancelButtons.svelte';
 
 	let { vokiName, vokiId }: { vokiName: string; vokiId: string } = $props<{
 		vokiName: string;
@@ -11,16 +15,32 @@
 
 	let textarea = $state<HTMLTextAreaElement>(null!);
 	let newName = $state(vokiName);
+	let isEditing = $state(false);
+	let savingErrs = $state<Err[]>([]);
+	const vokiCreationApi = getVokiCreationPageApiService();
+
 	new TextareaAutosize({ element: () => textarea, input: () => newName });
 
-	let isEditing = $state(false);
-
-	async function saveChanges() {}
+	function startEditing() {
+		newName = vokiName;
+		isEditing = true;
+		savingErrs = [];
+	}
+	async function saveChanges() {
+		const response = await vokiCreationApi.updateVokiName(vokiId, newName);
+		if (response.isSuccess) {
+			vokiName = newName;
+			isEditing = false;
+			savingErrs = [];
+		} else {
+			savingErrs = response.errs;
+		}
+	}
 </script>
 
 <div class="voki-name-section">
 	{#if isEditing}
-		<VokiCreationFieldName fieldName="Voki name:" className="edit-field-name" />
+		<VokiCreationFieldName fieldName="Voki name:" />
 
 		<textarea
 			class="name-input"
@@ -28,16 +48,19 @@
 			bind:value={newName}
 			name={StringUtils.rndStr()}
 		/>
-		<div class="btns-container">
-			<button onclick={() => (isEditing = false)} class="cancel-btn">Cancel</button>
-			<button onclick={() => saveChanges()} class="save-btn">Save</button>
-		</div>
+		{#if savingErrs.length > 0}
+			<DefaultErrBlock errList={savingErrs} containerId="voki-name-err-block" />
+		{/if}
+		<MainInfoSectionSaveAndCancelButtons
+			onCancel={() => (isEditing = false)}
+			onSave={() => saveChanges()}
+		/>
 	{:else}
 		<p class="voki-name-p">
 			<VokiCreationFieldName fieldName="Voki name:" />
 			<label class="voki-name-value">{vokiName}</label>
 		</p>
-		<MainInfoSectionButton text="Edit name" onclick={() => (isEditing = true)} />
+		<MainInfoSectionButton text="Edit name" onclick={startEditing} />
 	{/if}
 </div>
 
@@ -45,76 +68,43 @@
 	.voki-name-section {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		width: 100%;
 	}
 
-	.voki-name-section > :global(.edit-field-name) {
-		width: 100%;
-		margin-bottom: 0.375rem;
-	}
 	.name-input {
-		background-color: var(--secondary);
-		outline: 0.125rem solid var(--secondary);
-		resize: none;
-		border: none;
-		padding: 0.25rem 0.375rem;
-		border-radius: 0.375rem;
-		font-size: 1.25rem;
 		width: 100%;
 		box-sizing: border-box;
+		padding: 0.25rem 0.375rem;
+		margin-top: 0.375rem;
+		border: none;
+		border-radius: 0.375rem;
+		background-color: var(--secondary);
+		font-size: 1.25rem;
 		font-weight: 500;
+		outline: 0.125rem solid var(--secondary);
+		resize: none;
 	}
+
 	.name-input:hover {
 		outline-color: var(--secondary-foreground);
 	}
+
 	.name-input:focus {
 		outline-color: var(--primary);
 	}
-	.btns-container {
-		width: 100%;
-		display: flex;
-		flex-direction: row;
-		grid-template-columns: 1fr 1fr;
-		justify-content: right;
-		gap: 0.5rem;
+
+	.voki-name-section :global(#voki-name-err-block) {
 		margin-top: 0.5rem;
 	}
 
-	.btns-container button {
-		width: 7rem;
-		border: none;
-		border-radius: 0.25rem;
-		font-size: 1.125rem;
-		font-weight: 450;
-		letter-spacing: 0.2px;
-		cursor: pointer;
-		transition: transform 0.12s ease-in;
-		height: 2rem;
-	}
-	.cancel-btn {
-		font-weight: 480;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
-	}
-	.cancel-btn:hover {
-		background-color: var(--accent);
-		color: var(--accent-foreground);
-	}
-	.save-btn {
-		background-color: var(--primary);
-		color: var(--primary-foreground);
-	}
-	.save-btn:hover {
-		background-color: var(--primary-hov);
-	}
 	.voki-name-p {
 		width: 100%;
 	}
+
 	.voki-name-value {
-		text-decoration: none;
 		color: var(--text);
 		font-size: 1.5rem;
 		font-weight: 500;
+		text-decoration: none;
 	}
 </style>

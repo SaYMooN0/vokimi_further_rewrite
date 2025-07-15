@@ -20,11 +20,11 @@ public sealed class VokiName : ValueObject
         CheckForErr(value).IsErr(out var err) ? err : new VokiName(value);
 
     public static ErrOrNothing CheckForErr(string name) {
-        ErrOrNothing errs = ErrOrNothing.Nothing;
         if (string.IsNullOrWhiteSpace(name)) {
-            errs.AddNext(ErrFactory.NoValue.Common("Voki name cannot be empty"));
+            return ErrFactory.NoValue.Common("Voki name cannot be empty");
         }
 
+        ErrOrNothing errs = ErrOrNothing.Nothing;
         if (name.Length < MinLength) {
             errs.AddNext(ErrFactory.ValueOutOfRange(
                 $"Voki name must be at least {MinLength} characters", $"Provided name is {name.Length} characters"

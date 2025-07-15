@@ -39,35 +39,43 @@
 		display: grid;
 		align-items: center;
 		width: 100%;
+		box-sizing: border-box;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.25rem;
-		background-color: var(--back-second);
-		box-sizing: border-box;
+		color: var(--text);
 		grid-template-columns: 1fr auto;
 	}
 
+	.tag-display:hover {
+		background-color: var(--secondary);
+	}
+
 	.tag-display span {
-		font-size: 1.25rem;
+		font-size: 1.125rem;
+		cursor: default;
 		word-break: break-all;
 	}
 
 	.tag-display svg {
 		height: 1.5rem;
+		box-sizing: border-box;
 		padding: 0.25rem;
 		border-radius: 16%;
-		background-color: var(--gray);
-		color: var(--back-main);
-		transition: all 0.08s ease-in;
+		background-color: var(--muted);
+		stroke-width: 3;
+		color: var(--muted-foreground);
+		transition: all 0.04s ease-in;
 		cursor: pointer;
 		aspect-ratio: 1/1;
-		box-sizing: border-box;
 	}
 
 	.add-btn:hover {
-		background-color: var(--accent-main);
+		background-color: var(--primary);
+		color: var(--primary-foreground);
 	}
 
 	.remove-btn:hover {
-		background-color: var(--err-red);
+		background-color: var(--err-foreground);
+		color: var(--err-back);
 	}
 </style>

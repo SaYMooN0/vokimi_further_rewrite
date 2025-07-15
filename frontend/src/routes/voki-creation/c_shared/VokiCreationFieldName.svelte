@@ -9,11 +9,11 @@
 
 <style>
 	label {
+		margin-right: 0.25rem;
+		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 440;
-		color: var(--secondary-foreground);
 		text-decoration: underline;
-		margin-right: 0.25rem;
 		text-underline-offset: 0.125rem;
 	}
 </style>
