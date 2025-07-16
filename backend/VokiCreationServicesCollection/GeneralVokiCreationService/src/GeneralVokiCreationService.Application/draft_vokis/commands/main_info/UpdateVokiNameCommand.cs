@@ -1,9 +1,9 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Domain.repositories;
+﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
-namespace GeneralVokiCreationService.Application.draft_vokis.commands;
+namespace GeneralVokiCreationService.Application.draft_vokis.commands.main_info;
 
 public sealed record UpdateVokiNameCommand(VokiId VokiId, VokiName NewVokiName) :
     ICommand<VokiName>,

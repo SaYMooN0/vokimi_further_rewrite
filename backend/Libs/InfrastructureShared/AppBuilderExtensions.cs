@@ -7,9 +7,6 @@ namespace InfrastructureShared;
 public static class AppBuilderExtensions
 {
     public static void ConfigureLogging(this WebApplicationBuilder builder) {
-        var serviceName = builder.Configuration["ServiceName"]
-                          ?? throw new ArgumentNullException("ServiceName is not provided");
-
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)

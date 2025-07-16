@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Domain.repositories;
+﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 using GeneralVokiCreationService.Infrastructure.integration_events;
 using GeneralVokiCreationService.Infrastructure.persistence;
 using GeneralVokiCreationService.Infrastructure.persistence.repositories;

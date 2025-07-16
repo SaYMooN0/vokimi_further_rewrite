@@ -10,16 +10,10 @@
 	}>();
 </script>
 
-<div class="checkbox-wrapper-46">
-	<input type="checkbox" {id} class="input" />
-	<label for={id} class="cbx"
-		><span>
-			<svg viewBox="0 0 12 10" height="10px" width="12px">
-				<polyline points="1.5 6 4.5 9 10.5 1"></polyline></svg
-			></span
-		></label
-	>
-</div>
+<input type="checkbox" {id} class="input" bind:checked />
+<label for={id} class="cbx unselectable">
+	<span><svg viewBox="0 0 12 10"> <polyline points="1.5 6 4.5 9 10.5 1" /></svg></span>
+</label>
 
 <style>
 	input {
@@ -28,10 +22,7 @@
 	}
 
 	.cbx {
-		margin: auto;
-		-webkit-user-select: none;
-		user-select: none;
-		cursor: pointer;
+		display: inline;
 	}
 	.cbx span {
 		display: inline-block;
@@ -39,62 +30,42 @@
 		transform: translate3d(0, 0, 0);
 	}
 	.cbx span {
-		position: relative;
-		width: 18px;
-		height: 18px;
-		border-radius: 3px;
+		width: 1.25rem;
+		height: 1.25rem;
+		border-radius: 0.25rem;
 		transform: scale(1);
 		vertical-align: middle;
-		border: 1px solid #9098a9;
+		border: 0.125rem solid var(--secondary-foreground);
 		transition: all 0.2s ease;
 	}
 	.cbx span svg {
-		position: absolute;
-		top: 3px;
-		left: 2px;
 		fill: none;
-		stroke: #ffffff;
+		height: 100%;
+		width: 100%;
+		padding: 0.125rem;
+		box-sizing: border-box;
+		stroke: var(--primary-foreground);
 		stroke-width: 2;
 		stroke-linecap: round;
 		stroke-linejoin: round;
-		stroke-dasharray: 16px;
-		stroke-dashoffset: 16px;
+		stroke-dasharray: 1rem;
+		stroke-dashoffset: 1rem;
 		transition: all 0.3s ease;
 		transition-delay: 0.1s;
 		transform: translate3d(0, 0, 0);
 	}
-	.cbx span:before {
-		content: '';
-		width: 100%;
-		height: 100%;
-		background: #506eec;
-		display: block;
-		transform: scale(0);
-		opacity: 1;
-		border-radius: 50%;
-	}
 
 	.cbx:hover span {
-		border-color: #506eec;
+		border-color: var(--primary);
+		background-color: var(--secondary);
 	}
 
 	.input:checked + .cbx span {
-		background: #506eec;
-		border-color: #506eec;
+		background: var(--primary);
+		border-color: var(--primary);
 		animation: wave-46 0.4s ease;
 	}
 	.input:checked + .cbx span svg {
 		stroke-dashoffset: 0;
-	}
-	.input:checked + .cbx span:before {
-		transform: scale(3.5);
-		opacity: 0;
-		transition: all 0.6s ease;
-	}
-
-	@keyframes wave-46 {
-		50% {
-			transform: scale(0.9);
-		}
 	}
 </style>

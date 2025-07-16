@@ -5,5 +5,6 @@ namespace VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 
 public record class VokiCoverUpdatedEvent(
     VokiId VokiId,
+    DraftVokiCoverKey OldCover,
     DraftVokiCoverKey NewCover
 ) : IDomainEvent;

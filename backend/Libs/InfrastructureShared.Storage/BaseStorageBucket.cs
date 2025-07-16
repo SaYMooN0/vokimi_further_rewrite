@@ -1,11 +1,11 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
+using Microsoft.Extensions.Logging;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
-using SharedKernel.exceptions;
 using VokimiStorageKeysLib;
 
-namespace VokimiStorageService.storage_service;
+namespace InfrastructureShared.Storage;
 
 public abstract class BaseStorageBucket
 {
@@ -13,7 +13,7 @@ public abstract class BaseStorageBucket
     private readonly BaseBucketNameProvider _bucketNameProvider;
     private readonly ILogger<BaseStorageBucket> _logger;
 
-    public BaseStorageBucket(
+    protected BaseStorageBucket(
         IAmazonS3 s3Client,
         BaseBucketNameProvider bucketNameProvider,
         ILogger<BaseStorageBucket> logger
@@ -23,7 +23,7 @@ public abstract class BaseStorageBucket
         _logger = logger;
     }
 
-    public async Task<ErrOrNothing> UploadFileAsync(BaseStorageKey key, Stream content, string contentType) {
+    protected async Task<ErrOrNothing> UploadFileAsync(BaseStorageKey key, Stream content, string contentType) {
         try {
             var request = new PutObjectRequest {
                 BucketName = _bucketNameProvider.BucketName,
@@ -45,7 +45,7 @@ public abstract class BaseStorageBucket
         }
     }
 
-    public async Task<ErrOr<(Stream Stream, string ContentType)>> GetFileAsync(string key) {
+    protected async Task<ErrOr<(Stream Stream, string ContentType)>> GetFileAsync(string key) {
         try {
             GetObjectRequest request = new() {
                 BucketName = _bucketNameProvider.BucketName,
@@ -64,6 +64,27 @@ public abstract class BaseStorageBucket
         catch (Exception ex) {
             _logger.LogError(ex, "[Error] in {MethodName}, unexpected exception occurred", nameof(GetFileAsync));
             return ErrFactory.Unspecified("Unexpected error during file download");
+        }
+    }
+
+    protected async Task<ErrOrNothing> DeleteAsync(BaseStorageKey key) {
+        try {
+            var request = new DeleteObjectRequest {
+                BucketName = _bucketNameProvider.BucketName,
+                Key = key.ToString()
+            };
+
+            await _s3Client.DeleteObjectAsync(request);
+
+            return ErrOrNothing.Nothing;
+        }
+        catch (AmazonS3Exception ex) {
+            _logger.LogError(ex, "[Error] in {MethodName}, S3 exception occurred", nameof(DeleteAsync));
+            return ErrFactory.Unspecified("File deletion failed");
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex, "[Error] in {MethodName}, unexpected exception occurred", nameof(DeleteAsync));
+            return ErrFactory.Unspecified("Unexpected error during file deletion");
         }
     }
 }

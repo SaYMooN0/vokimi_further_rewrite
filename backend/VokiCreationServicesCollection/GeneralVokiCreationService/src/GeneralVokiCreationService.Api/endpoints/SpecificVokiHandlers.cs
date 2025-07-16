@@ -79,8 +79,9 @@ public static class SpecificVokiHandlers
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<UpdateVokiCoverRequest>();
+        var file = request.File!;
 
-        UpdateVokiCoverCommand command = new(id, request.ParsedCoverKey);
+        UpdateVokiCoverCommand command = new(id, file.OpenReadStream(), file.Name, file.ContentType);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (key) => Results.Json(

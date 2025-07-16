@@ -1,4 +1,4 @@
-﻿namespace VokimiStorageService.config;
+﻿namespace InfrastructureShared.Storage;
 
 public class S3Config
 {

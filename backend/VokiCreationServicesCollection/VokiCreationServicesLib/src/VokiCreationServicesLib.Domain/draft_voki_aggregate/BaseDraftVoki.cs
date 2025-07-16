@@ -58,8 +58,9 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
             );
         }
 
+        DraftVokiCoverKey oldCover = this.Cover;
         this.Cover = newCover;
-        AddDomainEvent(new VokiCoverUpdatedEvent(Id, Cover));
+        AddDomainEvent(new VokiCoverUpdatedEvent(Id, OldCover: oldCover, Cover));
         return ErrOrNothing.Nothing;
     }
 

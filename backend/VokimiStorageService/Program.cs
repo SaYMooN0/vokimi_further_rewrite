@@ -1,4 +1,5 @@
 using ApiShared;
+using VokimiStorageService.buckets;
 using VokimiStorageService.extensions;
 
 namespace VokimiStorageService;
@@ -10,8 +11,6 @@ public class Program
 
         builder.ConfigureLogging();
 
-        builder.Services.AddAuth(builder.Configuration);
-        builder.Services.AddUserContext();
         builder.Services.AddS3Storage(builder.Configuration);
 
         var app = builder.Build();
@@ -25,8 +24,24 @@ public class Program
 
         app.AddExceptionHandlingMiddleware();
 
-        app.MapEndpoints();
+        app
+            .MapGroup("/")
+            .DisableAntiforgery()
+            .MapGet("/{*fileKey}", GetFileFromStorage);
 
         app.Run();
+    }
+    private static async Task<IResult> GetFileFromStorage(
+        CancellationToken ct,
+        string fileKey,
+        MainStorageBucket bucket
+    ) {
+        var result = await bucket.GetFileAsync(fileKey);
+        return CustomResults.FromErrOr(result, (obj) => Results.Stream(
+                stream: obj.Stream,
+                contentType: obj.ContentType,
+                fileDownloadName: fileKey
+            )
+        );
     }
 }

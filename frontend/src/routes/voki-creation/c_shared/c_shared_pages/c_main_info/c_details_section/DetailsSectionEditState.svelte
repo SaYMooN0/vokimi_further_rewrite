@@ -45,7 +45,7 @@
 		if (response.isSuccess) {
 			updateParent(response.data);
 			savingErrs = [];
-            cancelEditing();
+			cancelEditing();
 		} else {
 			savingErrs = response.errs;
 		}
@@ -62,15 +62,15 @@
 <DefaultErrBlock errList={savingErrs} />
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Language:" />
-	<select bind:value={language}>
+	<select bind:value={language} class="language-select">
 		{#each LanguageUtils.values() as lang}
 			<option value={lang}>{LanguageUtils.name(lang)}</option>
 		{/each}
 	</select>
 </p>
 <p class="field-p">
-    <VokiCreationFieldName fieldName="Age restriction:" />
-    <DefaultCheckBox bind:checked={isAgeRestricted} />
+	<VokiCreationFieldName fieldName="Age restriction:" />
+	<DefaultCheckBox bind:checked={isAgeRestricted} />
 </p>
 
 <MainInfoSectionSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
@@ -96,5 +96,39 @@
 
 	.description-input:focus {
 		outline-color: var(--primary);
+	}
+	.field-p {
+		margin-top: 1rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5rem;
+	}
+	.language-select {
+		border-radius: 1rem;
+		color: var(--text);
+		border: 0.125rem solid var(--secondary-foreground);
+		font-size: 1.375rem;
+		padding: 0 0.75rem;
+		appearance: none;
+		box-sizing: border-box;
+		outline: none;
+		transition: border-radius 0.2s ease-out;
+		font-weight: 440;
+	}
+
+	.language-select:hover,
+	.language-select:focus,
+	.language-select:focus-within,
+	.language-select:has(:hover) {
+		border-color: var(--primary);
+		border-radius: 0.5rem;
+	}
+	.language-select option {
+		background-color: var(--secondary);
+		color: var(--text);
+	}
+	.language-select option:hover {
+		background-color: var(--accent);
 	}
 </style>

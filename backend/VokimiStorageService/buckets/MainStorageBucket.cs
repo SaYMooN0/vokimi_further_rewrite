@@ -1,6 +1,8 @@
 ﻿using Amazon.S3;
+using InfrastructureShared.Storage;
+using SharedKernel.errs;
 
-namespace VokimiStorageService.storage_service.buckets;
+namespace VokimiStorageService.buckets;
 
 public class MainStorageBucket : BaseStorageBucket
 {
@@ -9,6 +11,8 @@ public class MainStorageBucket : BaseStorageBucket
         MainBucketNameProvider mainBucketNameProvider,
         ILogger<MainStorageBucket> logger
     ) : base(s3Client, mainBucketNameProvider, logger) { }
+
+    public new Task<ErrOr<(Stream Stream, string ContentType)>> GetFileAsync(string key) => base.GetFileAsync(key);
 }
 
 public class MainBucketNameProvider : BaseBucketNameProvider

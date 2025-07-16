@@ -17,19 +17,25 @@ public class DraftVokiCoverKey : BaseStorageKey
             return;
         }
 
-        var validationResult = DraftVokiCoverKeyScheme.IsKeyValid(value, out var vokiId);
+        InvalidConstructorArgumentException.ThrowIfErr(this,
+            DraftVokiCoverKeyScheme.IsKeyValid(value, out var vokiId)
+        );
+        
         VokiId = vokiId;
-        InvalidConstructorArgumentException.ThrowIfErr(this, validationResult);
-
         Value = value;
     }
 
     public static DraftVokiCoverKey Default => new(DefaultKeyValue);
 
-    public static DraftVokiCoverKey CreateWithId(VokiId id, string extension) =>
-        new($"/draft-vokis/{id}/cover.{extension}");
+    public static ErrOr<DraftVokiCoverKey> CreateWithId(VokiId id, string extension) {
+        var ket = $"/draft-vokis/{id}/cover.{extension}";
+        if (DraftVokiCoverKeyScheme.IsKeyValid(ket, out _).IsErr(out var err)) {
+            return err;
+        }
+
+        return new DraftVokiCoverKey(ket);
+    }
 
     public bool IsDefault() => Value == DefaultKeyValue;
     public bool IsWithId(VokiId expectedId) => IsDefault() || VokiId == expectedId;
-    public static ErrOrNothing IsKeyValid(string key) => DraftVokiCoverKeyScheme.IsKeyValid(key, out _);
 }

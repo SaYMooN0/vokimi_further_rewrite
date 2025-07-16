@@ -1,5 +1,5 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Domain.repositories;
+﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using MassTransit;
 using SharedKernel.common.vokis;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;

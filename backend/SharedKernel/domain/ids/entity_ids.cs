@@ -8,3 +8,11 @@ public class VokiId(Guid value) : GuidBasedId(value)
 {
     public static VokiId CreateNew() => new(Guid.CreateVersion7());
 }
+public class GeneralVokiQuestionId(Guid value) : GuidBasedId(value)
+{
+    public static GeneralVokiQuestionId CreateNew() => new(Guid.CreateVersion7());
+}
+public class GeneralVokiAnswerId(Guid value) : GuidBasedId(value)
+{
+    public static GeneralVokiAnswerId CreateNew() => new(Guid.CreateVersion7());
+}

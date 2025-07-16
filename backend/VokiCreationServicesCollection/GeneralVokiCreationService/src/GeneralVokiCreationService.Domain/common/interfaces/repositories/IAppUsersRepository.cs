@@ -1,6 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.app_user_aggregate;
 
-namespace GeneralVokiCreationService.Domain.repositories;
+namespace GeneralVokiCreationService.Domain.common.interfaces.repositories;
 
 public interface IAppUsersRepository
 {

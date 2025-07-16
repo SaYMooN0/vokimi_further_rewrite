@@ -1,4 +1,4 @@
-﻿namespace VokimiStorageService.storage_service;
+﻿namespace InfrastructureShared.Storage;
 
 public abstract class BaseBucketNameProvider
 {

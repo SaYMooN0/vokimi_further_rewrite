@@ -2,7 +2,7 @@
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.repositories;
 
-namespace GeneralVokiCreationService.Domain.repositories;
+namespace GeneralVokiCreationService.Domain.common.interfaces.repositories;
 
 public interface IDraftGeneralVokiRepository : IDraftVokiRepository
 {

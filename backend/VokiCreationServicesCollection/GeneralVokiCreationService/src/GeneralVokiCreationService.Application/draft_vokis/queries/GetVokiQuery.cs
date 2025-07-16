@@ -1,5 +1,5 @@
+using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Domain.repositories;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.queries;

@@ -4,8 +4,8 @@ namespace GeneralVokiCreationService.Api.contracts.main_info;
 
 public class UpdateVokiCoverRequest : IRequestWithValidationNeeded
 {
-    public string NewVokiCover { get; init; }
-    public ErrOrNothing Validate() => DraftVokiCoverKey.IsKeyValid(NewVokiCover);
+    public IFormFile? File { get; init; }
 
-    public DraftVokiCoverKey ParsedCoverKey => new(NewVokiCover);
+    public ErrOrNothing Validate() =>
+        File is null ? ErrFactory.NoValue.Common("No file selected") : ErrOrNothing.Nothing;
 }

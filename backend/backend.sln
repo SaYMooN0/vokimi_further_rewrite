@@ -80,6 +80,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagsService.Infrastructure"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TagsService.Api", "TagsService\src\TagsService.Api\TagsService.Api.csproj", "{533ABC16-DD16-4B76-87C9-8D5002189435}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureShared.Storage", "Libs\InfrastructureShared.Storage\InfrastructureShared.Storage.csproj", "{CB160BD8-1289-4A4D-8DD0-03676AF8F224}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,7 @@ Global
 		{28524E16-11A6-4909-820C-DB03CBB77185} = {EE3AC37E-B7EF-4128-BAD4-CA515903A21E}
 		{56A23264-F88B-4D3B-9D34-7E15CF9BECB9} = {EE3AC37E-B7EF-4128-BAD4-CA515903A21E}
 		{533ABC16-DD16-4B76-87C9-8D5002189435} = {EE3AC37E-B7EF-4128-BAD4-CA515903A21E}
+		{CB160BD8-1289-4A4D-8DD0-03676AF8F224} = {D19B225D-D1A8-40C2-9DE4-FBFB4BAF9DA0}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2CAB55A2-15A7-401C-94C6-F8B273B50F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -221,5 +224,9 @@ Global
 		{533ABC16-DD16-4B76-87C9-8D5002189435}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{533ABC16-DD16-4B76-87C9-8D5002189435}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{533ABC16-DD16-4B76-87C9-8D5002189435}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB160BD8-1289-4A4D-8DD0-03676AF8F224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB160BD8-1289-4A4D-8DD0-03676AF8F224}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB160BD8-1289-4A4D-8DD0-03676AF8F224}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB160BD8-1289-4A4D-8DD0-03676AF8F224}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,5 +1,5 @@
 ﻿using GeneralVokiCreationService.Domain.app_user_aggregate;
-using GeneralVokiCreationService.Domain.repositories;
+using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.repositories;
 
