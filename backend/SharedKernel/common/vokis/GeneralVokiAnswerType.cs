@@ -16,12 +16,9 @@ public static class GeneralVokiAnswerTypeExtensions
     public static T Match<T>(
         this GeneralVokiAnswerType type,
         Func<T> textOnly,
-        Func<T> imageOnly,
-        Func<T> imageAndText,
-        Func<T> colorOnly,
-        Func<T> colorAndText,
-        Func<T> audioOnly,
-        Func<T> audioAndText
+        Func<T> imageOnly, Func<T> imageAndText,
+        Func<T> colorOnly, Func<T> colorAndText,
+        Func<T> audioOnly, Func<T> audioAndText
     ) => type switch {
         GeneralVokiAnswerType.TextOnly => textOnly(),
         GeneralVokiAnswerType.ImageOnly => imageOnly(),

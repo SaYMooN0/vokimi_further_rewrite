@@ -27,7 +27,7 @@ public class Program
         app
             .MapGroup("/")
             .DisableAntiforgery()
-            .MapGet("/{*fileKey}", GetFileFromStorage);
+            .MapGet("/main/{*fileKey}", GetFileFromStorage);
 
         app.Run();
     }

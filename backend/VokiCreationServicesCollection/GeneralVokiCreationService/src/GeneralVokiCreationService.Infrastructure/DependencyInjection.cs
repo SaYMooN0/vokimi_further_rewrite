@@ -1,9 +1,14 @@
-﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
+﻿using Amazon.Runtime;
+using Amazon.S3;
+using GeneralVokiCreationService.Application;
+using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 using GeneralVokiCreationService.Infrastructure.integration_events;
 using GeneralVokiCreationService.Infrastructure.persistence;
 using GeneralVokiCreationService.Infrastructure.persistence.repositories;
+using GeneralVokiCreationService.Infrastructure.storage;
 using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
+using InfrastructureShared.Storage;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +24,7 @@ public static class DependencyInjection
         return services
             .AddDefaultServices()
             .AddPersistence(configuration)
+            .AddS3(configuration)
             .AddAuth(configuration)
             .AddConfiguredMassTransit(configuration)
             .AddIntegrationEventsPublisher();
@@ -106,6 +112,24 @@ public static class DependencyInjection
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IDraftGeneralVokiRepository, DraftGeneralVokiRepository>();
         services.AddScoped<IDraftVokiRepository, DraftGeneralVokiRepository>();
+        
+        return services;
+    }
+    private static IServiceCollection AddS3(this IServiceCollection services, IConfiguration configuration) {
+        var s3Config = configuration.GetSection("S3").Get<S3Config>();
+        if (s3Config is null) {
+            throw new Exception("S3 is not configured");
+        }
+
+        services.AddSingleton<IAmazonS3>(_ => new AmazonS3Client(
+            new BasicAWSCredentials(s3Config.AccessKey, s3Config.SecretKey),
+            new AmazonS3Config { ServiceURL = s3Config.ServiceUrl }
+        ));
+
+        string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
+        services.AddSingleton(new MainBucketNameProvider(mainBucketName));
+        
+        services.AddScoped<IMainStorageBucket,  MainStorageBucket>();
         
         return services;
     }

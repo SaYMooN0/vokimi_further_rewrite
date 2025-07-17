@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answer_type_data;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using SharedKernel.common.vokis;
 using SharedKernel.errs.utils;
 

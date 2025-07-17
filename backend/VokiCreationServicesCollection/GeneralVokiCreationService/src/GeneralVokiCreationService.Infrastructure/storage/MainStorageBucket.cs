@@ -7,7 +7,7 @@ using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Infrastructure.storage;
 
-public class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
+internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
 {
     public MainStorageBucket(
         IAmazonS3 s3Client,

@@ -9,7 +9,7 @@ using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
-public static class SpecificVokiHandlers
+internal static class SpecificVokiHandlers
 {
     internal static void MapSpecificVokiHandlers(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup("/vokis/{vokiId}/");
@@ -69,7 +69,7 @@ public static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (key) => Results.Json(
-            new { NewVokiCover = key.ToString() }
+            new { NewCover = key.ToString() }
         ));
     }
 
@@ -85,7 +85,7 @@ public static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (key) => Results.Json(
-            new { NewVokiCover = key.ToString() }
+            new { NewCover = key.ToString() }
         ));
     }
 

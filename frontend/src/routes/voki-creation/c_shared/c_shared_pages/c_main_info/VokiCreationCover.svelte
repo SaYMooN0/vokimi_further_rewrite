@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { ApiVokimiStorage } from '$lib/ts/backend-communication/storage-service';
 	import { toast } from 'svelte-sonner';
 	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
+	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 
 	let { cover, vokiId }: { cover: string; vokiId: string } = $props<{
 		cover: string;
@@ -11,7 +11,12 @@
 	async function handleImageInputChange(event: Event) {
 		const input = event.target as HTMLInputElement;
 		if (input.files && input.files.length > 0) {
-			// await updateCover(input.files[0]);
+			const response = await vokiCreationApi.updateVokiCover(vokiId, input.files[0]);
+			if (response.isSuccess) {
+				cover = response.data.newCover;
+			} else {
+				toast.error("Couldn't update voki cover");
+			}
 		}
 	}
 	const vokiCreationApi = getVokiCreationPageApiService();
@@ -19,7 +24,7 @@
 	async function changeImageToDefault() {
 		const response = await vokiCreationApi.setVokiCoverToDefault(vokiId);
 		if (response.isSuccess) {
-			cover = response.data.newVokiCover;
+			cover = response.data.newCover;
 		} else {
 			toast.error("Couldn't set voki cover to default");
 		}
@@ -27,7 +32,7 @@
 </script>
 
 <div class="img-container">
-	<img src={ApiVokimiStorage.fileSrcWithVersion(cover)} alt="voki cover" />
+	<img src={StorageBucketMain.fileSrcWithVersion(cover)} alt="voki cover" />
 	<label for="voki-cover-input" class="img-btn change-btn">Change cover</label>
 	<input
 		type="file"

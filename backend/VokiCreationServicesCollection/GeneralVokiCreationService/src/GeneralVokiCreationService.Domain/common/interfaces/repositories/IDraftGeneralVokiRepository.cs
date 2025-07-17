@@ -9,6 +9,7 @@ public interface IDraftGeneralVokiRepository : IDraftVokiRepository
     Task Add(DraftGeneralVoki voki);
 
     new Task<DraftGeneralVoki?> GetByIdAsNoTracking(VokiId vokiId);
+     Task<DraftGeneralVoki?> GetWithQuestionsAsNoTracking(VokiId vokiId);
 
 
     Task<DraftGeneralVoki?> GetById(VokiId vokiId);

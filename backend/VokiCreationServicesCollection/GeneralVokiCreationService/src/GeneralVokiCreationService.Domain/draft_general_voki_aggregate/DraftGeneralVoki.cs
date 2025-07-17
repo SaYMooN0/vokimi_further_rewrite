@@ -20,6 +20,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         creationDate
     ) { }
 
+    private readonly List<VokiQuestion> _questions;
+    public ImmutableArray<VokiQuestion> Questions => _questions.ToImmutableArray();
+
     public static DraftGeneralVoki Create(
         VokiId vokiId, AppUserId primaryAuthorId,
         VokiName name, DraftVokiCoverKey cover,

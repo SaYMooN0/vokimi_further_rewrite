@@ -1,8 +1,4 @@
-﻿using SharedKernel.domain.ids;
-using SharedKernel.errs;
-using SharedKernel.exceptions;
-
-namespace VokimiStorageKeysLib.draft_voki_cover;
+﻿namespace VokimiStorageKeysLib.draft_voki_cover;
 
 public class DraftVokiCoverKey : BaseStorageKey
 {

@@ -2,7 +2,7 @@
 
 namespace GeneralVokiCreationService.Infrastructure.storage;
 
-public class MainBucketNameProvider : BaseBucketNameProvider
+internal class MainBucketNameProvider : BaseBucketNameProvider
 {
     public MainBucketNameProvider(string bucketName) : base(bucketName) { }
 }

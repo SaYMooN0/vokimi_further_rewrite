@@ -1,8 +1,4 @@
-﻿using System.Collections.Immutable;
-using SharedKernel.domain.ids;
-using SharedKernel.errs;
-
-namespace VokimiStorageKeysLib.draft_voki_cover;
+﻿namespace VokimiStorageKeysLib.draft_voki_cover;
 
 internal static class DraftVokiCoverKeyScheme
 {

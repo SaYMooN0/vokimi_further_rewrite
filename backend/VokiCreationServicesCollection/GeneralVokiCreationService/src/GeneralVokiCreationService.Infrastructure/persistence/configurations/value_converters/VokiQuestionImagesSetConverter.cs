@@ -1,0 +1,16 @@
+﻿using System.Collections.Immutable;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using VokimiStorageKeysLib.draft_general_voki.question_image;
+
+namespace GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters;
+
+public class VokiQuestionImagesSetConverter : ValueConverter<VokiQuestionImagesSet, string[]>
+{
+    public VokiQuestionImagesSetConverter() : base(
+        set => set.Keys.Select(k => k.ToString()).ToArray(),
+        keys => VokiQuestionImagesSet.Create(
+            keys.Select(k => new DraftGeneralVokiQuestionImageKey(k)).ToImmutableArray()
+        ).AsSuccess()
+    ) { }
+}

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { ApiVokimiStorage } from '$lib/ts/backend-communication/storage-service';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { toast } from 'svelte-sonner';
 	import { MyVokisCacheStore } from '../my-vokis-cache-store.svelte';
 	import type { PageProps } from './$types';
 	import VokiSkeletonItem from './c_page.svelte/VokiSkeletonItem.svelte';
 	import VokiUnableToLoad from './c_page.svelte/VokiUnableToLoad.svelte';
+	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 
 	let { data }: PageProps = $props();
 </script>
@@ -32,7 +32,7 @@
 							href="/voki-creation/{StringUtils.pascalToKebab(voki.type)}/{vokiId}"
 							class="voki-item"
 						>
-							<img class="voki-cover" src={ApiVokimiStorage.fileSrc(voki.cover)} alt="voki cover" />
+							<img class="voki-cover" src={StorageBucketMain.fileSrc(voki.cover)} alt="voki cover" />
 							<div class="bottom-items">
 								<div class="name-line">
 									<p class="voki-name">

@@ -17,7 +17,7 @@ export type VokiDetails = {
 }
 
 export interface IVokiCreationBackendService {
-    setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newVokiCover: string; }>>;
+    setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newCover: string; }>>;
     updateVokiCover(vokiId: string, file: File): Promise<ResponseResult<{ newCover: string; }>>;
     updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newName: string; }>>;
     updateVokiTags(vokiId: string, tags: string[]): Promise<ResponseResult<{ newTags: string[]; }>>;
@@ -28,8 +28,8 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
         super(baseUrl);
     }
 
-    public async setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newVokiCover: string; }>> {
-        return await this.fetchJsonResponse<{ newVokiCover: string }>(
+    public async setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newCover: string; }>> {
+        return await this.fetchJsonResponse<{ newCover: string }>(
             `/vokis/${vokiId}/set-cover-to-default`,
             { method: 'PATCH' }
         );
