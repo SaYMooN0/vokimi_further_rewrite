@@ -10,7 +10,13 @@ public class QuestionAnswersCountLimitConverter : ValueConverter<QuestionAnswers
         limit => ToString(limit),
         str => FromString(str)
     ) { }
+    private static string ToString(QuestionAnswersCountLimit value) {
+        if (!value.IsMultipleChoice) {
+            return "SingleChoice";
+        }
 
+        return $"{value.MinAnswers}-{value.MaxAnswers}";
+    }
     private static QuestionAnswersCountLimit FromString(string str) {
         if (str == "SingleChoice") {
             return QuestionAnswersCountLimit.SingleChoice();
@@ -40,11 +46,5 @@ public class QuestionAnswersCountLimitConverter : ValueConverter<QuestionAnswers
         return res.AsSuccess();
     }
 
-    private static string ToString(QuestionAnswersCountLimit value) {
-        if (!value.IsMultipleChoice) {
-            return "SingleChoice";
-        }
-
-        return $"{value.MinAnswers}-{value.MaxAnswers}";
-    }
+  
 }

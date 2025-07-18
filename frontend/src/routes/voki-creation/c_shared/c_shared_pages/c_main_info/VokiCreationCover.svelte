@@ -15,6 +15,7 @@
 			if (response.isSuccess) {
 				cover = response.data.newCover;
 			} else {
+				console.log(response.errs);
 				toast.error("Couldn't update voki cover");
 			}
 		}

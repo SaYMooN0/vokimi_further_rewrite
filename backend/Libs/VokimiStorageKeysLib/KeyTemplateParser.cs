@@ -11,7 +11,7 @@ public class KeyTemplateParser
 
     private readonly Regex _regex;
     private readonly string[] _placeholders;
-    private readonly Dictionary<string, string> _typesByPlaceholder;
+    private readonly ImmutableDictionary<string, string> _typesByPlaceholder;
     private readonly ImmutableHashSet<string> _allowedExtensions;
 
     private static readonly Dictionary<string, Func<string, bool>> SupportedPlaceholderTypes = new() {
@@ -20,9 +20,8 @@ public class KeyTemplateParser
     };
 
     public KeyTemplateParser(string template, ImmutableHashSet<string> allowedExtensions) {
-        _placeholders = [];
-        _typesByPlaceholder = [];
-
+        List<string> placeholders = [];
+        Dictionary<string, string> typesByPlaceholder = [];
         if (allowedExtensions is null || allowedExtensions.Count == 0) {
             throw new ArgumentException("Allowed extensions must be non-empty");
         }
@@ -33,8 +32,8 @@ public class KeyTemplateParser
             var name = match.Groups[1].Value;
             var type = match.Groups[2].Success ? match.Groups[2].Value : "str";
 
-            _placeholders.Append(name);
-            _typesByPlaceholder[name] = type;
+            placeholders.Add(name);
+            typesByPlaceholder[name] = type;
 
             return $"(?<{name}>{type switch {
                 "id" => @"[0-9a-fA-F\-]{36}",
@@ -46,6 +45,8 @@ public class KeyTemplateParser
         pattern += @"\.(?<ext>\w+)$";
         pattern += "$";
 
+        _placeholders = placeholders.ToArray();
+        _typesByPlaceholder = typesByPlaceholder.ToImmutableDictionary();
         _regex = new Regex(pattern, RegexOptions.Compiled);
     }
 

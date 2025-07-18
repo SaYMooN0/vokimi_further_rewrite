@@ -2,7 +2,7 @@
 
 public class DraftGeneralVokiAnswerAudioKeyScheme
 {
-    public const string Template = "/draft-vokis/{vokiId:id}/{questionId:id}/{answerId:id}/{versionId:id}";
+    public const string Template = "draft-vokis/{vokiId:id}/{questionId:id}/{answerId:id}/{versionId:id}";
     public static readonly ImmutableHashSet<string> AllowedExtensions = ["mp3"];
     private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
 

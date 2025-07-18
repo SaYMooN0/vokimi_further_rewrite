@@ -10,6 +10,11 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 {
     private DraftGeneralVoki() { }
 
+
+    public VokiTakingProcessSettings TakingProcessSettings { get; private set; }
+    private readonly List<VokiQuestion> _questions;
+    public ImmutableArray<VokiQuestion> Questions => _questions.ToImmutableArray();
+
     private DraftGeneralVoki(
         VokiId vokiId, AppUserId primaryAuthorId,
         VokiName name, DraftVokiCoverKey cover,
@@ -18,10 +23,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         vokiId, primaryAuthorId,
         name, cover,
         creationDate
-    ) { }
-
-    private readonly List<VokiQuestion> _questions;
-    public ImmutableArray<VokiQuestion> Questions => _questions.ToImmutableArray();
+    ) {
+        TakingProcessSettings = VokiTakingProcessSettings.Default;
+        _questions = [];
+    }
 
     public static DraftGeneralVoki Create(
         VokiId vokiId, AppUserId primaryAuthorId,
@@ -34,6 +39,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return newGeneralVoki;
     }
 
-
-  
+    public VokiQuestion AddNewQuestion(GeneralVokiAnswerType answersType) {
+        VokiQuestion question = VokiQuestion.CreateNew((ushort)_questions.Count, answersType);
+        _questions.Add(question);
+        return question;
+    }
 }

@@ -39,8 +39,8 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
         const formData = new FormData();
         formData.append("file", file);
 
-        return await this.fetchJsonResponse<{ newCover: string; }>(`/vokis/${vokiId}/cover`, {
-            method: 'POST',
+        return await this.fetchJsonResponse<{ newCover: string; }>(`/vokis/${vokiId}/update-cover`, {
+            method: 'PATCH',
             body: formData
         });
     }

@@ -14,20 +14,36 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     public GeneralVokiAnswerType AnswersType { get; }
     public ushort OrderInVoki { get; private set; }
     private readonly List<VokiQuestionAnswer> _answers;
-    public int AnswersCount => _answers.Count();
+    public ImmutableArray<VokiQuestionAnswer> Answers => _answers.ToImmutableArray();
+
     public QuestionAnswersCountLimit AnswersCountLimit { get; private set; }
 
-    public VokiQuestion(
+    private VokiQuestion(
         GeneralVokiQuestionId id,
         VokiQuestionText text,
+        VokiQuestionImagesSet images,
         ushort orderInVoki,
-        GeneralVokiAnswerType answersType) {
+        GeneralVokiAnswerType answersType,
+        QuestionAnswersCountLimit answersCountLimit
+    ) {
         Id = id;
         Text = text;
-        Images = VokiQuestionImagesSet.Empty;
+        Images = images;
         AnswersType = answersType;
         OrderInVoki = orderInVoki;
         _answers = [];
-        AnswersCountLimit = QuestionAnswersCountLimit.SingleChoice();
+        AnswersCountLimit = answersCountLimit;
     }
+
+    public static VokiQuestion CreateNew(
+        ushort orderInVoki,
+        GeneralVokiAnswerType answersType
+    ) => new(
+        GeneralVokiQuestionId.CreateNew(),
+        GeneralVokiPresets.GetRandomQuestionText(),
+        VokiQuestionImagesSet.Empty,
+        orderInVoki,
+        answersType,
+        QuestionAnswersCountLimit.SingleChoice()
+    );
 }

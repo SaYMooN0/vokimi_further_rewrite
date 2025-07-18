@@ -3,6 +3,7 @@ using GeneralVokiCreationService.Application.draft_vokis.commands;
 using GeneralVokiCreationService.Application.draft_vokis.commands.main_info;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+using Microsoft.AspNetCore.Mvc;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokimiStorageKeysLib.draft_voki_cover;
@@ -20,7 +21,8 @@ internal static class SpecificVokiHandlers
 
         group.MapPatch("/set-cover-to-default", SetVokiCoverToDefault);
         group.MapPatch("/update-cover", UpdateVokiCover)
-            .WithRequestValidation<UpdateVokiCoverRequest>();
+            .DisableAntiforgery();
+        ;
 
         group.MapPatch("/update-name", UpdateVokiName)
             .WithRequestValidation<UpdateVokiNameRequest>();
@@ -28,6 +30,8 @@ internal static class SpecificVokiHandlers
             .WithRequestValidation<UpdateVokiDetailsRequest>();
         group.MapPatch("/update-tags", UpdateVokiTags)
             .WithRequestValidation<UpdateVokiTagsRequest>();
+
+        // group.MapPatch("/update-voki-takingSettings", UpdateVokiTakingSettings);
     }
 
     private static async Task<IResult> GetVokiMainInfo(
@@ -75,13 +79,12 @@ internal static class SpecificVokiHandlers
 
     private static async Task<IResult> UpdateVokiCover(
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<UpdateVokiCoverCommand, DraftVokiCoverKey> handler
+        ICommandHandler<UpdateVokiCoverCommand, DraftVokiCoverKey> handler,
+        [FromForm] IFormFile file
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
-        var request = httpContext.GetValidatedRequest<UpdateVokiCoverRequest>();
-        var file = request.File!;
 
-        UpdateVokiCoverCommand command = new(id, file.OpenReadStream(), file.Name, file.ContentType);
+        UpdateVokiCoverCommand command = new(id, file.OpenReadStream(), file.FileName, file.ContentType);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (key) => Results.Json(

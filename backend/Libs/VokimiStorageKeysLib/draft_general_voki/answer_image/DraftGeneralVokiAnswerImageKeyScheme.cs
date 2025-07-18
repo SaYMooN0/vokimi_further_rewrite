@@ -2,7 +2,7 @@
 
 public class DraftGeneralVokiAnswerImageKeyScheme
 {
-    public const string Template = "/draft-vokis/{vokiId:id}/{questionId:id}/{answerId:id}/{versionId:id}";
+    public const string Template = "draft-vokis/{vokiId:id}/{questionId:id}/{answerId:id}/{versionId:id}";
     public static readonly ImmutableHashSet<string> AllowedExtensions = ["jpg", "webp"];
     private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
 

@@ -28,18 +28,16 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
             .Property(x => x.Cover)
             .HasConversion<StorageKeyConverter<DraftVokiCoverKey>>();
 
-        builder
-            .ComplexProperty(x => x.Details,
-                b => {
-                    b.Property(d => d.Language).HasColumnName("Details_Language");
-                    b.Property(d => d.IsAgeRestricted).HasColumnName("Details_IsAgeRestricted");
-                    b
-                        .Property(d => d.Description)
-                        .HasColumnName("Details_Description")
-                        .HasConversion<VokiDescriptionConverter>();
-                }
-            );
-        
+
+        builder.ComplexProperty(x => x.Details, b => {
+            b.Property(d => d.Language).HasColumnName("Details_Language");
+            b.Property(d => d.IsAgeRestricted).HasColumnName("Details_IsAgeRestricted");
+            b
+                .Property(d => d.Description)
+                .HasColumnName("Details_Description")
+                .HasConversion<VokiDescriptionConverter>();
+        });
+
         builder
             .Property(x => x.Tags)
             .HasVokiTagsSetConversion();
@@ -55,5 +53,16 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
 
         builder
             .Property(x => x.CreationDate);
+
+        builder.ComplexProperty(x => x.TakingProcessSettings, b => {
+            b.Property(s => s.ShuffleQuestions);
+            b.Property(d => d.ForceSequentialAnswering);
+        });
+
+        builder.Ignore(x => x.Questions);
+        builder
+            .HasMany<VokiQuestion>("_questions")
+            .WithOne()
+            .HasForeignKey("VokiId");
     }
 }

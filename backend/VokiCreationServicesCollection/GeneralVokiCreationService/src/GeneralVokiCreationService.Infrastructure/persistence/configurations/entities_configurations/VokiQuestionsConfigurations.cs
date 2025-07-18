@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.configurations.entities_configurations;
 
-public class VokiQuestionConfigurations : IEntityTypeConfiguration<VokiQuestion>
+public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion>
 {
     public void Configure(EntityTypeBuilder<VokiQuestion> builder) {
         builder
@@ -24,13 +24,11 @@ public class VokiQuestionConfigurations : IEntityTypeConfiguration<VokiQuestion>
             .Property(x => x.Images)
             .HasConversion<VokiQuestionImagesSetConverter>();
 
+        builder.Ignore(x => x.Answers);
         builder
             .HasMany<VokiQuestionAnswer>("_answers")
             .WithOne()
             .HasForeignKey("QuestionId");
-
-        builder
-            .Property(x => x.AnswersCount);
 
         builder
             .Property(x => x.AnswersCountLimit)

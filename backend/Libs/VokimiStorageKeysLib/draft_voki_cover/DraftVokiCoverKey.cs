@@ -24,12 +24,12 @@ public class DraftVokiCoverKey : BaseStorageKey
     public static DraftVokiCoverKey Default => new(DefaultKeyValue);
 
     public static ErrOr<DraftVokiCoverKey> CreateWithId(VokiId id, string extension) {
-        var ket = $"/draft-vokis/{id}/cover.{extension}";
-        if (DraftVokiCoverKeyScheme.IsKeyValid(ket, out _).IsErr(out var err)) {
+        var key = $"draft-vokis/{id}/cover{extension}"; 
+        if (DraftVokiCoverKeyScheme.IsKeyValid(key, out _).IsErr(out var err)) {
             return err;
         }
 
-        return new DraftVokiCoverKey(ket);
+        return new DraftVokiCoverKey(key);
     }
 
     public bool IsDefault() => Value == DefaultKeyValue;

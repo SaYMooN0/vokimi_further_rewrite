@@ -5,7 +5,7 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 public class VokiQuestionAnswer : Entity<GeneralVokiAnswerId>
 {
-    // private VokiQuestionAnswer() { }
+    private VokiQuestionAnswer() { }
     public BaseVokiAnswerTypeData TypeData { get; private set; }
 
 }

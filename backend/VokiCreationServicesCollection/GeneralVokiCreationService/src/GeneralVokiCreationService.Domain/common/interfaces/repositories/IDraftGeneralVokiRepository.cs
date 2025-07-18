@@ -16,4 +16,6 @@ public interface IDraftGeneralVokiRepository : IDraftVokiRepository
     Task Update(DraftGeneralVoki voki);
     async Task<BaseDraftVoki?> IDraftVokiRepository.GetByIdAsNoTracking(VokiId vokiId) =>
         await GetByIdAsNoTracking(vokiId);
+
+    Task<DraftGeneralVoki?> GetWithQuestions(VokiId vokiId);
 }

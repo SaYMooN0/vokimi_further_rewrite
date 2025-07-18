@@ -2,7 +2,7 @@
 
 internal static class DraftVokiCoverKeyScheme
 {
-    public const string Template = "/draft-vokis/{vokiId:id}/cover";
+    public const string Template = "draft-vokis/{vokiId:id}/cover";
     public static readonly ImmutableHashSet<string> AllowedExtensions = ["jpg", "webp"];
     private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
 
