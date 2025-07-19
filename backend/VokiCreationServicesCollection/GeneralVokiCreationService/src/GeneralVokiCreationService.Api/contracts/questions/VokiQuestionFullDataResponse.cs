@@ -1,0 +1,39 @@
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+using GeneralVokiCreationService.Infrastructure.parsers;
+using SharedKernel.common.vokis;
+
+namespace GeneralVokiCreationService.Api.contracts.questions;
+
+internal record class VokiQuestionFullDataResponse(
+    string Id,
+    string Text,
+    string[] Images,
+    GeneralVokiAnswerType AnswersType,
+    VokiQuestionAnswerResponse[] Answers,
+    ushort MinAnswersCount,
+    ushort MaxAnswersCount
+)
+{
+    public static VokiQuestionFullDataResponse Create(VokiQuestion question) => new(
+        question.Id.ToString(),
+        question.Text.ToString(),
+        question.Images.Keys.Select(imageKey => imageKey.ToString()).ToArray(),
+        question.AnswersType,
+        question.Answers.Select(VokiQuestionAnswerResponse.Create).OrderBy(a=>a.Order).ToArray(),
+        question.AnswersCountLimit.MinAnswers,
+        question.AnswersCountLimit.MaxAnswers
+    );
+}
+
+internal record class VokiQuestionAnswerResponse(
+    string Id,
+    ushort Order,
+    Dictionary<string, string> TypeData
+)
+{
+    public static VokiQuestionAnswerResponse Create(VokiQuestionAnswer answer) => new(
+        answer.Id.ToString(),
+        answer.OrderInQuestion,
+        VokiAnswerTypeDataParser.ToDictionary(answer.TypeData)
+    );
+}

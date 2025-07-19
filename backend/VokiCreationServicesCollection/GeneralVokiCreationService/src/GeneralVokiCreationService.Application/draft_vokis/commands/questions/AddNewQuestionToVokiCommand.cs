@@ -6,11 +6,11 @@ using VokiCreationServicesLib.Application.pipeline_behaviors;
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 
 public sealed record AddNewQuestionToVokiCommand(VokiId VokiId, GeneralVokiAnswerType AnswersType) :
-    ICommand<VokiQuestion>,
+    ICommand<GeneralVokiQuestionId>,
     IWithVokiAccessValidationStep;
 
 internal sealed class AddNewQuestionToVokiCommandHandler :
-    ICommandHandler<AddNewQuestionToVokiCommand, VokiQuestion>
+    ICommandHandler<AddNewQuestionToVokiCommand, GeneralVokiQuestionId>
 {
     private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
 
@@ -18,10 +18,10 @@ internal sealed class AddNewQuestionToVokiCommandHandler :
         _draftGeneralVokiRepository = draftGeneralVokiRepository;
     }
 
-    public async Task<ErrOr<VokiQuestion>> Handle(AddNewQuestionToVokiCommand command, CancellationToken ct) {
+    public async Task<ErrOr<GeneralVokiQuestionId>> Handle(AddNewQuestionToVokiCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
-        var question = voki.AddNewQuestion(command.AnswersType);
+        GeneralVokiQuestionId questionId = voki.AddNewQuestion(command.AnswersType);
         await _draftGeneralVokiRepository.Update(voki);
-        return question;
+        return questionId;
     }
 }

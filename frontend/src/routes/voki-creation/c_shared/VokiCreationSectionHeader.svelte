@@ -11,6 +11,7 @@
 	h1 {
 		width: 100%;
 		color: var(--text);
+		text-align: center;
 		font-size: 1.5rem;
 		font-weight: 450;
 	}

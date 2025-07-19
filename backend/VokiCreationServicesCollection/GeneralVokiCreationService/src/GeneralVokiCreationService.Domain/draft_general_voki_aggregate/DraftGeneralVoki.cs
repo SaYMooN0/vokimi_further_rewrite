@@ -39,9 +39,25 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return newGeneralVoki;
     }
 
-    public VokiQuestion AddNewQuestion(GeneralVokiAnswerType answersType) {
+    public GeneralVokiQuestionId AddNewQuestion(GeneralVokiAnswerType answersType) {
         VokiQuestion question = VokiQuestion.CreateNew((ushort)_questions.Count, answersType);
         _questions.Add(question);
-        return question;
+        return question.Id;
+    }
+
+    public void UpdateTakingProcessSettings(VokiTakingProcessSettings newSettings) {
+        TakingProcessSettings = newSettings;
+    }
+
+    public ErrOr<VokiQuestion> QuestionWithId(GeneralVokiQuestionId questionId) {
+        VokiQuestion? requestedQuestion = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (requestedQuestion is null) {
+            return ErrFactory.NotFound.Common(
+                "This voki doesn't have requested question",
+                $"Voki with id {Id} doesn't have a question with id {questionId}"
+            );
+        }
+
+        return requestedQuestion;
     }
 }

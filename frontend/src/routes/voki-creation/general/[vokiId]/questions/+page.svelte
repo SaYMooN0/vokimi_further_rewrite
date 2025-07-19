@@ -7,9 +7,9 @@
 	let { data }: PageProps = $props();
 </script>
 
-<!-- {#if !data.isSuccess}
+{#if !data.isSuccess}
 	<UnableToLoad errs={data.errs} />
-{:else} -->
+{:else}
 	<div class="questions-tab-container">
 		<VokiCreationSectionHeader header="Question settings" />
 		<p class="field-p">
@@ -22,11 +22,12 @@
 		</p>
 		<VokiCreationSectionHeader header={`Questions (${data.data.questions.length})`} />
 	</div>
-<!-- {/if} -->
+{/if}
 
 <style>
 	.questions-tab-container {
 		display: flex;
+		flex-direction: column;
 		width: 100%;
 	}
 </style>

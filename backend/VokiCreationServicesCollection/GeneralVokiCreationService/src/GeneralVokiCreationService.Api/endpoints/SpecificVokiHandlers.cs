@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Api.contracts.main_info;
+﻿using GeneralVokiCreationService.Api.contracts;
+using GeneralVokiCreationService.Api.contracts.main_info;
 using GeneralVokiCreationService.Application.draft_vokis.commands;
 using GeneralVokiCreationService.Application.draft_vokis.commands.main_info;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
@@ -31,7 +32,8 @@ internal static class SpecificVokiHandlers
         group.MapPatch("/update-tags", UpdateVokiTags)
             .WithRequestValidation<UpdateVokiTagsRequest>();
 
-        // group.MapPatch("/update-voki-takingSettings", UpdateVokiTakingSettings);
+        group.MapPatch("/update-voki-taking-process-settings", UpdateVokiTakingProcessSettings)
+            .WithRequestValidation<UpdateVokiTakingProcessSettingsRequest>();
     }
 
     private static async Task<IResult> GetVokiMainInfo(
@@ -120,5 +122,20 @@ internal static class SpecificVokiHandlers
         return CustomResults.FromErrOr(result, (tagsSet) => Results.Json(
             new { NewTags = tagsSet.Value.Select(t => t.ToString()).ToArray() }
         ));
+    }
+
+    private static async Task<IResult> UpdateVokiTakingProcessSettings(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<UpdateVokiTakingProcessSettingsCommand, VokiTakingProcessSettings> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        var request = httpContext.GetValidatedRequest<UpdateVokiTakingProcessSettingsRequest>();
+
+        UpdateVokiTakingProcessSettingsCommand command = new(id, request.ParsedSettings);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (settings) =>
+            Results.Json(settings)
+        );
     }
 }

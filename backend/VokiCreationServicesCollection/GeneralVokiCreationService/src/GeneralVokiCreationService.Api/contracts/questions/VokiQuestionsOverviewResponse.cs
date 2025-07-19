@@ -4,7 +4,7 @@ namespace GeneralVokiCreationService.Api.contracts.questions;
 
 public record class VokiQuestionsOverviewResponse(
     VokiQuestionBriefDataResponse[] Questions,
-    VokiTakingProcessSettings VokiTakingProcessSettings
+    VokiTakingProcessSettings Settings
 )
 {
     public static VokiQuestionsOverviewResponse Create(DraftGeneralVoki voki) => new(

@@ -7,13 +7,14 @@
 		cover: string;
 		vokiId: string;
 	}>();
-
+	let version = $state(0);
 	async function handleImageInputChange(event: Event) {
 		const input = event.target as HTMLInputElement;
 		if (input.files && input.files.length > 0) {
 			const response = await vokiCreationApi.updateVokiCover(vokiId, input.files[0]);
 			if (response.isSuccess) {
 				cover = response.data.newCover;
+				version++;
 			} else {
 				console.log(response.errs);
 				toast.error("Couldn't update voki cover");
@@ -33,7 +34,7 @@
 </script>
 
 <div class="img-container">
-	<img src={StorageBucketMain.fileSrcWithVersion(cover)} alt="voki cover" />
+		<img src={StorageBucketMain.fileSrcWithVersion(cover, version)} alt="voki cover" />
 	<label for="voki-cover-input" class="img-btn change-btn">Change cover</label>
 	<input
 		type="file"
@@ -55,9 +56,9 @@
 
 	.img-container img {
 		width: 100%;
-		height: 100%;
 		border-radius: 1rem;
-		object-fit: contain;
+		object-fit: fill;
+		aspect-ratio: var(--voki-cover-aspect-ratio);
 	}
 
 	.img-btn {

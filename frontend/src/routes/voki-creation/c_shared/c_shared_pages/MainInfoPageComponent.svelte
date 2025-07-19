@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { VokiMainInfo } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import VokiCreationSectionHeader from '../VokiCreationSectionHeader.svelte';
 	import VokiCreationCover from './c_main_info/VokiCreationCover.svelte';
 	import VokiCreationDetails from './c_main_info/VokiCreationDetails.svelte';
 	import VokiCreationName from './c_main_info/VokiCreationName.svelte';
@@ -16,7 +15,6 @@
 	<div class="main-section">
 		<VokiCreationName vokiName={mainInfo.name} {vokiId} />
 		<VokiCreationTags tags={mainInfo.tags} {vokiId} />
-		<VokiCreationSectionHeader header="Details" />
 		<VokiCreationDetails details={mainInfo.details} {vokiId} />
 	</div>
 	<div class="cover-section">

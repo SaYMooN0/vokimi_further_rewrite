@@ -5,7 +5,7 @@ import type { ResponseResult } from "./result-types";
 class VokimiStorageBucket {
     private _baseUrl: string;
     private _bucketName: string;
-    
+
 
     constructor(baseUrl: string, bucketName: string) {
         this._baseUrl = baseUrl;
@@ -15,8 +15,11 @@ class VokimiStorageBucket {
         return `${this._baseUrl}/${this._bucketName}/${key}`;
     }
 
-    public fileSrcWithVersion(key: string): string {
-        return `${this.fileSrc(key)}?v=${StringUtils.rndStr(4)}`;
+    public fileSrcWithVersion(key: string, version: string | number | undefined = undefined): string {
+        if (!version) {
+            version = StringUtils.rndStr(4);
+        }
+        return `${this.fileSrc(key)}?v=${version}`;
     }
     public async uploadFile(key: string, file: Blob | File): Promise<ResponseResult<string>> {
         try {

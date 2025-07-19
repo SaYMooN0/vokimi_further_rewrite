@@ -35,7 +35,7 @@ internal static class VokiQuestionsHandlers
 
     private static async Task<IResult> AddNewQuestionToVoki(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<AddNewQuestionToVokiCommand, VokiQuestion> handler,
+        ICommandHandler<AddNewQuestionToVokiCommand, GeneralVokiQuestionId> handler,
         [FromBody] GeneralVokiAnswerType questionAnswersType
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
@@ -43,8 +43,8 @@ internal static class VokiQuestionsHandlers
         AddNewQuestionToVokiCommand command = new(id, questionAnswersType);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (question) => Results.Json(
-            new { question }
+        return CustomResults.FromErrOr(result, (questionId) => Results.Json(
+            new { Id = questionId.ToString() }
         ));
     }
 }

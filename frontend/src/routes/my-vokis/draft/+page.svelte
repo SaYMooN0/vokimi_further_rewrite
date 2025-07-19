@@ -5,8 +5,8 @@
 	import { toast } from 'svelte-sonner';
 	import { MyVokisCacheStore } from '../my-vokis-cache-store.svelte';
 	import type { PageProps } from './$types';
-	import VokiSkeletonItem from './c_page.svelte/VokiSkeletonItem.svelte';
-	import VokiUnableToLoad from './c_page.svelte/VokiUnableToLoad.svelte';
+	import VokiSkeletonItem from './c_page/VokiSkeletonItem.svelte';
+	import VokiUnableToLoad from './c_page/VokiUnableToLoad.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 
 	let { data }: PageProps = $props();
@@ -86,7 +86,6 @@
 		gap: 1rem;
 		grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
 
-		--voki-cover-aspect-ratio: 1.5/1;
 		--voki-name-max-height: 2.4rem;
 		--voki-cover-name-gap: 0.5rem;
 		--voki-cover-border-radius: 0.75rem;
