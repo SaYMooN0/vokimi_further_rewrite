@@ -2,11 +2,11 @@
 	import { TextareaAutosize } from 'runed';
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import MainInfoSectionButton from './c_sections_shared/MainInfoSectionButton.svelte';
+	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
 	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
 	import type { Err } from '$lib/ts/err';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import MainInfoSectionSaveAndCancelButtons from './c_sections_shared/MainInfoSectionSaveAndCancelButtons.svelte';
+	import VokiCreationSaveAndCancelButtons from '../../VokiCreationSaveAndCancelButtons.svelte';
 
 	let { vokiName, vokiId }: { vokiName: string; vokiId: string } = $props<{
 		vokiName: string;
@@ -51,7 +51,7 @@
 		{#if savingErrs.length > 0}
 			<DefaultErrBlock errList={savingErrs} containerId="voki-name-err-block" />
 		{/if}
-		<MainInfoSectionSaveAndCancelButtons
+		<VokiCreationSaveAndCancelButtons
 			onCancel={() => (isEditing = false)}
 			onSave={() => saveChanges()}
 		/>
@@ -60,7 +60,7 @@
 			<VokiCreationFieldName fieldName="Voki name:" />
 			<label class="voki-name-value">{vokiName}</label>
 		</p>
-		<MainInfoSectionButton text="Edit name" onclick={startEditing} />
+		<VokiCreationDefaultButton text="Edit name" onclick={startEditing} />
 	{/if}
 </div>
 
@@ -106,5 +106,7 @@
 		font-size: 1.5rem;
 		font-weight: 500;
 		text-decoration: none;
+		word-break: break-all;
+
 	}
 </style>

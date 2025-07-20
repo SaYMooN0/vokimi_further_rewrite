@@ -20,12 +20,14 @@ public static class HttpContextExtensions
     }
 
     public static VokiId GetVokiIdFromRoute(this HttpContext context) {
-        var vokiIdString = context.Request.RouteValues["vokiId"]?.ToString() ?? "";
-        if (!Guid.TryParse(vokiIdString, out var guid)) {
+        var idString = context.Request.RouteValues["vokiId"]?.ToString() ?? "";
+        if (!Guid.TryParse(idString, out var guid)) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.IncorrectFormat(
-                "Invalid voki id",
-                "Couldn't parse voki id from route"
-            ));
+                    "Invalid voki id",
+                    $"'{idString}' is not a valid ${nameof(VokiId)}"
+                ),
+                userMessage: "Invalid voki id. Couldn't parse voki id from route"
+            );
         }
 
         return new VokiId(guid);

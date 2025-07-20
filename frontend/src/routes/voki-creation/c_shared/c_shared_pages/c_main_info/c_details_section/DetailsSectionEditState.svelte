@@ -6,10 +6,9 @@
 	import VokiCreationFieldName from '../../../VokiCreationFieldName.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import MainInfoSectionSaveAndCancelButtons from '../c_sections_shared/MainInfoSectionSaveAndCancelButtons.svelte';
 	import { LanguageUtils } from '$lib/ts/language';
-	import DefaulCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
+	import VokiCreationSaveAndCancelButtons from '../../../VokiCreationSaveAndCancelButtons.svelte';
 
 	const {
 		vokiId,
@@ -73,7 +72,7 @@
 	<DefaultCheckBox bind:checked={isAgeRestricted} />
 </p>
 
-<MainInfoSectionSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
+<VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
 
 <style>
 	.description-input {

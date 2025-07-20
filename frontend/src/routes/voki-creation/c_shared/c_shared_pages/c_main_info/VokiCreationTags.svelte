@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FieldNotSetLabel from '../../FieldNotSetLabel.svelte';
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
-	import MainInfoSectionButton from './c_sections_shared/MainInfoSectionButton.svelte';
+	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
 	import VokiCreationTagsEditingDialog from './c_tags_section/VokiCreationTagsEditingDialog.svelte';
 
 	let { tags, vokiId }: { tags: string[]; vokiId: string } = $props<{
@@ -27,7 +27,7 @@
 			{/each}
 		{/if}
 	</p>
-	<MainInfoSectionButton text="Edit tags" onclick={() => dialogElement.open(tags)} />
+	<VokiCreationDefaultButton text="Edit tags" onclick={() => dialogElement.open(tags)} />
 </div>
 
 <style>

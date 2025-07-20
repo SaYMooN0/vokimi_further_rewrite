@@ -5,7 +5,7 @@
 	import FieldNotSetLabel from '../../FieldNotSetLabel.svelte';
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import DetailsSectionEditState from './c_details_section/DetailsSectionEditState.svelte';
-	import MainInfoSectionButton from './c_sections_shared/MainInfoSectionButton.svelte';
+	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
 
 	let { details, vokiId }: { details: VokiDetails; vokiId: string } = $props<{
 		details: VokiDetails;
@@ -43,7 +43,7 @@
 				No age restriction
 			{/if}
 		</p>
-		<MainInfoSectionButton text="Edit details" onclick={() => (isEditing = true)} />
+		<VokiCreationDefaultButton text="Edit details" onclick={() => (isEditing = true)} />
 	{/if}
 </div>
 
@@ -60,6 +60,8 @@
 		color: var(--text);
 		font-size: 1.5rem;
 		font-weight: 500;
+		word-break: break-all;
+
 	}
 
 	.field:has(:global(.no-description)) {

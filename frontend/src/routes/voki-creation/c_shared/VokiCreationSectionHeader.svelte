@@ -12,7 +12,8 @@
 		width: 100%;
 		color: var(--text);
 		text-align: center;
-		font-size: 1.5rem;
-		font-weight: 450;
+		font-size: 1.75rem;
+		font-weight: 550;
+		letter-spacing: 0.5px;
 	}
 </style>
