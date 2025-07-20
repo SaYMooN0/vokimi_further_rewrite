@@ -31,7 +31,7 @@
 	}
 </script>
 
-<DialogWithCloseButton dialogId="voki-initializing-dialog" bind:this={dialog}>
+<DialogWithCloseButton dialogId="general-voki-question-initializing-dialog" bind:this={dialog}>
 	<h1 class="subheading">Choose new answers type for the new question</h1>
 	<div class="types-container">
 		<div

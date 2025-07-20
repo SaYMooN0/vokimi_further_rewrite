@@ -128,3 +128,4 @@ export class BackendService {
 export const ApiAuth = new BackendService('/api/auth');
 export const ApiVokiCreationCore = new BackendService('/api/voki-creation/core');
 export const ApiTags = new BackendService('/api/tags');
+export const ApiUserProfiles = new BackendService('/api/user-profiles');

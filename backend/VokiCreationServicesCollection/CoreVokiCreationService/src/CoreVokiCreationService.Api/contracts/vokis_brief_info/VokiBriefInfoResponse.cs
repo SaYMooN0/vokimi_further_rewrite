@@ -3,7 +3,7 @@ using SharedKernel.common.vokis;
 
 namespace CoreVokiCreationService.Api.contracts.vokis_brief_info;
 
-public record class VokiBriefInfoResponse(
+internal sealed record class VokiBriefInfoResponse(
     string Id,
     VokiType Type,
     string Name,
@@ -12,7 +12,7 @@ public record class VokiBriefInfoResponse(
     int CoAuthorsCount
 )
 {
-    public static VokiBriefInfoResponse FromVoki(DraftVoki v) => new(
+    public static VokiBriefInfoResponse Create(DraftVoki v) => new(
         v.Id.ToString(),
         v.Type,
         v.Name.ToString(),

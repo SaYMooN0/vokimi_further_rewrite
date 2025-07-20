@@ -1,9 +1,11 @@
-import { ApiVokiCreationGeneral, type VokiMainInfo } from "$lib/ts/backend-communication/voki-creation-backend-service";
 import type { ServerLoad } from "@sveltejs/kit";
+import type { VokiAuthorsInfo } from "../../../c_shared/c_shared_pages/c_authors/types";
+import { ApiVokiCreationCore } from "$lib/ts/backend-communication/backend-services";
 
 export const load: ServerLoad = async ({ params, fetch }) => {
-    const response = await ApiVokiCreationGeneral.serverFetchJsonResponse<VokiMainInfo>(
-        fetch, `/vokis/${params.vokiId}/main-info`, { method: 'GET' }
+    const response = await ApiVokiCreationCore.serverFetchJsonResponse<VokiAuthorsInfo>(
+        fetch, `/vokis/${params.vokiId}/authors-info`, { method: 'GET' }
     );
     return { ...response, vokiId: params.vokiId };
 }
+

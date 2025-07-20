@@ -1,4 +1,6 @@
-﻿using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
+﻿using CoreVokiCreationService.Domain.app_user_aggregate.events;
+using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
+using SharedKernel.common.rules;
 using SharedKernel.common.vokis;
 using VokimiStorageKeysLib.draft_voki_cover;
 
@@ -39,7 +41,6 @@ public class DraftVoki : AggregateRoot<VokiId>
         return newVoki;
     }
 
-    // public ErrOrNothing InviteNewCoAuthor() { }
     // public ErrOrNothing CancelCoAuthorInvite() { }
     // public ErrOrNothing AddCoAuthor() { }
     // public ErrOrNothing RemoveCoAuthor() { }
@@ -59,5 +60,20 @@ public class DraftVoki : AggregateRoot<VokiId>
 
     public void UpdateName(VokiName newName) {
         Name = newName;
+    }
+
+    public ErrOrNothing InviteNewCoAuthor(AppUserId invitedUserId) {
+        if (InvitedForCoAuthorUserIds.Contains(invitedUserId)) {
+            return ErrOrNothing.Nothing;
+        }
+
+        int totalCoAuthors = CoAuthorsIds.Count + InvitedForCoAuthorUserIds.Count;
+        if (totalCoAuthors >= VokiRules.MaxCoAuthors) {
+            return ErrFactory.LimitExceeded($"Voki cannot have more than {VokiRules.MaxCoAuthors} co-authors");
+        }
+
+        InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Add(invitedUserId);
+        AddDomainEvent(new CoAuthorInviteCreatedEvent(invitedUserId, this.Id));
+        return ErrOrNothing.Nothing;
     }
 }

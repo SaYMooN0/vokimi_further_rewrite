@@ -26,8 +26,7 @@ internal sealed class InitializeNewVokiCommandHandler :
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOr<(VokiId Id, VokiType Type)>>
-        Handle(InitializeNewVokiCommand command, CancellationToken ct) {
+    public async Task<ErrOr<(VokiId Id, VokiType Type)>> Handle(InitializeNewVokiCommand command, CancellationToken ct) {
         AppUserId authorId = _userContext.AuthenticatedUserId;
         DraftVoki voki = DraftVoki.Create(command.VokiName, command.VokiType, authorId, _dateTimeProvider.UtcNow);
         await _draftVokiRepository.Add(voki);

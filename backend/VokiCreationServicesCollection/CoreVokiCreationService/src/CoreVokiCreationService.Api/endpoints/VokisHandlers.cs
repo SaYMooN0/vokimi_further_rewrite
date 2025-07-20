@@ -25,7 +25,7 @@ public static class VokisHandlers
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (vokis) => Results.Json(new {
-            Vokis = vokis.Select(VokiBriefInfoResponse.FromVoki).ToArray()
+            Vokis = vokis.Select(VokiBriefInfoResponse.Create).ToArray()
         }));
     }
 }

@@ -98,7 +98,7 @@ public static class DependencyInjection
     }
 
     private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
-        string dbConnectionString = configuration.GetConnectionString("CoreVokiCreationServiceDb")
+        string dbConnectionString = configuration.GetConnectionString("TagsServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<TagsDbContext>(options => options.UseNpgsql(dbConnectionString));
 
