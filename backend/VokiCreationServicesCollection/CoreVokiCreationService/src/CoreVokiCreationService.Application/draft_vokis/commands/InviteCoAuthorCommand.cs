@@ -6,7 +6,7 @@ namespace CoreVokiCreationService.Application.draft_vokis.commands;
 
 public sealed record InviteCoAuthorCommand(VokiId VokiId, AppUserId NewCoAuthorId) :
     ICommand<DraftVoki>,
-    IWithVokiAccessValidationStep;
+    IWithVokiPrimaryAuthorValidationStep;
 
 internal sealed class InviteCoAuthorCommandHandler :
     ICommandHandler<InviteCoAuthorCommand, DraftVoki>

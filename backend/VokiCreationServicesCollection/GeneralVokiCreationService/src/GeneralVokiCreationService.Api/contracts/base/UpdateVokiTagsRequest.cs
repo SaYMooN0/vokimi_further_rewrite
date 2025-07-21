@@ -2,7 +2,7 @@
 using SharedKernel.common.rules;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
-namespace GeneralVokiCreationService.Api.contracts.main_info;
+namespace GeneralVokiCreationService.Api.contracts.@base;
 
 public class UpdateVokiTagsRequest : IRequestWithValidationNeeded
 {

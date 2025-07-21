@@ -38,6 +38,10 @@ public static class DependencyInjection
             typeof(WithMultipleVokiAccessValidationStepHandler.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>),
             typeof(WithMultipleVokiAccessValidationStepHandler.CommandBaseHandler<>));
+
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(VokiPrimaryAuthorValidationStepHandler.QueryHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>), typeof(VokiPrimaryAuthorValidationStepHandler.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(VokiPrimaryAuthorValidationStepHandler.CommandBaseHandler<>));
         return services;
     }
 }

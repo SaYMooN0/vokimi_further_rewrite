@@ -3,7 +3,7 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
-namespace GeneralVokiCreationService.Application.draft_vokis.commands.main_info;
+namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 
 public sealed record UpdateVokiNameCommand(VokiId VokiId, VokiName NewVokiName) :
     ICommand<VokiName>,

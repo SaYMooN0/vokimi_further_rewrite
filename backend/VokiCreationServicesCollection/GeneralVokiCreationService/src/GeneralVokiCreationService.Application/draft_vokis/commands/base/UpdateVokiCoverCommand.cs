@@ -3,7 +3,7 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokimiStorageKeysLib.draft_voki_cover;
 
-namespace GeneralVokiCreationService.Application.draft_vokis.commands.main_info;
+namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 
 public sealed record UpdateVokiCoverCommand(
     VokiId VokiId,

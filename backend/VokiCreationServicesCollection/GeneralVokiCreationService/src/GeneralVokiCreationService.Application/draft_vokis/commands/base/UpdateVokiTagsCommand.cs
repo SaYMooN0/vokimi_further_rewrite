@@ -3,7 +3,7 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
-namespace GeneralVokiCreationService.Application.draft_vokis.commands.main_info;
+namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 
 public sealed record UpdateVokiTagsCommand(VokiId VokiId, VokiTagsSet NewTags) :
     ICommand<VokiTagsSet>,

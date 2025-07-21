@@ -1,10 +1,9 @@
 ﻿namespace VokimiStorageKeysLib.draft_general_voki.answer_audio;
 
-public class DraftGeneralVokiAnswerAudioKeyScheme
+sealed class DraftGeneralVokiAnswerAudioKeyScheme
 {
     public const string Template = "draft-vokis/{vokiId:id}/{questionId:id}/{answerId:id}/{versionId:id}";
-    public static readonly ImmutableHashSet<string> AllowedExtensions = ["mp3"];
-    private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
+    private static readonly KeyTemplateParser Parser = new(Template, BaseStorageKey.Extensions.AudioFiles);
 
     public static ErrOrNothing IsKeyValid(
         string key,

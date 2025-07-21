@@ -1,6 +1,4 @@
-﻿using System.Collections.Immutable;
-
-namespace GeneralVokiCreationService.Domain.app_user_aggregate;
+﻿namespace GeneralVokiCreationService.Domain.app_user_aggregate;
 
 public class AppUser : AggregateRoot<AppUserId>
 {

@@ -1,29 +1,38 @@
 <script lang="ts">
-	import AuthorInviteDisplay from "./c_authors/AuthorInviteDisplay.svelte";
-	import AuthorUserDisplay from "./c_authors/AuthorUserDisplay.svelte";
-	import type { VokiAuthorsInfo } from "./c_authors/types";
-	import CoAuthorInviteDialog from "./c_authors/CoAuthorInviteDialog.svelte";
-	import NoCoAuthorsMessage from "./c_authors/NoCoAuthorsMessage.svelte";
+	import AuthorInviteDisplay from './c_authors/AuthorInviteDisplay.svelte';
+	import type { VokiAuthorsInfo } from './c_authors/types';
+	import CoAuthorInviteDialog from './c_authors/CoAuthorInviteDialog.svelte';
+	import NoCoAuthorsMessage from './c_authors/NoCoAuthorsMessage.svelte';
+	import CoAuthorUserDisplay from './c_authors/CoAuthorUserDisplay.svelte';
+	import AuthorsEmptySlotsDisplay from './c_authors/AuthorsEmptySlotsDisplay.svelte';
+	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 
-    
 	let { authorsInfo, vokiId }: { authorsInfo: VokiAuthorsInfo; vokiId: string } = $props<{
 		authorsInfo: VokiAuthorsInfo;
 		vokiId: string;
 	}>();
-	let emptySlots: number[] = [];
+
 	let dialog = $state<CoAuthorInviteDialog>()!;
 </script>
 
 <CoAuthorInviteDialog bind:this={dialog} {vokiId} updateParent={(info) => (authorsInfo = info)} />
 <div class="authors-tab-container">
 	<h1 class="authors-h">Primary author</h1>
-	<AuthorUserDisplay userId={authorsInfo.primaryAuthorId} />
-	<h1 class="authors-h">Co-authors ({authorsInfo.coAuthorIds.length})/5</h1>
+	<div class="primary-author-user">
+		<img
+			class="profile-picture"
+			src={StorageBucketMain.fileSrc(`/profile-pictures/${authorsInfo.primaryAuthorId}`)}
+		/>
+		<a href={`/users/${authorsInfo.primaryAuthorId}`} class="username"
+			>{authorsInfo.primaryAuthorId}</a
+		>
+	</div>
 	{#if authorsInfo.coAuthorIds.length === 0}
 		<NoCoAuthorsMessage openAuthorsInviteDialog={() => dialog.open()} />
 	{:else}
+		<h1 class="authors-h">Co-authors ({authorsInfo.coAuthorIds.length})/5</h1>
 		{#each authorsInfo.coAuthorIds as coauthorId}
-			<AuthorUserDisplay userId={coauthorId} />
+			<CoAuthorUserDisplay userId={coauthorId} />
 		{/each}
 		{#if authorsInfo.invitedCoAuthorIds.length != 0}
 			<h1 class="authors-h">Co-authors invites</h1>
@@ -31,12 +40,11 @@
 				<AuthorInviteDisplay userId={invitedCoAuthorIds} />
 			{/each}
 		{/if}
-		{#each emptySlots as _}
-			<div class="empty-co-author-slot">
-				<button class="invite-new-author" onclick={() => dialog.open()}>Invite new co-author</button
-				>
-			</div>
-		{/each}
+		<AuthorsEmptySlotsDisplay
+			coAuthorsCount={authorsInfo.coAuthorIds.length}
+			invitedCoAuthorsCount={authorsInfo.invitedCoAuthorIds.length}
+			openAuthorsInviteDialog={() => dialog.open()}
+		/>
 	{/if}
 </div>
 
@@ -47,5 +55,7 @@
 	}
 	.authors-h {
 		font-weight: 450;
+		font-size: 2rem;
+		color: var(--muted-foreground);
 	}
 </style>

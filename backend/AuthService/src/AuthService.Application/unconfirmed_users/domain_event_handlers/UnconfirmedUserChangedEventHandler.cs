@@ -13,12 +13,12 @@ public class UnconfirmedUserChangedEventHandler : IDomainEventHandler<Unconfirme
     }
 
     public async Task Handle(UnconfirmedUserChangedEvent e, CancellationToken ct) {
-        // var sendingErr = await _emailService.SendRegistrationConfirmationLink(
-        //     e.Email, e.Username, e.UserId, e.ConfirmationCode
-        // );
-        //
-        // UnexpectedBehaviourException.ThrowIfErr(
-        //     sendingErr, "Unable to send email confirmation link. Please try again later"
-        // );
+        var sendingErr = await _emailService.SendRegistrationConfirmationLink(
+            e.Email, e.Username, e.UserId, e.ConfirmationCode
+        );
+        
+        UnexpectedBehaviourException.ThrowIfErr(
+            sendingErr, "Unable to send email confirmation link. Please try again later"
+        );
     }
 }

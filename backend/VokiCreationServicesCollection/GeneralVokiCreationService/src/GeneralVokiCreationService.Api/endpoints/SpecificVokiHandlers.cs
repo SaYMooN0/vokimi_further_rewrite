@@ -1,7 +1,7 @@
 ﻿using GeneralVokiCreationService.Api.contracts;
-using GeneralVokiCreationService.Api.contracts.main_info;
+using GeneralVokiCreationService.Api.contracts.@base;
 using GeneralVokiCreationService.Application.draft_vokis.commands;
-using GeneralVokiCreationService.Application.draft_vokis.commands.main_info;
+using GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using Microsoft.AspNetCore.Mvc;
