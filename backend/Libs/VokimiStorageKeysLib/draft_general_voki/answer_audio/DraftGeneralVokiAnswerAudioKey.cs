@@ -7,7 +7,7 @@ public class DraftGeneralVokiAnswerAudioKey : BaseStorageKey
     public GeneralVokiQuestionId QuestionId { get; }
     public GeneralVokiAnswerId AnswerId { get; }
 
-    public DraftGeneralVokiAnswerAudioKey(string value) {
+    private DraftGeneralVokiAnswerAudioKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(this, DraftGeneralVokiAnswerAudioKeyScheme.IsKeyValid(
             value, out var vokiId, out var questionId, out var answerId
         ));
@@ -16,7 +16,10 @@ public class DraftGeneralVokiAnswerAudioKey : BaseStorageKey
         AnswerId = answerId;
         Value = value;
     }
-
+    public static ErrOr<DraftGeneralVokiAnswerAudioKey> Create(string value) =>
+        DraftGeneralVokiAnswerAudioKeyScheme.IsKeyValid(value, out _, out _, out _).IsErr(out var err)
+            ? err
+            : new DraftGeneralVokiAnswerAudioKey(value);
     public bool IsWithIds(
         VokiId expectedVokiId,
         GeneralVokiQuestionId expectedQuestionId,

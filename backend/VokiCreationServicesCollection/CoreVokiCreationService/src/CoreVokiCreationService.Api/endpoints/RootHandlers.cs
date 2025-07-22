@@ -1,7 +1,8 @@
-﻿using System.Collections.Immutable;
-using CoreVokiCreationService.Api.contracts;
+﻿using CoreVokiCreationService.Api.contracts;
+using CoreVokiCreationService.Application.app_users.queries;
 using CoreVokiCreationService.Application.draft_vokis.commands;
 using CoreVokiCreationService.Application.draft_vokis.queries;
+using CoreVokiCreationService.Domain.app_user_aggregate;
 using SharedKernel.common.vokis;
 
 namespace CoreVokiCreationService.Api.endpoints;
@@ -16,7 +17,9 @@ public static class RootHandlers
         group.MapGet("/list-user-voki-ids", ListUserVokiIds);
         group.MapPost("/initialize-new-voki", InitializeNewVoki)
             .WithRequestValidation<InitializeNewVokiRequest>();
+        group.MapGet("/list-invites", ListUserInvites);
     }
+
     private static async Task<IResult> ListUserVokiIds(
         CancellationToken ct, IQueryHandler<ListUserVokiIdsQuery, ImmutableArray<VokiId>> handler
     ) {
@@ -43,5 +46,16 @@ public static class RootHandlers
                 Type = voki.Type
             })
         );
+    }
+
+    private static async Task<IResult> ListUserInvites(
+        CancellationToken ct, IQueryHandler<GetCurrentUserQuery, AppUser> handler
+    ) {
+        GetCurrentUserQuery query = new();
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOr(result, (user) => Results.Json(
+            new { InvitedToCoAuthorVokiIds = user.InvitedToCoAuthorVokiIds.Select(v => v.ToString()).ToArray() }
+        ));
     }
 }

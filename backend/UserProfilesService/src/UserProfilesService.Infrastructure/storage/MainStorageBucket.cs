@@ -2,7 +2,6 @@
 using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
 using UserProfilesService.Application;
-using UserProfilesService.Application.app_users;
 using VokimiStorageKeysLib.users;
 
 namespace UserProfilesService.Infrastructure.storage;
@@ -15,7 +14,15 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
         ILogger<MainStorageBucket> logger
     ) : base(s3Client, mainBucketNameProvider, logger) { }
 
-    public Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromDefaults(AppUserId userId) => throw new NotImplementedException();
+    private const string DefaultProfilePic = "/common/default-user-profile-pic.webp";
 
-    public Task DeleteUserProfilePic(UserProfilePicKey key) => throw new NotImplementedException();
+    public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromDefaults(AppUserId userId) {
+        var newKey = UserProfilePicKey.CreateNewForUser(userId, "webp").AsSuccess();
+        var res = await CopyAsync(source: DefaultProfilePic, destinationKey: newKey);
+        if (res.IsErr(out var err)) {
+            return err;
+        }
+
+        return newKey;
+    }
 }

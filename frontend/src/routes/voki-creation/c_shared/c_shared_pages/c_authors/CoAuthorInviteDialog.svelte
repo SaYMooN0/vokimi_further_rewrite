@@ -50,6 +50,9 @@
 				</div>
 			{/each}
 		</div>
+		<label class="note"
+			>Note: invited user will see the type, name, cover and other main details of this voki</label
+		>
 	{/if}
 </DialogWithCloseButton>
 

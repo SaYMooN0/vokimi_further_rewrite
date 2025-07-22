@@ -96,24 +96,26 @@
 	.description-input:focus {
 		outline-color: var(--primary);
 	}
+
 	.field-p {
-		margin-top: 1rem;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		gap: 0.5rem;
+		margin-top: 1rem;
 	}
+
 	.language-select {
+		box-sizing: border-box;
+		padding: 0 0.75rem;
+		border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 1rem;
 		color: var(--text);
-		border: 0.125rem solid var(--secondary-foreground);
 		font-size: 1.375rem;
-		padding: 0 0.75rem;
-		appearance: none;
-		box-sizing: border-box;
-		outline: none;
-		transition: border-radius 0.2s ease-out;
 		font-weight: 440;
+		transition: border-radius 0.2s ease-out;
+		appearance: none;
+		outline: none;
 	}
 
 	.language-select:hover,
@@ -123,10 +125,12 @@
 		border-color: var(--primary);
 		border-radius: 0.5rem;
 	}
+
 	.language-select option {
 		background-color: var(--secondary);
 		color: var(--text);
 	}
+
 	.language-select option:hover {
 		background-color: var(--accent);
 	}

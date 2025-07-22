@@ -7,7 +7,7 @@ public class DraftGeneralVokiAnswerImageKey : BaseStorageKey
     public GeneralVokiQuestionId QuestionId { get; }
     public GeneralVokiAnswerId AnswerId { get; }
 
-    public DraftGeneralVokiAnswerImageKey(string value) {
+    private DraftGeneralVokiAnswerImageKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(this, DraftGeneralVokiAnswerImageKeyScheme.IsKeyValid(
             value, out var vokiId, out var questionId, out var answerId
         ));
@@ -16,6 +16,11 @@ public class DraftGeneralVokiAnswerImageKey : BaseStorageKey
         AnswerId = answerId;
         Value = value;
     }
+
+    public static ErrOr<DraftGeneralVokiAnswerImageKey> Create(string value) =>
+        DraftGeneralVokiAnswerImageKeyScheme.IsKeyValid(value, out _, out _, out _).IsErr(out var err)
+            ? err
+            : new DraftGeneralVokiAnswerImageKey(value);
 
     public bool IsWithIds(
         VokiId expectedVokiId,

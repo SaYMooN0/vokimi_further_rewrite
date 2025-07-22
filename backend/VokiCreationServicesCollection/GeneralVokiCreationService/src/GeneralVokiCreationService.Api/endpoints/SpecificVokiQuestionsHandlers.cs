@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using GeneralVokiCreationService.Api.contracts.questions;
+﻿using GeneralVokiCreationService.Api.contracts.questions;
 using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
@@ -14,6 +13,8 @@ internal static class SpecificVokiQuestionsHandlers
         group.WithGroupAuthenticationRequired();
 
         group.MapGet("/", GetVokiQuestionFullData);
+        // group.MapPatch("/update", UpdateVokiQuestion);
+        // group.MapDelete("/delete", DeleteVokiQuestion);
         // group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
         // group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
     }

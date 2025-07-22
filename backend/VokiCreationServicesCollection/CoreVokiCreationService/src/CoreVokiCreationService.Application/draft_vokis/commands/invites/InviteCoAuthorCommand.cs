@@ -2,7 +2,7 @@
 using CoreVokiCreationService.Domain.common.interfaces.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
-namespace CoreVokiCreationService.Application.draft_vokis.commands;
+namespace CoreVokiCreationService.Application.draft_vokis.commands.invites;
 
 public sealed record InviteCoAuthorCommand(VokiId VokiId, AppUserId NewCoAuthorId) :
     ICommand<DraftVoki>,

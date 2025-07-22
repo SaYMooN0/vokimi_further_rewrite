@@ -21,5 +21,6 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .HasConversion<AppUserNameConverter>();
         
         builder.Ignore(x => x.FavouriteTags);
+        builder.Ignore(x => x.ProfilePic);
     }
 }

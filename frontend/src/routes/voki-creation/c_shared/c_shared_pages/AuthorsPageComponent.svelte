@@ -53,9 +53,10 @@
 		display: flex;
 		flex-direction: column;
 	}
+
 	.authors-h {
-		font-weight: 450;
-		font-size: 2rem;
 		color: var(--muted-foreground);
+		font-size: 2rem;
+		font-weight: 450;
 	}
 </style>

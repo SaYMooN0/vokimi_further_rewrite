@@ -1,4 +1,4 @@
-﻿namespace CoreVokiCreationService.Api.contracts;
+﻿namespace CoreVokiCreationService.Api.contracts.invites;
 
 public class InviteCoAuthorRequest : IRequestWithValidationNeeded
 {

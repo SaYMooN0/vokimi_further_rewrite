@@ -41,9 +41,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         return newVoki;
     }
 
-    // public ErrOrNothing CancelCoAuthorInvite() { }
-    // public ErrOrNothing AddCoAuthor() { }
-    // public ErrOrNothing RemoveCoAuthor() { }
+
     public bool HasAccessToEdit(AppUserId userId) =>
         userId == PrimaryAuthorId || CoAuthorsIds.Contains(userId);
 
@@ -63,6 +61,10 @@ public class DraftVoki : AggregateRoot<VokiId>
     }
 
     public ErrOrNothing InviteNewCoAuthor(AppUserId invitedUserId) {
+        if (PrimaryAuthorId == invitedUserId) {
+            return ErrFactory.Conflict("You cannot invite primary author of voki to be a co-author");
+        }
+
         if (InvitedForCoAuthorUserIds.Contains(invitedUserId)) {
             return ErrOrNothing.Nothing;
         }
@@ -76,4 +78,39 @@ public class DraftVoki : AggregateRoot<VokiId>
         AddDomainEvent(new CoAuthorInviteCreatedEvent(invitedUserId, this.Id));
         return ErrOrNothing.Nothing;
     }
+
+    public ErrOrNothing AcceptInviteBy(AppUserId userId) {
+        if (CoAuthorsIds.Contains(userId)) {
+            return ErrOrNothing.Nothing;
+        }
+
+        if (!InvitedForCoAuthorUserIds.Contains(userId)) {
+            return ErrFactory.Unspecified("You are not listed as invited in this voki");
+        }
+
+        if (CoAuthorsIds.Count >= VokiRules.MaxCoAuthors) {
+            return ErrFactory.Conflict(
+                $"Some error has occured. This voki already has {VokiRules.MaxCoAuthors} co-authors"
+            );
+        }
+
+        CoAuthorsIds = CoAuthorsIds.Add(userId);
+        InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
+        AddDomainEvent(new CoAuthorInviteAcceptedEvent(Id, userId));
+        return ErrOrNothing.Nothing;
+    }
+
+    public void CancelCoAuthorInvite(AppUserId userId) {
+        if (!InvitedForCoAuthorUserIds.Contains(userId)) {
+            return;
+        }
+
+        InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
+        AddDomainEvent(new CoAuthorInviteCanceledEvent(Id, userId));
+    }
+
+    public void DeclineCoAuthorInvite(AppUserId userId) {
+        InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
+    }
+    // public ErrOrNothing RemoveCoAuthor() { }
 }

@@ -6,5 +6,4 @@ public interface IMainStorageBucket
 {
     public Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromDefaults(AppUserId userId);
 
-    Task DeleteUserProfilePic(UserProfilePicKey key);
 }

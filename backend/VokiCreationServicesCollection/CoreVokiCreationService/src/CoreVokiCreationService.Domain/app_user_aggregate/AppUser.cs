@@ -1,24 +1,64 @@
-﻿namespace CoreVokiCreationService.Domain.app_user_aggregate;
+﻿using CoreVokiCreationService.Domain.app_user_aggregate.events;
+
+namespace CoreVokiCreationService.Domain.app_user_aggregate;
 
 public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
     public ImmutableHashSet<VokiId> InitializedVokiIds { get; private set; }
     public ImmutableHashSet<VokiId> CoAuthoredVokiIds { get; private set; }
+    public ImmutableHashSet<VokiId> InvitedToCoAuthorVokiIds { get; private set; }
     //invite ids
 
     public AppUser(AppUserId id) {
         Id = id;
         InitializedVokiIds = [];
         CoAuthoredVokiIds = [];
+        InvitedToCoAuthorVokiIds = [];
     }
 
-    public ErrOrNothing AddInitializedVoki(VokiId vokiId) {
+    public void AddInitializedVoki(VokiId vokiId) {
+        InitializedVokiIds = InitializedVokiIds.Add(vokiId);
+    }
+
+    public ErrOrNothing InviteToCoAuthor(VokiId vokiId) {
         if (InitializedVokiIds.Contains(vokiId)) {
-            return ErrFactory.Conflict("New Voki is already listed as initialized by this user");
+            return ErrFactory.Conflict("User cannot be invite to co-author in voki that they have initialized");
         }
 
-        InitializedVokiIds = InitializedVokiIds.Add(vokiId);
+        if (CoAuthoredVokiIds.Contains(vokiId)) {
+            return ErrFactory.Conflict("User is already listed as voki co-author");
+        }
+
+        InvitedToCoAuthorVokiIds = InvitedToCoAuthorVokiIds.Add(vokiId);
         return ErrOrNothing.Nothing;
+    }
+
+    public void DeclineCoAuthorInvite(VokiId vokiId) {
+        if (!InvitedToCoAuthorVokiIds.Contains(vokiId)) {
+            return;
+        }
+
+        InvitedToCoAuthorVokiIds = InvitedToCoAuthorVokiIds.Remove(vokiId);
+        AddDomainEvent(new CoAuthorInviteDeclinedEvent(vokiId, Id));
+    }
+
+    public ErrOrNothing AcceptCoAuthorInvite(VokiId vokiId) {
+        if (CoAuthoredVokiIds.Contains(vokiId)) {
+            InvitedToCoAuthorVokiIds = InvitedToCoAuthorVokiIds.Remove(vokiId);
+            return ErrOrNothing.Nothing;
+        }
+
+        if (!InvitedToCoAuthorVokiIds.Contains(vokiId)) {
+            return ErrFactory.Unspecified("You are not listed as invited in this voki");
+        }
+
+        CoAuthoredVokiIds = CoAuthoredVokiIds.Add(vokiId);
+        InvitedToCoAuthorVokiIds = InvitedToCoAuthorVokiIds.Remove(vokiId);
+        return ErrOrNothing.Nothing;
+    }
+
+    public void RemoveInvitedToCoAuthorVoki(VokiId vokiId) {
+        InvitedToCoAuthorVokiIds = InvitedToCoAuthorVokiIds.Remove(vokiId);
     }
 }

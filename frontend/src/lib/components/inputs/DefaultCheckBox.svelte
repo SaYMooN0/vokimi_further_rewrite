@@ -24,35 +24,38 @@
 	.cbx {
 		display: inline;
 	}
+
 	.cbx span {
 		display: inline-block;
 		vertical-align: middle;
 		transform: translate3d(0, 0, 0);
 	}
+
 	.cbx span {
 		width: 1.25rem;
 		height: 1.25rem;
+		border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 0.25rem;
+		transition: all 0.2s ease;
 		transform: scale(1);
 		vertical-align: middle;
-		border: 0.125rem solid var(--secondary-foreground);
-		transition: all 0.2s ease;
 	}
+
 	.cbx span svg {
-		fill: none;
-		height: 100%;
 		width: 100%;
-		padding: 0.125rem;
+		height: 100%;
 		box-sizing: border-box;
+		padding: 0.125rem;
+		transition: all 0.3s ease;
+		transform: translate3d(0, 0, 0);
+		fill: none;
 		stroke: var(--primary-foreground);
 		stroke-width: 2;
 		stroke-linecap: round;
 		stroke-linejoin: round;
 		stroke-dasharray: 1rem;
 		stroke-dashoffset: 1rem;
-		transition: all 0.3s ease;
 		transition-delay: 0.1s;
-		transform: translate3d(0, 0, 0);
 	}
 
 	.cbx:hover span {
@@ -61,10 +64,11 @@
 	}
 
 	.input:checked + .cbx span {
-		background: var(--primary);
 		border-color: var(--primary);
+		background: var(--primary);
 		animation: wave-46 0.4s ease;
 	}
+
 	.input:checked + .cbx span svg {
 		stroke-dashoffset: 0;
 	}

@@ -94,10 +94,11 @@
 	.subheading {
 		width: 100%;
 		color: var(--text);
-		text-align: center;
 		font-size: 1.75rem;
 		font-weight: 550;
+		text-align: center;
 	}
+
 	.types-container {
 		display: grid;
 		grid-template-columns: auto auto auto auto;
@@ -105,14 +106,16 @@
 		gap: 2rem;
 		grid-auto-flow: column;
 	}
+
 	.type-card {
-		text-align: center;
 		border-radius: 0.5rem;
-		font-weight: bold;
-		cursor: pointer;
-		transition: background-color 0.2s ease;
 		background-color: var(--secondary);
+		font-weight: bold;
+		text-align: center;
+		transition: background-color 0.2s ease;
+		cursor: pointer;
 	}
+
 	.type-card.selected {
 		background-color: var(--primary);
 		color: var(--primary-foreground);

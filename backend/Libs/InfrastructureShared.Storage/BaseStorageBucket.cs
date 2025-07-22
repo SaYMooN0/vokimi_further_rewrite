@@ -87,4 +87,26 @@ public abstract class BaseStorageBucket
             return ErrFactory.Unspecified("Unexpected error during file deletion");
         }
     }
+
+    protected async Task<ErrOrNothing> CopyAsync(string source, BaseStorageKey destinationKey) {
+        try {
+            var request = new CopyObjectRequest {
+                SourceBucket = _bucketNameProvider.BucketName,
+                SourceKey = source,
+                DestinationBucket = _bucketNameProvider.BucketName,
+                DestinationKey = destinationKey.ToString()
+            };
+
+            await _s3Client.CopyObjectAsync(request);
+            return ErrOrNothing.Nothing;
+        }
+        catch (AmazonS3Exception ex) {
+            _logger.LogError(ex, "[Error] in {MethodName}, S3 exception occurred", nameof(CopyAsync));
+            return ErrFactory.Unspecified("File copy failed");
+        }
+        catch (Exception ex) {
+            _logger.LogError(ex, "[Error] in {MethodName}, unexpected exception occurred", nameof(CopyAsync));
+            return ErrFactory.Unspecified("Unexpected error during file copy");
+        }
+    }
 }
