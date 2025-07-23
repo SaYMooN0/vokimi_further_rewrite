@@ -10,6 +10,7 @@ internal record class VokiQuestionFullDataResponse(
     string[] Images,
     GeneralVokiAnswerType AnswersType,
     VokiQuestionAnswerResponse[] Answers,
+    bool ShuffleAnswers,
     ushort MinAnswersCount,
     ushort MaxAnswersCount
 )
@@ -19,7 +20,8 @@ internal record class VokiQuestionFullDataResponse(
         question.Text.ToString(),
         question.Images.Keys.Select(imageKey => imageKey.ToString()).ToArray(),
         question.AnswersType,
-        question.Answers.Select(VokiQuestionAnswerResponse.Create).OrderBy(a=>a.Order).ToArray(),
+        question.Answers.Select(VokiQuestionAnswerResponse.Create).OrderBy(a => a.Order).ToArray(),
+        question.ShuffleAnswers,
         question.AnswersCountLimit.MinAnswers,
         question.AnswersCountLimit.MaxAnswers
     );

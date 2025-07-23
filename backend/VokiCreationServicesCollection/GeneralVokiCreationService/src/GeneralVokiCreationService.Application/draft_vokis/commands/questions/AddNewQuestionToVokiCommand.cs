@@ -18,7 +18,13 @@ internal sealed class AddNewQuestionToVokiCommandHandler :
         _draftGeneralVokiRepository = draftGeneralVokiRepository;
     }
 
+    private static readonly GeneralVokiAnswerType[] SupportedTyped = [GeneralVokiAnswerType.TextOnly];
+
     public async Task<ErrOr<GeneralVokiQuestionId>> Handle(AddNewQuestionToVokiCommand command, CancellationToken ct) {
+        if (!SupportedTyped.Contains(command.AnswersType)) {
+            return ErrFactory.NotImplemented("Selected type is not implemented yet");
+        }
+
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
         GeneralVokiQuestionId questionId = voki.AddNewQuestion(command.AnswersType);
         await _draftGeneralVokiRepository.Update(voki);

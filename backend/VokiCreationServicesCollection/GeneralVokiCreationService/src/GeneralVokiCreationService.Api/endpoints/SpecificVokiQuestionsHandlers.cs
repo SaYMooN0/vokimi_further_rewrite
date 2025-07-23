@@ -1,7 +1,9 @@
 ﻿using GeneralVokiCreationService.Api.contracts.questions;
 using GeneralVokiCreationService.Api.extensions;
+using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -13,7 +15,12 @@ internal static class SpecificVokiQuestionsHandlers
         group.WithGroupAuthenticationRequired();
 
         group.MapGet("/", GetVokiQuestionFullData);
-        // group.MapPatch("/update", UpdateVokiQuestion);
+        group.MapPatch("/update-text", UpdateQuestionText)
+            .WithRequestValidation<UpdateQuestionTextRequest>();
+        group.MapPatch("/update-images", UpdateQuestionImages)
+            .WithRequestValidation<UpdateQuestionImagesRequest>();
+        group.MapPatch("/update-answer-settings", UpdateQuestionAnswerSettings)
+            .WithRequestValidation<UpdateQuestionAnswerSettingsRequest>();
         // group.MapDelete("/delete", DeleteVokiQuestion);
         // group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
         // group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
@@ -32,6 +39,61 @@ internal static class SpecificVokiQuestionsHandlers
         return CustomResults.FromErrOr(result, (question) => Results.Json(
             VokiQuestionFullDataResponse.Create(question)
         ));
+    }
+
+    private static async Task<IResult> UpdateQuestionText(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<UpdateQuestionTextCommand, VokiQuestionText> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+        var request = httpContext.GetValidatedRequest<UpdateQuestionTextRequest>();
+
+        UpdateQuestionTextCommand command = new(id, questionId, request.ParsedText);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (text) => Results.Json(
+            new { NewText = text.ToString() }
+        ));
+    }
+
+    private static async Task<IResult> UpdateQuestionImages(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<UpdateQuestionImagesCommand, VokiQuestionImagesSet> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+        var request = httpContext.GetValidatedRequest<UpdateQuestionImagesRequest>();
+
+        UpdateQuestionImagesCommand command = new(id, questionId, request.ParsedImagesSet);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (imgsSet) => Results.Json(new {
+            NewImages = imgsSet.Keys.Select(s => s.ToString()).ToArray()
+        }));
+    }
+
+    private static async Task<IResult> UpdateQuestionAnswerSettings(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<UpdateQuestionAnswerSettingsCommand, VokiQuestion> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+        var request = httpContext.GetValidatedRequest<UpdateQuestionAnswerSettingsRequest>();
+
+        UpdateQuestionAnswerSettingsCommand command = new(
+            id, questionId, request.ParsedAnswersCountLimit, request.ShuffleAnswers
+        );
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (question) => Results.Json(new {
+            NewCountLimit = new {
+                IsMultipleChoice = question.AnswersCountLimit.IsMultipleChoice,
+                MinAnswers = question.AnswersCountLimit.MinAnswers,
+                MaxAnswers = question.AnswersCountLimit.MaxAnswers,
+            },
+            ShuffleAnswers = question.ShuffleAnswers
+        }));
     }
     // private static async Task<IResult> MoveQuestionUpInOrder(
     //     CancellationToken ct, HttpContext httpContext,

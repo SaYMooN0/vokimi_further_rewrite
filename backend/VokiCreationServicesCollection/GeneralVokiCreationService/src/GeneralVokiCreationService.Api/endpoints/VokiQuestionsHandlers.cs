@@ -1,22 +1,20 @@
-﻿using System.Collections.Immutable;
-using GeneralVokiCreationService.Api.contracts.questions;
+﻿using GeneralVokiCreationService.Api.contracts.questions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using Microsoft.AspNetCore.Mvc;
-using SharedKernel.common.vokis;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
 internal static class VokiQuestionsHandlers
 {
     internal static void MapVokiQuestionsHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/questions");
+        var group = endpoints.MapGroup("/vokis/{vokiId}/questions/");
 
         group.WithGroupAuthenticationRequired();
 
         group.MapGet("/overview", GetVokiQuestionsOverview);
-        group.MapPost("/add-new", AddNewQuestionToVoki);
+        group.MapPost("/add-new", AddNewQuestionToVoki)
+            .WithRequestValidation<AddNewQuestionToVokiRequest>();
     }
 
     private static async Task<IResult> GetVokiQuestionsOverview(
@@ -35,12 +33,12 @@ internal static class VokiQuestionsHandlers
 
     private static async Task<IResult> AddNewQuestionToVoki(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<AddNewQuestionToVokiCommand, GeneralVokiQuestionId> handler,
-        [FromBody] GeneralVokiAnswerType questionAnswersType
+        ICommandHandler<AddNewQuestionToVokiCommand, GeneralVokiQuestionId> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
+        var request = httpContext.GetValidatedRequest<AddNewQuestionToVokiRequest>();
 
-        AddNewQuestionToVokiCommand command = new(id, questionAnswersType);
+        AddNewQuestionToVokiCommand command = new(id, request.QuestionAnswersType);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (questionId) => Results.Json(

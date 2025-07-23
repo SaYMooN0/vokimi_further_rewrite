@@ -1,23 +1,25 @@
 import type { AnswerTypeData, GeneralVokiAnswerType } from "$lib/ts/voki";
 
-export type QuestionBriefData = {
+export type QuestionBriefInfo = {
     id: string;
     text: string;
     images: string[];
     answersType: GeneralVokiAnswerType;
     orderInVoki: number;
+    shuffleAnswers: boolean;
     isMultipleChoice: boolean;
 }
 export type GeneralVokiTakingProcessSettings = {
     forceSequentialAnswering: boolean;
     shuffleQuestions: boolean;
 }
-export type QuestionFullData = {
+export type QuestionFullInfo = {
     id: string;
     text: string;
     images: string[];
     answersType: GeneralVokiAnswerType;
     answers: QuestionAnswerData[];
+    shuffleAnswers: boolean;
     minAnswersCount: number;
     maxAnswersCount: number;
 }

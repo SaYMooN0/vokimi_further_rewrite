@@ -9,6 +9,7 @@ public record class VokiQuestionBriefDataResponse(
     string[] Images,
     GeneralVokiAnswerType AnswersType,
     ushort OrderInVoki,
+    bool ShuffleAnswers,
     bool IsMultipleChoice
 )
 {
@@ -18,6 +19,7 @@ public record class VokiQuestionBriefDataResponse(
         question.Images.Keys.Select(k => k.ToString()).ToArray(),
         question.AnswersType,
         question.OrderInVoki,
+        ShuffleAnswers: question.ShuffleAnswers,
         question.AnswersCountLimit.IsMultipleChoice
     );
 }

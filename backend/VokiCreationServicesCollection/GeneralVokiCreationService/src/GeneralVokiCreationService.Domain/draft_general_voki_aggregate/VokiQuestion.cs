@@ -16,6 +16,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     private readonly List<VokiQuestionAnswer> _answers;
     public ImmutableArray<VokiQuestionAnswer> Answers => _answers.ToImmutableArray();
 
+    public bool ShuffleAnswers { get; private set; }
     public QuestionAnswersCountLimit AnswersCountLimit { get; private set; }
 
     private VokiQuestion(
@@ -33,6 +34,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         OrderInVoki = orderInVoki;
         _answers = [];
         AnswersCountLimit = answersCountLimit;
+        ShuffleAnswers = false;
     }
 
     public static VokiQuestion CreateNew(
@@ -46,4 +48,27 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         answersType,
         QuestionAnswersCountLimit.SingleChoice()
     );
+
+
+    public void UpdateText(VokiQuestionText questionText) {
+        Text = questionText;
+    }
+
+    public ErrOrNothing UpdateImages(VokiQuestionImagesSet images) {
+        if (images.Keys.Any(k => k.QuestionId != Id)) {
+            return ErrFactory.Conflict("One or more images does not belong to this question");
+        }
+        Images = images;
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOrNothing UpdateAnswerSettings(QuestionAnswersCountLimit newCountLimit, bool shuffleAnswers) {
+        if (newCountLimit.MaxAnswers > _answers.Count) {
+            return ErrFactory.Conflict("Max answers count limit cannot be greater than the number of answers");
+        }
+
+        AnswersCountLimit = newCountLimit;
+        ShuffleAnswers = shuffleAnswers;
+        return ErrOrNothing.Nothing;
+    }
 }

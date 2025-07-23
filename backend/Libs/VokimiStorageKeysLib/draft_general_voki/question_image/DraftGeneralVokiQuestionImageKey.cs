@@ -5,21 +5,23 @@ public class DraftGeneralVokiQuestionImageKey : BaseStorageKey
     protected override string Value { get; }
     public VokiId VokiId { get; }
     public GeneralVokiQuestionId QuestionId { get; }
-    public GeneralVokiAnswerId AnswerId { get; }
 
     public DraftGeneralVokiQuestionImageKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(this, DraftGeneralVokiQuestionImageKeyScheme.IsKeyValid(
-            value, out var vokiId, out var questionId, out var answerId
+            value, out var vokiId, out var questionId
         ));
         VokiId = vokiId;
         QuestionId = questionId;
-        AnswerId = answerId;
         Value = value;
     }
 
+    public static ErrOr<DraftGeneralVokiQuestionImageKey> Create(string value) =>
+        DraftGeneralVokiQuestionImageKeyScheme.IsKeyValid(value, out _, out _).IsErr(out var err)
+            ? err
+            : new DraftGeneralVokiQuestionImageKey(value);
+
     public bool IsWithIds(
         VokiId expectedVokiId,
-        GeneralVokiQuestionId expectedQuestionId,
-        GeneralVokiAnswerId answerId
-    ) => VokiId == expectedVokiId && QuestionId == expectedQuestionId && AnswerId == answerId;
+        GeneralVokiQuestionId expectedQuestionId
+    ) => VokiId == expectedVokiId && QuestionId == expectedQuestionId;
 }

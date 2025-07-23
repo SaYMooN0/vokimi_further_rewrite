@@ -1,4 +1,5 @@
-﻿using SharedKernel.common.vokis;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using SharedKernel.common.vokis;
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
@@ -59,5 +60,64 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         return requestedQuestion;
+    }
+
+    public ErrOr<VokiQuestion> UpdateQuestionText(GeneralVokiQuestionId questionId, VokiQuestionText newText) {
+        VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (questionToUpdate is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find question to update", $"Voki with id {Id} doesn't have a question with id {questionId}"
+            );
+        }
+
+        questionToUpdate.UpdateText(newText);
+        return questionToUpdate;
+    }
+
+    public ErrOr<VokiQuestion> UpdateQuestionImages(GeneralVokiQuestionId questionId, VokiQuestionImagesSet newImages) {
+        VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (questionToUpdate is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find question to update", $"Voki with id {Id} doesn't have a question with id {questionId}"
+            );
+        }
+
+        var incorrectKeys = newImages.Keys
+            .Where(k => !k.IsWithIds(Id, questionId))
+            .Select(k => k.ToString())
+            .ToArray();
+        if (incorrectKeys.Length != 0) {
+            return ErrFactory.Conflict(
+                "Some of provided images does not belong to specified question",
+                $"Voki id: {Id}, question id: {questionId}, incorrect keys: {string.Join(", ", incorrectKeys)}"
+            );
+        }
+
+        var res = questionToUpdate.UpdateImages(newImages);
+        if (res.IsErr(out var err)) {
+            return err;
+        }
+
+        return questionToUpdate;
+    }
+
+    public ErrOr<VokiQuestion> UpdateQuestionAnswerSettings(
+        GeneralVokiQuestionId questionId,
+        QuestionAnswersCountLimit newCountLimit,
+        bool shuffleAnswers
+    ) {
+        VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (questionToUpdate is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find question to update", $"Voki with id {Id} doesn't have a question with id {questionId}"
+            );
+        }
+
+        var res = questionToUpdate.UpdateAnswerSettings(newCountLimit, shuffleAnswers);
+        if (res.IsErr(out var err)) {
+            return err;
+        }
+
+        return questionToUpdate;
     }
 }

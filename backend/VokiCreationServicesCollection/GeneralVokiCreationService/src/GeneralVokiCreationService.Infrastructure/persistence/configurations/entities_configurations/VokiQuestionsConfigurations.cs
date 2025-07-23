@@ -22,7 +22,7 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
 
         builder
             .Property(x => x.Images)
-            .HasConversion<VokiQuestionImagesSetConverter>();
+            .HasVokiQuestionImagesSetConversion();
 
         builder.Ignore(x => x.Answers);
         builder

@@ -1,10 +1,10 @@
 import { ApiVokiCreationGeneral } from "$lib/ts/backend-communication/voki-creation-backend-service";
 import type { ServerLoad } from "@sveltejs/kit";
-import type { GeneralVokiTakingProcessSettings, QuestionBriefData } from "./types";
+import type { GeneralVokiTakingProcessSettings, QuestionBriefInfo } from "./types";
 
 export const load: ServerLoad = async ({ params, fetch }) => {
     const response = await ApiVokiCreationGeneral.serverFetchJsonResponse<{
-        questions: QuestionBriefData[],
+        questions: QuestionBriefInfo[],
         settings: GeneralVokiTakingProcessSettings
     }>(
         fetch, `/vokis/${params.vokiId}/questions/overview`, { method: 'GET' }

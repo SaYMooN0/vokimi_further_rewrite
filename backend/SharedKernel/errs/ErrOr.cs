@@ -63,7 +63,9 @@ public class ErrOr<T>
     public TResult Match<TResult>(Func<T, TResult> successFunc, Func<Err, TResult> errorFunc) =>
         _isSuccess ? successFunc(_success!) : errorFunc(_err!);
 
-  
+    public ErrOr<TOut> Bind<TOut>(Func<T, ErrOr<TOut>> onSuccess)=> 
+        Match(onSuccess, err => err);
+
 
     public static implicit operator ErrOr<T>(T value) => new(value);
     public static implicit operator ErrOr<T>(Err err) => new(err);

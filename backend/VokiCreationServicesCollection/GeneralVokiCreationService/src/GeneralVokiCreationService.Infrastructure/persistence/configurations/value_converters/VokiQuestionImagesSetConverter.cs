@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VokimiStorageKeysLib.draft_general_voki.question_image;
 
@@ -11,6 +12,18 @@ public class VokiQuestionImagesSetConverter : ValueConverter<VokiQuestionImagesS
         set => set.Keys.Select(k => k.ToString()).ToArray(),
         keys => VokiQuestionImagesSet.Create(
             keys.Select(k => new DraftGeneralVokiQuestionImageKey(k)).ToImmutableArray()
+        ).AsSuccess()
+    ) { }
+}
+
+internal class VokiQuestionImagesSetComparer : ValueComparer<VokiQuestionImagesSet>
+{
+    public VokiQuestionImagesSetComparer() : base(
+        (a, b) => a.Equals(b),
+        obj => obj.GetHashCode(),
+        obj => VokiQuestionImagesSet.Create(
+            obj.Keys.Select(k => new DraftGeneralVokiQuestionImageKey(k.ToString()))
+                .ToImmutableArray()
         ).AsSuccess()
     ) { }
 }

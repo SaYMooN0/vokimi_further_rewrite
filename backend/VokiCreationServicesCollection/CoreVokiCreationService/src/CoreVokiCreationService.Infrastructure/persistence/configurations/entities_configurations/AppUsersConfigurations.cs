@@ -16,11 +16,15 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .HasGuidBasedIdConversion();
 
         builder
-            .Property<ImmutableHashSet<VokiId>>("InitializedVokiIds")
+            .Property(x => x.InitializedVokiIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
-        
+
         builder
-            .Property<ImmutableHashSet<VokiId>>("CoAuthoredVokiIds")
+            .Property(x => x.CoAuthoredVokiIds)
+            .HasGuidBasedIdsImmutableHashSetConversion();
+
+        builder
+            .Property(x => x.InvitedToCoAuthorVokiIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }
