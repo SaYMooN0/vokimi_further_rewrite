@@ -5,10 +5,18 @@
 	import NoQuestions from './c_questions_page/NoQuestions.svelte';
 	import QuestionInitializingDialog from './c_questions_page/QuestionInitializingDialog.svelte';
 	import VokiTakingProcessSettingsSection from './c_questions_page/VokiTakingProcessSettingsSection.svelte';
+	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
+	import generalVokiTakingProcessSettingsSprite from '$lib/icons/general-voki-taking-process-settings-icons.svg?raw';
+	import GeneralVokiCreationQuestionItem from './c_questions_page/GeneralVokiCreationQuestionItem.svelte';
 
 	let { data }: PageProps = $props();
 	let questionInitializingDialog = $state<QuestionInitializingDialog>()!;
 </script>
+
+<div class="sprites">
+	{@html vokiAnswerTypesIconsSprite}
+	{@html generalVokiTakingProcessSettingsSprite}
+</div>
 
 {#if !data.isSuccess}
 	<UnableToLoad errs={data.errs} />
@@ -22,9 +30,7 @@
 			<VokiCreationSectionHeader header={`Questions (${data.data.questions.length})`} />
 			<div class="questios">
 				{#each data.data.questions as question}
-					<div class="question">
-						<p>{question.text}</p>
-					</div>
+					<GeneralVokiCreationQuestionItem {question} />
 				{/each}
 			</div>
 		{/if}
@@ -36,5 +42,10 @@
 		display: flex;
 		flex-direction: column;
 		width: 100%;
+	}
+	.sprites {
+		display: none;
+		width: 0;
+		height: 0;
 	}
 </style>

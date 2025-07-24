@@ -14,7 +14,7 @@ internal static class GeneralVokiPresets
         "placeholder but it kinda slaps",
         "brain.exe not found, insert question",
         "vibe check question goes here",
-        "this question’s built different",
+        "this question is s built different",
         "💀💀💀 actual question coming soon"
     ];
 

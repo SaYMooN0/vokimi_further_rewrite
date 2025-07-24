@@ -8,8 +8,8 @@
 	} from './c_layout/c_sign_in_dialog/sign-in-dialog-context';
 	import AppToaster from './c_layout/AppToaster.svelte';
 	import vokiTypesIconsSprite from '$lib/icons/voki-types.svg?raw';
-	import crossedCircleIconsSprite from '$lib/icons/crossed-circle.svg?raw';
 	import commonIconsSprite from '$lib/icons/common-icons.svg?raw';
+	import caretIconsSprite from '$lib/icons/caret-icons.svg?raw';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
@@ -20,8 +20,8 @@
 
 <div class="sprites">
 	{@html vokiTypesIconsSprite}
-	{@html crossedCircleIconsSprite}
 	{@html commonIconsSprite}
+	{@html caretIconsSprite}
 </div>
 <SignInDialog bind:this={signInDialog} />
 <div class="page" class:full-width={isFullWidthMode}>

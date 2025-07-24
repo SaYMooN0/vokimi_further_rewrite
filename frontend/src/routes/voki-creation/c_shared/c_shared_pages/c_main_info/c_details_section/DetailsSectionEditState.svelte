@@ -58,7 +58,6 @@
 	bind:value={description}
 	name={StringUtils.rndStr()}
 />
-<DefaultErrBlock errList={savingErrs} />
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Language:" />
 	<select bind:value={language} class="language-select">
@@ -71,6 +70,8 @@
 	<VokiCreationFieldName fieldName="Age restriction:" />
 	<DefaultCheckBox bind:checked={isAgeRestricted} />
 </p>
+<DefaultErrBlock errList={savingErrs} />
+
 
 <VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
 

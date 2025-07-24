@@ -1,5 +1,5 @@
 <script lang="ts">
-	const { text, className="" }: { text: string; className?: string } = $props<{
+	const { text, className = '' }: { text: string; className?: string } = $props<{
 		text: string;
 		className?: string;
 	}>();
@@ -7,7 +7,7 @@
 
 <label class="not-set {className}">
 	<svg>
-		<use href="#crossed-circle-icon" />
+		<use href="#common-crossed-circle-icon" />
 	</svg>
 	{text}
 </label>

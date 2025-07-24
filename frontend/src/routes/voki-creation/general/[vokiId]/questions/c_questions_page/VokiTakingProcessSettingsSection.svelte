@@ -4,6 +4,7 @@
 	import VokiCreationSectionHeader from '../../../../c_shared/VokiCreationSectionHeader.svelte';
 	import type { GeneralVokiTakingProcessSettings } from '../types';
 	import TakingProcessSettingsEditingState from './c_settings_section/TakingProcessSettingsEditingState.svelte';
+	import TakingProcessSettingsFieldValue from './c_settings_section/TakingProcessSettingsFieldValue.svelte';
 
 	let { settings, vokiId }: { settings: GeneralVokiTakingProcessSettings; vokiId: string } =
 		$props<{
@@ -13,6 +14,7 @@
 	let isEditingState = $state(false);
 </script>
 
+<VokiCreationSectionHeader header="Voki taking process settings" />
 {#if isEditingState}
 	<TakingProcessSettingsEditingState
 		{vokiId}
@@ -21,14 +23,42 @@
 		cancelEditing={() => (isEditingState = false)}
 	/>
 {:else}
-	<VokiCreationSectionHeader header="Voki taking process settings" />
 	<p class="field-p">
 		<VokiCreationFieldName fieldName="Questions order:" />
-		{settings.shuffleQuestions ? 'Shuffled' : 'Ordered'}
+		{#if settings.shuffleQuestions}
+			<TakingProcessSettingsFieldValue
+				text="Shuffled"
+				iconId="#general-voki-taking-process-settings-questions-shuffled-icon"
+			/>
+		{:else}
+			<TakingProcessSettingsFieldValue
+				text="Ordered"
+				iconId="#general-voki-taking-process-settings-questions-ordered-icon"
+			/>
+		{/if}
 	</p>
 	<p class="field-p">
-		<VokiCreationFieldName fieldName="Answering mode:" />
-		{settings.forceSequentialAnswering ? 'Sequential' : 'Free'}
+		<VokiCreationFieldName fieldName="Answering flow:" />
+		{#if settings.forceSequentialAnswering}
+			<TakingProcessSettingsFieldValue
+				text="Sequential"
+				iconId="#general-voki-taking-process-settings-force-sequential-flow-icon"
+			/>
+		{:else}
+			<TakingProcessSettingsFieldValue
+				text="Free"
+				iconId="#general-voki-taking-process-settings-free-flow-icon"
+			/>
+		{/if}
 	</p>
 	<VokiCreationDefaultButton text="Edit settings" onclick={() => (isEditingState = true)} />
 {/if}
+
+<style>
+	.field-p {
+		margin: 2rem 0 0 0;
+		display: grid;
+		grid-template-columns: 12.5rem 1fr;
+		align-items: center;
+	}
+</style>

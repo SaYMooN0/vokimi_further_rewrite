@@ -1,6 +1,12 @@
 <script lang="ts">
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
+	import type { Err } from '$lib/ts/err';
+	import { RequestJsonOptions } from '$lib/ts/request-json-options';
+	import VokiCreationFieldName from '../../../../../c_shared/VokiCreationFieldName.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../c_shared/VokiCreationSaveAndCancelButtons.svelte';
 	import type { GeneralVokiTakingProcessSettings } from '../../types';
+	import TwoStateSwitchInput from './TwoStateSwitchInput.svelte';
 
 	const {
 		vokiId,
@@ -18,11 +24,57 @@
 		updateParent: (settings: GeneralVokiTakingProcessSettings) => void;
 		cancelEditing: () => void;
 	}>();
-
-	function saveChanges() {
-		updateParent(settings);
-		cancelEditing();
+	let editableSettings = $state<GeneralVokiTakingProcessSettings>(settings);
+	let errs = $state<Err[]>([]);
+	async function saveChanges() {
+		errs = [];
+		const response =
+			await ApiVokiCreationGeneral.fetchJsonResponse<GeneralVokiTakingProcessSettings>(
+				`/vokis/${vokiId}/update-voki-taking-process-settings`,
+				RequestJsonOptions.PATCH(editableSettings)
+			);
+		if (response.isSuccess) {
+			updateParent(response.data);
+			cancelEditing();
+		} else {
+		}
 	}
 </script>
 
+<p class="field-p">
+	<VokiCreationFieldName fieldName="Questions order:" />
+	<TwoStateSwitchInput
+		bind:value={editableSettings.shuffleQuestions}
+		trueLabel="Shuffled"
+		trueIconId="#general-voki-taking-process-settings-questions-shuffled-icon"
+		falseLabel="Ordered"
+		falseIconId="#general-voki-taking-process-settings-questions-ordered-icon"
+	/>
+</p>
+<p class="field-p">
+	<VokiCreationFieldName fieldName="Answering flow:" />
+	<TwoStateSwitchInput
+		bind:value={editableSettings.forceSequentialAnswering}
+		trueLabel="Sequential"
+		trueIconId="#general-voki-taking-process-settings-force-sequential-flow-icon"
+		falseLabel="Free"
+		falseIconId="#general-voki-taking-process-settings-free-flow-icon"
+	/>
+</p>
+{#if errs.length > 0}
+	<DefaultErrBlock errList={errs} containerId="general-voki-taking-process-settings-err-block" />
+{/if}
 <VokiCreationSaveAndCancelButtons onSave={() => saveChanges()} onCancel={cancelEditing} />
+
+<style>
+	.field-p {
+		margin: 1.5rem 0 0 0;
+		display: grid;
+		grid-template-columns: 12rem 1fr;
+		align-items: center;
+	}
+
+	:global(#general-voki-taking-process-settings-err-block) {
+		margin-top: 0.5rem;
+	}
+</style>

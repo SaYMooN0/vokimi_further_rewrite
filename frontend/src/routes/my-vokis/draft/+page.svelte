@@ -21,60 +21,68 @@
 				<VokiSkeletonItem />
 			{/each}
 		{:then _}
-			{#each data.draftVokiIds as vokiId}
-				{#await MyVokisCacheStore.Get(vokiId)}
-					<VokiSkeletonItem />
-				{:then voki}
-					{#if voki === null || voki === undefined}
-						<VokiUnableToLoad {vokiId} />
-					{:else}
-						<a
-							href="/voki-creation/{StringUtils.pascalToKebab(voki.type)}/{vokiId}"
-							class="voki-item"
-						>
-							<img class="voki-cover" src={StorageBucketMain.fileSrc(voki.cover)} alt="voki cover" />
-							<div class="bottom-items">
-								<div class="name-line">
-									<p class="voki-name">
-										{voki?.name}
-									</p>
-									<svg
-										class="voki-more-btn interactable"
-										onclick={(e) => {
-											e.preventDefault();
-											toast.error("Voki more button isn't implemented yet");
-										}}
-									>
-										<use href="#common-more-icon" />
-									</svg>
-								</div>
-								<div class="authors">
-									by: <span
-										class="primary-author-span interactable"
-										onclick={(e) => {
-											e.preventDefault();
-											goto(`/user/${voki.primaryAuthorId}`);
-										}}>{voki.primaryAuthorId}</span
-									>
-									{#if voki.coAuthorsCount > 0}
-										<div
-											class="co-authors interactable"
+			{#if data.draftVokiIds.length === 0}
+				<h1>No vokis created</h1>
+			{:else}
+				{#each data.draftVokiIds as vokiId}
+					{#await MyVokisCacheStore.Get(vokiId)}
+						<VokiSkeletonItem />
+					{:then voki}
+						{#if voki === null || voki === undefined}
+							<VokiUnableToLoad {vokiId} />
+						{:else}
+							<a
+								href="/voki-creation/{StringUtils.pascalToKebab(voki.type)}/{vokiId}"
+								class="voki-item"
+							>
+								<img
+									class="voki-cover"
+									src={StorageBucketMain.fileSrc(voki.cover)}
+									alt="voki cover"
+								/>
+								<div class="bottom-items">
+									<div class="name-line">
+										<p class="voki-name">
+											{voki?.name}
+										</p>
+										<svg
+											class="voki-more-btn interactable"
 											onclick={(e) => {
 												e.preventDefault();
-												toast.error(
-													'You cannot see co-authors here yet. Please open voki creation page'
-												);
+												toast.error("Voki more button isn't implemented yet");
 											}}
 										>
-											+ {voki.coAuthorsCount}
-										</div>
-									{/if}
+											<use href="#common-more-icon" />
+										</svg>
+									</div>
+									<div class="authors">
+										by: <span
+											class="primary-author-span interactable"
+											onclick={(e) => {
+												e.preventDefault();
+												goto(`/user/${voki.primaryAuthorId}`);
+											}}>{voki.primaryAuthorId}</span
+										>
+										{#if voki.coAuthorsCount > 0}
+											<div
+												class="co-authors interactable"
+												onclick={(e) => {
+													e.preventDefault();
+													toast.error(
+														'You cannot see co-authors here yet. Please open voki creation page'
+													);
+												}}
+											>
+												+ {voki.coAuthorsCount}
+											</div>
+										{/if}
+									</div>
 								</div>
-							</div>
-						</a>
-					{/if}
-				{/await}
-			{/each}
+							</a>
+						{/if}
+					{/await}
+				{/each}
+			{/if}
 		{/await}
 	</div>
 {/if}

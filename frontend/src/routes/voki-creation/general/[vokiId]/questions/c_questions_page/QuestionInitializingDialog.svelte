@@ -6,8 +6,8 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
+	import AnswersTypeSelectionCard from './c_initializing_dialog/AnswersTypeSelectionCard.svelte';
 
 	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	let dialog = $state<DialogWithCloseButton>()!;
@@ -31,68 +31,86 @@
 	}
 </script>
 
+
 <DialogWithCloseButton dialogId="general-voki-question-initializing-dialog" bind:this={dialog}>
 	<h1 class="subheading">Choose new answers type for the new question</h1>
 	<div class="types-container">
-		<div
-			class="type-card"
-			class:selected={selectedAnswersType === 'TextOnly'}
-			onclick={() => (selectedAnswersType = 'TextOnly')}
-		>
-			Text only
+		<div class="type-subset-column">
+			<svg><use href="#text-general-voki-answer-type-icon" /></svg>
+			<div class="subset-container">
+				<AnswersTypeSelectionCard
+					label="Text only"
+					isSelected={selectedAnswersType === 'TextOnly'}
+					onClick={() => (selectedAnswersType = 'TextOnly')}
+				/>
+			</div>
 		</div>
-		<div></div>
-		<div
-			class="type-card"
-			class:selected={selectedAnswersType === 'ImageOnly'}
-			onclick={() => (selectedAnswersType = 'ImageOnly')}
-		>
-			Image only
+
+		<div class="columns-sep"></div>
+
+		<div class="type-subset-column">
+			<svg><use href="#color-general-voki-answer-type-icon" /></svg>
+			<div class="subset-container">
+				<AnswersTypeSelectionCard
+					label="Color only"
+					isSelected={selectedAnswersType === 'ColorOnly'}
+					onClick={() => (selectedAnswersType = 'ColorOnly')}
+				/>
+				<AnswersTypeSelectionCard
+					label="Color and Text"
+					isSelected={selectedAnswersType === 'ColorAndText'}
+					onClick={() => (selectedAnswersType = 'ColorAndText')}
+				/>
+			</div>
 		</div>
-		<div
-			class="type-card"
-			class:selected={selectedAnswersType === 'ImageAndText'}
-			onclick={() => (selectedAnswersType = 'ImageAndText')}
-		>
-			ImageAndText
+
+		<div class="columns-sep"></div>
+
+		<div class="type-subset-column">
+			<svg><use href="#image-general-voki-answer-type-icon" /></svg>
+			<div class="subset-container">
+				<AnswersTypeSelectionCard
+					label="Image only"
+					isSelected={selectedAnswersType === 'ImageOnly'}
+					onClick={() => (selectedAnswersType = 'ImageOnly')}
+				/>
+				<AnswersTypeSelectionCard
+					label="Image and Text"
+					isSelected={selectedAnswersType === 'ImageAndText'}
+					onClick={() => (selectedAnswersType = 'ImageAndText')}
+				/>
+			</div>
 		</div>
-		<div
-			class="type-card"
-			class:selected={selectedAnswersType === 'ColorOnly'}
-			onclick={() => (selectedAnswersType = 'ColorOnly')}
-		>
-			Color only
-		</div>
-		<div
-			class="type-card"
-			class:selected={selectedAnswersType === 'ColorAndText'}
-			onclick={() => (selectedAnswersType = 'ColorAndText')}
-		>
-			Color and Text
-		</div>
-		<div
-			class="type-card"
-			class:selected={selectedAnswersType === 'AudioOnly'}
-			onclick={() => (selectedAnswersType = 'AudioOnly')}
-		>
-			Audio only
-		</div>
-		<div
-			class="type-card"
-			class:selected={selectedAnswersType === 'AudioAndText'}
-			onclick={() => (selectedAnswersType = 'AudioAndText')}
-		>
-			Audio and Text
+
+		<div class="columns-sep"></div>
+
+		<div class="type-subset-column">
+			<svg><use href="#audio-general-voki-answer-type-icon" /></svg>
+			<div class="subset-container">
+				<AnswersTypeSelectionCard
+					label="Audio only"
+					isSelected={selectedAnswersType === 'AudioOnly'}
+					onClick={() => (selectedAnswersType = 'AudioOnly')}
+				/>
+				<AnswersTypeSelectionCard
+					label="Audio and Text"
+					isSelected={selectedAnswersType === 'AudioAndText'}
+					onClick={() => (selectedAnswersType = 'AudioAndText')}
+				/>
+			</div>
 		</div>
 	</div>
+
 	<DefaultErrBlock errList={errs} />
 
 	<PrimaryButton onclick={() => submitCreate()}>Create</PrimaryButton>
 </DialogWithCloseButton>
 
 <style>
+	
+
 	.subheading {
-		width: 100%;
+		padding: 0.25rem 1rem 2.5rem;
 		color: var(--text);
 		font-size: 1.75rem;
 		font-weight: 550;
@@ -101,23 +119,52 @@
 
 	.types-container {
 		display: grid;
-		grid-template-columns: auto auto auto auto;
-		grid-template-rows: 3rem 3rem;
-		gap: 2rem;
-		grid-auto-flow: column;
+		grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+		gap: 1.25rem;
+		padding: 0 2rem;
 	}
 
-	.type-card {
-		border-radius: 0.5rem;
+	.columns-sep {
+		width: 0.125rem;
+		height: 100%;
+		border-radius: 0.125rem;
 		background-color: var(--secondary);
-		font-weight: bold;
-		text-align: center;
-		transition: background-color 0.2s ease;
-		cursor: pointer;
 	}
 
-	.type-card.selected {
-		background-color: var(--primary);
-		color: var(--primary-foreground);
+	.type-subset-column {
+		display: grid;
+		grid-template-rows: auto 1fr;
+		gap: 2rem;
+		justify-items: center;
+	}
+
+	.type-subset-column > svg {
+		width: 3.25rem;
+		height: 3.25rem;
+		padding: 0.375rem;
+		border: 0.125rem solid var(--primary);
+		border-radius: 1.375rem;
+		color: var(--primary);
+		box-shadow: var(--shadow-md);
+		stroke-width: 1.5;
+	}
+
+	.subset-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	:global(#general-voki-question-initializing-dialog .dialog-content) {
+		display: flex;
+		flex-direction: column;
+	}
+
+	:global(#general-voki-question-initializing-dialog .err-block) {
+		margin: 1rem 0;
+	}
+
+	:global(#general-voki-question-initializing-dialog .primary-btn) {
+		margin: 0 auto;
 	}
 </style>
