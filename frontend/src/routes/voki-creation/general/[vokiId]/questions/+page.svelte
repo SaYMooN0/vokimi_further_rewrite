@@ -5,17 +5,23 @@
 	import NoQuestions from './c_questions_page/NoQuestions.svelte';
 	import QuestionInitializingDialog from './c_questions_page/QuestionInitializingDialog.svelte';
 	import VokiTakingProcessSettingsSection from './c_questions_page/VokiTakingProcessSettingsSection.svelte';
+
 	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
-	import generalVokiTakingProcessSettingsSprite from '$lib/icons/general-voki-taking-process-settings-icons.svg?raw';
+	import generalVokiCreationIconsSprite from '$lib/icons/general-voki-creation-icons.svg?raw';
+	import imageIconsSprite from '$lib/icons/image-icons.svg?raw';
+
 	import GeneralVokiCreationQuestionItem from './c_questions_page/GeneralVokiCreationQuestionItem.svelte';
+	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 
 	let { data }: PageProps = $props();
 	let questionInitializingDialog = $state<QuestionInitializingDialog>()!;
+	const maxQuestionsCount = 100;
 </script>
 
 <div class="sprites">
 	{@html vokiAnswerTypesIconsSprite}
-	{@html generalVokiTakingProcessSettingsSprite}
+	{@html generalVokiCreationIconsSprite}
+	{@html imageIconsSprite}
 </div>
 
 {#if !data.isSuccess}
@@ -28,11 +34,20 @@
 		{:else}
 			<VokiTakingProcessSettingsSection vokiId={data.vokiId!} settings={data.data.settings} />
 			<VokiCreationSectionHeader header={`Questions (${data.data.questions.length})`} />
-			<div class="questios">
+			<div class="questions">
 				{#each data.data.questions as question}
-					<GeneralVokiCreationQuestionItem {question} />
+					<GeneralVokiCreationQuestionItem
+						vokiId={data.vokiId!}
+						{question}
+						questionsCount={data.data.questions.length}
+					/>
 				{/each}
 			</div>
+			{#if data.data.questions.length < maxQuestionsCount}
+				<PrimaryButton onclick={() => questionInitializingDialog.open()}
+					>Add new question</PrimaryButton
+				>
+			{/if}
 		{/if}
 	</div>
 {/if}
@@ -43,9 +58,19 @@
 		flex-direction: column;
 		width: 100%;
 	}
+
 	.sprites {
 		display: none;
 		width: 0;
 		height: 0;
+	}
+
+	.questions {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.questions-tab-container :global(.primary-btn) {
+		margin: 1.25rem auto;
 	}
 </style>

@@ -35,44 +35,49 @@
 <style>
 	.switch-container {
 		display: grid;
-		grid-template-columns: 1fr auto 1fr;
-        width: fit-content;
 		gap: 0.5rem;
+        width: fit-content;
 		border-radius: 0.375rem;
+		grid-template-columns: 1fr auto 1fr;
 	}
+
 	.sep {
 		width: 0.125rem;
 		height: 100%;
 		border-radius: 0.125rem;
 		background-color: var(--muted);
 	}
+
 	.option {
+		display: grid;
+		align-items: center;
+		gap: 0.25rem;
 		width: 10rem;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.5rem;
-		gap: 0.25rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		cursor: pointer;
-		display: grid;
-		grid-template-columns: 1.5rem 1fr;
-		align-items: center;
 		font-size: 1.125rem;
 		font-weight: 450;
 		letter-spacing: 0.4px;
 		box-shadow: var(--shadow-xs);
 		transition: transform 0.12s ease-in;
+		cursor: pointer;
+		grid-template-columns: 1.5rem 1fr;
 	}
+
 	.option > svg {
 		width: 100%;
 		aspect-ratio: 1/1;
 		stroke-width: 1.8;
 	}
+
 	.option:not(.selected):hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 		transform: scale(1.04);
 	}
+
 	.option.selected {
 		background-color: var(--primary);
 		color: var(--primary-foreground);

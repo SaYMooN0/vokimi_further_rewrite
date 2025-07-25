@@ -29,9 +29,6 @@
 		display: inline-block;
 		vertical-align: middle;
 		transform: translate3d(0, 0, 0);
-	}
-
-	.cbx span {
 		width: 1.25rem;
 		height: 1.25rem;
 		border: 0.125rem solid var(--secondary-foreground);

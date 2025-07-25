@@ -26,8 +26,12 @@ internal sealed class AddNewQuestionToVokiCommandHandler :
         }
 
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
-        GeneralVokiQuestionId questionId = voki.AddNewQuestion(command.AnswersType);
+        var res = voki.AddNewQuestion(command.AnswersType);
+        if (res.IsErr(out var err)) {
+            return err;
+        }
+
         await _draftGeneralVokiRepository.Update(voki);
-        return questionId;
+        return res.AsSuccess();
     }
 }

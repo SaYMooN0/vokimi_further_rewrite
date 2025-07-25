@@ -26,15 +26,9 @@
 	<p class="field-p">
 		<VokiCreationFieldName fieldName="Questions order:" />
 		{#if settings.shuffleQuestions}
-			<TakingProcessSettingsFieldValue
-				text="Shuffled"
-				iconId="#general-voki-taking-process-settings-questions-shuffled-icon"
-			/>
+			<TakingProcessSettingsFieldValue text="Shuffled" iconId="#common-shuffle-icon" />
 		{:else}
-			<TakingProcessSettingsFieldValue
-				text="Ordered"
-				iconId="#general-voki-taking-process-settings-questions-ordered-icon"
-			/>
+			<TakingProcessSettingsFieldValue text="Ordered" iconId="#common-order-icon" />
 		{/if}
 	</p>
 	<p class="field-p">
@@ -56,9 +50,9 @@
 
 <style>
 	.field-p {
-		margin: 2rem 0 0 0;
 		display: grid;
-		grid-template-columns: 12.5rem 1fr;
 		align-items: center;
+		margin: 2rem 0 0;
+		grid-template-columns: 12.5rem 1fr;
 	}
 </style>

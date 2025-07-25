@@ -9,9 +9,8 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 public sealed class DraftGeneralVoki : BaseDraftVoki
 {
+    private const int MaxQuestionsCount = 100;
     private DraftGeneralVoki() { }
-
-
     public VokiTakingProcessSettings TakingProcessSettings { get; private set; }
     private readonly List<VokiQuestion> _questions;
     public ImmutableArray<VokiQuestion> Questions => _questions.ToImmutableArray();
@@ -40,7 +39,13 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return newGeneralVoki;
     }
 
-    public GeneralVokiQuestionId AddNewQuestion(GeneralVokiAnswerType answersType) {
+    public ErrOr<GeneralVokiQuestionId> AddNewQuestion(GeneralVokiAnswerType answersType) {
+        if (_questions.Count >= MaxQuestionsCount) {
+            return ErrFactory.LimitExceeded(
+                $"General voki cannot have more than {MaxQuestionsCount} questions. Current count: {_questions.Count}"
+            );
+        }
+
         VokiQuestion question = VokiQuestion.CreateNew((ushort)_questions.Count, answersType);
         _questions.Add(question);
         return question.Id;

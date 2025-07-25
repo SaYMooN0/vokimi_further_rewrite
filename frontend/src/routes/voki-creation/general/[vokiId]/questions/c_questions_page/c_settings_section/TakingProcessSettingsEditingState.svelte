@@ -46,9 +46,9 @@
 	<TwoStateSwitchInput
 		bind:value={editableSettings.shuffleQuestions}
 		trueLabel="Shuffled"
-		trueIconId="#general-voki-taking-process-settings-questions-shuffled-icon"
+		trueIconId="#common-shuffle-icon"
 		falseLabel="Ordered"
-		falseIconId="#general-voki-taking-process-settings-questions-ordered-icon"
+		falseIconId="#common-order-icon"
 	/>
 </p>
 <p class="field-p">
@@ -68,10 +68,10 @@
 
 <style>
 	.field-p {
-		margin: 1.5rem 0 0 0;
 		display: grid;
-		grid-template-columns: 12rem 1fr;
 		align-items: center;
+		margin: 1.5rem 0 0;
+		grid-template-columns: 12rem 1fr;
 	}
 
 	:global(#general-voki-taking-process-settings-err-block) {
