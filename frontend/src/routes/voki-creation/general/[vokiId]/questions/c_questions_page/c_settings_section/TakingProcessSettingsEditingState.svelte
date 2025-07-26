@@ -1,12 +1,12 @@
 <script lang="ts">
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import TwoStateSwitchInput from '$lib/components/inputs/TwoStateSwitchInput.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import VokiCreationFieldName from '../../../../../c_shared/VokiCreationFieldName.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../c_shared/VokiCreationSaveAndCancelButtons.svelte';
 	import type { GeneralVokiTakingProcessSettings } from '../../types';
-	import TwoStateSwitchInput from './TwoStateSwitchInput.svelte';
 
 	const {
 		vokiId,

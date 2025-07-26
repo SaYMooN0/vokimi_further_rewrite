@@ -29,7 +29,7 @@ export default {
       'max-height',
 
       'box-sizing',
-      
+
       'padding',
       'padding-top',
       'padding-right',
@@ -74,12 +74,8 @@ export default {
       files: ['**/*.svelte'],
       customSyntax: 'postcss-html',
       rules: {
-        'selector-pseudo-class-no-unknown': [
-          true,
-          {
-            ignorePseudoClasses: ['global', 'deep']
-          }
-        ]
+        'selector-pseudo-class-no-unknown': [true, { ignorePseudoClasses: ['global', 'deep'] }],
+        "property-no-vendor-prefix": null
       }
     }
   ]

@@ -1,4 +1,5 @@
 ﻿using GeneralVokiCreationService.Api.contracts.questions;
+using GeneralVokiCreationService.Api.contracts.questions.update_question;
 using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
@@ -87,11 +88,8 @@ internal static class SpecificVokiQuestionsHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (question) => Results.Json(new {
-            NewCountLimit = new {
-                IsMultipleChoice = question.AnswersCountLimit.IsMultipleChoice,
-                MinAnswers = question.AnswersCountLimit.MinAnswers,
-                MaxAnswers = question.AnswersCountLimit.MaxAnswers,
-            },
+            MinAnswers = question.AnswersCountLimit.MinAnswers,
+            MaxAnswers = question.AnswersCountLimit.MaxAnswers,
             ShuffleAnswers = question.ShuffleAnswers
         }));
     }

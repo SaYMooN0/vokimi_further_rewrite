@@ -1,7 +1,7 @@
 <script lang="ts">
+	import VokiCreationBasicHeader from '../../../../c_shared/VokiCreationBasicHeader.svelte';
 	import VokiCreationDefaultButton from '../../../../c_shared/VokiCreationDefaultButton.svelte';
 	import VokiCreationFieldName from '../../../../c_shared/VokiCreationFieldName.svelte';
-	import VokiCreationSectionHeader from '../../../../c_shared/VokiCreationSectionHeader.svelte';
 	import type { GeneralVokiTakingProcessSettings } from '../types';
 	import TakingProcessSettingsEditingState from './c_settings_section/TakingProcessSettingsEditingState.svelte';
 	import TakingProcessSettingsFieldValue from './c_settings_section/TakingProcessSettingsFieldValue.svelte';
@@ -14,7 +14,7 @@
 	let isEditingState = $state(false);
 </script>
 
-<VokiCreationSectionHeader header="Voki taking process settings" />
+<VokiCreationBasicHeader header="Voki taking process settings" />
 {#if isEditingState}
 	<TakingProcessSettingsEditingState
 		{vokiId}
@@ -23,36 +23,48 @@
 		cancelEditing={() => (isEditingState = false)}
 	/>
 {:else}
-	<p class="field-p">
-		<VokiCreationFieldName fieldName="Questions order:" />
-		{#if settings.shuffleQuestions}
-			<TakingProcessSettingsFieldValue text="Shuffled" iconId="#common-shuffle-icon" />
-		{:else}
-			<TakingProcessSettingsFieldValue text="Ordered" iconId="#common-order-icon" />
-		{/if}
-	</p>
-	<p class="field-p">
-		<VokiCreationFieldName fieldName="Answering flow:" />
-		{#if settings.forceSequentialAnswering}
-			<TakingProcessSettingsFieldValue
-				text="Sequential"
-				iconId="#general-voki-taking-process-settings-force-sequential-flow-icon"
-			/>
-		{:else}
-			<TakingProcessSettingsFieldValue
-				text="Free"
-				iconId="#general-voki-taking-process-settings-free-flow-icon"
-			/>
-		{/if}
-	</p>
-	<VokiCreationDefaultButton text="Edit settings" onclick={() => (isEditingState = true)} />
+	<div class="settings-section">
+		<div class="field first-filed">
+			<VokiCreationFieldName fieldName="Questions order:" />
+			{#if settings.shuffleQuestions}
+				<TakingProcessSettingsFieldValue text="Shuffled" iconId="#common-shuffle-icon" />
+			{:else}
+				<TakingProcessSettingsFieldValue text="Ordered" iconId="#common-order-icon" />
+			{/if}
+		</div>
+		<div class="field">
+			<VokiCreationFieldName fieldName="Answering flow:" />
+			{#if settings.forceSequentialAnswering}
+				<TakingProcessSettingsFieldValue
+					text="Sequential"
+					iconId="#general-voki-taking-process-settings-force-sequential-flow-icon"
+				/>
+			{:else}
+				<TakingProcessSettingsFieldValue
+					text="Free"
+					iconId="#general-voki-taking-process-settings-free-flow-icon"
+				/>
+			{/if}
+		</div>
+		<VokiCreationDefaultButton text="Edit settings" onclick={() => (isEditingState = true)} />
+	</div>
 {/if}
 
 <style>
-	.field-p {
+	.settings-section {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.field {
 		display: grid;
 		align-items: center;
-		margin: 2rem 0 0;
+		margin: 0;
 		grid-template-columns: 12.5rem 1fr;
+	}
+
+	.field:not(.first-filed) {
+		margin-top: 1.5rem;
 	}
 </style>

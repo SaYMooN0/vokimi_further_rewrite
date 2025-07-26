@@ -69,7 +69,7 @@
 	.option > svg {
 		width: 100%;
 		aspect-ratio: 1/1;
-		stroke-width: 1.8;
+		stroke-width: 1.9;
 	}
 
 	.option:not(.selected):hover {

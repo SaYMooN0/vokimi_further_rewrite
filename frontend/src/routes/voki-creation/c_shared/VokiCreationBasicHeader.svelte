@@ -9,7 +9,9 @@
 
 <style>
 	h1 {
+		display: block;
 		width: 100%;
+		margin: 0.75rem 0 1.25rem;
 		color: var(--text);
 		font-size: 1.75rem;
 		font-weight: 550;

@@ -5,10 +5,18 @@
 	import VokiCreationHeader from '../../c_layout/VokiCreationHeader.svelte';
 	import { setVokiCreationPageApiService } from '../../voki-creation-page-context';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
-
+	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
+	import generalVokiCreationIconsSprite from '$lib/icons/general-voki-creation-icons.svg?raw';
+	import imageIconsSprite from '$lib/icons/image-icons.svg?raw';
 	const { children }: { children: Snippet } = $props();
 	setVokiCreationPageApiService('General');
 </script>
+
+<div class="sprites">
+	{@html vokiAnswerTypesIconsSprite}
+	{@html generalVokiCreationIconsSprite}
+	{@html imageIconsSprite}
+</div>
 
 <VokiCreationHeader vokiName="Voki name bla bla ki name ki name " typeName="general" />
 <GeneralVokiCreationLayoutNavBar />
@@ -19,12 +27,18 @@
 		<CubesLoader sizeRem={5} />
 	</div>
 {:else}
-	<div class="fade-in-animation">
+	<div class="fade-in-animation content">
 		{@render children()}
 	</div>
 {/if}
 
 <style>
+	.sprites {
+		display: none;
+		width: 0;
+		height: 0;
+	}
+
 	.loading {
 		display: flex;
 		flex-direction: column;
@@ -38,6 +52,10 @@
 		font-size: 2.5rem;
 		font-weight: 600;
 		letter-spacing: 2px;
+	}
+
+	.content {
+		scrollbar-gutter: stable;
 	}
 
 	.fade-in-animation {

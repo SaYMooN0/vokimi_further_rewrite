@@ -1,9 +1,10 @@
 <script lang="ts">
 	import type { VokiMainInfo } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import VokiCreationCover from './c_main_info/VokiCreationCover.svelte';
-	import VokiCreationDetails from './c_main_info/VokiCreationDetails.svelte';
-	import VokiCreationName from './c_main_info/VokiCreationName.svelte';
-	import VokiCreationTags from './c_main_info/VokiCreationTags.svelte';
+	import VokiCreationBasicHeader from '../VokiCreationBasicHeader.svelte';
+	import VokiCreationCoverSection from './c_main_info/VokiCreationCoverSection.svelte';
+	import VokiCreationDetailsSection from './c_main_info/VokiCreationDetailsSection.svelte';
+	import VokiCreationNameSection from './c_main_info/VokiCreationNameSection.svelte';
+	import VokiCreationTagsSection from './c_main_info/VokiCreationTagsSection.svelte';
 
 	let { mainInfo, vokiId }: { mainInfo: VokiMainInfo; vokiId: string } = $props<{
 		mainInfo: VokiMainInfo;
@@ -11,14 +12,15 @@
 	}>();
 </script>
 
+<VokiCreationBasicHeader header="Voki main info" />
 <div class="main-info-tab-container">
 	<div class="main-section">
-		<VokiCreationName vokiName={mainInfo.name} {vokiId} />
-		<VokiCreationTags tags={mainInfo.tags} {vokiId} />
-		<VokiCreationDetails details={mainInfo.details} {vokiId} />
+		<VokiCreationNameSection vokiName={mainInfo.name} {vokiId} />
+		<VokiCreationTagsSection tags={mainInfo.tags} {vokiId} />
+		<VokiCreationDetailsSection details={mainInfo.details} {vokiId} />
 	</div>
 	<div class="cover-section">
-		<VokiCreationCover cover={mainInfo.cover} {vokiId} />
+		<VokiCreationCoverSection cover={mainInfo.cover} {vokiId} />
 	</div>
 </div>
 

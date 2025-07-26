@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { toast } from 'svelte-sonner';
 	import type { QuestionBriefInfo } from '../types';
 	import QuestionOrderButtons from './c_question_item/QuestionOrderButtons.svelte';
 	import QuestionProps from './c_question_item/QuestionProps.svelte';
@@ -12,6 +13,9 @@
 		question: QuestionBriefInfo;
 		questionsCount: number;
 	}>();
+	async function deleteQuestion() {
+		toast.error('Question deleting is not implemented yet');
+	}
 </script>
 
 <div class="question">
@@ -30,7 +34,7 @@
 			<QuestionProps {question} />
 			<div class="buttons-container">
 				<a href="/voki-creation/general/{vokiId}/questions/{question.id}" class="edit-btn">Edit</a>
-				<button class="delete-btn">
+				<button class="delete-btn" onclick={deleteQuestion}>
 					<svg><use href="#common-trash-can-icon" /></svg>
 				</button>
 			</div>
@@ -42,7 +46,7 @@
 	.question {
 		display: grid;
 		gap: 0.5rem;
-		padding: 0.25rem 1rem 0.5rem 0.25rem;
+		padding: 0.25rem 0.5rem;
 		margin-top: 1.25rem;
 		border: 0.125rem solid var(--muted);
 		border-radius: 0.75rem;
@@ -57,6 +61,7 @@
 	}
 
 	.text {
+		margin: 0.25rem 0 0;
 		color: var(--text);
 		font-size: 1.5rem;
 		font-weight: 450;
@@ -73,7 +78,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		margin-top: 0.5rem;
+		margin: 0.25rem 0.5rem 0.25rem 0;
 	}
 
 	.buttons-container {
@@ -84,22 +89,23 @@
 
 	.buttons-container > * {
 		display: flex;
-        justify-content: center;
+		justify-content: center;
 		align-items: center;
 		height: 2rem;
 		border: none;
 		border-radius: 0.25rem;
-		box-shadow: var(--shadow-xl);
+		box-shadow: var(--shadow);
 		outline: none;
+		cursor: pointer;
 	}
 
 	.edit-btn {
-		padding: 0 1rem;
+		padding: 0 1.25rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 		font-size: 1.25rem;
 		font-weight: 480;
-		letter-spacing: 1px;
+		letter-spacing: 1.5px;
 	}
 
 	.edit-btn:hover {

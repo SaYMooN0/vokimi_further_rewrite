@@ -1,15 +1,20 @@
 <script lang="ts">
-	const { text, onclick }: { text: string; onclick: () => void } = $props<{
+	const {
+		text,
+		onclick,
+		className = ''
+	}: { text: string; onclick: () => void; className?: string } = $props<{
 		text: string;
 		onclick: () => void;
+		className?: string;
 	}>();
 </script>
 
-<button class="btn" {onclick}>{text}</button>
+<button class="btn {className}" {onclick}>{text}</button>
 
 <style>
 	.btn {
-		width: 9.5rem;
+		min-width: 9.5rem;
 		height: 2rem;
 		margin: 0.5rem 1rem 0 auto;
 		border: none;

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import UnableToLoad from '../../../c_shared/UnableToLoad.svelte';
-	import VokiCreationSectionHeader from '../../../c_shared/VokiCreationSectionHeader.svelte';
 	import type { PageProps } from './$types';
 	import NoQuestions from './c_questions_page/NoQuestions.svelte';
 	import QuestionInitializingDialog from './c_questions_page/QuestionInitializingDialog.svelte';
@@ -12,6 +11,7 @@
 
 	import GeneralVokiCreationQuestionItem from './c_questions_page/GeneralVokiCreationQuestionItem.svelte';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import VokiCreationBasicHeader from '../../../c_shared/VokiCreationBasicHeader.svelte';
 
 	let { data }: PageProps = $props();
 	let questionInitializingDialog = $state<QuestionInitializingDialog>()!;
@@ -28,37 +28,29 @@
 	<UnableToLoad errs={data.errs} />
 {:else}
 	<QuestionInitializingDialog bind:this={questionInitializingDialog} vokiId={data.vokiId!} />
-	<div class="questions-tab-container">
-		{#if data.data.questions.length === 0}
-			<NoQuestions openQuestionInitializingDialog={() => questionInitializingDialog.open()} />
-		{:else}
-			<VokiTakingProcessSettingsSection vokiId={data.vokiId!} settings={data.data.settings} />
-			<VokiCreationSectionHeader header={`Questions (${data.data.questions.length})`} />
-			<div class="questions">
-				{#each data.data.questions as question}
-					<GeneralVokiCreationQuestionItem
-						vokiId={data.vokiId!}
-						{question}
-						questionsCount={data.data.questions.length}
-					/>
-				{/each}
-			</div>
-			{#if data.data.questions.length < maxQuestionsCount}
-				<PrimaryButton onclick={() => questionInitializingDialog.open()}
-					>Add new question</PrimaryButton
-				>
-			{/if}
+	{#if data.data.questions.length === 0}
+		<NoQuestions openQuestionInitializingDialog={() => questionInitializingDialog.open()} />
+	{:else}
+		<VokiTakingProcessSettingsSection vokiId={data.vokiId!} settings={data.data.settings} />
+		<VokiCreationBasicHeader header={`Questions (${data.data.questions.length})`} />
+		<div class="questions">
+			{#each data.data.questions as question}
+				<GeneralVokiCreationQuestionItem
+					vokiId={data.vokiId!}
+					{question}
+					questionsCount={data.data.questions.length}
+				/>
+			{/each}
+		</div>
+		{#if data.data.questions.length < maxQuestionsCount}
+			<PrimaryButton onclick={() => questionInitializingDialog.open()} class="add-new-question-btn"
+				>Add new question</PrimaryButton
+			>
 		{/if}
-	</div>
+	{/if}
 {/if}
 
 <style>
-	.questions-tab-container {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-	}
-
 	.sprites {
 		display: none;
 		width: 0;
@@ -70,7 +62,7 @@
 		flex-direction: column;
 	}
 
-	.questions-tab-container :global(.primary-btn) {
+	:global(.primary-btn.add-new-question-btn) {
 		margin: 1.25rem auto;
 	}
 </style>

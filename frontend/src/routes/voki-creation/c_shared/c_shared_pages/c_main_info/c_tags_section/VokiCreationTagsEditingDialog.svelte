@@ -26,7 +26,6 @@
 	async function saveData() {
 		const response = await vokiCreationApi.updateVokiTags(vokiId, chosenTags);
 		if (response.isSuccess) {
-			console.log(response.data.newTags);
 			updateParent(response.data.newTags);
 			dialogElement.close();
 		} else {
@@ -35,8 +34,8 @@
 	}
 	export function open(tags: string[]) {
 		chosenTags = tags ?? [];
-		dialogElement.open();
 		errs = [];
+		dialogElement.open();
 	}
 	function removeTag(tag: string) {
 		chosenTags = chosenTags.filter((t) => t !== tag);

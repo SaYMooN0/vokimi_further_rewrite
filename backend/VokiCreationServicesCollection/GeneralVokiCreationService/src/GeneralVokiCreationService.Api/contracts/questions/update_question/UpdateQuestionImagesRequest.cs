@@ -1,7 +1,7 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using VokimiStorageKeysLib.draft_general_voki.question_image;
 
-namespace GeneralVokiCreationService.Api.contracts.questions;
+namespace GeneralVokiCreationService.Api.contracts.questions.update_question;
 
 public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
 {

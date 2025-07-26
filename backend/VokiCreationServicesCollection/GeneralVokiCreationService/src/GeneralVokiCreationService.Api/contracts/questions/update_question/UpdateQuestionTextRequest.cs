@@ -1,6 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 
-namespace GeneralVokiCreationService.Api.contracts.questions;
+namespace GeneralVokiCreationService.Api.contracts.questions.update_question;
 
 public class UpdateQuestionTextRequest : IRequestWithValidationNeeded
 {

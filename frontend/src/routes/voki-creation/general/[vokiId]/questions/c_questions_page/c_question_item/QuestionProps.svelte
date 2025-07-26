@@ -49,22 +49,22 @@
 	.property {
 		display: grid;
 		align-items: center;
-		gap: 0.375rem;
+		gap: 0.25rem;
 		width: fit-content;
-		padding: 0.25rem 0.75rem;
+		padding: 0.25rem 0.675rem;
 		border-radius: 1rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		font-size: 1.125rem;
+		font-size: 1rem;
 		font-weight: 450;
 		letter-spacing: 0.2px;
 		cursor: default;
-		grid-template-columns: 1.25rem 1fr;
+		grid-template-columns: 1.125rem 1fr;
 	}
 
 	.property > svg {
 		width: 100%;
 		aspect-ratio: 1/1;
-		stroke-width: 2;
+		stroke-width: 2.2;
 	}
 </style>

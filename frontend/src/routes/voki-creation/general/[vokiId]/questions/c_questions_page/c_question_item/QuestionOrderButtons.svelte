@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { toast } from 'svelte-sonner';
+
 	let {
 		vokiId,
 		questionId,
@@ -15,8 +17,12 @@
 		questionOrder: number;
 		questionsCount: number;
 	}>();
-	async function moveUpInOrder() {}
-	async function moveDownInOrder() {}
+	async function moveUpInOrder() {
+		toast.error("Question order buttons aren't implemented yet");
+	}
+	async function moveDownInOrder() {
+		toast.error("Question order buttons aren't implemented yet");
+	}
 </script>
 
 <div class="change-order-btns">
