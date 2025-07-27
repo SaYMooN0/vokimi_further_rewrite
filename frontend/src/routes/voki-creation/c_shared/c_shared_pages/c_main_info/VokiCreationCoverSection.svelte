@@ -16,7 +16,6 @@
 				cover = response.data.newCover;
 				version++;
 			} else {
-				console.log(response.errs);
 				toast.error("Couldn't update voki cover");
 			}
 		}

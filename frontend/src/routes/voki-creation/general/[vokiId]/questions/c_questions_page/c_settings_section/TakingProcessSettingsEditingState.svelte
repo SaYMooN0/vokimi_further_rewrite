@@ -37,6 +37,7 @@
 			updateParent(response.data);
 			cancelEditing();
 		} else {
+			errs = response.errs;
 		}
 	}
 </script>

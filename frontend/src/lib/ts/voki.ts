@@ -9,7 +9,7 @@ export type GeneralVokiAnswerType =
     | "AudioOnly"
     | "AudioAndText";
 
-export type AnswerTypeData =
+export type GeneralVokiAnswerTypeData =
     | AnswerDataTextOnly
     | AnswerDataImageOnly
     | AnswerDataImageAndText
@@ -18,10 +18,11 @@ export type AnswerTypeData =
     | AnswerDataAudioOnly
     | AnswerDataAudioAndText;
 
-export type AnswerDataTextOnly = { text: string };
-export type AnswerDataImageOnly = { image: string };
-export type AnswerDataImageAndText = { image: string; text: string };
-export type AnswerDataColorOnly = { color: string };
-export type AnswerDataColorAndText = { color: string; text: string };
-export type AnswerDataAudioOnly = { audio: string };
-export type AnswerDataAudioAndText = { audio: string; text: string };
+export type AnswerDataTextOnly = { answerType: 'TextOnly', text: string };
+export type AnswerDataImageOnly = { answerType: 'ImageOnly', image: string };
+export type AnswerDataImageAndText = { answerType: 'ImageAndText', image: string; text: string };
+export type AnswerDataColorOnly = { answerType: 'ColorOnly', color: string };
+export type AnswerDataColorAndText = { answerType: 'ColorAndText', color: string; text: string };
+export type AnswerDataAudioOnly = { answerType: 'AudioOnly', audio: string };
+export type AnswerDataAudioAndText = { answerType: 'AudioAndText', audio: string; text: string };
+

@@ -1,4 +1,4 @@
-import type { AnswerTypeData, GeneralVokiAnswerType } from "$lib/ts/voki";
+import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerType } from "$lib/ts/voki";
 
 export type QuestionBriefInfo = {
     id: string;
@@ -26,5 +26,5 @@ export type QuestionFullInfo = {
 export type QuestionAnswerData = {
     id: string;
     orderInQuestion: number;
-    typeData: AnswerTypeData;
+    typeData: GeneralVokiAnswerTypeData;
 }

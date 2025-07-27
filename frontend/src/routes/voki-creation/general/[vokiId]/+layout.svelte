@@ -27,7 +27,7 @@
 		<CubesLoader sizeRem={5} />
 	</div>
 {:else}
-	<div class="fade-in-animation content">
+	<div class="fade-in-animation">
 		{@render children()}
 	</div>
 {/if}
@@ -52,10 +52,6 @@
 		font-size: 2.5rem;
 		font-weight: 600;
 		letter-spacing: 2px;
-	}
-
-	.content {
-		scrollbar-gutter: stable;
 	}
 
 	.fade-in-animation {

@@ -4,7 +4,6 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import { error } from 'console';
 	import VokiCreationFieldName from '../../../../../../c_shared/VokiCreationFieldName.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../../c_shared/VokiCreationSaveAndCancelButtons.svelte';
 
@@ -100,7 +99,10 @@
 		<input id="max-answers-count" type="number" bind:value={maxAnswers} />
 	</div>
 </div>
-<DefaultErrBlock errList={savingErrs} />
+<DefaultErrBlock
+	errList={savingErrs}
+	containerId="general-voki-taking-question-answers-settings-err-block"
+/>
 <VokiCreationSaveAndCancelButtons onCancel={() => cancelEditing()} onSave={() => saveChanges()} />
 
 <style>
@@ -117,7 +119,7 @@
 		width: 100%;
 		padding: 0.25rem 0.75rem;
 		margin: 1rem 0 0 1rem;
-		transition: all 0.12s ease;
+		transition: all 0.2s ease-in;
 		interpolate-size: allow-keywords;
 		border-left: 0.125rem solid var(--secondary-foreground);
 	}
@@ -125,11 +127,14 @@
 	.multiple-choice-inputs.show {
 		height: auto;
 		opacity: 1;
+		width: 100%;
 	}
 
 	.multiple-choice-inputs.hide {
 		height: 0;
 		opacity: 0;
+		width: 0;
+        transform: translateY(-10%);
 	}
 
 	.multiple-choice-inputs * {
@@ -146,7 +151,10 @@
 		font-size: 1rem !important;
 		transition: inherit;
 	}
-
+	.multiple-choice-inputs.hide input[type='number'] {
+		font-size: 0.25rem;
+		opacity: 0;
+	}
 	input[type='number'] {
 		width: 3.75rem;
 		height: 1.875rem;
@@ -167,11 +175,10 @@
 		margin: 0;
 	}
 
-	.multiple-choice-inputs.hide input[type='number'] {
-		height: 0;
-	}
-
 	input[type='number']:focus {
 		border-color: var(--primary);
+	}
+	:global(#general-voki-taking-question-answers-settings-err-block) {
+		margin-top: 0.5rem;
 	}
 </style>

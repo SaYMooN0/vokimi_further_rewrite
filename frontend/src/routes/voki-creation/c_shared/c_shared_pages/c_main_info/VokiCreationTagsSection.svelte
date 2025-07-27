@@ -20,7 +20,7 @@
 	<p class="tags-list">
 		<VokiCreationFieldName fieldName="Tags:" />
 		{#if tags.length === 0}
-			<FieldNotSetLabel text="No tags selected" className="no-tags" />
+			<FieldNotSetLabel text="No tags selected" />
 		{:else}
 			{#each tags as tag}
 				<label class="tag">#{tag}</label>

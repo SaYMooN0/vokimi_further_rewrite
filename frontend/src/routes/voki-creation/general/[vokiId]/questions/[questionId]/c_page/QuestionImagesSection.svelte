@@ -1,4 +1,5 @@
 <script lang="ts">
+	import FieldNotSetLabel from '../../../../../c_shared/FieldNotSetLabel.svelte';
 	import VokiCreationDefaultButton from '../../../../../c_shared/VokiCreationDefaultButton.svelte';
 	import VokiCreationFieldName from '../../../../../c_shared/VokiCreationFieldName.svelte';
 	import QuestionImagesEditingDialog from './c_images_section/QuestionImagesEditingDialog.svelte';
@@ -15,13 +16,19 @@
 	{vokiId}
 	updateParent={(newImages) => (images = newImages)}
 />
-<div class="question-images-section">
+<div class="field">
 	<VokiCreationFieldName fieldName="Images:" />
-	<VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open()} />
+	{#if images.length === 0}
+		<FieldNotSetLabel text="No images selected" />
+	{/if}
 </div>
+<VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open()} />
 
 <style>
-	.question-images-section {
+	.field {
 		margin-top: 1.5rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 	}
 </style>

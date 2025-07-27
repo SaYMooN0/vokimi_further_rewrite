@@ -6,6 +6,8 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../c_shared/VokiCreationSaveAndCancelButtons.svelte';
 	import VokiCreationDefaultButton from '../../../../../c_shared/VokiCreationDefaultButton.svelte';
+	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
+	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 
 	let {
 		text,
@@ -34,50 +36,48 @@
 		savingErrs = [];
 	}
 	async function saveChanges() {
-		// const response = await vokiCreationApi.updateVokiName(vokiId, newName);
-		// if (response.isSuccess) {
-		// 	vokiName = newName;
-		// 	isEditing = false;
-		// 	savingErrs = [];
-		// } else {
-		// 	savingErrs = response.errs;
-		// }
+		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ newText: string }>(
+			`/vokis/${vokiId}/questions/${questionId}/update-text`,
+			RequestJsonOptions.PATCH({ newText: newText })
+		);
+		if (response.isSuccess) {
+			text = response.data.newText;
+			isEditing = false;
+			savingErrs = [];
+		} else {
+			savingErrs = response.errs;
+		}
 	}
 </script>
 
-<div class="question-text-section">
-	{#if isEditing}
-		<VokiCreationFieldName fieldName="Question text:" />
+{#if isEditing}
+	<VokiCreationFieldName fieldName="Question text:" />
 
-		<textarea
-			class="text-input"
-			bind:this={textarea}
-			bind:value={newText}
-			name={StringUtils.rndStr()}
+	<textarea
+		class="text-input"
+		bind:this={textarea}
+		bind:value={newText}
+		name={StringUtils.rndStr()}
+	/>
+	{#if savingErrs.length > 0}
+		<DefaultErrBlock
+			errList={savingErrs}
+			containerId="general-voki-creation-question-text-err-block"
 		/>
-		{#if savingErrs.length > 0}
-			<DefaultErrBlock errList={savingErrs} containerId="question-text-err-block" />
-		{/if}
-		<VokiCreationSaveAndCancelButtons
-			onCancel={() => (isEditing = false)}
-			onSave={() => saveChanges()}
-		/>
-	{:else}
-		<p class="question-text-p">
-			<VokiCreationFieldName fieldName="Question text:" />
-			<label class="question-text-value">{text}</label>
-		</p>
-		<VokiCreationDefaultButton text="Edit text" onclick={startEditing} />
 	{/if}
-</div>
+	<VokiCreationSaveAndCancelButtons
+		onCancel={() => (isEditing = false)}
+		onSave={() => saveChanges()}
+	/>
+{:else}
+	<p class="question-text-p">
+		<VokiCreationFieldName fieldName="Question text:" />
+		<label class="question-text-value">{text}</label>
+	</p>
+	<VokiCreationDefaultButton text="Edit text" onclick={startEditing} />
+{/if}
 
 <style>
-	.question-text-section {
-		display: flex;
-		flex-direction: column;
-		width: 100%;
-	}
-
 	.text-input {
 		width: 100%;
 		box-sizing: border-box;
@@ -100,7 +100,7 @@
 		outline-color: var(--primary);
 	}
 
-	.question-text-section :global(#question-text-err-block) {
+	:global(#general-voki-creation-question-text-err-block) {
 		margin-top: 0.5rem;
 	}
 

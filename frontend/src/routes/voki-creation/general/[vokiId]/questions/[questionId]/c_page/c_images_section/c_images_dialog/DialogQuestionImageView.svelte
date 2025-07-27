@@ -1,13 +1,13 @@
 <script lang="ts">
-	const { img, removeImage }: { img: string; removeImage: (image: string) => void } = $props<{
+	const { img, removeImg }: { img: string; removeImg: (image: string) => void } = $props<{
 		img: string;
-		removeImage: (image: string) => void;
+		removeImg: (image: string) => void;
 	}>();
 </script>
 
 <div class="img-view">
 	<img src={img} alt="" />
-	<button class="remove-img-btn" onclick={() => removeImage(img)}>
+	<button class="remove-img-btn" onclick={() => removeImg(img)}>
 		<svg> <use href="#common-cross-icon" /></svg>
 	</button>
 </div>

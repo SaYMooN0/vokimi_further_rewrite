@@ -17,8 +17,6 @@ export class BackendService {
                 ...options,
                 credentials: 'include'
             });
-            console.log(response);
-
             if (response.ok) {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);
@@ -31,7 +29,7 @@ export class BackendService {
         } catch (e: any) {
             return {
                 isSuccess: false,
-                errs: [ErrUtils.createUnknown("Error: " + e.message)]
+                errs: this.createErrsFromException(e)
             };
         }
     }
@@ -52,7 +50,7 @@ export class BackendService {
         } catch (e: any) {
             return {
                 isSuccess: false,
-                errs: [ErrUtils.createUnknown("Error: " + e.message)]
+                errs: this.createErrsFromException(e)
             };
         }
     }
@@ -93,7 +91,7 @@ export class BackendService {
         } catch (e: any) {
             return {
                 isSuccess: false,
-                errs: [ErrUtils.createUnknown("Exception: " + e.message)]
+                errs: this.createErrsFromException(e)
             };
         }
     }
@@ -121,9 +119,38 @@ export class BackendService {
                 return [ErrUtils.createUnknown("Failed to parse JSON error response")];
             }
         }
+        // in case of server unexpected error
+        const status = response.status;
+        if (status === 404) {
+            return [{ message: "Unexpected error: requested resource was not found (404)" }];
+        }
+        if (status === 403) {
+            return [{ message: "Unexpected error: no permission to access this resource (403)" }];
+        }
+        if (status === 401) {
+            return [{ message: "Unexpected error: not authorized (401)" }];
+        }
+        if (status >= 500) {
+            return [{ message: `Unexpected error: Internal server error (${status})` }];
+        }
 
-        return [ErrUtils.createUnknown("Response not in JSON format")];
+        // fallback for everything else
+        return [{ message: `Unexpected error: Unexpected non-JSON error response (status ${status})` }];
     }
+    private createErrsFromException(e: unknown): Err[] {
+        if (e instanceof TypeError && e.message === "Failed to fetch") {
+            // Server doesn't respond or no connection
+            return [{ message: "Could not connect to the server. Please check your connection or try again later" }];
+        }
+
+        if (e instanceof DOMException && e.name === "AbortError") {
+            // Request was aborted
+            return [{ message: "The request was aborted" }];
+        }
+
+        return [{ message: "Unexpected unhandled error " }];
+    }
+
 }
 export const ApiAuth = new BackendService('/api/auth');
 export const ApiVokiCreationCore = new BackendService('/api/voki-creation/core');

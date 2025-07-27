@@ -5,9 +5,7 @@
 	import QuestionInitializingDialog from './c_questions_page/QuestionInitializingDialog.svelte';
 	import VokiTakingProcessSettingsSection from './c_questions_page/VokiTakingProcessSettingsSection.svelte';
 
-	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
-	import generalVokiCreationIconsSprite from '$lib/icons/general-voki-creation-icons.svg?raw';
-	import imageIconsSprite from '$lib/icons/image-icons.svg?raw';
+	
 
 	import GeneralVokiCreationQuestionItem from './c_questions_page/GeneralVokiCreationQuestionItem.svelte';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
@@ -18,11 +16,7 @@
 	const maxQuestionsCount = 100;
 </script>
 
-<div class="sprites">
-	{@html vokiAnswerTypesIconsSprite}
-	{@html generalVokiCreationIconsSprite}
-	{@html imageIconsSprite}
-</div>
+
 
 {#if !data.isSuccess}
 	<UnableToLoad errs={data.errs} />
@@ -43,26 +37,29 @@
 			{/each}
 		</div>
 		{#if data.data.questions.length < maxQuestionsCount}
-			<PrimaryButton onclick={() => questionInitializingDialog.open()} class="add-new-question-btn"
+		<div class="add-new-question-btn-container">
+			<PrimaryButton onclick={() => questionInitializingDialog.open()} 
 				>Add new question</PrimaryButton
 			>
+		</div>
 		{/if}
 	{/if}
 {/if}
 
 <style>
-	.sprites {
-		display: none;
-		width: 0;
-		height: 0;
-	}
-
+	
 	.questions {
 		display: flex;
 		flex-direction: column;
+		gap: 1.25rem;
 	}
 
-	:global(.primary-btn.add-new-question-btn) {
+	.add-new-question-btn-container {
+		display: flex;
+		justify-content: center;
+	}
+		.add-new-question-btn-container > :global(.primary-btn) {
 		margin: 1.25rem auto;
+		
 	}
 </style>

@@ -62,13 +62,11 @@
 			{/if}
 		</QuestionSettingsFieldValue>
 	</div>
-	<div class="edit-btn-wrapper">
-		<VokiCreationDefaultButton
-			text="Edit answer settings"
-			onclick={() => (isEditingState = true)}
-			className="question-settings-edit-btn"
-		/>
-	</div>
+	<VokiCreationDefaultButton
+		text="Edit answer settings"
+		onclick={() => (isEditingState = true)}
+		className="question-settings-edit-btn"
+	/>
 {/if}
 
 <style>
@@ -79,12 +77,7 @@
 		margin: 1.5rem 0 0;
 	}
 
-	.edit-btn-wrapper {
-		display: flex;
-		justify-content: right;
-	}
-
-	.edit-btn-wrapper :global(> button) {
+	:global(.question-settings-edit-btn.btn) {
 		width: auto;
 		padding: 0 1rem;
 	}

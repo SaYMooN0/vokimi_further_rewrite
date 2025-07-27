@@ -22,7 +22,7 @@ internal sealed class UpdateQuestionTextCommandHandler : ICommandHandler<UpdateQ
     }
 
     public async Task<ErrOr<VokiQuestionText>> Handle(UpdateQuestionTextCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
         var res = voki.UpdateQuestionText(command.QuestionId, command.NewQuestionText);
         if (res.IsErr(out var err)) {
             return err;

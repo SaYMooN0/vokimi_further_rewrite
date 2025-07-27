@@ -58,12 +58,13 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         if (images.Keys.Any(k => k.QuestionId != Id)) {
             return ErrFactory.Conflict("One or more images does not belong to this question");
         }
+
         Images = images;
         return ErrOrNothing.Nothing;
     }
 
     public ErrOrNothing UpdateAnswerSettings(QuestionAnswersCountLimit newCountLimit, bool shuffleAnswers) {
-        if (newCountLimit.MaxAnswers > _answers.Count) {
+        if ( newCountLimit.MaxAnswers != 1 && newCountLimit.MaxAnswers > _answers.Count) {
             return ErrFactory.Conflict("Max answers count limit cannot be greater than the number of answers");
         }
 

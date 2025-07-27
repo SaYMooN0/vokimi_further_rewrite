@@ -47,7 +47,6 @@
 		display: grid;
 		gap: 0.5rem;
 		padding: 0.25rem 0.5rem;
-		margin-top: 1.25rem;
 		border: 0.125rem solid var(--muted);
 		border-radius: 0.75rem;
 		box-shadow: var(--shadow-xs);

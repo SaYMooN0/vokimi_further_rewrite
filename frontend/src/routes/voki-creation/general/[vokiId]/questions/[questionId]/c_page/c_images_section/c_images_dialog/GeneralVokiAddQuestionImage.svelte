@@ -1,11 +1,11 @@
 <script lang="ts">
-	const {
+		const {
 		questionId,
 		vokiId,
-		addImage
-	}: { questionId: string; vokiId: string; addImage: (image: string) => void } = $props<{
+		uploadImage
+	}: { questionId: string; vokiId: string; uploadImage: (image: File) => Promise<void> } = $props<{
 		questionId: string;
 		vokiId: string;
-		addImage: (image: string) => void;
+		uploadImage: (image: File) => Promise<void>
 	}>();
 </script>

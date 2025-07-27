@@ -39,7 +39,6 @@ export namespace MyVokisCacheStore {
         try {
             return await request;
         } finally {
-            console.log("finished request", id);
             delete ongoingRequests[id];
         }
     }
@@ -48,7 +47,6 @@ export namespace MyVokisCacheStore {
         const response = await ApiVokiCreationCore.fetchJsonResponse<DraftVokiBriefInfo>(
             `/vokis/${id}/brief-info`, { method: "GET" }
         );
-        console.log("response", id);
         if (response.isSuccess && response.data) {
             insertOrReplace(response.data);
             return response.data;
