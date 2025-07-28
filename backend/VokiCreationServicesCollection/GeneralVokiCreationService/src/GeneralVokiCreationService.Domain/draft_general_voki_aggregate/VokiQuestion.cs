@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
@@ -64,12 +65,32 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     }
 
     public ErrOrNothing UpdateAnswerSettings(QuestionAnswersCountLimit newCountLimit, bool shuffleAnswers) {
-        if ( newCountLimit.MaxAnswers != 1 && newCountLimit.MaxAnswers > _answers.Count) {
+        if (newCountLimit.MaxAnswers != 1 && newCountLimit.MaxAnswers > _answers.Count) {
             return ErrFactory.Conflict("Max answers count limit cannot be greater than the number of answers");
         }
 
         AnswersCountLimit = newCountLimit;
         ShuffleAnswers = shuffleAnswers;
         return ErrOrNothing.Nothing;
+    }
+
+    public ErrOr<VokiQuestionAnswer> AddNewAnswer(BaseVokiAnswerTypeData answerData) {
+        if (_answers.Count >= MaxAnswersCount) {
+            return ErrFactory.LimitExceeded(
+                "Answer count limit exceeded",
+                $"Maximum allowed answers count is {MaxAnswersCount}. Current answers count is {_answers.Count}"
+            );
+        }
+
+        if (answerData.MatchingEnum != this.AnswersType) {
+            return ErrFactory.Conflict(
+                "Given answer type does not correspond with the question answers type",
+                $"Answers data type: {answerData.MatchingEnum}. Question answers type: {this.AnswersType}"
+            );
+        }
+
+        var answer = VokiQuestionAnswer.CreateNew(answerData, (ushort)_answers.Count);
+        _answers.Add(answer);
+        return answer;
     }
 }

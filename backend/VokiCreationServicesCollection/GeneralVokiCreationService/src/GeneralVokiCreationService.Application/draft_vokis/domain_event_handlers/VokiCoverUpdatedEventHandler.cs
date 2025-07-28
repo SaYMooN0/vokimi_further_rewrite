@@ -12,7 +12,8 @@ public class VokiCoverUpdatedEventHandler : IDomainEventHandler<VokiCoverUpdated
 
     public async Task Handle(VokiCoverUpdatedEvent e, CancellationToken ct) {
         if (e.NewCover != e.OldCover && !e.OldCover.IsDefault()) {
-            await _mainStorageBucket.DeleteVokiCover(e.OldCover);
+            var deleteRes = await _mainStorageBucket.DeleteVokiCover(e.OldCover);
+            UnexpectedBehaviourException.ThrowIfErr(deleteRes);
         }
     }
 }

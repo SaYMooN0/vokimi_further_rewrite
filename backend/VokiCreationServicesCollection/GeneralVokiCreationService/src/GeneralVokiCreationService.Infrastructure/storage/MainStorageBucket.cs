@@ -1,8 +1,10 @@
-﻿using Amazon.S3;
+﻿using System.Collections.Immutable;
+using Amazon.S3;
 using GeneralVokiCreationService.Application;
 using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
-using SharedKernel.errs.utils;
+using VokimiStorageKeysLib;
+using VokimiStorageKeysLib.draft_general_voki.question_image;
 using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Infrastructure.storage;
@@ -15,33 +17,39 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
         ILogger<MainStorageBucket> logger
     ) : base(s3Client, mainBucketNameProvider, logger) { }
 
-    public async Task<ErrOr<DraftVokiCoverKey>> UploadDraftVokiCover(
-        VokiId vokiId, Stream fileStream, string fileName, string fileContentType
-    ) {
-        string extenstion;
-        try {
-            extenstion = Path.GetExtension(fileName);
-        }
-        catch {
-            return ErrFactory.IncorrectFormat("Unable to extract file extension");
+    public async Task<ErrOr<DraftVokiCoverKey>> UploadDraftVokiCover(VokiId vokiId, FileData file) =>
+        await UploadWithKeyAsync(
+            (ext) => DraftVokiCoverKey.CreateWithId(vokiId, ext),
+            file
+        );
+
+    public async Task<ErrOrNothing> DeleteVokiCover(DraftVokiCoverKey key) {
+        if (!key.IsDefault()) {
+            return await base.DeleteAsync(key);
         }
 
-        ErrOr<DraftVokiCoverKey> keyCreation = DraftVokiCoverKey.CreateWithId(vokiId, extenstion);
-        if (keyCreation.IsErr(out var err)) {
-            return err;
-        }
-
-        ErrOrNothing res = await base.UploadFileAsync(keyCreation.AsSuccess(), fileStream, fileContentType);
-        if (res.IsErr(out err)) {
-            return err;
-        }
-
-        return keyCreation;
+        return ErrOrNothing.Nothing;
     }
 
-    public async Task DeleteVokiCover(DraftVokiCoverKey key) {
-        if (!key.IsDefault()) {
-            await base.DeleteAsync(key);
-        }
+    public async Task<ErrOr<DraftGeneralVokiQuestionImageKey>> UploadVokiQuestionImage(
+        VokiId vokiId,
+        GeneralVokiQuestionId questionId,
+        FileData file
+    ) =>
+        await UploadWithKeyAsync<DraftGeneralVokiQuestionImageKey>(
+            (ext) => DraftGeneralVokiQuestionImageKey.Create(vokiId, questionId, ext),
+            file
+        );
+
+    public async Task<ErrOrNothing> DeleteUnusedQuestionImages(
+        VokiId vokiId,
+        GeneralVokiQuestionId questionId,
+        IEnumerable<DraftGeneralVokiQuestionImageKey> usedKeys
+    ) {
+        string prefix = DraftGeneralVokiQuestionImageKey.Folder(vokiId, questionId) + '/';
+        var usedStringifiedKeys = usedKeys
+            .Select(k => k.ToString())
+            .ToImmutableHashSet();
+        return await base.DeleteFilesWithoutSubfoldersAsync(prefix, usedStringifiedKeys);
     }
 }

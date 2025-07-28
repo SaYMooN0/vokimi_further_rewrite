@@ -3,6 +3,8 @@
 	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerType } from '$lib/ts/voki';
 	import VokiCreationBasicHeader from '../../../../../c_shared/VokiCreationBasicHeader.svelte';
 	import type { QuestionAnswerData } from '../../types';
+	import GeneralVokiCreationNewAnswerDisplay from './c_answers_section/GeneralVokiCreationNewAnswerDisplay.svelte';
+	import GeneralVokiCreationSavedAnswerDisplay from './c_answers_section/GeneralVokiCreationSavedAnswerDisplay.svelte';
 	import QuestionNoAnswersDisplay from './c_answers_section/QuestionNoAnswersDisplay.svelte';
 
 	let {
@@ -56,14 +58,18 @@
 			: ''})"
 	/>
 	{#each answers as answer}
-		<div class="answer"></div>
+		<GeneralVokiCreationSavedAnswerDisplay {vokiId} QuestionId={questionId} {answer} />
 	{/each}
 	{#if unsavedAnswers.length != 0}
 		<div class="new-answer-sep">
 			<label>New answers ({unsavedAnswers.length}*)</label>
 		</div>
 		{#each unsavedAnswers as unsavedAnswer}
-			<div class="unsaved-answer">Unsave answer</div>
+			<GeneralVokiCreationNewAnswerDisplay
+				{vokiId}
+				QuestionId={questionId}
+				answer={unsavedAnswer}
+			/>
 		{/each}
 	{/if}
 	{#if answers.length + unsavedAnswers.length < maxAnswersForQuestionCount}

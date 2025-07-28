@@ -4,7 +4,7 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers
 
 public abstract partial class BaseVokiAnswerTypeData
 {
-    public sealed class ImageOnly : BaseVokiAnswerTypeData
+    public sealed class ImageOnly : BaseVokiAnswerTypeData, IVokiAnswerTypeDataWithStorageKey
     {
         public DraftGeneralVokiAnswerImageKey Image { get; }
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.ImageOnly;
@@ -15,5 +15,7 @@ public abstract partial class BaseVokiAnswerTypeData
 
         public override IEnumerable<object> GetEqualityComponents() => [Image];
 
+        public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
+            Image.IsWithIds(vokiId, questionId);
     }
 }

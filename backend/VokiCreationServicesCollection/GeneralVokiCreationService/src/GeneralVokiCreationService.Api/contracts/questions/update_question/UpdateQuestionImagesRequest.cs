@@ -8,7 +8,7 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
     public string[] NewImages { get; init; }
 
     public ErrOrNothing Validate() {
-        var keysRes = NewImages.Select(DraftGeneralVokiQuestionImageKey.Create).ToArray();
+        var keysRes = NewImages.Select(DraftGeneralVokiQuestionImageKey.FromString).ToArray();
         var keyErrs = keysRes.Where(r => r.IsErr()).ToArray();
         if (keyErrs.Length > 0) {
             ErrOrNothing errs = ErrOrNothing.Nothing;

@@ -5,7 +5,7 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers
 
 public abstract partial class BaseVokiAnswerTypeData
 {
-    public sealed class ImageAndText : BaseVokiAnswerTypeData
+    public sealed class ImageAndText : BaseVokiAnswerTypeData, IVokiAnswerTypeDataWithStorageKey
     {
         public string Text { get; }
         public DraftGeneralVokiAnswerImageKey Image { get; }
@@ -23,5 +23,8 @@ public abstract partial class BaseVokiAnswerTypeData
                 : new ImageAndText(text, image);
 
         public override IEnumerable<object> GetEqualityComponents() => [Text, Image];
+
+        public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
+            Image.IsWithIds(vokiId, questionId);
     }
 }

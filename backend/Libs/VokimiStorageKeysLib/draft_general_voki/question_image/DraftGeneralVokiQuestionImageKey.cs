@@ -15,10 +15,17 @@ public class DraftGeneralVokiQuestionImageKey : BaseStorageKey
         Value = value;
     }
 
-    public static ErrOr<DraftGeneralVokiQuestionImageKey> Create(string value) =>
+    public static ErrOr<DraftGeneralVokiQuestionImageKey> FromString(string value) =>
         DraftGeneralVokiQuestionImageKeyScheme.IsKeyValid(value, out _, out _).IsErr(out var err)
             ? err
             : new DraftGeneralVokiQuestionImageKey(value);
+
+    public static DraftGeneralVokiQuestionImageKey Create(
+        VokiId vokiId, GeneralVokiQuestionId questionId, string extension
+    ) => new($"{Folder(vokiId, questionId)}/{Guid.NewGuid()}{extension}");
+
+    public static string Folder(VokiId vokiId, GeneralVokiQuestionId questionId) =>
+        $"draft-vokis/{vokiId}/{questionId}/images";
 
     public bool IsWithIds(
         VokiId expectedVokiId,

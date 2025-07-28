@@ -1,10 +1,13 @@
 ﻿using GeneralVokiCreationService.Api.contracts.questions;
 using GeneralVokiCreationService.Api.contracts.questions.update_question;
 using GeneralVokiCreationService.Api.extensions;
+using GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using Microsoft.AspNetCore.Mvc;
+using VokimiStorageKeysLib.draft_general_voki.question_image;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -25,6 +28,10 @@ internal static class SpecificVokiQuestionsHandlers
         // group.MapDelete("/delete", DeleteVokiQuestion);
         // group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
         // group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
+
+
+        group.MapPatch("/upload-image", UploadVokiQuestionImage)
+            .DisableAntiforgery();
     }
 
     private static async Task<IResult> GetVokiQuestionFullData(
@@ -92,6 +99,23 @@ internal static class SpecificVokiQuestionsHandlers
             MaxAnswers = question.AnswersCountLimit.MaxAnswers,
             ShuffleAnswers = question.ShuffleAnswers
         }));
+    }
+
+    private static async Task<IResult> UploadVokiQuestionImage(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<UploadVokiQuestionImageCommand, DraftGeneralVokiQuestionImageKey> handler,
+        [FromForm] IFormFile file
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+
+        UploadVokiQuestionImageCommand command = new(vokiId, questionId,
+            new(file.OpenReadStream(), file.FileName, file.ContentType));
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (key) => Results.Json(
+            new { ImageKey = key.ToString() }
+        ));
     }
     // private static async Task<IResult> MoveQuestionUpInOrder(
     //     CancellationToken ct, HttpContext httpContext,

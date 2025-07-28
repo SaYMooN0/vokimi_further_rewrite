@@ -3,7 +3,7 @@ using SharedKernel.common.vokis;
 using VokimiStorageKeysLib.draft_general_voki.answer_audio;
 using VokimiStorageKeysLib.draft_general_voki.answer_image;
 
-namespace GeneralVokiCreationService.Application.draft_vokis;
+namespace GeneralVokiCreationService.Api.contracts;
 
 public record VokiAnswerTypeDataDto(
     string? Text,

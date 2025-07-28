@@ -23,7 +23,6 @@ internal static class SpecificVokiHandlers
         group.MapPatch("/set-cover-to-default", SetVokiCoverToDefault);
         group.MapPatch("/update-cover", UpdateVokiCover)
             .DisableAntiforgery();
-        ;
 
         group.MapPatch("/update-name", UpdateVokiName)
             .WithRequestValidation<UpdateVokiNameRequest>();
@@ -86,7 +85,7 @@ internal static class SpecificVokiHandlers
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
-        UpdateVokiCoverCommand command = new(id, file.OpenReadStream(), file.FileName, file.ContentType);
+        UpdateVokiCoverCommand command = new(id, new(file.OpenReadStream(), file.FileName, file.ContentType));
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (key) => Results.Json(

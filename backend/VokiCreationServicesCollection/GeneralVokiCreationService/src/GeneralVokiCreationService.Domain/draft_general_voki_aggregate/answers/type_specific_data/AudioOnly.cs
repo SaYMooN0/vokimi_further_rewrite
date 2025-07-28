@@ -4,7 +4,7 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers
 
 public abstract partial class BaseVokiAnswerTypeData
 {
-    public sealed class AudioOnly : BaseVokiAnswerTypeData
+    public sealed class AudioOnly : BaseVokiAnswerTypeData, IVokiAnswerTypeDataWithStorageKey
     {
         public DraftGeneralVokiAnswerAudioKey Audio { get; }
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.AudioOnly;
@@ -12,6 +12,10 @@ public abstract partial class BaseVokiAnswerTypeData
         public AudioOnly(DraftGeneralVokiAnswerAudioKey audio) {
             Audio = audio;
         }
+
         public override IEnumerable<object> GetEqualityComponents() => [Audio];
+
+        public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
+            Audio.IsWithIds(vokiId, questionId);
     }
 }

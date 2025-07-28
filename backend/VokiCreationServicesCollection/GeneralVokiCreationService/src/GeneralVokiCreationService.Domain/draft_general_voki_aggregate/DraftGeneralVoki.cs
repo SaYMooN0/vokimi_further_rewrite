@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using SharedKernel.common.vokis;
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
@@ -124,5 +125,23 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         return questionToUpdate;
+    }
+
+    public ErrOr<VokiQuestionAnswer> AddNewAnswerToQuestion(
+        GeneralVokiQuestionId questionId, BaseVokiAnswerTypeData answerData
+    ) {
+        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return ErrFactory.NotFound.Common("Cannot add new answer to question because question not fount");
+        }
+
+        if (answerData is IVokiAnswerTypeDataWithStorageKey keyWithCheckNeeded) {
+            if (!keyWithCheckNeeded.IsForCorrectVokiQuestion(Id, questionId)) {
+                return ErrFactory.Conflict("Answer data does not belong to this question");
+            }
+        }
+
+        var res = question.AddNewAnswer(answerData);
+        return res;
     }
 }

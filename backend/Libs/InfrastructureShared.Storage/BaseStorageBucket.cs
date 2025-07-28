@@ -23,6 +23,31 @@ public abstract class BaseStorageBucket
         _logger = logger;
     }
 
+
+    protected async Task<ErrOr<TKey>> UploadWithKeyAsync<TKey>(
+        Func<string, ErrOr<TKey>> keyCreationFunc, FileData file
+    ) where TKey : BaseStorageKey {
+        string extenstion;
+        try {
+            extenstion = Path.GetExtension(file.Name);
+        }
+        catch {
+            return ErrFactory.IncorrectFormat("Unable to extract file extension");
+        }
+
+        ErrOr<TKey> keyCreation = keyCreationFunc(extenstion);
+        if (keyCreation.IsErr(out var err)) {
+            return err;
+        }
+
+        ErrOrNothing res = await UploadFileAsync(keyCreation.AsSuccess(), file.Stream, file.ContentType);
+        if (res.IsErr(out err)) {
+            return err;
+        }
+
+        return keyCreation.AsSuccess();
+    }
+
     protected async Task<ErrOrNothing> UploadFileAsync(BaseStorageKey key, Stream content, string contentType) {
         try {
             var request = new PutObjectRequest {
@@ -68,13 +93,16 @@ public abstract class BaseStorageBucket
     }
 
     protected async Task<ErrOrNothing> DeleteAsync(BaseStorageKey key) {
+        var keyString = key.ToString();
+
         try {
             var request = new DeleteObjectRequest {
                 BucketName = _bucketNameProvider.BucketName,
-                Key = key.ToString()
+                Key = keyString
             };
 
             await _s3Client.DeleteObjectAsync(request);
+            _logger.LogInformation("Successfully deleted file: {Key}", keyString);
 
             return ErrOrNothing.Nothing;
         }
@@ -87,6 +115,7 @@ public abstract class BaseStorageBucket
             return ErrFactory.Unspecified("Unexpected error during file deletion");
         }
     }
+
 
     protected async Task<ErrOrNothing> CopyAsync(string source, BaseStorageKey destinationKey) {
         try {
@@ -108,5 +137,61 @@ public abstract class BaseStorageBucket
             _logger.LogError(ex, "[Error] in {MethodName}, unexpected exception occurred", nameof(CopyAsync));
             return ErrFactory.Unspecified("Unexpected error during file copy");
         }
+    }
+
+    private static bool IsTopLevelKey(string key, string prefix) {
+        var suffix = key.Substring(prefix.Length);
+        return !suffix.Contains('/');
+    }
+
+    protected async Task<ErrOrNothing> DeleteFilesWithoutSubfoldersAsync(
+        string prefix,
+        ISet<string> usedKeys
+    ) {
+        List<string> deletedKeys = [];
+
+        var request = new ListObjectsV2Request {
+            BucketName = _bucketNameProvider.BucketName,
+            Prefix = prefix
+        };
+
+        ListObjectsV2Response response;
+        do {
+            response = await _s3Client.ListObjectsV2Async(request);
+
+            foreach (var obj in response.S3Objects) {
+                if (!usedKeys.Contains(obj.Key) && IsTopLevelKey(obj.Key, prefix)) {
+                    try {
+                        await _s3Client.DeleteObjectAsync(new DeleteObjectRequest {
+                            BucketName = _bucketNameProvider.BucketName,
+                            Key = obj.Key
+                        });
+                        deletedKeys.Add(obj.Key);
+                    }
+                    catch (AmazonS3Exception ex) {
+                        _logger.LogError(ex, "[Error] in {MethodName}, S3 exception occurred while deleting key {Key}",
+                            nameof(DeleteFilesWithoutSubfoldersAsync), obj.Key);
+                        return ErrFactory.Unspecified("File deletion failed due to S3 exception");
+                    }
+                    catch (Exception ex) {
+                        _logger.LogError(ex,
+                            "[Error] in {MethodName}, unexpected exception occurred while deleting key {Key}",
+                            nameof(DeleteFilesWithoutSubfoldersAsync), obj.Key);
+                        return ErrFactory.Unspecified("Unexpected error during file deletion");
+                    }
+                }
+            }
+
+            request.ContinuationToken = response.NextContinuationToken;
+        } while (response.IsTruncated == true);
+
+        if (deletedKeys.Count > 0) {
+            _logger.LogInformation(
+                "Deleted {Count} unused top-level objects under prefix '{Prefix}': {Keys}",
+                deletedKeys.Count, prefix, string.Join(", ", deletedKeys)
+            );
+        }
+
+        return ErrOrNothing.Nothing;
     }
 }

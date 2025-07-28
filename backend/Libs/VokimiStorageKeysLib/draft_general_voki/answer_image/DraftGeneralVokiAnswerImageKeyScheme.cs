@@ -2,27 +2,24 @@
 
 sealed class DraftGeneralVokiAnswerImageKeyScheme
 {
-    public const string Template = "draft-vokis/{vokiId:id}/{questionId:id}/{answerId:id}/{versionId:id}";
+    public const string Template = "draft-vokis/{vokiId:id}/{questionId:id}/answers/{name:id}";
     private static readonly KeyTemplateParser Parser = new(Template, BaseStorageKey.Extensions.ImageFiles);
 
     public static ErrOrNothing IsKeyValid(
         string key,
         out VokiId vokiId,
-        out GeneralVokiQuestionId questionId,
-        out GeneralVokiAnswerId answerId
+        out GeneralVokiQuestionId questionId
     ) {
         var parseResult = Parser.TryParse(key);
         if (parseResult.IsErr(out var err)) {
             vokiId = default!;
             questionId = default!;
-            answerId = default!;
             return err;
         }
 
         var parts = parseResult.AsSuccess();
         vokiId = new VokiId(new Guid(parts["vokiId"]));
         questionId = new GeneralVokiQuestionId(new Guid(parts["questionId"]));
-        answerId = new GeneralVokiAnswerId(new Guid(parts["answerId"]));
         return ErrOrNothing.Nothing;
     }
 }

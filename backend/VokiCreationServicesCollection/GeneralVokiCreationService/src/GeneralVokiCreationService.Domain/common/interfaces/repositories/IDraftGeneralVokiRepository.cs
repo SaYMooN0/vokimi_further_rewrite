@@ -19,4 +19,5 @@ public interface IDraftGeneralVokiRepository : IDraftVokiRepository
 
     Task<DraftGeneralVoki?> GetWithQuestions(VokiId vokiId);
     Task<DraftGeneralVoki?> GetWithQuestionAnswersAsNoTracking(VokiId vokiId);
+    Task<DraftGeneralVoki?> GetWithQuestionAnswers(VokiId vokiId);
 }

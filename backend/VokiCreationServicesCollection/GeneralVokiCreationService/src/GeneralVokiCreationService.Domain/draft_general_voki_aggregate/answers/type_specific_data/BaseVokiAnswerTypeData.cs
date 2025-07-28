@@ -22,3 +22,8 @@ public abstract partial class BaseVokiAnswerTypeData : ValueObject
         audioAndText: () => audioAndText((AudioAndText)this)
     );
 }
+
+public interface IVokiAnswerTypeDataWithStorageKey
+{
+    public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId);
+}
