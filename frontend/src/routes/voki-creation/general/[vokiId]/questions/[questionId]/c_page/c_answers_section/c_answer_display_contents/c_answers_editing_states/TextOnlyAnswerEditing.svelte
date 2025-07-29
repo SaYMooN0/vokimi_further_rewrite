@@ -26,6 +26,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-items: center;
+		width: 100%;
 	}
 	.answer-input {
 		width: 100%;

@@ -26,16 +26,3 @@ internal record class VokiQuestionFullDataResponse(
         question.AnswersCountLimit.MaxAnswers
     );
 }
-
-internal record class VokiQuestionAnswerResponse(
-    string Id,
-    ushort Order,
-    Dictionary<string, string> TypeData
-)
-{
-    public static VokiQuestionAnswerResponse Create(VokiQuestionAnswer answer) => new(
-        answer.Id.ToString(),
-        answer.OrderInQuestion,
-        VokiAnswerTypeDataParser.ToDictionary(answer.TypeData)
-    );
-}

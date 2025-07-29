@@ -1,0 +1,17 @@
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+using GeneralVokiCreationService.Infrastructure.parsers;
+
+namespace GeneralVokiCreationService.Api.contracts.questions;
+
+internal record class VokiQuestionAnswerResponse(
+    string Id,
+    ushort Order,
+    VokiAnswerTypeDataDto TypeData
+)
+{
+    public static VokiQuestionAnswerResponse Create(VokiQuestionAnswer answer) => new(
+        answer.Id.ToString(),
+        answer.OrderInQuestion,
+        VokiAnswerTypeDataDto.FromAnswerData(answer.TypeData)
+    );
+}

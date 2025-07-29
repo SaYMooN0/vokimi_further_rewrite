@@ -91,4 +91,8 @@ public record VokiAnswerTypeDataDto(
                 .Bind<BaseVokiAnswerTypeData>(d => d);
         }
     );
+
+    public static VokiAnswerTypeDataDto FromAnswerData(BaseVokiAnswerTypeData answerTypeData) {
+        throw new NotImplementedException();
+    }
 }

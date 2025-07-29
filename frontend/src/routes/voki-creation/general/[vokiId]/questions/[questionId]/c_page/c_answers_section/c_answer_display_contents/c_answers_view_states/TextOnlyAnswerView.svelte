@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { AnswerDataTextOnly } from '$lib/ts/voki';
 
-	let { answer }: { answer: AnswerDataTextOnly } = $props<{
+	const { answer }: { answer: AnswerDataTextOnly } = $props<{
 		answer: AnswerDataTextOnly;
 	}>();
 </script>

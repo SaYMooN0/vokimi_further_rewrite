@@ -18,7 +18,6 @@
 		gap: 0.5rem;
 		width: 100%;
 		margin-top: 0.5rem;
-		grid-template-columns: 1fr 1fr;
 	}
 
 	.btns-container button {

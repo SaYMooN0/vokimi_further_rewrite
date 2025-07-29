@@ -11,7 +11,6 @@
 
 <QuestionImagesEditingDialog
 	bind:this={dialogElement}
-	{images}
 	{questionId}
 	{vokiId}
 	updateParent={(newImages) => (images = newImages)}
@@ -22,7 +21,7 @@
 		<FieldNotSetLabel text="No images selected" />
 	{/if}
 </div>
-<VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open()} />
+<VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open(images)} />
 
 <style>
 	.field {

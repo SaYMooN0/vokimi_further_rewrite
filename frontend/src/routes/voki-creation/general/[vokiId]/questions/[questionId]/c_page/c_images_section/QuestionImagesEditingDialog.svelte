@@ -10,22 +10,20 @@
 	import QuestionHasNoImages from './c_images_dialog/QuestionHasNoImages.svelte';
 
 	let {
-		images,
 		questionId,
 		vokiId,
 		updateParent
 	}: {
-		images: string[];
 		questionId: string;
 		vokiId: string;
 		updateParent: (images: string[]) => void;
 	} = $props<{
-		images: string[];
 		questionId: string;
 		vokiId: string;
 		updateParent: (images: string[]) => void;
 	}>();
 
+	let images: string[] = $state<string[]>([]);
 	let dialogElement = $state<DialogWithCloseButton>()!;
 	let errs = $state<Err[]>([]);
 	const maxImagesCount = 5;
@@ -41,7 +39,8 @@
 			errs = response.errs;
 		}
 	}
-	export function open() {
+	export function open(imgs: string[]) {
+		images = imgs;
 		errs = [];
 		dialogElement.open();
 	}
@@ -51,10 +50,11 @@
 
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ imageKey: string }>(
 			`/vokis/${vokiId}/questions/${questionId}/upload-image`,
-			RequestJsonOptions.POST(formData)
+			{ method: 'POST', body: formData }
 		);
 		if (response.isSuccess) {
-			images.push(response.data.imageKey);
+			images = [...images, response.data.imageKey];
+			console.log(images);
 		} else {
 			errs = response.errs;
 		}
@@ -74,7 +74,7 @@
 				<DialogQuestionImageView {img} {removeImg} />
 			{/each}
 			{#if images.length < maxImagesCount}
-				<GeneralVokiAddQuestionImage {questionId} {vokiId} uploadImage={uploadAndAddImg} />
+				<GeneralVokiAddQuestionImage uploadImage={uploadAndAddImg} />
 			{/if}
 		</div>
 	{/if}
@@ -95,7 +95,14 @@
 	:global(#voki-creation-question-images-dialog .dialog-content) {
 		display: flex;
 		flex-direction: column;
+	}
+	.imgs-container {
+		max-width: min(90vw, 90rem);
+		display: flex;
+		flex-direction: row;
 		gap: 1rem;
+		align-items: center;
+		justify-content: center;
 	}
 	:global(#voki-creation-question-images-dialog .dialog-content > .primary-btn) {
 		align-self: center;

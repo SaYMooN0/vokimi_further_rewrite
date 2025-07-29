@@ -30,7 +30,7 @@ internal static class SpecificVokiQuestionsHandlers
         // group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
 
 
-        group.MapPatch("/upload-image", UploadVokiQuestionImage)
+        group.MapPost("/upload-image", UploadVokiQuestionImage)
             .DisableAntiforgery();
     }
 

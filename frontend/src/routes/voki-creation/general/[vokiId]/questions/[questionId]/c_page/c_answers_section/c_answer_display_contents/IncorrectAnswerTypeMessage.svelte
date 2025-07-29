@@ -1,13 +1,15 @@
 <script lang="ts">
-	const { answerType }: { answerType?: string } = $props<{
-		answerType?: string;
+	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
+
+	const { answer }: { answer?: GeneralVokiAnswerTypeData } = $props<{
+		answer?: GeneralVokiAnswerTypeData;
 	}>();
 </script>
 
 <div class="message-container">
-	{#if answerType}
-		<p>Unexpected answer type: {answerType}</p>
+	{#if answer && answer.answerType}
+		<p>Unexpected answer type: {answer.answerType}</p>
 	{:else}
-		<p>Answer type is not provided</p>
+		<p>Answer or answer type is not provided</p>
 	{/if}
 </div>

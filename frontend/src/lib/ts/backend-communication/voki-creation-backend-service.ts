@@ -38,10 +38,10 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
     public async updateVokiCover(vokiId: string, file: File): Promise<ResponseResult<{ newCover: string; }>> {
         const formData = new FormData();
         formData.append("file", file);
-
+        console.log(formData);
         return await this.fetchJsonResponse<{ newCover: string; }>(
             `/vokis/${vokiId}/update-cover`,
-            RequestJsonOptions.PATCH(formData)
+            { method: 'PATCH', body: formData }
         );
     }
 

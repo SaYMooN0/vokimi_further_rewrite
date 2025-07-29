@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { AnswerDataImageAndText} from '$lib/ts/voki';
 
-	const { answer  }: { answer: AnswerDataImageAndText } = $props<{
+	let { answer = $bindable() }: { answer: AnswerDataImageAndText } = $props<{
 		answer: AnswerDataImageAndText;
 	}>();
 </script>

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
+
 	const {
 		questionId,
 		vokiId,
@@ -8,25 +10,28 @@
 		vokiId: string;
 		uploadImage: (image: File) => Promise<void>;
 	}>();
-	function handleFile(file: File) {
+	let isLoading = $state(false);
+	async function handleFile(file: File) {
 		if (!file.type.startsWith('image/')) {
 			return;
 		}
-		uploadImage(file);
+		isLoading = true;
+		await uploadImage(file);
+		isLoading = false;
 	}
 
 	async function handleInputChange(event: Event) {
 		const files = (event.target as HTMLInputElement).files;
 		if (files?.length) {
-			handleFile(files[0]);
+			await handleFile(files[0]);
 		}
 	}
 
-	function ondrop(event: DragEvent) {
+	async function ondrop(event: DragEvent) {
 		event.preventDefault();
 		isDragging = false;
 		if (event.dataTransfer?.files?.length) {
-			handleFile(event.dataTransfer.files[0]);
+			await handleFile(event.dataTransfer.files[0]);
 		}
 	}
 
@@ -43,15 +48,28 @@
 	let isDragging = $state(false);
 </script>
 
-<div class="no-images" class:dragging={isDragging} {ondrop} {ondragover} {ondragleave}>
-	<h1>This question has no images yet</h1>
-	<p>Drag and drop image or click the button below</p>
+<div
+	class="no-images"
+	class:loading={isLoading}
+	class:dragging={isDragging}
+	ondrop={(e) => ondrop(e)}
+	{ondragover}
+	{ondragleave}
+>
+	{#if isLoading}
+		<div class="loading-container">
+			<CubesLoader sizeRem={5} />
+		</div>
+	{:else}
+		<h1>This question has no images yet</h1>
+		<p>Drag and drop image or click the button below</p>
 
-	<label class="upload-button unselectable" class:dragging={isDragging}>
-		<svg><use href="#add-image-icon" /></svg>
-		<span>Add image</span>
-		<input type="file" accept="image/*" onchange={handleInputChange} hidden />
-	</label>
+		<label class="upload-button unselectable" class:dragging={isDragging}>
+			<svg><use href="#add-image-icon" /></svg>
+			<span>Add image</span>
+			<input type="file" accept="image/*" onchange={handleInputChange} hidden />
+		</label>
+	{/if}
 </div>
 
 <style>
@@ -68,9 +86,22 @@
 		cursor: pointer;
 		transition: all 0.12s ease-in;
 	}
-	.no-images.dragging {
+	.no-images.dragging:not(.loading) {
 		border-color: var(--primary);
 		background-color: var(--secondary);
+	}
+	.loading-container {
+		animation: fade-in 0.06s ease-in-out forwards;
+	}
+
+	@keyframes fade-in {
+		from {
+			opacity: 0.4;
+		}
+
+		to {
+			opacity: 1;
+		}
 	}
 
 	.upload-button {

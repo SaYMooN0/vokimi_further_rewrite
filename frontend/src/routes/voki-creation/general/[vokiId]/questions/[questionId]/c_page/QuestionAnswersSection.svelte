@@ -44,13 +44,18 @@
 		}
 	}
 
-	function addNewAnswer() {
+	function addNewUnsavedAnswer() {
 		unsavedAnswers.push(createEmptyAnswer(answersType));
+	}
+	function addNewSavedAnswer(answer: QuestionAnswerData) {
+		answers.push(answer);
+		answers.sort((a, b) => a.orderInQuestion - b.orderInQuestion);
+		console.log('addednew', answers);
 	}
 </script>
 
 {#if answers.length + unsavedAnswers.length === 0}
-	<QuestionNoAnswersDisplay {addNewAnswer} />
+	<QuestionNoAnswersDisplay addNewAnswer={addNewUnsavedAnswer} />
 {:else}
 	<VokiCreationBasicHeader
 		header="Question answers ({answers.length}{unsavedAnswers.length != 0
@@ -67,13 +72,17 @@
 		{#each unsavedAnswers as unsavedAnswer}
 			<GeneralVokiCreationNewAnswerDisplay
 				{vokiId}
-				QuestionId={questionId}
+				{questionId}
 				answer={unsavedAnswer}
+				deleteAnswer={() => {
+					unsavedAnswers = unsavedAnswers.filter((a) => a != unsavedAnswer);
+				}}
+				{addNewSavedAnswer}
 			/>
 		{/each}
 	{/if}
 	{#if answers.length + unsavedAnswers.length < maxAnswersForQuestionCount}
-		<PrimaryButton onclick={addNewAnswer} class="add-new-answer">Add new</PrimaryButton>
+		<PrimaryButton onclick={addNewUnsavedAnswer} class="add-new-answer">Add new</PrimaryButton>
 	{:else}
 		<div class="limit-reached-message">
 			<h1>
@@ -105,5 +114,7 @@
 	}
 	:global(.add-new-answer.primary-btn) {
 		align-self: center;
+		margin: 1.5rem;
+		padding: 0.25rem 2rem;
 	}
 </style>
