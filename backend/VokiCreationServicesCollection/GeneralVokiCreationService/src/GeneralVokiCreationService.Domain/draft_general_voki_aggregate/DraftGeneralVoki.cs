@@ -10,11 +10,20 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 public sealed class DraftGeneralVoki : BaseDraftVoki
 {
-    private const int MaxQuestionsCount = 100;
+    private const int
+        MinQuestionsCount = 2,
+        MaxQuestionsCount = 100;
+
+    private const int
+        MinResultsCount = 2,
+        MaxResultsCount = 60;
+
     private DraftGeneralVoki() { }
     public VokiTakingProcessSettings TakingProcessSettings { get; private set; }
     private readonly List<VokiQuestion> _questions;
     public ImmutableArray<VokiQuestion> Questions => _questions.ToImmutableArray();
+    private readonly List<VokiResult> _results;
+    public ImmutableArray<VokiResult> Results => _results.ToImmutableArray();
 
     private DraftGeneralVoki(
         VokiId vokiId, AppUserId primaryAuthorId,
@@ -27,6 +36,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     ) {
         TakingProcessSettings = VokiTakingProcessSettings.Default;
         _questions = [];
+        _results = [];
     }
 
     public static DraftGeneralVoki Create(
@@ -143,5 +153,17 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
         var res = question.AddNewAnswer(answerData);
         return res;
+    }
+
+    public ErrOr<VokiResult> ResultWithId(GeneralVokiResultId resultId) {
+        VokiResult? requestedResult = _results.FirstOrDefault(q => q.Id == resultId);
+        if (requestedResult is null) {
+            return ErrFactory.NotFound.Common(
+                "This voki doesn't have requested result",
+                $"Voki with id {Id} doesn't have a result with id {resultId}"
+            );
+        }
+
+        return requestedResult;
     }
 }

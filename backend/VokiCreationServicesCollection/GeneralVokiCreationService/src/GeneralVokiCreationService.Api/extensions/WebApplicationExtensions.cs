@@ -8,9 +8,14 @@ public static class WebApplicationExtensions
 
     internal static void MapEndpoints(this WebApplication app) {
         app.MapSpecificVokiHandlers();
+
         app.MapVokiQuestionsHandlers();
         app.MapSpecificVokiQuestionsHandlers();
+
         app.MapQuestionAnswersHandlers();
         app.MapSpecificQuestionAnswerHandlers();
+
+        app.MapVokiResultsHandlers();
+        app.MapSpecificVokiResultsHandlers();
     }
 }

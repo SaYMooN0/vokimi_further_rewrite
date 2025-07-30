@@ -92,7 +92,14 @@ public record VokiAnswerTypeDataDto(
         }
     );
 
-    public static VokiAnswerTypeDataDto FromAnswerData(BaseVokiAnswerTypeData answerTypeData) {
-        throw new NotImplementedException();
-    }
+    public static VokiAnswerTypeDataDto FromAnswerData(BaseVokiAnswerTypeData data) =>
+        data.Match<VokiAnswerTypeDataDto>(
+            textOnly: d => new(Text: d.Text, Image: null, Audio: null, Color: null),
+            imageOnly: d => new(Text: null, Image: d.Image.ToString(), Audio: null, Color: null),
+            imageAndText: d => new(Text: d.Text, Image: d.Image.ToString(), Audio: null, Color: null),
+            colorOnly: d => new(Text: null, Image: null, Audio: null, Color: d.Color.ToString()),
+            colorAndText: d => new(Text: d.Text, Image: null, Audio: null, Color: d.Color.ToString()),
+            audioOnly: d => new(Text: null, Image: null, Audio: d.Audio.ToString(), Color: null),
+            audioAndText: d => new(Text: d.Text, Image: null, Audio: d.Audio.ToString(), Color: null)
+        );
 }

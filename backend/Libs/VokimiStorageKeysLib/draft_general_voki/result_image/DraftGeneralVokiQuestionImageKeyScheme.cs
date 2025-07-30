@@ -1,25 +1,26 @@
-﻿namespace VokimiStorageKeysLib.draft_general_voki.answer_image;
+﻿namespace VokimiStorageKeysLib.draft_general_voki.result_image;
 
-sealed class DraftGeneralVokiAnswerImageKeyScheme
+internal static class DraftGeneralVokiResultImageKeyScheme
 {
-    public const string Template = "draft-vokis/{vokiId:id}/questions/{questionId:id}/answers/{name:id}";
+    public const string Template = "draft-vokis/{vokiId:id}/results/{resultId:id}/images/{name:id}";
+    public static readonly ImmutableHashSet<string> AllowedExtensions = ["jpg", "webp"];
     private static readonly KeyTemplateParser Parser = new(Template, BaseStorageKey.Extensions.ImageFiles);
 
     public static ErrOrNothing IsKeyValid(
         string key,
         out VokiId vokiId,
-        out GeneralVokiQuestionId questionId
+        out GeneralVokiResultId resultId
     ) {
         var parseResult = Parser.TryParse(key);
         if (parseResult.IsErr(out var err)) {
             vokiId = default!;
-            questionId = default!;
+            resultId = default!;
             return err;
         }
 
         var parts = parseResult.AsSuccess();
         vokiId = new VokiId(new Guid(parts["vokiId"]));
-        questionId = new GeneralVokiQuestionId(new Guid(parts["questionId"]));
+        resultId = new GeneralVokiResultId(new Guid(parts["resultId"]));
         return ErrOrNothing.Nothing;
     }
 }

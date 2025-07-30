@@ -16,3 +16,7 @@ public class GeneralVokiAnswerId(Guid value) : GuidBasedId(value)
 {
     public static GeneralVokiAnswerId CreateNew() => new(Guid.CreateVersion7());
 }
+public class GeneralVokiResultId(Guid value) : GuidBasedId(value)
+{
+    public static GeneralVokiResultId CreateNew() => new(Guid.CreateVersion7());
+}

@@ -2,7 +2,7 @@
 
 sealed class DraftGeneralVokiAnswerAudioKeyScheme
 {
-    public const string Template = "draft-vokis/{vokiId:id}/{questionId:id}/answers/{name:id}";
+    public const string Template = "draft-vokis/{vokiId:id}/questions/{questionId:id}/answers/{name:id}";
     private static readonly KeyTemplateParser Parser = new(Template, BaseStorageKey.Extensions.AudioFiles);
 
     public static ErrOrNothing IsKeyValid(

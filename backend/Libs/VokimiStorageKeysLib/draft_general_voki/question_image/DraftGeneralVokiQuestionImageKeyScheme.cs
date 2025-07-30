@@ -1,8 +1,8 @@
 ﻿namespace VokimiStorageKeysLib.draft_general_voki.question_image;
 
-sealed class DraftGeneralVokiQuestionImageKeyScheme
+internal static class DraftGeneralVokiQuestionImageKeyScheme
 {
-    public const string Template = "draft-vokis/{vokiId:id}/{questionId:id}/images/{name:id}";
+    public const string Template = "draft-vokis/{vokiId:id}/questions/{questionId:id}/images/{name:id}";
     public static readonly ImmutableHashSet<string> AllowedExtensions = ["jpg", "webp"];
     private static readonly KeyTemplateParser Parser = new(Template, BaseStorageKey.Extensions.ImageFiles);
 
