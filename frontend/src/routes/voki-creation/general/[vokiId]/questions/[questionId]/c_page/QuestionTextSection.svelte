@@ -60,10 +60,7 @@
 		name={StringUtils.rndStr()}
 	/>
 	{#if savingErrs.length > 0}
-		<DefaultErrBlock
-			errList={savingErrs}
-			containerId="general-voki-creation-question-text-err-block"
-		/>
+		<DefaultErrBlock errList={savingErrs} className="question-text-err-block" />
 	{/if}
 	<VokiCreationSaveAndCancelButtons
 		onCancel={() => (isEditing = false)}
@@ -100,7 +97,7 @@
 		outline-color: var(--primary);
 	}
 
-	:global(#general-voki-creation-question-text-err-block) {
+	:global(.err-block.question-text-err-block) {
 		margin-top: 0.5rem;
 	}
 

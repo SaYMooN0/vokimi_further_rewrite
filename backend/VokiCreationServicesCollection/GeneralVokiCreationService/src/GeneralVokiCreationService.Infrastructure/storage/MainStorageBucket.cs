@@ -5,6 +5,7 @@ using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
 using VokimiStorageKeysLib;
 using VokimiStorageKeysLib.draft_general_voki.question_image;
+using VokimiStorageKeysLib.draft_general_voki.result_image;
 using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Infrastructure.storage;
@@ -52,4 +53,13 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
             .ToImmutableHashSet();
         return await base.DeleteFilesWithoutSubfoldersAsync(prefix, usedStringifiedKeys);
     }
+
+    public async Task<ErrOr<DraftGeneralVokiResultImageKey>> UploadVokiResultImage(
+        VokiId vokiId,
+        GeneralVokiResultId resultId,
+        FileData file
+    ) => await UploadWithKeyAsync<DraftGeneralVokiResultImageKey>(
+        (ext) => DraftGeneralVokiResultImageKey.Create(vokiId, resultId, ext),
+        file
+    );
 }

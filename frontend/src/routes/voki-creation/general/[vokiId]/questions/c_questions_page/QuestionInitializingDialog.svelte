@@ -9,7 +9,7 @@
 	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
 	import AnswersTypeSelectionCard from './c_initializing_dialog/AnswersTypeSelectionCard.svelte';
 
-	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
+	const { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	let dialog = $state<DialogWithCloseButton>()!;
 	let selectedAnswersType = $state<GeneralVokiAnswerType>('TextOnly');
 	let errs: Err[] = $state([]);
@@ -31,9 +31,11 @@
 	}
 </script>
 
-
-<DialogWithCloseButton dialogId="general-voki-question-initializing-dialog" bind:this={dialog}>
-	<h1 class="subheading">Choose new answers type for the new question</h1>
+<DialogWithCloseButton
+	dialogId="general-voki-question-initializing-dialog"
+	bind:this={dialog}
+	subheading="Choose new answers type for the new question"
+>
 	<div class="types-container">
 		<div class="type-subset-column">
 			<svg><use href="#text-general-voki-answer-type-icon" /></svg>
@@ -107,16 +109,6 @@
 </DialogWithCloseButton>
 
 <style>
-	
-
-	.subheading {
-		padding: 0.25rem 1rem 2.5rem;
-		color: var(--text);
-		font-size: 1.75rem;
-		font-weight: 550;
-		text-align: center;
-	}
-
 	.types-container {
 		display: grid;
 		grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;

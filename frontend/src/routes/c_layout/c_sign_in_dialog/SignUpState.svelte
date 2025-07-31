@@ -153,7 +153,7 @@
 <div class="gap" />
 
 <SignInDialogLink text="I already have an account" onClick={() => changeState('login')} />
-<DefaultErrBlock errList={errs} containerId="sign-up-err-block" />
+<DefaultErrBlock errList={errs} className="sign-up-err-block" />
 <SignInDialogConfirmButton text="Sign Up" onclick={() => confirmSignUp()} {isLoading} />
 
 <style>
@@ -161,7 +161,7 @@
 		margin-top: auto;
 	}
 
-	:global(#sign-up-err-block) {
+	:global(.err-block.sign-up-err-block) {
 		margin-top: 0.375rem;
 	}
 </style>

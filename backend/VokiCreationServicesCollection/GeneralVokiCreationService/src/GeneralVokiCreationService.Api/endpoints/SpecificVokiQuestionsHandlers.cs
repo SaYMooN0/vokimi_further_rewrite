@@ -1,7 +1,6 @@
 ﻿using GeneralVokiCreationService.Api.contracts.questions;
 using GeneralVokiCreationService.Api.contracts.questions.update_question;
 using GeneralVokiCreationService.Api.extensions;
-using GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;

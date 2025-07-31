@@ -27,5 +27,7 @@ public class VokiResultsConfigurations : IEntityTypeConfiguration<VokiResult>
         builder
             .Property(x => x.Image)
             .HasConversion<VokiResultImageConverter>();
+
+        builder.Property(x => x.CreationDate);
     }
 }

@@ -1,13 +1,7 @@
 <script lang="ts">
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 
-	const {
-		questionId,
-		vokiId,
-		uploadImage
-	}: { questionId: string; vokiId: string; uploadImage: (image: File) => Promise<void> } = $props<{
-		questionId: string;
-		vokiId: string;
+	const { uploadImage }: { uploadImage: (image: File) => Promise<void> } = $props<{
 		uploadImage: (image: File) => Promise<void>;
 	}>();
 	let isLoading = $state(false);

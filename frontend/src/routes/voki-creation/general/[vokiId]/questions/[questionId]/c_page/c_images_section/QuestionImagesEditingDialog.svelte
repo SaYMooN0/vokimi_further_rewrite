@@ -64,10 +64,13 @@
 	}
 </script>
 
-<DialogWithCloseButton bind:this={dialogElement} dialogId="voki-creation-question-images-dialog">
-	<h1 class="subheading">Question images</h1>
+<DialogWithCloseButton
+	bind:this={dialogElement}
+	dialogId="voki-creation-question-images-dialog"
+	subheading="Question images"
+>
 	{#if images.length == 0}
-		<QuestionHasNoImages {questionId} {vokiId} uploadImage={uploadAndAddImg} />
+		<QuestionHasNoImages uploadImage={uploadAndAddImg} />
 	{:else}
 		<div class="imgs-container">
 			{#each images as img}
@@ -95,6 +98,7 @@
 	:global(#voki-creation-question-images-dialog .dialog-content) {
 		display: flex;
 		flex-direction: column;
+		gap: 1rem;
 	}
 	.imgs-container {
 		max-width: min(90vw, 90rem);

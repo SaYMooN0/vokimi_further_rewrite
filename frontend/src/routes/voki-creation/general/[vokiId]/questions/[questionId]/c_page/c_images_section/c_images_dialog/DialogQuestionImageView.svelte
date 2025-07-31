@@ -48,10 +48,10 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		transition: opacity  0.04s ease;
+		transition: opacity  0.08s ease;
 	}
 	.img-view:has(img:hover) .remove-img-btn {
-		opacity: 0.1;
+		opacity: 0.3;
 	}
 	.remove-img-btn:hover {
 		background-color: var(--primary-hov);

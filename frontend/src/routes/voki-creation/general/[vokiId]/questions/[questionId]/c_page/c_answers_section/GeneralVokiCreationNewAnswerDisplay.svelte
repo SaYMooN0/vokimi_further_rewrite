@@ -48,7 +48,9 @@
 </script>
 
 <div class="unsaved-answer">
-	<AnswerContentEditingState bind:answer />
+	<div class="results-with-content">
+		<AnswerContentEditingState bind:answer />
+	</div>
 	{#if savingErrs.length > 0}
 		<DefaultErrBlock errList={savingErrs} />
 	{/if}
@@ -73,7 +75,10 @@
 		border: 0.125rem dashed var(--secondary-foreground);
 		border-radius: 0.75rem;
 	}
-
+	.results-with-content {
+		display: grid;
+		grid-template-columns: 14rem 1fr;
+	}
 	.buttons-container {
 		display: flex;
 		flex-direction: row;

@@ -20,5 +20,9 @@ public class VokiQuestionAnswersConfigurations : IEntityTypeConfiguration<VokiQu
         builder
             .Property(x => x.TypeData)
             .HasConversion<VokiAnswerTypeDataConverter>();
+
+        builder
+            .Property(x => x.RelatedResultIds)
+            .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }

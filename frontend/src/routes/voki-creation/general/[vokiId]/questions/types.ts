@@ -28,3 +28,7 @@ export type QuestionAnswerData = {
     orderInQuestion: number;
     typeData: GeneralVokiAnswerTypeData;
 }
+export type ResultIdWithName = {
+    id: string;
+    name: string;
+}

@@ -59,20 +59,27 @@
 		justify-content: center;
 		padding: 0 1rem;
 		height: 10rem;
-		background-color: var(--primary);
-		color: var(--primary-foreground);
-		border-radius: 0.375rem;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+		border-radius: 0.5rem;
 		cursor: pointer;
-		font-weight: 450;
+		font-weight: 500;
 		transition: inherit;
 		font-size: 1.25rem;
 		letter-spacing: 0.25px;
 		white-space: nowrap;
+		gap: 1rem;
+		border: 0.1875rem dashed var(--muted-foreground);
 	}
 	.upload-button svg {
-		height: 3rem;
-		width: 3rem;
+		height: 3.5rem;
+		width: 3.5rem;
 		stroke-width: 1.5;
+	}
+	.upload-button:hover {
+		background-color: var(--accent);
+		color: var(--accent-foreground);
+		border-color: var(--accent-foreground);
 	}
 	@keyframes fade-in {
 		from {

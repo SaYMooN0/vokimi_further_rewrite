@@ -8,7 +8,10 @@ public record class VokiQuestionsOverviewResponse(
 )
 {
     public static VokiQuestionsOverviewResponse Create(DraftGeneralVoki voki) => new(
-        voki.Questions.Select(VokiQuestionBriefDataResponse.Create).ToArray(),
+        voki.Questions
+            .Select(VokiQuestionBriefDataResponse.Create)
+            .OrderBy(a => a.OrderInVoki)
+            .ToArray(),
         voki.TakingProcessSettings
     );
 }

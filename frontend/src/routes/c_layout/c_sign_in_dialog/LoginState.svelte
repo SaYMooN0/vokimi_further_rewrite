@@ -121,7 +121,7 @@
 	}}
 />
 <SignInDialogLink text="I don't have an account yet" onClick={() => changeState('signup')} />
-<DefaultErrBlock errList={errs} containerId="login-err-block" />
+<DefaultErrBlock errList={errs} className="login-err-block" />
 <SignInDialogConfirmButton text="Log in" onclick={() => confirmLogin()} {isLoading} />
 
 <style>
@@ -129,7 +129,7 @@
 		margin-top: auto;
 	}
 
-	:global(#login-err-block) {
+	:global(.err-block.login-err-block) {
 		margin-top: 0.375rem;
 	}
 </style>

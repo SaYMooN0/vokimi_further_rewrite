@@ -3,13 +3,13 @@
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import ErrView from './ErrView.svelte';
 
-	let {
-		errList,
-		containerId = StringUtils.rndStrWithPref('err-block-')
-	}: { errList: Err[]; containerId?: string } = $props();
+	let { errList, className }: { errList: Err[]; className?: string } = $props<{
+		errList: Err[];
+		className?: string;
+	}>();
 </script>
 
-<div class="err-block" id={containerId}>
+<div class="err-block {className}">
 	{#each errList as err}
 		<ErrView {err} />
 	{/each}

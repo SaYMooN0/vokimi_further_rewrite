@@ -2,8 +2,13 @@
 	import type { Snippet } from 'svelte';
 	import BaseDialog from './BaseDialog.svelte';
 
-	let { children, dialogId }: { children: Snippet; dialogId?: string } = $props<{
+	let {
+		children,
+		subheading,
+		dialogId
+	}: { children: Snippet; subheading?: string; dialogId?: string } = $props<{
 		children: Snippet;
+		subheading?: string;
 		dialogId?: string;
 	}>();
 
@@ -17,6 +22,9 @@
 </script>
 
 <BaseDialog bind:this={dialog} {dialogId}>
+	{#if subheading}
+		<h1 class="subheading">{subheading}</h1>
+	{/if}
 	<button class="dialog-close-btn" onclick={() => close()}>
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
 			<path
@@ -33,9 +41,18 @@
 
 <style>
 	:global(dialog > .dialog-content) {
-		padding: 2.25rem;
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
-
+	.subheading {
+		padding: 0rem 0 3rem 0;
+		color: var(--text);
+		font-size: 1.75rem;
+		font-weight: 550;
+		text-align: center;
+	}
 	.dialog-close-btn {
 		position: absolute;
 		top: 0.75rem;

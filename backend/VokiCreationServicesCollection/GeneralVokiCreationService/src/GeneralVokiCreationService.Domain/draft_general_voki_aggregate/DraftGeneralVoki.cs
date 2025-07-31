@@ -1,9 +1,12 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
+using SharedKernel;
 using SharedKernel.common.vokis;
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
+using VokimiStorageKeysLib.draft_general_voki.result_image;
 using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
@@ -82,7 +85,8 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
             return ErrFactory.NotFound.Common(
-                "Could not find question to update", $"Voki with id {Id} doesn't have a question with id {questionId}"
+                "Could not find question to update",
+                $"Voki with id {Id} doesn't have a question with id {questionId}"
             );
         }
 
@@ -94,7 +98,8 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
             return ErrFactory.NotFound.Common(
-                "Could not find question to update", $"Voki with id {Id} doesn't have a question with id {questionId}"
+                "Could not find question to update",
+                $"Voki with id {Id} doesn't have a question with id {questionId}"
             );
         }
 
@@ -125,7 +130,8 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
             return ErrFactory.NotFound.Common(
-                "Could not find question to update", $"Voki with id {Id} doesn't have a question with id {questionId}"
+                "Could not find question to update",
+                $"Voki with id {Id} doesn't have a question with id {questionId}"
             );
         }
 
@@ -165,5 +171,85 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         return requestedResult;
+    }
+
+    public ErrOrNothing AddNewResult(VokiResultName resultName, IDateTimeProvider dateTimeProvider) {
+        if (_results.Count >= MaxResultsCount) {
+            return ErrFactory.LimitExceeded(
+                $"General voki cannot have more than {MaxResultsCount} results. Current count: {_results.Count}"
+            );
+        }
+
+        HashSet<VokiResultName> existingNames = _results.Select(r => r.Name).ToHashSet();
+        if (existingNames.Contains(resultName)) {
+            return ErrFactory.Conflict("Result with this name already exists in this Voki. Result name must be unique");
+        }
+
+        VokiResult result = VokiResult.CreateNew(resultName, dateTimeProvider.UtcNow);
+        _results.Add(result);
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOr<VokiResult> UpdateResultName(GeneralVokiResultId resultId, VokiResultName newName) {
+        VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
+        if (resultToUpdate is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find result to update",
+                $"Voki with id {Id} doesn't have a result with id {resultId}"
+            );
+        }
+
+        resultToUpdate.UpdateName(newName);
+        return resultToUpdate;
+    }
+
+    public ErrOr<VokiResult> UpdateResultText(GeneralVokiResultId resultId, VokiResultText newText) {
+        VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
+        if (resultToUpdate is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find result to update",
+                $"Voki with id {Id} doesn't have a result with id {resultId}"
+            );
+        }
+
+        resultToUpdate.UpdateText(newText);
+        return resultToUpdate;
+    }
+
+    public ErrOr<VokiResult> RemoveResultImage(GeneralVokiResultId resultId) {
+        VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
+        if (resultToUpdate is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find result to update",
+                $"Voki with id {Id} doesn't have a result with id {resultId}"
+            );
+        }
+
+        resultToUpdate.RemoveImage();
+        return resultToUpdate;
+    }
+
+    public ErrOr<VokiResult> SetResultImage(GeneralVokiResultId resultId, DraftGeneralVokiResultImageKey key) {
+        VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
+        if (resultToUpdate is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find result to update",
+                $"Voki with id {Id} doesn't have a result with id {resultId}"
+            );
+        }
+
+        if (!key.IsWithIds(Id, resultId)) {
+            return ErrFactory.Conflict(
+                "Provided image does not belong to the specified result",
+                $"Voki id: {Id}, result id: {resultId}, key: {key}"
+            );
+        }
+
+        var updatingRes = resultToUpdate.SetImage(key);
+        if (updatingRes.IsErr(out var err)) {
+            return err;
+        }
+
+        return resultToUpdate;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using VokimiStorageKeysLib;
 using VokimiStorageKeysLib.draft_general_voki.question_image;
+using VokimiStorageKeysLib.draft_general_voki.result_image;
 using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Application;
@@ -20,5 +21,11 @@ public interface IMainStorageBucket
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
         IEnumerable<DraftGeneralVokiQuestionImageKey> usedKeys
+    );
+
+    Task<ErrOr<DraftGeneralVokiResultImageKey>> UploadVokiResultImage(
+        VokiId vokiId,
+        GeneralVokiResultId resultId,
+        FileData file
     );
 }

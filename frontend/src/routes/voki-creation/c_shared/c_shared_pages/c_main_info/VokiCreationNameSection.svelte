@@ -49,7 +49,7 @@
 			name={StringUtils.rndStr()}
 		/>
 		{#if savingErrs.length > 0}
-			<DefaultErrBlock errList={savingErrs} containerId="voki-name-err-block" />
+			<DefaultErrBlock errList={savingErrs}/>
 		{/if}
 		<VokiCreationSaveAndCancelButtons
 			onCancel={() => (isEditing = false)}
@@ -93,7 +93,7 @@
 		outline-color: var(--primary);
 	}
 
-	.voki-name-section :global(#voki-name-err-block) {
+	.voki-name-section :global(.err-block) {
 		margin-top: 0.5rem;
 	}
 

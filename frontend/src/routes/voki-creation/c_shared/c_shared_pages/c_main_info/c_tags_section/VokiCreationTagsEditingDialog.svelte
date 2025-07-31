@@ -122,7 +122,7 @@
 	}
 
 	.bottom-part > :global(.err-block) {
-		margin: 0 0 1rem;
+		margin-bottom: 1rem;
 	}
 
 	.continue-typing {

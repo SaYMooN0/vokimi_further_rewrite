@@ -99,10 +99,7 @@
 		<input id="max-answers-count" type="number" bind:value={maxAnswers} />
 	</div>
 </div>
-<DefaultErrBlock
-	errList={savingErrs}
-	containerId="general-voki-taking-question-answers-settings-err-block"
-/>
+<DefaultErrBlock errList={savingErrs} className="question-answers-settings-err-block" />
 <VokiCreationSaveAndCancelButtons onCancel={() => cancelEditing()} onSave={() => saveChanges()} />
 
 <style>
@@ -134,7 +131,7 @@
 		height: 0;
 		opacity: 0;
 		width: 0;
-        transform: translateY(-10%);
+		transform: translateY(-10%);
 	}
 
 	.multiple-choice-inputs * {
@@ -178,7 +175,7 @@
 	input[type='number']:focus {
 		border-color: var(--primary);
 	}
-	:global(#general-voki-taking-question-answers-settings-err-block) {
+	:global(.err-block.question-answers-settings-err-block) {
 		margin-top: 0.5rem;
 	}
 </style>

@@ -1,11 +1,12 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerType } from '$lib/ts/voki';
+	import ListEmptyMessage from '../../../../../c_shared/ListEmptyMessage.svelte';
 	import VokiCreationBasicHeader from '../../../../../c_shared/VokiCreationBasicHeader.svelte';
 	import type { QuestionAnswerData } from '../../types';
+	import AnswerRelatedResultsSelectingDialog from './c_answers_section/AnswerRelatedResultsSelectingDialog.svelte';
 	import GeneralVokiCreationNewAnswerDisplay from './c_answers_section/GeneralVokiCreationNewAnswerDisplay.svelte';
 	import GeneralVokiCreationSavedAnswerDisplay from './c_answers_section/GeneralVokiCreationSavedAnswerDisplay.svelte';
-	import QuestionNoAnswersDisplay from './c_answers_section/QuestionNoAnswersDisplay.svelte';
 
 	let {
 		questionId,
@@ -25,6 +26,7 @@
 	}>();
 	const maxAnswersForQuestionCount = 60;
 	let unsavedAnswers = $state<GeneralVokiAnswerTypeData[]>([]);
+	let resultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
 	function createEmptyAnswer(type: GeneralVokiAnswerType): GeneralVokiAnswerTypeData {
 		switch (type) {
 			case 'TextOnly':
@@ -50,12 +52,16 @@
 	function addNewSavedAnswer(answer: QuestionAnswerData) {
 		answers.push(answer);
 		answers.sort((a, b) => a.orderInQuestion - b.orderInQuestion);
-		console.log('addednew', answers);
 	}
 </script>
 
+<AnswerRelatedResultsSelectingDialog bind:this={resultsSelectingDialog} {vokiId} />
 {#if answers.length + unsavedAnswers.length === 0}
-	<QuestionNoAnswersDisplay addNewAnswer={addNewUnsavedAnswer} />
+	<ListEmptyMessage
+		onBtnClick={addNewUnsavedAnswer}
+		messageText="This question has no answers yet"
+		btnText="Add first answer"
+	/>
 {:else}
 	<VokiCreationBasicHeader
 		header="Question answers ({answers.length}{unsavedAnswers.length != 0

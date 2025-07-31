@@ -47,8 +47,6 @@
 
 <style>
 	:global(#sign-in-dialog .dialog-content) {
-		display: flex;
-		flex-direction: column;
 		width: 28rem;
 		height: 34rem;
 	}

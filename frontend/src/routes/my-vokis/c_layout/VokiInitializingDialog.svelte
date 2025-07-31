@@ -48,8 +48,7 @@
 	}
 </script>
 
-<DialogWithCloseButton dialogId="voki-initializing-dialog" bind:this={dialog}>
-	<p class="subheading">Choose new Voki type</p>
+<DialogWithCloseButton dialogId="voki-initializing-dialog" bind:this={dialog} subheading="Choose voki type">
 	<div class="voki-type-container">
 		<VokiTypeCard
 			name="General"
@@ -82,7 +81,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		padding: 0 4rem;
 	}
 
 	.subheading {

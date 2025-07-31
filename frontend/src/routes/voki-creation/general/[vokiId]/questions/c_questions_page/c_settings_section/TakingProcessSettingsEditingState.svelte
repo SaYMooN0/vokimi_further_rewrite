@@ -63,7 +63,7 @@
 	/>
 </p>
 {#if errs.length > 0}
-	<DefaultErrBlock errList={errs} containerId="general-voki-taking-process-settings-err-block" />
+	<DefaultErrBlock errList={errs} className="voki-taking-process-settings-err-block" />
 {/if}
 <VokiCreationSaveAndCancelButtons onSave={() => saveChanges()} onCancel={cancelEditing} />
 
@@ -75,7 +75,7 @@
 		grid-template-columns: 12rem 1fr;
 	}
 
-	:global(#general-voki-taking-process-settings-err-block) {
+	:global(.err-block.voki-taking-process-settings-err-block) {
 		margin-top: 0.5rem;
 	}
 </style>
