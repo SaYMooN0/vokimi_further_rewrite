@@ -24,10 +24,10 @@
 	.answer-content {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-items: center;
+		place-items: center center;
 		width: 100%;
 	}
+
 	.answer-input {
 		width: 100%;
 		box-sizing: border-box;

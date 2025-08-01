@@ -90,24 +90,27 @@
 <style>
 	.subheading {
 		margin: 0;
+		margin-bottom: 1rem;
 		font-size: 1.75rem;
 		font-weight: 650;
 		text-align: center;
-		margin-bottom: 1rem;
 	}
+
 	:global(#voki-creation-question-images-dialog .dialog-content) {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 	}
+
 	.imgs-container {
-		max-width: min(90vw, 90rem);
 		display: flex;
 		flex-direction: row;
-		gap: 1rem;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		gap: 1rem;
+		max-width: min(90vw, 90rem);
 	}
+
 	:global(#voki-creation-question-images-dialog .dialog-content > .primary-btn) {
 		align-self: center;
 	}

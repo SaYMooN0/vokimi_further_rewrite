@@ -1,7 +1,8 @@
 ﻿using GeneralVokiCreationService.Api.contracts.answers;
 using GeneralVokiCreationService.Api.contracts.questions;
 using GeneralVokiCreationService.Api.extensions;
-using GeneralVokiCreationService.Application.draft_vokis.commands.questions.answers;
+using GeneralVokiCreationService.Application.draft_vokis.commands.answers;
+using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 namespace GeneralVokiCreationService.Api.endpoints;
@@ -25,7 +26,8 @@ internal static class QuestionAnswersHandlers
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
         var request = httpContext.GetValidatedRequest<AddNewAnswerToVokiQuestionRequest>();
 
-        AddNewAnswerToVokiQuestionCommand command = new(id, questionId, request.ParsedAnswerData);
+        AddNewAnswerToVokiQuestionCommand command = new(
+            id, questionId, request.ParsedAnswerData, request.ParsedResultIds);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (answer) => Results.Json(

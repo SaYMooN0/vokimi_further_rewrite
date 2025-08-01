@@ -144,7 +144,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
     public ErrOr<VokiQuestionAnswer> AddNewAnswerToQuestion(
-        GeneralVokiQuestionId questionId, BaseVokiAnswerTypeData answerData
+        GeneralVokiQuestionId questionId,
+        BaseVokiAnswerTypeData answerData,
+        ImmutableHashSet<GeneralVokiResultId> relatedResultIds
     ) {
         VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
         if (question is null) {
@@ -157,7 +159,19 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             }
         }
 
-        var res = question.AddNewAnswer(answerData);
+        var existingResults = _results.Select(r => r.Id).ToHashSet();
+        var incorrectRelatedResultIds = relatedResultIds
+            .Where(r => !existingResults.Contains(r))
+            .Select(id => id.ToString())
+            .ToArray();
+        if (incorrectRelatedResultIds.Length > 0) {
+            return ErrFactory.Conflict(
+                "Some of the provided results specified as related does not exist in this voki",
+                $"Voki id: {Id}, incorrect result ids: {string.Join(", ", incorrectRelatedResultIds)}"
+            );
+        }
+
+        var res = question.AddNewAnswer(answerData, relatedResultIds);
         return res;
     }
 

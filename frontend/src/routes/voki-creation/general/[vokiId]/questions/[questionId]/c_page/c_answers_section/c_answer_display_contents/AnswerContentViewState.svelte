@@ -14,6 +14,7 @@
 	}>();
 </script>
 
+<p>"type:" {answer.answerType}</p>
 {#if answer.answerType === 'TextOnly'}
 	<TextOnlyAnswerView {answer} />
 {:else if answer.answerType === 'ImageOnly'}

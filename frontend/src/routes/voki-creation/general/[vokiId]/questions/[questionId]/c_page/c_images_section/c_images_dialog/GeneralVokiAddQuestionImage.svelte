@@ -34,53 +34,58 @@
 
 <style>
 	.loading-container {
-		aspect-ratio: 1/1;
-		padding: 0 1rem;
-		background-color: var(--secondary);
-		animation: fade-in 0.06s ease-in-out forwards;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		padding: 0 1rem;
 		border-radius: 1rem;
+		background-color: var(--secondary);
+		animation: fade-in 0.06s ease-in-out forwards;
+		aspect-ratio: 1/1;
 	}
+
 	.loading-container > h1 {
+		margin: 1rem 0 2rem;
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 550;
-		white-space: nowrap;
 		letter-spacing: 0.5px;
-		margin: 1rem 0 2rem 0;
+		white-space: nowrap;
 	}
+
 	.upload-button {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
-		padding: 0 1rem;
+		align-items: center;
+		gap: 1rem;
 		height: 10rem;
+		padding: 0 1rem;
+		border: 0.1875rem dashed var(--muted-foreground);
+		border-radius: 0.5rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		border-radius: 0.5rem;
-		cursor: pointer;
-		font-weight: 500;
-		transition: inherit;
 		font-size: 1.25rem;
+		font-weight: 500;
 		letter-spacing: 0.25px;
+		transition: inherit;
+		cursor: pointer;
 		white-space: nowrap;
-		gap: 1rem;
-		border: 0.1875rem dashed var(--muted-foreground);
 	}
+
 	.upload-button svg {
-		height: 3.5rem;
 		width: 3.5rem;
+		height: 3.5rem;
 		stroke-width: 1.5;
 	}
+
 	.upload-button:hover {
+		border-color: var(--accent-foreground);
 		background-color: var(--accent);
 		color: var(--accent-foreground);
-		border-color: var(--accent-foreground);
 	}
+
 	@keyframes fade-in {
 		from {
 			opacity: 0.4;

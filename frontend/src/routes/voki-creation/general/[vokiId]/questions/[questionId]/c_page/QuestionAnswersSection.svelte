@@ -79,11 +79,13 @@
 			<GeneralVokiCreationNewAnswerDisplay
 				{vokiId}
 				{questionId}
-				answer={unsavedAnswer}
+				answerData={unsavedAnswer}
 				deleteAnswer={() => {
 					unsavedAnswers = unsavedAnswers.filter((a) => a != unsavedAnswer);
 				}}
 				{addNewSavedAnswer}
+				openRelatedResultsSelectingDialog={(alreadySelected, setSelected) =>
+					resultsSelectingDialog.open(alreadySelected, setSelected)}
 			/>
 		{/each}
 	{/if}
@@ -100,27 +102,31 @@
 
 <style>
 	.new-answer-sep {
+		position: relative;
 		width: calc(100% - 2rem);
+		height: 0.125rem;
 		background-color: var(--muted);
 		align-self: center;
-		height: 0.125rem;
-		position: relative;
+		margin: 2rem 0;
+
 	}
+
 	.new-answer-sep label {
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-50%, -50%);
-		background-color: var(--back);
 		padding: 0.25rem 0.5rem;
-		color: var(--muted-foreground);
-		font-weight: 500;
-		font-size: 1.375rem;
 		border: 0.25rem solid var(--back);
+		background-color: var(--back);
+		color: var(--muted-foreground);
+		font-size: 1.375rem;
+		font-weight: 500;
+		transform: translate(-50%, -50%);
 	}
+
 	:global(.add-new-answer.primary-btn) {
-		align-self: center;
-		margin: 1.5rem;
 		padding: 0.25rem 2rem;
+		margin: 1.5rem;
+		align-self: center;
 	}
 </style>

@@ -20,14 +20,13 @@
 
 <style>
 	.saved-answer {
-		margin-top: 1.5rem;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-items: center;
-		width: 100%;
+		place-items: center center;
 		gap: 0.75rem;
+		width: 100%;
 		padding: 0.5rem 0.75rem;
+		margin-top: 1rem;
 		border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 0.75rem;
 	}

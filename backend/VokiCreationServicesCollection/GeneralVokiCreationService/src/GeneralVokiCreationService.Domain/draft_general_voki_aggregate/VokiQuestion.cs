@@ -74,7 +74,10 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOr<VokiQuestionAnswer> AddNewAnswer(BaseVokiAnswerTypeData answerData) {
+    public ErrOr<VokiQuestionAnswer> AddNewAnswer(
+        BaseVokiAnswerTypeData answerData,
+        ImmutableHashSet<GeneralVokiResultId> relatedResultIds
+    ) {
         if (_answers.Count >= MaxAnswersCount) {
             return ErrFactory.LimitExceeded(
                 "Answer count limit exceeded",
@@ -89,7 +92,16 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
             );
         }
 
-        var answer = VokiQuestionAnswer.CreateNew(answerData, (ushort)_answers.Count);
+        var creationRes = VokiQuestionAnswer.CreateNew(
+            answerData,
+            (ushort)_answers.Count,
+            relatedResultIds
+        );
+        if (creationRes.IsErr(out var err)) {
+            return err;
+        }
+
+        var answer = creationRes.AsSuccess();
         _answers.Add(answer);
         return answer;
     }

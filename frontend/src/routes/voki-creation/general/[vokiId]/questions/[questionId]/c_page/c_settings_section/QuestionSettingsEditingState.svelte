@@ -122,15 +122,15 @@
 	}
 
 	.multiple-choice-inputs.show {
+		width: 100%;
 		height: auto;
 		opacity: 1;
-		width: 100%;
 	}
 
 	.multiple-choice-inputs.hide {
+		width: 0;
 		height: 0;
 		opacity: 0;
-		width: 0;
 		transform: translateY(-10%);
 	}
 
@@ -148,10 +148,12 @@
 		font-size: 1rem !important;
 		transition: inherit;
 	}
+
 	.multiple-choice-inputs.hide input[type='number'] {
 		font-size: 0.25rem;
 		opacity: 0;
 	}
+
 	input[type='number'] {
 		width: 3.75rem;
 		height: 1.875rem;
@@ -175,6 +177,7 @@
 	input[type='number']:focus {
 		border-color: var(--primary);
 	}
+
 	:global(.err-block.question-answers-settings-err-block) {
 		margin-top: 0.5rem;
 	}

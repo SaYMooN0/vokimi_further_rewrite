@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Api.contracts.results;
+﻿using GeneralVokiCreationService.Api.contracts;
+using GeneralVokiCreationService.Api.contracts.results;
 using GeneralVokiCreationService.Application.draft_vokis.commands.results;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
@@ -15,7 +16,9 @@ internal static class VokiResultsHandlers
         group.MapGet("/overview", GetVokiResultsOverview);
         group.MapPost("/add-new", AddNewResultToVoki)
             .WithRequestValidation<AddNewResultToVokiRequest>();
+        group.MapGet("/ids-names", GetVokiResultsIdsWithNames);
     }
+
     private static async Task<IResult> GetVokiResultsOverview(
         CancellationToken ct, HttpContext httpContext,
         IQueryHandler<GetVokiWithResultsQuery, DraftGeneralVoki> handler
@@ -37,11 +40,26 @@ internal static class VokiResultsHandlers
         VokiId id = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<AddNewResultToVokiRequest>();
 
-        AddNewResultToVokiCommand command = new(id,  request.ParsedName);
+        AddNewResultToVokiCommand command = new(id, request.ParsedName);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (results) => Results.Json(
             VokiResultsOverviewResponse.Create(results)
+        ));
+    }
+
+    private static async Task<IResult> GetVokiResultsIdsWithNames(
+        CancellationToken ct, HttpContext httpContext,
+        IQueryHandler<GetVokiWithResultsQuery, DraftGeneralVoki> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+
+        GetVokiWithResultsQuery query = new(id);
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOr(result, (voki) => Results.Json(new {
+                Results = voki.Results.Select(VokiResultIdWithNameResponse.Create).ToArray()
+            }
         ));
     }
 }

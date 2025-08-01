@@ -21,8 +21,8 @@
 
 <style>
 	.input-field {
-		width: 100%;
 		position: relative;
+		width: 100%;
 		margin: 0.75rem 0 0.5rem;
 	}
 

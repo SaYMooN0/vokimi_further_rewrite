@@ -25,9 +25,9 @@
 
 <style>
 	.field {
-		margin-top: 1.5rem;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		margin-top: 1.5rem;
 	}
 </style>

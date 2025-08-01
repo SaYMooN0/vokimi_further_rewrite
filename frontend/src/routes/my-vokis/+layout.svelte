@@ -97,6 +97,7 @@
 			opacity: 1;
 		}
 	}
+
 	.my-vokis-page {
 		position: relative;
 		display: grid;

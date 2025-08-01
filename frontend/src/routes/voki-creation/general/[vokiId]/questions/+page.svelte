@@ -25,7 +25,7 @@
 		/>
 	{:else}
 		<VokiTakingProcessSettingsSection vokiId={data.vokiId!} settings={data.data.settings} />
-		<VokiCreationBasicHeader header={`Questions (${data.data.questions.length})`} />
+		<VokiCreationBasicHeader header={`Voki questions (${data.data.questions.length})`} />
 		<div class="questions">
 			{#each data.data.questions as question}
 				<GeneralVokiCreationQuestionItem
@@ -55,8 +55,6 @@
 	.add-new-question-btn-container {
 		display: flex;
 		justify-content: center;
-	}
-	.add-new-question-btn-container > :global(.primary-btn) {
 		margin: 1.25rem auto;
 	}
 </style>

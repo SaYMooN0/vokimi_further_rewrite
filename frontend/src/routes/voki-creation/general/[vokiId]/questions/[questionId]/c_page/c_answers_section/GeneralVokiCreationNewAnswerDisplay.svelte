@@ -4,37 +4,39 @@
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
-	import type { QuestionAnswerData } from '../../../types';
+	import type { QuestionAnswerData, ResultIdWithName } from '../../../types';
 	import AnswerContentEditingState from './c_answer_display_contents/AnswerContentEditingState.svelte';
+	import AnswerRelatedResultsEditingState from './c_answer_related_results/AnswerRelatedResultsEditingState.svelte';
 
+	interface Props {
+		vokiId: string;
+		questionId: string;
+		answerData: GeneralVokiAnswerTypeData;
+		deleteAnswer: () => void;
+		addNewSavedAnswer: (answer: QuestionAnswerData) => void;
+		openRelatedResultsSelectingDialog: (
+			selectedResult: ResultIdWithName[],
+			setSelected: (selected: ResultIdWithName[]) => void
+		) => void;
+	}
 	let {
 		vokiId,
 		questionId,
-		answer,
+		answerData,
 		deleteAnswer,
-		addNewSavedAnswer
-	}: {
-		vokiId: string;
-		questionId: string;
-		answer: GeneralVokiAnswerTypeData;
-		deleteAnswer: () => void;
-		addNewSavedAnswer: (answer: QuestionAnswerData) => void;
-	} = $props<{
-		vokiId: string;
-		questionId: string;
-		answer: GeneralVokiAnswerTypeData;
-		deleteAnswer: () => void;
-		addNewSavedAnswer: (answer: QuestionAnswerData) => void;
-	}>();
+		addNewSavedAnswer,
+		openRelatedResultsSelectingDialog
+	}: Props = $props();
+	let relatedResults: ResultIdWithName[] = $state([]);
 	let savingErrs = $state<Err[]>([]);
 	async function saveAnswer() {
 		savingErrs = [];
-		console.log(answer);
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<QuestionAnswerData>(
 			`/vokis/${vokiId}/questions/${questionId}/answers/add-new`,
 			RequestJsonOptions.POST({
-				answersType: answer.answerType,
-				answerData: answer
+				answersType: answerData.answerType,
+				answerData: answerData,
+				relateResultIds: relatedResults.map((r) => r.id)
 			})
 		);
 		if (response.isSuccess) {
@@ -45,47 +47,57 @@
 			savingErrs = response.errs;
 		}
 	}
+	function openRelatedResultsSelectingDialogWithParams() {
+		openRelatedResultsSelectingDialog(relatedResults, (selected: ResultIdWithName[]) => {
+			relatedResults = selected;
+		});
+	}
 </script>
 
 <div class="unsaved-answer">
-	<div class="results-with-content">
-		<AnswerContentEditingState bind:answer />
-	</div>
-	{#if savingErrs.length > 0}
-		<DefaultErrBlock errList={savingErrs} />
-	{/if}
-	<div class="buttons-container">
-		<button class="save-btn" onclick={() => saveAnswer()}>Save</button>
-		<button class="delete-btn" onclick={deleteAnswer}>
-			<svg><use href="#common-trash-can-icon" /></svg>
-		</button>
+	<AnswerRelatedResultsEditingState
+		results={relatedResults}
+		openRelatedResultsSelectingDialog={openRelatedResultsSelectingDialogWithParams}
+	/>
+	<div class="answer-content-with-actions">
+		<AnswerContentEditingState bind:answer={answerData} />
+		{#if savingErrs.length > 0}
+			<DefaultErrBlock errList={savingErrs} />
+		{/if}
+		<div class="buttons-container">
+			<button class="save-btn" onclick={() => saveAnswer()}>Save</button>
+			<button class="delete-btn" onclick={deleteAnswer}>
+				<svg><use href="#common-trash-can-icon" /></svg>
+			</button>
+		</div>
 	</div>
 </div>
 
 <style>
 	.unsaved-answer {
-		margin-top: 1.5rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-items: center;
+		display: grid;
+		grid-template-columns: 13rem 1fr;
+		gap: 0.25rem;
 		width: 100%;
-		gap: 0.75rem;
 		padding: 0.5rem 0.75rem;
+		margin-top: 1rem;
 		border: 0.125rem dashed var(--secondary-foreground);
 		border-radius: 0.75rem;
 	}
-	.results-with-content {
-		display: grid;
-		grid-template-columns: 14rem 1fr;
+
+	.answer-content-with-actions {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
 	}
+
 	.buttons-container {
 		display: flex;
 		flex-direction: row;
-
 		justify-content: flex-end;
-		width: 100%;
 		gap: 0.5rem;
+		width: 100%;
 	}
 
 	.buttons-container > * {

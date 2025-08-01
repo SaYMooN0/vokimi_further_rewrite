@@ -1,9 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
+	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
+	import ListEmptyMessage from '../../../../../../c_shared/ListEmptyMessage.svelte';
 	import type { ResultIdWithName } from '../../../types';
 
 	const { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
@@ -14,20 +17,33 @@
 	let resultsWithIsSelected = $state<Record<string, boolean>>({}); // id - isSelected
 	let onSubmit: () => void = $state(() => {});
 	export function open(
-		selectedResultIds: string[],
+		selectedResults: ResultIdWithName[],
 		setSelected: (selected: ResultIdWithName[]) => void
 	) {
 		errs = [];
 
+		const selectedResultIds = selectedResults.map((r) => r.id);
+
 		function applySelectedIds() {
+			if (!allResults) return;
+
 			const selectedMap: Record<string, boolean> = {};
-			for (const result of allResults!) {
+			for (const result of allResults) {
 				selectedMap[result.id] = selectedResultIds.includes(result.id);
 			}
 			resultsWithIsSelected = selectedMap;
 		}
+		dialog.open();
 
-		if (allResults === null) {
+		const needsFetching = () => {
+			if (allResults === null) {
+				return true;
+			}
+			const allIds = new Set(allResults.map((r) => r.id));
+			return selectedResultIds.some((id) => !allIds.has(id));
+		};
+
+		if (needsFetching()) {
 			fetchResultNames().then(() => {
 				if (allResults !== null) {
 					applySelectedIds();
@@ -36,18 +52,19 @@
 		} else {
 			applySelectedIds();
 		}
+
 		onSubmit = () => {
 			const selected = allResults!.filter((result) => resultsWithIsSelected[result.id]);
 			setSelected(selected);
 		};
-		dialog.open();
 	}
 
 	async function fetchResultNames() {
 		isLoading = true;
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
 			results: ResultIdWithName[];
-		}>(`/vokis/${vokiId}/results/names`, { method: 'GET' });
+		}>(`/vokis/${vokiId}/results/ids-names`, { method: 'GET' });
+
 		if (response.isSuccess) {
 			allResults = response.data.results;
 		} else {
@@ -65,25 +82,74 @@
 	{#if isLoading}
 		<div class="loader">
 			<CubesLoader sizeRem={5} />
+			<p>Loading...</p>
 		</div>
 	{:else if allResults === null}
-		{#if errs.length > 0}
-			<DefaultErrBlock errList={errs} />
-		{:else}
-			<div class="error">
+		<div class="error">
+			<h1>Error during fetching results</h1>
+			{#if errs.length > 0}
+				<DefaultErrBlock errList={errs} />
+			{:else}
 				<h1>Something went wrong during fetching voki results</h1>
 				<p>Please try again later</p>
-			</div>
-		{/if}
+			{/if}
+			<PrimaryButton onclick={() => fetchResultNames()}>Refetch</PrimaryButton>
+		</div>
+	{:else if allResults.length === 0}
+		<ListEmptyMessage
+			messageText="This voki has no results"
+			btnText="Go to results page"
+			onBtnClick={() => {
+				goto(`/voki-creation/general/${vokiId}/results`);
+			}}
+			className="no-results"
+		/>
+		<PrimaryButton onclick={() => fetchResultNames()}>Refetch</PrimaryButton>
 	{:else}
 		<div class="results">
 			{#each allResults as result}
 				<div class="result">
-					<input type="checkbox" bind:value={resultsWithIsSelected[result.id]} />
-					<p>{result}</p>
+					<input type="checkbox" bind:checked={resultsWithIsSelected[result.id]} />
+					<p>{result.name}</p>
 				</div>
 			{/each}
 		</div>
 		<button class="submit-btn" onclick={onSubmit}>Submit</button>
 	{/if}
 </DialogWithCloseButton>
+
+<style>
+	:global(#general-voki-answer-related-results-selecting-dialog .dialog-content) {
+		width: 50rem;
+		height: 30rem;
+	}
+
+	.loader {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.loader p {
+		font-size: 2rem;
+		color: var(--secondary-foreground);
+		font-weight: 520;
+		letter-spacing: 1.5px;
+	}
+	.error {
+		margin: auto auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+	}
+	.error > :global(.primary-btn) {
+		margin-top: 1rem;
+	}
+	:global(#general-voki-answer-related-results-selecting-dialog .no-results) {
+		margin: auto auto;
+	}
+</style>

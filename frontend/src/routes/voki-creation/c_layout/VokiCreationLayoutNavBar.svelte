@@ -32,11 +32,12 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		padding: 0.25rem 1.5rem;
+		gap: 0.375rem;
+		padding: 0.25rem 1.25rem;
 		border-radius: 2rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		font-size: 1.25rem;
+		font-size: 1.125rem;
 		font-weight: 450;
 	}
 
@@ -46,11 +47,7 @@
 	}
 
 	.nav-bar a :global(svg) {
-		height: 1.5rem;
-		margin-right: 0.5rem;
-	}
-
-	.nav-bar a :global(svg path) {
+		height: 1.375rem;
 		stroke-width: 2;
 	}
 </style>

@@ -41,18 +41,20 @@
 
 <style>
 	:global(dialog > .dialog-content) {
-		padding: 2rem;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		padding: 2rem;
 	}
+
 	.subheading {
-		padding: 0rem 0 3rem 0;
+		padding: 0 0 3rem;
 		color: var(--text);
 		font-size: 1.75rem;
 		font-weight: 550;
 		text-align: center;
 	}
+
 	.dialog-close-btn {
 		position: absolute;
 		top: 0.75rem;

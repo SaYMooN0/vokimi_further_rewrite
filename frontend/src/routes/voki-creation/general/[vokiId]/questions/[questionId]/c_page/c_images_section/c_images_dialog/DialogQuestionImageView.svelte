@@ -17,45 +17,49 @@
 <style>
 	.img-view {
 		position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 		width: fit-content;
 		height: fit-content;
 		border: 0.25rem solid var(--muted);
 		border-radius: 1rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
 	}
+
 	.img-view > img {
+		z-index: 1;
 		max-width: 14rem;
 		max-height: 18rem;
-		object-fit: contain;
-		z-index: 1;
 		border-radius: 0.75rem;
+		object-fit: contain;
 	}
 
 	.remove-img-btn {
-		z-index: 2;
 		position: absolute;
-		right: 0;
 		top: 0;
-		transform: translate(40%, -40%);
-		padding: 0.25rem;
-		border-radius: 50%;
-		background-color: var(--secondary-foreground);
-		cursor: pointer;
-		outline: none;
-		border: none;
+		right: 0;
+		z-index: 2;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		padding: 0.25rem;
+		border: none;
+		border-radius: 50%;
+		background-color: var(--secondary-foreground);
 		transition: opacity  0.08s ease;
+		transform: translate(40%, -40%);
+		cursor: pointer;
+		outline: none;
 	}
+
 	.img-view:has(img:hover) .remove-img-btn {
 		opacity: 0.3;
 	}
+
 	.remove-img-btn:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.remove-img-btn > svg {
 		width: 1rem;
 		height: 1rem;

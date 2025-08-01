@@ -68,22 +68,24 @@
 
 <style>
 	.no-images {
-		border: 0.125rem dashed var(--muted);
-		border-radius: 1rem;
-		width: 36rem;
-		height: 16rem;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		width: 36rem;
+		height: 16rem;
+		border: 0.125rem dashed var(--muted);
+		border-radius: 1rem;
 		text-align: center;
-		cursor: pointer;
 		transition: all 0.12s ease-in;
+		cursor: pointer;
 	}
+
 	.no-images.dragging:not(.loading) {
 		border-color: var(--primary);
 		background-color: var(--secondary);
 	}
+
 	.loading-container {
 		animation: fade-in 0.06s ease-in-out forwards;
 	}
@@ -100,19 +102,19 @@
 
 	.upload-button {
 		display: inline-flex;
-		width: fit-content;
 		align-items: center;
 		gap: 0.5rem;
-		margin-top: 1rem;
+		width: fit-content;
 		padding: 0.375rem 1.25rem;
+		margin-top: 1rem;
+		border-radius: 0.375rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-		border-radius: 0.375rem;
-		cursor: pointer;
-		font-weight: 450;
-		transition: inherit;
 		font-size: 1.125rem;
+		font-weight: 450;
 		letter-spacing: 0.25px;
+		transition: inherit;
+		cursor: pointer;
 	}
 
 	.upload-button svg {
@@ -125,23 +127,27 @@
 	.upload-button:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.upload-button.dragging {
 		background-color: var(--primary-hov);
 		transform: scale(1.06);
 	}
+
 	h1 {
 		margin-bottom: 0.5rem;
+		color: var(--text);
 		font-size: 1.375rem;
 		font-weight: 700;
-		color: var(--text);
 		transition: inherit;
 	}
+
 	.no-images.dragging h1 {
 		letter-spacing: 0.5px;
 	}
+
 	p {
+		margin-bottom: 1rem;
 		color: var(--secondary-foreground);
 		font-weight: 440;
-		margin-bottom: 1rem;
 	}
 </style>

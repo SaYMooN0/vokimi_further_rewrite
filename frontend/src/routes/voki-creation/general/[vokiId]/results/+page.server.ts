@@ -1,5 +1,6 @@
 import { ApiVokiCreationGeneral } from "$lib/ts/backend-communication/voki-creation-backend-service";
 import type { ServerLoad } from "@sveltejs/kit";
+import type { ResultOverViewData } from "./types";
 
 export const load: ServerLoad = async ({ params, fetch }) => {
     const response = await ApiVokiCreationGeneral.serverFetchJsonResponse<{
@@ -10,9 +11,3 @@ export const load: ServerLoad = async ({ params, fetch }) => {
     return { ...response, vokiId: params.vokiId };
 }
 
-type ResultOverViewData = {
-    id: string;
-    name: string;
-    text: string;
-    image: string | null;
-};
