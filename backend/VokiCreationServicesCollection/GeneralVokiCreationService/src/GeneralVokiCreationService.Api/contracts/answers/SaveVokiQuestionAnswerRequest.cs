@@ -1,12 +1,10 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
-using SharedKernel.common.vokis;
 
 namespace GeneralVokiCreationService.Api.contracts.answers;
 
-public class AddNewAnswerToVokiQuestionRequest : IRequestWithValidationNeeded
+public class SaveVokiQuestionAnswerRequest : IRequestWithValidationNeeded
 {
     public VokiAnswerTypeDataDto AnswerData { get; init; }
-    public GeneralVokiAnswerType AnswersType { get; init; }
     public string[] RelateResultIds { get; init; }
     private const int MaxRelatedResultsCount = 120;
 
@@ -19,7 +17,7 @@ public class AddNewAnswerToVokiQuestionRequest : IRequestWithValidationNeeded
             return ErrFactory.NoValue.Common($"{nameof(AnswerData)} is empty");
         }
 
-        var parseRes = AnswerData.ParseToAnswerData(AnswersType);
+        var parseRes = AnswerData.ParseToAnswerData();
         if (parseRes.IsErr(out var err)) {
             return err;
         }

@@ -25,8 +25,9 @@ export type QuestionFullInfo = {
 }
 export type QuestionAnswerData = {
     id: string;
-    orderInQuestion: number;
+    order: number;
     typeData: GeneralVokiAnswerTypeData;
+    relatedResultIds: string[]
 }
 export type ResultIdWithName = {
     id: string;

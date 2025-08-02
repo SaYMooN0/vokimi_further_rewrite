@@ -93,16 +93,38 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         }
 
         var creationRes = VokiQuestionAnswer.CreateNew(
-            answerData,
-            (ushort)_answers.Count,
-            relatedResultIds
+            answerData, (ushort)_answers.Count, relatedResultIds
         );
+
         if (creationRes.IsErr(out var err)) {
             return err;
         }
 
         var answer = creationRes.AsSuccess();
         _answers.Add(answer);
+        return answer;
+    }
+
+    public ErrOr<VokiQuestionAnswer> UpdateAnswer(
+        GeneralVokiAnswerId answerId,
+        BaseVokiAnswerTypeData newAnswerData,
+        ImmutableHashSet<GeneralVokiResultId> newRelatedResultIds
+    ) {
+        if (newAnswerData.MatchingEnum != this.AnswersType) {
+            return ErrFactory.Conflict(
+                "Given answer type does not correspond with the question answers type",
+                $"Answers data type: {newAnswerData.MatchingEnum}. Question answers type: {this.AnswersType}"
+            );
+        }
+        VokiQuestionAnswer? answer = _answers.FirstOrDefault(a => a.Id == answerId);
+        if (answer is null) {
+            return ErrFactory.NotFound.Common("Cannot add update question answer because answer doesn't exist");
+        }
+
+        var updateRes = answer.Update(newAnswerData, newRelatedResultIds);
+        if (updateRes.IsErr(out var err)) {
+            return err;
+        }
         return answer;
     }
 }

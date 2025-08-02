@@ -1,6 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
-namespace GeneralVokiCreationService.Api.contracts;
+namespace GeneralVokiCreationService.Api.contracts.voki;
 
 public class UpdateVokiTakingProcessSettingsRequest : IRequestWithValidationNeeded
 {

@@ -1,62 +1,93 @@
 <script lang="ts">
 	import FieldNotSetLabel from '../../../../../../../c_shared/FieldNotSetLabel.svelte';
-	import type { ResultIdWithName } from '../../../../types';
 
 	let {
-		results,
+		relatedResultIds,
 		openRelatedResultsSelectingDialog
 	}: {
-		results: ResultIdWithName[];
+		relatedResultIds: string[];
 		openRelatedResultsSelectingDialog: () => void;
 	} = $props<{
-		results: ResultIdWithName[];
+		relatedResultIds: string[];
 		openRelatedResultsSelectingDialog: () => void;
 	}>();
 	const maxResultsCount = 10;
 </script>
 
-<div class="results">
-	{#if results.length === 0}
-		<FieldNotSetLabel text="No related results" className="no-results" />
+<div class="related-results">
+	{#if relatedResultIds.length === 0}
+		<FieldNotSetLabel text="related results" className="no-related-results" />
 	{:else}
-		{#each results as result}
+		<label class="related-results-label">Related relatedResultIds ({relatedResultIds.length})</label>
+		{#each relatedResultIds as result}
 			<div class="result">
-				{result}
+				<label>
+					{result}
+				</label>
+				<svg class="remove-result-btn"><use href="#common-minus-icon" /></svg>
 			</div>
 		{/each}
 	{/if}
-	{#if results.length < maxResultsCount}
+	{#if relatedResultIds.length < maxResultsCount}
 		<button class="add-btn" onclick={() => openRelatedResultsSelectingDialog()}>
 			<svg><use href="#common-plus-icon" /></svg>
-			related results
+			related results 
 		</button>
 	{/if}
 </div>
 
 <style>
-	.results {
+	.related-results {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 0.375rem;
-	}
-	.results:has(:global(.no-results)) {
-		align-content: center;
 		height: 100%;
 		justify-content: center;
 	}
-	.results > :global(.no-results) {
+	.related-results > :global(.no-related-results) {
 		margin: 0;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 		font-weight: 450;
 	}
-
+	.related-results-label {
+		color: var(--secondary-foreground);
+		font-size: 1.125rem;
+		font-weight: 450;
+		text-decoration: underline;
+		text-decoration-thickness: 0.125rem;
+		margin-bottom: 0.25rem;
+	}
 	.result {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		width:100%;
+		gap: 0.25rem;
+		padding: 0 0.25rem;
+	}
+	.result > label {
 		text-overflow: ellipsis;
 		overflow: hidden;
-		display: flex;
+		white-space: nowrap;
+		color: var(--text);
+		font-size: 1.25rem;
+		font-weight: 450;
+	}
+	.remove-result-btn {
+		width: 1.375rem;
+		height: 1.375rem;
+		stroke-width: 3;
+		cursor: pointer;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+		border-radius: 0.25rem;
+		padding: 0.125rem;
+	}
+	.remove-result-btn:hover {
+		background-color: var(--accent);
+		color: var(--accent-foreground);
 	}
 	.add-btn {
 		margin-top: 0.25rem;

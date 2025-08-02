@@ -80,10 +80,6 @@
 		letter-spacing: 2px;
 	}
 
-	.content {
-		scrollbar-gutter: stable;
-	}
-
 	.fade-in-animation {
 		animation: fade-in 0.06s ease-in-out forwards;
 	}

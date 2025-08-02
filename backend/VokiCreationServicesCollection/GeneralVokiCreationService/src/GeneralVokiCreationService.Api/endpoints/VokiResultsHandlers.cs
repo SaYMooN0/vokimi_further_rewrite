@@ -1,5 +1,4 @@
-﻿using GeneralVokiCreationService.Api.contracts;
-using GeneralVokiCreationService.Api.contracts.results;
+﻿using GeneralVokiCreationService.Api.contracts.results;
 using GeneralVokiCreationService.Application.draft_vokis.commands.results;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;

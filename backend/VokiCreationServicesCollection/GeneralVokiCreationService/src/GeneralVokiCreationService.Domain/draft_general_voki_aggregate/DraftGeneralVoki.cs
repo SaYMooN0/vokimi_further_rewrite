@@ -143,37 +143,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return questionToUpdate;
     }
 
-    public ErrOr<VokiQuestionAnswer> AddNewAnswerToQuestion(
-        GeneralVokiQuestionId questionId,
-        BaseVokiAnswerTypeData answerData,
-        ImmutableHashSet<GeneralVokiResultId> relatedResultIds
-    ) {
-        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
-        if (question is null) {
-            return ErrFactory.NotFound.Common("Cannot add new answer to question because question not fount");
-        }
-
-        if (answerData is IVokiAnswerTypeDataWithStorageKey keyWithCheckNeeded) {
-            if (!keyWithCheckNeeded.IsForCorrectVokiQuestion(Id, questionId)) {
-                return ErrFactory.Conflict("Answer data does not belong to this question");
-            }
-        }
-
-        var existingResults = _results.Select(r => r.Id).ToHashSet();
-        var incorrectRelatedResultIds = relatedResultIds
-            .Where(r => !existingResults.Contains(r))
-            .Select(id => id.ToString())
-            .ToArray();
-        if (incorrectRelatedResultIds.Length > 0) {
-            return ErrFactory.Conflict(
-                "Some of the provided results specified as related does not exist in this voki",
-                $"Voki id: {Id}, incorrect result ids: {string.Join(", ", incorrectRelatedResultIds)}"
-            );
-        }
-
-        var res = question.AddNewAnswer(answerData, relatedResultIds);
-        return res;
-    }
 
     public ErrOr<VokiResult> ResultWithId(GeneralVokiResultId resultId) {
         VokiResult? requestedResult = _results.FirstOrDefault(q => q.Id == resultId);
@@ -265,5 +234,71 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         return resultToUpdate;
+    }
+
+    private ErrOrNothing CheckIfAnswerDataBelongs(GeneralVokiQuestionId questionId, BaseVokiAnswerTypeData answerData) {
+        if (answerData is IVokiAnswerTypeDataWithStorageKey keyWithCheckNeeded) {
+            if (!keyWithCheckNeeded.IsForCorrectVokiQuestion(Id, questionId)) {
+                return ErrFactory.Conflict("Answer data does not belong to this question");
+            }
+        }
+
+        return ErrOrNothing.Nothing;
+    }
+
+    private ErrOrNothing CheckIfResultsExist(ImmutableHashSet<GeneralVokiResultId> relatedResultIds) {
+        var existingResults = _results.Select(r => r.Id).ToHashSet();
+        var incorrectRelatedResultIds = relatedResultIds
+            .Where(r => !existingResults.Contains(r))
+            .Select(id => id.ToString())
+            .ToArray();
+        if (incorrectRelatedResultIds.Length > 0) {
+            return ErrFactory.Conflict(
+                "Some of the provided results specified as related does not exist in this voki",
+                $"Voki id: {Id}, incorrect result ids: {string.Join(", ", incorrectRelatedResultIds)}"
+            );
+        }
+
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOr<VokiQuestionAnswer> AddNewAnswerToQuestion(
+        GeneralVokiQuestionId questionId,
+        BaseVokiAnswerTypeData answerData,
+        ImmutableHashSet<GeneralVokiResultId> relatedResultIds
+    ) {
+        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return ErrFactory.NotFound.Common("Cannot add new answer to question because question not fount");
+        }
+
+        if (
+            CheckIfAnswerDataBelongs(questionId, answerData).IsErr(out var err)
+            || CheckIfResultsExist(relatedResultIds).IsErr(out err)
+        ) {
+            return err;
+        }
+
+        var res = question.AddNewAnswer(answerData, relatedResultIds);
+        return res;
+    }
+
+    public ErrOr<VokiQuestionAnswer> UpdateQuestionAnswer(
+        GeneralVokiQuestionId questionId, GeneralVokiAnswerId answerId,
+        BaseVokiAnswerTypeData newAnswerTypeData, ImmutableHashSet<GeneralVokiResultId> newRelatedResultIds
+    ) {
+        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return ErrFactory.NotFound.Common("Cannot add update question answer because question doesn't exist");
+        }
+
+        if (
+            CheckIfAnswerDataBelongs(questionId, newAnswerTypeData).IsErr(out var err)
+            || CheckIfResultsExist(newRelatedResultIds).IsErr(out err)
+        ) {
+            return err;
+        }
+
+        return question.UpdateAnswer(answerId, newAnswerTypeData, newRelatedResultIds);
     }
 }

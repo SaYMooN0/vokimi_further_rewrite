@@ -1,6 +1,6 @@
 ﻿using SharedKernel.common.vokis;
 
-namespace GeneralVokiCreationService.Api.contracts.@base;
+namespace GeneralVokiCreationService.Api.contracts.voki;
 
 public class UpdateVokiNameRequest : IRequestWithValidationNeeded
 {

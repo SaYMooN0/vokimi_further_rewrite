@@ -1,5 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters;
+using GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters.questions;
 using InfrastructureShared.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

@@ -16,13 +16,8 @@
 	let isLoading = $state(false);
 	let resultsWithIsSelected = $state<Record<string, boolean>>({}); // id - isSelected
 	let onSubmit: () => void = $state(() => {});
-	export function open(
-		selectedResults: ResultIdWithName[],
-		setSelected: (selected: ResultIdWithName[]) => void
-	) {
+	export function open(selectedResultIds: string[], setSelected: (selected: string[]) => void) {
 		errs = [];
-
-		const selectedResultIds = selectedResults.map((r) => r.id);
 
 		function applySelectedIds() {
 			if (!allResults) return;
@@ -35,6 +30,7 @@
 		}
 		dialog.open();
 
+		//check if all selected Ids are presented in allResults
 		const needsFetching = () => {
 			if (allResults === null) {
 				return true;
@@ -54,8 +50,7 @@
 		}
 
 		onSubmit = () => {
-			const selected = allResults!.filter((result) => resultsWithIsSelected[result.id]);
-			setSelected(selected);
+			setSelected(Object.keys(resultsWithIsSelected).filter((id) => resultsWithIsSelected[id]));
 		};
 	}
 

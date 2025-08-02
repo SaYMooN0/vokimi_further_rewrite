@@ -1,6 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
-namespace GeneralVokiCreationService.Api.contracts.@base;
+namespace GeneralVokiCreationService.Api.contracts.voki;
 
 public record class VokiMainInfoResponse(
     string Name,

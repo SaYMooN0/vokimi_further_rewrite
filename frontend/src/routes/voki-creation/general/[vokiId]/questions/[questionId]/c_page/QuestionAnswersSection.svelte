@@ -30,19 +30,19 @@
 	function createEmptyAnswer(type: GeneralVokiAnswerType): GeneralVokiAnswerTypeData {
 		switch (type) {
 			case 'TextOnly':
-				return { answerType: 'TextOnly', text: '' };
+				return { type: 'TextOnly', relatedResultIds: [], text: '' };
 			case 'ImageOnly':
-				return { answerType: 'ImageOnly', image: '' };
+				return { type: 'ImageOnly', relatedResultIds: [], image: '' };
 			case 'ImageAndText':
-				return { answerType: 'ImageAndText', image: '', text: '' };
+				return { type: 'ImageAndText', relatedResultIds: [], image: '', text: '' };
 			case 'ColorOnly':
-				return { answerType: 'ColorOnly', color: '' };
+				return { type: 'ColorOnly', relatedResultIds: [], color: '' };
 			case 'ColorAndText':
-				return { answerType: 'ColorAndText', color: '', text: '' };
+				return { type: 'ColorAndText', relatedResultIds: [], color: '', text: '' };
 			case 'AudioOnly':
-				return { answerType: 'AudioOnly', audio: '' };
+				return { type: 'AudioOnly', relatedResultIds: [], audio: '' };
 			case 'AudioAndText':
-				return { answerType: 'AudioAndText', audio: '', text: '' };
+				return { type: 'AudioAndText', relatedResultIds: [], audio: '', text: '' };
 		}
 	}
 
@@ -51,7 +51,7 @@
 	}
 	function addNewSavedAnswer(answer: QuestionAnswerData) {
 		answers.push(answer);
-		answers.sort((a, b) => a.orderInQuestion - b.orderInQuestion);
+		answers.sort((a, b) => a.order - b.order);
 	}
 </script>
 
@@ -79,13 +79,13 @@
 			<GeneralVokiCreationNewAnswerDisplay
 				{vokiId}
 				{questionId}
-				answerData={unsavedAnswer}
+				answer={unsavedAnswer}
 				deleteAnswer={() => {
 					unsavedAnswers = unsavedAnswers.filter((a) => a != unsavedAnswer);
 				}}
 				{addNewSavedAnswer}
-				openRelatedResultsSelectingDialog={(alreadySelected, setSelected) =>
-					resultsSelectingDialog.open(alreadySelected, setSelected)}
+				openRelatedResultsSelectingDialog={(selectedIds, setSelected) =>
+					resultsSelectingDialog.open(selectedIds, setSelected)}
 			/>
 		{/each}
 	{/if}
@@ -108,7 +108,6 @@
 		background-color: var(--muted);
 		align-self: center;
 		margin: 2rem 0;
-
 	}
 
 	.new-answer-sep label {

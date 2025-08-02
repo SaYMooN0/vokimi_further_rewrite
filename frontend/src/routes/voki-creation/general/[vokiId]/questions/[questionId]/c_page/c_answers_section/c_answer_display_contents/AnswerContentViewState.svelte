@@ -14,20 +14,20 @@
 	}>();
 </script>
 
-<p>"type:" {answer.answerType}</p>
-{#if answer.answerType === 'TextOnly'}
+<p>"type:" {answer.type}</p>
+{#if answer.type === 'TextOnly'}
 	<TextOnlyAnswerView {answer} />
-{:else if answer.answerType === 'ImageOnly'}
+{:else if answer.type === 'ImageOnly'}
 	<ImageOnlyAnswerView {answer} />
-{:else if answer.answerType === 'ImageAndText'}
+{:else if answer.type === 'ImageAndText'}
 	<ImageAndTextAnswerView {answer} />
-{:else if answer.answerType === 'ColorOnly'}
+{:else if answer.type === 'ColorOnly'}
 	<ColorOnlyAnswerView {answer} />
-{:else if answer.answerType === 'ColorAndText'}
+{:else if answer.type === 'ColorAndText'}
 	<ColorAndTextAnswerView {answer} />
-{:else if answer.answerType === 'AudioOnly'}
+{:else if answer.type === 'AudioOnly'}
 	<AudioOnlyAnswerView {answer} />
-{:else if answer.answerType === 'AudioAndText'}
+{:else if answer.type === 'AudioAndText'}
 	<AudioAndTextAnswerView {answer} />
 {:else}
 	<IncorrectAnswerTypeMessage {answer} />

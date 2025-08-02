@@ -1,5 +1,5 @@
 ﻿using GeneralVokiCreationService.Api.contracts;
-using GeneralVokiCreationService.Api.contracts.@base;
+using GeneralVokiCreationService.Api.contracts.voki;
 using GeneralVokiCreationService.Application.draft_vokis.commands;
 using GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 using GeneralVokiCreationService.Application.draft_vokis.queries;

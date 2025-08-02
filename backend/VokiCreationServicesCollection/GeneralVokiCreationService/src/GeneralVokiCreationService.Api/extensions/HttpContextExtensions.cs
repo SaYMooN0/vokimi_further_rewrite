@@ -16,7 +16,8 @@ public static class HttpContextExtensions
         }
 
         return new GeneralVokiQuestionId(guid);
-    } 
+    }
+
     public static GeneralVokiResultId GetResultIdFromRoute(this HttpContext context) {
         var idString = context.Request.RouteValues["resultId"]?.ToString() ?? "";
         if (!Guid.TryParse(idString, out var guid)) {
@@ -29,5 +30,19 @@ public static class HttpContextExtensions
         }
 
         return new GeneralVokiResultId(guid);
+    }
+
+    public static GeneralVokiAnswerId GetAnswerIdFromRoute(this HttpContext context) {
+        var idString = context.Request.RouteValues["answerId"]?.ToString() ?? "";
+        if (!Guid.TryParse(idString, out var guid)) {
+            UnexpectedBehaviourException.ThrowErr(ErrFactory.IncorrectFormat(
+                    "Invalid result",
+                    $"'{idString}' is not a valid ${nameof(GeneralVokiAnswerId)}"
+                ),
+                userMessage: "Invalid answer id. Couldn't parse answer id from route"
+            );
+        }
+
+        return new GeneralVokiAnswerId(guid);
     }
 }

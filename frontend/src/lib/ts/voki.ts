@@ -18,11 +18,11 @@ export type GeneralVokiAnswerTypeData =
     | AnswerDataAudioOnly
     | AnswerDataAudioAndText;
 
-export type AnswerDataTextOnly = { answerType: 'TextOnly', text: string };
-export type AnswerDataImageOnly = { answerType: 'ImageOnly', image: string };
-export type AnswerDataImageAndText = { answerType: 'ImageAndText', image: string; text: string };
-export type AnswerDataColorOnly = { answerType: 'ColorOnly', color: string };
-export type AnswerDataColorAndText = { answerType: 'ColorAndText', color: string; text: string };
-export type AnswerDataAudioOnly = { answerType: 'AudioOnly', audio: string };
-export type AnswerDataAudioAndText = { answerType: 'AudioAndText', audio: string; text: string };
+export type AnswerDataTextOnly = { type: 'TextOnly'; relatedResultIds: string[]; text: string; };
+export type AnswerDataImageOnly = { type: 'ImageOnly'; relatedResultIds: string[]; image: string };
+export type AnswerDataImageAndText = { type: 'ImageAndText'; relatedResultIds: string[]; image: string; text: string };
+export type AnswerDataColorOnly = { type: 'ColorOnly'; relatedResultIds: string[]; color: string };
+export type AnswerDataColorAndText = { type: 'ColorAndText'; relatedResultIds: string[]; color: string; text: string };
+export type AnswerDataAudioOnly = { type: 'AudioOnly'; relatedResultIds: string[]; audio: string };
+export type AnswerDataAudioAndText = { type: 'AudioAndText'; relatedResultIds: string[]; audio: string; text: string };
 

@@ -15,11 +15,8 @@ public class VokiQuestionAnswer : Entity<GeneralVokiAnswerId>
         ushort orderInQuestion,
         ImmutableHashSet<GeneralVokiResultId> relatedResultIds
     ) {
-        if (relatedResultIds.Count > MaxRelatedResultsForAnswerCount) {
-            return ErrFactory.LimitExceeded(
-                "Too many related results for answer selected",
-                $"Maximum allowes count: {MaxRelatedResultsForAnswerCount}. Selected : {relatedResultIds.Count}"
-            );
+        if (CheckRelatedResultsForErr(relatedResultIds).IsErr(out var err)) {
+            return err;
         }
 
         return new VokiQuestionAnswer() {
@@ -28,5 +25,31 @@ public class VokiQuestionAnswer : Entity<GeneralVokiAnswerId>
             TypeData = typeData,
             RelatedResultIds = relatedResultIds
         };
+    }
+
+    private static ErrOrNothing CheckRelatedResultsForErr(ImmutableHashSet<GeneralVokiResultId> relatedResultIds) =>
+        relatedResultIds.Count > MaxRelatedResultsForAnswerCount
+            ? ErrFactory.LimitExceeded(
+                "Too many related results for answer selected",
+                $"Maximum allowed count: {MaxRelatedResultsForAnswerCount}. Selected : {relatedResultIds.Count}"
+            )
+            : ErrOrNothing.Nothing;
+
+
+    public ErrOrNothing Update(
+        BaseVokiAnswerTypeData newAnswerData,
+        ImmutableHashSet<GeneralVokiResultId> newRelatedResultIds
+    ) {
+        if (TypeData.MatchingEnum != newAnswerData.MatchingEnum) {
+            return ErrFactory.Conflict("Cannot update answer because new data type does not correspond with current");
+        }
+
+        if (CheckRelatedResultsForErr(newRelatedResultIds).IsErr(out var err)) {
+            return err;
+        }
+
+        TypeData = newAnswerData;
+        RelatedResultIds = newRelatedResultIds;
+        return ErrOrNothing.Nothing;
     }
 }

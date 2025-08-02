@@ -88,13 +88,6 @@
 </DialogWithCloseButton>
 
 <style>
-	.subheading {
-		margin: 0;
-		margin-bottom: 1rem;
-		font-size: 1.75rem;
-		font-weight: 650;
-		text-align: center;
-	}
 
 	:global(#voki-creation-question-images-dialog .dialog-content) {
 		display: flex;

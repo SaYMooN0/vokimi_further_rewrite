@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VokimiStorageKeysLib.draft_general_voki.question_image;
 
-namespace GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters;
+namespace GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters.questions;
 
 public class VokiQuestionImagesSetConverter : ValueConverter<VokiQuestionImagesSet, string[]>
 {

@@ -6,6 +6,7 @@ using VokimiStorageKeysLib.draft_general_voki.answer_image;
 namespace GeneralVokiCreationService.Api.contracts;
 
 public record VokiAnswerTypeDataDto(
+    GeneralVokiAnswerType Type,
     string? Text,
     string? Image,
     string? Audio,
@@ -34,7 +35,7 @@ public record VokiAnswerTypeDataDto(
         ? ErrFactory.NoValue.Common("'Color' value is not provided")
         : HexColor.Create(Color);
 
-    public ErrOr<BaseVokiAnswerTypeData> ParseToAnswerData(GeneralVokiAnswerType type) => type.Match(
+    public ErrOr<BaseVokiAnswerTypeData> ParseToAnswerData() => Type.Match(
         textOnly: () => GetText()
             .Bind(BaseVokiAnswerTypeData.TextOnly.CreateNew)
             .Bind<BaseVokiAnswerTypeData>(d => d),
@@ -94,12 +95,54 @@ public record VokiAnswerTypeDataDto(
 
     public static VokiAnswerTypeDataDto FromAnswerData(BaseVokiAnswerTypeData data) =>
         data.Match<VokiAnswerTypeDataDto>(
-            textOnly: d => new(Text: d.Text, Image: null, Audio: null, Color: null),
-            imageOnly: d => new(Text: null, Image: d.Image.ToString(), Audio: null, Color: null),
-            imageAndText: d => new(Text: d.Text, Image: d.Image.ToString(), Audio: null, Color: null),
-            colorOnly: d => new(Text: null, Image: null, Audio: null, Color: d.Color.ToString()),
-            colorAndText: d => new(Text: d.Text, Image: null, Audio: null, Color: d.Color.ToString()),
-            audioOnly: d => new(Text: null, Image: null, Audio: d.Audio.ToString(), Color: null),
-            audioAndText: d => new(Text: d.Text, Image: null, Audio: d.Audio.ToString(), Color: null)
+            textOnly: d => new(
+                GeneralVokiAnswerType.TextOnly,
+                Text: d.Text,
+                Image: null,
+                Audio: null,
+                Color: null
+            ),
+            imageOnly: d => new(
+                GeneralVokiAnswerType.ImageOnly,
+                Text: null,
+                Image: d.Image.ToString(),
+                Audio: null,
+                Color: null
+            ),
+            imageAndText: d => new(
+                GeneralVokiAnswerType.ImageAndText,
+                Text: d.Text,
+                Image: d.Image.ToString(),
+                Audio: null,
+                Color: null
+            ),
+            colorOnly: d => new(
+                GeneralVokiAnswerType.ColorOnly,
+                Text: null,
+                Image: null,
+                Audio: null,
+                Color: d.Color.ToString()
+            ),
+            colorAndText: d => new(
+                GeneralVokiAnswerType.ColorAndText,
+                Text: d.Text,
+                Image: null,
+                Audio: null,
+                Color: d.Color.ToString()
+            ),
+            audioOnly: d => new(
+                GeneralVokiAnswerType.AudioOnly,
+                Text: null,
+                Image: null,
+                Audio: d.Audio.ToString(),
+                Color: null
+            ),
+            audioAndText: d => new(
+                GeneralVokiAnswerType.AudioAndText,
+                Text: d.Text,
+                Image: null,
+                Audio: d.Audio.ToString(),
+                Color: null
+            )
         );
 }

@@ -11,36 +11,34 @@
 	interface Props {
 		vokiId: string;
 		questionId: string;
-		answerData: GeneralVokiAnswerTypeData;
+		answer: GeneralVokiAnswerTypeData;
 		deleteAnswer: () => void;
 		addNewSavedAnswer: (answer: QuestionAnswerData) => void;
 		openRelatedResultsSelectingDialog: (
-			selectedResult: ResultIdWithName[],
-			setSelected: (selected: ResultIdWithName[]) => void
+			selectedResultIds: string[],
+			setSelected: (selected: string[]) => void
 		) => void;
 	}
 	let {
 		vokiId,
 		questionId,
-		answerData,
+		answer,
 		deleteAnswer,
 		addNewSavedAnswer,
 		openRelatedResultsSelectingDialog
 	}: Props = $props();
-	let relatedResults: ResultIdWithName[] = $state([]);
 	let savingErrs = $state<Err[]>([]);
 	async function saveAnswer() {
 		savingErrs = [];
+		const { relatedResultIds, ...answerWithoutRelated } = answer;
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<QuestionAnswerData>(
 			`/vokis/${vokiId}/questions/${questionId}/answers/add-new`,
 			RequestJsonOptions.POST({
-				answersType: answerData.answerType,
-				answerData: answerData,
-				relateResultIds: relatedResults.map((r) => r.id)
+				relatedResultIds,
+				...answerWithoutRelated
 			})
 		);
 		if (response.isSuccess) {
-			console.log(response.data);
 			addNewSavedAnswer(response.data);
 			deleteAnswer();
 		} else {
@@ -48,19 +46,19 @@
 		}
 	}
 	function openRelatedResultsSelectingDialogWithParams() {
-		openRelatedResultsSelectingDialog(relatedResults, (selected: ResultIdWithName[]) => {
-			relatedResults = selected;
+		openRelatedResultsSelectingDialog(answer.relatedResultIds, (selected: string[]) => {
+			answer.relatedResultIds = selected;
 		});
 	}
 </script>
 
 <div class="unsaved-answer">
 	<AnswerRelatedResultsEditingState
-		results={relatedResults}
+		relatedResultIds={answer.relatedResultIds}
 		openRelatedResultsSelectingDialog={openRelatedResultsSelectingDialogWithParams}
 	/>
 	<div class="answer-content-with-actions">
-		<AnswerContentEditingState bind:answer={answerData} />
+		<AnswerContentEditingState bind:answer />
 		{#if savingErrs.length > 0}
 			<DefaultErrBlock errList={savingErrs} />
 		{/if}
@@ -75,8 +73,9 @@
 
 <style>
 	.unsaved-answer {
+		--results-width: 13rem;
 		display: grid;
-		grid-template-columns: 13rem 1fr;
+		grid-template-columns: var(--results-width) 1fr;
 		gap: 0.25rem;
 		width: 100%;
 		padding: 0.5rem 0.75rem;
@@ -96,6 +95,7 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-end;
+		margin-top: auto;
 		gap: 0.5rem;
 		width: 100%;
 	}

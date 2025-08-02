@@ -8,6 +8,7 @@
 	import QuestionAnswersSection from './c_page/QuestionAnswersSection.svelte';
 
 	let { data }: PageProps = $props();
+	let questionAnswers = $state(data.data?.answers.sort((a, b) => a.order - b.order) ?? []);
 </script>
 
 {#if !data.isSuccess}
@@ -33,7 +34,7 @@
 			vokiId={data.vokiId!}
 		/>
 		<QuestionAnswersSection
-			answers={data.data.answers}
+			answers={questionAnswers}
 			questionId={data.questionId!}
 			vokiId={data.vokiId!}
 			answersType={data.data.answersType}

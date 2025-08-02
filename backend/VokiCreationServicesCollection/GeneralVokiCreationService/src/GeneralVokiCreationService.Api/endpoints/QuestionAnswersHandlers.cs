@@ -15,7 +15,7 @@ internal static class QuestionAnswersHandlers
         group.WithGroupAuthenticationRequired();
 
         group.MapPost("/add-new", AddNewAnswerToVokiQuestion)
-            .WithRequestValidation<AddNewAnswerToVokiQuestionRequest>();
+            .WithRequestValidation<SaveVokiQuestionAnswerRequest>();
     }
 
     private static async Task<IResult> AddNewAnswerToVokiQuestion(
@@ -24,7 +24,7 @@ internal static class QuestionAnswersHandlers
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
-        var request = httpContext.GetValidatedRequest<AddNewAnswerToVokiQuestionRequest>();
+        var request = httpContext.GetValidatedRequest<SaveVokiQuestionAnswerRequest>();
 
         AddNewAnswerToVokiQuestionCommand command = new(
             id, questionId, request.ParsedAnswerData, request.ParsedResultIds);

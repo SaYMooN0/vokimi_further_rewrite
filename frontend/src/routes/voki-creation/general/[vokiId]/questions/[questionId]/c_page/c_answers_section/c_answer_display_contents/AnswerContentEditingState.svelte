@@ -14,19 +14,19 @@
 	}>();
 </script>
 
-{#if answer.answerType === 'TextOnly'}
+{#if answer.type === 'TextOnly'}
 	<TextOnlyAnswerEditing {answer} />
-{:else if answer.answerType === 'ImageOnly'}
+{:else if answer.type === 'ImageOnly'}
 	<ImageOnlyAnswerEditing {answer} />
-{:else if answer.answerType === 'ImageAndText'}
+{:else if answer.type === 'ImageAndText'}
 	<ImageAndTextAnswerEditing {answer} />
-{:else if answer.answerType === 'ColorOnly'}
+{:else if answer.type === 'ColorOnly'}
 	<ColorOnlyAnswerEditing {answer} />
-{:else if answer.answerType === 'ColorAndText'}
+{:else if answer.type === 'ColorAndText'}
 	<ColorAndTextAnswerEditing {answer} />
-{:else if answer.answerType === 'AudioOnly'}
+{:else if answer.type === 'AudioOnly'}
 	<AudioOnlyAnswerEditing {answer} />
-{:else if answer.answerType === 'AudioAndText'}
+{:else if answer.type === 'AudioAndText'}
 	<AudioAndTextAnswerEditing {answer} />
 {:else}
 	<IncorrectAnswerTypeMessage {answer} />
