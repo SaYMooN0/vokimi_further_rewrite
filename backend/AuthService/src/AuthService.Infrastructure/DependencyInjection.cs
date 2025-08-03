@@ -9,19 +9,26 @@ using AuthService.Infrastructure.persistence.repositories;
 using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
 using MassTransit;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
 
 namespace AuthService.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment env
+    ) {
         return services
             .AddDefaultServices()
-            .AddPersistence(configuration)
+            .AddPersistence(configuration, env)
             .AddAuth(configuration)
             .AddEmailService(configuration)
             .AddFrontendConfig(configuration)
@@ -49,12 +56,15 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddConfiguredMassTransit(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddConfiguredMassTransit(this IServiceCollection services,
+        IConfiguration configuration) {
         var rabbitConfig = configuration.GetSection("MessageBroker");
 
         var host = rabbitConfig["Host"] ?? throw new ArgumentException("MessageBroker:Host is not configured");
-        var username = rabbitConfig["Username"] ?? throw new ArgumentException("MessageBroker:Username is not configured");
-        var password = rabbitConfig["Password"] ?? throw new ArgumentException("MessageBroker:Password is not configured");
+        var username = rabbitConfig["Username"] ??
+                       throw new ArgumentException("MessageBroker:Username is not configured");
+        var password = rabbitConfig["Password"] ??
+                       throw new ArgumentException("MessageBroker:Password is not configured");
         var retryCountStr = rabbitConfig["RetryCount"] ??
                             throw new ArgumentException("MessageBroker:RetryCount is not configured");
 
@@ -81,7 +91,7 @@ public static class DependencyInjection
 
                 var serviceName = configuration["ServiceName"] ??
                                   throw new ArgumentNullException("ServiceName is not provided");
-                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName+":"));
+                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName + ":"));
 
                 cfg.UseMessageRetry(
                     r => { r.Interval(retryCount, TimeSpan.FromSeconds(retryIntervalSeconds)); }
@@ -105,10 +115,28 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddPersistence(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment env
+    ) {
         string dbConnectionString = configuration.GetConnectionString("AuthServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<AuthDbContext>(options => options.UseNpgsql(dbConnectionString));
+
+        services.AddDbContext<AuthDbContext>(options => {
+                options.UseNpgsql(dbConnectionString);
+                if (env.IsDevelopment()) {
+                    options.EnableDetailedErrors();
+                    options.EnableSensitiveDataLogging();
+                    options.ConfigureWarnings(warning => {
+                        warning.Log(
+                            CoreEventId.FirstWithoutOrderByAndFilterWarning,
+                            CoreEventId.RowLimitingOperationWithoutOrderByWarning
+                        );
+                    });
+                }
+            }
+        );
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IUnconfirmedUsersRepository, UnconfirmedUsersRepository>();
@@ -128,7 +156,8 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddFrontendConfig(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection
+        AddFrontendConfig(this IServiceCollection services, IConfiguration configuration) {
         var frontendConfig = configuration.GetSection("FrontendConfig").Get<FrontendConfig>();
         if (frontendConfig is null) {
             throw new Exception("Email service is not configured");

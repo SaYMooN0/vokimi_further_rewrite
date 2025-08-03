@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+﻿using GeneralVokiCreationService.Api.contracts.results;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 namespace GeneralVokiCreationService.Api.contracts.questions;
 

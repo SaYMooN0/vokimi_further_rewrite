@@ -20,7 +20,7 @@
 	{#if data.data.questions.length === 0}
 		<ListEmptyMessage
 			messageText="This voki doesn't have any questions yet"
-			btnText = "Create first question"
+			btnText="Create first question"
 			onBtnClick={() => questionInitializingDialog.open()}
 		/>
 	{:else}

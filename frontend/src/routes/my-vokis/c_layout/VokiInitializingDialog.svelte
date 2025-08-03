@@ -77,12 +77,6 @@
 </DialogWithCloseButton>
 
 <style>
-	:global(#voki-initializing-dialog .dialog-content) {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-	}
-
 	.subheading {
 		width: fit-content;
 		margin: 2.5rem 0 1rem;

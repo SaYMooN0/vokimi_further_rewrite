@@ -4,7 +4,7 @@ public class DraftVokiCoverKey : BaseStorageKey
 {
     protected override string Value { get; }
     public VokiId VokiId { get; }
-    private const string DefaultKeyValue = "/common/default-voki-cover.webp";
+    private const string DefaultKeyValue = "common/default-voki-cover.webp";
 
     public DraftVokiCoverKey(string value) {
         if (value == DefaultKeyValue) {

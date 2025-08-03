@@ -3,10 +3,10 @@
 	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerType } from '$lib/ts/voki';
 	import ListEmptyMessage from '../../../../../c_shared/ListEmptyMessage.svelte';
 	import VokiCreationBasicHeader from '../../../../../c_shared/VokiCreationBasicHeader.svelte';
-	import type { QuestionAnswerData } from '../../types';
+	import { type QuestionAnswerData, createEmptyGeneralVokiAnswerTypeData } from '../types';
 	import AnswerRelatedResultsSelectingDialog from './c_answers_section/AnswerRelatedResultsSelectingDialog.svelte';
-	import GeneralVokiCreationNewAnswerDisplay from './c_answers_section/GeneralVokiCreationNewAnswerDisplay.svelte';
-	import GeneralVokiCreationSavedAnswerDisplay from './c_answers_section/GeneralVokiCreationSavedAnswerDisplay.svelte';
+	import GeneralVokiCreationNewAnswerDisplay from './c_answers_section/c_answer_displays/GeneralVokiCreationNewAnswerDisplay.svelte';
+	import GeneralVokiCreationSavedAnswerDisplay from './c_answers_section/c_answer_displays/GeneralVokiCreationSavedAnswerDisplay.svelte';
 
 	let {
 		questionId,
@@ -27,32 +27,15 @@
 	const maxAnswersForQuestionCount = 60;
 	let unsavedAnswers = $state<GeneralVokiAnswerTypeData[]>([]);
 	let resultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
-	function createEmptyAnswer(type: GeneralVokiAnswerType): GeneralVokiAnswerTypeData {
-		switch (type) {
-			case 'TextOnly':
-				return { type: 'TextOnly', relatedResultIds: [], text: '' };
-			case 'ImageOnly':
-				return { type: 'ImageOnly', relatedResultIds: [], image: '' };
-			case 'ImageAndText':
-				return { type: 'ImageAndText', relatedResultIds: [], image: '', text: '' };
-			case 'ColorOnly':
-				return { type: 'ColorOnly', relatedResultIds: [], color: '' };
-			case 'ColorAndText':
-				return { type: 'ColorAndText', relatedResultIds: [], color: '', text: '' };
-			case 'AudioOnly':
-				return { type: 'AudioOnly', relatedResultIds: [], audio: '' };
-			case 'AudioAndText':
-				return { type: 'AudioAndText', relatedResultIds: [], audio: '', text: '' };
-		}
-	}
 
 	function addNewUnsavedAnswer() {
-		unsavedAnswers.push(createEmptyAnswer(answersType));
+		unsavedAnswers.push(createEmptyGeneralVokiAnswerTypeData(answersType));
 	}
 	function addNewSavedAnswer(answer: QuestionAnswerData) {
 		answers.push(answer);
 		answers.sort((a, b) => a.order - b.order);
 	}
+	function updateAnswerOnSave(newAnswer: QuestionAnswerData) {}
 </script>
 
 <AnswerRelatedResultsSelectingDialog bind:this={resultsSelectingDialog} {vokiId} />
@@ -69,23 +52,31 @@
 			: ''})"
 	/>
 	{#each answers as answer}
-		<GeneralVokiCreationSavedAnswerDisplay {vokiId} QuestionId={questionId} {answer} />
+		<GeneralVokiCreationSavedAnswerDisplay
+			{answer}
+			{vokiId}
+			{questionId}
+			openRelatedResultsSelectingDialog={(selected, setSelected) =>
+				resultsSelectingDialog.open(selected, setSelected)}
+			updateParentOnSave={updateAnswerOnSave}
+			refetchOnDelete={() => {}}
+		/>
 	{/each}
 	{#if unsavedAnswers.length != 0}
 		<div class="new-answer-sep">
 			<label>New answers ({unsavedAnswers.length}*)</label>
 		</div>
-		{#each unsavedAnswers as unsavedAnswer}
+		{#each unsavedAnswers as unsavedAnswer, i}
 			<GeneralVokiCreationNewAnswerDisplay
+				bind:answer={unsavedAnswers[i]}
 				{vokiId}
 				{questionId}
-				answer={unsavedAnswer}
+				openRelatedResultsSelectingDialog={(selected, setSelected) =>
+					resultsSelectingDialog.open(selected, setSelected)}
+				{addNewSavedAnswer}
 				deleteAnswer={() => {
 					unsavedAnswers = unsavedAnswers.filter((a) => a != unsavedAnswer);
 				}}
-				{addNewSavedAnswer}
-				openRelatedResultsSelectingDialog={(selectedIds, setSelected) =>
-					resultsSelectingDialog.open(selectedIds, setSelected)}
 			/>
 		{/each}
 	{/if}

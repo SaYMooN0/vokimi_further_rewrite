@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+﻿using GeneralVokiCreationService.Api.contracts.results;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel.common.vokis;
 
 namespace GeneralVokiCreationService.Api.contracts.questions;
@@ -11,10 +12,12 @@ internal record class VokiQuestionFullDataResponse(
     VokiQuestionAnswerResponse[] Answers,
     bool ShuffleAnswers,
     ushort MinAnswersCount,
-    ushort MaxAnswersCount
+    ushort MaxAnswersCount,
+    VokiResultIdWithNameResponse[] Results
+
 )
 {
-    public static VokiQuestionFullDataResponse Create(VokiQuestion question) => new(
+    public static VokiQuestionFullDataResponse Create(VokiQuestion question, ImmutableArray<VokiResult> results) => new(
         question.Id.ToString(),
         question.Text.ToString(),
         question.Images.Keys.Select(imageKey => imageKey.ToString()).ToArray(),
@@ -22,6 +25,7 @@ internal record class VokiQuestionFullDataResponse(
         question.Answers.Select(VokiQuestionAnswerResponse.Create).OrderBy(a => a.Order).ToArray(),
         question.ShuffleAnswers,
         question.AnswersCountLimit.MinAnswers,
-        question.AnswersCountLimit.MaxAnswers
+        question.AnswersCountLimit.MaxAnswers,
+        results.Select(VokiResultIdWithNameResponse.Create).ToArray()
     );
 }

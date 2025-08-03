@@ -1,6 +1,6 @@
 import { ApiVokiCreationGeneral } from "$lib/ts/backend-communication/voki-creation-backend-service";
 import type { ServerLoad } from "@sveltejs/kit";
-import type { QuestionFullInfo } from "../types";
+import type { QuestionFullInfo } from "./types";
 
 export const load: ServerLoad = async ({ params, fetch }) => {
     const response = await ApiVokiCreationGeneral.serverFetchJsonResponse<QuestionFullInfo>(

@@ -10,9 +10,13 @@ using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
 using InfrastructureShared.Storage;
 using MassTransit;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using SharedKernel.auth;
 using VokiCreationServicesLib.Domain.repositories;
 
@@ -20,10 +24,14 @@ namespace GeneralVokiCreationService.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment env
+    ) {
         return services
             .AddDefaultServices()
-            .AddPersistence(configuration)
+            .AddPersistence(configuration, env)
             .AddS3(configuration)
             .AddAuth(configuration)
             .AddConfiguredMassTransit(configuration)
@@ -48,12 +56,15 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddConfiguredMassTransit(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddConfiguredMassTransit(this IServiceCollection services,
+        IConfiguration configuration) {
         var rabbitConfig = configuration.GetSection("MessageBroker");
 
         var host = rabbitConfig["Host"] ?? throw new ArgumentException("MessageBroker:Host is not configured");
-        var username = rabbitConfig["Username"] ?? throw new ArgumentException("MessageBroker:Username is not configured");
-        var password = rabbitConfig["Password"] ?? throw new ArgumentException("MessageBroker:Password is not configured");
+        var username = rabbitConfig["Username"] ??
+                       throw new ArgumentException("MessageBroker:Username is not configured");
+        var password = rabbitConfig["Password"] ??
+                       throw new ArgumentException("MessageBroker:Password is not configured");
         var retryCountStr = rabbitConfig["RetryCount"] ??
                             throw new ArgumentException("MessageBroker:RetryCount is not configured");
 
@@ -80,7 +91,7 @@ public static class DependencyInjection
 
                 var serviceName = configuration["ServiceName"] ??
                                   throw new ArgumentNullException("ServiceName is not provided");
-                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName+":"));
+                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName + ":"));
 
                 cfg.UseMessageRetry(
                     r => { r.Interval(retryCount, TimeSpan.FromSeconds(retryIntervalSeconds)); }
@@ -104,17 +115,35 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddPersistence(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment env
+    ) {
         string dbConnectionString = configuration.GetConnectionString("GeneralVokiCreationServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<GeneralVokiCreationDbContext>(options => options.UseNpgsql(dbConnectionString));
-        
+        services.AddDbContext<GeneralVokiCreationDbContext>(options => {
+                options.UseNpgsql(dbConnectionString);
+                if (env.IsDevelopment()) {
+                    options.EnableDetailedErrors();
+                    options.EnableSensitiveDataLogging();
+                    options.ConfigureWarnings(warning => {
+                        warning.Log(
+                            CoreEventId.FirstWithoutOrderByAndFilterWarning,
+                            CoreEventId.RowLimitingOperationWithoutOrderByWarning
+                        );
+                    });
+                }
+            }
+        );
+
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IDraftGeneralVokiRepository, DraftGeneralVokiRepository>();
         services.AddScoped<IDraftVokiRepository, DraftGeneralVokiRepository>();
-        
+
         return services;
     }
+
     private static IServiceCollection AddS3(this IServiceCollection services, IConfiguration configuration) {
         var s3Config = configuration.GetSection("S3").Get<S3Config>();
         if (s3Config is null) {
@@ -128,9 +157,9 @@ public static class DependencyInjection
 
         string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
         services.AddSingleton(new MainBucketNameProvider(mainBucketName));
-        
-        services.AddScoped<IMainStorageBucket,  MainStorageBucket>();
-        
+
+        services.AddScoped<IMainStorageBucket, MainStorageBucket>();
+
         return services;
     }
 }

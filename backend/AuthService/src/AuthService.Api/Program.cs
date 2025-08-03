@@ -10,13 +10,17 @@ public class Program
 {
     public static void Main(string[] args) {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.ConfigureLogging();
+        builder.Host.UseDefaultServiceProvider((_, options) => {
+            options.ValidateScopes = false;
+            options.ValidateOnBuild = true;
+        });
         
+        builder.ConfigureLogging();
+
         builder.Services
             .AddPresentation(builder.Configuration)
             .AddApplication()
-            .AddInfrastructure(builder.Configuration)
+            .AddInfrastructure(builder.Configuration, builder.Environment)
             ;
 
         var app = builder.Build();
@@ -32,7 +36,7 @@ public class Program
         app.AddExceptionHandlingMiddleware();
 
         app.MapEndpoints();
-        
+
         using (var serviceScope = app.Services.CreateScope()) {
             var db = serviceScope.ServiceProvider.GetRequiredService<AuthDbContext>();
             // db.Database.EnsureDeleted();

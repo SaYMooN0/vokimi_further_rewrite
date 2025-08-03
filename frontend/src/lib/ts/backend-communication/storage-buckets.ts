@@ -12,6 +12,9 @@ class VokimiStorageBucket {
         this._bucketName = bucketName;
     }
     public fileSrc(key: string): string {
+        if (key.startsWith('/')) {
+            return `${this._baseUrl}/${this._bucketName}${key}`;
+        }
         return `${this._baseUrl}/${this._bucketName}/${key}`;
     }
 

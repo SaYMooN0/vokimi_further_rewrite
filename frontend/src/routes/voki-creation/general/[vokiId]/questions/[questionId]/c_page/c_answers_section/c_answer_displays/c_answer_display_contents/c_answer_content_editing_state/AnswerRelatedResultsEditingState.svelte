@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FieldNotSetLabel from '../../../../../../../c_shared/FieldNotSetLabel.svelte';
+	import FieldNotSetLabel from "../../../../../../../../../c_shared/FieldNotSetLabel.svelte";
 
 	let {
 		relatedResultIds,
@@ -18,7 +18,7 @@
 	{#if relatedResultIds.length === 0}
 		<FieldNotSetLabel text="related results" className="no-related-results" />
 	{:else}
-		<label class="related-results-label">Related relatedResultIds ({relatedResultIds.length})</label>
+		<label class="related-results-label">Related results ({relatedResultIds.length})</label>
 		{#each relatedResultIds as result}
 			<div class="result">
 				<label>
@@ -31,7 +31,7 @@
 	{#if relatedResultIds.length < maxResultsCount}
 		<button class="add-btn" onclick={() => openRelatedResultsSelectingDialog()}>
 			<svg><use href="#common-plus-icon" /></svg>
-			related results 
+			related results
 		</button>
 	{/if}
 </div>
@@ -63,7 +63,7 @@
 	.result {
 		display: grid;
 		grid-template-columns: 1fr auto;
-		width:100%;
+		width: 100%;
 		gap: 0.25rem;
 		padding: 0 0.25rem;
 	}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
-	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
 
 	let { cover, vokiId }: { cover: string; vokiId: string } = $props<{
 		cover: string;

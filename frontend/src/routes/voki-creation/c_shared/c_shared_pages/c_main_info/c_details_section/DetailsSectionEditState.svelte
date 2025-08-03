@@ -71,8 +71,6 @@
 	<DefaultCheckBox bind:checked={isAgeRestricted} />
 </p>
 <DefaultErrBlock errList={savingErrs} />
-
-
 <VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
 
 <style>

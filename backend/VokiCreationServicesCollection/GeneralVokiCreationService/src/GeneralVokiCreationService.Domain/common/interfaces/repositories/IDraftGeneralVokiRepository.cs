@@ -6,22 +6,23 @@ namespace GeneralVokiCreationService.Domain.common.interfaces.repositories;
 
 public interface IDraftGeneralVokiRepository : IDraftVokiRepository
 {
-    Task Add(DraftGeneralVoki voki);
-
-    new Task<DraftGeneralVoki?> GetByIdAsNoTracking(VokiId vokiId);
-    Task<DraftGeneralVoki?> GetWithQuestionsAsNoTracking(VokiId vokiId);
-
-
     Task<DraftGeneralVoki?> GetById(VokiId vokiId);
-    Task Update(DraftGeneralVoki voki);
-
+    new Task<DraftGeneralVoki?> GetByIdAsNoTracking(VokiId vokiId);
     async Task<BaseDraftVoki?> IDraftVokiRepository.GetByIdAsNoTracking(VokiId vokiId) =>
         await GetByIdAsNoTracking(vokiId);
 
+    Task Add(DraftGeneralVoki voki);
+    Task Update(DraftGeneralVoki voki);
+
     Task<DraftGeneralVoki?> GetWithQuestions(VokiId vokiId);
-    Task<DraftGeneralVoki?> GetWithQuestionAnswersAsNoTracking(VokiId vokiId);
+    Task<DraftGeneralVoki?> GetWithQuestionsAsNoTracking(VokiId vokiId);
+    
     Task<DraftGeneralVoki?> GetWithQuestionAnswers(VokiId vokiId);
-    Task<DraftGeneralVoki?> GetWithResultsAsNoTracking(VokiId vokiId);
+    Task<DraftGeneralVoki?> GetWithQuestionAnswersAsNoTracking(VokiId vokiId);
+    
     Task<DraftGeneralVoki?> GetWithResults(VokiId vokiId);
+    Task<DraftGeneralVoki?> GetWithResultsAsNoTracking(VokiId vokiId);
+    
     Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResults(VokiId vokiId);
+    Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResultsAsNoTracking(VokiId vokiId);
 }

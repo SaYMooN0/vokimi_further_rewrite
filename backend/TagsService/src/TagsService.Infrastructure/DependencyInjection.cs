@@ -1,9 +1,12 @@
 ﻿using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
 using MassTransit;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
 using TagsService.Domain.common.interfaces.repositories;
 using TagsService.Infrastructure.integration_events;
@@ -14,10 +17,14 @@ namespace TagsService.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration) {
+    public static IServiceCollection AddInfrastructure(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment env
+    )  {
         return services
             .AddDefaultServices()
-            .AddPersistence(configuration)
+            .AddPersistence(configuration, env)
             .AddAuth(configuration)
             .AddConfiguredMassTransit(configuration)
             .AddIntegrationEventsPublisher();
@@ -97,11 +104,27 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddPersistence(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddPersistence(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment env
+    ) {
         string dbConnectionString = configuration.GetConnectionString("TagsServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<TagsDbContext>(options => options.UseNpgsql(dbConnectionString));
-
+        services.AddDbContext<TagsDbContext>(options => {
+                options.UseNpgsql(dbConnectionString);
+                if (env.IsDevelopment()) {
+                    options.EnableDetailedErrors();
+                    options.EnableSensitiveDataLogging();
+                    options.ConfigureWarnings(warning => {
+                        warning.Log(
+                            CoreEventId.FirstWithoutOrderByAndFilterWarning,
+                            CoreEventId.RowLimitingOperationWithoutOrderByWarning
+                        );
+                    });
+                }
+            }
+        );
         services.AddScoped<IVokiTagsRepository, VokiTagsRepository>();
 
         return services;

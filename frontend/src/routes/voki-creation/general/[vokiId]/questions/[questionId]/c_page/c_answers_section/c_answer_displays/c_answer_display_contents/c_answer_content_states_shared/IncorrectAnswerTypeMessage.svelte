@@ -7,7 +7,7 @@
 </script>
 
 <div class="message-container">
-	{#if answer && answer.type}
+	{#if answer && answer}
 		<p>Unexpected answer type: {answer.type}</p>
 	{:else}
 		<p>Answer or answer type is not provided</p>

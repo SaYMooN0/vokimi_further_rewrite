@@ -7,48 +7,24 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import ListEmptyMessage from '../../../../../../c_shared/ListEmptyMessage.svelte';
-	import type { ResultIdWithName } from '../../../types';
+	import { getQuestionPageContext } from '../../context.svelte';
+	import type { ResultIdWithName } from '../../types';
 
 	const { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	let dialog = $state<DialogWithCloseButton>()!;
 	let errs: Err[] = $state([]);
-	let allResults = $state<ResultIdWithName[] | null>(null);
+	let allResults = $state<ResultIdWithName[]>(getQuestionPageContext().results);
 	let isLoading = $state(false);
 	let resultsWithIsSelected = $state<Record<string, boolean>>({}); // id - isSelected
 	let onSubmit: () => void = $state(() => {});
 	export function open(selectedResultIds: string[], setSelected: (selected: string[]) => void) {
 		errs = [];
-
-		function applySelectedIds() {
-			if (!allResults) return;
-
-			const selectedMap: Record<string, boolean> = {};
-			for (const result of allResults) {
-				selectedMap[result.id] = selectedResultIds.includes(result.id);
-			}
-			resultsWithIsSelected = selectedMap;
+		const selectedMap: Record<string, boolean> = {};
+		for (const result of allResults) {
+			selectedMap[result.id] = selectedResultIds.includes(result.id);
 		}
+		resultsWithIsSelected = selectedMap;
 		dialog.open();
-
-		//check if all selected Ids are presented in allResults
-		const needsFetching = () => {
-			if (allResults === null) {
-				return true;
-			}
-			const allIds = new Set(allResults.map((r) => r.id));
-			return selectedResultIds.some((id) => !allIds.has(id));
-		};
-
-		if (needsFetching()) {
-			fetchResultNames().then(() => {
-				if (allResults !== null) {
-					applySelectedIds();
-				}
-			});
-		} else {
-			applySelectedIds();
-		}
-
 		onSubmit = () => {
 			setSelected(Object.keys(resultsWithIsSelected).filter((id) => resultsWithIsSelected[id]));
 		};
@@ -63,7 +39,6 @@
 		if (response.isSuccess) {
 			allResults = response.data.results;
 		} else {
-			allResults = null;
 			errs = response.errs;
 		}
 		isLoading = false;
@@ -79,17 +54,12 @@
 			<CubesLoader sizeRem={5} />
 			<p>Loading...</p>
 		</div>
-	{:else if allResults === null}
+	{:else if errs.length > 0}
 		<div class="error">
 			<h1>Error during fetching results</h1>
-			{#if errs.length > 0}
-				<DefaultErrBlock errList={errs} />
-			{:else}
-				<h1>Something went wrong during fetching voki results</h1>
-				<p>Please try again later</p>
-			{/if}
-			<PrimaryButton onclick={() => fetchResultNames()}>Refetch</PrimaryButton>
+			<DefaultErrBlock errList={errs} />
 		</div>
+		<PrimaryButton onclick={() => fetchResultNames()}>Refetch</PrimaryButton>
 	{:else if allResults.length === 0}
 		<ListEmptyMessage
 			messageText="This voki has no results"
@@ -109,7 +79,7 @@
 				</div>
 			{/each}
 		</div>
-		<button class="submit-btn" onclick={onSubmit}>Submit</button>
+		<button class="submit-btn" onclick={onSubmit}>Confirm</button>
 	{/if}
 </DialogWithCloseButton>
 
