@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getSignInDialogOpenFunction } from '../../routes/c_layout/c_sign_in_dialog/sign-in-dialog-context';
+	import { getSignInDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/sign-in-dialog-context';
 	const openSignInDialog = getSignInDialogOpenFunction();
 </script>
 

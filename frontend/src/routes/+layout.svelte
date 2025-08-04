@@ -2,20 +2,29 @@
 	import { type Snippet } from 'svelte';
 	import SideBar from './c_layout/SideBar.svelte';
 	import SignInDialog from './c_layout/SignInDialog.svelte';
-	import {
-		registerSignInDialogOpenFunction,
-		type SignInDialogState
-	} from './c_layout/c_sign_in_dialog/sign-in-dialog-context';
 	import AppToaster from './c_layout/AppToaster.svelte';
 	import vokiTypesIconsSprite from '$lib/icons/voki-types.svg?raw';
 	import commonIconsSprite from '$lib/icons/common-icons.svg?raw';
 	import caretIconsSprite from '$lib/icons/caret-icons.svg?raw';
+	import ConfirmActionDialog from './c_layout/ConfirmActionDialog.svelte';
+	import {
+		registerConfirmActionDialogOpenFunction,
+		type ConfirmActionDialogContent
+	} from './c_layout/ts_layout_contexts/confirm-action-dialog-context';
+	import {
+		registerSignInDialogOpenFunction,
+		type SignInDialogState
+	} from './c_layout/ts_layout_contexts/sign-in-dialog-context';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
 	let signInDialog = $state<SignInDialog>()!;
+	let confirmActionDialog = $state<ConfirmActionDialog>()!;
 
 	registerSignInDialogOpenFunction((state: SignInDialogState) => signInDialog.open(state));
+	registerConfirmActionDialogOpenFunction((content: ConfirmActionDialogContent) =>
+		confirmActionDialog.open(content)
+	);
 </script>
 
 <div class="sprites">
@@ -24,6 +33,7 @@
 	{@html caretIconsSprite}
 </div>
 <SignInDialog bind:this={signInDialog} />
+<ConfirmActionDialog bind:this={confirmActionDialog} />
 <div class="page" class:full-width={isFullWidthMode}>
 	<div class="width-limit">
 		<SideBar />

@@ -49,7 +49,6 @@
 		padding: 0.25rem 0.5rem;
 		border: 0.125rem solid var(--muted);
 		border-radius: 0.75rem;
-		box-shadow: var(--shadow-xs);
 		grid-template-columns: auto 1fr;
 	}
 

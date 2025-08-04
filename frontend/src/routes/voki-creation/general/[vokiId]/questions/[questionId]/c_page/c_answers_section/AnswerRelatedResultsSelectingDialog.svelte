@@ -7,7 +7,7 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import ListEmptyMessage from '../../../../../../c_shared/ListEmptyMessage.svelte';
-	import { getQuestionPageContext } from '../../context.svelte';
+	import { getQuestionPageContext } from '../../question-page-context.svelte';
 	import type { ResultIdWithName } from '../../types';
 
 	const { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
@@ -90,31 +90,35 @@
 	}
 
 	.loader {
-		width: 100%;
-		height: 100%;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		flex-direction: column;
 		gap: 1rem;
+		width: 100%;
+		height: 100%;
 	}
+
 	.loader p {
-		font-size: 2rem;
 		color: var(--secondary-foreground);
+		font-size: 2rem;
 		font-weight: 520;
 		letter-spacing: 1.5px;
 	}
+
 	.error {
-		margin: auto auto;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 1rem;
+		margin: auto;
 	}
+
 	.error > :global(.primary-btn) {
 		margin-top: 1rem;
 	}
+
 	:global(#general-voki-answer-related-results-selecting-dialog .no-results) {
-		margin: auto auto;
+		margin: auto;
 	}
 </style>

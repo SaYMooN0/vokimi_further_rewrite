@@ -53,13 +53,14 @@
 		width: fit-content;
 		padding: 0.25rem 0.675rem;
 		border-radius: 1rem;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: 450;
 		letter-spacing: 0.2px;
 		cursor: default;
 		grid-template-columns: 1.125rem 1fr;
+		box-shadow: var(--shadow-xs);
 	}
 
 	.property > svg {

@@ -37,19 +37,19 @@
 <style>
     
 	.answer-content-with-actions {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
+		width: 100%;
 	}
 
 	.buttons-container {
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-end;
-		margin-top: auto;
 		gap: 0.5rem;
 		width: 100%;
+		margin-top: auto;
 	}
 
 	.buttons-container > * {

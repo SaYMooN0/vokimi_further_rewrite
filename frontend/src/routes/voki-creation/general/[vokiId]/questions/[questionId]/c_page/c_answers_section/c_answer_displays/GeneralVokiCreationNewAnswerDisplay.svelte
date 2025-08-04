@@ -6,8 +6,8 @@
 	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
 	import type { QuestionAnswerData } from '../../../types';
 	import AnswerDisplayContentWrapper from './AnswerDisplayContentWrapper.svelte';
-	import AnswerContentEditingState from './c_answer_display_contents/c_answer_content_editing_state/AnswerContentEditingState.svelte';
-	import AnswerRelatedResultsEditingState from './c_answer_display_contents/c_answer_content_editing_state/AnswerRelatedResultsEditingState.svelte';
+	import AnswerContentEditingState from './c_answer_display_contents/c_editing/AnswerContentEditingState.svelte';
+	import AnswerRelatedResultsEditingState from './c_answer_display_contents/c_editing/AnswerRelatedResultsEditingState.svelte';
 
 	interface Props {
 		vokiId: string;
@@ -32,10 +32,7 @@
 	async function saveAnswer() {
 		savingErrs = [];
 		const { relatedResultIds, ...answerWithoutRelated } = answer;
-		console.log('---111', {
-			relateResultIds: relatedResultIds,
-			typeData: answer
-		});
+	
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<QuestionAnswerData>(
 			`/vokis/${vokiId}/questions/${questionId}/answers/add-new`,
 			RequestJsonOptions.POST({

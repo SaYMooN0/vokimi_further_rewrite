@@ -9,18 +9,18 @@ const forbiddenFileStructurePlugin = () => {
 		name: 'validate-file-structure',
 		buildStart() {
 			console.log('Checking file structure...');
-			checkFiles('src/routes', false);
+			checkFiles('src/routes', false, false);
 		},
 		handleHotUpdate({ file }: { file: string }) {
 			if (file.includes(path.normalize('src/routes'))) {
 				console.log(`Hot update: checking ${file}`);
-				checkFiles('src/routes', false);
+				checkFiles('src/routes', false, false);
 			}
 		}
 	};
 };
 
-function checkFiles(dir: string, insideCFolder: boolean) {
+function checkFiles(dir: string, insideCFolder: boolean, insideTSFolder: boolean) {
 	const entries = fs.readdirSync(dir, { withFileTypes: true });
 
 	for (const entry of entries) {
@@ -34,17 +34,31 @@ function checkFiles(dir: string, insideCFolder: boolean) {
 			if (insideCFolder && entry.name.startsWith('+')) {
 				throw new Error(`Files inside 'c_' folders cannot start with '+': ${fullPath}`);
 			}
+
+			if (insideTSFolder && !entry.name.endsWith('.ts')) {
+				throw new Error(`Files inside 'ts_' folders must end with '.ts': ${fullPath}`);
+			}
 		} else if (entry.isDirectory()) {
 			const isCFolder = entry.name.startsWith('c_');
+			const isTSFolder = entry.name.startsWith('ts_');
 
-			if (insideCFolder && !isCFolder) {
-				throw new Error(`Subfolders inside 'c_' folders must also start with 'c_': ${fullPath}`);
+			if (insideCFolder && !isCFolder && !isTSFolder) {
+				throw new Error(`Subfolders inside 'c_' folders must start with 'c_' or 'ts_': ${fullPath}`);
 			}
 
-			checkFiles(fullPath, insideCFolder || isCFolder);
+			if (insideTSFolder && isCFolder) {
+				throw new Error(`'ts_' folders cannot contain 'c_' folders: ${fullPath}`);
+			}
+
+			checkFiles(
+				fullPath,
+				insideCFolder || isCFolder,
+				insideTSFolder || isTSFolder
+			);
 		}
 	}
 }
+
 function createProxyEntry(
 	basePath: string,
 	port: number,

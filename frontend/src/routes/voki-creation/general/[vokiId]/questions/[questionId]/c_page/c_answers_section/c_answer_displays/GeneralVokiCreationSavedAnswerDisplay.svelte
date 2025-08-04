@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
-	import { toast } from 'svelte-sonner';
 	import type { QuestionAnswerData } from '../../../types';
 	import SavedAnswerDisplayEditing from './c_saved_answer/SavedAnswerDisplayEditing.svelte';
+	import SavedAnswerDisplayView from './c_saved_answer/SavedAnswerDisplayView.svelte';
 
 	interface Props {
 		vokiId: string;
@@ -30,14 +28,12 @@
 		| { isEditing: true; answer: GeneralVokiAnswerTypeData }
 		| { isEditing: false };
 	let currentState = $state<isEditingState>({ isEditing: false });
-
-	
 </script>
 
 <div class="saved-answer" class:editing={currentState.isEditing}>
 	{#if currentState.isEditing}
 		<SavedAnswerDisplayEditing
-			bind:answer
+			{answer}
 			{vokiId}
 			{questionId}
 			{openRelatedResultsSelectingDialog}
@@ -45,21 +41,27 @@
 			cancelEditing={() => (currentState = { isEditing: false })}
 		/>
 	{:else}
-		<!-- <SavedAnswerDisplayView {answer} {vokiId} {questionId} /> -->
+		<SavedAnswerDisplayView
+			{answer}
+			{vokiId}
+			{questionId}
+			startEditing={() => (currentState = { isEditing: true, answer: answer.typeData })}
+			{refetchOnDelete}
+		/>
 	{/if}
 </div>
 
 <style>
 	.saved-answer {
-		display: flex;
-		flex-direction: column;
-		place-items: center center;
-		gap: 0.75rem;
+		--results-width: 13rem;
+		display: grid;
+		grid-template-columns: var(--results-width) 1fr;
+		gap: 0.25rem;
 		width: 100%;
 		padding: 0.5rem 0.75rem;
 		margin-top: 1rem;
-		border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 0.75rem;
+		box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
 	}
 	.saved-answer.editing {
 		border: 0.125rem dashed var(--primary);

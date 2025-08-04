@@ -25,7 +25,7 @@ internal sealed class UpdateVokiQuestionAnswerCommandHandler :
     }
 
     public async Task<ErrOr<VokiQuestionAnswer>> Handle(UpdateVokiQuestionAnswerCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestionAnswers(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
         var res = voki.UpdateQuestionAnswer(
             command.QuestionId, command.AnswerId,
             command.NewAnswerTypeData, command.NewRelatedResultIds

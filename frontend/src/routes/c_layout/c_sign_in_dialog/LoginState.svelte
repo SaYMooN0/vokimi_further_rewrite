@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
-	import type { SignInDialogState } from './sign-in-dialog-context';
+	import type { SignInDialogState } from '../ts_layout_contexts/sign-in-dialog-context';
 	import SignInDialogHeader from './c_states_shared/SignInDialogHeader.svelte';
 	import SignInDialogInput from './c_states_shared/SignInDialogInput.svelte';
 	import SignInDialogLink from './c_states_shared/SignInDialogLink.svelte';

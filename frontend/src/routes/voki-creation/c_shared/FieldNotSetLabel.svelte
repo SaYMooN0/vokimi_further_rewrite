@@ -25,6 +25,7 @@
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
 		font-weight: 440;
+		box-shadow:var(--shadow-xs);
 	}
 
 	.not-set > svg {

@@ -6,7 +6,7 @@
 	import QuestionImagesSection from './c_page/QuestionImagesSection.svelte';
 	import QuestionAnswerSettingsSection from './c_page/QuestionAnswerSettingsSection.svelte';
 	import QuestionAnswersSection from './c_page/QuestionAnswersSection.svelte';
-	import { setQuestionPageContext } from './context.svelte';
+	import { setQuestionPageContext } from './question-page-context.svelte';
 
 	let { data }: PageProps = $props();
 	let questionAnswers = $state(data.data?.answers.sort((a, b) => a.order - b.order) ?? []);

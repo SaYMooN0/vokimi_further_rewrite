@@ -17,6 +17,7 @@
 		place-items: center center;
 		width: 100%;
 	}
+
 	p {
 		width: 100%;
 		box-sizing: border-box;

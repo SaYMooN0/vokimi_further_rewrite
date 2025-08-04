@@ -55,8 +55,8 @@
 		width: 10rem;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.5rem;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
 		font-size: 1.125rem;
 		font-weight: 450;
 		letter-spacing: 0.4px;
@@ -75,12 +75,13 @@
 	.option:not(.selected):hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
-		transform: scale(1.04);
+		box-shadow: none;
+		
 	}
 
 	.option.selected {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-		box-shadow: var(--shadow-md);
+		box-shadow: none;
 	}
 </style>

@@ -66,7 +66,7 @@
 		border-radius: 0.25rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		box-shadow: var(--shadow);
+		box-shadow: var(--shadow-md);
 		cursor: pointer;
 	}
 

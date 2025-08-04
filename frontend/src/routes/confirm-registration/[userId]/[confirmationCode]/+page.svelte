@@ -3,7 +3,7 @@
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import { ErrUtils } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import { getSignInDialogOpenFunction } from '../../../c_layout/c_sign_in_dialog/sign-in-dialog-context';
+	import { getSignInDialogOpenFunction } from '../../../c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import { goto } from '$app/navigation';
 	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
 

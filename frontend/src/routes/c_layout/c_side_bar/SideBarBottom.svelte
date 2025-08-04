@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AuthView from '$lib/components/AuthView.svelte';
-	import { getSignInDialogOpenFunction } from '../c_sign_in_dialog/sign-in-dialog-context';
+	import { getSignInDialogOpenFunction } from '../ts_layout_contexts/sign-in-dialog-context';
 	const openSignInDialog = getSignInDialogOpenFunction();
 </script>
 

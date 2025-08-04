@@ -1,6 +1,6 @@
 <script lang="ts">
 	import LoginState from './c_sign_in_dialog/LoginState.svelte';
-	import type { SignInDialogState } from './c_sign_in_dialog/sign-in-dialog-context';
+	import type { SignInDialogState } from './ts_layout_contexts/sign-in-dialog-context';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import ConfirmationLinkState from './c_sign_in_dialog/ConfirmationLinkState.svelte';
 	import SignUpState from './c_sign_in_dialog/SignUpState.svelte';

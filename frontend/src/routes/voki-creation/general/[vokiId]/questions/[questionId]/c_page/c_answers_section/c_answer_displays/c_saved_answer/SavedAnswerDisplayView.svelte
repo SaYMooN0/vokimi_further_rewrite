@@ -4,8 +4,8 @@
 	import { toast } from 'svelte-sonner';
 	import type { QuestionAnswerData } from '../../../../types';
 	import AnswerDisplayContentWrapper from '../AnswerDisplayContentWrapper.svelte';
-	import AnswerContentViewState from '../c_answer_display_contents/c_answer_content_view_state/AnswerContentViewState.svelte';
-	import AnswerRelatedResultsViewState from '../c_answer_display_contents/c_answer_content_view_state/AnswerRelatedResultsViewState.svelte';
+	import AnswerContentViewState from '../c_answer_display_contents/c_view/AnswerContentViewState.svelte';
+	import AnswerRelatedResultsViewState from '../c_answer_display_contents/c_view/AnswerRelatedResultsViewState.svelte';
 
 	interface Props {
 		answer: QuestionAnswerData;
@@ -32,7 +32,7 @@
 <AnswerRelatedResultsViewState relatedResultIds={answer.relatedResultIds} />
 <AnswerDisplayContentWrapper
 	errs={[]}
-	mainBtnText="Save"
+	mainBtnText="Edit"
 	mainBtnOnClick={() => startEditing()}
 	secondaryBtnIconId="#common-trash-can-icon"
 	secondaryBtnOnClick={() => deleteAnswer()}

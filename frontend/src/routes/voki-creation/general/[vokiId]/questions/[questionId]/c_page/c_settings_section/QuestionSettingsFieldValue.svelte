@@ -15,9 +15,10 @@
 		align-items: center;
 		padding: 0.25rem 0.75rem;
 		border-radius: 0.5rem;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
         font-size: 1.125rem;
         font-weight: 420;
+		box-shadow: var(--shadow-xs);
 	}
 </style>

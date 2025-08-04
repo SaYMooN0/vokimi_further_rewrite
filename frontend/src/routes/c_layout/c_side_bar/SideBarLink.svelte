@@ -40,7 +40,6 @@
 
 	.link:hover {
 		background-color: var(--accent);
-		box-shadow: var(--shadow-xs);
 	}
 
 	.link * {

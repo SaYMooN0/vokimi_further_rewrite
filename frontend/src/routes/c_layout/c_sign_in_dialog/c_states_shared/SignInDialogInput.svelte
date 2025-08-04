@@ -53,13 +53,12 @@
 		box-sizing: border-box;
 		padding: 0.625rem 1rem;
 		border: solid 0.125rem var(--secondary-foreground);
-		border-radius: 8px;
+		border-radius: 0.75rem;
 		background-color: var(--back);
 		font-size: 1.125rem;
 		letter-spacing: 1px;
 		outline: none;
 		box-shadow: var(--shadow-md);
-
 	}
 
 	.input-field input:focus,

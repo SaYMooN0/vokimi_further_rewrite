@@ -35,7 +35,10 @@
 		answers.push(answer);
 		answers.sort((a, b) => a.order - b.order);
 	}
-	function updateAnswerOnSave(newAnswer: QuestionAnswerData) {}
+	function updateAnswerOnSave(newAnswer: QuestionAnswerData) {
+		answers = answers.map((a) => (a.id === newAnswer.id ? newAnswer : a));
+		answers.sort((a, b) => a.order - b.order);
+	}
 </script>
 
 <AnswerRelatedResultsSelectingDialog bind:this={resultsSelectingDialog} {vokiId} />
@@ -96,9 +99,9 @@
 		position: relative;
 		width: calc(100% - 2rem);
 		height: 0.125rem;
+		margin: 2rem 0;
 		background-color: var(--muted);
 		align-self: center;
-		margin: 2rem 0;
 	}
 
 	.new-answer-sep label {

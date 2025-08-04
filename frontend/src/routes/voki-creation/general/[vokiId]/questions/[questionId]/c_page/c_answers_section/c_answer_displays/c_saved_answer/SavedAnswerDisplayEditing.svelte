@@ -2,10 +2,11 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
+	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
 	import type { QuestionAnswerData } from '../../../../types';
 	import AnswerDisplayContentWrapper from '../AnswerDisplayContentWrapper.svelte';
-	import AnswerContentEditingState from '../c_answer_display_contents/c_answer_content_editing_state/AnswerContentEditingState.svelte';
-	import AnswerRelatedResultsEditingState from '../c_answer_display_contents/c_answer_content_editing_state/AnswerRelatedResultsEditingState.svelte';
+	import AnswerContentEditingState from '../c_answer_display_contents/c_editing/AnswerContentEditingState.svelte';
+	import AnswerRelatedResultsEditingState from '../c_answer_display_contents/c_editing/AnswerRelatedResultsEditingState.svelte';
 
 	interface Props {
 		answer: QuestionAnswerData;
@@ -19,7 +20,7 @@
 		cancelEditing: () => void;
 	}
 	let {
-		answer = $bindable(),
+		answer,
 		openRelatedResultsSelectingDialog,
 		vokiId,
 		questionId,
@@ -28,32 +29,35 @@
 	}: Props = $props();
 
 	let savingErrs = $state<Err[]>([]);
+	let answerData = $state<GeneralVokiAnswerTypeData>(answer.typeData);
+	let answerResults = $state<string[]>(answer.relatedResultIds);
+
 	async function saveAnswer() {
 		savingErrs = [];
-		const { relatedResultIds, ...answerWithoutRelated } = answer;
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<QuestionAnswerData>(
 			`/vokis/${vokiId}/questions/${questionId}/answers/${answer.id}/update`,
-			RequestJsonOptions.POST({
-				relatedResultIds,
-				...answerWithoutRelated
+			RequestJsonOptions.PUT({
+				relateResultIds: answerResults,
+				answerData: answerData
 			})
 		);
 		if (response.isSuccess) {
 			updateParentOnSave(response.data);
+			cancelEditing();
 		} else {
 			savingErrs = response.errs;
 		}
 	}
 
 	function openRelatedResultsSelectingDialogWithParams() {
-		openRelatedResultsSelectingDialog(answer.relatedResultIds, (selected: string[]) => {
-			answer.relatedResultIds = selected;
+		openRelatedResultsSelectingDialog(answerResults, (selected: string[]) => {
+			answerResults = selected;
 		});
 	}
 </script>
 
 <AnswerRelatedResultsEditingState
-	relatedResultIds={answer.relatedResultIds}
+	relatedResultIds={answerResults}
 	openRelatedResultsSelectingDialog={openRelatedResultsSelectingDialogWithParams}
 />
 <AnswerDisplayContentWrapper
@@ -63,5 +67,5 @@
 	secondaryBtnIconId="#common-cross-icon"
 	secondaryBtnOnClick={() => cancelEditing()}
 >
-	<AnswerContentEditingState bind:answer={answer.typeData} />
+	<AnswerContentEditingState bind:answer={answerData} />
 </AnswerDisplayContentWrapper>
