@@ -11,7 +11,7 @@
 	let {
 		questionId,
 		vokiId,
-		answers,
+		answers = $bindable(),
 		answersType
 	}: {
 		questionId: string;
@@ -84,7 +84,9 @@
 		{/each}
 	{/if}
 	{#if answers.length + unsavedAnswers.length < maxAnswersForQuestionCount}
-		<PrimaryButton onclick={addNewUnsavedAnswer} class="add-new-answer">Add new</PrimaryButton>
+		<PrimaryButton onclick={addNewUnsavedAnswer} class="add-new-answer"
+			>Add new answer</PrimaryButton
+		>
 	{:else}
 		<div class="limit-reached-message">
 			<h1>

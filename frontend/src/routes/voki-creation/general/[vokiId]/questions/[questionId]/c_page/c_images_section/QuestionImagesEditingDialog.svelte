@@ -54,7 +54,6 @@
 		);
 		if (response.isSuccess) {
 			images = [...images, response.data.imageKey];
-			console.log(images);
 		} else {
 			errs = response.errs;
 		}

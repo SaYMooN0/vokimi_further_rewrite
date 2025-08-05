@@ -32,7 +32,7 @@
 	async function saveAnswer() {
 		savingErrs = [];
 		const { relatedResultIds, ...answerWithoutRelated } = answer;
-	
+
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<QuestionAnswerData>(
 			`/vokis/${vokiId}/questions/${questionId}/answers/add-new`,
 			RequestJsonOptions.POST({
@@ -52,12 +52,16 @@
 			answer.relatedResultIds = selected;
 		});
 	}
+	function removeResult(resultId: string) {
+		answer.relatedResultIds = answer.relatedResultIds.filter((id) => id != resultId);
+	}
 </script>
 
 <div class="unsaved-answer">
 	<AnswerRelatedResultsEditingState
 		relatedResultIds={answer.relatedResultIds}
 		openRelatedResultsSelectingDialog={openRelatedResultsSelectingDialogWithParams}
+		{removeResult}
 	/>
 	<AnswerDisplayContentWrapper
 		errs={savingErrs}

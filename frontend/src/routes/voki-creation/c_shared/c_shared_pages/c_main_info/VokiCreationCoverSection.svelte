@@ -33,7 +33,7 @@
 </script>
 
 <div class="img-container">
-		<img src={StorageBucketMain.fileSrcWithVersion(cover, version)} alt="voki cover" />
+	<img src={StorageBucketMain.fileSrcWithVersion(cover, version)} alt="voki cover" />
 	<label for="voki-cover-input" class="img-btn change-btn">Change cover</label>
 	<input
 		type="file"

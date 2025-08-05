@@ -116,6 +116,7 @@
 		width: 100%;
 		border-radius: var(--voki-cover-border-radius);
 		aspect-ratio: var(--voki-cover-aspect-ratio);
+		box-shadow: var(--shadow-xs);
 	}
 
 	.bottom-items {

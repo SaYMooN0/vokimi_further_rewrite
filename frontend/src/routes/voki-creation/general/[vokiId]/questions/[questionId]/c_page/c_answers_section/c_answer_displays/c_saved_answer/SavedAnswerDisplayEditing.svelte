@@ -7,6 +7,7 @@
 	import AnswerDisplayContentWrapper from '../AnswerDisplayContentWrapper.svelte';
 	import AnswerContentEditingState from '../c_answer_display_contents/c_editing/AnswerContentEditingState.svelte';
 	import AnswerRelatedResultsEditingState from '../c_answer_display_contents/c_editing/AnswerRelatedResultsEditingState.svelte';
+	import AnswerDisplayVerticalSep from '../c_answer_display_contents/c_shared/AnswerDisplayVerticalSep.svelte';
 
 	interface Props {
 		answer: QuestionAnswerData;
@@ -54,12 +55,17 @@
 			answerResults = selected;
 		});
 	}
+	function removeResult(resultId: string) {
+		answerResults = answerResults.filter((id) => id != resultId);
+	}
 </script>
 
 <AnswerRelatedResultsEditingState
 	relatedResultIds={answerResults}
 	openRelatedResultsSelectingDialog={openRelatedResultsSelectingDialogWithParams}
+	{removeResult}
 />
+<AnswerDisplayVerticalSep />
 <AnswerDisplayContentWrapper
 	errs={savingErrs}
 	mainBtnText="Save"

@@ -6,6 +6,8 @@
 	import AnswerDisplayContentWrapper from '../AnswerDisplayContentWrapper.svelte';
 	import AnswerContentViewState from '../c_answer_display_contents/c_view/AnswerContentViewState.svelte';
 	import AnswerRelatedResultsViewState from '../c_answer_display_contents/c_view/AnswerRelatedResultsViewState.svelte';
+	import AnswerDisplayVerticalSep from '../c_answer_display_contents/c_shared/AnswerDisplayVerticalSep.svelte';
+	import { getConfirmActionDialogOpenFunction } from '../../../../../../../../../c_layout/ts_layout_contexts/confirm-action-dialog-context';
 
 	interface Props {
 		answer: QuestionAnswerData;
@@ -16,26 +18,45 @@
 	}
 	let { answer = $bindable(), vokiId, questionId, startEditing, refetchOnDelete }: Props = $props();
 
-	async function deleteAnswer() {
-		const response = await ApiVokiCreationGeneral.fetchJsonResponse<void>(
-			`/vokis/${vokiId}/questions/${questionId}/answers/${answer.id}/delete`,
-			RequestJsonOptions.DELETE({})
-		);
-		if (response.isSuccess) {
-			refetchOnDelete();
-		} else {
-			toast.error('Failed to delete answer');
-		}
+	const { open: openConfirmationDialog, close: closeConfirmationDialog } =
+		getConfirmActionDialogOpenFunction();
+	function openAnswerDeleteConfirmationDialog() {
+		const deleteAnswer = async () => {
+			const response = await ApiVokiCreationGeneral.fetchJsonResponse<void>(
+				`/vokis/${vokiId}/questions/${questionId}/answers/${answer.id}/delete`,
+				RequestJsonOptions.DELETE({})
+			);
+			if (response.isSuccess) {
+				refetchOnDelete();
+				closeConfirmationDialog();
+				return [];
+			} else {
+				return response.errs;
+			}
+		};
+		openConfirmationDialog({
+			mainContent: {
+				mainText: 'Are you sure you want to delete this answer?',
+				subheading: undefined
+			},
+			dialogButtons: {
+				confirmBtnText: 'Delete',
+				confirmBtnOnclick: () => deleteAnswer(),
+				cancelBtnText: 'Cancel',
+				cancelBtnOnclick: closeConfirmationDialog
+			}
+		});
 	}
 </script>
 
 <AnswerRelatedResultsViewState relatedResultIds={answer.relatedResultIds} />
+<AnswerDisplayVerticalSep />
 <AnswerDisplayContentWrapper
 	errs={[]}
 	mainBtnText="Edit"
 	mainBtnOnClick={() => startEditing()}
 	secondaryBtnIconId="#common-trash-can-icon"
-	secondaryBtnOnClick={() => deleteAnswer()}
+	secondaryBtnOnClick={() => openAnswerDeleteConfirmationDialog()}
 >
 	<AnswerContentViewState answer={answer.typeData} />
 </AnswerDisplayContentWrapper>

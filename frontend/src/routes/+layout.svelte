@@ -22,9 +22,10 @@
 	let confirmActionDialog = $state<ConfirmActionDialog>()!;
 
 	registerSignInDialogOpenFunction((state: SignInDialogState) => signInDialog.open(state));
-	registerConfirmActionDialogOpenFunction((content: ConfirmActionDialogContent) =>
-		confirmActionDialog.open(content)
-	);
+	registerConfirmActionDialogOpenFunction({
+		open: (content: ConfirmActionDialogContent) => confirmActionDialog.open(content),
+		close: () => confirmActionDialog.close()
+	});
 </script>
 
 <div class="sprites">

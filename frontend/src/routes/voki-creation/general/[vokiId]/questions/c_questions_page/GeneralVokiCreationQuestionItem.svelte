@@ -76,7 +76,7 @@
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: center;
-		margin: 0.25rem 0.5rem 0.25rem 0;
+		margin: 0.25rem 0.25rem 0.25rem 0;
 	}
 
 	.buttons-container {

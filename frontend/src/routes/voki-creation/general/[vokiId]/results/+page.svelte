@@ -4,11 +4,18 @@
 	import UnableToLoad from '../../../c_shared/UnableToLoad.svelte';
 	import VokiCreationBasicHeader from '../../../c_shared/VokiCreationBasicHeader.svelte';
 	import type { PageProps } from './$types';
+	import GeneralVokiCreationResultItem from './c_results_page/GeneralVokiCreationResultItem.svelte';
 	import ResultInitializingDialog from './c_results_page/ResultInitializingDialog.svelte';
+	import type { ResultOverViewData } from './types';
 
 	let { data }: PageProps = $props();
 	let resultCreationDialog = $state<ResultInitializingDialog>()!;
 	let results = $state(data.data?.results ?? []);
+
+	async function refetchResultsOnDelete() {}
+	function updateOnSave(result: ResultOverViewData) {
+		results = results.map((r) => (r.id === result.id ? result : r));
+	}
 	const maxResultsCount = 60;
 </script>
 
@@ -31,7 +38,12 @@
 	{:else}
 		<div class="results">
 			{#each results as result}
-				<p>result</p>
+				<GeneralVokiCreationResultItem
+					vokiId={data.vokiId!}
+					{result}
+					updateParentOnSave={updateOnSave}
+					refetchOnDelete={refetchResultsOnDelete}
+				/>
 			{/each}
 		</div>
 		{#if results.length < maxResultsCount}
@@ -47,5 +59,10 @@
 		display: flex;
 		justify-content: center;
 		margin: 1.25rem auto;
+	}
+	.results {
+		display: flex;
+		flex-direction: column;
+		gap: 1.25rem;
 	}
 </style>

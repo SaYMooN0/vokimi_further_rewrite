@@ -36,7 +36,7 @@
 			vokiId={data.vokiId!}
 		/>
 		<QuestionAnswersSection
-			answers={questionAnswers}
+			bind:answers={questionAnswers}
 			questionId={data.questionId!}
 			vokiId={data.vokiId!}
 			answersType={data.data.answersType}

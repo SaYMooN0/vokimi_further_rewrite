@@ -6,6 +6,8 @@
 		ConfirmActionDialogContent,
 		ConfirmActionDialogMainContent
 	} from './ts_layout_contexts/confirm-action-dialog-context';
+	import type { Err } from '$lib/ts/err';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 
 	let content = $state<ConfirmActionDialogMainContent | Snippet>();
 	let buttons = $state<ConfirmActionDialogButtons | Snippet>();
@@ -23,10 +25,25 @@
 	let dialog = $state<DialogWithCloseButton>()!;
 
 	export function open(dialogContent: ConfirmActionDialogContent) {
+		confirmErrs = [];
 		content = dialogContent.mainContent;
 		buttons = dialogContent.dialogButtons;
 		dialog.open();
 	}
+	export function close() {
+		dialog.close();
+	}
+	async function onConfirm() {
+		if (isDialogButtons(buttons)) {
+			let res = await buttons.confirmBtnOnclick();
+			if (res) {
+				confirmErrs = res;
+			}
+		} else {
+			dialog.close();
+		}
+	}
+	let confirmErrs = $state<Err[]>([]);
 </script>
 
 <DialogWithCloseButton
@@ -41,8 +58,11 @@
 	{/if}
 
 	{#if isDialogButtons(buttons)}
+		{#if confirmErrs.length > 0}
+			<DefaultErrBlock errList={confirmErrs} />
+		{/if}
 		<div class="buttons">
-			<button class="confirm" onclick={buttons.confirmBtnOnclick}>{buttons.confirmBtnText}</button>
+			<button class="confirm" onclick={onConfirm}>{buttons.confirmBtnText}</button>
 			<button class="cancel" onclick={buttons.cancelBtnOnclick}>{buttons.cancelBtnText}</button>
 		</div>
 	{:else if buttons}

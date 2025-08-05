@@ -4,13 +4,16 @@
 
 	let {
 		relatedResultIds,
-		openRelatedResultsSelectingDialog
+		openRelatedResultsSelectingDialog,
+		removeResult
 	}: {
 		relatedResultIds: string[];
 		openRelatedResultsSelectingDialog: () => void;
+		removeResult: (resultId: string) => void;
 	} = $props<{
 		relatedResultIds: string[];
 		openRelatedResultsSelectingDialog: () => void;
+		removeResult: (resultId: string) => void;
 	}>();
 	const maxResultsCount = 10;
 	let resultsIdToName = Object.fromEntries(
@@ -23,13 +26,15 @@
 		<FieldNotSetLabel text="related results" className="no-related-results" />
 	{:else}
 		<label class="related-results-label">Related results ({relatedResultIds.length})</label>
-		{#each relatedResultIds as result}
-			<div class="result" class:err={resultsIdToName[result] === undefined}>
-				{#if resultsIdToName[result]}
+		{#each relatedResultIds as id}
+			<div class="result" class:err={resultsIdToName[id] === undefined}>
+				{#if resultsIdToName[id]}
 					<label>
-						{resultsIdToName[result]}
+						{resultsIdToName[id]}
 					</label>
-					<svg class="remove-result-btn"><use href="#common-minus-icon" /></svg>
+					<svg class="remove-result-btn" onclick={() => removeResult(id)}
+						><use href="#common-minus-icon" /></svg
+					>
 				{:else}
 					<label>Error</label>
 				{/if}

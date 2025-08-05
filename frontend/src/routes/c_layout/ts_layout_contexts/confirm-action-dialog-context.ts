@@ -1,8 +1,9 @@
+import type { Err } from "$lib/ts/err";
 import { getContext, setContext, type Snippet } from "svelte";
 
 export type ConfirmActionDialogButtons = {
 	confirmBtnText: string;
-	confirmBtnOnclick: () => void;
+	confirmBtnOnclick: () => Promise<Err[]> | void;
 	cancelBtnText: string;
 	cancelBtnOnclick: () => void;
 };
@@ -16,12 +17,12 @@ export type ConfirmActionDialogContent = {
 };
 
 const confirmActionKey = Symbol("open-confirm-action-dialog-function");
-type openConfirmActionDialogFunction = (val: ConfirmActionDialogContent) => void;
+type confirmActionDialogFunctions = { open: (val: ConfirmActionDialogContent) => void, close: () => void };
 
-export function registerConfirmActionDialogOpenFunction(openDialog: openConfirmActionDialogFunction) {
+export function registerConfirmActionDialogOpenFunction(openDialog: confirmActionDialogFunctions) {
 	setContext(confirmActionKey, openDialog);
 }
 
 export function getConfirmActionDialogOpenFunction() {
-	return getContext<openConfirmActionDialogFunction>(confirmActionKey);
+	return getContext<confirmActionDialogFunctions>(confirmActionKey);
 }

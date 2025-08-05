@@ -55,7 +55,7 @@
 	.saved-answer {
 		--results-width: 13rem;
 		display: grid;
-		grid-template-columns: var(--results-width) 1fr;
+		grid-template-columns: var(--results-width) auto 1fr;
 		gap: 0.25rem;
 		width: 100%;
 		padding: 0.5rem 0.75rem;
@@ -65,5 +65,6 @@
 	}
 	.saved-answer.editing {
 		border: 0.125rem dashed var(--primary);
+		box-shadow: none;
 	}
 </style>

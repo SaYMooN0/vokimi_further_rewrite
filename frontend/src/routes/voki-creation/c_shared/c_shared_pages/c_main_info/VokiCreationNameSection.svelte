@@ -13,7 +13,7 @@
 		vokiId: string;
 	}>();
 
-	let textarea = $state<HTMLTextAreaElement>(null!);
+	let textarea = $state<HTMLTextAreaElement>()!;
 	let newName = $state(vokiName);
 	let isEditing = $state(false);
 	let savingErrs = $state<Err[]>([]);
