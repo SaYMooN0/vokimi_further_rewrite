@@ -8,7 +8,7 @@
 		vokiId: string;
 		questionId: string;
 		answer: QuestionAnswerData;
-		refetchOnDelete: () => void;
+		updateParentOnDelete: (answerId : string) => void;
 		updateParentOnSave: (answer: QuestionAnswerData) => void;
 		openRelatedResultsSelectingDialog: (
 			selectedResultIds: string[],
@@ -19,7 +19,7 @@
 		vokiId,
 		questionId,
 		answer,
-		refetchOnDelete,
+		updateParentOnDelete,
 		updateParentOnSave,
 		openRelatedResultsSelectingDialog
 	}: Props = $props();
@@ -46,7 +46,7 @@
 			{vokiId}
 			{questionId}
 			startEditing={() => (currentState = { isEditing: true, answer: answer.typeData })}
-			{refetchOnDelete}
+			{updateParentOnDelete}
 		/>
 	{/if}
 </div>
@@ -54,6 +54,7 @@
 <style>
 	.saved-answer {
 		--results-width: 13rem;
+
 		display: grid;
 		grid-template-columns: var(--results-width) auto 1fr;
 		gap: 0.25rem;
@@ -61,8 +62,9 @@
 		padding: 0.5rem 0.75rem;
 		margin-top: 1rem;
 		border-radius: 0.75rem;
-		box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+		box-shadow: rgb(0 0 0 / 5%) 0 0 0 1px;
 	}
+
 	.saved-answer.editing {
 		border: 0.125rem dashed var(--primary);
 		box-shadow: none;

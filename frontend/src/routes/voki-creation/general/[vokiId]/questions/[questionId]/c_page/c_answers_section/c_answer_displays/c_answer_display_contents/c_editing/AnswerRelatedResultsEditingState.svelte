@@ -81,6 +81,7 @@
 		padding: 0 0.25rem;
 		grid-template-columns: 1fr auto;
 	}
+
 	.result.err {
 		padding: 0.125rem;
 		border-radius: 0.25rem;
@@ -88,6 +89,7 @@
 		color: var(--err-foreground);
 		box-shadow: var(--err-shadow);
 	}
+
 	.result > label {
 		text-overflow: ellipsis;
 		overflow: hidden;

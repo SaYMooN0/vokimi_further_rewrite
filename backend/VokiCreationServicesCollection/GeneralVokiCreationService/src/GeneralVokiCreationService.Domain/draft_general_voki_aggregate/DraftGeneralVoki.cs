@@ -2,8 +2,6 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using SharedKernel;
-using SharedKernel.common.vokis;
-using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokimiStorageKeysLib.draft_general_voki.result_image;
@@ -173,7 +171,12 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOr<VokiResult> UpdateResultName(GeneralVokiResultId resultId, VokiResultName newName) {
+    public ErrOr<VokiResult> UpdateResult(
+        GeneralVokiResultId resultId,
+        VokiResultName newName,
+        VokiResultText newText,
+        DraftGeneralVokiResultImageKey? newImage
+    ) {
         VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
         if (resultToUpdate is null) {
             return ErrFactory.NotFound.Common(
@@ -182,58 +185,34 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        resultToUpdate.UpdateName(newName);
-        return resultToUpdate;
-    }
-
-    public ErrOr<VokiResult> UpdateResultText(GeneralVokiResultId resultId, VokiResultText newText) {
-        VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
-        if (resultToUpdate is null) {
-            return ErrFactory.NotFound.Common(
-                "Could not find result to update",
-                $"Voki with id {Id} doesn't have a result with id {resultId}"
-            );
-        }
-
-        resultToUpdate.UpdateText(newText);
-        return resultToUpdate;
-    }
-
-    public ErrOr<VokiResult> RemoveResultImage(GeneralVokiResultId resultId) {
-        VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
-        if (resultToUpdate is null) {
-            return ErrFactory.NotFound.Common(
-                "Could not find result to update",
-                $"Voki with id {Id} doesn't have a result with id {resultId}"
-            );
-        }
-
-        resultToUpdate.RemoveImage();
-        return resultToUpdate;
-    }
-
-    public ErrOr<VokiResult> SetResultImage(GeneralVokiResultId resultId, DraftGeneralVokiResultImageKey key) {
-        VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
-        if (resultToUpdate is null) {
-            return ErrFactory.NotFound.Common(
-                "Could not find result to update",
-                $"Voki with id {Id} doesn't have a result with id {resultId}"
-            );
-        }
-
-        if (!key.IsWithIds(Id, resultId)) {
+        if (newImage is not null && !newImage.IsWithIds(Id, resultId)) {
             return ErrFactory.Conflict(
                 "Provided image does not belong to the specified result",
-                $"Voki id: {Id}, result id: {resultId}, key: {key}"
+                $"Voki id: {Id}, result id: {resultId}, key: {newImage}"
             );
         }
 
-        var updatingRes = resultToUpdate.SetImage(key);
+        var updatingRes = resultToUpdate.Update(newName, newText, newImage);
         if (updatingRes.IsErr(out var err)) {
             return err;
         }
 
         return resultToUpdate;
+    }
+
+
+    public bool DeleteResult(GeneralVokiResultId resultId) {
+        VokiResult? result = _results.FirstOrDefault(q => q.Id == resultId);
+        if (result is null) {
+            return false;
+        }
+
+        foreach (var q in _questions) {
+            q.RemoveRelatedResultInAnswers(resultId);
+        }
+
+        _results.Remove(result);
+        return true;
     }
 
     private ErrOrNothing CheckIfAnswerDataBelongs(GeneralVokiQuestionId questionId, BaseVokiAnswerTypeData answerData) {
@@ -300,5 +279,15 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         return question.UpdateAnswer(answerId, newAnswerTypeData, newRelatedResultIds);
+    }
+
+    public bool DeleteQuestionAnswer(GeneralVokiQuestionId questionId, GeneralVokiAnswerId answerId) {
+        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return false;
+        }
+
+        bool wasDeleted = question.DeleteAnswer(answerId);
+        return wasDeleted;
     }
 }

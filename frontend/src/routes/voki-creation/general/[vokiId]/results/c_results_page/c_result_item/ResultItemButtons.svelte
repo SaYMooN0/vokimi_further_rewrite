@@ -24,6 +24,7 @@
 		width: 100%;
 		margin: 0.125rem 0.25rem 0.25rem 0;
 	}
+
 	.buttons-container > * {
 		display: flex;
 		justify-content: center;

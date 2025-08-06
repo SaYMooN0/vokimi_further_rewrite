@@ -3,8 +3,7 @@ using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.results;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
-using Microsoft.AspNetCore.Mvc;
+ using Microsoft.AspNetCore.Mvc;
 using VokimiStorageKeysLib.draft_general_voki.result_image;
 
 namespace GeneralVokiCreationService.Api.endpoints;
@@ -17,15 +16,12 @@ internal static class SpecificVokiResultsHandlers
         group.WithGroupAuthenticationRequired();
 
         group.MapGet("/", GetVokiResult);
-        group.MapPatch("/update-name", UpdateResultName)
-            .WithRequestValidation<UpdateResultNameRequest>();
-        group.MapPatch("/update-text", UpdateResultText)
-            .WithRequestValidation<UpdateResultTextRequest>();
-        group.MapPatch("/remove-image", RemoveResultImage);
-        group.MapPatch("/set-image", SetResultImage)
+        group.MapPut("/update", UpdateVokiResult)
+            .WithRequestValidation<UpdateVokiResultRequest>();
+        group.MapPost("/upload-image", UploadResultImage)
             .DisableAntiforgery();
 
-        // group.MapDelete("/delete", DeleteVokiResult);
+        group.MapDelete("/delete", DeleteVokiResult);
     }
 
     private static async Task<IResult> GetVokiResult(
@@ -43,65 +39,50 @@ internal static class SpecificVokiResultsHandlers
         ));
     }
 
-    private static async Task<IResult> UpdateResultName(
+    private static async Task<IResult> UpdateVokiResult(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<UpdateResultNameCommand, VokiResultName> handler
+        ICommandHandler<UpdateVokiResultCommand, VokiResult> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
-        var request = httpContext.GetValidatedRequest<UpdateResultNameRequest>();
+        var request = httpContext.GetValidatedRequest<UpdateVokiResultRequest>();
 
-        UpdateResultNameCommand command = new(id, resultId, request.ParsedName);
+        UpdateVokiResultCommand command = new(id, resultId,
+            request.ParsedName, request.ParsedText, request.ParsedImage
+        );
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (text) => Results.Json(
-            new { NewName = text.ToString() }
-        ));
+        return CustomResults.FromErrOr(result, (voki) =>
+            Results.Json(VokiResultDataResponse.Create(voki))
+        );
     }
 
-    private static async Task<IResult> UpdateResultText(
+    private static async Task<IResult> UploadResultImage(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<UpdateResultTextCommand, VokiResultText> handler
-    ) {
-        VokiId id = httpContext.GetVokiIdFromRoute();
-        GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
-        var request = httpContext.GetValidatedRequest<UpdateResultTextRequest>();
-
-        UpdateResultTextCommand command = new(id, resultId, request.ParsedText);
-        var result = await handler.Handle(command, ct);
-
-        return CustomResults.FromErrOr(result, (text) => Results.Json(
-            new { NewText = text.ToString() }
-        ));
-    }
-
-    private static async Task<IResult> SetResultImage(
-        CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<SetResultImageCommand, DraftGeneralVokiResultImageKey> handler,
+        ICommandHandler<UploadResultImageCommand, DraftGeneralVokiResultImageKey> handler,
         [FromForm] IFormFile file
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
         GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
 
-        SetResultImageCommand command = new(vokiId, resultId,
+        UploadResultImageCommand command = new(vokiId, resultId,
             new(file.OpenReadStream(), file.FileName, file.ContentType));
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (img) => Results.Json(
-            new { NewImage = img.ToString() }
+            new { ImageKey = img.ToString() }
         ));
     }
-
-    private static async Task<IResult> RemoveResultImage(
-        HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<RemoveResultImageCommand> handler
+    private static async Task<IResult> DeleteVokiResult(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<DeleteVokiResultCommand> handler
     ) {
-        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+        VokiId id = httpContext.GetVokiIdFromRoute();
         GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
 
-        RemoveResultImageCommand command = new(vokiId, resultId);
+        DeleteVokiResultCommand command = new(id, resultId);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
+        return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
     }
 }

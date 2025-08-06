@@ -15,9 +15,9 @@
   --err-shadow: 0 1px 3px 0px hsl(0deg 84% 50% / 8%), 0 1px 2px -1px hsl(0deg 84% 50% / 8%);
   --font-family: "Rubik", sans-serif;
   --radius: 0.5rem;
-  --shadow-xs: rgba(26, 0, 51, 0.1) 0px 0px 0px 1px;
+  --shadow-xs: rgb(26 0 51 / 10%) 0px 0px 0px 1px;
   --shadow: 0 1px 3px 0px hsl(0deg 0% 0% / 10%), 0 1px 2px -1px hsl(0deg 0% 0% / 10%);
-  --shadow-md:  rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  --shadow-md:  rgb(0 0 0 / 10%) 0px 1px 3px 0px, rgb(0 0 0 / 6%) 0px 1px 2px 0px;
   --shadow-lg: 0 1px 3px 0px hsl(0deg 0% 0% / 10%), 0 4px 6px -1px hsl(0deg 0% 0% / 10%);
   --shadow-xl: 0 1px 3px 0px hsl(0deg 0% 0% / 10%), 0 8px 10px -1px hsl(0deg 0% 0% / 10%);
   --shadow-2xl: 0 1px 3px 0px hsl(0deg 0% 0% / 25%);

@@ -116,6 +116,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
                 $"Answers data type: {newAnswerData.MatchingEnum}. Question answers type: {this.AnswersType}"
             );
         }
+
         VokiQuestionAnswer? answer = _answers.FirstOrDefault(a => a.Id == answerId);
         if (answer is null) {
             return ErrFactory.NotFound.Common("Cannot add update question answer because answer doesn't exist");
@@ -125,6 +126,22 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         if (updateRes.IsErr(out var err)) {
             return err;
         }
+
         return answer;
+    }
+
+    public bool DeleteAnswer(GeneralVokiAnswerId answerId) {
+        VokiQuestionAnswer? answer = _answers.FirstOrDefault(a => a.Id == answerId);
+        if (answer is null) {
+            return false;
+        }
+
+        return _answers.Remove(answer);
+    }
+
+    public void RemoveRelatedResultInAnswers(GeneralVokiResultId resultId) {
+        foreach (var a in _answers) {
+            a.RemoveRelatedResult(resultId);
+        }
     }
 }

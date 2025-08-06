@@ -13,7 +13,6 @@ public static class WebApplicationExtensions
         app.MapSpecificVokiQuestionsHandlers();
 
         app.MapQuestionAnswersHandlers();
-        app.MapSpecificQuestionAnswerHandlers();
 
         app.MapVokiResultsHandlers();
         app.MapSpecificVokiResultsHandlers();

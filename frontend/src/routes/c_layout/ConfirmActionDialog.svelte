@@ -72,39 +72,44 @@
 
 <style>
 	.buttons {
-		align-self: end;
-		margin: auto 2rem 2rem auto;
 		display: grid;
-		grid-template-columns: 1fr 1fr;
 		gap: 0.5rem;
+		margin: auto 2rem 2rem auto;
+		align-self: end;
+		grid-template-columns: 1fr 1fr;
 	}
+
 	.text {
-		text-align: center;
 		font-size: 2.125rem;
+		text-align: center;
 	}
+
 	.buttons button {
 		padding: 8px 20px;
-		border-radius: 6px;
-		outline: none;
 		border: none;
+		border-radius: 6px;
 		color: var(--back-main);
 		font-size: 20px;
 		text-align: center;
-		cursor: pointer;
 		transition: all 0.08s ease-in;
+		cursor: pointer;
+		outline: none;
 	}
 
 	.confirm {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
+
 	.confirm:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.cancel {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 	}
+
 	.cancel:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);

@@ -52,4 +52,8 @@ public class VokiQuestionAnswer : Entity<GeneralVokiAnswerId>
         RelatedResultIds = newRelatedResultIds;
         return ErrOrNothing.Nothing;
     }
+
+    public void RemoveRelatedResult(GeneralVokiResultId resultId) {
+        RelatedResultIds = RelatedResultIds.Remove(resultId);
+    }
 }

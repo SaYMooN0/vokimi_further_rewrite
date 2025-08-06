@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ApiShared;
 
-public class CustomResults
+public static class CustomResults
 {
     public static IResult ErrorResponse(Err e) =>
         Results.Json(new ErrResponseObject(e.ToDtoArray()), statusCode: e.ToHttpStatusCode());

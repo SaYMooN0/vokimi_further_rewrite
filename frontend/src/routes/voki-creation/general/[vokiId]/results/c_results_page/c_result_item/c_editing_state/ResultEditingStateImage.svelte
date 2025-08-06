@@ -38,29 +38,34 @@
 			isLoadingImage = false;
 		}
 	}
-	async function removeResultImage() {}
+	async function removeResultImage() {
+		image = null;
+	}
 	let isLoadingImage = $state(false);
 </script>
 
 {#if isLoadingImage}
-	<div class="loading-container">
+	<div class="loading-container img-not-set">
 		<CubesLoader sizeRem={3} />
 	</div>
 {:else if image}
-	<img class="result-image" src={StorageBucketMain.fileSrc(image)} alt="result" />
-	<label for="result-image-{resultId}" class="img-btn change-btn unselectable">Change image</label>
-	<input
-		type="file"
-		id="result-image-{resultId}"
-		accept=".jpg,.png,.webp"
-		hidden
-		onchange={handleInputChange}
-	/>
-	<button class="img-btn remove-btn unselectable" onclick={() => removeResultImage()}
-		>Remove image</button
-	>
+	<div class="image-set">
+		<img class="result-image" src={StorageBucketMain.fileSrc(image)} alt="result" />
+		<label for="result-image-{resultId}" class="img-btn change-btn unselectable">Change image</label
+		>
+		<input
+			type="file"
+			id="result-image-{resultId}"
+			accept=".jpg,.png,.webp"
+			hidden
+			onchange={handleInputChange}
+		/>
+		<button class="img-btn remove-btn unselectable" onclick={() => removeResultImage()}
+			>Remove image</button
+		>
+	</div>
 {:else}
-	<label class="upload-button unselectable">
+	<label class="upload-button img-not-set unselectable">
 		<svg><use href="#add-image-icon" /></svg>
 		<span>Add image</span>
 		<input type="file" accept=".jpg,.png,.webp" onchange={handleInputChange} hidden />
@@ -68,11 +73,30 @@
 {/if}
 
 <style>
+	.img-not-set {
+		margin: 0.5rem;
+		width: 6rem;
+		height: 6rem;
+	}
+	.image-set {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+	.result-image {
+		max-width: 15rem;
+		max-height: 18rem;
+		object-fit: contain;
+		border-radius: 1rem;
+		box-shadow: var(--shadow-xs);
+	}
 	.img-btn {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 100%;
+		width: 90%;
+		min-width: 11rem;
 		height: 2rem;
 		border: none;
 		border-radius: 0.25rem;
@@ -89,41 +113,42 @@
 		color: var(--primary-foreground);
 	}
 
-	.set-default-btn {
+	.remove-btn {
 		margin-top: 0.5rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 	}
 
-	.set-default-btn:hover {
-		background-color: var(--accent);
-		color: var(--accent-foreground);
+	.remove-btn:hover {
+		background-color: var(--err-back);
+		color: var(--err-foreground);
 	}
+
 	.upload-button {
-		height: 6rem;
-		width: 6rem;
-		background-color: var(--secondary);
-		box-shadow: var(--shadow-xs);
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		gap: 0.25rem;
-		font-size: 1rem;
 		border: none;
 		border-radius: 0.75rem;
+		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-        font-weight:450;
+		font-size: 1rem;
+		font-weight: 450;
+		box-shadow: var(--shadow-xs);
 	}
+
 	.upload-button > svg {
-		height: 2rem;
 		width: 2rem;
+		height: 2rem;
 		color: inherit;
-        stroke-width: 1.3;
+		stroke-width: 1.3;
 	}
+
 	.upload-button:hover {
-		color: var(--accent-foreground);
 		background-color: var(--accent);
+		color: var(--accent-foreground);
 		box-shadow: none;
 	}
 </style>

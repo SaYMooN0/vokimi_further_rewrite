@@ -58,6 +58,7 @@
 		font-size: 1.125rem;
 		font-weight: 450;
 	}
+
 	.result.err {
 		padding: 0.125rem;
 		border-radius: 0.25rem;

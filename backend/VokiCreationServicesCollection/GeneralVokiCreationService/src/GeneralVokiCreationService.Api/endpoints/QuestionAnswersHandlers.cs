@@ -16,6 +16,11 @@ internal static class QuestionAnswersHandlers
 
         group.MapPost("/add-new", AddNewAnswerToVokiQuestion)
             .WithRequestValidation<SaveVokiQuestionAnswerRequest>();
+
+        group.MapPut("/{answerId}/update", UpdateVokiQuestionAnswer)
+            .WithRequestValidation<SaveVokiQuestionAnswerRequest>();
+
+        group.MapDelete("/{answerId}/delete", DeleteVokiQuestionAnswer);
     }
 
     private static async Task<IResult> AddNewAnswerToVokiQuestion(
@@ -33,5 +38,38 @@ internal static class QuestionAnswersHandlers
         return CustomResults.FromErrOr(result, (answer) => Results.Json(
             VokiQuestionAnswerResponse.Create(answer)
         ));
+    }
+
+    private static async Task<IResult> UpdateVokiQuestionAnswer(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<UpdateVokiQuestionAnswerCommand, VokiQuestionAnswer> handler
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+        GeneralVokiAnswerId answerId = httpContext.GetAnswerIdFromRoute();
+        var request = httpContext.GetValidatedRequest<SaveVokiQuestionAnswerRequest>();
+
+        UpdateVokiQuestionAnswerCommand command = new(
+            vokiId, questionId, answerId, request.ParsedAnswerData, request.ParsedResultIds
+        );
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (answer) => Results.Json(
+            VokiQuestionAnswerResponse.Create(answer)
+        ));
+    }
+
+    private static async Task<IResult> DeleteVokiQuestionAnswer(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<DeleteVokiQuestionAnswerCommand> handler
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+        GeneralVokiAnswerId answerId = httpContext.GetAnswerIdFromRoute();
+
+        DeleteVokiQuestionAnswerCommand command = new(vokiId, questionId, answerId);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
     }
 }

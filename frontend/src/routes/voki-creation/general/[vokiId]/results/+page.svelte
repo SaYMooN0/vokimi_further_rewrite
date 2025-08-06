@@ -12,9 +12,11 @@
 	let resultCreationDialog = $state<ResultInitializingDialog>()!;
 	let results = $state(data.data?.results ?? []);
 
-	async function refetchResultsOnDelete() {}
 	function updateOnSave(result: ResultOverViewData) {
 		results = results.map((r) => (r.id === result.id ? result : r));
+	}
+	function updateOnDelete(resultId: string) {
+		results = results.filter((r) => r.id !== resultId);
 	}
 	const maxResultsCount = 60;
 </script>
@@ -42,7 +44,7 @@
 					vokiId={data.vokiId!}
 					{result}
 					updateParentOnSave={updateOnSave}
-					refetchOnDelete={refetchResultsOnDelete}
+					updateParentOnDelete={updateOnDelete}
 				/>
 			{/each}
 		</div>
@@ -60,6 +62,7 @@
 		justify-content: center;
 		margin: 1.25rem auto;
 	}
+
 	.results {
 		display: flex;
 		flex-direction: column;

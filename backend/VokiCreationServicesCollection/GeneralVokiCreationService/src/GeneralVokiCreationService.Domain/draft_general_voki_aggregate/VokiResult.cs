@@ -21,20 +21,17 @@ public class VokiResult : Entity<GeneralVokiResultId>
 
     public static VokiResult CreateNew(VokiResultName name, DateTime dateTime) => new(name, dateTime);
 
-    public void UpdateName(VokiResultName name) => this.Name = name;
-    public void UpdateText(VokiResultText text) => this.Text = text;
-
-    public ErrOrNothing SetImage(DraftGeneralVokiResultImageKey key) {
-        if (key.ResultId != Id) {
+    public ErrOrNothing Update(VokiResultName name, VokiResultText text, DraftGeneralVokiResultImageKey? newKey) {
+        if (newKey is not null && newKey.ResultId != Id) {
             return ErrFactory.Conflict(
                 "Provided image does not belong to the specified result",
-                $"Result id: {Id}, key: {key}"
+                $"Result id: {Id}, key: {newKey}"
             );
         }
 
-        Image = key;
+        this.Name = name;
+        this.Text = text;
+        Image = newKey;
         return ErrOrNothing.Nothing;
     }
-
-    public void RemoveImage() => this.Image = null;
 }

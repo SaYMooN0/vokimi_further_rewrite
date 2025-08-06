@@ -58,9 +58,9 @@
 		font-size: 1rem;
 		font-weight: 450;
 		letter-spacing: 0.2px;
+		box-shadow: var(--shadow-xs);
 		cursor: default;
 		grid-template-columns: 1.125rem 1fr;
-		box-shadow: var(--shadow-xs);
 	}
 
 	.property > svg {

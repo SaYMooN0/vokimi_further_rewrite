@@ -14,20 +14,20 @@
 		vokiId: string;
 		questionId: string;
 		startEditing: () => void;
-		refetchOnDelete: () => void;
+		updateParentOnDelete: (answerId:string) => void;
 	}
-	let { answer = $bindable(), vokiId, questionId, startEditing, refetchOnDelete }: Props = $props();
+	let { answer = $bindable(), vokiId, questionId, startEditing, updateParentOnDelete }: Props = $props();
 
 	const { open: openConfirmationDialog, close: closeConfirmationDialog } =
 		getConfirmActionDialogOpenFunction();
 	function openAnswerDeleteConfirmationDialog() {
 		const deleteAnswer = async () => {
-			const response = await ApiVokiCreationGeneral.fetchJsonResponse<void>(
+			const response = await ApiVokiCreationGeneral.fetchVoidResponse(
 				`/vokis/${vokiId}/questions/${questionId}/answers/${answer.id}/delete`,
 				RequestJsonOptions.DELETE({})
 			);
 			if (response.isSuccess) {
-				refetchOnDelete();
+				updateParentOnDelete(answer.id);
 				closeConfirmationDialog();
 				return [];
 			} else {

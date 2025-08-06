@@ -30,20 +30,20 @@
 		border-radius: 0.5rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		box-shadow: var(--shadow-xs);
 		font-size: 1.25rem;
 		font-weight: bold;
 		font-weight: 580;
 		text-align: center;
 		letter-spacing: 0.5px;
+		box-shadow: var(--shadow-xs);
 		transition: transform 0.1s ease-in;
 		cursor: pointer;
 		white-space: nowrap;
 	}
 
 	.type-card:not(.selected):hover {
-		color: var(--accent-foreground);
 		background-color: var(--accent);
+		color: var(--accent-foreground);
 		box-shadow: none;
 	}
 
@@ -51,9 +51,9 @@
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 		box-shadow: var(--shadow-xl);
+		box-shadow: none;
 		transition: transform 0.18s ease-in;
 		transform: scale(1.06);
-		box-shadow: none;
 
 	}
 </style>

@@ -77,6 +77,7 @@
 <style>
 	.unsaved-answer {
 		--results-width: 13rem;
+
 		display: grid;
 		grid-template-columns: var(--results-width) 1fr;
 		gap: 0.25rem;

@@ -8,22 +8,13 @@
 	import GeneralVokiCreationNewAnswerDisplay from './c_answers_section/c_answer_displays/GeneralVokiCreationNewAnswerDisplay.svelte';
 	import GeneralVokiCreationSavedAnswerDisplay from './c_answers_section/c_answer_displays/GeneralVokiCreationSavedAnswerDisplay.svelte';
 
-	let {
-		questionId,
-		vokiId,
-		answers = $bindable(),
-		answersType
-	}: {
+	interface Props {
 		questionId: string;
 		vokiId: string;
 		answers: QuestionAnswerData[];
 		answersType: GeneralVokiAnswerType;
-	} = $props<{
-		questionId: string;
-		vokiId: string;
-		answers: QuestionAnswerData[];
-		answersType: GeneralVokiAnswerType;
-	}>();
+	}
+	let { questionId, vokiId, answers = $bindable(), answersType }: Props = $props();
 	const maxAnswersForQuestionCount = 60;
 	let unsavedAnswers = $state<GeneralVokiAnswerTypeData[]>([]);
 	let resultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
@@ -38,6 +29,9 @@
 	function updateAnswerOnSave(newAnswer: QuestionAnswerData) {
 		answers = answers.map((a) => (a.id === newAnswer.id ? newAnswer : a));
 		answers.sort((a, b) => a.order - b.order);
+	}
+	function updateOnAnswerDelete(answerId: string) {
+		answers = answers.filter((a) => a.id !== answerId);
 	}
 </script>
 
@@ -62,7 +56,7 @@
 			openRelatedResultsSelectingDialog={(selected, setSelected) =>
 				resultsSelectingDialog.open(selected, setSelected)}
 			updateParentOnSave={updateAnswerOnSave}
-			refetchOnDelete={() => {}}
+			updateParentOnDelete={(id) => updateOnAnswerDelete(id)}
 		/>
 	{/each}
 	{#if unsavedAnswers.length != 0}

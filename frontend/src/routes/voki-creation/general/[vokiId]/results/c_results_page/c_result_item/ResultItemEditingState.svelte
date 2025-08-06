@@ -26,11 +26,15 @@
 		cancelEditing: () => void;
 	}>();
 	let errs = $state<Err[]>([]);
-	let resultEditing = $state(result);
+	let resultEditing = $state({ ...result });
 	async function saveResult() {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<ResultOverViewData>(
 			`/vokis/${vokiId}/results/${result.id}/update`,
-			RequestJsonOptions.PUT({ resultEditing })
+			RequestJsonOptions.PUT({
+				newName: resultEditing.name,
+				newText: resultEditing.text,
+				newImage: resultEditing.image
+			})
 		);
 
 		if (response.isSuccess) {
@@ -64,9 +68,9 @@
 	<DefaultErrBlock errList={errs} />
 {/if}
 <ResultItemButtons
-	mainBtnText="Edit"
+	mainBtnText="Save"
 	mainBtnOnClick={() => saveResult()}
-	secondaryBtnIconId="#common-minus-icon"
+	secondaryBtnIconId="#common-cross-icon"
 	secondaryBtnOnClick={() => cancelEditing()}
 />
 
@@ -76,6 +80,7 @@
 		flex-direction: row;
 		gap: 0.5rem;
 	}
+
 	.result-input {
 		width: 100%;
 		box-sizing: border-box;
@@ -95,16 +100,18 @@
 	.result-input:focus {
 		outline-color: var(--primary);
 	}
+
 	.result-name {
+		padding: 0.125rem 0.375rem;
 		font-size: 1.675rem;
 		font-weight: 475;
 		letter-spacing: 0.5px;
-		padding: 0.125rem 0.375rem;
 	}
+
 	.result-text {
+		padding: 0.125rem 0.25rem;
 		font-size: 1.25rem;
 		font-weight: 420;
 		letter-spacing: 0.1px;
-		padding: 0.125rem 0.25rem;
 	}
 </style>
