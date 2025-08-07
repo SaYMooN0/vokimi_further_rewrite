@@ -51,8 +51,9 @@
 		padding: 0.125rem 0.375rem;
 		margin-left: 0.375rem;
 		border-radius: 0.25rem;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+		box-shadow: var(--shadow-xs);
 		font-size: 1rem;
 	}
 </style>

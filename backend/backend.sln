@@ -94,6 +94,32 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserProfilesService.Infrast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserProfilesService.Api", "UserProfilesService\src\UserProfilesService.Api\UserProfilesService.Api.csproj", "{FB1D8D71-B2FE-4511-AD8F-63A2266A1FB8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VokiTakingServicesCollection", "VokiTakingServicesCollection", "{244EBF0E-66E5-42D9-A483-A8231E06D064}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GeneralVokiTakingService", "GeneralVokiTakingService", "{13FDB206-FF65-41F5-8578-30DF75353C77}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1CE60351-3855-45C7-9F59-B5380B9C46A8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralVokiTakingService.Domain", "VokiTakingServicesCollection\GeneralVokiTakingService\src\GeneralVokiTakingService.Domain\GeneralVokiTakingService.Domain.csproj", "{3A99E638-9711-4C26-AC63-8E1E7D39DD77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralVokiTakingService.Infrastructure", "VokiTakingServicesCollection\GeneralVokiTakingService\src\GeneralVokiTakingService.Infrastructure\GeneralVokiTakingService.Infrastructure.csproj", "{BA2BC608-6C87-4A3E-BCF0-AC035B1EF748}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralVokiTakingService.Application", "VokiTakingServicesCollection\GeneralVokiTakingService\src\GeneralVokiTakingService.Application\GeneralVokiTakingService.Application.csproj", "{9EF664E7-9BF0-421B-B889-FCCAD1AB932F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneralVokiTakingService.Api", "VokiTakingServicesCollection\GeneralVokiTakingService\src\GeneralVokiTakingService.Api\GeneralVokiTakingService.Api.csproj", "{0E60A7E8-7073-4016-8C83-2C17DDC2C14B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VokisCatalogService", "VokisCatalogService", "{189F7914-6C83-4EE4-802B-58F83B1C3695}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A15794F8-EB41-4FC3-B553-E96EEF0C9424}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokisCatalogService.Api", "VokisCatalogService\src\VokisCatalogService.Api\VokisCatalogService.Api.csproj", "{8A503877-EDE3-4490-BA1D-A3C837D5E67A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokisCatalogService.Application", "VokisCatalogService\src\VokisCatalogService.Application\VokisCatalogService.Application.csproj", "{2DDB8C80-F154-4FDD-B5E1-A8E553F3EF3E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokisCatalogService.Domain", "VokisCatalogService\src\VokisCatalogService.Domain\VokisCatalogService.Domain.csproj", "{D1BA4BC1-7209-46D5-A331-D5C7B969A96D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokisCatalogService.Infrastructure", "VokisCatalogService\src\VokisCatalogService.Infrastructure\VokisCatalogService.Infrastructure.csproj", "{3A0F6888-5A50-40F6-B06C-E7770F99E1E9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +165,17 @@ Global
 		{DD27EB75-59DC-481D-8AC1-77AA8441AB9C} = {83B7977A-3E1D-44CE-88F7-3FC1FC0EEB2E}
 		{C9085D88-009F-443F-A037-F65E0A38C01E} = {83B7977A-3E1D-44CE-88F7-3FC1FC0EEB2E}
 		{FB1D8D71-B2FE-4511-AD8F-63A2266A1FB8} = {83B7977A-3E1D-44CE-88F7-3FC1FC0EEB2E}
+		{13FDB206-FF65-41F5-8578-30DF75353C77} = {244EBF0E-66E5-42D9-A483-A8231E06D064}
+		{1CE60351-3855-45C7-9F59-B5380B9C46A8} = {13FDB206-FF65-41F5-8578-30DF75353C77}
+		{3A99E638-9711-4C26-AC63-8E1E7D39DD77} = {1CE60351-3855-45C7-9F59-B5380B9C46A8}
+		{BA2BC608-6C87-4A3E-BCF0-AC035B1EF748} = {1CE60351-3855-45C7-9F59-B5380B9C46A8}
+		{9EF664E7-9BF0-421B-B889-FCCAD1AB932F} = {1CE60351-3855-45C7-9F59-B5380B9C46A8}
+		{0E60A7E8-7073-4016-8C83-2C17DDC2C14B} = {1CE60351-3855-45C7-9F59-B5380B9C46A8}
+		{A15794F8-EB41-4FC3-B553-E96EEF0C9424} = {189F7914-6C83-4EE4-802B-58F83B1C3695}
+		{8A503877-EDE3-4490-BA1D-A3C837D5E67A} = {A15794F8-EB41-4FC3-B553-E96EEF0C9424}
+		{2DDB8C80-F154-4FDD-B5E1-A8E553F3EF3E} = {A15794F8-EB41-4FC3-B553-E96EEF0C9424}
+		{D1BA4BC1-7209-46D5-A331-D5C7B969A96D} = {A15794F8-EB41-4FC3-B553-E96EEF0C9424}
+		{3A0F6888-5A50-40F6-B06C-E7770F99E1E9} = {A15794F8-EB41-4FC3-B553-E96EEF0C9424}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2CAB55A2-15A7-401C-94C6-F8B273B50F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -261,5 +298,37 @@ Global
 		{FB1D8D71-B2FE-4511-AD8F-63A2266A1FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB1D8D71-B2FE-4511-AD8F-63A2266A1FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB1D8D71-B2FE-4511-AD8F-63A2266A1FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A99E638-9711-4C26-AC63-8E1E7D39DD77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A99E638-9711-4C26-AC63-8E1E7D39DD77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A99E638-9711-4C26-AC63-8E1E7D39DD77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A99E638-9711-4C26-AC63-8E1E7D39DD77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA2BC608-6C87-4A3E-BCF0-AC035B1EF748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA2BC608-6C87-4A3E-BCF0-AC035B1EF748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA2BC608-6C87-4A3E-BCF0-AC035B1EF748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA2BC608-6C87-4A3E-BCF0-AC035B1EF748}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EF664E7-9BF0-421B-B889-FCCAD1AB932F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EF664E7-9BF0-421B-B889-FCCAD1AB932F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EF664E7-9BF0-421B-B889-FCCAD1AB932F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EF664E7-9BF0-421B-B889-FCCAD1AB932F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E60A7E8-7073-4016-8C83-2C17DDC2C14B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E60A7E8-7073-4016-8C83-2C17DDC2C14B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E60A7E8-7073-4016-8C83-2C17DDC2C14B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E60A7E8-7073-4016-8C83-2C17DDC2C14B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A503877-EDE3-4490-BA1D-A3C837D5E67A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A503877-EDE3-4490-BA1D-A3C837D5E67A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A503877-EDE3-4490-BA1D-A3C837D5E67A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A503877-EDE3-4490-BA1D-A3C837D5E67A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DDB8C80-F154-4FDD-B5E1-A8E553F3EF3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DDB8C80-F154-4FDD-B5E1-A8E553F3EF3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DDB8C80-F154-4FDD-B5E1-A8E553F3EF3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DDB8C80-F154-4FDD-B5E1-A8E553F3EF3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1BA4BC1-7209-46D5-A331-D5C7B969A96D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1BA4BC1-7209-46D5-A331-D5C7B969A96D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1BA4BC1-7209-46D5-A331-D5C7B969A96D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1BA4BC1-7209-46D5-A331-D5C7B969A96D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A0F6888-5A50-40F6-B06C-E7770F99E1E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A0F6888-5A50-40F6-B06C-E7770F99E1E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A0F6888-5A50-40F6-B06C-E7770F99E1E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A0F6888-5A50-40F6-B06C-E7770F99E1E9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

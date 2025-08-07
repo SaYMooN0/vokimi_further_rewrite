@@ -80,8 +80,8 @@
 	}
 
 	.result-content {
-		display: flex;
-		flex-direction: row;
+		display: grid;
+		grid-template-columns: 1fr auto;
 	}
 
 	.result-text {

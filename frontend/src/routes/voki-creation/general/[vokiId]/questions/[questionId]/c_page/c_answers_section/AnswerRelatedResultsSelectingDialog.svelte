@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
@@ -48,6 +49,7 @@
 <DialogWithCloseButton
 	dialogId="general-voki-answer-related-results-selecting-dialog"
 	bind:this={dialog}
+	subheading="Select related results"
 >
 	{#if isLoading}
 		<div class="loader">
@@ -59,7 +61,7 @@
 			<h1>Error during fetching results</h1>
 			<DefaultErrBlock errList={errs} />
 		</div>
-		<PrimaryButton onclick={() => fetchResultNames()}>Refetch</PrimaryButton>
+		<PrimaryButton onclick={() => fetchResultNames()} class="refetch">Refetch</PrimaryButton>
 	{:else if allResults.length === 0}
 		<ListEmptyMessage
 			messageText="This voki has no results"
@@ -69,24 +71,24 @@
 			}}
 			className="no-results"
 		/>
-		<PrimaryButton onclick={() => fetchResultNames()}>Refetch</PrimaryButton>
+		<PrimaryButton onclick={() => fetchResultNames()} class="refetch">Refetch</PrimaryButton>
 	{:else}
 		<div class="results">
 			{#each allResults as result}
-				<div class="result">
-					<input type="checkbox" bind:checked={resultsWithIsSelected[result.id]} />
+				<label class="result">
+					<DefaultCheckBox bind:checked={resultsWithIsSelected[result.id]} />
 					<p>{result.name}</p>
-				</div>
+				</label>
 			{/each}
 		</div>
-		<button class="submit-btn" onclick={onSubmit}>Confirm</button>
+		<PrimaryButton onclick={() => onSubmit()} class="confirm">Confirm</PrimaryButton>
 	{/if}
 </DialogWithCloseButton>
 
 <style>
 	:global(#general-voki-answer-related-results-selecting-dialog .dialog-content) {
-		width: 50rem;
-		height: 30rem;
+		min-width: 40rem;
+		min-height: 20rem;
 	}
 
 	.loader {
@@ -97,6 +99,7 @@
 		gap: 1rem;
 		width: 100%;
 		height: 100%;
+		animation: var(--default-fade-in-animation);
 	}
 
 	.loader p {
@@ -112,13 +115,51 @@
 		align-items: center;
 		gap: 1rem;
 		margin: auto;
+		animation: var(--default-fade-in-animation);
 	}
 
-	.error > :global(.primary-btn) {
-		margin-top: 1rem;
+	:global(#general-voki-answer-related-results-selecting-dialog .refetch) {
+		margin-top: 4rem;
 	}
 
 	:global(#general-voki-answer-related-results-selecting-dialog .no-results) {
 		margin: auto;
+		animation: var(--default-fade-in-animation);
+	}
+	.results {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		max-height: 50rem;
+		overflow-y: auto;
+		padding: 0 1rem;
+	}
+	.result {
+		width: 100%;
+		font-size: 1.125rem;
+		font-weight: 450;
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		justify-items: flex-start;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.5rem;
+	}
+	.result:hover {
+		background-color: var(--secondary);
+		box-shadow: var(--shadow-xs);
+		cursor: pointer;
+	}
+	:global(#general-voki-answer-related-results-selecting-dialog .confirm) {
+		margin-top: auto;
+	}
+	@keyframes default-fade-in {
+		from {
+			opacity: 0.4;
+		}
+
+		to {
+			opacity: 1;
+		}
 	}
 </style>

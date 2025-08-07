@@ -18,7 +18,11 @@ internal sealed class AddNewQuestionToVokiCommandHandler :
         _draftGeneralVokiRepository = draftGeneralVokiRepository;
     }
 
-    private static readonly GeneralVokiAnswerType[] SupportedTyped = [GeneralVokiAnswerType.TextOnly];
+    private static readonly GeneralVokiAnswerType[] SupportedTyped = [
+        GeneralVokiAnswerType.TextOnly,
+        GeneralVokiAnswerType.ColorOnly,
+        GeneralVokiAnswerType.ColorAndText
+    ];
 
     public async Task<ErrOr<GeneralVokiQuestionId>> Handle(AddNewQuestionToVokiCommand command, CancellationToken ct) {
         if (!SupportedTyped.Contains(command.AnswersType)) {

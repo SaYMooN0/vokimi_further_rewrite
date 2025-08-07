@@ -4,7 +4,7 @@ public static class GeneralVokiAnswerRules
 {
     public const int
         TextAnswerMinLength = 5,
-        TextAnswerMaxLength = 500;
+        TextAnswerMaxLength = 1000;
 
     public static ErrOrNothing CheckAnswerTextForErrs(string answer) {
         int len = string.IsNullOrWhiteSpace(answer) ? 0 : answer.Length;

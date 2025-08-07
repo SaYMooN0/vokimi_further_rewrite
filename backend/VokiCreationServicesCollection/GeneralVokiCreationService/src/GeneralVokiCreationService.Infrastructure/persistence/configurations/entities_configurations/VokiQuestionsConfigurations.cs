@@ -18,6 +18,9 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .HasGuidBasedIdConversion();
 
         builder
+            .Property(x => x.AnswersType);
+        
+        builder
             .Property(x => x.Text)
             .HasConversion<VokiQuestionTextConverter>();
 

@@ -73,23 +73,24 @@
 <style>
 	.buttons {
 		display: grid;
-		gap: 0.5rem;
-		margin: auto 2rem 2rem auto;
+		gap: 0.75rem;
+		margin-top: 2rem;
 		align-self: end;
 		grid-template-columns: 1fr 1fr;
 	}
 
 	.text {
-		font-size: 2.125rem;
+		font-size: 2rem;
+		font-weight: 450;
 		text-align: center;
+		padding: 0 1rem;
 	}
 
 	.buttons button {
-		padding: 8px 20px;
+		padding: 0.375rem 1.5rem;
 		border: none;
-		border-radius: 6px;
-		color: var(--back-main);
-		font-size: 20px;
+		border-radius: 0.5rem;
+		font-size: 1.5rem;
 		text-align: center;
 		transition: all 0.08s ease-in;
 		cursor: pointer;
@@ -108,6 +109,7 @@
 	.cancel {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
+		font-weight: 480;
 	}
 
 	.cancel:hover {

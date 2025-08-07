@@ -106,6 +106,7 @@
 		width: 100%;
 		border-radius: var(--voki-cover-border-radius);
 		cursor: pointer;
+		margin: 0.125rem;
 	}
 
 	.voki-item:not(:has(.interactable:hover)):active {

@@ -7,7 +7,7 @@ public sealed class VokiQuestionText : ValueObject
     private readonly string _value;
 
     public const int QuestionTextMinLength = 10;
-    public const int QuestionTextMaxLength = 500;
+    public const int QuestionTextMaxLength = 1000;
 
     private VokiQuestionText(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(value));

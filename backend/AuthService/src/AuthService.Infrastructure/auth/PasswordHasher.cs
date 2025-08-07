@@ -7,7 +7,7 @@ internal sealed class PasswordHasher : IPasswordHasher
 {
     private const int SaltSize = 16;
     private const int HashSize = 32;
-    private const int Iterations = 500000;
+    private const int Iterations = 50;
 
     private static readonly HashAlgorithmName Algorithm = HashAlgorithmName.SHA512;
 

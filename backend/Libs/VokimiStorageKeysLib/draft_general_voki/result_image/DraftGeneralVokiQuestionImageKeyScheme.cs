@@ -2,7 +2,7 @@
 
 internal static class DraftGeneralVokiResultImageKeyScheme
 {
-    public const string Template = "draft-vokis/{vokiId:id}/results/{resultId:id}/images/{name:id}";
+    public const string Template = "draft-vokis/{vokiId:id}/results/{resultId:id}/{version:id}";
     public static readonly ImmutableHashSet<string> AllowedExtensions = ["jpg", "webp"];
     private static readonly KeyTemplateParser Parser = new(Template, BaseStorageKey.Extensions.ImageFiles);
 

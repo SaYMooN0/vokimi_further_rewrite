@@ -25,7 +25,7 @@ public class DraftGeneralVokiResultImageKey : BaseStorageKey
     ) => new($"{Folder(vokiId, resultId)}/{Guid.NewGuid()}{extension}");
 
     public static string Folder(VokiId vokiId, GeneralVokiResultId resultId) =>
-        $"draft-vokis/{vokiId}/results/{resultId}/images";
+        $"draft-vokis/{vokiId}/results/{resultId}";
 
     public bool IsWithIds(
         VokiId expectedVokiId,

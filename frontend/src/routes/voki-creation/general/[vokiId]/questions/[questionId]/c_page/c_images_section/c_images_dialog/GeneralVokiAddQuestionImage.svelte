@@ -41,7 +41,7 @@
 		padding: 0 1rem;
 		border-radius: 1rem;
 		background-color: var(--secondary);
-		animation: fade-in 0.06s ease-in-out forwards;
+		animation: var(--default-fade-in-animation);
 		aspect-ratio: 1/1;
 	}
 
@@ -84,15 +84,5 @@
 		border-color: var(--accent-foreground);
 		background-color: var(--accent);
 		color: var(--accent-foreground);
-	}
-
-	@keyframes fade-in {
-		from {
-			opacity: 0.4;
-		}
-
-		to {
-			opacity: 1;
-		}
 	}
 </style>
