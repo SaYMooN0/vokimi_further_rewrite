@@ -1,4 +1,5 @@
-﻿using CoreVokiCreationService.Domain.common.interfaces.repositories;
+﻿using ApplicationShared;
+using CoreVokiCreationService.Domain.common.interfaces.repositories;
 using CoreVokiCreationService.Infrastructure.integration_events;
 using CoreVokiCreationService.Infrastructure.persistence;
 using CoreVokiCreationService.Infrastructure.persistence.repositories;
@@ -21,7 +22,7 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration,
         IWebHostEnvironment env
-    )  {
+    ) {
         return services
             .AddDefaultServices()
             .AddPersistence(configuration, env)
@@ -30,12 +31,10 @@ public static class DependencyInjection
             .AddIntegrationEventsPublisher();
     }
 
-    private static IServiceCollection AddDefaultServices(this IServiceCollection services) {
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-        services.AddTransient<IDomainEventsPublisher, DomainEventsPublisher>();
-
-        return services;
-    }
+    private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
+        .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+        .AddTransient<IDomainEventsPublisher, DomainEventsPublisher>()
+        .AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
     private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
         var jwtTokenConfig = configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
@@ -48,12 +47,15 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddConfiguredMassTransit(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddConfiguredMassTransit(this IServiceCollection services,
+        IConfiguration configuration) {
         var rabbitConfig = configuration.GetSection("MessageBroker");
 
         var host = rabbitConfig["Host"] ?? throw new ArgumentException("MessageBroker:Host is not configured");
-        var username = rabbitConfig["Username"] ?? throw new ArgumentException("MessageBroker:Username is not configured");
-        var password = rabbitConfig["Password"] ?? throw new ArgumentException("MessageBroker:Password is not configured");
+        var username = rabbitConfig["Username"] ??
+                       throw new ArgumentException("MessageBroker:Username is not configured");
+        var password = rabbitConfig["Password"] ??
+                       throw new ArgumentException("MessageBroker:Password is not configured");
         var retryCountStr = rabbitConfig["RetryCount"] ??
                             throw new ArgumentException("MessageBroker:RetryCount is not configured");
 
@@ -80,7 +82,7 @@ public static class DependencyInjection
 
                 var serviceName = configuration["ServiceName"] ??
                                   throw new ArgumentNullException("ServiceName is not provided");
-                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName+":"));
+                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName + ":"));
 
                 cfg.UseMessageRetry(
                     r => { r.Interval(retryCount, TimeSpan.FromSeconds(retryIntervalSeconds)); }

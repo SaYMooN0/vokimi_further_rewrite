@@ -1,6 +1,7 @@
 ﻿using SharedKernel.common.vokis;
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
 using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
@@ -75,5 +76,57 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
 
     public void UpdateTags(VokiTagsSet newTags) {
         this.Tags = newTags;
+    }
+
+    protected List<VokiPublishingIssue> CheckCoverForPublishingIssues() {
+        if (!Cover.IsWithId(Id)) {
+            return [
+                VokiPublishingIssue.Error(
+                    message: "Cover does not belong to this Voki",
+                    source: "Cover",
+                    fixRecommendation: "Try choosing another cover"
+                )
+            ];
+        }
+
+        if (this.Cover.IsDefault()) {
+            return [
+                VokiPublishingIssue.Warning(
+                    message: "You are using the default cover",
+                    source: "Cover",
+                    fixRecommendation: "Consider selecting a custom cover that better represents your Voki"
+                )
+            ];
+        }
+
+        return [];
+    }
+
+    protected List<VokiPublishingIssue> CheckDetailsForPublishingIssues() {
+        if (string.IsNullOrWhiteSpace(Details.Description.ToString())) {
+            return [
+                VokiPublishingIssue.Warning(
+                    message: "Description is empty",
+                    source: "Description",
+                    fixRecommendation: "Add a description to help users understand your Voki"
+                )
+            ];
+        }
+
+        return [];
+    }
+
+    protected List<VokiPublishingIssue> CheckTagsForPublishingIssues() {
+        if (Tags.Value.Count == 0) {
+            return [
+                VokiPublishingIssue.Warning(
+                    message: "No tags have been added",
+                    source: "Tags",
+                    fixRecommendation: "Add some tags so users can discover your Voki more easily"
+                )
+            ];
+        }
+
+        return [];
     }
 }

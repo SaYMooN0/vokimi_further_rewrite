@@ -1,9 +1,11 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.events;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using SharedKernel;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
 using VokimiStorageKeysLib.draft_general_voki.result_image;
 using VokimiStorageKeysLib.draft_voki_cover;
 
@@ -289,5 +291,103 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
         bool wasDeleted = question.DeleteAnswer(answerId);
         return wasDeleted;
+    }
+
+    private List<VokiPublishingIssue> CheckQuestionsForPublishingIssues() {
+        if (_questions.Count < MinQuestionsCount) {
+            return [
+                VokiPublishingIssue.Error(
+                    message: $"Too few questions ({_questions.Count}). Minimum required is {MinQuestionsCount}",
+                    source: "Questions",
+                    fixRecommendation: $"Add at least {MinQuestionsCount - _questions.Count} more question(s)"
+                )
+            ];
+        }
+
+        if (_questions.Count > MaxQuestionsCount) {
+            return [
+                VokiPublishingIssue.Error(
+                    message: $"Too many questions ({_questions.Count}). Maximum allowed is {MaxQuestionsCount}",
+                    source: "Questions",
+                    fixRecommendation: $"Remove {_questions.Count - MaxQuestionsCount} question(s) to meet the limit"
+                )
+            ];
+        }
+
+        return _questions.SelectMany(q => q.CheckForPublishingIssues()).ToList();
+    }
+
+
+    private List<VokiPublishingIssue> CheckResultsForPublishingIssues() {
+        if (_results.Count < MinResultsCount) {
+            return [
+                VokiPublishingIssue.Error(
+                    message: $"Too few results ({_results.Count}). Minimum required is {MinResultsCount}",
+                    source: "Results",
+                    fixRecommendation: $"Add at least {MinResultsCount - _results.Count} more result(s)"
+                )
+            ];
+        }
+
+        if (_results.Count > MaxResultsCount) {
+            return [
+                VokiPublishingIssue.Error(
+                    message: $"Too many results ({_results.Count}). Maximum allowed is {MaxResultsCount}",
+                    source: "Results",
+                    fixRecommendation: $"Remove {_results.Count - MaxResultsCount} result(s) to meet the limit"
+                )
+            ];
+        }
+
+        int resultImages = _results.Count(r => r.Image is not null);
+        if (resultImages > 0 && resultImages < _results.Count) {
+            return [
+                VokiPublishingIssue.Warning(
+                    message: "Some results include images while others don't",
+                    source: "Results",
+                    fixRecommendation: "Consider using images for all results or none to keep presentation consistent"
+                )
+            ];
+        }
+
+        return [];
+    }
+
+    public ImmutableArray<VokiPublishingIssue> CheckForPublishingIssues() => [
+        ..base.CheckCoverForPublishingIssues(),
+        ..base.CheckTagsForPublishingIssues(),
+        ..base.CheckDetailsForPublishingIssues(),
+        ..CheckQuestionsForPublishingIssues(),
+        ..CheckResultsForPublishingIssues()
+    ];
+
+    public ErrOrNothing PublishWithWarningsIgnore(IDateTimeProvider dateTimeProvider) {
+        var issues = CheckForPublishingIssues();
+        bool anyErrors = issues.Any(i => i.IssueType == PublishingIssueType.Error);
+        if (anyErrors) {
+            return ErrFactory.Conflict("Cannot publish voki because it has some unresolved errors");
+        }
+
+        QuestionDomainEventDto ParseQuestionToDto(VokiQuestion q) {
+            return new QuestionDomainEventDto(
+                q.Id, q.Text, q.Images, q.AnswersType, q.OrderInVoki,
+                q.Answers.Select(a =>
+                    new AnswerDomainEventDto(a.Id, a.OrderInQuestion, a.TypeData, a.RelatedResultIds.ToArray())
+                ).ToArray(),
+                q.ShuffleAnswers, q.AnswersCountLimit
+            );
+        }
+
+        AddDomainEvent(new GeneralVokiPublishedEvent(
+            Id, PrimaryAuthorId, CoAuthors,
+            Name, Cover, Details, Tags,
+            InitializingDate: CreationDate,
+            PublishingDate: dateTimeProvider.UtcNow,
+            _questions.Select(ParseQuestionToDto).ToArray(),
+            ForceSequentialAnswering: TakingProcessSettings.ForceSequentialAnswering,
+            ShuffleQuestions: TakingProcessSettings.ShuffleQuestions,
+            _results.Select(r => new ResultDomainEventDto(r.Id, r.Name, r.Text, r.Image)).ToArray()
+        ));
+        return ErrOrNothing.Nothing;
     }
 }

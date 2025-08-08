@@ -1,12 +1,14 @@
-﻿using GeneralVokiCreationService.Api.contracts;
-using GeneralVokiCreationService.Api.contracts.voki;
+﻿using GeneralVokiCreationService.Api.contracts.voki;
 using GeneralVokiCreationService.Application.draft_vokis.commands;
 using GeneralVokiCreationService.Application.draft_vokis.commands.@base;
+using GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.common.vokis;
+using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
 using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Api.endpoints;
@@ -33,6 +35,10 @@ internal static class SpecificVokiHandlers
 
         group.MapPatch("/update-voki-taking-process-settings", UpdateVokiTakingProcessSettings)
             .WithRequestValidation<UpdateVokiTakingProcessSettingsRequest>();
+
+        group.MapGet("/publishing-errors", CheckVokiForPublishingErrors);
+        group.MapPost("/publish", PublishVoki);
+        group.MapPost("/publish-with-warnings-ignore", PublishVokiWithWarningsIgnore);
     }
 
     private static async Task<IResult> GetVokiMainInfo(
@@ -136,5 +142,48 @@ internal static class SpecificVokiHandlers
         return CustomResults.FromErrOr(result, (settings) =>
             Results.Json(settings)
         );
+    }
+
+    private static async Task<IResult> CheckVokiForPublishingErrors(
+        CancellationToken ct, HttpContext httpContext,
+        IQueryHandler<GetVokiPublishingIssuesQuery, ImmutableArray<VokiPublishingIssue>> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+
+        GetVokiPublishingIssuesQuery query = new(id);
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOr(result, (issues) => Results.Json(
+            VokiPublishingIssuesResponse.Create(issues)
+        ));
+    }
+
+    private static async Task<IResult> PublishVoki(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<PublishVokiCommand, PublishVokiCommandResult> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+
+        PublishVokiCommand command = new(id);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (r) => r switch {
+            PublishVokiCommandResult.Success => Results.Ok(),
+            PublishVokiCommandResult.FailedToPublish fail =>
+                Results.Json(VokiPublishingIssuesResponse.Create(fail.Issues)),
+            _ => throw new ArgumentException("Unknown Voki result command")
+        });
+    }
+
+    private static async Task<IResult> PublishVokiWithWarningsIgnore(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<PublishVokiWithWarningsIgnoreCommand> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+
+        PublishVokiWithWarningsIgnoreCommand command = new(id);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
 }

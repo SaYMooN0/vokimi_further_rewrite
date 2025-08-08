@@ -1,5 +1,6 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
+using ApplicationShared;
 using GeneralVokiCreationService.Application;
 using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 using GeneralVokiCreationService.Infrastructure.integration_events;
@@ -34,16 +35,13 @@ public static class DependencyInjection
             .AddPersistence(configuration, env)
             .AddS3(configuration)
             .AddAuth(configuration)
-            .AddConfiguredMassTransit(configuration)
-            .AddIntegrationEventsPublisher();
+            .AddConfiguredMassTransit(configuration);
     }
 
-    private static IServiceCollection AddDefaultServices(this IServiceCollection services) {
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-        services.AddTransient<IDomainEventsPublisher, DomainEventsPublisher>();
-
-        return services;
-    }
+    private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
+        .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+        .AddTransient<IDomainEventsPublisher, DomainEventsPublisher>()
+        .AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
     private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
         var jwtTokenConfig = configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
@@ -56,8 +54,10 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddConfiguredMassTransit(this IServiceCollection services,
-        IConfiguration configuration) {
+    private static IServiceCollection AddConfiguredMassTransit(
+        this IServiceCollection services,
+        IConfiguration configuration
+    ) {
         var rabbitConfig = configuration.GetSection("MessageBroker");
 
         var host = rabbitConfig["Host"] ?? throw new ArgumentException("MessageBroker:Host is not configured");
@@ -98,19 +98,6 @@ public static class DependencyInjection
                 );
             });
         });
-
-        return services;
-    }
-
-    private static IServiceCollection AddIntegrationEventsPublisher(this IServiceCollection services) {
-        services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
-
-        services
-            .Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
-                .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
-                .AsImplementedInterfaces()
-                .WithScopedLifetime()
-            );
 
         return services;
     }

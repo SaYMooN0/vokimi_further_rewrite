@@ -5,5 +5,5 @@ public record class VokiTakingProcessSettings(
     bool ShuffleQuestions
 )
 {
-    public static VokiTakingProcessSettings Default = new(false, false);
+    public static readonly VokiTakingProcessSettings Default = new(false, false);
 }

@@ -1,7 +1,8 @@
-﻿using AuthService.Domain.app_user_aggregate.events;
+﻿using ApplicationShared;
+using AuthService.Domain.app_user_aggregate.events;
 using SharedKernel.integration_events;
 
-namespace AuthService.Infrastructure.integration_events;
+namespace AuthService.Application;
 
 internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler,
     IDomainEventHandler<NewAppUserCreatedEvent>

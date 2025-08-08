@@ -1,7 +1,8 @@
-﻿namespace GeneralVokiTakingService.Infrastructure.integration_events;
+﻿using ApplicationShared;
+
+namespace UserProfilesService.Application;
 
 internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler
-
 // and all other domain events that need to be published as integration events
 {
     private readonly IIntegrationEventPublisher _integrationEventPublisher;
@@ -9,5 +10,4 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
     public DomainToIntegrationEventsHandler(IIntegrationEventPublisher integrationEventPublisher) {
         _integrationEventPublisher = integrationEventPublisher;
     }
-
 }

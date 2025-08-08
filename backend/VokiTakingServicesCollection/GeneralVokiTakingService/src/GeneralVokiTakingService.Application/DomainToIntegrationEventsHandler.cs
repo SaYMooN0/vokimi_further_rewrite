@@ -1,4 +1,6 @@
-﻿namespace VokisCatalogService.Infrastructure.integration_events;
+﻿using ApplicationShared;
+
+namespace GeneralVokiTakingService.Application;
 
 internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler
 

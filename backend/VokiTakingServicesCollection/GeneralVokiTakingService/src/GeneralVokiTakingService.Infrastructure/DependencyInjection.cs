@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.common.interfaces.repositories;
+﻿using ApplicationShared;
+using GeneralVokiTakingService.Domain.common.interfaces.repositories;
 using GeneralVokiTakingService.Infrastructure.integration_events;
 using GeneralVokiTakingService.Infrastructure.persistence;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories;
@@ -30,12 +31,10 @@ public static class DependencyInjection
             .AddIntegrationEventsPublisher();
     }
 
-    private static IServiceCollection AddDefaultServices(this IServiceCollection services) {
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-        services.AddTransient<IDomainEventsPublisher, DomainEventsPublisher>();
-
-        return services;
-    }
+    private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
+        .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+        .AddTransient<IDomainEventsPublisher, DomainEventsPublisher>()
+        .AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
     private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
         var jwtTokenConfig = configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();

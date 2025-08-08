@@ -1,12 +1,8 @@
-﻿using MassTransit;
+﻿using ApplicationShared;
+using MassTransit;
 using SharedKernel.integration_events;
 
-namespace VokisCatalogService.Infrastructure.integration_events;
-
-public interface IIntegrationEventPublisher
-{
-    Task Publish<T>(T integrationEvent, CancellationToken ct = default) where T : class, IIntegrationEvent;
-}
+namespace VokisCatalogService.Infrastructure;
 
 public class IntegrationEventPublisher : IIntegrationEventPublisher
 {

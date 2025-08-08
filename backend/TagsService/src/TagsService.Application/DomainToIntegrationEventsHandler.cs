@@ -1,4 +1,6 @@
-﻿namespace UserProfilesService.Infrastructure.integration_events;
+﻿using ApplicationShared;
+
+namespace TagsService.Application;
 
 internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler
 // and all other domain events that need to be published as integration events

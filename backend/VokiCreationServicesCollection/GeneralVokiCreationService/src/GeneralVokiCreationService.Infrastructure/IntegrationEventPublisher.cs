@@ -1,12 +1,8 @@
-﻿using MassTransit;
+﻿using ApplicationShared;
+using MassTransit;
 using SharedKernel.integration_events;
 
-namespace TagsService.Infrastructure.integration_events;
-
-public interface IIntegrationEventPublisher
-{
-    Task Publish<T>(T integrationEvent, CancellationToken ct = default) where T : class, IIntegrationEvent;
-}
+namespace GeneralVokiCreationService.Infrastructure.integration_events;
 
 public class IntegrationEventPublisher : IIntegrationEventPublisher
 {

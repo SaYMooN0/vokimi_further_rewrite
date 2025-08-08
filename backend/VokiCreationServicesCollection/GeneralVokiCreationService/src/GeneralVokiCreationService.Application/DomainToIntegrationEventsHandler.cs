@@ -1,7 +1,8 @@
-﻿using SharedKernel.integration_events.draft_vokis;
+﻿using ApplicationShared;
+using SharedKernel.integration_events.draft_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 
-namespace GeneralVokiCreationService.Infrastructure.integration_events;
+namespace GeneralVokiCreationService.Application;
 
 internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler,
     IDomainEventHandler<VokiNameUpdatedEvent>,

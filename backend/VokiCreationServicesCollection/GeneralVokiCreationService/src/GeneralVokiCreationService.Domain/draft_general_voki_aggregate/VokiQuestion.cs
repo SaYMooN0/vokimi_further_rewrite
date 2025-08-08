@@ -1,5 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
@@ -144,4 +145,47 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
             a.RemoveRelatedResult(resultId);
         }
     }
+
+    public List<VokiPublishingIssue> CheckForPublishingIssues()
+    {
+        List<VokiPublishingIssue> issues = [];
+
+        if (_answers.Count < MinAnswersCount)
+        {
+            issues.Add(VokiPublishingIssue.Error(
+                message: $"Too few answers ({_answers.Count}). Minimum required is {MinAnswersCount}",
+                source: "Question answers",
+                fixRecommendation: $"Add at least {MinAnswersCount - _answers.Count} more answer(s)"
+            ));
+        }
+        else if (_answers.Count > MaxAnswersCount)
+        {
+            issues.Add(VokiPublishingIssue.Error(
+                message: $"Too many answers ({_answers.Count}). Maximum allowed is {MaxAnswersCount}",
+                source: "Question answers",
+                fixRecommendation: $"Remove { _answers.Count - MaxAnswersCount } answer(s) to meet the limit"
+            ));
+        }
+
+        if (_answers.Count < AnswersCountLimit.MinAnswers)
+        {
+            issues.Add(VokiPublishingIssue.Error(
+                message: $"Answer count is below the configured minimum ({AnswersCountLimit.MinAnswers})",
+                source: "Question answers",
+                fixRecommendation: $"Increase the minimum limit or add {AnswersCountLimit.MinAnswers - _answers.Count} more answer(s)"
+            ));
+        }
+
+        if (_answers.Count > AnswersCountLimit.MaxAnswers)
+        {
+            issues.Add(VokiPublishingIssue.Error(
+                message: $"Answer count exceeds the configured maximum ({AnswersCountLimit.MaxAnswers})",
+                source: "Question answers",
+                fixRecommendation: $"Increase the maximum limit or remove { _answers.Count - AnswersCountLimit.MaxAnswers } answer(s)"
+            ));
+        }
+
+        return issues;
+    }
+
 }

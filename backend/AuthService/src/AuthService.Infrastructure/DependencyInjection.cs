@@ -1,4 +1,5 @@
-﻿using AuthService.Application.abstractions;
+﻿using ApplicationShared;
+using AuthService.Application.abstractions;
 using AuthService.Domain.common.interfaces;
 using AuthService.Domain.common.interfaces.repositories;
 using AuthService.Infrastructure.auth;
@@ -36,12 +37,10 @@ public static class DependencyInjection
             .AddIntegrationEventsPublisher();
     }
 
-    private static IServiceCollection AddDefaultServices(this IServiceCollection services) {
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-        services.AddTransient<IDomainEventsPublisher, DomainEventsPublisher>();
-
-        return services;
-    }
+    private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
+        .AddSingleton<IDateTimeProvider, DateTimeProvider>()
+        .AddTransient<IDomainEventsPublisher, DomainEventsPublisher>()
+        .AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
     private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
         var jwtTokenConfig = configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();

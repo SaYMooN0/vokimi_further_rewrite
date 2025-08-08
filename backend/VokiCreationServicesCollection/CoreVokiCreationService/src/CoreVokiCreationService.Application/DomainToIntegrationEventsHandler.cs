@@ -1,8 +1,9 @@
-﻿using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
+﻿using ApplicationShared;
+using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.vokis;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
 
-namespace CoreVokiCreationService.Infrastructure.integration_events;
+namespace CoreVokiCreationService.Application;
 
 internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler,
     IDomainEventHandler<NewDraftVokiInitializedEvent>

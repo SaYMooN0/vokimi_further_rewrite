@@ -9,7 +9,7 @@ public class VokiResult : Entity<GeneralVokiResultId>
     public VokiResultName Name { get; private set; }
     public VokiResultText Text { get; private set; }
     public DraftGeneralVokiResultImageKey? Image { get; private set; }
-    public DateTime? CreationDate { get; }
+    public DateTime CreationDate { get; } //to sort when showing to user
 
     private VokiResult(VokiResultName name, DateTime dateTime) {
         Id = GeneralVokiResultId.CreateNew();
