@@ -2,7 +2,7 @@
 using MassTransit;
 using SharedKernel.integration_events;
 
-namespace GeneralVokiTakingService.Infrastructure.integration_events;
+namespace GeneralVokiTakingService.Infrastructure;
 
 public class IntegrationEventPublisher : IIntegrationEventPublisher
 {

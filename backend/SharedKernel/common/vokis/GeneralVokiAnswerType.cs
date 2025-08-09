@@ -29,4 +29,9 @@ public static class GeneralVokiAnswerTypeExtensions
         GeneralVokiAnswerType.AudioAndText => audioAndText(),
         _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
     };
+    public static bool HasAudio(this GeneralVokiAnswerType answersType) => answersType switch {
+        GeneralVokiAnswerType.AudioOnly => true,
+        GeneralVokiAnswerType.AudioAndText => true,
+        _ => false
+    };
 }

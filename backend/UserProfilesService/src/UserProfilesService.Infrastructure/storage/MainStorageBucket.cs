@@ -18,7 +18,7 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
 
     public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromDefaults(AppUserId userId) {
         var newKey = UserProfilePicKey.CreateNewForUser(userId, "webp").AsSuccess();
-        var res = await CopyAsync(source: DefaultProfilePic, destinationKey: newKey);
+        var res = await CopySingleObjectAsync(source: DefaultProfilePic, destinationKey: newKey);
         if (res.IsErr(out var err)) {
             return err;
         }

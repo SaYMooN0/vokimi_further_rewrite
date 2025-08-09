@@ -4,7 +4,7 @@ using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
 namespace CoreVokiCreationService.Application.draft_vokis.domain_event_handlers;
 
-public class CoAuthorInviteDeclinedEventHandler : IDomainEventHandler<CoAuthorInviteDeclinedEvent>
+internal class CoAuthorInviteDeclinedEventHandler : IDomainEventHandler<CoAuthorInviteDeclinedEvent>
 {
     private readonly IDraftVokiRepository _draftVokiRepository;
     public CoAuthorInviteDeclinedEventHandler(IDraftVokiRepository draftVokiRepository) {

@@ -1,6 +1,5 @@
 ﻿using ApplicationShared;
 using CoreVokiCreationService.Domain.common.interfaces.repositories;
-using CoreVokiCreationService.Infrastructure.integration_events;
 using CoreVokiCreationService.Infrastructure.persistence;
 using CoreVokiCreationService.Infrastructure.persistence.repositories;
 using InfrastructureShared.auth;

@@ -1,0 +1,18 @@
+﻿using VokimiStorageKeysLib.draft_general_voki.answer_audio;
+
+namespace GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
+
+public abstract partial class BaseVokiAnswerTypeData
+{
+    public sealed class AudioOnly : BaseVokiAnswerTypeData
+    {
+        public DraftGeneralVokiAnswerAudioKey Audio { get; }
+        public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.AudioOnly;
+
+        public AudioOnly(DraftGeneralVokiAnswerAudioKey audio) {
+            Audio = audio;
+        }
+
+        public override IEnumerable<object> GetEqualityComponents() => [Audio];
+    }
+}

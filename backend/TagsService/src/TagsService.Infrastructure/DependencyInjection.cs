@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
 using TagsService.Domain.common.interfaces.repositories;
-using TagsService.Infrastructure.integration_events;
 using TagsService.Infrastructure.persistence;
 using TagsService.Infrastructure.persistence.repositories;
 

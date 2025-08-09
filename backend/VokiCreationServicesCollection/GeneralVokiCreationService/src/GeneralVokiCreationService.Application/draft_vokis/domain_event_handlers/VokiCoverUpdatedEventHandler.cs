@@ -2,7 +2,7 @@
 
 namespace GeneralVokiCreationService.Application.draft_vokis.domain_event_handlers;
 
-public class VokiCoverUpdatedEventHandler : IDomainEventHandler<VokiCoverUpdatedEvent>
+internal class VokiCoverUpdatedEventHandler : IDomainEventHandler<VokiCoverUpdatedEvent>
 {
     private readonly IMainStorageBucket _mainStorageBucket;
 

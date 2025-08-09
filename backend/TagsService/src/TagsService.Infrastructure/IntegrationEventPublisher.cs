@@ -2,7 +2,7 @@
 using MassTransit;
 using SharedKernel.integration_events;
 
-namespace TagsService.Infrastructure.integration_events;
+namespace TagsService.Infrastructure;
 
 public class IntegrationEventPublisher : IIntegrationEventPublisher
 {

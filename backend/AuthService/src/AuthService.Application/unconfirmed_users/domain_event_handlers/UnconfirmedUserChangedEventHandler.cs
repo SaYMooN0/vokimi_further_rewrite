@@ -4,7 +4,7 @@ using AuthService.Domain.unconfirmed_user_aggregate.events;
 
 namespace AuthService.Application.unconfirmed_users.domain_event_handlers;
 
-public class UnconfirmedUserChangedEventHandler : IDomainEventHandler<UnconfirmedUserChangedEvent>
+internal class UnconfirmedUserChangedEventHandler : IDomainEventHandler<UnconfirmedUserChangedEvent>
 {
     private readonly IEmailService _emailService;
 

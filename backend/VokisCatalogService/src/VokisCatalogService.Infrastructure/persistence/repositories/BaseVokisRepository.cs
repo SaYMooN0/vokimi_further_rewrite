@@ -10,5 +10,4 @@ internal class BaseVokisRepository : IBaseVokisRepository
         _db = db;
     }
 
-
 }

@@ -5,7 +5,7 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using SharedKernel;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.draft_general_voki.result_image;
 using VokimiStorageKeysLib.draft_voki_cover;
 
@@ -114,11 +114,17 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
+        var oldImages = questionToUpdate.Images;
+
         var res = questionToUpdate.UpdateImages(newImages);
         if (res.IsErr(out var err)) {
             return err;
         }
 
+        AddDomainEvent(new VokiQuestionImagesUpdatedEvent(Id, questionId,
+            OldImage: oldImages,
+            NewImages: questionToUpdate.Images
+        ));
         return questionToUpdate;
     }
 
@@ -194,10 +200,16 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
+        var oldImage = resultToUpdate.Image;
         var updatingRes = resultToUpdate.Update(newName, newText, newImage);
         if (updatingRes.IsErr(out var err)) {
             return err;
         }
+
+        AddDomainEvent(new VokiResultImageUpdatedEvent(Id, resultId,
+            OldImage: oldImage,
+            NewImage: resultToUpdate.Image
+        ));
 
         return resultToUpdate;
     }

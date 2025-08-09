@@ -4,7 +4,6 @@ using AuthService.Domain.common.interfaces;
 using AuthService.Domain.common.interfaces.repositories;
 using AuthService.Infrastructure.auth;
 using AuthService.Infrastructure.email_service;
-using AuthService.Infrastructure.integration_events;
 using AuthService.Infrastructure.persistence;
 using AuthService.Infrastructure.persistence.repositories;
 using InfrastructureShared.auth;

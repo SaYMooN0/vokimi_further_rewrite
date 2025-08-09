@@ -4,7 +4,7 @@ using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 
 namespace CoreVokiCreationService.Application.app_users.domain_event_handlers;
 
-public class CoAuthorInviteCreatedEventHandler : IDomainEventHandler<CoAuthorInviteCreatedEvent>
+internal class CoAuthorInviteCreatedEventHandler : IDomainEventHandler<CoAuthorInviteCreatedEvent>
 {
     private readonly IAppUsersRepository _appUsersRepository;
     public CoAuthorInviteCreatedEventHandler(IAppUsersRepository appUsersRepository) {

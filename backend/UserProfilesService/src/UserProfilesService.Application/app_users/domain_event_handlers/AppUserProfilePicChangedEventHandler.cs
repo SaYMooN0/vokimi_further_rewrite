@@ -2,7 +2,7 @@
 
 namespace UserProfilesService.Application.app_users.domain_event_handlers;
 
-public class AppUserProfilePicChangedEventHandler : IDomainEventHandler<AppUserProfilePicChangedEvent>
+internal class AppUserProfilePicChangedEventHandler : IDomainEventHandler<AppUserProfilePicChangedEvent>
 {
     public async Task Handle(AppUserProfilePicChangedEvent e, CancellationToken ct) {
         

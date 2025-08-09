@@ -1,6 +1,5 @@
 ﻿using ApplicationShared;
 using GeneralVokiTakingService.Domain.common.interfaces.repositories;
-using GeneralVokiTakingService.Infrastructure.integration_events;
 using GeneralVokiTakingService.Infrastructure.persistence;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories;
 using InfrastructureShared.auth;

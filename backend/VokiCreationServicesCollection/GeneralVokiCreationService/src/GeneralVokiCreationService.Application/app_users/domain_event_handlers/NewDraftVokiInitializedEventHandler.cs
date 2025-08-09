@@ -4,7 +4,7 @@ using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 
 namespace GeneralVokiCreationService.Application.app_users.domain_event_handlers;
 
-public class NewDraftVokiInitializedEventHandler : IDomainEventHandler<NewDraftVokiInitializedEvent>
+internal class NewDraftVokiInitializedEventHandler : IDomainEventHandler<NewDraftVokiInitializedEvent>
 {
     private readonly IAppUsersRepository _appUsersRepository;
 

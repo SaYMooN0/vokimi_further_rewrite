@@ -9,7 +9,7 @@ public class VokiResult : Entity<GeneralVokiResultId>
     public string Text { get; }
     public PublishedGeneralVokiResultImageKey? Image { get; }
 
-    private VokiResult(GeneralVokiResultId id, string name, string text, PublishedGeneralVokiResultImageKey? image) {
+    public VokiResult(GeneralVokiResultId id, string name, string text, PublishedGeneralVokiResultImageKey? image) {
         Id = id;
         Name = name;
         Text = text;

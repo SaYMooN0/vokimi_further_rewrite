@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using VokisCatalogService.Domain.app_user_aggregate;
 using VokisCatalogService.Domain.voki_aggregate;
+using VokisCatalogService.Domain.voki_aggregate.voki_types;
 
 namespace VokisCatalogService.Infrastructure.persistence;
 
@@ -16,6 +17,7 @@ public class VokisCatalogTakingDbContext : DbContext
     }
     public DbSet<AppUser> AppUsers { get; init; } = null!;
     public DbSet<BaseVoki> BaseVokis { get; init; } = null!;
+    public DbSet<GeneralVoki> GeneralVokis { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VokisCatalogTakingDbContext).Assembly);

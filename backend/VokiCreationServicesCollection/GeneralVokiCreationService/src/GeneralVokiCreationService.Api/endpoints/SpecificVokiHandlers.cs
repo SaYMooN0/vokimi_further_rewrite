@@ -1,4 +1,5 @@
 ﻿using GeneralVokiCreationService.Api.contracts.voki;
+using GeneralVokiCreationService.Api.contracts.voki.update_requests;
 using GeneralVokiCreationService.Application.draft_vokis.commands;
 using GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 using GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
@@ -8,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using SharedKernel.common.vokis;
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace GeneralVokiCreationService.Api.endpoints;

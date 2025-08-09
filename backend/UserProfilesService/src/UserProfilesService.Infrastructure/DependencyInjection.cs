@@ -15,7 +15,6 @@ using SharedKernel.auth;
 using UserProfilesService.Application;
 using UserProfilesService.Application.app_users;
 using UserProfilesService.Domain.common.interfaces.repositories;
-using UserProfilesService.Infrastructure.integration_events;
 using UserProfilesService.Infrastructure.persistence;
 using UserProfilesService.Infrastructure.persistence.repositories;
 using UserProfilesService.Infrastructure.storage;

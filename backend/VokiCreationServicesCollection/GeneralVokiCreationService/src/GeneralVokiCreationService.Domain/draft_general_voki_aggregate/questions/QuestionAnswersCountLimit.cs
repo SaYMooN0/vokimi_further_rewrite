@@ -12,13 +12,13 @@ public class QuestionAnswersCountLimit : ValueObject
     public ushort MinAnswers { get; }
     public ushort MaxAnswers { get; }
 
-    private QuestionAnswersCountLimit( ushort minAnswers, ushort maxAnswers) {
+    private QuestionAnswersCountLimit(ushort minAnswers, ushort maxAnswers) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckAnswersForErr(minAnswers, maxAnswers));
         MinAnswers = minAnswers;
         MaxAnswers = maxAnswers;
     }
 
-    public static QuestionAnswersCountLimit SingleChoice() => new( 1, 1);
+    public static QuestionAnswersCountLimit SingleChoice() => new(1, 1);
 
     public static ErrOr<QuestionAnswersCountLimit> MultipleChoice(ushort minAnswers, ushort maxAnswers) =>
         CheckAnswersForErr(maxAnswers, maxAnswers).IsErr(out var err)

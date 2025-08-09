@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.common.vokis;
@@ -27,15 +28,17 @@ public class VokiAnswerTypeDataConverter : ValueConverter<BaseVokiAnswerTypeData
     }
 
     private static Dictionary<string, string> ToDictionary(BaseVokiAnswerTypeData data) => data.Match(
-        textOnly: d => new Dictionary<string, string> { ["Text"] = d.Text },
+        textOnly: d => new Dictionary<string, string> { ["Text"] = d.Text.ToString() },
         imageOnly: d => new() { ["Image"] = d.Image.ToString() },
-        imageAndText: d => new() { ["Text"] = d.Text, ["Image"] = d.Image.ToString() },
+        imageAndText: d => new() { ["Text"] = d.Text.ToString(), ["Image"] = d.Image.ToString() },
         colorOnly: d => new() { ["Color"] = d.Color.ToString() },
-        colorAndText: d => new() { ["Text"] = d.Text, ["Color"] = d.Color.ToString() },
+        colorAndText: d => new() { ["Text"] = d.Text.ToString(), ["Color"] = d.Color.ToString() },
         audioOnly: d => new() { ["Audio"] = d.Audio.ToString() },
-        audioAndText: d => new() { ["Text"] = d.Text, ["Audio"] = d.Audio.ToString() }
+        audioAndText: d => new() { ["Text"] = d.Text.ToString(), ["Audio"] = d.Audio.ToString() }
     );
 
+    private static ErrOr<string> Get(Dictionary<string, string> dict, string key, string err) =>
+        dict.TryGetValue(key, out var v) ? v : ErrFactory.NoValue.Common(err);
 
     private static ErrOr<BaseVokiAnswerTypeData> CreateFromDictionary(
         GeneralVokiAnswerType type,
@@ -50,127 +53,50 @@ public class VokiAnswerTypeDataConverter : ValueConverter<BaseVokiAnswerTypeData
         audioAndText: () => CreateAudioAndText(dictionary)
     );
 
-    private static ErrOr<BaseVokiAnswerTypeData> CreateTextOnly(Dictionary<string, string> dictionary) {
-        if (!dictionary.TryGetValue("Text", out string text)) {
-            return ErrFactory.NoValue.Common("Unable to create text only answer data. 'Text' field not provided");
-        }
+    private static ErrOr<BaseVokiAnswerTypeData> CreateTextOnly(Dictionary<string, string> dictionary) =>
+        Get(dictionary, "Text", "Unable to create text only answer data. 'Text' field not provided")
+            .Bind(GeneralVokiAnswerText.Create)
+            .Bind<BaseVokiAnswerTypeData>(t => new BaseVokiAnswerTypeData.TextOnly(t));
 
-        var result = BaseVokiAnswerTypeData.TextOnly.CreateNew(text);
-        if (result.IsErr(out var err)) {
-            return err;
-        }
+    private static ErrOr<BaseVokiAnswerTypeData> CreateImageOnly(Dictionary<string, string> dictionary) =>
+        Get(dictionary, "Image", "Unable to create image only answer data. 'Image' field not provided")
+            .Bind(DraftGeneralVokiAnswerImageKey.Create)
+            .Bind<BaseVokiAnswerTypeData>(img => new BaseVokiAnswerTypeData.ImageOnly(img));
 
-        return result.AsSuccess();
-    }
+    private static ErrOr<BaseVokiAnswerTypeData> CreateImageAndText(Dictionary<string, string> dictionary) =>
+        Get(dictionary, "Text", "Unable to create image and text answer data. 'Text' field not provided")
+            .Bind(GeneralVokiAnswerText.Create)
+            .Bind<BaseVokiAnswerTypeData>(text =>
+                Get(dictionary, "Image", "Unable to create image and text answer data. 'Image' field not provided")
+                    .Bind(DraftGeneralVokiAnswerImageKey.Create)
+                    .Bind<BaseVokiAnswerTypeData>(img => new BaseVokiAnswerTypeData.ImageAndText(text, img))
+            );
 
-    private static ErrOr<BaseVokiAnswerTypeData> CreateImageOnly(Dictionary<string, string> dictionary) {
-        if (!dictionary.TryGetValue("Image", out string image)) {
-            return ErrFactory.NoValue.Common("Unable to create image only answer data. 'Image' field not provided");
-        }
+    private static ErrOr<BaseVokiAnswerTypeData> CreateColorOnly(Dictionary<string, string> dictionary) =>
+        Get(dictionary, "Color", "Unable to create color only answer data. 'Color' field not provided")
+            .Bind(HexColor.Create)
+            .Bind<BaseVokiAnswerTypeData>(c => new BaseVokiAnswerTypeData.ColorOnly(c));
 
-        var res = DraftGeneralVokiAnswerImageKey.Create(image);
-        if (res.IsErr(out var err)) {
-            return err;
-        }
+    private static ErrOr<BaseVokiAnswerTypeData> CreateColorAndText(Dictionary<string, string> dictionary) =>
+        Get(dictionary, "Text", "Unable to create color and text answer data. 'Text' field not provided")
+            .Bind(GeneralVokiAnswerText.Create)
+            .Bind<BaseVokiAnswerTypeData>(text =>
+                Get(dictionary, "Color", "Unable to create color and text answer data. 'Color' field not provided")
+                    .Bind(HexColor.Create)
+                    .Bind<BaseVokiAnswerTypeData>(color => new BaseVokiAnswerTypeData.ColorAndText(text, color))
+            );
 
-        var key = res.AsSuccess();
-        return new BaseVokiAnswerTypeData.ImageOnly(key);
-    }
+    private static ErrOr<BaseVokiAnswerTypeData> CreateAudioOnly(Dictionary<string, string> dictionary) =>
+        Get(dictionary, "Audio", "Unable to create audio only answer data. 'Audio' field not provided")
+            .Bind(DraftGeneralVokiAnswerAudioKey.Create)
+            .Bind<BaseVokiAnswerTypeData>(a => new BaseVokiAnswerTypeData.AudioOnly(a));
 
-    private static ErrOr<BaseVokiAnswerTypeData> CreateImageAndText(Dictionary<string, string> dictionary) {
-        if (!dictionary.TryGetValue("Text", out string text)) {
-            return ErrFactory.NoValue.Common("Unable to create image and text answer data. 'Text' field not provided");
-        }
-
-        if (!dictionary.TryGetValue("Image", out string image)) {
-            return ErrFactory.NoValue.Common("Unable to create image and text answer data. 'Image' field not provided");
-        }
-
-        var res = DraftGeneralVokiAnswerImageKey.Create(image);
-        if (res.IsErr(out var err)) {
-            return err;
-        }
-
-        var key = res.AsSuccess();
-        var creationRes = BaseVokiAnswerTypeData.ImageAndText.CreateNew(text, key);
-        if (creationRes.IsErr(out err)) {
-            return err;
-        }
-
-        return creationRes.AsSuccess();
-    }
-
-    private static ErrOr<BaseVokiAnswerTypeData> CreateColorOnly(Dictionary<string, string> dictionary) {
-        if (!dictionary.TryGetValue("Color", out string color)) {
-            return ErrFactory.NoValue.Common("Unable to create color only answer data. 'Color' field not provided");
-        }
-
-        var res = HexColor.Create(color);
-        if (res.IsErr(out var err)) {
-            return err;
-        }
-
-        var hexColor = res.AsSuccess();
-        return new BaseVokiAnswerTypeData.ColorOnly(hexColor);
-    }
-
-    private static ErrOr<BaseVokiAnswerTypeData> CreateColorAndText(Dictionary<string, string> dictionary) {
-        if (!dictionary.TryGetValue("Text", out string text)) {
-            return ErrFactory.NoValue.Common("Unable to create color and text answer data. 'Text' field not provided");
-        }
-
-        if (!dictionary.TryGetValue("Color", out string color)) {
-            return ErrFactory.NoValue.Common("Unable to create color and text answer data. 'Color' field not provided");
-        }
-
-        var res = HexColor.Create(color);
-        if (res.IsErr(out var err)) {
-            return err;
-        }
-
-        var hexColor = res.AsSuccess();
-        var creationRes = BaseVokiAnswerTypeData.ColorAndText.CreateNew(text, hexColor);
-        if (creationRes.IsErr(out err)) {
-            return err;
-        }
-
-        return creationRes.AsSuccess();
-    }
-
-    private static ErrOr<BaseVokiAnswerTypeData> CreateAudioOnly(Dictionary<string, string> dictionary) {
-        if (!dictionary.TryGetValue("Audio", out string audio)) {
-            return ErrFactory.NoValue.Common("Unable to create audio only answer data. 'Audio' field not provided");
-        }
-
-        var res = DraftGeneralVokiAnswerAudioKey.Create(audio);
-        if (res.IsErr(out var err)) {
-            return err;
-        }
-
-        var key = res.AsSuccess();
-        return new BaseVokiAnswerTypeData.AudioOnly(key);
-    }
-
-    private static ErrOr<BaseVokiAnswerTypeData> CreateAudioAndText(Dictionary<string, string> dictionary) {
-        if (!dictionary.TryGetValue("Text", out string text)) {
-            return ErrFactory.NoValue.Common("Unable to create audio and text answer data. 'Text' field not provided");
-        }
-
-        if (!dictionary.TryGetValue("Audio", out string audio)) {
-            return ErrFactory.NoValue.Common("Unable to create audio and text answer data. 'Audio' field not provided");
-        }
-
-        var res = DraftGeneralVokiAnswerAudioKey.Create(audio);
-        if (res.IsErr(out var err)) {
-            return err;
-        }
-
-        var key = res.AsSuccess();
-        var creationRes = BaseVokiAnswerTypeData.AudioAndText.CreateNew(text, key);
-        if (creationRes.IsErr(out err)) {
-            return err;
-        }
-
-        return creationRes.AsSuccess();
-    }
+    private static ErrOr<BaseVokiAnswerTypeData> CreateAudioAndText(Dictionary<string, string> dictionary) =>
+        Get(dictionary, "Text", "Unable to create audio and text answer data. 'Text' field not provided")
+            .Bind(GeneralVokiAnswerText.Create)
+            .Bind<BaseVokiAnswerTypeData>(text =>
+                Get(dictionary, "Audio", "Unable to create audio and text answer data. 'Audio' field not provided")
+                    .Bind(DraftGeneralVokiAnswerAudioKey.Create)
+                    .Bind<BaseVokiAnswerTypeData>(audio => new BaseVokiAnswerTypeData.AudioAndText(text, audio))
+            );
 }

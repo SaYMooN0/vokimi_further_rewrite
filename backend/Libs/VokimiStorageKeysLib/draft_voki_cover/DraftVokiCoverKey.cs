@@ -16,7 +16,7 @@ public class DraftVokiCoverKey : BaseStorageKey
         InvalidConstructorArgumentException.ThrowIfErr(this,
             DraftVokiCoverKeyScheme.IsKeyValid(value, out var vokiId)
         );
-        
+
         VokiId = vokiId;
         Value = value;
     }
@@ -24,7 +24,7 @@ public class DraftVokiCoverKey : BaseStorageKey
     public static DraftVokiCoverKey Default => new(DefaultKeyValue);
 
     public static ErrOr<DraftVokiCoverKey> CreateWithId(VokiId id, string extension) {
-        var key = $"draft-vokis/{id}/cover{extension}"; 
+        var key = $"{StorageFolders.DraftVokis}/{id}/cover{extension}";
         if (DraftVokiCoverKeyScheme.IsKeyValid(key, out _).IsErr(out var err)) {
             return err;
         }

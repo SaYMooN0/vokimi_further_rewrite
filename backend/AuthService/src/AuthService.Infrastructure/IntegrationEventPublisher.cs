@@ -2,7 +2,7 @@
 using MassTransit;
 using SharedKernel.integration_events;
 
-namespace AuthService.Infrastructure.integration_events;
+namespace AuthService.Infrastructure;
 
 public class IntegrationEventPublisher : IIntegrationEventPublisher
 {

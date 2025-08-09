@@ -54,6 +54,16 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
         return await base.DeleteFilesWithoutSubfoldersAsync(prefix, usedStringifiedKeys);
     }
 
+    public async Task<ErrOrNothing> DeleteUnusedResultImages(
+        VokiId vokiId,
+        GeneralVokiResultId resultId,
+        DraftGeneralVokiResultImageKey? currentKey
+    ) {
+        string prefix = DraftGeneralVokiResultImageKey.Folder(vokiId, resultId) + '/';
+        ImmutableHashSet<string> usedStringifiedKeys = currentKey is null ? [] : [currentKey.ToString()];
+        return await base.DeleteFilesWithoutSubfoldersAsync(prefix, usedStringifiedKeys);
+    }
+
     public async Task<ErrOr<DraftGeneralVokiResultImageKey>> UploadVokiResultImage(
         VokiId vokiId,
         GeneralVokiResultId resultId,
@@ -62,4 +72,10 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
         (ext) => DraftGeneralVokiResultImageKey.Create(vokiId, resultId, ext),
         file
     );
+
+    public async Task<ErrOrNothing> CopyDraftVokiContentToPublished(VokiId vokiId) =>
+        await base.CopyAllObjectsWithSubfoldersAsync(
+            sourcePrefix: $"{StorageFolders.DraftVokis}/{vokiId}/",
+            destinationPrefix: $"{StorageFolders.PublishedVokis}/{vokiId}/"
+        );
 }

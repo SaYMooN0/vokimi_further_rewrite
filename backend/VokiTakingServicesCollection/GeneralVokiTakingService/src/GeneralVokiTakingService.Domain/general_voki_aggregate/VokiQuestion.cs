@@ -1,4 +1,4 @@
-﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers;
+﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 
@@ -9,12 +9,10 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     public string[] Images { get; }
     public GeneralVokiAnswerType AnswersType { get; }
     public ushort OrderInVoki { get; }
-    private ImmutableArray<BaseVokiQuestionAnswer> Answers { get; }
+    private ImmutableArray<VokiQuestionAnswer> Answers { get; }
 
     public bool ShuffleAnswers { get; }
-    public bool IsMultipleChoice => MinAnswers != 1 || MaxAnswers != 1;
-    public ushort MinAnswers { get; }
-    public ushort MaxAnswers { get; }
+    public QuestionAnswersCountLimit AnswersCountLimit { get; }
 
     public VokiQuestion(
         GeneralVokiQuestionId id,
@@ -22,19 +20,15 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         string[] images,
         GeneralVokiAnswerType answersType,
         ushort orderInVoki,
-        ImmutableArray<BaseVokiQuestionAnswer> answers,
-        bool shuffleAnswers,
-        ushort minAnswers,
-        ushort maxAnswers
-    ) {
+        ImmutableArray<VokiQuestionAnswer> answers,
+        bool shuffleAnswers, QuestionAnswersCountLimit answersCountLimit) {
         Id = id;
         Text = text;
         Images = images;
         AnswersType = answersType;
         OrderInVoki = orderInVoki;
-        Answers = [];
+        Answers = answers;
         ShuffleAnswers = shuffleAnswers;
-        MinAnswers = minAnswers;
-        MaxAnswers = maxAnswers;
+        AnswersCountLimit = answersCountLimit;
     }
 }

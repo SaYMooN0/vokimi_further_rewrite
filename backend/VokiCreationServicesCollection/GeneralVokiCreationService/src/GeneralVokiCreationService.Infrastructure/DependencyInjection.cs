@@ -3,7 +3,6 @@ using Amazon.S3;
 using ApplicationShared;
 using GeneralVokiCreationService.Application;
 using GeneralVokiCreationService.Domain.common.interfaces.repositories;
-using GeneralVokiCreationService.Infrastructure.integration_events;
 using GeneralVokiCreationService.Infrastructure.persistence;
 using GeneralVokiCreationService.Infrastructure.persistence.repositories;
 using GeneralVokiCreationService.Infrastructure.storage;

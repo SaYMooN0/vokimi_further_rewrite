@@ -1,4 +1,6 @@
-﻿using SharedKernel.common;
+﻿using System.Collections.Immutable;
+using SharedKernel.common;
+using SharedKernel.common.vokis;
 
 namespace SharedKernel.integration_events.voki_publishing;
 
@@ -26,8 +28,39 @@ public record class GeneralVokiPublishedIntegrationEvent(
     InitializingDate, PublishingDate
 );
 
-public record class GeneralVokiResultIntegrationEventDto();
+public sealed record class GeneralVokiQuestionIntegrationEventDto(
+    GeneralVokiQuestionId Id,
+    string Text,
+    string[] Images,
+    GeneralVokiAnswerType AnswersType,
+    ushort OrderInVoki,
+    GeneralVokiAnswerIntegrationEventDto[] Answers,
+    bool ShuffleAnswers,
+    ushort MinAnswersCount,
+    ushort MaxAnswersCount
+);
 
-public record class GeneralVokiQuestionIntegrationEventDto();
+public sealed record class GeneralVokiAnswerIntegrationEventDto(
+    GeneralVokiAnswerId Id,
+    ushort OrderInQuestion,
+    GeneralVokiAnswerTypeDataIntegrationEventDto TypeData,
+    GeneralVokiResultId[] RelatedResultIds
+);
 
-public record class GeneralVokiAnswerIntegrationEventDto();
+public sealed record GeneralVokiAnswerTypeDataIntegrationEventDto(ImmutableDictionary<string, string> Fields)
+{
+    public static class Keys
+    {
+        public const string Text = "Text";
+        public const string Image = "Image";
+        public const string Audio = "Audio";
+        public const string Color = "Color";
+    }
+}
+
+public sealed record class GeneralVokiResultIntegrationEventDto(
+    GeneralVokiResultId Id,
+    string Name,
+    string Text,
+    string? Image
+);

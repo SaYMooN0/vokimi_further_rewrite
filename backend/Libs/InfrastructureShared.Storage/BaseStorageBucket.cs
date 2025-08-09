@@ -50,7 +50,7 @@ public abstract class BaseStorageBucket
 
     protected async Task<ErrOrNothing> UploadFileAsync(BaseStorageKey key, Stream content, string contentType) {
         try {
-            var request = new PutObjectRequest {
+            PutObjectRequest request = new() {
                 BucketName = _bucketNameProvider.BucketName,
                 Key = key.ToString(),
                 InputStream = content,
@@ -96,7 +96,7 @@ public abstract class BaseStorageBucket
         var keyString = key.ToString();
 
         try {
-            var request = new DeleteObjectRequest {
+            DeleteObjectRequest request = new() {
                 BucketName = _bucketNameProvider.BucketName,
                 Key = keyString
             };
@@ -117,9 +117,9 @@ public abstract class BaseStorageBucket
     }
 
 
-    protected async Task<ErrOrNothing> CopyAsync(string source, BaseStorageKey destinationKey) {
+    protected async Task<ErrOrNothing> CopySingleObjectAsync(string source, BaseStorageKey destinationKey) {
         try {
-            var request = new CopyObjectRequest {
+            CopyObjectRequest request = new() {
                 SourceBucket = _bucketNameProvider.BucketName,
                 SourceKey = source,
                 DestinationBucket = _bucketNameProvider.BucketName,
@@ -130,11 +130,12 @@ public abstract class BaseStorageBucket
             return ErrOrNothing.Nothing;
         }
         catch (AmazonS3Exception ex) {
-            _logger.LogError(ex, "[Error] in {MethodName}, S3 exception occurred", nameof(CopyAsync));
+            _logger.LogError(ex, "[Error] in {MethodName}, S3 exception occurred", nameof(CopySingleObjectAsync));
             return ErrFactory.Unspecified("File copy failed");
         }
         catch (Exception ex) {
-            _logger.LogError(ex, "[Error] in {MethodName}, unexpected exception occurred", nameof(CopyAsync));
+            _logger.LogError(ex, "[Error] in {MethodName}, unexpected exception occurred",
+                nameof(CopySingleObjectAsync));
             return ErrFactory.Unspecified("Unexpected error during file copy");
         }
     }
@@ -150,7 +151,7 @@ public abstract class BaseStorageBucket
     ) {
         List<string> deletedKeys = [];
 
-        var request = new ListObjectsV2Request {
+        ListObjectsV2Request request = new() {
             BucketName = _bucketNameProvider.BucketName,
             Prefix = prefix
         };
@@ -189,6 +190,59 @@ public abstract class BaseStorageBucket
             _logger.LogInformation(
                 "Deleted {Count} unused top-level objects under prefix '{Prefix}': {Keys}",
                 deletedKeys.Count, prefix, string.Join(", ", deletedKeys)
+            );
+        }
+
+        return ErrOrNothing.Nothing;
+    }
+
+    protected async Task<ErrOrNothing>
+        CopyAllObjectsWithSubfoldersAsync(string sourcePrefix, string destinationPrefix) {
+        List<string> copiedKeys = [];
+
+        ListObjectsV2Request request = new() {
+            BucketName = _bucketNameProvider.BucketName,
+            Prefix = sourcePrefix
+        };
+
+        ListObjectsV2Response response;
+        do {
+            response = await _s3Client.ListObjectsV2Async(request);
+
+            foreach (var obj in response.S3Objects) {
+                try {
+                    var destinationKey = destinationPrefix + obj.Key.Substring(sourcePrefix.Length);
+
+                    var copyRequest = new CopyObjectRequest {
+                        SourceBucket = _bucketNameProvider.BucketName,
+                        SourceKey = obj.Key,
+                        DestinationBucket = _bucketNameProvider.BucketName,
+                        DestinationKey = destinationKey
+                    };
+
+                    await _s3Client.CopyObjectAsync(copyRequest);
+                    copiedKeys.Add(destinationKey);
+                }
+                catch (AmazonS3Exception ex) {
+                    _logger.LogError(ex, "[Error] in {MethodName}, S3 exception occurred while copying key {Key}",
+                        nameof(CopyAllObjectsWithSubfoldersAsync), obj.Key);
+                    return ErrFactory.Unspecified("File copy failed due to S3 exception");
+                }
+                catch (Exception ex) {
+                    _logger.LogError(ex,
+                        "[Error] in {MethodName}, unexpected exception occurred while copying key {Key}",
+                        nameof(CopyAllObjectsWithSubfoldersAsync), obj.Key);
+                    return ErrFactory.Unspecified("Unexpected error during file copy");
+                }
+            }
+
+            request.ContinuationToken = response.NextContinuationToken;
+        } while (response.IsTruncated == true);
+
+        if (copiedKeys.Count > 0) {
+            _logger.LogInformation(
+                "Copied {Count} objects from '{SourcePrefix}' to '{DestinationPrefix}': {Keys}",
+                copiedKeys.Count, sourcePrefix, destinationPrefix, string.Join(", ", copiedKeys)
             );
         }
 

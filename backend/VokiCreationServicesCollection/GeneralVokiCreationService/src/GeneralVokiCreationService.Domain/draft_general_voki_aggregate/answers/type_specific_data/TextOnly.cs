@@ -1,25 +1,15 @@
-﻿using SharedKernel.exceptions;
-
-namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
+﻿namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 
 public abstract partial class BaseVokiAnswerTypeData
 {
     public sealed class TextOnly : BaseVokiAnswerTypeData
     {
-        public string Text { get; }
+        public GeneralVokiAnswerText Text { get; }
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.TextOnly;
 
-        private TextOnly(string text) {
-            InvalidConstructorArgumentException.ThrowIfErr(this, GeneralVokiAnswerRules.CheckAnswerTextForErrs(text));
+        public TextOnly(GeneralVokiAnswerText text) {
             Text = text;
         }
-
-
-        public static ErrOr<TextOnly> CreateNew(string text) =>
-            GeneralVokiAnswerRules.CheckAnswerTextForErrs(text).IsErr(out var err)
-                ? err
-                : new TextOnly(text);
-
         public override IEnumerable<object> GetEqualityComponents() => [Text];
     }
 }

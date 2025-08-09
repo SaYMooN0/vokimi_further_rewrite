@@ -23,9 +23,17 @@ public interface IMainStorageBucket
         IEnumerable<DraftGeneralVokiQuestionImageKey> usedKeys
     );
 
+    public Task<ErrOrNothing> DeleteUnusedResultImages(
+        VokiId vokiId,
+        GeneralVokiResultId resultId,
+        DraftGeneralVokiResultImageKey? currentKey
+    );
+
     Task<ErrOr<DraftGeneralVokiResultImageKey>> UploadVokiResultImage(
         VokiId vokiId,
         GeneralVokiResultId resultId,
         FileData file
     );
+
+    Task<ErrOrNothing> CopyDraftVokiContentToPublished(VokiId vokiId);
 }

@@ -1,7 +1,8 @@
 ﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+using SharedKernel;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
 
@@ -20,9 +21,18 @@ internal sealed class PublishVokiCommandHandler :
     ICommandHandler<PublishVokiCommand, PublishVokiCommandResult>
 {
     private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IMainStorageBucket _storageBucket;
 
-    public PublishVokiCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
+
+    public PublishVokiCommandHandler(
+        IDraftGeneralVokiRepository draftGeneralVokiRepository,
+        IDateTimeProvider dateTimeProvider,
+        IMainStorageBucket storageBucket
+    ) {
         _draftGeneralVokiRepository = draftGeneralVokiRepository;
+        _dateTimeProvider = dateTimeProvider;
+        _storageBucket = storageBucket;
     }
 
     public async Task<ErrOr<PublishVokiCommandResult>> Handle(PublishVokiCommand command, CancellationToken ct) {
@@ -31,11 +41,16 @@ internal sealed class PublishVokiCommandHandler :
         if (issues.Any()) {
             return new PublishVokiCommandResult.FailedToPublish(issues);
         }
-        var publishingRes = voki.PublishWithWarningsIgnore();
+
+        var publishingRes = voki.PublishWithWarningsIgnore(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {
             return err;
         }
 
+        var storageRes =  await _storageBucket.CopyDraftVokiContentToPublished(voki.Id);
+        if (storageRes.IsErr(out  err)) {
+            return err;
+        }
         await _draftGeneralVokiRepository.Update(voki);
         return new PublishVokiCommandResult.Success();
     }

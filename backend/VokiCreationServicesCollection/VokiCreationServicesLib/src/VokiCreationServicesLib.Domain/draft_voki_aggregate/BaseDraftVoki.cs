@@ -1,7 +1,7 @@
 ﻿using SharedKernel.common.vokis;
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.draft_voki_cover;
 
 namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;

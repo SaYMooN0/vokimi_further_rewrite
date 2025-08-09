@@ -2,7 +2,7 @@
 using MassTransit;
 using SharedKernel.integration_events;
 
-namespace CoreVokiCreationService.Infrastructure.integration_events;
+namespace CoreVokiCreationService.Infrastructure;
 public class IntegrationEventPublisher : IIntegrationEventPublisher
 {
     private readonly IPublishEndpoint _publish;

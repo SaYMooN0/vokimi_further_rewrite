@@ -1,4 +1,4 @@
-﻿namespace VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
+﻿namespace VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
 public enum PublishingIssueType
 {

@@ -1,5 +1,5 @@
 ﻿using SharedKernel.exceptions;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing_issues;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
 namespace GeneralVokiCreationService.Api.contracts.voki;
 
