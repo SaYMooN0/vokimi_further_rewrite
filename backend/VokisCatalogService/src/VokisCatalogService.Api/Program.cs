@@ -36,13 +36,7 @@ public class Program
         app.AddExceptionHandlingMiddleware();
 
         app.MapEndpoints();
-
-        using (var serviceScope = app.Services.CreateScope()) {
-            var db = serviceScope.ServiceProvider.GetRequiredService<VokisCatalogTakingDbContext>();
-            // db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
-        }
-
+        
         app.AllowFrontendCors();
         app.Run();
     }

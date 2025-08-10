@@ -5,9 +5,9 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
     protected BaseVoki() { }
     public abstract VokiType VokiType { get; }
     public VokiName Name { get; }
-    public ImmutableHashSet<VokiTagId> Tags { get; }
     public AppUserId PrimaryAuthorId { get; }
     public ImmutableHashSet<AppUserId> CoAuthorIds { get; }
+    public ImmutableHashSet<VokiTagId> Tags { get; }
     public uint LikesCount { get; private set; }
     public uint CommentsCount { get; private set; }
     public uint VokiTakingsCount { get; private set; }

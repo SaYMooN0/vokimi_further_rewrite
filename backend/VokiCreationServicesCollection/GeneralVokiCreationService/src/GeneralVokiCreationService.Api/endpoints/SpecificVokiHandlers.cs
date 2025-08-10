@@ -10,7 +10,7 @@ using SharedKernel.common.vokis;
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -73,7 +73,7 @@ internal static class SpecificVokiHandlers
 
     private static async Task<IResult> SetVokiCoverToDefault(
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<SetVokiCoverToDefaultCommand, DraftVokiCoverKey> handler
+        ICommandHandler<SetVokiCoverToDefaultCommand, VokiCoverKey> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
@@ -87,7 +87,7 @@ internal static class SpecificVokiHandlers
 
     private static async Task<IResult> UpdateVokiCover(
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<UpdateVokiCoverCommand, DraftVokiCoverKey> handler,
+        ICommandHandler<UpdateVokiCoverCommand, VokiCoverKey> handler,
         [FromForm] IFormFile file
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();

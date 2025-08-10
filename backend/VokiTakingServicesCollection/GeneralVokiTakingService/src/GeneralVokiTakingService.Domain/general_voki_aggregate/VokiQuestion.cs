@@ -9,10 +9,10 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     public string[] Images { get; }
     public GeneralVokiAnswerType AnswersType { get; }
     public ushort OrderInVoki { get; }
-    private ImmutableArray<VokiQuestionAnswer> Answers { get; }
-
     public bool ShuffleAnswers { get; }
     public QuestionAnswersCountLimit AnswersCountLimit { get; }
+    private ImmutableArray<VokiQuestionAnswer> Answers { get; }
+
 
     public VokiQuestion(
         GeneralVokiQuestionId id,

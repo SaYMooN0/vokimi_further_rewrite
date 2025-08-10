@@ -1,8 +1,8 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using SharedKernel.common.vokis;
-using VokimiStorageKeysLib.draft_general_voki.answer_audio;
-using VokimiStorageKeysLib.draft_general_voki.answer_image;
+using VokimiStorageKeysLib.general_voki.answer_audio;
+using VokimiStorageKeysLib.general_voki.answer_image;
 
 namespace GeneralVokiCreationService.Api.contracts;
 
@@ -24,13 +24,13 @@ public record VokiAnswerTypeDataDto(
         ? ErrFactory.NoValue.Common("'Text' value is not provided")
         : GeneralVokiAnswerText.Create(Text);
 
-    private ErrOr<DraftGeneralVokiAnswerImageKey> GetImage() => Image is null
+    private ErrOr<GeneralVokiAnswerImageKey> GetImage() => Image is null
         ? ErrFactory.NoValue.Common("'Image' value is not provided")
-        : DraftGeneralVokiAnswerImageKey.Create(Image);
+        : GeneralVokiAnswerImageKey.Create(Image);
 
-    private ErrOr<DraftGeneralVokiAnswerAudioKey> GetAudio() => Audio is null
+    private ErrOr<GeneralVokiAnswerAudioKey> GetAudio() => Audio is null
         ? ErrFactory.NoValue.Common("'Audio' value is not provided")
-        : DraftGeneralVokiAnswerAudioKey.Create(Audio);
+        : GeneralVokiAnswerAudioKey.Create(Audio);
 
     private ErrOr<HexColor> GetColor() => Color is null
         ? ErrFactory.NoValue.Common("'Color' value is not provided")

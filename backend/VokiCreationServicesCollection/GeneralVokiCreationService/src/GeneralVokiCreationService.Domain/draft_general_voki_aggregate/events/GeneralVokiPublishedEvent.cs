@@ -2,8 +2,8 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
-using VokimiStorageKeysLib.draft_general_voki.result_image;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.general_voki.result_image;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.events;
 
@@ -12,7 +12,7 @@ public record GeneralVokiPublishedEvent(
     AppUserId PrimaryAuthorId,
     VokiCoAuthorIdsSet CoAuthors,
     VokiName Name,
-    DraftVokiCoverKey Cover,
+    VokiCoverKey Cover,
     VokiDetails Details,
     VokiTagsSet Tags,
     DateTime InitializingDate,
@@ -46,5 +46,5 @@ public record ResultDomainEventDto(
     GeneralVokiResultId Id,
     VokiResultName Name,
     VokiResultText Text,
-    DraftGeneralVokiResultImageKey? Image
+    GeneralVokiResultImageKey? Image
 );

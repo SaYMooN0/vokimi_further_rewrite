@@ -2,15 +2,15 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 
 public sealed record UpdateVokiCoverCommand(VokiId VokiId, FileData File) :
-    ICommand<DraftVokiCoverKey>,
+    ICommand<VokiCoverKey>,
     IWithVokiAccessValidationStep;
 
-internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVokiCoverCommand, DraftVokiCoverKey>
+internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVokiCoverCommand, VokiCoverKey>
 {
     private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
     private readonly IMainStorageBucket _mainStorageBucket;
@@ -23,7 +23,7 @@ internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVoki
         _mainStorageBucket = mainStorageBucket;
     }
 
-    public async Task<ErrOr<DraftVokiCoverKey>> Handle(UpdateVokiCoverCommand command, CancellationToken ct) {
+    public async Task<ErrOr<VokiCoverKey>> Handle(UpdateVokiCoverCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
         var uploadingRes = await _mainStorageBucket.UploadDraftVokiCover(command.VokiId, command.File);
         if (uploadingRes.IsErr(out var err)) {

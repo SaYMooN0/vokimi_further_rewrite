@@ -1,17 +1,17 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VokimiStorageKeysLib.draft_general_voki.result_image;
+using VokimiStorageKeysLib.general_voki.result_image;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters.results;
 
-public class VokiResultImageConverter : ValueConverter<DraftGeneralVokiResultImageKey?, string?>
+public class VokiResultImageConverter : ValueConverter<GeneralVokiResultImageKey?, string?>
 {
     public VokiResultImageConverter() : base(
         img => ToString(img),
         str =>FromString(str)
     ) { }
-    private static string? ToString(DraftGeneralVokiResultImageKey? image) =>
+    private static string? ToString(GeneralVokiResultImageKey? image) =>
         image?.ToString();
-    private static DraftGeneralVokiResultImageKey? FromString(string? str) => 
-        str is null ? null : new DraftGeneralVokiResultImageKey(str);
+    private static GeneralVokiResultImageKey? FromString(string? str) => 
+        str is null ? null : new GeneralVokiResultImageKey(str);
 }

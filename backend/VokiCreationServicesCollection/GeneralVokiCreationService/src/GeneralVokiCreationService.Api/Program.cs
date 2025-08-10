@@ -36,12 +36,6 @@ public class Program
 
         app.MapEndpoints();
 
-        using (var serviceScope = app.Services.CreateScope()) {
-            var db = serviceScope.ServiceProvider.GetRequiredService<GeneralVokiCreationDbContext>();
-            // db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
-        }
-
         app.AllowFrontendCors();
         app.Run();
     }

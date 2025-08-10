@@ -6,8 +6,8 @@ using SharedKernel;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
-using VokimiStorageKeysLib.draft_general_voki.result_image;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.general_voki.result_image;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
@@ -30,7 +30,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
     private DraftGeneralVoki(
         VokiId vokiId, AppUserId primaryAuthorId,
-        VokiName name, DraftVokiCoverKey cover,
+        VokiName name, VokiCoverKey cover,
         DateTime creationDate
     ) : base(
         vokiId, primaryAuthorId,
@@ -44,7 +44,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
     public static DraftGeneralVoki Create(
         VokiId vokiId, AppUserId primaryAuthorId,
-        VokiName name, DraftVokiCoverKey cover,
+        VokiName name, VokiCoverKey cover,
         DateTime creationDate
     ) {
         DraftGeneralVoki newGeneralVoki = new(vokiId, primaryAuthorId, name, cover, creationDate);
@@ -183,7 +183,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         GeneralVokiResultId resultId,
         VokiResultName newName,
         VokiResultText newText,
-        DraftGeneralVokiResultImageKey? newImage
+        GeneralVokiResultImageKey? newImage
     ) {
         VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
         if (resultToUpdate is null) {

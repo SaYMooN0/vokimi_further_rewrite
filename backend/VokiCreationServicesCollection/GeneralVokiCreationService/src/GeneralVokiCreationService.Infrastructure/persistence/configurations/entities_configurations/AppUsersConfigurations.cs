@@ -17,7 +17,7 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .HasGuidBasedIdConversion();
 
         builder
-            .Property<ImmutableHashSet<VokiId>>("InitializedVokiIds")
+            .Property<ImmutableHashSet<VokiId>>(x=>x.InitializedVokiIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
         
         builder

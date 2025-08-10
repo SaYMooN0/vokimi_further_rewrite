@@ -6,7 +6,7 @@ using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using Microsoft.AspNetCore.Mvc;
-using VokimiStorageKeysLib.draft_general_voki.question_image;
+using VokimiStorageKeysLib.general_voki.question_image;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -106,7 +106,7 @@ internal static class SpecificVokiQuestionsHandlers
 
     private static async Task<IResult> UploadVokiQuestionImage(
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<UploadVokiQuestionImageCommand, DraftGeneralVokiQuestionImageKey> handler,
+        ICommandHandler<UploadVokiQuestionImageCommand, GeneralVokiQuestionImageKey> handler,
         [FromForm] IFormFile file
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();

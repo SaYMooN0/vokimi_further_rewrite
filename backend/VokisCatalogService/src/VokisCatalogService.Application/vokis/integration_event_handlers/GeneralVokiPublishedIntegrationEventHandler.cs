@@ -18,7 +18,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
         var e = context.Message;
         bool anyAudioAnswers = e.Questions.Any(q => q.AnswersType.HasAudio());
 
-        var voki = GeneralVoki.CreateNew(
+        GeneralVoki voki = new(
             e.VokiId,
             new VokiName(e.Name),
             e.PrimaryAuthorId,

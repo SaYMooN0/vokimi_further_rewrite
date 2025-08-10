@@ -1,4 +1,5 @@
-﻿using InfrastructureShared.persistence.extensions;
+﻿using System.Collections.Immutable;
+using InfrastructureShared.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokisCatalogService.Domain.app_user_aggregate;
@@ -14,5 +15,13 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
+        
+        builder
+            .Property<ImmutableHashSet<VokiId>>(x=>x.InitializedVokiIds)
+            .HasGuidBasedIdsImmutableHashSetConversion();
+        
+        builder
+            .Property<ImmutableHashSet<VokiId>>("CoAuthoredVokiIds")
+            .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }

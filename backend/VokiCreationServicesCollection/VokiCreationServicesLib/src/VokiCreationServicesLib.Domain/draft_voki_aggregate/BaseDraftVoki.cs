@@ -2,7 +2,7 @@
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
@@ -12,7 +12,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     public AppUserId PrimaryAuthorId { get; }
     protected VokiCoAuthorIdsSet CoAuthors { get; private set; }
     public VokiName Name { get; private set; }
-    public DraftVokiCoverKey Cover { get; private set; }
+    public VokiCoverKey Cover { get; private set; }
     public VokiDetails Details { get; private set; }
     public VokiTagsSet Tags { get; private set; }
 
@@ -20,7 +20,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
 
     protected BaseDraftVoki(
         VokiId vokiId, AppUserId primaryAuthorId,
-        VokiName name, DraftVokiCoverKey cover,
+        VokiName name, VokiCoverKey cover,
         DateTime creationDate
     ) {
         Id = vokiId;
@@ -52,21 +52,21 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         AddDomainEvent(new VokiNameUpdatedEvent(Id, Name));
     }
 
-    public ErrOrNothing UpdateCover(DraftVokiCoverKey newCover) {
+    public ErrOrNothing UpdateCover(VokiCoverKey newCover) {
         if (!newCover.IsWithId(this.Id)) {
             return ErrFactory.Conflict(
                 "This cover does not belong to this Voki", $"Voki id: {Id}, cover voki id: {newCover.VokiId}"
             );
         }
 
-        DraftVokiCoverKey oldCover = this.Cover;
+        VokiCoverKey oldCover = this.Cover;
         this.Cover = newCover;
         AddDomainEvent(new VokiCoverUpdatedEvent(Id, OldCover: oldCover, Cover));
         return ErrOrNothing.Nothing;
     }
 
     public void SetCoverToDefault() {
-        ErrOrNothing res = UpdateCover(DraftVokiCoverKey.Default);
+        ErrOrNothing res = UpdateCover(VokiCoverKey.Default);
         UnexpectedBehaviourException.ThrowIfErr(res);
     }
 

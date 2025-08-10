@@ -35,12 +35,6 @@ public class Program
         app.AddExceptionHandlingMiddleware();
 
         app.MapEndpoints();
-
-        using (var serviceScope = app.Services.CreateScope()) {
-            var db = serviceScope.ServiceProvider.GetRequiredService<CoreVokiCreationDbContext>();
-            // db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
-        }
         
         app.AllowFrontendCors();
         app.Run();

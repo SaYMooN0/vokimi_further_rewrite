@@ -3,8 +3,8 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.common.vokis;
-using VokimiStorageKeysLib.draft_general_voki.answer_audio;
-using VokimiStorageKeysLib.draft_general_voki.answer_image;
+using VokimiStorageKeysLib.general_voki.answer_audio;
+using VokimiStorageKeysLib.general_voki.answer_image;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters;
 
@@ -60,7 +60,7 @@ public class VokiAnswerTypeDataConverter : ValueConverter<BaseVokiAnswerTypeData
 
     private static ErrOr<BaseVokiAnswerTypeData> CreateImageOnly(Dictionary<string, string> dictionary) =>
         Get(dictionary, "Image", "Unable to create image only answer data. 'Image' field not provided")
-            .Bind(DraftGeneralVokiAnswerImageKey.Create)
+            .Bind(GeneralVokiAnswerImageKey.Create)
             .Bind<BaseVokiAnswerTypeData>(img => new BaseVokiAnswerTypeData.ImageOnly(img));
 
     private static ErrOr<BaseVokiAnswerTypeData> CreateImageAndText(Dictionary<string, string> dictionary) =>
@@ -68,7 +68,7 @@ public class VokiAnswerTypeDataConverter : ValueConverter<BaseVokiAnswerTypeData
             .Bind(GeneralVokiAnswerText.Create)
             .Bind<BaseVokiAnswerTypeData>(text =>
                 Get(dictionary, "Image", "Unable to create image and text answer data. 'Image' field not provided")
-                    .Bind(DraftGeneralVokiAnswerImageKey.Create)
+                    .Bind(GeneralVokiAnswerImageKey.Create)
                     .Bind<BaseVokiAnswerTypeData>(img => new BaseVokiAnswerTypeData.ImageAndText(text, img))
             );
 
@@ -88,7 +88,7 @@ public class VokiAnswerTypeDataConverter : ValueConverter<BaseVokiAnswerTypeData
 
     private static ErrOr<BaseVokiAnswerTypeData> CreateAudioOnly(Dictionary<string, string> dictionary) =>
         Get(dictionary, "Audio", "Unable to create audio only answer data. 'Audio' field not provided")
-            .Bind(DraftGeneralVokiAnswerAudioKey.Create)
+            .Bind(GeneralVokiAnswerAudioKey.Create)
             .Bind<BaseVokiAnswerTypeData>(a => new BaseVokiAnswerTypeData.AudioOnly(a));
 
     private static ErrOr<BaseVokiAnswerTypeData> CreateAudioAndText(Dictionary<string, string> dictionary) =>
@@ -96,7 +96,7 @@ public class VokiAnswerTypeDataConverter : ValueConverter<BaseVokiAnswerTypeData
             .Bind(GeneralVokiAnswerText.Create)
             .Bind<BaseVokiAnswerTypeData>(text =>
                 Get(dictionary, "Audio", "Unable to create audio and text answer data. 'Audio' field not provided")
-                    .Bind(DraftGeneralVokiAnswerAudioKey.Create)
+                    .Bind(GeneralVokiAnswerAudioKey.Create)
                     .Bind<BaseVokiAnswerTypeData>(audio => new BaseVokiAnswerTypeData.AudioAndText(text, audio))
             );
 }

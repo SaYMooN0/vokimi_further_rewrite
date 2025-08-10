@@ -2,7 +2,7 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
-using VokimiStorageKeysLib.draft_general_voki.result_image;
+using VokimiStorageKeysLib.general_voki.result_image;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.results;
 
@@ -11,7 +11,7 @@ public sealed record UpdateVokiResultCommand(
     GeneralVokiResultId ResultId,
     VokiResultName NewName,
     VokiResultText NewText,
-    DraftGeneralVokiResultImageKey? NewImage
+    GeneralVokiResultImageKey? NewImage
 ) :
     ICommand<VokiResult>,
     IWithVokiAccessValidationStep;

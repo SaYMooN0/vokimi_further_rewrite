@@ -9,6 +9,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\Libs\VokimiStorageKeysLib\VokimiStorageKeysLib.csproj" />
       <ProjectReference Include="..\..\..\..\SharedKernel\SharedKernel.csproj" />
+      <ProjectReference Include="..\..\..\VokiTakingServicesLib\VokiTakingServicesLib.Domain\VokiTakingServicesLib.Domain.csproj" />
     </ItemGroup>
 
 </Project>

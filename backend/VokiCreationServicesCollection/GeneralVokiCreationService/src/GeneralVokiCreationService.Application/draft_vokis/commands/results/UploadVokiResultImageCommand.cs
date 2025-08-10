@@ -1,15 +1,15 @@
 ﻿using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.draft_general_voki.result_image;
+using VokimiStorageKeysLib.general_voki.result_image;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.results;
 
 public sealed record UploadVokiResultImageCommand(VokiId VokiId, GeneralVokiResultId ResultId, FileData File) :
-    ICommand<DraftGeneralVokiResultImageKey>,
+    ICommand<GeneralVokiResultImageKey>,
     IWithVokiAccessValidationStep;
 
 internal sealed class UploadVokiResultImageCommandHandler :
-    ICommandHandler<UploadVokiResultImageCommand, DraftGeneralVokiResultImageKey>
+    ICommandHandler<UploadVokiResultImageCommand, GeneralVokiResultImageKey>
 {
     private readonly IMainStorageBucket _mainStorageBucket;
 
@@ -17,7 +17,7 @@ internal sealed class UploadVokiResultImageCommandHandler :
         _mainStorageBucket = mainStorageBucket;
     }
 
-    public async Task<ErrOr<DraftGeneralVokiResultImageKey>> Handle(
+    public async Task<ErrOr<GeneralVokiResultImageKey>> Handle(
         UploadVokiResultImageCommand command, CancellationToken ct
     ) =>
         await _mainStorageBucket.UploadVokiResultImage(command.VokiId, command.ResultId, command.File);

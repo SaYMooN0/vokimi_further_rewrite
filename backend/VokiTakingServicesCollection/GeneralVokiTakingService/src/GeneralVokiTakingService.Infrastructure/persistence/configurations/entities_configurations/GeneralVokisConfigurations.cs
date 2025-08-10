@@ -15,15 +15,23 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
 
-
         builder
             .HasMany<VokiQuestion>("Questions")
             .WithOne()
-            .HasForeignKey("VokiId"); 
+            .HasForeignKey("VokiId");
+        
+        builder.Property<bool>("ShuffleQuestions");
+        builder.Property(x => x.ForceSequentialAnswering);
         
         builder
             .HasMany<VokiResult>("Results")
             .WithOne()
             .HasForeignKey("VokiId");
+
+        builder
+            .Property(x => x.VokiTakenRecordIds)
+            .HasGuidBasedIdsImmutableHashSetConversion();
+
+       
     }
 }

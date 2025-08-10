@@ -2,7 +2,7 @@
 using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.rules;
 using SharedKernel.common.vokis;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace CoreVokiCreationService.Domain.draft_voki_aggregate;
 
@@ -11,7 +11,7 @@ public class DraftVoki : AggregateRoot<VokiId>
     private DraftVoki() { }
     public VokiType Type { get; }
     public VokiName Name { get; private set; }
-    public DraftVokiCoverKey Cover { get; private set; }
+    public VokiCoverKey Cover { get; private set; }
     public AppUserId PrimaryAuthorId { get; }
     public ImmutableHashSet<AppUserId> CoAuthorsIds { get; private set; }
     public ImmutableHashSet<AppUserId> InvitedForCoAuthorUserIds { get; private set; }
@@ -21,7 +21,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         Id = id;
         Type = type;
         Name = name;
-        Cover = DraftVokiCoverKey.Default;
+        Cover = VokiCoverKey.Default;
         PrimaryAuthorId = primaryAuthorId;
         CreationDate = creationDate;
         CoAuthorsIds = [];
@@ -45,7 +45,7 @@ public class DraftVoki : AggregateRoot<VokiId>
     public bool HasAccessToEdit(AppUserId userId) =>
         userId == PrimaryAuthorId || CoAuthorsIds.Contains(userId);
 
-    public ErrOrNothing UpdateCover(DraftVokiCoverKey newCover) {
+    public ErrOrNothing UpdateCover(VokiCoverKey newCover) {
         if (!newCover.IsWithId(this.Id)) {
             return ErrFactory.Conflict(
                 "This cover does not belong to this Voki", $"Voki id: {Id}, cover voki id: {newCover.VokiId}"

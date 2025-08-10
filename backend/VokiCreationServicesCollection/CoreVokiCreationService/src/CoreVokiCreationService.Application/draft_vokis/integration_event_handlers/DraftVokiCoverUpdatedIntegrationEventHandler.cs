@@ -2,7 +2,7 @@
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using MassTransit;
 using SharedKernel.integration_events.draft_vokis;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace CoreVokiCreationService.Application.draft_vokis.integration_event_handlers;
 
@@ -16,7 +16,7 @@ public class DraftVokiCoverUpdatedIntegrationEventHandler : IConsumer<DraftVokiC
 
     public async Task Consume(ConsumeContext<DraftVokiCoverUpdatedIntegrationEvent> context) {
         DraftVoki voki = (await _draftVokiRepository.GetById(context.Message.VokiId))!;
-        var res = voki.UpdateCover(new DraftVokiCoverKey(context.Message.NewVokiCover));
+        var res = voki.UpdateCover(new VokiCoverKey(context.Message.NewVokiCover));
         UnexpectedBehaviourException.ThrowIfErr(res);
         await _draftVokiRepository.Update(voki);
     }

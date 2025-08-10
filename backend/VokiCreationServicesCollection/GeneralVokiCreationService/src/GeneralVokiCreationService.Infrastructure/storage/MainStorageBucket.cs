@@ -4,9 +4,9 @@ using GeneralVokiCreationService.Application;
 using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
 using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.draft_general_voki.question_image;
-using VokimiStorageKeysLib.draft_general_voki.result_image;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.general_voki.question_image;
+using VokimiStorageKeysLib.general_voki.result_image;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Infrastructure.storage;
 
@@ -18,13 +18,13 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
         ILogger<MainStorageBucket> logger
     ) : base(s3Client, mainBucketNameProvider, logger) { }
 
-    public async Task<ErrOr<DraftVokiCoverKey>> UploadDraftVokiCover(VokiId vokiId, FileData file) =>
+    public async Task<ErrOr<VokiCoverKey>> UploadDraftVokiCover(VokiId vokiId, FileData file) =>
         await UploadWithKeyAsync(
-            (ext) => DraftVokiCoverKey.CreateWithId(vokiId, ext),
+            (ext) => VokiCoverKey.CreateWithId(vokiId, ext),
             file
         );
 
-    public async Task<ErrOrNothing> DeleteVokiCover(DraftVokiCoverKey key) {
+    public async Task<ErrOrNothing> DeleteVokiCover(VokiCoverKey key) {
         if (!key.IsDefault()) {
             return await base.DeleteAsync(key);
         }
@@ -32,22 +32,22 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
         return ErrOrNothing.Nothing;
     }
 
-    public async Task<ErrOr<DraftGeneralVokiQuestionImageKey>> UploadVokiQuestionImage(
+    public async Task<ErrOr<GeneralVokiQuestionImageKey>> UploadVokiQuestionImage(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
         FileData file
     ) =>
-        await UploadWithKeyAsync<DraftGeneralVokiQuestionImageKey>(
-            (ext) => DraftGeneralVokiQuestionImageKey.Create(vokiId, questionId, ext),
+        await UploadWithKeyAsync<GeneralVokiQuestionImageKey>(
+            (ext) => GeneralVokiQuestionImageKey.Create(vokiId, questionId, ext),
             file
         );
 
     public async Task<ErrOrNothing> DeleteUnusedQuestionImages(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        IEnumerable<DraftGeneralVokiQuestionImageKey> usedKeys
+        IEnumerable<GeneralVokiQuestionImageKey> usedKeys
     ) {
-        string prefix = DraftGeneralVokiQuestionImageKey.Folder(vokiId, questionId) + '/';
+        string prefix = GeneralVokiQuestionImageKey.Folder(vokiId, questionId) + '/';
         var usedStringifiedKeys = usedKeys
             .Select(k => k.ToString())
             .ToImmutableHashSet();
@@ -57,25 +57,20 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
     public async Task<ErrOrNothing> DeleteUnusedResultImages(
         VokiId vokiId,
         GeneralVokiResultId resultId,
-        DraftGeneralVokiResultImageKey? currentKey
+        GeneralVokiResultImageKey? currentKey
     ) {
-        string prefix = DraftGeneralVokiResultImageKey.Folder(vokiId, resultId) + '/';
+        string prefix = GeneralVokiResultImageKey.Folder(vokiId, resultId) + '/';
         ImmutableHashSet<string> usedStringifiedKeys = currentKey is null ? [] : [currentKey.ToString()];
         return await base.DeleteFilesWithoutSubfoldersAsync(prefix, usedStringifiedKeys);
     }
 
-    public async Task<ErrOr<DraftGeneralVokiResultImageKey>> UploadVokiResultImage(
+    public async Task<ErrOr<GeneralVokiResultImageKey>> UploadVokiResultImage(
         VokiId vokiId,
         GeneralVokiResultId resultId,
         FileData file
-    ) => await UploadWithKeyAsync<DraftGeneralVokiResultImageKey>(
-        (ext) => DraftGeneralVokiResultImageKey.Create(vokiId, resultId, ext),
+    ) => await UploadWithKeyAsync<GeneralVokiResultImageKey>(
+        (ext) => GeneralVokiResultImageKey.Create(vokiId, resultId, ext),
         file
     );
 
-    public async Task<ErrOrNothing> CopyDraftVokiContentToPublished(VokiId vokiId) =>
-        await base.CopyAllObjectsWithSubfoldersAsync(
-            sourcePrefix: $"{StorageFolders.DraftVokis}/{vokiId}/",
-            destinationPrefix: $"{StorageFolders.PublishedVokis}/{vokiId}/"
-        );
 }

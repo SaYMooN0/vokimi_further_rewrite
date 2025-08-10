@@ -4,9 +4,9 @@ using GeneralVokiCreationService.Application.draft_vokis.commands.results;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
  using Microsoft.AspNetCore.Mvc;
-using VokimiStorageKeysLib.draft_general_voki.result_image;
+ using VokimiStorageKeysLib.general_voki.result_image;
 
-namespace GeneralVokiCreationService.Api.endpoints;
+ namespace GeneralVokiCreationService.Api.endpoints;
 
 internal static class SpecificVokiResultsHandlers
 {
@@ -59,7 +59,7 @@ internal static class SpecificVokiResultsHandlers
 
     private static async Task<IResult> UploadResultImage(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<UploadResultImageCommand, DraftGeneralVokiResultImageKey> handler,
+        ICommandHandler<UploadResultImageCommand, GeneralVokiResultImageKey> handler,
         [FromForm] IFormFile file
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();

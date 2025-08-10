@@ -129,6 +129,7 @@ public static class DependencyInjection
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IGeneralVokisRepository, GeneralVokisRepository>();
+        services.AddScoped<IGeneralVokiTakenRecordsRepository, GeneralVokiTakenRecordsRepository>();
 
         return services;
     }

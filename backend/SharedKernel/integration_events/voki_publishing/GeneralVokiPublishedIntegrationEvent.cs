@@ -60,7 +60,7 @@ public sealed record GeneralVokiAnswerTypeDataIntegrationEventDto(ImmutableDicti
 
 public sealed record class GeneralVokiResultIntegrationEventDto(
     GeneralVokiResultId Id,
-    string Name,
+    string Name, 
     string Text,
-    string? Image
+    string? DraftVokiImageKey
 );

@@ -1,17 +1,17 @@
 ﻿using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.draft_general_voki.question_image;
-using VokimiStorageKeysLib.draft_general_voki.result_image;
-using VokimiStorageKeysLib.draft_voki_cover;
+using VokimiStorageKeysLib.general_voki.question_image;
+using VokimiStorageKeysLib.general_voki.result_image;
+using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Application;
 
 public interface IMainStorageBucket
 {
-    public Task<ErrOr<DraftVokiCoverKey>> UploadDraftVokiCover(VokiId vokiId, FileData file);
+    public Task<ErrOr<VokiCoverKey>> UploadDraftVokiCover(VokiId vokiId, FileData file);
 
-    Task<ErrOrNothing> DeleteVokiCover(DraftVokiCoverKey key);
+    Task<ErrOrNothing> DeleteVokiCover(VokiCoverKey key);
 
-    public Task<ErrOr<DraftGeneralVokiQuestionImageKey>> UploadVokiQuestionImage(
+    public Task<ErrOr<GeneralVokiQuestionImageKey>> UploadVokiQuestionImage(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
         FileData file
@@ -20,20 +20,18 @@ public interface IMainStorageBucket
     public Task<ErrOrNothing> DeleteUnusedQuestionImages(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        IEnumerable<DraftGeneralVokiQuestionImageKey> usedKeys
+        IEnumerable<GeneralVokiQuestionImageKey> usedKeys
     );
 
     public Task<ErrOrNothing> DeleteUnusedResultImages(
         VokiId vokiId,
         GeneralVokiResultId resultId,
-        DraftGeneralVokiResultImageKey? currentKey
+        GeneralVokiResultImageKey? currentKey
     );
 
-    Task<ErrOr<DraftGeneralVokiResultImageKey>> UploadVokiResultImage(
+    Task<ErrOr<GeneralVokiResultImageKey>> UploadVokiResultImage(
         VokiId vokiId,
         GeneralVokiResultId resultId,
         FileData file
     );
-
-    Task<ErrOrNothing> CopyDraftVokiContentToPublished(VokiId vokiId);
 }
