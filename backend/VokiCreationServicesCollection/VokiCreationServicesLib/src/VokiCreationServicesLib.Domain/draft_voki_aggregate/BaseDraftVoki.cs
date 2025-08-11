@@ -81,7 +81,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     protected List<VokiPublishingIssue> CheckCoverForPublishingIssues() {
         if (!Cover.IsWithId(Id)) {
             return [
-                VokiPublishingIssue.Error(
+                VokiPublishingIssue.Problem(
                     message: "Cover does not belong to this Voki",
                     source: "Cover",
                     fixRecommendation: "Try choosing another cover"

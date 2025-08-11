@@ -65,6 +65,7 @@
 		align-items: center;
 		width: 30rem;
 	}
+
 	.loading-container {
 		display: flex;
 		flex-direction: column;
@@ -75,6 +76,7 @@
 		aspect-ratio: var(--voki-cover-aspect-ratio);
 		animation: var(--default-fade-in-animation);
 	}
+
 	.loading-container > label {
 		color: var(--secondary-foreground);
 		font-size: 1.5rem;

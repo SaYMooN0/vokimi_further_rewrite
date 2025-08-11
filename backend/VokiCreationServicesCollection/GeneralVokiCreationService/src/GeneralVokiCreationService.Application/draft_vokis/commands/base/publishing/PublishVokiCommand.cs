@@ -12,7 +12,7 @@ public record class PublishVokiCommand(VokiId VokiId) :
 
 public abstract record PublishVokiCommandResult
 {
-    public sealed record Success : PublishVokiCommandResult;
+    public sealed record Success(VokiId Id) : PublishVokiCommandResult;
 
     public sealed record FailedToPublish(ImmutableArray<VokiPublishingIssue> Issues) : PublishVokiCommandResult;
 }
@@ -39,11 +39,12 @@ internal sealed class PublishVokiCommandHandler :
             return new PublishVokiCommandResult.FailedToPublish(issues);
         }
 
-        var publishingRes = voki.PublishWithWarningsIgnore(_dateTimeProvider);
+        var publishingRes = voki.PublishWithWarningsIgnored(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {
             return err;
         }
+
         await _draftGeneralVokiRepository.Update(voki);
-        return new PublishVokiCommandResult.Success();
+        return new PublishVokiCommandResult.Success(voki.Id);
     }
 }

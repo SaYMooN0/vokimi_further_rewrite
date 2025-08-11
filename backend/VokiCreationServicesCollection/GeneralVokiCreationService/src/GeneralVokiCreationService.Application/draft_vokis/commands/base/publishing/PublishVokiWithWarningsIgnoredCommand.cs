@@ -5,18 +5,18 @@ using VokiCreationServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
 
-public record class PublishVokiWithWarningsIgnoreCommand(VokiId VokiId) :
-    ICommand,
+public sealed record  PublishVokiWithWarningsIgnoredCommand(VokiId VokiId) :
+    ICommand<VokiId>,
     IWithVokiPrimaryAuthorValidationStep;
 
-internal sealed class PublishVokiWithWarningsIgnoreCommandHandler :
-    ICommandHandler<PublishVokiWithWarningsIgnoreCommand>
+internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
+    ICommandHandler<PublishVokiWithWarningsIgnoredCommand, VokiId>
 {
     private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
 
-    public PublishVokiWithWarningsIgnoreCommandHandler(
+    public PublishVokiWithWarningsIgnoredCommandHandler(
         IDraftGeneralVokiRepository draftGeneralVokiRepository,
         IDateTimeProvider dateTimeProvider
     ) {
@@ -24,15 +24,14 @@ internal sealed class PublishVokiWithWarningsIgnoreCommandHandler :
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOrNothing> Handle(PublishVokiWithWarningsIgnoreCommand command, CancellationToken ct) {
+    public async Task<ErrOr<VokiId>> Handle(PublishVokiWithWarningsIgnoredCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
-        var issues = voki.CheckForPublishingIssues();
-        var publishingRes = voki.PublishWithWarningsIgnore(_dateTimeProvider);
+        var publishingRes = voki.PublishWithWarningsIgnored(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {
             return err;
         }
 
         await _draftGeneralVokiRepository.Update(voki);
-        return ErrOrNothing.Nothing;
+        return voki.Id;
     }
 }

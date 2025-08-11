@@ -127,8 +127,10 @@ public static class DependencyInjection
             }
         );
 
+
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IBaseVokisRepository, BaseVokisRepository>();
+        services.AddScoped<IGeneralVokisRepository, GeneralVokisRepository>();
 
         return services;
     }

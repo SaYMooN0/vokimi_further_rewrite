@@ -93,11 +93,11 @@
 
 	.result-image {
 		width: 100%;
-		height: 100%;
 		max-width: 15rem;
+		height: 100%;
 		max-height: 18rem;
-		object-fit: contain;
 		border-radius: 1rem;
 		box-shadow: var(--shadow-xs);
+		object-fit: contain;
 	}
 </style>

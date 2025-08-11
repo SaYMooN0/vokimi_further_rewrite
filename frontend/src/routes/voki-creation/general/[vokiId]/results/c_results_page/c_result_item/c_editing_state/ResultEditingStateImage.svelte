@@ -74,16 +74,18 @@
 
 <style>
 	.img-not-set {
-		margin: 0.5rem;
 		width: 6rem;
 		height: 6rem;
+		margin: 0.5rem;
 	}
+
 	.image-set {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 	}
+
 	.result-image {
 		max-width: 15rem;
 		max-height: 18rem;
@@ -91,6 +93,7 @@
 		border-radius: 1rem;
 		box-shadow: var(--shadow-xs);
 	}
+
 	.img-btn {
 		display: flex;
 		justify-content: center;

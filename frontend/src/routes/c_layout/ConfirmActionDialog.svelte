@@ -80,10 +80,10 @@
 	}
 
 	.text {
+		padding: 0 1rem;
 		font-size: 2rem;
 		font-weight: 450;
 		text-align: center;
-		padding: 0 1rem;
 	}
 
 	.buttons button {

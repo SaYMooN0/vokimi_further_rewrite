@@ -308,7 +308,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     private List<VokiPublishingIssue> CheckQuestionsForPublishingIssues() {
         if (_questions.Count < MinQuestionsCount) {
             return [
-                VokiPublishingIssue.Error(
+                VokiPublishingIssue.Problem(
                     message: $"Too few questions ({_questions.Count}). Minimum required is {MinQuestionsCount}",
                     source: "Questions",
                     fixRecommendation: $"Add at least {MinQuestionsCount - _questions.Count} more question(s)"
@@ -318,7 +318,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
         if (_questions.Count > MaxQuestionsCount) {
             return [
-                VokiPublishingIssue.Error(
+                VokiPublishingIssue.Problem(
                     message: $"Too many questions ({_questions.Count}). Maximum allowed is {MaxQuestionsCount}",
                     source: "Questions",
                     fixRecommendation: $"Remove {_questions.Count - MaxQuestionsCount} question(s) to meet the limit"
@@ -333,7 +333,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     private List<VokiPublishingIssue> CheckResultsForPublishingIssues() {
         if (_results.Count < MinResultsCount) {
             return [
-                VokiPublishingIssue.Error(
+                VokiPublishingIssue.Problem(
                     message: $"Too few results ({_results.Count}). Minimum required is {MinResultsCount}",
                     source: "Results",
                     fixRecommendation: $"Add at least {MinResultsCount - _results.Count} more result(s)"
@@ -343,7 +343,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
         if (_results.Count > MaxResultsCount) {
             return [
-                VokiPublishingIssue.Error(
+                VokiPublishingIssue.Problem(
                     message: $"Too many results ({_results.Count}). Maximum allowed is {MaxResultsCount}",
                     source: "Results",
                     fixRecommendation: $"Remove {_results.Count - MaxResultsCount} result(s) to meet the limit"
@@ -373,11 +373,11 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         ..CheckResultsForPublishingIssues()
     ];
 
-    public ErrOrNothing PublishWithWarningsIgnore(IDateTimeProvider dateTimeProvider) {
+    public ErrOrNothing PublishWithWarningsIgnored(IDateTimeProvider dateTimeProvider) {
         var issues = CheckForPublishingIssues();
-        bool anyErrors = issues.Any(i => i.IssueType == PublishingIssueType.Error);
-        if (anyErrors) {
-            return ErrFactory.Conflict("Cannot publish voki because it has some unresolved errors");
+        bool anyProblems = issues.Any(i => i.Type == PublishingIssueType.Problem );
+        if (anyProblems) {
+            return ErrFactory.Conflict("Cannot publish Voki because of an unresolved problem");
         }
 
         QuestionDomainEventDto ParseQuestionToDto(VokiQuestion q) {

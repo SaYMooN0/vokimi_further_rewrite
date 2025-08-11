@@ -1,4 +1,5 @@
-﻿using CoreVokiCreationService.Domain.app_user_aggregate;
+﻿using ApplicationShared;
+using CoreVokiCreationService.Domain.app_user_aggregate;
 using CoreVokiCreationService.Domain.common.interfaces.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 

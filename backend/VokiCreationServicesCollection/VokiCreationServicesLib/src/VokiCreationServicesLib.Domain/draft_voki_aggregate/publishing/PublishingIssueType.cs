@@ -2,6 +2,6 @@
 
 public enum PublishingIssueType
 {
-    Error,
+    Problem,
     Warning
 }

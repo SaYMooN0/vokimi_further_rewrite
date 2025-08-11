@@ -37,9 +37,9 @@ internal static class SpecificVokiHandlers
         group.MapPatch("/update-voki-taking-process-settings", UpdateVokiTakingProcessSettings)
             .WithRequestValidation<UpdateVokiTakingProcessSettingsRequest>();
 
-        group.MapGet("/publishing-errors", CheckVokiForPublishingErrors);
+        group.MapGet("/publishing-issues", CheckVokiForPublishingIssues);
         group.MapPost("/publish", PublishVoki);
-        group.MapPost("/publish-with-warnings-ignore", PublishVokiWithWarningsIgnore);
+        group.MapPost("/publish-with-warnings-ignored", PublishVokiWithWarningsIgnored);
     }
 
     private static async Task<IResult> GetVokiMainInfo(
@@ -145,7 +145,7 @@ internal static class SpecificVokiHandlers
         );
     }
 
-    private static async Task<IResult> CheckVokiForPublishingErrors(
+    private static async Task<IResult> CheckVokiForPublishingIssues(
         CancellationToken ct, HttpContext httpContext,
         IQueryHandler<GetVokiPublishingIssuesQuery, ImmutableArray<VokiPublishingIssue>> handler
     ) {
@@ -155,7 +155,7 @@ internal static class SpecificVokiHandlers
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (issues) => Results.Json(
-            VokiPublishingIssuesResponse.Create(issues)
+            new { Isssues = issues.Select(VokiPublishingIssueResponse.Create).ToArray() }
         ));
     }
 
@@ -169,22 +169,27 @@ internal static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (r) => r switch {
-            PublishVokiCommandResult.Success => Results.Ok(),
+            PublishVokiCommandResult.Success success =>
+                Results.Json(new { PublishedVokiId = success.Id.ToString() }),
             PublishVokiCommandResult.FailedToPublish fail =>
-                Results.Json(VokiPublishingIssuesResponse.Create(fail.Issues)),
+                Results.Json(new {
+                    Isssues = fail.Issues.Select(VokiPublishingIssueResponse.Create).ToArray()
+                }),
             _ => throw new ArgumentException("Unknown Voki result command")
         });
     }
 
-    private static async Task<IResult> PublishVokiWithWarningsIgnore(
+    private static async Task<IResult> PublishVokiWithWarningsIgnored(
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<PublishVokiWithWarningsIgnoreCommand> handler
+        ICommandHandler<PublishVokiWithWarningsIgnoredCommand, VokiId> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
-        PublishVokiWithWarningsIgnoreCommand command = new(id);
+        PublishVokiWithWarningsIgnoredCommand command = new(id);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
+        return CustomResults.FromErrOr(result,
+            (vokiId) => Results.Json(new { PublishedVokiId = vokiId.ToString() })
+        );
     }
 }

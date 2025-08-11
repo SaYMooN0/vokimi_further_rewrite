@@ -104,9 +104,9 @@
 		flex-direction: column;
 		gap: var(--voki-cover-name-gap);
 		width: 100%;
+		margin: 0.125rem;
 		border-radius: var(--voki-cover-border-radius);
 		cursor: pointer;
-		margin: 0.125rem;
 	}
 
 	.voki-item:not(:has(.interactable:hover)):active {

@@ -126,6 +126,7 @@
 		margin: auto;
 		animation: var(--default-fade-in-animation);
 	}
+
 	.results {
 		display: flex;
 		flex-direction: column;
@@ -134,25 +135,28 @@
 		overflow-y: auto;
 		padding: 0 1rem;
 	}
+
 	.result {
-		width: 100%;
-		font-size: 1.125rem;
-		font-weight: 450;
 		display: flex;
+		place-items: center flex-start;
 		gap: 0.5rem;
-		align-items: center;
-		justify-items: flex-start;
+		width: 100%;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.5rem;
+		font-size: 1.125rem;
+		font-weight: 450;
 	}
+
 	.result:hover {
 		background-color: var(--secondary);
 		box-shadow: var(--shadow-xs);
 		cursor: pointer;
 	}
+
 	:global(#general-voki-answer-related-results-selecting-dialog .confirm) {
 		margin-top: auto;
 	}
+
 	@keyframes default-fade-in {
 		from {
 			opacity: 0.4;

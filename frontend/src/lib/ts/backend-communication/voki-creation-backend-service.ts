@@ -15,6 +15,14 @@ export type VokiDetails = {
     language: Language;
     isAgeRestricted: boolean;
 }
+export type VokiPublishingIssueType = 'Problem' | 'Warning';
+export type VokiPublishingIssue = {
+    type: VokiPublishingIssueType;
+    message: string;
+    source: string;
+    fixRecommendation: string;
+
+}
 
 export interface IVokiCreationBackendService {
     setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newCover: string; }>>;
@@ -22,11 +30,13 @@ export interface IVokiCreationBackendService {
     updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newName: string; }>>;
     updateVokiTags(vokiId: string, tags: string[]): Promise<ResponseResult<{ newTags: string[]; }>>;
     updateVokiDetails(vokiId: string, details: VokiDetails): Promise<ResponseResult<VokiDetails>>;
+    checkForPublishingIssues(vokiId: string): Promise<ResponseResult<{ issues: VokiPublishingIssue[] }>>;
 }
 class VokiCreationBackendService extends BackendService implements IVokiCreationBackendService {
     constructor(baseUrl: string) {
         super(baseUrl);
     }
+
 
     public async setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newCover: string; }>> {
         return await this.fetchJsonResponse<{ newCover: string }>(
@@ -67,6 +77,21 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
                 newLanguage: details.language,
                 newIsAgeRestricted: details.isAgeRestricted
             })
+        );
+    }
+    public async checkForPublishingIssues(vokiId: string): Promise<ResponseResult<{ issues: VokiPublishingIssue[]; }>> {
+        return await this.fetchJsonResponse<{ issues: VokiPublishingIssue[]; }>(
+            `/vokis/${vokiId}/publishing-issues`, { method: 'GET' }
+        );
+    }
+    public async publish(vokiId: string): Promise<ResponseResult<{ issues: VokiPublishingIssue[]; }>> {
+        return await this.fetchJsonResponse<{ issues: VokiPublishingIssue[]; }>(
+            `/vokis/${vokiId}/publish`, RequestJsonOptions.POST({})
+        );
+    }
+    public async publishWithWarningsIgnored(vokiId: string): Promise<ResponseResult<{ publishedVokiId: string }>> {
+        return await this.fetchJsonResponse<{ publishedVokiId: string }>(
+            `/vokis/${vokiId}/publish-with-warnings-ignored`, RequestJsonOptions.POST({})
         );
     }
 }
