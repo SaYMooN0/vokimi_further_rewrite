@@ -19,21 +19,7 @@
 	<div class="err-message">
 		{err.message}
 		{#if ErrUtils.hasSomethingExceptMessage(err)}
-			<svg
-				bind:this={iconElement}
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 24 24"
-				fill="none"
-				onclick={toggleDetails}
-			>
-				<path
-					d="M17.9998 15C17.9998 15 13.5809 9.00001 11.9998 9C10.4187 8.99999 5.99985 15 5.99985 15"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				/>
-			</svg>
+			<svg onclick={toggleDetails} bind:this={iconElement}><use href="#error-content-toggle-icon" /></svg>
 		{/if}
 	</div>
 	{#if ErrUtils.hasNonEmptyDetails(err)}
@@ -75,9 +61,12 @@
 	}
 
 	.err-message > svg {
+		width: 1.5rem;
+		height: 1.5rem;
 		transition: transform 0.17s ease-in;
 		transform: scale(1.2);
 		cursor: pointer;
+		stroke-width: 2;
 	}
 
 	:global(.err-message > .rotate-down) {

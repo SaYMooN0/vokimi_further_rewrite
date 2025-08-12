@@ -146,46 +146,58 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         }
     }
 
-    public List<VokiPublishingIssue> CheckForPublishingIssues()
-    {
-        List<VokiPublishingIssue> issues = [];
+    public List<VokiPublishingIssue> CheckForPublishingIssues() {
+        string questionText = Text.ToString();
+        string preview = questionText.Length > 15
+            ? questionText[..15] + "..."
+            : questionText;
 
-        if (_answers.Count < MinAnswersCount)
-        {
-            issues.Add(VokiPublishingIssue.Problem(
-                message: $"Too few answers ({_answers.Count}). Minimum required is {MinAnswersCount}",
-                source: "Question answers",
-                fixRecommendation: $"Add at least {MinAnswersCount - _answers.Count} more answer(s)"
-            ));
-        }
-        else if (_answers.Count > MaxAnswersCount)
-        {
-            issues.Add(VokiPublishingIssue.Problem(
-                message: $"Too many answers ({_answers.Count}). Maximum allowed is {MaxAnswersCount}",
-                source: "Question answers",
-                fixRecommendation: $"Remove { _answers.Count - MaxAnswersCount } answer(s) to meet the limit"
-            ));
+        if (_answers.Count < MinAnswersCount) {
+            return [
+                VokiPublishingIssue.Problem(
+                    message:
+                    $"[\"{preview}\"] question has too few answers ({_answers.Count}). Minimum required is {MinAnswersCount}",
+                    source: "Question answers",
+                    fixRecommendation: $"Add at least {MinAnswersCount - _answers.Count} more answer(s)"
+                )
+            ];
         }
 
-        if (_answers.Count < AnswersCountLimit.MinAnswers)
-        {
-            issues.Add(VokiPublishingIssue.Problem(
-                message: $"Answer count is below the configured minimum ({AnswersCountLimit.MinAnswers})",
-                source: "Question answers",
-                fixRecommendation: $"Increase the minimum limit or add {AnswersCountLimit.MinAnswers - _answers.Count} more answer(s)"
-            ));
+        if (_answers.Count > MaxAnswersCount) {
+            return [
+                VokiPublishingIssue.Problem(
+                    message:
+                    $"[\"{preview}\"] question has too many answers ({_answers.Count}). Maximum allowed is {MaxAnswersCount}",
+                    source: "Question answers",
+                    fixRecommendation: $"Remove {_answers.Count - MaxAnswersCount} answer(s) to meet the limit"
+                )
+            ];
         }
 
-        if (_answers.Count > AnswersCountLimit.MaxAnswers)
-        {
-            issues.Add(VokiPublishingIssue.Problem(
-                message: $"Answer count exceeds the configured maximum ({AnswersCountLimit.MaxAnswers})",
-                source: "Question answers",
-                fixRecommendation: $"Increase the maximum limit or remove { _answers.Count - AnswersCountLimit.MaxAnswers } answer(s)"
-            ));
+        if (_answers.Count < AnswersCountLimit.MinAnswers) {
+            return [
+                VokiPublishingIssue.Problem(
+                    message:
+                    $"[\"{preview}\"] question's answer count is below the configured minimum ({AnswersCountLimit.MinAnswers})",
+                    source: "Question answers",
+                    fixRecommendation:
+                    $"Decrease the minimum limit or add at least {AnswersCountLimit.MinAnswers - _answers.Count} more answer(s)"
+                )
+            ];
         }
 
-        return issues;
+        if (_answers.Count < AnswersCountLimit.MaxAnswers) {
+            return [
+                VokiPublishingIssue.Problem(
+                    message:
+                    $"[\"{preview}\"] question's answer count is below the configured minimum({AnswersCountLimit.MaxAnswers})",
+                    source: "Question answers",
+                    fixRecommendation:
+                    $"Decrease the maximum limit or add at least {AnswersCountLimit.MaxAnswers - _answers.Count} answer(s)"
+                )
+            ];
+        }
+
+        return [];
     }
-
 }

@@ -148,7 +148,7 @@
 
 	.voki-item:not(:has(.interactable:hover)):hover .voki-name {
 		text-decoration: underline;
-		text-decoration-thickness: 2px;
+		text-decoration-thickness: 0.125rem;
 	}
 
 	.voki-more-btn {

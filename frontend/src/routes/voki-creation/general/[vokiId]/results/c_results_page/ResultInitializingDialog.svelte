@@ -22,6 +22,7 @@
 	export function open() {
 		errs = [];
 		dialog.open();
+		name = '';
 	}
 	async function submitCreate() {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{

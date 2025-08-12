@@ -1,6 +1,7 @@
 ﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel;
+using VokiCreationServicesLib.Application;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
@@ -12,7 +13,7 @@ public record class PublishVokiCommand(VokiId VokiId) :
 
 public abstract record PublishVokiCommandResult
 {
-    public sealed record Success(VokiId Id) : PublishVokiCommandResult;
+    public sealed record Success(VokiSuccessfullyPublishedResult VokiData) : PublishVokiCommandResult;
 
     public sealed record FailedToPublish(ImmutableArray<VokiPublishingIssue> Issues) : PublishVokiCommandResult;
 }
@@ -45,6 +46,8 @@ internal sealed class PublishVokiCommandHandler :
         }
 
         await _draftGeneralVokiRepository.Update(voki);
-        return new PublishVokiCommandResult.Success(voki.Id);
+        return new PublishVokiCommandResult.Success(
+            new VokiSuccessfullyPublishedResult(voki.Id, voki.Cover, voki.Name)
+        );
     }
 }

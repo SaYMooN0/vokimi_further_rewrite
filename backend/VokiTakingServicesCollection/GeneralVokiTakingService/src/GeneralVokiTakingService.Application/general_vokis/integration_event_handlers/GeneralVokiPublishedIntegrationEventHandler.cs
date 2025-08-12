@@ -10,7 +10,7 @@ using VokimiStorageKeysLib.general_voki.answer_audio;
 using VokimiStorageKeysLib.general_voki.answer_image;
 using VokimiStorageKeysLib.general_voki.result_image;
 
-namespace GeneralVokiTakingService.Application.vokis.integration_event_handlers;
+namespace GeneralVokiTakingService.Application.general_vokis.integration_event_handlers;
 
 public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVokiPublishedIntegrationEvent>
 {

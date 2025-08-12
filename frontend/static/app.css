@@ -12,6 +12,8 @@
   --accent-foreground: #4d4c8e;
   --err-back: #ffe9e9;
   --err-foreground: #f04545;
+  --warn-back: #fff7e5;     
+--warn-foreground: #d97706;
   --err-shadow: 0 1px 3px 0px hsl(0deg 84% 50% / 8%), 0 1px 2px -1px hsl(0deg 84% 50% / 8%);
   --font-family: "Rubik", sans-serif;
   --radius: 0.5rem;

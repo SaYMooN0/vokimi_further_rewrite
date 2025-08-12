@@ -6,6 +6,7 @@
 	import vokiTypesIconsSprite from '$lib/icons/voki-types.svg?raw';
 	import commonIconsSprite from '$lib/icons/common-icons.svg?raw';
 	import caretIconsSprite from '$lib/icons/caret-icons.svg?raw';
+	import errorIconsSprite from '$lib/icons/error-icons.svg?raw';
 	import ConfirmActionDialog from './c_layout/ConfirmActionDialog.svelte';
 	import {
 		registerConfirmActionDialogOpenFunction,
@@ -32,6 +33,7 @@
 	{@html vokiTypesIconsSprite}
 	{@html commonIconsSprite}
 	{@html caretIconsSprite}
+	{@html errorIconsSprite}
 </div>
 <SignInDialog bind:this={signInDialog} />
 <ConfirmActionDialog bind:this={confirmActionDialog} />

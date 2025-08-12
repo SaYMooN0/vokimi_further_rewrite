@@ -68,6 +68,11 @@ internal class DraftGeneralVokiRepository : IDraftGeneralVokiRepository
         .ThenInclude(q => EF.Property<List<VokiQuestionAnswer>>(q, "_answers"))
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 
+    public Task Delete(DraftGeneralVoki voki) {
+        _db.Vokis.Remove(voki);
+        return _db.SaveChangesAsync();
+    }
+
 
     public Task<DraftGeneralVoki?> GetById(VokiId vokiId) => _db.Vokis
         .FirstOrDefaultAsync(v => v.Id == vokiId);

@@ -20,7 +20,12 @@ internal class AppUsersRepository : IAppUsersRepository
         await _db.AppUsers.FindAsync(id);
 
     public async Task Update(AppUser user) {
-        _db.Update(user);
+        _db.AppUsers.Update(user);
         await _db.SaveChangesAsync();
+    }
+
+    public Task UpdateRange(IEnumerable<AppUser> user) {
+        _db.AppUsers.UpdateRange(user);
+        return _db.SaveChangesAsync();
     }
 }

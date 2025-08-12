@@ -331,39 +331,58 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
 
     private List<VokiPublishingIssue> CheckResultsForPublishingIssues() {
+        List<VokiPublishingIssue> issues = [];
+
         if (_results.Count < MinResultsCount) {
-            return [
+            issues.Add(
                 VokiPublishingIssue.Problem(
-                    message: $"Too few results ({_results.Count}). Minimum required is {MinResultsCount}",
+                    message: $"Too few results ({_results.Count}). Minimum required is {MinResultsCount}.",
                     source: "Results",
-                    fixRecommendation: $"Add at least {MinResultsCount - _results.Count} more result(s)"
+                    fixRecommendation: $"Add at least {MinResultsCount - _results.Count} more result(s)."
                 )
-            ];
+            );
         }
 
         if (_results.Count > MaxResultsCount) {
-            return [
+            issues.Add(
                 VokiPublishingIssue.Problem(
-                    message: $"Too many results ({_results.Count}). Maximum allowed is {MaxResultsCount}",
+                    message: $"Too many results ({_results.Count}). Maximum allowed is {MaxResultsCount}.",
                     source: "Results",
-                    fixRecommendation: $"Remove {_results.Count - MaxResultsCount} result(s) to meet the limit"
+                    fixRecommendation: $"Remove {_results.Count - MaxResultsCount} result(s) to meet the limit."
                 )
-            ];
+            );
         }
 
         int resultImages = _results.Count(r => r.Image is not null);
         if (resultImages > 0 && resultImages < _results.Count) {
-            return [
+            issues.Add(
                 VokiPublishingIssue.Warning(
-                    message: "Some results include images while others don't",
+                    message: "Some results have images while others do not.",
                     source: "Results",
-                    fixRecommendation: "Consider using images for all results or none to keep presentation consistent"
+                    fixRecommendation:
+                    "Consider adding images to all results or removing them from all to keep presentation consistent."
                 )
-            ];
+            );
         }
 
-        return [];
+        HashSet<GeneralVokiResultId> resultsAnswersLeadTo = _questions
+            .SelectMany(q => q.Answers.SelectMany(a => a.RelatedResultIds))
+            .ToHashSet();
+
+        foreach (var result in _results) {
+            if (!resultsAnswersLeadTo.Contains(result.Id)) {
+                issues.Add(
+                    VokiPublishingIssue.Problem(
+                        message: $"Result \"{result.Name}\" is not linked to any answer.",
+                        source: "Results",
+                        fixRecommendation: "Make this result related to at least one answer or remove it."
+                    )
+                );
+            }
+        }
+        return issues;
     }
+
 
     public ImmutableArray<VokiPublishingIssue> CheckForPublishingIssues() => [
         ..base.CheckCoverForPublishingIssues(),
@@ -375,7 +394,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
     public ErrOrNothing PublishWithWarningsIgnored(IDateTimeProvider dateTimeProvider) {
         var issues = CheckForPublishingIssues();
-        bool anyProblems = issues.Any(i => i.Type == PublishingIssueType.Problem );
+        bool anyProblems = issues.Any(i => i.Type == PublishingIssueType.Problem);
         if (anyProblems) {
             return ErrFactory.Conflict("Cannot publish Voki because of an unresolved problem");
         }

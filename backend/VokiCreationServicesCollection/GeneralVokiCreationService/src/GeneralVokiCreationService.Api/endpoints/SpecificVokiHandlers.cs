@@ -7,7 +7,7 @@ using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.common.vokis;
-using SharedKernel.exceptions;
+using VokiCreationServicesLib.Application;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.voki_cover;
@@ -155,7 +155,7 @@ internal static class SpecificVokiHandlers
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (issues) => Results.Json(
-            new { Isssues = issues.Select(VokiPublishingIssueResponse.Create).ToArray() }
+            new { Issues = issues.Select(VokiPublishingIssueResponse.Create).ToArray() }
         ));
     }
 
@@ -170,7 +170,7 @@ internal static class SpecificVokiHandlers
 
         return CustomResults.FromErrOr(result, (r) => r switch {
             PublishVokiCommandResult.Success success =>
-                Results.Json(new { PublishedVokiId = success.Id.ToString() }),
+                Results.Json(VokiSuccessfullyPublishedResponse.Create(success.VokiData)),
             PublishVokiCommandResult.FailedToPublish fail =>
                 Results.Json(new {
                     Isssues = fail.Issues.Select(VokiPublishingIssueResponse.Create).ToArray()
@@ -181,7 +181,7 @@ internal static class SpecificVokiHandlers
 
     private static async Task<IResult> PublishVokiWithWarningsIgnored(
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<PublishVokiWithWarningsIgnoredCommand, VokiId> handler
+        ICommandHandler<PublishVokiWithWarningsIgnoredCommand, VokiSuccessfullyPublishedResult> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
@@ -189,7 +189,7 @@ internal static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result,
-            (vokiId) => Results.Json(new { PublishedVokiId = vokiId.ToString() })
+            (success) => Results.Json(VokiSuccessfullyPublishedResponse.Create(success))
         );
     }
 }

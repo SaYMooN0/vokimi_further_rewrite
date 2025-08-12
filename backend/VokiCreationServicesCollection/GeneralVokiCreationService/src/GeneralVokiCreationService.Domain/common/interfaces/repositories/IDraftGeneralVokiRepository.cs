@@ -8,6 +8,7 @@ public interface IDraftGeneralVokiRepository : IDraftVokiRepository
 {
     Task<DraftGeneralVoki?> GetById(VokiId vokiId);
     new Task<DraftGeneralVoki?> GetByIdAsNoTracking(VokiId vokiId);
+
     async Task<BaseDraftVoki?> IDraftVokiRepository.GetByIdAsNoTracking(VokiId vokiId) =>
         await GetByIdAsNoTracking(vokiId);
 
@@ -16,13 +17,14 @@ public interface IDraftGeneralVokiRepository : IDraftVokiRepository
 
     Task<DraftGeneralVoki?> GetWithQuestions(VokiId vokiId);
     Task<DraftGeneralVoki?> GetWithQuestionsAsNoTracking(VokiId vokiId);
-    
+
     Task<DraftGeneralVoki?> GetWithQuestionAnswers(VokiId vokiId);
     Task<DraftGeneralVoki?> GetWithQuestionAnswersAsNoTracking(VokiId vokiId);
-    
+
     Task<DraftGeneralVoki?> GetWithResults(VokiId vokiId);
     Task<DraftGeneralVoki?> GetWithResultsAsNoTracking(VokiId vokiId);
-    
+
     Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResults(VokiId vokiId);
     Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResultsAsNoTracking(VokiId vokiId);
+    Task Delete(DraftGeneralVoki voki);
 }

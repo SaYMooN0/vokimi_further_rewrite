@@ -4,7 +4,7 @@ public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
     public ImmutableHashSet<VokiId> InitializedVokiIds { get; private set; }
-    private ImmutableHashSet<VokiId> CoAuthoredVokiIds { get; init; }
+    protected ImmutableHashSet<VokiId> CoAuthoredVokiIds { get; private set; }
 
     public AppUser(AppUserId id) {
         Id = id;
@@ -12,12 +12,16 @@ public class AppUser : AggregateRoot<AppUserId>
         CoAuthoredVokiIds = [];
     }
 
-    public ErrOrNothing AddInitializedVoki(VokiId vokiId) {
-        if (InitializedVokiIds.Contains(vokiId)) {
-            return ErrFactory.Conflict("New Voki is already listed as initialized by this user");
-        }
-
+    public void AddInitializedVoki(VokiId vokiId) =>
         InitializedVokiIds = InitializedVokiIds.Add(vokiId);
-        return ErrOrNothing.Nothing;
-    }
+
+    public void RemoveInitializedVoki(VokiId vokiId) =>
+        InitializedVokiIds = InitializedVokiIds.Remove(vokiId);
+
+    public void AddCoAuthoredVoki(VokiId vokiId) =>
+        CoAuthoredVokiIds = CoAuthoredVokiIds.Add(vokiId);
+
+    public void RemoveCoAuthoredVoki(VokiId vokiId) =>
+        CoAuthoredVokiIds = CoAuthoredVokiIds.Remove(vokiId);
+
 }
