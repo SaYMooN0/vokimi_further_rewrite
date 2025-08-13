@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ErrUtils } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { getSignInDialogOpenFunction } from '../../../c_layout/ts_layout_contexts/sign-in-dialog-context';

@@ -3,7 +3,7 @@
 	import VokiInitializingDialog from './c_layout/VokiInitializingDialog.svelte';
 	import type { Snippet } from 'svelte';
 	import { navigating, page } from '$app/state';
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import AuthView from '$lib/components/AuthView.svelte';
 	import PageSignInRequired from '$lib/components/PageSignInRequired.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';

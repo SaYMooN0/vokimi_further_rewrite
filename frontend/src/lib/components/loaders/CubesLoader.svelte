@@ -5,9 +5,7 @@
 	}>();
 </script>
 
-<div class="container" style="
-
---uib-size: {sizeRem}rem; --uib-speed: {speedSec}s">
+<div class="container" style="--size: {sizeRem}rem; --speed: {speedSec}s">
 	<div class="cube"><div class="cube-inner"></div></div>
 	<div class="cube"><div class="cube-inner"></div></div>
 	<div class="cube"><div class="cube-inner"></div></div>
@@ -15,18 +13,19 @@
 
 <style>
 	.container {
+		--loader-color: var(--primary);
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;
-		width: var(--uib-size);
-		height: calc(var(--uib-size) * 0.6);
+		width: var(--size);
+		height: calc(var(--size) * 0.6);
 	}
 
 	.cube {
 		flex-shrink: 0;
-		width: calc(var(--uib-size) * 0.2);
-		height: calc(var(--uib-size) * 0.2);
-		animation: jump var(--uib-speed) ease-in-out infinite;
+		width: calc(var(--size) * 0.2);
+		height: calc(var(--size) * 0.2);
+		animation: jump var(--speed) ease-in-out infinite;
 	}
 
 	.cube-inner {
@@ -34,25 +33,25 @@
 		width: 100%;
 		height: 100%;
 		border-radius: 25%;
-		background-color: var(--primary);
+		background-color: var(--loader-color);
 		transition: background-color 0.3s ease;
-		animation: morph var(--uib-speed) ease-in-out infinite;
+		animation: morph var(--speed) ease-in-out infinite;
 		transform-origin: center bottom;
 	}
 
 	.cube:nth-child(2) {
-		animation-delay: calc(var(--uib-speed) * -0.36);
+		animation-delay: calc(var(--speed) * -0.36);
 
 		.cube-inner {
-			animation-delay: calc(var(--uib-speed) * -0.36);
+			animation-delay: calc(var(--speed) * -0.36);
 		}
 	}
 
 	.cube:nth-child(3) {
-		animation-delay: calc(var(--uib-speed) * -0.2);
+		animation-delay: calc(var(--speed) * -0.2);
 
 		.cube-inner {
-			animation-delay: calc(var(--uib-speed) * -0.2);
+			animation-delay: calc(var(--speed) * -0.2);
 		}
 	}
 

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';

@@ -4,7 +4,7 @@
 	import QuestionInitializingDialog from './c_questions_page/QuestionInitializingDialog.svelte';
 	import VokiTakingProcessSettingsSection from './c_questions_page/VokiTakingProcessSettingsSection.svelte';
 	import GeneralVokiCreationQuestionItem from './c_questions_page/GeneralVokiCreationQuestionItem.svelte';
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import VokiCreationBasicHeader from '../../../c_shared/VokiCreationBasicHeader.svelte';
 	import ListEmptyMessage from '../../../c_shared/ListEmptyMessage.svelte';
 

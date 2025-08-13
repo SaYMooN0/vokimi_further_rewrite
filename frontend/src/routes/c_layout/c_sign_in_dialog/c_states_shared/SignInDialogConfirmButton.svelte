@@ -1,5 +1,7 @@
 <script lang="ts">
-	const { onclick, text, isLoading }: { onclick: () => void; text: string; isLoading: boolean } =
+	import LinesLoader from '$lib/components/loaders/LinesLoader.svelte';
+
+	let { onclick, text, isLoading }: { onclick: () => void; text: string; isLoading: boolean } =
 		$props<{
 			onclick: () => void;
 			text: string;
@@ -7,9 +9,15 @@
 		}>();
 </script>
 
-<button class="confirm-btn unselectable" onclick={() => onclick()} type="submit" disabled={isLoading}>
+<button
+	class="confirm-btn unselectable"
+	onclick={() => onclick()}
+	type="submit"
+	disabled={isLoading}
+	class:loading={isLoading}
+>
 	{#if isLoading}
-		Loading...
+		<LinesLoader sizeRem={1.3} strokePx={2} />
 	{:else}
 		{text}
 	{/if}
@@ -30,6 +38,10 @@
 		box-shadow: var(--shadow);
 		transition: all 0.12s ease-in;
 		cursor: pointer;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
 	}
 
 	.confirm-btn:hover {
@@ -38,5 +50,12 @@
 
 	.confirm-btn:active {
 		width: 90%;
+	}
+	.confirm-btn.loading {
+		pointer-events: none;
+		opacity: 0.9;
+	}
+	.confirm-btn > :global(.container) {
+		--loader-color: var(--primary-foreground);
 	}
 </style>

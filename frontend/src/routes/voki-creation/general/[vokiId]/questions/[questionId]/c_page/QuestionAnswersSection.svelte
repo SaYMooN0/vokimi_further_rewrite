@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerType } from '$lib/ts/voki';
 	import ListEmptyMessage from '../../../../../c_shared/ListEmptyMessage.svelte';
 	import VokiCreationBasicHeader from '../../../../../c_shared/VokiCreationBasicHeader.svelte';

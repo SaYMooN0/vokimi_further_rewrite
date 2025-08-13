@@ -27,10 +27,12 @@
 		if (errs.length > 0) {
 			return;
 		}
+		isLoading = true;
 		const response = await ApiAuth.fetchVoidResponse(
 			'/login',
 			RequestJsonOptions.POST({ email, password })
 		);
+		isLoading = false;
 		if (response.isSuccess) {
 			window.location.reload();
 		} else {

@@ -1,29 +1,46 @@
 <script lang="ts">
 	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
-	import type { VokiPublishingIssue } from '$lib/ts/backend-communication/voki-creation-backend-service';
+	import type {
+		VokiPublishingIssue,
+		VokiSuccessfullyPublishedData
+	} from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import ErrView from '$lib/components/errs/ErrView.svelte';
 	import VokiCreationBasicHeader from '../../VokiCreationBasicHeader.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import ReloadButton from '$lib/components/buttons/ReloadButton.svelte';
 
 	const vokiCreationApi = getVokiCreationPageApiService();
 	const {
 		issues,
 		refetch,
-		vokiId
-	}: { issues: VokiPublishingIssue[]; refetch: () => void; vokiId: string } = $props<{
+		vokiId,
+		onPublishedSuccessfully
+	}: {
 		issues: VokiPublishingIssue[];
 		refetch: () => void;
 		vokiId: string;
+		onPublishedSuccessfully: (data: VokiSuccessfullyPublishedData) => void;
+	} = $props<{
+		issues: VokiPublishingIssue[];
+		refetch: () => void;
+		vokiId: string;
+		onPublishedSuccessfully: (data: VokiSuccessfullyPublishedData) => void;
 	}>();
 	const problems = issues.filter((issue) => issue.type === 'Problem');
 	const warnings = issues.filter((issue) => issue.type === 'Warning');
-	async function ignoreWarningsAndPublish() {}
+	async function ignoreWarningsAndPublish() {
+		onPublishedSuccessfully({
+			id: '123',
+			cover: '123',
+			name: '123'
+		});
+	}
 	let errs = $state<Err[]>([]);
 </script>
 
 <VokiCreationBasicHeader header={`Voki publishing issues (${issues.length})`} />
-<div class="refetch-btn" onclick={() => refetch()}>Refetch</div>
+<ReloadButton onclick={() => refetch()} />
 <div class="all-issues-container">
 	{#each problems as problem}
 		<div class="issue problem">
@@ -61,25 +78,6 @@
 {/if}
 
 <style>
-	.refetch-btn {
-		width: fit-content;
-		padding: 0.25rem 1.25rem;
-		margin: 0 auto;
-		margin-bottom: 2rem;
-		border-radius: 1rem;
-		background-color: var(--secondary);
-		color: var(--secondary-foreground);
-		font-size: 1.125rem;
-		font-weight: 440;
-		letter-spacing: 0.25px;
-		cursor: pointer;
-	}
-
-	.refetch-btn:hover {
-		text-decoration: underline;
-		text-decoration-thickness: 0.125rem;
-	}
-
 	.all-issues-container {
 		display: flex;
 		flex-direction: column;

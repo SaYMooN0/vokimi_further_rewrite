@@ -42,7 +42,6 @@
 	.login-btn {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-
 	}
 
 	.login-btn:hover {
@@ -53,7 +52,6 @@
 	.signup-btn {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-
 	}
 
 	.signup-btn:hover {

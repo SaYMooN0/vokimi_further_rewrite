@@ -1,6 +1,6 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import type { UserViewData } from '$lib/ts/users';

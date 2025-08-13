@@ -1,12 +1,13 @@
 <script lang="ts">
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { type VokiPublishingIssue } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { getVokiCreationPageApiService } from '../../voki-creation-page-context';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import VokiPublishingIssuesList from './c_publishing/VokiPublishingIssuesList.svelte';
 	import NoVokiPublishingIssues from './c_publishing/NoVokiPublishingIssues.svelte';
+	import VokiPublishedDialog from './c_publishing/VokiPublishedDialog.svelte';
 
 	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	const vokiCreationApi = getVokiCreationPageApiService();
@@ -30,8 +31,10 @@
 			console.log(pageState);
 		}
 	}
+	let vokiPublishedDialog = $state<VokiPublishedDialog>()!;
 </script>
 
+<VokiPublishedDialog bind:this={vokiPublishedDialog} />
 {#if pageState.name === 'Message'}
 	<div class="msg-container">
 		<label class="warning-label">Warning</label>
@@ -59,9 +62,16 @@
 		issues={pageState.issues}
 		{vokiId}
 		refetch={() => loadPublishingIssues()}
+		onPublishedSuccessfully={(publishedData) => vokiPublishedDialog.open(publishedData)}
 	/>
 {:else}
-	<NoVokiPublishingIssues {vokiId} />
+	<NoVokiPublishingIssues
+		{vokiId}
+		onPublishedSuccessfully={(publishedData) => vokiPublishedDialog.open(publishedData)}
+		showNewIssuesOnIssuesFound={(issuesList: VokiPublishingIssue[]) => {
+			pageState = { name: 'Fetched', issues: issuesList };
+		}}
+	/>
 {/if}
 
 <style>

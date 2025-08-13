@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import ListEmptyMessage from '../../../c_shared/ListEmptyMessage.svelte';
 	import UnableToLoad from '../../../c_shared/UnableToLoad.svelte';
 	import VokiCreationBasicHeader from '../../../c_shared/VokiCreationBasicHeader.svelte';

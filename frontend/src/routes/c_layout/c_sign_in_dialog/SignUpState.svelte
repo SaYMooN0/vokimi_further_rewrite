@@ -29,11 +29,12 @@
 		if (errs.length > 0) {
 			return;
 		}
+		isLoading = true;
 		const response = await ApiAuth.fetchVoidResponse(
 			'/sign-up',
 			RequestJsonOptions.POST({ email, password, userName })
 		);
-
+		isLoading = false;
 		if (response.isSuccess) {
 			changeState('confirmation-sent');
 		} else {

@@ -1,17 +1,51 @@
 <script lang="ts">
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import type {
+		VokiPublishingIssue,
+		VokiSuccessfullyPublishedData
+	} from '$lib/ts/backend-communication/voki-creation-backend-service';
+	import type { Err } from '$lib/ts/err';
+	import { toast } from 'svelte-sonner';
+	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
 
 	const vokiCreationApi = getVokiCreationPageApiService();
-	const { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
+	const {
+		vokiId,
+		showNewIssuesOnIssuesFound,
+		onPublishedSuccessfully
+	}: {
+		vokiId: string;
+		showNewIssuesOnIssuesFound: (issues: VokiPublishingIssue[]) => void;
+		onPublishedSuccessfully: (vokiData: VokiSuccessfullyPublishedData) => void;
+	} = $props<{
+		vokiId: string;
+		showNewIssuesOnIssuesFound: (issues: VokiPublishingIssue[]) => void;
+		onPublishedSuccessfully: (vokiData: VokiSuccessfullyPublishedData) => void;
+	}>();
+
+	async function publishVokiButtonPressed() {
+		const response = await vokiCreationApi.publish(vokiId);
+		if (response.isSuccess) {
+			if ('issues' in response.data) {
+				toast.error('During publishing some publishing issues were found. Please check them');
+				showNewIssuesOnIssuesFound(response.data.issues);
+			} else {
+				onPublishedSuccessfully(response.data);
+			}
+		} else {
+			publishingErrs = response.errs;
+		}
+	}
+	let publishingErrs = $state<Err[]>([]);
 </script>
 
 <div class="no-issues-container">
 	<label class="no-issues-label"
 		>This voki has no publishing issues and is ready to be published</label
 	>
-	<PrimaryButton onclick={() => vokiCreationApi.publishVoki(vokiId)}
-		>Publish this voki</PrimaryButton
-	>
+	<DefaultErrBlock errList={publishingErrs} />
+	<PrimaryButton onclick={() => publishVokiButtonPressed()}>Publish this voki</PrimaryButton>
 </div>
 
 <style>

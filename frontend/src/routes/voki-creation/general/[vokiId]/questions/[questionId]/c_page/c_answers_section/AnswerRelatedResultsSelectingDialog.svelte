@@ -4,7 +4,7 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
-	import PrimaryButton from '$lib/components/PrimaryButton.svelte';
+	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import ListEmptyMessage from '../../../../../../c_shared/ListEmptyMessage.svelte';
