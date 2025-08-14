@@ -112,5 +112,13 @@ public class DraftVoki : AggregateRoot<VokiId>
     public void DeclineCoAuthorInvite(AppUserId userId) {
         InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
     }
+
     // public ErrOrNothing RemoveCoAuthor() { }
+    public void MarkAsPublished() {
+        foreach (var invitedUserIds in InvitedForCoAuthorUserIds) {
+            AddDomainEvent(new CoAuthorInviteCanceledEvent(Id, invitedUserIds));
+        }
+
+        AddDomainEvent(new VokiPublishedEvent(Id, PrimaryAuthorId, CoAuthorsIds));
+    }
 }

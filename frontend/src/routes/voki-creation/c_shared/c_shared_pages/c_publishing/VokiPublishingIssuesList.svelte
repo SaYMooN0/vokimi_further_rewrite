@@ -10,7 +10,6 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import ReloadButton from '$lib/components/buttons/ReloadButton.svelte';
 
-	const vokiCreationApi = getVokiCreationPageApiService();
 	const {
 		issues,
 		refetch,
@@ -29,12 +28,15 @@
 	}>();
 	const problems = issues.filter((issue) => issue.type === 'Problem');
 	const warnings = issues.filter((issue) => issue.type === 'Warning');
+	const vokiCreationApi = getVokiCreationPageApiService();
+
 	async function ignoreWarningsAndPublish() {
-		onPublishedSuccessfully({
-			id: '123',
-			cover: '123',
-			name: '123'
-		});
+		const response = await vokiCreationApi.publishWithWarningsIgnored(vokiId);
+		if (response.isSuccess) {
+			onPublishedSuccessfully(response.data);
+		} else {
+			errs = response.errs;
+		}
 	}
 	let errs = $state<Err[]>([]);
 </script>
@@ -66,7 +68,7 @@
 		</div>
 	{/each}
 </div>
-<DefaultErrBlock errList={errs} />
+<DefaultErrBlock className="publishing-err-block" errList={errs} />
 {#if problems.length > 0}
 	<p class="fix-msg">Please fix all problems before publishing</p>
 {:else if warnings.length > 0}
@@ -132,6 +134,32 @@
 		color: var(--accent-foreground);
 		font-size: 1.25rem;
 		font-weight: 500;
+		letter-spacing: 0.25px;
+	}
+	:global(.publishing-err-block) {
+		margin-top: 1rem;
+	}
+	.ignore-and-publish-btn {
+		display: block;
+		width: fit-content;
+		padding: 0.125rem 0.375rem;
+		margin: 1rem auto;
+		border-radius: 1rem;
+		color: var(--muted-foreground);
+		background-color: transparent;
+		border-radius: 0;
+		border: none;
+		border-bottom: 0.125rem solid var(--muted-foreground);
+		font-size: 1.25rem;
+		font-weight: 500;
+		transition: all 0.08s ease-in-out;
+	}
+	.ignore-and-publish-btn:hover {
+		cursor: pointer;
+		padding: 0.125rem 1rem;
+
+		color: var(--primary);
+		border-color: var(--primary);
 		letter-spacing: 0.25px;
 	}
 </style>

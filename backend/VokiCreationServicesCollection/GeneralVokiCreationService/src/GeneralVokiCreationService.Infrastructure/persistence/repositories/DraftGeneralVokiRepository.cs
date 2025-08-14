@@ -56,16 +56,18 @@ internal class DraftGeneralVokiRepository : IDraftGeneralVokiRepository
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 
     public Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResults(VokiId vokiId) => _db.Vokis
-        .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
         .Include(v => EF.Property<List<VokiQuestion>>(v, "_questions"))
         .ThenInclude(q => EF.Property<List<VokiQuestionAnswer>>(q, "_answers"))
+        .AsSplitQuery()
+        .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 
     public Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResultsAsNoTracking(VokiId vokiId) => _db.Vokis
         .AsNoTracking()
-        .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
         .Include(v => EF.Property<List<VokiQuestion>>(v, "_questions"))
         .ThenInclude(q => EF.Property<List<VokiQuestionAnswer>>(q, "_answers"))
+        .AsSplitQuery()
+        .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 
     public Task Delete(DraftGeneralVoki voki) {

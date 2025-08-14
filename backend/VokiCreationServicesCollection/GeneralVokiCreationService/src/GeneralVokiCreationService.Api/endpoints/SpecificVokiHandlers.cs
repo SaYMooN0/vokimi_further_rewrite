@@ -173,7 +173,7 @@ internal static class SpecificVokiHandlers
                 Results.Json(VokiSuccessfullyPublishedResponse.Create(success.VokiData)),
             PublishVokiCommandResult.FailedToPublish fail =>
                 Results.Json(new {
-                    Isssues = fail.Issues.Select(VokiPublishingIssueResponse.Create).ToArray()
+                    Issues = fail.Issues.Select(VokiPublishingIssueResponse.Create).ToArray()
                 }),
             _ => throw new ArgumentException("Unknown Voki result command")
         });

@@ -22,7 +22,7 @@
 			<span>{vokiData!.name}</span>
 			has been successfully published
 		</p>
-		<a href={`/voki/${vokiData!.id}`} class="view-button">View published Voki page</a>
+		<a href={`/catalog/${vokiData!.id}`} class="view-button">View published Voki page</a>
 	{:else}
 		<h1 class="title">Error</h1>
 		<p class="message">Something went wrong, please try again</p>

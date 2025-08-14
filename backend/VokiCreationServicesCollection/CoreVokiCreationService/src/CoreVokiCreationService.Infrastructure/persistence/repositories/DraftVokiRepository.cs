@@ -45,4 +45,9 @@ internal class DraftVokiRepository : IDraftVokiRepository
         _db.Vokis.Update(voki);
         await _db.SaveChangesAsync();
     }
+
+    public async Task Delete(DraftVoki voki) {
+        _db.Vokis.Remove(voki);
+        await _db.SaveChangesAsync();
+    }
 }

@@ -45,7 +45,7 @@ internal sealed class PublishVokiCommandHandler :
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokiRepository.Delete(voki);
         return new PublishVokiCommandResult.Success(
             new VokiSuccessfullyPublishedResult(voki.Id, voki.Cover, voki.Name)
         );

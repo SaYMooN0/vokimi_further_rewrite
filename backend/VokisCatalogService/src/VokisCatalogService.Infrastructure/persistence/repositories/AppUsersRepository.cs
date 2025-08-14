@@ -11,9 +11,9 @@ internal class AppUsersRepository : IAppUsersRepository
         _db = db;
     }
 
-    public Task Add(AppUser user) {
+    public async Task Add(AppUser user) {
         _db.AppUsers.Add(user);
-        return _db.SaveChangesAsync();
+        await _db.SaveChangesAsync();
     }
 
     public async Task<AppUser?> GetById(AppUserId id) =>
@@ -21,6 +21,11 @@ internal class AppUsersRepository : IAppUsersRepository
 
     public async Task Update(AppUser user) {
         _db.Update(user);
+        await _db.SaveChangesAsync();
+    }
+
+    public async Task UpdateRange(IEnumerable<AppUser> users) {
+        _db.UpdateRange(users);
         await _db.SaveChangesAsync();
     }
 }

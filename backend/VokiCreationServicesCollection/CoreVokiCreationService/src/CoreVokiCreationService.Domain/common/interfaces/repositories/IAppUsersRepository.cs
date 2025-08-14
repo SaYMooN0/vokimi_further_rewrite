@@ -8,4 +8,5 @@ public interface IAppUsersRepository
     Task<AppUser?> GetById(AppUserId id);
     Task Update(AppUser user);
     Task<AppUser?> GetByIdAsNoTracking(AppUserId userId);
+    Task UpdateRange(IEnumerable<AppUser> users);
 }

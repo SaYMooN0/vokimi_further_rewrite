@@ -27,6 +27,7 @@
 	async function publishVokiButtonPressed() {
 		const response = await vokiCreationApi.publish(vokiId);
 		if (response.isSuccess) {
+			console.log(response.data);
 			if ('issues' in response.data) {
 				toast.error('During publishing some publishing issues were found. Please check them');
 				showNewIssuesOnIssuesFound(response.data.issues);
@@ -61,5 +62,16 @@
 		border-radius: 1rem;
 		box-shadow: var(--shadow-2xl);
 		animation: var(--default-fade-in-animation);
+	}
+	.no-issues-label {
+		font-size: 2rem;
+		text-align: center;
+		margin-bottom: auto;
+		font-weight: 520;
+	text-wrap: balance;
+	letter-spacing: 0.25px;
+	}
+	.no-issues-container > :global(.primary-btn) {
+		margin-top: 1rem;
 	}
 </style>

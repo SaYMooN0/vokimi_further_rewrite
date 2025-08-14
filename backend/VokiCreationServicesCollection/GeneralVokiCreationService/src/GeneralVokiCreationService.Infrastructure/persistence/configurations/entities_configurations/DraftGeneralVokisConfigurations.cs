@@ -63,12 +63,16 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
         builder
             .HasMany<VokiQuestion>("_questions")
             .WithOne()
-            .HasForeignKey("VokiId"); 
+            .HasForeignKey("VokiId")
+            .IsRequired()            
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.Ignore(x => x.Results);
         builder
             .HasMany<VokiResult>("_results")
             .WithOne()
-            .HasForeignKey("VokiId");
+            .HasForeignKey("VokiId")
+            .IsRequired()            
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

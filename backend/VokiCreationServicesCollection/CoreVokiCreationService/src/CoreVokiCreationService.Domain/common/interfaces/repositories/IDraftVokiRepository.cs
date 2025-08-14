@@ -10,4 +10,5 @@ public interface IDraftVokiRepository
     Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds);
     Task<DraftVoki?> GetById(VokiId vokiId);
     Task Update(DraftVoki voki);
+    Task Delete(DraftVoki voki);
 }

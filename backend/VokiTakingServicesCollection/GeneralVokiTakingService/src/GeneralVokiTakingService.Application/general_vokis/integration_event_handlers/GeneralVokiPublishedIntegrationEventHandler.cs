@@ -8,6 +8,7 @@ using SharedKernel.common.vokis;
 using SharedKernel.integration_events.voki_publishing;
 using VokimiStorageKeysLib.general_voki.answer_audio;
 using VokimiStorageKeysLib.general_voki.answer_image;
+using VokimiStorageKeysLib.general_voki.question_image;
 using VokimiStorageKeysLib.general_voki.result_image;
 
 namespace GeneralVokiTakingService.Application.general_vokis.integration_event_handlers;
@@ -38,7 +39,9 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
     );
 
     private static VokiQuestion QuestionFromEventDto(GeneralVokiQuestionIntegrationEventDto q) => new(
-        q.Id, q.Text, q.Images, q.AnswersType, q.OrderInVoki,
+        q.Id, q.Text,
+        q.Images.Select(key => new GeneralVokiQuestionImageKey(key)).ToArray(),
+        q.AnswersType, q.OrderInVoki,
         q.Answers.Select(a => AnswerFromEventDto(a, q.AnswersType)).ToImmutableArray(),
         q.ShuffleAnswers,
         new QuestionAnswersCountLimit(minAnswers: q.MinAnswersCount, maxAnswers: q.MaxAnswersCount)

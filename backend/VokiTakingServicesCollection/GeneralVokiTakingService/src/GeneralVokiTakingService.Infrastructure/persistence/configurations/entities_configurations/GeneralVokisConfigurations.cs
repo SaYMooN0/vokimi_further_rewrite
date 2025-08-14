@@ -18,7 +18,9 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
         builder
             .HasMany<VokiQuestion>("Questions")
             .WithOne()
-            .HasForeignKey("VokiId");
+            .HasForeignKey("VokiId")
+            .IsRequired()            
+            .OnDelete(DeleteBehavior.Cascade);
         
         builder.Property<bool>("ShuffleQuestions");
         builder.Property(x => x.ForceSequentialAnswering);
@@ -26,7 +28,9 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
         builder
             .HasMany<VokiResult>("Results")
             .WithOne()
-            .HasForeignKey("VokiId");
+            .HasForeignKey("VokiId")
+            .IsRequired()            
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder
             .Property(x => x.VokiTakenRecordIds)

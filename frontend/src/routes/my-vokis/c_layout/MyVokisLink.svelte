@@ -1,12 +1,23 @@
 <script lang="ts">
-	let { text, href, isCurrent }: { text: string; href: string; isCurrent: boolean } = $props<{
-		text: string;
+	import type { Snippet } from 'svelte';
+
+	interface Props {
+		content: { icon: Snippet; isIcon: true } | { text: string; isIcon: false };
 		href: string;
 		isCurrent: boolean;
-	}>();
+	}
+	let { content, href, isCurrent }: Props = $props();
 </script>
 
-<a data-sveltekit-preload-data="off" {href} class:current={isCurrent} class="unselectable">{text}</a
+<a
+	data-sveltekit-preload-data="off"
+	{href}
+	class="unselectable"
+	class:current={isCurrent}
+	class:icon={content.isIcon}
+	>{#if content.isIcon}{@render content!.icon!()}{:else}
+		{content.text}
+	{/if}</a
 >
 
 <style>
@@ -26,7 +37,14 @@
 		transition: transform 0.12s ease;
 		cursor: pointer;
 	}
-
+	a.icon {
+		width: auto;
+		aspect-ratio: 1/1;
+	}
+	a.icon > :global(.svg) {
+		height: 1.25rem;
+		width: 1.25rem;
+	}
 	a:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);

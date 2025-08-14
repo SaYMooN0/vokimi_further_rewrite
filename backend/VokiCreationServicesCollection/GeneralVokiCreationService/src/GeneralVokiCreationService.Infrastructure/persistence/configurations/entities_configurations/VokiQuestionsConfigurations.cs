@@ -31,7 +31,9 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
         builder
             .HasMany<VokiQuestionAnswer>("_answers")
             .WithOne()
-            .HasForeignKey("QuestionId");
+            .HasForeignKey("QuestionId")
+            .IsRequired()            
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder
             .Property(x => x.AnswersCountLimit)

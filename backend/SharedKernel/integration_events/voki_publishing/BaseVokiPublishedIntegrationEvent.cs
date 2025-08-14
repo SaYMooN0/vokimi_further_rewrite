@@ -1,8 +1,12 @@
-﻿using SharedKernel.common;
+﻿using System.Text.Json.Serialization;
+using SharedKernel.common;
 
 namespace SharedKernel.integration_events.voki_publishing;
+// @formatter:off
+[JsonDerivedType(typeof(GeneralVokiPublishedIntegrationEvent),    typeDiscriminator: nameof(GeneralVokiPublishedIntegrationEvent))]
+// @formatter:on
 
-public record class BaseVokiPublishedIntegrationEvent(
+public abstract record class BaseVokiPublishedIntegrationEvent(
     VokiId VokiId,
     AppUserId PrimaryAuthorId,
     AppUserId[] CoAuthors,

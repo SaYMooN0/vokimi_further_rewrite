@@ -28,7 +28,9 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
         builder
             .HasMany<VokiQuestionAnswer>("Answers")
             .WithOne()
-            .HasForeignKey("QuestionId");
+            .HasForeignKey("QuestionId")
+            .IsRequired()            
+            .OnDelete(DeleteBehavior.Cascade);
 
        
     }
