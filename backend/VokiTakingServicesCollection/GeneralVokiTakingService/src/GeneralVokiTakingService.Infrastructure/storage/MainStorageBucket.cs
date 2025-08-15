@@ -16,6 +16,11 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
     ) : base(s3Client, mainBucketNameProvider, logger) { }
 
 
-    public Task<ErrOr<VokiCoverKey>> DeleteUnusedVokiKeys(VokiId vokiId, IEnumerable<BaseStorageKey> usedKeys) =>
-        throw new NotImplementedException("DeleteUnusedVokiKeys is not implemented");
+    public async Task<ErrOrNothing> DeleteUnusedVokiKeys(VokiId vokiId, IEnumerable<BaseStorageKey> usedKeys) {
+        string prefix = $"{StorageFolders.Vokis}/{vokiId}/";
+        var usedStringifiedKeys = usedKeys
+            .Select(k => k.ToString())
+            .ToImmutableHashSet();
+        return await base.DeleteFilesWithoutSubfoldersAsync(prefix, usedStringifiedKeys);
+    }
 }

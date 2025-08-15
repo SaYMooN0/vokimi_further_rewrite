@@ -63,14 +63,16 @@
 		box-shadow: var(--shadow-2xl);
 		animation: var(--default-fade-in-animation);
 	}
+
 	.no-issues-label {
-		font-size: 2rem;
-		text-align: center;
 		margin-bottom: auto;
+		font-size: 2rem;
 		font-weight: 520;
-	text-wrap: balance;
+		text-align: center;
 	letter-spacing: 0.25px;
+	text-wrap: balance;
 	}
+
 	.no-issues-container > :global(.primary-btn) {
 		margin-top: 1rem;
 	}

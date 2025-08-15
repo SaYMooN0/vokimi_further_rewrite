@@ -20,7 +20,7 @@
 			{/each}
 		{:then _}
 			{#if data.draftVokiIds.length === 0}
-				<h1>No vokis created</h1>
+				<h1>You don't have any draft vokis</h1>
 			{:else}
 				{#each data.draftVokiIds as vokiId}
 					{#await MyVokisCacheStore.Get(vokiId)}

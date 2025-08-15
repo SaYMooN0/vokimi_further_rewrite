@@ -18,7 +18,7 @@ public interface IWithVokiPrimaryAuthorValidationStep
 internal static class VokiPrimaryAuthorValidationStepHandler
 {
     internal sealed class CommandHandler<TCommand, TResponse> : ICommandHandler<TCommand, TResponse>
-        where TCommand : ICommand<TResponse>, IWithVokiAccessValidationStep
+        where TCommand : ICommand<TResponse>, IWithVokiPrimaryAuthorValidationStep
     {
         private readonly IDraftVokiRepository _draftVokiRepository;
         private readonly IUserContext _userContext;
@@ -50,7 +50,7 @@ internal static class VokiPrimaryAuthorValidationStepHandler
     }
 
     internal sealed class CommandBaseHandler<TCommand> : ICommandHandler<TCommand>
-        where TCommand : ICommand, IWithVokiAccessValidationStep
+        where TCommand : ICommand, IWithVokiPrimaryAuthorValidationStep
     {
         private readonly IDraftVokiRepository _draftVokiRepository;
         private readonly IUserContext _userContext;
@@ -82,7 +82,7 @@ internal static class VokiPrimaryAuthorValidationStepHandler
     }
 
     internal sealed class QueryHandler<TQuery, TResponse> : IQueryHandler<TQuery, TResponse>
-        where TQuery : IQuery<TResponse>, IWithVokiAccessValidationStep
+        where TQuery : IQuery<TResponse>, IWithVokiPrimaryAuthorValidationStep
     {
         private readonly IDraftVokiRepository _draftVokiRepository;
         private readonly IUserContext _userContext;

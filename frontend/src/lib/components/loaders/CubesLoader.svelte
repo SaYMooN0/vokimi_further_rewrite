@@ -5,7 +5,9 @@
 	}>();
 </script>
 
-<div class="container" style="--size: {sizeRem}rem; --speed: {speedSec}s">
+<div class="container" style="
+
+--size: {sizeRem}rem; --speed: {speedSec}s">
 	<div class="cube"><div class="cube-inner"></div></div>
 	<div class="cube"><div class="cube-inner"></div></div>
 	<div class="cube"><div class="cube-inner"></div></div>
@@ -14,6 +16,7 @@
 <style>
 	.container {
 		--loader-color: var(--primary);
+
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;

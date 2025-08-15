@@ -40,7 +40,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
 
     private static VokiQuestion QuestionFromEventDto(GeneralVokiQuestionIntegrationEventDto q) => new(
         q.Id, q.Text,
-        q.Images.Select(key => new GeneralVokiQuestionImageKey(key)).ToArray(),
+        q.Images.Select(key => new GeneralVokiQuestionImageKey(key)).ToImmutableArray(),
         q.AnswersType, q.OrderInVoki,
         q.Answers.Select(a => AnswerFromEventDto(a, q.AnswersType)).ToImmutableArray(),
         q.ShuffleAnswers,
@@ -57,7 +57,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
     );
 
     private static BaseVokiAnswerTypeData ParseAnswerTypeDataFromDto(
-        GeneralVokiAnswerType type, ImmutableDictionary<string, string> f
+        GeneralVokiAnswerType type, Dictionary<string, string> f
     ) => type.Match(
         textOnly: () => GeneralVokiAnswerText
             .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Text])

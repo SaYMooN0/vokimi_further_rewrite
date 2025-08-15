@@ -47,7 +47,9 @@ public sealed record class GeneralVokiAnswerIntegrationEventDto(
     GeneralVokiResultId[] RelatedResultIds
 );
 
-public sealed record GeneralVokiAnswerTypeDataIntegrationEventDto(ImmutableDictionary<string, string> Fields)
+public sealed record GeneralVokiAnswerTypeDataIntegrationEventDto(
+    Dictionary<string, string> Fields
+)
 {
     public static class Keys
     {
@@ -60,7 +62,7 @@ public sealed record GeneralVokiAnswerTypeDataIntegrationEventDto(ImmutableDicti
 
 public sealed record class GeneralVokiResultIntegrationEventDto(
     GeneralVokiResultId Id,
-    string Name, 
+    string Name,
     string Text,
     string? DraftVokiImageKey
 );

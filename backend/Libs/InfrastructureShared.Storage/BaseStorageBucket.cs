@@ -140,28 +140,24 @@ public abstract class BaseStorageBucket
         }
     }
 
-    private static bool IsTopLevelKey(string key, string prefix) {
-        var suffix = key.Substring(prefix.Length);
-        return !suffix.Contains('/');
-    }
-
     protected async Task<ErrOrNothing> DeleteFilesWithoutSubfoldersAsync(
         string prefix,
         ISet<string> usedKeys
     ) {
         List<string> deletedKeys = [];
 
-        ListObjectsV2Request request = new() {
+        var request = new ListObjectsV2Request {
             BucketName = _bucketNameProvider.BucketName,
-            Prefix = prefix
+            Prefix = prefix,
+            Delimiter = "/" 
         };
 
         ListObjectsV2Response response;
         do {
             response = await _s3Client.ListObjectsV2Async(request);
 
-            foreach (var obj in response.S3Objects) {
-                if (!usedKeys.Contains(obj.Key) && IsTopLevelKey(obj.Key, prefix)) {
+            foreach (var obj in response.S3Objects ?? []) {
+                if (!usedKeys.Contains(obj.Key)) {
                     try {
                         await _s3Client.DeleteObjectAsync(new DeleteObjectRequest {
                             BucketName = _bucketNameProvider.BucketName,
@@ -170,7 +166,8 @@ public abstract class BaseStorageBucket
                         deletedKeys.Add(obj.Key);
                     }
                     catch (AmazonS3Exception ex) {
-                        _logger.LogError(ex, "[Error] in {MethodName}, S3 exception occurred while deleting key {Key}",
+                        _logger.LogError(ex,
+                            "[Error] in {MethodName}, S3 exception occurred while deleting key {Key}",
                             nameof(DeleteFilesWithoutSubfoldersAsync), obj.Key);
                         return ErrFactory.Unspecified("File deletion failed due to S3 exception");
                     }
@@ -196,6 +193,7 @@ public abstract class BaseStorageBucket
         return ErrOrNothing.Nothing;
     }
 
+
     protected async Task<ErrOrNothing>
         CopyAllObjectsWithSubfoldersAsync(string sourcePrefix, string destinationPrefix) {
         List<string> copiedKeys = [];
@@ -209,7 +207,7 @@ public abstract class BaseStorageBucket
         do {
             response = await _s3Client.ListObjectsV2Async(request);
 
-            foreach (var obj in response.S3Objects) {
+            foreach (var obj in response.S3Objects ?? []) {
                 try {
                     var destinationKey = destinationPrefix + obj.Key.Substring(sourcePrefix.Length);
 

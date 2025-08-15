@@ -17,7 +17,10 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .HasGuidBasedIdConversion();
 
         builder.Property(x => x.Text);
-        builder.Property(x => x.Images);
+        builder
+            .Property(x => x.Images)
+            .HasVokiQuestionImagesArrayConverter();
+        
         builder.Property(x => x.AnswersType);
         builder.Property(x => x.OrderInVoki);
         builder.Property(x => x.ShuffleAnswers);

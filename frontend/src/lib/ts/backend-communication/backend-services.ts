@@ -65,6 +65,7 @@ export class BackendService {
                 ...options,
                 credentials: 'include'
             });
+            console.log(response);
             if (response.ok) {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);
@@ -156,3 +157,5 @@ export const ApiAuth = new BackendService('/api/auth');
 export const ApiVokiCreationCore = new BackendService('/api/voki-creation/core');
 export const ApiTags = new BackendService('/api/tags');
 export const ApiUserProfiles = new BackendService('/api/user-profiles');
+export const ApiVokisCatalog = new BackendService('/api/vokis-catalog');
+export const ApiVokiTakingGeneral = new BackendService('/api/voki-taking/general');

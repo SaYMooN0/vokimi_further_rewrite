@@ -136,30 +136,32 @@
 		font-weight: 500;
 		letter-spacing: 0.25px;
 	}
+
 	:global(.publishing-err-block) {
 		margin-top: 1rem;
 	}
+
 	.ignore-and-publish-btn {
 		display: block;
 		width: fit-content;
 		padding: 0.125rem 0.375rem;
 		margin: 1rem auto;
-		border-radius: 1rem;
-		color: var(--muted-foreground);
-		background-color: transparent;
-		border-radius: 0;
 		border: none;
-		border-bottom: 0.125rem solid var(--muted-foreground);
+		border-radius: 1rem;
+		border-radius: 0;
+		background-color: transparent;
+		color: var(--muted-foreground);
 		font-size: 1.25rem;
 		font-weight: 500;
 		transition: all 0.08s ease-in-out;
+		border-bottom: 0.125rem solid var(--muted-foreground);
 	}
-	.ignore-and-publish-btn:hover {
-		cursor: pointer;
-		padding: 0.125rem 1rem;
 
-		color: var(--primary);
+	.ignore-and-publish-btn:hover {
+		padding: 0.125rem 1rem;
 		border-color: var(--primary);
+		color: var(--primary);
 		letter-spacing: 0.25px;
+		cursor: pointer;
 	}
 </style>

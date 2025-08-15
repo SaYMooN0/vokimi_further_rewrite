@@ -21,7 +21,7 @@ internal class ExceptionHandlingMiddleware
 
     public async Task InvokeAsync(HttpContext context) {
         try {
-                await _next(context);
+            await _next(context);
         }
         catch (InvalidConstructorArgumentException ex) {
             _logger.LogCritical(ex.Err.ToStringWithField("Caller", ex.Caller));

@@ -5,5 +5,5 @@ namespace GeneralVokiTakingService.Application;
 
 public interface IMainStorageBucket
 {
-    public Task<ErrOr<VokiCoverKey>> DeleteUnusedVokiKeys(VokiId vokiId, IEnumerable<BaseStorageKey> usedKeys);
+    public Task<ErrOrNothing> DeleteUnusedVokiKeys(VokiId vokiId, IEnumerable<BaseStorageKey> usedKeys);
 }

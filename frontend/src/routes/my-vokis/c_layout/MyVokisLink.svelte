@@ -31,31 +31,46 @@
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 		font-size: 1rem;
-		font-weight: 450;
+		font-weight: 430;
 		text-decoration: none;
 		box-shadow: var(--shadow-2xl);
 		transition: transform 0.12s ease;
 		cursor: pointer;
+		letter-spacing: 0.2px;
 	}
+
 	a.icon {
 		width: auto;
 		aspect-ratio: 1/1;
 	}
-	a.icon > :global(.svg) {
-		height: 1.25rem;
-		width: 1.25rem;
+
+	a.icon > :global(svg) {
+		transition: inherit;
+		stroke-width: 1.5;
+		width: 1.5rem;
+		height: 1.5rem;
 	}
+
 	a:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
 
 	a:active {
-		transform: scale(0.96);
+		letter-spacing: 0px;
+	}
+	a.icon:active > :global(svg) {
+		transform: scale(0.9);
 	}
 
 	a.current {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
+		font-weight: 460;
+
+	}
+	a.current.icon > :global(svg) {
+		stroke-width: 1.7;
+		
 	}
 </style>

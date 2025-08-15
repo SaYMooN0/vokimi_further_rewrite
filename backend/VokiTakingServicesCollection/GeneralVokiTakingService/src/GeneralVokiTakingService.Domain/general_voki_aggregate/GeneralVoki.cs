@@ -8,10 +8,10 @@ namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 public sealed class GeneralVoki : AggregateRoot<VokiId>
 {
     private GeneralVoki() { }
-    private ImmutableArray<VokiQuestion> Questions { get; }
+    private IReadOnlyCollection<VokiQuestion> Questions { get; }
     public bool ForceSequentialAnswering { get; }
     private bool ShuffleQuestions { get; }
-    private ImmutableArray<VokiResult> Results { get; }
+    private IReadOnlyCollection<VokiResult> Results { get; }
     public ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; private set; }
 
     public ImmutableArray<VokiQuestion> OrderedQuestionForTaking() {

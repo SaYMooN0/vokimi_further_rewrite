@@ -65,7 +65,7 @@ public static class VokiPublishedEventMapper
 
     private static GeneralVokiAnswerTypeDataIntegrationEventDto NewDict(
         params (string key, string value)[] items
-    ) => new(items.ToImmutableDictionary(
+    ) => new(items.ToDictionary(
         x => x.key,
         x => x.value
     ));

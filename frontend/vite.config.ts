@@ -88,9 +88,11 @@ export default defineConfig({
 			...createProxyEntry('/api/voki-creation/core', 5180),
 			...createProxyEntry('/api/voki-creation/general', 5181),
 			//voki taking
-			// ...createProxyEntry(, 5191),
+			...createProxyEntry('/api/voki-taking/general', 5191),
 			//other
 			...createProxyEntry('/api/tags', 5201),
+			...createProxyEntry('/api/user-profiles', 5202),
+			...createProxyEntry('/api/vokis-catalog', 5203),
 		}
 	}
 });

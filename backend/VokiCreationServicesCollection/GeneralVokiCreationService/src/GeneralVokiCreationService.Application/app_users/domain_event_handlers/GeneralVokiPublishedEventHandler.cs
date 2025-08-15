@@ -21,10 +21,6 @@ internal class GeneralVokiPublishedEventHandler : IDomainEventHandler<GeneralVok
             usersToUpdate.Add(initiator);
         }
 
-        if (e.CoAuthors.Count == 0) {
-            return;
-        }
-
         foreach (var coAuthorId in e.CoAuthors.ToArray()) {
             var coAuthor = await _appUsersRepository.GetById(coAuthorId);
             if (coAuthor is null) continue;

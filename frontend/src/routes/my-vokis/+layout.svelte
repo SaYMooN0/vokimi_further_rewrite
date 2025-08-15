@@ -51,8 +51,8 @@
 				{/snippet}
 				<MyVokisLink
 					content={{ isIcon: true, icon: inviteIcon }}
-					href="/my-vokis/published"
-					isCurrent={page.data.currentTab === 'published'}
+					href="/my-vokis/invites"
+					isCurrent={page.data.currentTab === 'invites'}
 				></MyVokisLink>
 			</div>
 			{#if navigating.type}
@@ -128,9 +128,10 @@
 	}
 
 	.links-container {
-		display: grid;
+		display: flex;
 		gap: 1rem;
-		width: fit-content;
+		width: 100%;
+		justify-content: center;
 		height: 100%;
 		height: var(--side-bar-links-top-padding);
 		box-sizing: border-box;
@@ -138,7 +139,7 @@
 		margin: 0 auto;
 		border-radius: 2rem;
 		background-color: var(--back);
-		grid-template-columns: 1fr 1fr;
+		flex-direction: row;
 	}
 
 	.my-vokis-page-content {

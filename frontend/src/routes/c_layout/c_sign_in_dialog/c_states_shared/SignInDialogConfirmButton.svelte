@@ -25,6 +25,10 @@
 
 <style>
 	.confirm-btn {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
 		width: 92%;
 		min-height: 2.25rem;
 		margin: 1rem auto 0;
@@ -38,10 +42,6 @@
 		box-shadow: var(--shadow);
 		transition: all 0.12s ease-in;
 		cursor: pointer;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
 	}
 
 	.confirm-btn:hover {
@@ -51,10 +51,12 @@
 	.confirm-btn:active {
 		width: 90%;
 	}
+
 	.confirm-btn.loading {
 		pointer-events: none;
 		opacity: 0.9;
 	}
+
 	.confirm-btn > :global(.container) {
 		--loader-color: var(--primary-foreground);
 	}

@@ -17,13 +17,19 @@ public class VokiAnswerTypeDataConverter : ValueConverter<BaseVokiAnswerTypeData
 
     private const string Divider = ": ";
 
+    private static readonly JsonSerializerOptions JsonOpts = new()
+    {
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        WriteIndented = false 
+    };
     private static string ToString(BaseVokiAnswerTypeData value) =>
-        value.MatchingEnum + Divider + JsonSerializer.Serialize(ToDictionary(value));
+        value.MatchingEnum + Divider + JsonSerializer.Serialize(ToDictionary(value), JsonOpts);
 
-    private static BaseVokiAnswerTypeData FromString(string str) {
+    private static BaseVokiAnswerTypeData FromString(string str)
+    {
         string[] parts = str.Split(Divider, 2);
-        GeneralVokiAnswerType type = Enum.Parse<GeneralVokiAnswerType>(parts[0]);
-        Dictionary<string, string> data = JsonSerializer.Deserialize<Dictionary<string, string>>(parts[1])!;
+        var type = Enum.Parse<GeneralVokiAnswerType>(parts[0]);
+        var data = JsonSerializer.Deserialize<Dictionary<string, string>>(parts[1], JsonOpts)!;
         return CreateFromDictionary(type, data).AsSuccess();
     }
 

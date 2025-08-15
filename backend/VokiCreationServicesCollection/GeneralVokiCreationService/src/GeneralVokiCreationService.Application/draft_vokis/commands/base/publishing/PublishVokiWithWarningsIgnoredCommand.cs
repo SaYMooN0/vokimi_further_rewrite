@@ -25,8 +25,10 @@ internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOr<VokiSuccessfullyPublishedResult>> Handle(PublishVokiWithWarningsIgnoredCommand command,
-        CancellationToken ct) {
+    public async Task<ErrOr<VokiSuccessfullyPublishedResult>> Handle(
+        PublishVokiWithWarningsIgnoredCommand command,
+        CancellationToken ct
+    ) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
         var publishingRes = voki.PublishWithWarningsIgnored(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {

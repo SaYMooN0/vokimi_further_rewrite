@@ -75,7 +75,7 @@
 	}
 
 	.bottom-items {
-		padding: 0 0.375rem 0.25rem 0.375rem;
+		padding: 0 0.375rem 0.25rem;
 	}
 
 	.name-line {

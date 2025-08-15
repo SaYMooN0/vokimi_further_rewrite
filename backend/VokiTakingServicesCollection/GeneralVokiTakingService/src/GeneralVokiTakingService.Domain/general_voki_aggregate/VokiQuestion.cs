@@ -7,18 +7,18 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
 {
     private VokiQuestion() { }
     public string Text { get; }
-    public GeneralVokiQuestionImageKey[] Images { get; }
+    public ImmutableArray<GeneralVokiQuestionImageKey> Images { get; }
     public GeneralVokiAnswerType AnswersType { get; }
     public ushort OrderInVoki { get; }
     public bool ShuffleAnswers { get; }
     public QuestionAnswersCountLimit AnswersCountLimit { get; }
-    public ImmutableArray<VokiQuestionAnswer> Answers { get; }
+    public IReadOnlyCollection<VokiQuestionAnswer> Answers { get; }
 
 
     public VokiQuestion(
         GeneralVokiQuestionId id,
         string text,
-        GeneralVokiQuestionImageKey[] images,
+        ImmutableArray<GeneralVokiQuestionImageKey> images,
         GeneralVokiAnswerType answersType,
         ushort orderInVoki,
         ImmutableArray<VokiQuestionAnswer> answers,
