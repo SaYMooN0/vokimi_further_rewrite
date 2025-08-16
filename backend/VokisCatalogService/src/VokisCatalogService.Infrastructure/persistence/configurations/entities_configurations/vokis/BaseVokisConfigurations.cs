@@ -29,11 +29,19 @@ public class BaseVokisConfigurations : IEntityTypeConfiguration<BaseVoki>
             .Property(x => x.CoAuthorIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
 
+        builder.ComplexProperty(x => x.Details, b => {
+            b.Property(d => d.Language).HasColumnName("Details_Language");
+            b.Property(d => d.IsAgeRestricted).HasColumnName("Details_IsAgeRestricted");
+            b.Property(d => d.Description).HasColumnName("Details_Description");
+        });
+
         builder
             .Property(x => x.Tags)
             .HasTagIdImmutableHashSetHashSetConversion();
 
-        builder.Property(x => x.LikesCount);
+        builder.Property(x => x.PublicationDate);
+
+        builder.Property(x => x.RatingsCount);
         builder.Property(x => x.CommentsCount);
         builder.Property(x => x.VokiTakingsCount);
     }

@@ -129,9 +129,10 @@
 
 	.links-container {
 		display: flex;
+		flex-direction: row;
+		justify-content: center;
 		gap: 1rem;
 		width: 100%;
-		justify-content: center;
 		height: 100%;
 		height: var(--side-bar-links-top-padding);
 		box-sizing: border-box;
@@ -139,7 +140,6 @@
 		margin: 0 auto;
 		border-radius: 2rem;
 		background-color: var(--back);
-		flex-direction: row;
 	}
 
 	.my-vokis-page-content {

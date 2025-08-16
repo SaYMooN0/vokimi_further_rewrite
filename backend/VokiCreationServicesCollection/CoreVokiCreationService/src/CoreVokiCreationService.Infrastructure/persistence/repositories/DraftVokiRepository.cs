@@ -20,10 +20,10 @@ internal class DraftVokiRepository : IDraftVokiRepository
     public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId) =>
         _db.Vokis
             .FromSqlInterpolated($@"
-                SELECT ""Id"", ""PrimaryAuthorId"", ""CoAuthorsIds"", ""CreationDate""
+                SELECT ""Id"", ""PrimaryAuthorId"", ""CoAuthorIds"", ""CreationDate""
                 FROM ""Vokis""
                 WHERE {userId.Value} = ""PrimaryAuthorId""
-                   OR {userId.Value} = ANY(""CoAuthorsIds"")
+                   OR {userId.Value} = ANY(""CoAuthorIds"")
                 ORDER BY ""CreationDate"" DESC
             ")
             .Select(v => v.Id)

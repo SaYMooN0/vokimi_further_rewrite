@@ -33,9 +33,9 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
             .HasColumnName("PrimaryAuthorId");
 
         builder
-            .Property(x => x.CoAuthorsIds)
+            .Property(x => x.CoAuthorIds)
             .HasGuidBasedIdsImmutableHashSetConversion()
-            .HasColumnName("CoAuthorsIds");
+            .HasColumnName("CoAuthorIds");
 
         builder
             .Property(x => x.InvitedForCoAuthorUserIds)

@@ -1,29 +1,33 @@
-import { ApiVokiCreationCore } from "$lib/ts/backend-communication/backend-services";
+import { ApiVokisCatalog } from "$lib/ts/backend-communication/backend-services";
+import type { Language } from "$lib/ts/language";
 import { RequestJsonOptions } from "$lib/ts/request-json-options";
 import type { VokiType } from "$lib/ts/voki";
 
-type DraftVokiBriefInfo = {
+
+type PublishedVokiBriefInfo = {
     id: string;
     type: VokiType;
     name: string;
     cover: string;
     primaryAuthorId: string;
-    coAuthorsCount: number;
+    coAuthorIds: string[];
+    isAgeRestricted: boolean;
+    language: Language;
 };
 
-type CachedVokiEntry = {
-    info: DraftVokiBriefInfo;
+
+type CacheEntry = {
+    info: PublishedVokiBriefInfo;
     lastFetched: Date;
 };
-
 const CACHE_SIZE = 100;
 const TTL_MS = 5 * 60 * 1000;
 
-export namespace MyVokisCacheStore {
-    const cache: Record<string, CachedVokiEntry> = $state({});
-    const ongoingRequests: Record<string, Promise<DraftVokiBriefInfo | null>> = {};
+export namespace MyPublishedVokisCacheStore {
+    const cache: Record<string, CacheEntry> = $state({});
+    const ongoingRequests: Record<string, Promise<PublishedVokiBriefInfo | null>> = {};
 
-    export async function Get(id: string): Promise<DraftVokiBriefInfo | null> {
+    export async function Get(id: string): Promise<PublishedVokiBriefInfo | null> {
         const cached = cache[id];
         const now = new Date();
         if (cached && now.getTime() - cached.lastFetched.getTime() <= TTL_MS) {
@@ -43,13 +47,15 @@ export namespace MyVokisCacheStore {
         }
     }
 
-    export async function RefreshAndGet(id: string): Promise<DraftVokiBriefInfo | null> {
-        const response = await ApiVokiCreationCore.fetchJsonResponse<DraftVokiBriefInfo>(
-            `/vokis/${id}/brief-info`, { method: "GET" }
+    export async function RefreshAndGet(id: string): Promise<PublishedVokiBriefInfo | null> {
+      
+        const response = await ApiVokisCatalog.fetchJsonResponse<{ vokis: PublishedVokiBriefInfo[] }>(
+            `/vokis/brief-info`,
+            RequestJsonOptions.POST({ ids: [id] })
         );
-        if (response.isSuccess && response.data) {
-            insertOrReplace(response.data);
-            return response.data;
+        if (response.isSuccess && response.data && response.data.vokis.length > 0) {
+            insertOrReplace(response.data.vokis[0]);
+            return response.data.vokis[0];
         }
 
         return null;
@@ -67,7 +73,7 @@ export namespace MyVokisCacheStore {
 
         const limitedIds = needsFetch.slice(0, CACHE_SIZE);
 
-        const response = await ApiVokiCreationCore.fetchJsonResponse<{ vokis: DraftVokiBriefInfo[] }>(
+        const response = await ApiVokisCatalog.fetchJsonResponse<{ vokis: PublishedVokiBriefInfo[] }>(
             `/vokis/brief-info`,
             RequestJsonOptions.POST({ ids: limitedIds })
         );
@@ -86,7 +92,7 @@ export namespace MyVokisCacheStore {
         }
     }
 
-    function insertOrReplace(info: DraftVokiBriefInfo): void {
+    function insertOrReplace(info: PublishedVokiBriefInfo): void {
         const now = new Date();
         if (Object.keys(cache).length >= CACHE_SIZE) {
             evictOldest();

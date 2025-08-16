@@ -1,7 +1,9 @@
 ﻿using MassTransit;
 using SharedKernel.common.vokis;
 using SharedKernel.integration_events.voki_publishing;
+using VokimiStorageKeysLib.voki_cover;
 using VokisCatalogService.Domain.common.interfaces.repositories;
+using VokisCatalogService.Domain.voki_aggregate;
 using VokisCatalogService.Domain.voki_aggregate.voki_types;
 
 namespace VokisCatalogService.Application.vokis.integration_event_handlers;
@@ -21,9 +23,12 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
         GeneralVoki voki = GeneralVoki.CreateNew(
             e.VokiId,
             new VokiName(e.Name),
+            new VokiCoverKey(e.Cover),
             e.PrimaryAuthorId,
             e.CoAuthors.ToImmutableHashSet(),
+            new VokiDetails(e.Description, e.IsAgeRestricted, e.Language),
             tags: e.Tags.ToImmutableHashSet(),
+            e.PublishingDate,
             questionsCount: (ushort)e.Questions.Length,
             resultsCount: (ushort)e.Results.Length,
             anyAudioAnswers: anyAudioAnswers

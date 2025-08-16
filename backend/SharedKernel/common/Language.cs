@@ -7,5 +7,7 @@ public enum Language
     Spa,
     Ger,
     Fra,
+    Ukr,
+    Por,
     Other
 }

@@ -11,6 +11,7 @@ public class AppUser : AggregateRoot<AppUserId>
     public AppUserName UserName { get; private set; }
     public UserProfilePicKey ProfilePic { get; private set; }
     public ImmutableHashSet<VokiTagId> FavouriteTags { get; private set; }
+    public UserSettings Settings { get; private set; }
 
     public AppUser(AppUserId id, AppUserName userName, UserProfilePicKey profilePic) {
         if (!profilePic.IsForUser(Id)) {
@@ -23,6 +24,7 @@ public class AppUser : AggregateRoot<AppUserId>
         UserName = userName;
         ProfilePic = profilePic;
         FavouriteTags = [];
+        Settings = UserSettings.Default;
     }
 
     public void UpdateUserName(AppUserName newUserName) {

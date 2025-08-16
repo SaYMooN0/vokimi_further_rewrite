@@ -1,10 +1,18 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import type { Language } from '$lib/ts/language';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
-		voki: { name: string; cover: string; primaryAuthorId: string; coAuthorsCount: number };
+		voki: {
+			name: string;
+			cover: string;
+			primaryAuthorId: string;
+			coAuthorIds: string[];
+			language?: Language;
+			isAgeRestricted?: boolean;
+		};
 		link: string;
 		onMoreBtnClick: () => void;
 	}
@@ -36,7 +44,7 @@
 					goto(`/user/${voki.primaryAuthorId}`);
 				}}>{voki.primaryAuthorId}</span
 			>
-			{#if voki.coAuthorsCount > 0}
+			{#if voki.coAuthorIds.length > 0}
 				<div
 					class="co-authors interactable"
 					onclick={(e) => {
@@ -44,7 +52,7 @@
 						toast.error('You cannot see co-authors here yet. Please go to the voki page');
 					}}
 				>
-					+ {voki.coAuthorsCount}
+					+ {voki.coAuthorIds.length}
 				</div>
 			{/if}
 		</div>
@@ -52,7 +60,6 @@
 </a>
 
 <style>
-    
 	.voki-item {
 		display: flex;
 		flex-direction: column;

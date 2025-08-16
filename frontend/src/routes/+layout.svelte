@@ -3,7 +3,7 @@
 	import SideBar from './c_layout/SideBar.svelte';
 	import SignInDialog from './c_layout/SignInDialog.svelte';
 	import AppToaster from './c_layout/AppToaster.svelte';
-	import vokiTypesIconsSprite from '$lib/icons/voki-types.svg?raw';
+	import vokiTypesIconsSprite from '$lib/icons/voki-type-icons.svg?raw';
 	import commonIconsSprite from '$lib/icons/common-icons.svg?raw';
 	import caretIconsSprite from '$lib/icons/caret-icons.svg?raw';
 	import errorIconsSprite from '$lib/icons/error-icons.svg?raw';

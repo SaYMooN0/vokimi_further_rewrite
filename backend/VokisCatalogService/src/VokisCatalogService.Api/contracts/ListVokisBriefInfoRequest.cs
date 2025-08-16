@@ -1,4 +1,4 @@
-﻿namespace CoreVokiCreationService.Api.contracts.vokis_brief_info;
+﻿namespace VokisCatalogService.Api.contracts;
 
 public class ListVokisBriefInfoRequest : IRequestWithValidationNeeded
 {

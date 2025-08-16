@@ -9,6 +9,8 @@
 	import { LanguageUtils } from '$lib/ts/language';
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../VokiCreationSaveAndCancelButtons.svelte';
+	import DefaultLanguageInput from '$lib/components/inputs/DefaultLanguageSelect.svelte';
+	import DefaultLanguageSelect from '$lib/components/inputs/DefaultLanguageSelect.svelte';
 
 	const {
 		vokiId,
@@ -60,11 +62,7 @@
 />
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Language:" />
-	<select bind:value={language} class="language-select">
-		{#each LanguageUtils.values() as lang}
-			<option value={lang}>{LanguageUtils.name(lang)}</option>
-		{/each}
-	</select>
+	<DefaultLanguageSelect bind:value={language} />
 </p>
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Age restriction:" />
@@ -102,35 +100,5 @@
 		align-items: center;
 		gap: 0.5rem;
 		margin-top: 1rem;
-	}
-
-	.language-select {
-		box-sizing: border-box;
-		padding: 0 0.75rem;
-		border: 0.125rem solid var(--secondary-foreground);
-		border-radius: 1rem;
-		color: var(--text);
-		font-size: 1.375rem;
-		font-weight: 440;
-		transition: border-radius 0.2s ease-out;
-		appearance: none;
-		outline: none;
-	}
-
-	.language-select:hover,
-	.language-select:focus,
-	.language-select:focus-within,
-	.language-select:has(:hover) {
-		border-color: var(--primary);
-		border-radius: 0.5rem;
-	}
-
-	.language-select option {
-		background-color: var(--secondary);
-		color: var(--text);
-	}
-
-	.language-select option:hover {
-		background-color: var(--accent);
 	}
 </style>

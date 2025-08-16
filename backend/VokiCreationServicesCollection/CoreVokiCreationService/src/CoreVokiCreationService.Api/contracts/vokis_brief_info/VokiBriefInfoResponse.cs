@@ -9,7 +9,7 @@ internal sealed record class VokiBriefInfoResponse(
     string Name,
     string Cover,
     string PrimaryAuthorId,
-    int CoAuthorsCount
+    string[] CoAuthorIds
 )
 {
     public static VokiBriefInfoResponse Create(DraftVoki v) => new(
@@ -18,6 +18,6 @@ internal sealed record class VokiBriefInfoResponse(
         v.Name.ToString(),
         v.Cover.ToString(),
         v.PrimaryAuthorId.ToString(),
-        v.CoAuthorsIds.Count
+        v.CoAuthorIds.Select(id => id.ToString()).ToArray()
     );
 }

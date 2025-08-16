@@ -33,10 +33,10 @@
 		font-size: 1rem;
 		font-weight: 430;
 		text-decoration: none;
+		letter-spacing: 0.2px;
 		box-shadow: var(--shadow-2xl);
 		transition: transform 0.12s ease;
 		cursor: pointer;
-		letter-spacing: 0.2px;
 	}
 
 	a.icon {
@@ -45,10 +45,10 @@
 	}
 
 	a.icon > :global(svg) {
-		transition: inherit;
-		stroke-width: 1.5;
 		width: 1.5rem;
 		height: 1.5rem;
+		transition: inherit;
+		stroke-width: 1.5;
 	}
 
 	a:hover {
@@ -57,8 +57,9 @@
 	}
 
 	a:active {
-		letter-spacing: 0px;
+		letter-spacing: 0;
 	}
+
 	a.icon:active > :global(svg) {
 		transform: scale(0.9);
 	}
@@ -69,6 +70,7 @@
 		font-weight: 460;
 
 	}
+
 	a.current.icon > :global(svg) {
 		stroke-width: 1.7;
 		

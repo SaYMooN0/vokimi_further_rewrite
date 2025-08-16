@@ -1,4 +1,4 @@
-const allLanguages = ['Eng', 'Rus', 'Spa', 'Ger', 'Fra', 'Other'] as const;
+const allLanguages = ['Eng', 'Rus', 'Spa', 'Ger', 'Fra', 'Ukr', 'Por', 'Other'] as const;
 export type Language = typeof allLanguages[number];
 
 export class LanguageUtils {
@@ -9,6 +9,8 @@ export class LanguageUtils {
             case 'Spa': return 'Spanish';
             case 'Ger': return 'German';
             case 'Fra': return 'French';
+            case 'Ukr': return 'Ukrainian';
+            case 'Por': return 'Portuguese';
             case 'Other': return 'Other';
         }
     }

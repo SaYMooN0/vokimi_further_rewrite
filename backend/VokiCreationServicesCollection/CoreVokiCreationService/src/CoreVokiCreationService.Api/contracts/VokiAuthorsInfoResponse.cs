@@ -10,7 +10,7 @@ public record class VokiAuthorsInfoResponse(
 {
     public static VokiAuthorsInfoResponse Create(DraftVoki voki) => new(
         voki.PrimaryAuthorId.ToString(),
-        voki.CoAuthorsIds.Select(id => id.ToString()).ToArray(),
+        voki.CoAuthorIds.Select(id => id.ToString()).ToArray(),
         voki.InvitedForCoAuthorUserIds.Select(id => id.ToString()).ToArray()
     );
 }

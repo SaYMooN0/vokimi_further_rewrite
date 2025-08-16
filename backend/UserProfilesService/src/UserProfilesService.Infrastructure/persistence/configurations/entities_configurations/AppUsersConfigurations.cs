@@ -19,7 +19,11 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
         builder
             .Property(x => x.UserName)
             .HasConversion<AppUserNameConverter>();
-        
+
+        builder.ComplexProperty(x => x.Settings, b => {
+            b.Property(d => d.AllowCoAuthorInvites).HasColumnName("settings_AllowCoAuthorInvites");
+        });
+
         builder.Ignore(x => x.FavouriteTags);
         builder.Ignore(x => x.ProfilePic);
     }

@@ -13,7 +13,7 @@ public class DraftVoki : AggregateRoot<VokiId>
     public VokiName Name { get; private set; }
     public VokiCoverKey Cover { get; private set; }
     public AppUserId PrimaryAuthorId { get; }
-    public ImmutableHashSet<AppUserId> CoAuthorsIds { get; private set; }
+    public ImmutableHashSet<AppUserId> CoAuthorIds { get; private set; }
     public ImmutableHashSet<AppUserId> InvitedForCoAuthorUserIds { get; private set; }
     public DateTime CreationDate { get; }
 
@@ -24,7 +24,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         Cover = VokiCoverKey.Default;
         PrimaryAuthorId = primaryAuthorId;
         CreationDate = creationDate;
-        CoAuthorsIds = [];
+        CoAuthorIds = [];
         InvitedForCoAuthorUserIds = [];
     }
 
@@ -43,7 +43,7 @@ public class DraftVoki : AggregateRoot<VokiId>
 
 
     public bool HasAccessToEdit(AppUserId userId) =>
-        userId == PrimaryAuthorId || CoAuthorsIds.Contains(userId);
+        userId == PrimaryAuthorId || CoAuthorIds.Contains(userId);
 
     public ErrOrNothing UpdateCover(VokiCoverKey newCover) {
         if (!newCover.IsWithId(this.Id)) {
@@ -69,7 +69,7 @@ public class DraftVoki : AggregateRoot<VokiId>
             return ErrOrNothing.Nothing;
         }
 
-        int totalCoAuthors = CoAuthorsIds.Count + InvitedForCoAuthorUserIds.Count;
+        int totalCoAuthors = CoAuthorIds.Count + InvitedForCoAuthorUserIds.Count;
         if (totalCoAuthors >= VokiRules.MaxCoAuthors) {
             return ErrFactory.LimitExceeded($"Voki cannot have more than {VokiRules.MaxCoAuthors} co-authors");
         }
@@ -80,7 +80,7 @@ public class DraftVoki : AggregateRoot<VokiId>
     }
 
     public ErrOrNothing AcceptInviteBy(AppUserId userId) {
-        if (CoAuthorsIds.Contains(userId)) {
+        if (CoAuthorIds.Contains(userId)) {
             return ErrOrNothing.Nothing;
         }
 
@@ -88,13 +88,13 @@ public class DraftVoki : AggregateRoot<VokiId>
             return ErrFactory.Unspecified("You are not listed as invited in this voki");
         }
 
-        if (CoAuthorsIds.Count >= VokiRules.MaxCoAuthors) {
+        if (CoAuthorIds.Count >= VokiRules.MaxCoAuthors) {
             return ErrFactory.Conflict(
                 $"Some error has occured. This voki already has {VokiRules.MaxCoAuthors} co-authors"
             );
         }
 
-        CoAuthorsIds = CoAuthorsIds.Add(userId);
+        CoAuthorIds = CoAuthorIds.Add(userId);
         InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
         AddDomainEvent(new CoAuthorInviteAcceptedEvent(Id, userId));
         return ErrOrNothing.Nothing;
@@ -119,6 +119,6 @@ public class DraftVoki : AggregateRoot<VokiId>
             AddDomainEvent(new CoAuthorInviteCanceledEvent(Id, invitedUserIds));
         }
 
-        AddDomainEvent(new VokiPublishedEvent(Id, PrimaryAuthorId, CoAuthorsIds));
+        AddDomainEvent(new VokiPublishedEvent(Id, PrimaryAuthorId, CoAuthorIds));
     }
 }

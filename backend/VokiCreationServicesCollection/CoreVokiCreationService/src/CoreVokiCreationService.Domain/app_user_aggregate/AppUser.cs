@@ -1,4 +1,5 @@
 ﻿using CoreVokiCreationService.Domain.app_user_aggregate.events;
+using SharedKernel.common.app_users;
 
 namespace CoreVokiCreationService.Domain.app_user_aggregate;
 
@@ -8,13 +9,14 @@ public class AppUser : AggregateRoot<AppUserId>
     public ImmutableHashSet<VokiId> InitializedVokiIds { get; private set; }
     public ImmutableHashSet<VokiId> CoAuthoredVokiIds { get; private set; }
     public ImmutableHashSet<VokiId> InvitedToCoAuthorVokiIds { get; private set; }
-    //invite ids
+    public AllowCoAuthorInvitesSettingValue InvitesSetting { get; private set; }
 
     public AppUser(AppUserId id) {
         Id = id;
         InitializedVokiIds = [];
         CoAuthoredVokiIds = [];
         InvitedToCoAuthorVokiIds = [];
+        InvitesSetting = AllowCoAuthorInvitesSettingValueExtensions.Default;
     }
 
     public void AddInitializedVoki(VokiId vokiId) {
@@ -64,7 +66,7 @@ public class AppUser : AggregateRoot<AppUserId>
 
     public void RemoveInitializedVoki(VokiId vokiId) =>
         InitializedVokiIds = InitializedVokiIds.Remove(vokiId);
+
     public void RemoveCoAuthoredVoki(VokiId vokiId) =>
         CoAuthoredVokiIds = CoAuthoredVokiIds.Remove(vokiId);
-
 }
