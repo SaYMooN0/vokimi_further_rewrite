@@ -12,17 +12,17 @@ internal class BaseVokisRepository : IBaseVokisRepository
         _db = db;
     }
 
-    public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId) =>
-        _db.BaseVokis
-            .FromSqlInterpolated($@"
-                SELECT ""Id"", ""PrimaryAuthorId"", ""CoAuthorIds"", ""CreationDate""
-                FROM ""Vokis""
-                WHERE {userId.Value} = ""PrimaryAuthorId""
-                   OR {userId.Value} = ANY(""CoAuthorIds"")
-                ORDER BY ""CreationDate"" DESC
-            ")
-            .Select(v => v.Id)
-            .ToArrayAsync();
+    public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId) => _db.Database
+        .SqlQuery<Guid>($@"
+            SELECT ""Id"" AS ""Value""
+            FROM ""BaseVokis""
+            WHERE ""PrimaryAuthorId"" = {userId.Value}
+               OR {userId.Value} = ANY(""CoAuthorIds"")
+            ORDER BY ""PublicationDate"" DESC
+        ")
+        .Select(id => new VokiId(id))
+        .ToArrayAsync();
+
 
     public Task<BaseVoki?> GetByIdAsNoTracking(VokiId vokiId) =>
         _db.BaseVokis

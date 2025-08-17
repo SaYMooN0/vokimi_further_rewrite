@@ -144,7 +144,6 @@
 
 	.my-vokis-page-content {
 		overflow-y: auto;
-		scrollbar-gutter: stable;
 	}
 
 	:global(.my-vokis-page > .create-new-voki-btn) {

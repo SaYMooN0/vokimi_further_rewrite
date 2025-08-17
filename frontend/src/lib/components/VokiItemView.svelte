@@ -20,7 +20,9 @@
 </script>
 
 <a href={link} class="voki-item">
-	<img class="voki-cover" src={StorageBucketMain.fileSrc(voki.cover)} alt="voki cover" />
+	<div class="cover-container">
+		<img class="voki-cover" src={StorageBucketMain.fileSrc(voki.cover)} alt="voki cover" />
+	</div>
 	<div class="bottom-items">
 		<div class="name-line">
 			<p class="voki-name">
@@ -64,9 +66,11 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--voki-cover-name-gap);
+		gap: 0.25rem;
 		width: 100%;
-		margin: 0.125rem;
-		border-radius: var(--voki-cover-border-radius);
+		height: fit-content;
+		padding: 0.5rem;
+		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
 		cursor: pointer;
 	}
 
@@ -79,10 +83,6 @@
 		border-radius: var(--voki-cover-border-radius);
 		aspect-ratio: var(--voki-cover-aspect-ratio);
 		box-shadow: var(--shadow-xs);
-	}
-
-	.bottom-items {
-		padding: 0 0.375rem 0.25rem;
 	}
 
 	.name-line {
@@ -113,7 +113,7 @@
 	}
 
 	.voki-more-btn {
-		height: calc(var(--voki-name-max-height) * 0.55);
+		height: calc(var(--voki-name-max-height) * 0.65);
 		border-radius: 0.25rem;
 		color: var(--text);
 		aspect-ratio: 1/1;

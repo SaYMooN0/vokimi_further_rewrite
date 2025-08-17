@@ -1,6 +1,7 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
 using VokimiStorageKeysLib;
+using VokimiStorageKeysLib.voki_cover;
 using VokiTakingServicesLib.Domain.common;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
@@ -37,18 +38,18 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
 
 
     public static GeneralVoki CreateNew(
-        VokiId id,
+        VokiId id, VokiCoverKey coverKey,
         ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
         bool forceSequentialAnswering, bool shuffleQuestions
     ) {
         var voki = new GeneralVoki(id, questions, results, forceSequentialAnswering, shuffleQuestions);
-        List<BaseStorageKey> vokiContentKeys = GatherVokiContentKeys(questions, results);
+        List<BaseStorageKey> vokiContentKeys = GatherVokiContentKeys(coverKey, questions, results);
         voki.AddDomainEvent(new PublishedVokiCreatedEvent(voki.Id, vokiContentKeys.ToArray()));
         return voki;
     }
 
     private static List<BaseStorageKey> GatherVokiContentKeys(
-        ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results
+        VokiCoverKey coverKey, ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results
     ) {
         List<BaseStorageKey> keys = results
             .Select(r => r.Image)
@@ -64,6 +65,8 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
             keys.AddRange(answerKeys);
         }
 
+        keys.Add(coverKey);
+        
         return keys;
     }
 }

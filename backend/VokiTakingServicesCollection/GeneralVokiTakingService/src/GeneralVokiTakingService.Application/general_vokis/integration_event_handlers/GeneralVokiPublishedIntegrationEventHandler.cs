@@ -24,7 +24,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
     public async Task Consume(ConsumeContext<GeneralVokiPublishedIntegrationEvent> context) {
         var e = context.Message;
         var voki = GeneralVoki.CreateNew(
-            e.VokiId,
+            e.VokiId, new(e.Cover),
             e.Questions.Select(QuestionFromEventDto).ToImmutableArray(),
             e.Results.Select(ResultFromEventDto).ToImmutableArray(),
             forceSequentialAnswering: e.ForceSequentialAnswering,

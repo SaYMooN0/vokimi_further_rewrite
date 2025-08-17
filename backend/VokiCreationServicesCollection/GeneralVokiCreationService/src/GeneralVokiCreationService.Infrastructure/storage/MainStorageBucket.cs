@@ -18,7 +18,7 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
         ILogger<MainStorageBucket> logger
     ) : base(s3Client, mainBucketNameProvider, logger) { }
 
-    public async Task<ErrOr<VokiCoverKey>> UploadDraftVokiCover(VokiId vokiId, FileData file) =>
+    public async Task<ErrOr<VokiCoverKey>> UploadVokiCover(VokiId vokiId, FileData file) =>
         await UploadWithKeyAsync(
             (ext) => VokiCoverKey.CreateWithId(vokiId, ext),
             file

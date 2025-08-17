@@ -2,8 +2,10 @@
 using InfrastructureShared.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using VokimiStorageKeysLib.voki_cover;
 using VokisCatalogService.Domain.voki_aggregate;
 using VokisCatalogService.Infrastructure.persistence.configurations.extensions;
+using VokisCatalogService.Infrastructure.persistence.configurations.value_converters;
 
 namespace VokisCatalogService.Infrastructure.persistence.configurations.entities_configurations.vokis;
 
@@ -22,6 +24,12 @@ public class BaseVokisConfigurations : IEntityTypeConfiguration<BaseVoki>
             .HasConversion<VokiNameConverter>();
 
         builder
+            .Property(x => x.PublicationDate);
+        builder
+            .Property(x => x.Cover)
+            .HasConversion<VokiCoverKeyConverter>();
+
+        builder
             .Property(x => x.PrimaryAuthorId)
             .HasGuidBasedIdConversion();
 
@@ -29,11 +37,12 @@ public class BaseVokisConfigurations : IEntityTypeConfiguration<BaseVoki>
             .Property(x => x.CoAuthorIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
 
-        builder.ComplexProperty(x => x.Details, b => {
-            b.Property(d => d.Language).HasColumnName("Details_Language");
-            b.Property(d => d.IsAgeRestricted).HasColumnName("Details_IsAgeRestricted");
-            b.Property(d => d.Description).HasColumnName("Details_Description");
+        builder.OwnsOne(v => v.Details, d => {
+            d.Property(p => p.Language).HasColumnName("Details_Language");
+            d.Property(p => p.IsAgeRestricted).HasColumnName("Details_IsAgeRestricted");
+            d.Property(p => p.Description).HasColumnName("Details_Description");
         });
+
 
         builder
             .Property(x => x.Tags)

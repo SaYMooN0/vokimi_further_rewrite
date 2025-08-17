@@ -1,13 +1,15 @@
 import { ApiVokisCatalog } from "$lib/ts/backend-communication/backend-services";
 import type { Language } from "$lib/ts/language";
 import type { VokiType } from "$lib/ts/voki";
-import type { ServerLoad } from "@sveltejs/kit";
+import type { LayoutServerLoad } from "./$types";
 
-export const load: ServerLoad = async ({ params, fetch }) => {
-    const response = await ApiVokisCatalog.serverFetchJsonResponse<VokiOverviewInfo>(
-        fetch, `/vokis/${params.vokiId}/overview`, { method: 'GET' }
-    );
-    return { ...response, vokiId: params.vokiId };
+export const load: LayoutServerLoad = async ({ params, fetch }) => {
+    return {
+        response: await ApiVokisCatalog.serverFetchJsonResponse<VokiOverviewInfo>(
+            fetch, `/vokis/${params.vokiId}/overview`, { method: 'GET' }
+        ),
+        vokiId: params.vokiId
+    };
 }
 
 type VokiOverviewInfo = {

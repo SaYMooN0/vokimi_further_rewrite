@@ -3,9 +3,9 @@ using VokimiStorageKeysLib.voki_cover;
 
 namespace CoreVokiCreationService.Infrastructure.persistence.configurations.value_converters;
 
-public class DraftVokiCoverKeyConverter : ValueConverter<VokiCoverKey, string>
+public class VokiCoverKeyConverter : ValueConverter<VokiCoverKey, string>
 {
-    public DraftVokiCoverKeyConverter() : base(
+    public VokiCoverKeyConverter() : base(
         id => id.ToString(),
         value => new VokiCoverKey(value)
     ) { }

@@ -25,7 +25,7 @@ internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVoki
 
     public async Task<ErrOr<VokiCoverKey>> Handle(UpdateVokiCoverCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
-        var uploadingRes = await _mainStorageBucket.UploadDraftVokiCover(command.VokiId, command.File);
+        var uploadingRes = await _mainStorageBucket.UploadVokiCover(command.VokiId, command.File);
         if (uploadingRes.IsErr(out var err)) {
             return err;
         }

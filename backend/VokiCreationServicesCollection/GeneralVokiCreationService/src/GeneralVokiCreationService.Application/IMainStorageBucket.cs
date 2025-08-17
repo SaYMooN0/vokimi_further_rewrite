@@ -7,7 +7,7 @@ namespace GeneralVokiCreationService.Application;
 
 public interface IMainStorageBucket
 {
-    public Task<ErrOr<VokiCoverKey>> UploadDraftVokiCover(VokiId vokiId, FileData file);
+    public Task<ErrOr<VokiCoverKey>> UploadVokiCover(VokiId vokiId, FileData file);
 
     Task<ErrOrNothing> DeleteVokiCover(VokiCoverKey key);
 

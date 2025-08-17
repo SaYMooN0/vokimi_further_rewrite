@@ -1,19 +1,9 @@
 import { ApiVokisCatalog } from "$lib/ts/backend-communication/backend-services";
-import type { Language } from "$lib/ts/language";
 import { RequestJsonOptions } from "$lib/ts/request-json-options";
-import type { VokiType } from "$lib/ts/voki";
+import type { PublishedVokiBriefInfo } from "$lib/ts/voki";
 
 
-type PublishedVokiBriefInfo = {
-    id: string;
-    type: VokiType;
-    name: string;
-    cover: string;
-    primaryAuthorId: string;
-    coAuthorIds: string[];
-    isAgeRestricted: boolean;
-    language: Language;
-};
+
 
 
 type CacheEntry = {

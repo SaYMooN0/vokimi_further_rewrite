@@ -2,7 +2,7 @@
 	import { getAuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import type { Snippet } from 'svelte';
 
-	type AuthStoreData = { isAuthenticated: () => boolean };
+	type AuthStoreData = { isAuthenticated: () => boolean; userId: string };
 	const {
 		loading = null,
 		authenticated = null,

@@ -8,6 +8,8 @@
 	import caretIconsSprite from '$lib/icons/caret-icons.svg?raw';
 	import errorIconsSprite from '$lib/icons/error-icons.svg?raw';
 	import ConfirmActionDialog from './c_layout/ConfirmActionDialog.svelte';
+	import languagesIconsSprite from '$lib/icons/languages-icons.svg?raw';
+
 	import {
 		registerConfirmActionDialogOpenFunction,
 		type ConfirmActionDialogContent
@@ -34,6 +36,7 @@
 	{@html commonIconsSprite}
 	{@html caretIconsSprite}
 	{@html errorIconsSprite}
+	{@html languagesIconsSprite}
 </div>
 <SignInDialog bind:this={signInDialog} />
 <ConfirmActionDialog bind:this={confirmActionDialog} />
@@ -60,7 +63,7 @@
 		box-sizing: border-box;
 
 		--side-bar-links-top-padding: 4rem;
-		--width-limit: min(92rem, 100%);
+		--width-limit: min(112rem, 100%);
 	}
 
 	.width-limit {
@@ -74,5 +77,23 @@
 
 	.page.full-width {
 		--width-limit: 100% !important;
+	}
+
+	@media (width >= 1536px) and (width <= 1919px) {
+		.page {
+			--width-limit: 94vw;
+		}
+	}
+
+	@media (width >= 1366px) and (width <= 1535px) {
+		.page {
+			--width-limit: min(80rem, 100%);
+		}
+	}
+
+	@media (width <= 1365px) {
+		.page {
+			--width-limit: min(70rem, 98vw);
+		}
 	}
 </style>

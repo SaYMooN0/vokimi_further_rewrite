@@ -24,7 +24,7 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
 
         builder
             .Property(x => x.Cover)
-            .HasConversion<DraftVokiCoverKeyConverter>();
+            .HasConversion<VokiCoverKeyConverter>();
         
         builder
             .Property(x => x.PrimaryAuthorId)

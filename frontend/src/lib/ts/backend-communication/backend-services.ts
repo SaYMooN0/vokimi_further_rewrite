@@ -61,6 +61,8 @@ export class BackendService {
         options: RequestInit
     ): Promise<ResponseResult<T>> {
         try {
+            console.log('dsa');
+
             const response = await fetchFunc(this._baseUrl + url, {
                 ...options,
                 credentials: 'include'
@@ -90,6 +92,8 @@ export class BackendService {
             };
 
         } catch (e: any) {
+            console.log(e);
+
             return {
                 isSuccess: false,
                 errs: this.createErrsFromException(e)

@@ -1,3 +1,5 @@
+import type { Language } from "./language";
+
 export type VokiType = 'General' | 'Scoring' | 'TierList';
 
 export type GeneralVokiAnswerType =
@@ -26,3 +28,15 @@ export type AnswerDataColorAndText = { type: 'ColorAndText'; relatedResultIds: s
 export type AnswerDataAudioOnly = { type: 'AudioOnly'; relatedResultIds: string[]; audio: string };
 export type AnswerDataAudioAndText = { type: 'AudioAndText'; relatedResultIds: string[]; audio: string; text: string };
 
+
+
+export type PublishedVokiBriefInfo = {
+    id: string;
+    type: VokiType;
+    name: string;
+    cover: string;
+    primaryAuthorId: string;
+    coAuthorIds: string[];
+    isAgeRestricted: boolean;
+    language: Language;
+};

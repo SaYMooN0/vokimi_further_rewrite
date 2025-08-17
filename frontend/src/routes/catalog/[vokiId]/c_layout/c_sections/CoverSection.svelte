@@ -1,0 +1,68 @@
+<script lang="ts">
+	import AuthView from '$lib/components/AuthView.svelte';
+	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
+	import type { VokiType } from '$lib/ts/voki';
+	import AddToAlbumButtonIcon from './c_cover_section_icons/AddToAlbumButtonIcon.svelte';
+	import ManageVokiButtonIcon from './c_cover_section_icons/ManageVokiButtonIcon.svelte';
+	import TakeVokiButtonIcon from './c_cover_section_icons/TakeVokiButtonIcon.svelte';
+	interface Props {
+		vokiId: string;
+		cover: string;
+		usersWithAccessToManage: string[];
+		vokiType: VokiType;
+	}
+	let { vokiId, cover, usersWithAccessToManage, vokiType }: Props = $props();
+</script>
+
+<div class="voki-cover-section">
+	<img class="voki-cover" src={StorageBucketMain.fileSrc(cover)} alt="voki cover" />
+	<div class="buttons-container">
+		<a href="/take-voki/{StringUtils.pascalToKebab(vokiType)}/{vokiId}"
+			><TakeVokiButtonIcon />Take voki</a
+		>
+		<AuthView>
+			{#snippet authenticated(authData)}
+				{#if usersWithAccessToManage.includes(authData.userId)}
+					<a href="/manage-voki/{vokiId}">
+						<ManageVokiButtonIcon />
+						Manage voki
+					</a>
+				{/if}
+				<button><AddToAlbumButtonIcon /> Add to album</button>
+			{/snippet}
+		</AuthView>
+	</div>
+</div>
+
+<style>
+	.voki-cover-section {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 1rem;
+	}
+	.voki-cover-section > img {
+		width: 25rem;
+			border-radius: var(--voki-cover-border-radius);
+		aspect-ratio: var(--voki-cover-aspect-ratio);
+		box-shadow: var(--shadow-xs);
+	}
+	.buttons-container {
+		width: 100%;
+		display: flex;
+		gap: 0.5rem;
+		flex-direction: column;
+	}
+	.buttons-container > * {
+		height: 2rem;
+		width: 100%;
+		background-color: antiquewhite;
+	}
+	.buttons-container > * > :global(svg) {
+		height: 2rem;
+		width: 2rem;
+	}
+</style>

@@ -7,11 +7,26 @@
 <div class="vokis-container">
 	{@render children()}
 </div>
+
 <style>
 	.vokis-container {
 		display: flex;
 		display: grid;
-		gap: 1rem;
-		grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+		gap: 0.5rem;
+		width: 100%;
+		padding: 0.125rem 0.25rem;
+		grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+	}
+
+	@media (width >= 1536px) and (width <= 1919px){
+		.vokis-container {
+			grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+		}
+	}
+
+	@media  (width <= 1535px) {
+			.vokis-container {
+			grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+		}
 	}
 </style>
