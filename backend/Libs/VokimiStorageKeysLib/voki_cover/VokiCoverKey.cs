@@ -4,10 +4,9 @@ public class VokiCoverKey : BaseStorageKey
 {
     protected override string Value { get; }
     public VokiId VokiId { get; }
-    private const string DefaultKeyValue = "common/default-voki-cover.webp";
 
     public VokiCoverKey(string value) {
-        if (value == DefaultKeyValue) {
+        if (value == KeyConsts.DefaultVokiCover) {
             Value = value;
             VokiId = new VokiId(Guid.Empty);
             return;
@@ -21,10 +20,10 @@ public class VokiCoverKey : BaseStorageKey
         Value = value;
     }
 
-    public static VokiCoverKey Default => new(DefaultKeyValue);
+    public static VokiCoverKey Default => new(KeyConsts.DefaultVokiCover);
 
     public static ErrOr<VokiCoverKey> CreateWithId(VokiId id, string extension) {
-        var key = $"{StorageFolders.Vokis}/{id}/cover{extension}";
+        var key = $"{KeyConsts.Vokis}/{id}/cover{extension}";
         if (VokiCoverKeyScheme.IsKeyValid(key, out _).IsErr(out var err)) {
             return err;
         }
@@ -32,6 +31,6 @@ public class VokiCoverKey : BaseStorageKey
         return new VokiCoverKey(key);
     }
 
-    public bool IsDefault() => Value == DefaultKeyValue;
+    public bool IsDefault() => Value == KeyConsts.DefaultVokiCover;
     public bool IsWithId(VokiId expectedId) => IsDefault() || VokiId == expectedId;
 }

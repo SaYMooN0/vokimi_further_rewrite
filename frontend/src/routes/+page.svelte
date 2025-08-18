@@ -4,12 +4,13 @@
 	import { toast } from 'svelte-sonner';
 	import type { PageProps } from './$types';
 	import VokiItemsGridContainer from '$lib/components/VokiItemsGridContainer.svelte';
+	import CatalogLoadingErrDisplay from './catalog/c_catalog_page/CatalogLoadingErrDisplay.svelte';
 
 	let { data }: PageProps = $props();
 </script>
 
 {#if data.errs}
-	<DefaultErrBlock errList={data.errs} />
+	<CatalogLoadingErrDisplay errs={data.errs} />
 {:else}
 	<VokiItemsGridContainer>
 		{#each data.data.vokis as voki}

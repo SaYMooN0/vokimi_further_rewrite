@@ -7,7 +7,7 @@ public class UserProfilePicKey : BaseStorageKey
     protected override string Value { get; }
     public AppUserId UserId { get; }
 
-    private UserProfilePicKey(string value) {
+    public UserProfilePicKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(this, UserProfilePicKeyScheme.IsKeyValid(
             value, out var userId
         ));

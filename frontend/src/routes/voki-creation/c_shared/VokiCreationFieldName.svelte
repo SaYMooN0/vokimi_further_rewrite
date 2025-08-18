@@ -11,8 +11,8 @@
 	label {
 		margin-right: 0.25rem;
 		color: var(--secondary-foreground);
-		font-size: 1.375rem;
-		font-weight: 440;
+		font-size: 1.25rem;
+		font-weight: 420;
 		text-decoration: underline;
 		text-underline-offset: 0.125rem;
 	}

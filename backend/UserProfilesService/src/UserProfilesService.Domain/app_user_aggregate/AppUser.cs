@@ -13,14 +13,14 @@ public class AppUser : AggregateRoot<AppUserId>
     public ImmutableHashSet<VokiTagId> FavouriteTags { get; private set; }
     public UserSettings Settings { get; private set; }
 
-    public AppUser(AppUserId id, AppUserName userName, UserProfilePicKey profilePic) {
-        if (!profilePic.IsForUser(Id)) {
+    public AppUser(AppUserId userId, AppUserName userName, UserProfilePicKey profilePic) {
+        if (!profilePic.IsForUser(userId)) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Conflict(
-                $"Given profile pic key doesn't belong to this user. User id: {id}, profile pic id: {profilePic.UserId}"
+                $"Given profile pic key doesn't belong to this user. User id: {userId}, profile pic id: {profilePic.UserId}"
             ));
         }
 
-        Id = id;
+        Id = userId;
         UserName = userName;
         ProfilePic = profilePic;
         FavouriteTags = [];

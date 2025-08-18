@@ -52,10 +52,12 @@
 
 <style>
 	.sprites {
-		display: none;
 		height: 0;
 	}
-
+	.sprites > :global(svg) {
+		width: 0;
+		height: 0;
+	}
 	.page {
 		display: flex;
 		flex-direction: column;

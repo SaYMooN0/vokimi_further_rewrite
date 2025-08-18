@@ -17,7 +17,7 @@ internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
 
 
     public async Task<ErrOrNothing> DeleteUnusedVokiKeys(VokiId vokiId, IEnumerable<BaseStorageKey> usedKeys) {
-        string prefix = $"{StorageFolders.Vokis}/{vokiId}/";
+        string prefix = $"{KeyConsts.Vokis}/{vokiId}/";
         var usedStringifiedKeys = usedKeys
             .Select(k => k.ToString())
             .ToImmutableHashSet();

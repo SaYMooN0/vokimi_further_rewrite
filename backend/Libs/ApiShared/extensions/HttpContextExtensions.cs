@@ -32,4 +32,18 @@ public static class HttpContextExtensions
 
         return new VokiId(guid);
     }
+
+    public static AppUserId GetAppUserIdFromRoute(this HttpContext context) {
+        var idString = context.Request.RouteValues["userId"]?.ToString() ?? "";
+        if (!Guid.TryParse(idString, out var guid)) {
+            UnexpectedBehaviourException.ThrowErr(ErrFactory.IncorrectFormat(
+                    "Invalid user id",
+                    $"'{idString}' is not a valid ${nameof(AppUserId)}"
+                ),
+                userMessage: "Invalid user id. Couldn't parse user id from route"
+            );
+        }
+
+        return new AppUserId(guid);
+    }
 }

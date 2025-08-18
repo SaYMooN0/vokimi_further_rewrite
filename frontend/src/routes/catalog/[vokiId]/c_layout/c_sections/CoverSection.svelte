@@ -18,18 +18,28 @@
 <div class="voki-cover-section">
 	<img class="voki-cover" src={StorageBucketMain.fileSrc(cover)} alt="voki cover" />
 	<div class="buttons-container">
-		<a href="/take-voki/{StringUtils.pascalToKebab(vokiType)}/{vokiId}"
-			><TakeVokiButtonIcon />Take voki</a
-		>
+		<a href="/take-voki/{StringUtils.pascalToKebab(vokiType)}/{vokiId}" class="take-voki-btn">
+			<TakeVokiButtonIcon />
+			<label class="btn-text">Take voki</label>
+		</a>
 		<AuthView>
 			{#snippet authenticated(authData)}
+				<button class="add-to-album-btn">
+					<AddToAlbumButtonIcon />
+					<label class="btn-text">Add to album</label>
+				</button>
 				{#if usersWithAccessToManage.includes(authData.userId)}
-					<a href="/manage-voki/{vokiId}">
+					<a href="/manage-voki/{vokiId}" class="manage-voki-btn">
 						<ManageVokiButtonIcon />
-						Manage voki
+						<label class="btn-text">Manage voki</label>
 					</a>
 				{/if}
-				<button><AddToAlbumButtonIcon /> Add to album</button>
+			{/snippet}
+			{#snippet unauthenticated()}
+				<button class="add-to-album-btn">
+					<AddToAlbumButtonIcon />
+					<label class="btn-text">Add to album</label>
+				</button>
 			{/snippet}
 		</AuthView>
 	</div>
@@ -46,7 +56,7 @@
 	}
 	.voki-cover-section > img {
 		width: 25rem;
-			border-radius: var(--voki-cover-border-radius);
+		border-radius: var(--voki-cover-border-radius);
 		aspect-ratio: var(--voki-cover-aspect-ratio);
 		box-shadow: var(--shadow-xs);
 	}
@@ -59,10 +69,32 @@
 	.buttons-container > * {
 		height: 2rem;
 		width: 100%;
-		background-color: antiquewhite;
+		border-radius: 0.25rem;
+		border: none;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
 	}
 	.buttons-container > * > :global(svg) {
 		height: 2rem;
 		width: 2rem;
+		margin-right: 0.5rem;
+	}
+	.btn-text {
+		font-size: 1.375rem;
+		width: 8.5rem;
+	}
+	.take-voki-btn {
+		background-color: var(--primary);
+		color: var(--primary-foreground);
+	}
+	.add-to-album-btn {
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+	}
+	.manage-voki-btn {
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
 	}
 </style>

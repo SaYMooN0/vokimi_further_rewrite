@@ -30,7 +30,9 @@
   --voki-cover-name-gap: 0.5rem;
   --voki-cover-border-radius: 0.75rem;
 
+
   /* other */
+  --lang-icon-aspect-ratio: 1.4/1;
   --default-fade-in-animation: default-fade-in 0.08s ease-in-out;
 
   background-color: var(--back);

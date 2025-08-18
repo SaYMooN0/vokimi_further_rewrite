@@ -1,4 +1,5 @@
-﻿using UserProfilesService.Domain.app_user_aggregate;
+﻿using Microsoft.EntityFrameworkCore;
+using UserProfilesService.Domain.app_user_aggregate;
 using UserProfilesService.Domain.common.interfaces.repositories;
 
 namespace UserProfilesService.Infrastructure.persistence.repositories;
@@ -11,9 +12,9 @@ public class AppUsersRepository : IAppUsersRepository
         _db = db;
     }
 
-    public Task Add(AppUser user) {
+    public async Task Add(AppUser user) {
         _db.AppUsers.Add(user);
-        return _db.SaveChangesAsync();
+        await _db.SaveChangesAsync();
     }
 
     public async Task<AppUser?> GetById(AppUserId id) =>
@@ -24,4 +25,7 @@ public class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync();
     }
 
+    public Task<AppUser?> GetByIdAsNoTracking(AppUserId userId) => _db.AppUsers
+        .AsNoTracking()
+        .FirstOrDefaultAsync(x => x.Id == userId);
 }
