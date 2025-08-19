@@ -1,4 +1,6 @@
-﻿namespace AuthService.Api.contracts;
+﻿using SharedKernel.common.app_users;
+
+namespace AuthService.Api.contracts;
 
 public class RegisterUserRequest : IRequestWithValidationNeeded
 {

@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.users;
 
-namespace CoreVokiCreationService.Infrastructure.persistence.configurations.value_converters;
+namespace UserProfilesService.Infrastructure.persistence.configurations.value_converters;
 
-public class AppUserProfilePicKeyConverter : ValueConverter<VokiCoverKey, string>
+public class AppUserProfilePicKeyConverter : ValueConverter<UserProfilePicKey, string>
 {
     public AppUserProfilePicKeyConverter() : base(
         id => id.ToString(),
-        value => new VokiCoverKey(value)
+        value => new UserProfilePicKey(value)
     ) { }
 }

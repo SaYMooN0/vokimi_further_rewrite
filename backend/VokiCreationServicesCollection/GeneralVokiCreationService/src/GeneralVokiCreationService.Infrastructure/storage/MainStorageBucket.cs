@@ -4,19 +4,19 @@ using GeneralVokiCreationService.Application;
 using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
 using VokimiStorageKeysLib;
+using VokimiStorageKeysLib.concrete_keys;
 using VokimiStorageKeysLib.general_voki.question_image;
 using VokimiStorageKeysLib.general_voki.result_image;
-using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Infrastructure.storage;
 
-internal class MainStorageBucket : BaseStorageBucket, IMainStorageBucket
+internal class MainStorageBucket : StorageBucketAccessor, IMainStorageBucket
 {
     public MainStorageBucket(
         IAmazonS3 s3Client,
-        MainBucketNameProvider mainBucketNameProvider,
+        S3MainBucket s3MainBucket,
         ILogger<MainStorageBucket> logger
-    ) : base(s3Client, mainBucketNameProvider, logger) { }
+    ) : base(s3Client, s3MainBucket, logger) { }
 
     public async Task<ErrOr<VokiCoverKey>> UploadVokiCover(VokiId vokiId, FileData file) =>
         await UploadWithKeyAsync(

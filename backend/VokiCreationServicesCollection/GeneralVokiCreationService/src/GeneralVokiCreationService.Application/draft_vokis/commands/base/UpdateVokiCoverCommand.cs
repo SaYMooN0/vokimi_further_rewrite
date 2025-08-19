@@ -2,7 +2,7 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 

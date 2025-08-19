@@ -1,6 +1,7 @@
 ﻿using AuthService.Application.abstractions;
 using MailKit.Net.Smtp;
 using MimeKit;
+using SharedKernel.common.app_users;
 
 namespace AuthService.Infrastructure.email_service;
 

@@ -3,6 +3,8 @@ using InfrastructureShared.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UserProfilesService.Domain.app_user_aggregate;
+using UserProfilesService.Infrastructure.persistence.configurations.extensions;
+using UserProfilesService.Infrastructure.persistence.configurations.value_converters;
 using VokimiStorageKeysLib.users;
 
 namespace UserProfilesService.Infrastructure.persistence.configurations.entities_configurations;
@@ -23,7 +25,7 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 
         builder
             .Property(x => x.ProfilePic)
-            .HasConversion<UserProfilePicKey>();
+            .HasConversion<AppUserProfilePicKeyConverter>();
 
         builder.ComplexProperty(x => x.Settings, b => {
             b
@@ -31,6 +33,8 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
                 .HasColumnName("settings_AllowCoAuthorInvites");
         });
 
-        builder.Ignore(x => x.FavouriteTags);
+        builder
+            .Property(x => x.FavouriteTags)
+            .HasTagIdImmutableHashSetHashSetConversion();
     }
 }

@@ -7,19 +7,19 @@ using VokimiStorageKeysLib;
 
 namespace InfrastructureShared.Storage;
 
-public abstract class BaseStorageBucket
+public abstract class StorageBucketAccessor
 {
     private readonly IAmazonS3 _s3Client;
-    private readonly BaseBucketNameProvider _bucketNameProvider;
-    private readonly ILogger<BaseStorageBucket> _logger;
+    private readonly S3MainBucket _s3MainBucket;
+    private readonly ILogger<StorageBucketAccessor> _logger;
 
-    protected BaseStorageBucket(
+    protected StorageBucketAccessor(
         IAmazonS3 s3Client,
-        BaseBucketNameProvider bucketNameProvider,
-        ILogger<BaseStorageBucket> logger
+        S3MainBucket s3MainBucket,
+        ILogger<StorageBucketAccessor> logger
     ) {
         _s3Client = s3Client;
-        _bucketNameProvider = bucketNameProvider;
+        _s3MainBucket = s3MainBucket;
         _logger = logger;
     }
 
@@ -51,7 +51,7 @@ public abstract class BaseStorageBucket
     protected async Task<ErrOrNothing> UploadFileAsync(BaseStorageKey key, Stream content, string contentType) {
         try {
             PutObjectRequest request = new() {
-                BucketName = _bucketNameProvider.BucketName,
+                BucketName = _s3MainBucket.Name,
                 Key = key.ToString(),
                 InputStream = content,
                 ContentType = contentType
@@ -73,7 +73,7 @@ public abstract class BaseStorageBucket
     protected async Task<ErrOr<(Stream Stream, string ContentType)>> GetFileAsync(string key) {
         try {
             GetObjectRequest request = new() {
-                BucketName = _bucketNameProvider.BucketName,
+                BucketName = _s3MainBucket.Name,
                 Key = key
             };
             var response = await _s3Client.GetObjectAsync(request);
@@ -97,7 +97,7 @@ public abstract class BaseStorageBucket
 
         try {
             DeleteObjectRequest request = new() {
-                BucketName = _bucketNameProvider.BucketName,
+                BucketName = _s3MainBucket.Name,
                 Key = keyString
             };
 
@@ -120,9 +120,9 @@ public abstract class BaseStorageBucket
     protected async Task<ErrOrNothing> CopySingleObjectAsync(string source, BaseStorageKey destinationKey) {
         try {
             CopyObjectRequest request = new() {
-                SourceBucket = _bucketNameProvider.BucketName,
+                SourceBucket = _s3MainBucket.Name,
                 SourceKey = source,
-                DestinationBucket = _bucketNameProvider.BucketName,
+                DestinationBucket = _s3MainBucket.Name,
                 DestinationKey = destinationKey.ToString()
             };
 
@@ -147,9 +147,9 @@ public abstract class BaseStorageBucket
         List<string> deletedKeys = [];
 
         var request = new ListObjectsV2Request {
-            BucketName = _bucketNameProvider.BucketName,
+            BucketName = _s3MainBucket.Name,
             Prefix = prefix,
-            Delimiter = "/" 
+            Delimiter = "/"
         };
 
         ListObjectsV2Response response;
@@ -160,7 +160,7 @@ public abstract class BaseStorageBucket
                 if (!usedKeys.Contains(obj.Key)) {
                     try {
                         await _s3Client.DeleteObjectAsync(new DeleteObjectRequest {
-                            BucketName = _bucketNameProvider.BucketName,
+                            BucketName = _s3MainBucket.Name,
                             Key = obj.Key
                         });
                         deletedKeys.Add(obj.Key);
@@ -199,7 +199,7 @@ public abstract class BaseStorageBucket
         List<string> copiedKeys = [];
 
         ListObjectsV2Request request = new() {
-            BucketName = _bucketNameProvider.BucketName,
+            BucketName = _s3MainBucket.Name,
             Prefix = sourcePrefix
         };
 
@@ -212,9 +212,9 @@ public abstract class BaseStorageBucket
                     var destinationKey = destinationPrefix + obj.Key.Substring(sourcePrefix.Length);
 
                     var copyRequest = new CopyObjectRequest {
-                        SourceBucket = _bucketNameProvider.BucketName,
+                        SourceBucket = _s3MainBucket.Name,
                         SourceKey = obj.Key,
-                        DestinationBucket = _bucketNameProvider.BucketName,
+                        DestinationBucket = _s3MainBucket.Name,
                         DestinationKey = destinationKey
                     };
 

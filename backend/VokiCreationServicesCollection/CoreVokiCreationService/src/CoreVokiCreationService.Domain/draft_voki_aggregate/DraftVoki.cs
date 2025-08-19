@@ -2,7 +2,7 @@
 using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.rules;
 using SharedKernel.common.vokis;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace CoreVokiCreationService.Domain.draft_voki_aggregate;
 

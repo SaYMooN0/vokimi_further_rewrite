@@ -1,7 +1,7 @@
 ﻿using SharedKernel.common.vokis;
 using VokisCatalogService.Domain.voki_aggregate;
 
-namespace VokisCatalogService.Api.catalog;
+namespace VokisCatalogService.Api.contracts;
 
 public record class VokiOverviewResponse(
     string Id,

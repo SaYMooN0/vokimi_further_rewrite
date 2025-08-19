@@ -1,5 +1,6 @@
 ﻿using AuthService.Domain.common;
 using SharedKernel.common;
+using SharedKernel.common.app_users;
 
 namespace AuthService.Application.abstractions;
 

@@ -2,7 +2,7 @@
 using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 

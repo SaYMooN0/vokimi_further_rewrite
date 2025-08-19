@@ -2,7 +2,7 @@
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using MassTransit;
 using SharedKernel.integration_events.draft_vokis;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace CoreVokiCreationService.Application.draft_vokis.integration_event_handlers;
 

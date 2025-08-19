@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace SharedKernel.common;
+namespace SharedKernel.common.app_users;
 
 public class AppUserName : ValueObject
 {

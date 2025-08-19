@@ -17,4 +17,5 @@ public static class AppBuilderExtensions
             
         builder.Host.UseSerilog();
     }
+   
 }

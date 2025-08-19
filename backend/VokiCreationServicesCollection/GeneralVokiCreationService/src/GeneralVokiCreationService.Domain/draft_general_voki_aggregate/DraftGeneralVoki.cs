@@ -6,8 +6,8 @@ using SharedKernel;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
+using VokimiStorageKeysLib.concrete_keys;
 using VokimiStorageKeysLib.general_voki.result_image;
-using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 

@@ -1,4 +1,4 @@
-﻿using VokisCatalogService.Api.catalog;
+﻿using VokisCatalogService.Api.contracts;
 using VokisCatalogService.Application.vokis.queries;
 using VokisCatalogService.Domain.voki_aggregate;
 

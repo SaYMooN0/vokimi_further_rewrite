@@ -1,7 +1,7 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
 using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 using VokiTakingServicesLib.Domain.common;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;

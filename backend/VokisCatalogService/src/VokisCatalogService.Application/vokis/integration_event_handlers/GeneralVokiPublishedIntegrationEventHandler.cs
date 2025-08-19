@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using SharedKernel.common.vokis;
 using SharedKernel.integration_events.voki_publishing;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 using VokisCatalogService.Domain.common.interfaces.repositories;
 using VokisCatalogService.Domain.voki_aggregate;
 using VokisCatalogService.Domain.voki_aggregate.voki_types;

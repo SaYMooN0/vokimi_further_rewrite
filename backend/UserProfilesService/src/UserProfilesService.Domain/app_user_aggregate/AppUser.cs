@@ -1,4 +1,5 @@
-﻿using SharedKernel.exceptions;
+﻿using SharedKernel.common.app_users;
+using SharedKernel.exceptions;
 using UserProfilesService.Domain.app_user_aggregate.events;
 using VokimiStorageKeysLib.users;
 

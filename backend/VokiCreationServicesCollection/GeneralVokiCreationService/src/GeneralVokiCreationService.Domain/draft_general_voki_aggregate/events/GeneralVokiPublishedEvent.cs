@@ -2,8 +2,8 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
+using VokimiStorageKeysLib.concrete_keys;
 using VokimiStorageKeysLib.general_voki.result_image;
-using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.events;
 

@@ -18,6 +18,7 @@ using UserProfilesService.Domain.common.interfaces.repositories;
 using UserProfilesService.Infrastructure.persistence;
 using UserProfilesService.Infrastructure.persistence.repositories;
 using UserProfilesService.Infrastructure.storage;
+using S3BucketConf = UserProfilesService.Infrastructure.storage.S3BucketConf;
 
 namespace UserProfilesService.Infrastructure;
 
@@ -148,7 +149,7 @@ public static class DependencyInjection
 
         string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
 
-        services.AddSingleton(new MainBucketNameProvider(mainBucketName));
+        services.AddSingleton(new S3BucketConf(mainBucketName));
         services.AddScoped<IMainStorageBucket, MainStorageBucket>();
 
         return services;

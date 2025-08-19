@@ -1,5 +1,6 @@
 ﻿using AuthService.Domain.common.interfaces;
 using AuthService.Domain.unconfirmed_user_aggregate;
+using SharedKernel.common.app_users;
 
 namespace AuthService.Application.unconfirmed_users.commands;
 

@@ -1,4 +1,4 @@
-﻿using VokimiStorageKeysLib.voki_cover;
+﻿using VokimiStorageKeysLib.concrete_keys;
 using VokisCatalogService.Domain.voki_aggregate.events;
 
 namespace VokisCatalogService.Domain.voki_aggregate.voki_types;

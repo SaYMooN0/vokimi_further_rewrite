@@ -2,7 +2,6 @@
 using InfrastructureShared.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VokimiStorageKeysLib.voki_cover;
 using VokisCatalogService.Domain.voki_aggregate;
 using VokisCatalogService.Infrastructure.persistence.configurations.extensions;
 using VokisCatalogService.Infrastructure.persistence.configurations.value_converters;

@@ -3,85 +3,99 @@ using SharedKernel.errs.utils;
 
 namespace VokimiStorageKeysLib;
 
-public class KeyTemplateParser
+public sealed class KeyTemplateParser
 {
-    private const int MaxStrLength = 60;
-
-    private static readonly Regex PlaceholderRegex = new(@"\{(\w+)(?::(\w+))?\}");
-
     private readonly Regex _regex;
-    private readonly string[] _placeholders;
-    private readonly ImmutableDictionary<string, string> _typesByPlaceholder;
+    private readonly ImmutableDictionary<string, PlaceholderType> _typesByPlaceholder;
     private readonly ImmutableHashSet<string> _allowedExtensions;
 
-    private static readonly Dictionary<string, Func<string, bool>> SupportedPlaceholderTypes = new() {
-        { "id", val => Guid.TryParse(val, out _) },
-        { "str", val => !string.IsNullOrWhiteSpace(val) && val.Length <= MaxStrLength }
-    };
-
     public KeyTemplateParser(string template, ImmutableHashSet<string> allowedExtensions) {
-        List<string> placeholders = [];
-        Dictionary<string, string> typesByPlaceholder = [];
         if (allowedExtensions is null || allowedExtensions.Count == 0) {
             throw new ArgumentException("Allowed extensions must be non-empty");
         }
 
-        _allowedExtensions = allowedExtensions.Select(e => e.TrimStart('.').ToLowerInvariant()).ToImmutableHashSet();
+        _allowedExtensions = allowedExtensions
+            .Select(e => e.TrimStart('.').ToLowerInvariant())
+            .ToImmutableHashSet();
+
+        Dictionary<string, PlaceholderType> typesByPlaceholderName = new(StringComparer.Ordinal);
 
         string pattern = "^" + PlaceholderRegex.Replace(template, match => {
-            var name = match.Groups[1].Value;
-            var type = match.Groups[2].Success ? match.Groups[2].Value : "str";
+            string placeholderName = match.Groups[1].Value;
+            string placeholderType = match.Groups[2].Success ? match.Groups[2].Value : "str";
 
-            placeholders.Add(name);
-            typesByPlaceholder[name] = type;
+            if (!SupportedPlaceholderTypes.TryGetValue(placeholderType, out var typeDef)) {
+                throw new NotSupportedException($"Unsupported placeholder type: {placeholderType}");
+            }
 
-            return $"(?<{name}>{type switch {
-                "id" => @"[0-9a-fA-F\-]{36}",
-                "str" => $@"[^/{{}}]{{1,{MaxStrLength}}}",
-                _ => throw new NotSupportedException($"Unsupported placeholder type: {type}")
-            }})";
+            if (typesByPlaceholderName.ContainsKey(placeholderName)) {
+                throw new NotSupportedException($"Duplicate placeholder '{placeholderName}' is not allowed");
+            }
+
+            typesByPlaceholderName[placeholderName] = typeDef;
+
+            var body = typeDef.BodyRegex.ToString();
+            return $"(?<{placeholderName}>{body})";
         });
 
+        // file extension
         pattern += @"\.(?<ext>\w+)$";
-        pattern += "$";
 
-        _placeholders = placeholders.ToArray();
-        _typesByPlaceholder = typesByPlaceholder.ToImmutableDictionary();
-        _regex = new Regex(pattern, RegexOptions.Compiled);
+        _typesByPlaceholder = typesByPlaceholderName.ToImmutableDictionary();
+        _regex = new Regex(pattern, DefaultRegexOptions);
     }
 
-    public ErrOr<Dictionary<string, string>> TryParse(string value) {
-        Dictionary<string, string> result = [];
+    private const RegexOptions DefaultRegexOptions = RegexOptions.Compiled |
+                                                     RegexOptions.CultureInvariant |
+                                                     RegexOptions.ExplicitCapture;
 
+
+    private static readonly Regex PlaceholderRegex = new(@"<(\w+)(?::(\w+))?>", DefaultRegexOptions);
+
+    private sealed record PlaceholderType(
+        string Name,
+        Regex BodyRegex,
+        Func<string, bool> Validator
+    );
+
+    private const int MaxStrLength = 60;
+
+    private static readonly IReadOnlyDictionary<string, PlaceholderType> SupportedPlaceholderTypes =
+        new Dictionary<string, PlaceholderType>(StringComparer.OrdinalIgnoreCase) {
+            ["id"] = new(Name: "id", new Regex(@"[0-9a-fA-F\-]{36}", DefaultRegexOptions),
+                s => Guid.TryParse(s, out _)
+            ),
+            ["str"] = new(
+                Name: "str", new Regex($@"[^/<>]{{1,{MaxStrLength}}}", DefaultRegexOptions),
+                s => !string.IsNullOrWhiteSpace(s) && s.Length <= MaxStrLength
+            ),
+        };
+
+
+    public ErrOr<Dictionary<string, string>> TryParse(string value) {
         var match = _regex.Match(value);
         if (!match.Success) {
             return ErrFactory.IncorrectFormat("Key does not match expected format", value);
         }
 
-        foreach (var name in _placeholders) {
-            var val = match.Groups[name].Value;
+        Dictionary<string, string> result = new(_typesByPlaceholder.Count, StringComparer.Ordinal);
 
-            if (!_typesByPlaceholder.TryGetValue(name, out var type)) {
-                UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified($"No type found for placeholder: {name}"));
+        foreach (var (name, typeDef) in _typesByPlaceholder) {
+            var placeholderValue = match.Groups[name].Value;
+            if (!typeDef.Validator(placeholderValue)) {
+                return ErrFactory.IncorrectFormat(
+                    $"Invalid value '{placeholderValue}' for placeholder '{name}' of type '{typeDef.Name}'"
+                );
             }
 
-            if (!SupportedPlaceholderTypes.TryGetValue(type, out var validator)) {
-                return ErrFactory.IncorrectFormat($"Unsupported placeholder type: '{type}' in key");
-            }
-
-            if (!validator(val)) {
-                return ErrFactory.IncorrectFormat($"Invalid value '{val}' for placeholder '{name}' of type '{type}'");
-            }
-
-            result[name] = val;
+            result[name] = placeholderValue;
         }
 
-        var ext = match.Groups["ext"].Value.ToLowerInvariant();
-        if (!_allowedExtensions.Contains(ext)) {
+        string ext = match.Groups["ext"].Value.ToLowerInvariant();
+        if (!_allowedExtensions.Contains(ext))
             return ErrFactory.IncorrectFormat(
                 $"Extension '.{ext}' is not allowed", $"Allowed: {string.Join(", ", _allowedExtensions)}"
             );
-        }
 
         return result;
     }

@@ -10,7 +10,7 @@ using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Application;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 

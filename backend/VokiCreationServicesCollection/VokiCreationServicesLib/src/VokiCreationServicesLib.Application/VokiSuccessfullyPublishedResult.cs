@@ -1,6 +1,6 @@
 ﻿using SharedKernel.common.vokis;
 using SharedKernel.domain.ids;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace VokiCreationServicesLib.Application;
 

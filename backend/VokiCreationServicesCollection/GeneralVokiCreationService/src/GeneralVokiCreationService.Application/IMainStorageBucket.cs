@@ -1,7 +1,7 @@
 ﻿using VokimiStorageKeysLib;
+using VokimiStorageKeysLib.concrete_keys;
 using VokimiStorageKeysLib.general_voki.question_image;
 using VokimiStorageKeysLib.general_voki.result_image;
-using VokimiStorageKeysLib.voki_cover;
 
 namespace GeneralVokiCreationService.Application;
 

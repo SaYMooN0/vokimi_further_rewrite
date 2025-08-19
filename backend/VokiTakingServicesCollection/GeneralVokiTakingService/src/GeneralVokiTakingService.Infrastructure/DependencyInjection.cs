@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
+using S3BucketConf = GeneralVokiTakingService.Infrastructure.storage.S3BucketConf;
 
 namespace GeneralVokiTakingService.Infrastructure;
 
@@ -151,7 +152,7 @@ public static class DependencyInjection
         ));
 
         string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
-        services.AddSingleton(new MainBucketNameProvider(mainBucketName));
+        services.AddSingleton(new S3BucketConf(mainBucketName));
 
         services.AddScoped<IMainStorageBucket, MainStorageBucket>();
 

@@ -3,7 +3,7 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using MassTransit;
 using SharedKernel.common.vokis;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
-using VokimiStorageKeysLib.voki_cover;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.integration_event_handlers;
 
