@@ -3,6 +3,7 @@ using GeneralVokiTakingService.Application;
 using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
 using VokimiStorageKeysLib;
+using VokimiStorageKeysLib.base_keys;
 
 namespace GeneralVokiTakingService.Infrastructure.storage;
 
@@ -10,9 +11,9 @@ internal class MainStorageBucket : StorageBucketAccessor, IMainStorageBucket
 {
     public MainStorageBucket(
         IAmazonS3 s3Client,
-        S3MainBucket s3MainBucket,
+        S3MainBucketConf s3MainBucketConf,
         ILogger<MainStorageBucket> logger
-    ) : base(s3Client, s3MainBucket, logger) { }
+    ) : base(s3Client, s3MainBucketConf, logger) { }
 
 
     public async Task<ErrOrNothing> DeleteUnusedVokiKeys(VokiId vokiId, IEnumerable<BaseStorageKey> usedKeys) {

@@ -5,7 +5,6 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UserProfilesService.Domain.app_user_aggregate;
 using UserProfilesService.Infrastructure.persistence.configurations.extensions;
 using UserProfilesService.Infrastructure.persistence.configurations.value_converters;
-using VokimiStorageKeysLib.users;
 
 namespace UserProfilesService.Infrastructure.persistence.configurations.entities_configurations;
 

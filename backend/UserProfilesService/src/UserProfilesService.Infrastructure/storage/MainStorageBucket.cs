@@ -3,7 +3,7 @@ using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
 using UserProfilesService.Application;
 using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.users;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace UserProfilesService.Infrastructure.storage;
 
@@ -11,9 +11,9 @@ internal class MainStorageBucket : StorageBucketAccessor, IMainStorageBucket
 {
     public MainStorageBucket(
         IAmazonS3 s3Client,
-        S3MainBucket s3MainBucket,
+        S3MainBucketConf s3MainBucketConf,
         ILogger<MainStorageBucket> logger
-    ) : base(s3Client, s3MainBucket, logger) { }
+    ) : base(s3Client, s3MainBucketConf, logger) { }
 
 
     public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromDefaults(AppUserId userId) {

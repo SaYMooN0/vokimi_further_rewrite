@@ -10,13 +10,13 @@ using VokimiStorageKeysLib.general_voki.result_image;
 
 namespace GeneralVokiCreationService.Infrastructure.storage;
 
-internal class MainStorageBucket : StorageBucketAccessor, IMainStorageBucket
+internal class MainS3Bucket : S3BucketClientBase, IMainStorageBucket
 {
-    public MainStorageBucket(
+    public MainS3Bucket(
         IAmazonS3 s3Client,
-        S3MainBucket s3MainBucket,
-        ILogger<MainStorageBucket> logger
-    ) : base(s3Client, s3MainBucket, logger) { }
+        S3MainBucketConf s3MainBucketConf,
+        ILogger<MainS3Bucket> logger
+    ) : base(s3Client, s3MainBucketConf, logger) { }
 
     public async Task<ErrOr<VokiCoverKey>> UploadVokiCover(VokiId vokiId, FileData file) =>
         await UploadWithKeyAsync(

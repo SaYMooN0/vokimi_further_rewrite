@@ -10,9 +10,4 @@
       <ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="concrete_keys\general_voki\" />
-      <Folder Include="users\" />
-    </ItemGroup>
-
 </Project>

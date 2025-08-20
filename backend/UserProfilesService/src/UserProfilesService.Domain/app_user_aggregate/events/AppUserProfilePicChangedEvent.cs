@@ -1,4 +1,4 @@
-﻿using VokimiStorageKeysLib.users;
+﻿using VokimiStorageKeysLib.concrete_keys;
 
 namespace UserProfilesService.Domain.app_user_aggregate.events;
 

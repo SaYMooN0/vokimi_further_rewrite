@@ -1,4 +1,5 @@
 ﻿using VokimiStorageKeysLib;
+using VokimiStorageKeysLib.base_keys;
 
 namespace GeneralVokiTakingService.Application;
 

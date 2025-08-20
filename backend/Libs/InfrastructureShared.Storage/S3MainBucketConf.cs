@@ -1,10 +1,10 @@
 ﻿namespace InfrastructureShared.Storage;
 
-public class S3MainBucket
+public sealed class S3MainBucketConf
 {
     public string Name { get; }
 
-    protected S3MainBucket(string name) {
+    protected S3MainBucketConf(string name) {
         Name = name;
     }
 }

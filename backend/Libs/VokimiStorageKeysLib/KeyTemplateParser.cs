@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using SharedKernel.errs.utils;
+using VokimiStorageKeysLib.extension;
 
 namespace VokimiStorageKeysLib;
 
@@ -38,9 +39,6 @@ public sealed class KeyTemplateParser
             return $"(?<{placeholderName}>{body})";
         });
 
-        // file extension
-        pattern += @"\.(?<ext>\w+)$";
-
         _typesByPlaceholder = typesByPlaceholderName.ToImmutableDictionary();
         _regex = new Regex(pattern, DefaultRegexOptions);
     }
@@ -69,6 +67,14 @@ public sealed class KeyTemplateParser
                 Name: "str", new Regex($@"[^/<>]{{1,{MaxStrLength}}}", DefaultRegexOptions),
                 s => !string.IsNullOrWhiteSpace(s) && s.Length <= MaxStrLength
             ),
+            ["imageExt"] = new(
+                Name: "imageExt", ImageFileExtension.ExtPattern,
+                s => ImageFileExtension.Validate(s).IsNothing()
+            ),
+            ["audioExt"] = new(
+                Name: "audioExt", AudioFileExtension.ExtPattern,
+                s => AudioFileExtension.Validate(s).IsNothing()
+            ),
         };
 
 
@@ -90,13 +96,6 @@ public sealed class KeyTemplateParser
 
             result[name] = placeholderValue;
         }
-
-        string ext = match.Groups["ext"].Value.ToLowerInvariant();
-        if (!_allowedExtensions.Contains(ext))
-            return ErrFactory.IncorrectFormat(
-                $"Extension '.{ext}' is not allowed", $"Allowed: {string.Join(", ", _allowedExtensions)}"
-            );
-
         return result;
     }
 }

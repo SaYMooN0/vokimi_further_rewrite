@@ -8,7 +8,8 @@ public class ErrOrNothing
         _err = err;
     }
 
-    public bool IsErr() => _err != null;
+    public bool IsErr() => _err is not null;
+    public bool IsNothing() => _err is null;
 
     public bool IsErr(out Err err) {
         if (_err != null) {

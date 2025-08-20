@@ -8,9 +8,9 @@ public class MainStorageBucket : StorageBucketAccessor
 {
     public MainStorageBucket(
         IAmazonS3 s3Client,
-        S3MainBucket s3MainBucket,
+        S3MainBucketConf s3MainBucketConf,
         ILogger<MainStorageBucket> logger
-    ) : base(s3Client, s3MainBucket, logger) { }
+    ) : base(s3Client, s3MainBucketConf, logger) { }
 
     public new Task<ErrOr<(Stream Stream, string ContentType)>> GetFileAsync(string key) => base.GetFileAsync(key);
 }
