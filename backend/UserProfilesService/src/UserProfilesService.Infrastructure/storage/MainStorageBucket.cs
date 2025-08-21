@@ -1,5 +1,6 @@
 ﻿using Amazon.S3;
 using InfrastructureShared.Storage;
+using InfrastructureShared.Storage.s3;
 using Microsoft.Extensions.Logging;
 using UserProfilesService.Application;
 using VokimiStorageKeysLib;

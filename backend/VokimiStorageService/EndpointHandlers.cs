@@ -1,5 +1,5 @@
 ﻿using ApiShared;
-using VokimiStorageService.buckets;
+using VokimiStorageService.s3_storage.s3;
 
 namespace VokimiStorageService;
 
@@ -7,7 +7,7 @@ internal static class EndpointHandlers
 {
     internal static void MapEndpointHandlers(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup("/");
-        
+
         group
             .DisableAntiforgery()
             .MapGet("/main/{*fileKey}", GetFileFromStorage);
@@ -16,12 +16,12 @@ internal static class EndpointHandlers
     private static async Task<IResult> GetFileFromStorage(
         CancellationToken ct,
         string fileKey,
-        MainStorageBucket bucketAccessor
+        IS3MainBucketClient s3MainBucketClient
     ) {
-        var result = await bucketAccessor.GetFileAsync(fileKey);
-        return CustomResults.FromErrOr(result, (obj) => Results.Stream(
-                stream: obj.Stream,
-                contentType: obj.ContentType,
+        ErrOr<FileData> result = await s3MainBucketClient.GetFile(fileKey, ct);
+        return CustomResults.FromErrOr(result, (file) => Results.Stream(
+                stream: file.Stream,
+                contentType: file.ContentType,
                 fileDownloadName: fileKey
             )
         );

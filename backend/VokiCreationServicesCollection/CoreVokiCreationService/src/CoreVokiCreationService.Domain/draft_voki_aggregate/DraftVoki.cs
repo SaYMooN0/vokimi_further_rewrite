@@ -17,11 +17,14 @@ public class DraftVoki : AggregateRoot<VokiId>
     public ImmutableHashSet<AppUserId> InvitedForCoAuthorUserIds { get; private set; }
     public DateTime CreationDate { get; }
 
-    private DraftVoki(VokiId id, VokiType type, VokiName name, AppUserId primaryAuthorId, DateTime creationDate) {
+    private DraftVoki(
+        VokiId id, VokiType type, VokiName name, VokiCoverKey cover,
+        AppUserId primaryAuthorId, DateTime creationDate
+    ) {
         Id = id;
         Type = type;
         Name = name;
-        Cover = VokiCoverKey.Default;
+        Cover = cover;
         PrimaryAuthorId = primaryAuthorId;
         CreationDate = creationDate;
         CoAuthorIds = [];
@@ -29,7 +32,12 @@ public class DraftVoki : AggregateRoot<VokiId>
     }
 
     public static DraftVoki Create(VokiName name, VokiType type, AppUserId primaryAuthorId, DateTime creationDate) {
-        DraftVoki newVoki = new(VokiId.CreateNew(), type, name, primaryAuthorId, creationDate);
+        VokiId vokiId = VokiId.CreateNew();
+        VokiCoverKey cover = VokiCoverKey.CreateWithId(
+            vokiId, CommonStorageItemKey.DefaultVokiCover.ImageExtension
+        ).AsSuccess();
+
+        DraftVoki newVoki = new(vokiId, type, name, cover, primaryAuthorId, creationDate);
         newVoki.AddDomainEvent(new NewDraftVokiInitializedEvent(
             newVoki.Id,
             newVoki.Type,

@@ -5,11 +5,9 @@ public static class KeyConsts
     public const string VokisFolder = "vokis";
     public const string UserProfilePicsFolder = "user-profile-pics";
 
-    public const string DefaultUserProfilePic = "common/default-user-profile-pic.webp";
-    
-    public const string DefaultVokiCover = $"common/default-voki-cover.{DefaultVokiCoverExtension}";
-    public const string DefaultVokiCoverExtension = "webp";
-    
-    public const string TempFolder = "temp";
+    internal const string CommonFolder = "common";
+    internal const string DefaultUserProfilePic = $"{CommonFolder}/default-user-profile-pic.webp";
+    internal const string DefaultVokiCover = $"{CommonFolder}/default-voki-cover.webp";
 
+    public const string TempFolder = "temp";
 }

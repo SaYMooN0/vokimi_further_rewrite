@@ -65,11 +65,6 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         return ErrOrNothing.Nothing;
     }
 
-    public void SetCoverToDefault() {
-        ErrOrNothing res = UpdateCover(VokiCoverKey.Default);
-        UnexpectedBehaviourException.ThrowIfErr(res);
-    }
-
     public void UpdateDetails(VokiDetails newDetails) {
         this.Details = newDetails;
     }

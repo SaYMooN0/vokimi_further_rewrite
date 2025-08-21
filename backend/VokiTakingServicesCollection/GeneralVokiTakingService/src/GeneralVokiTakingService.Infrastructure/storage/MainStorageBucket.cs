@@ -1,6 +1,7 @@
 ﻿using Amazon.S3;
 using GeneralVokiTakingService.Application;
 using InfrastructureShared.Storage;
+using InfrastructureShared.Storage.s3;
 using Microsoft.Extensions.Logging;
 using VokimiStorageKeysLib;
 using VokimiStorageKeysLib.base_keys;

@@ -151,9 +151,7 @@ public static class DependencyInjection
             new AmazonS3Config { ServiceURL = s3Config.ServiceUrl }
         ));
 
-        string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
-        services.AddSingleton(new S3BucketConf(mainBucketName));
-
+        services.AddSingleton(s3Config.MainBucket); //S3MainBucketConf
         services.AddScoped<IMainStorageBucket, MainStorageBucket>();
 
         return services;

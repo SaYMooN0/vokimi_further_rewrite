@@ -8,9 +8,9 @@ public class TempAudioKey : ITempKey
     public string Value { get; }
 
     public AudioFileExtension Extension { get; }
+    IFileExtension ITempKey.Extension => Extension;
 
-    public TempAudioKey(string value)
-    {
+    public TempAudioKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(
             this, CheckAndExtractExtension(value, out var ext)
         );
@@ -22,8 +22,7 @@ public class TempAudioKey : ITempKey
         $"{KeyConsts.TempFolder}/{Guid.NewGuid()}-{Guid.NewGuid()}.{ext}"
     );
 
-    private ErrOrNothing CheckAndExtractExtension(string value, out AudioFileExtension ext)
-    {
+    private ErrOrNothing CheckAndExtractExtension(string value, out AudioFileExtension ext) {
         ext = default;
 
         if (string.IsNullOrWhiteSpace(value)) {

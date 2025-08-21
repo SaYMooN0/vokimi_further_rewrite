@@ -1,7 +1,5 @@
 ﻿using VokimiStorageKeysLib;
 using VokimiStorageKeysLib.concrete_keys;
-using VokimiStorageKeysLib.general_voki.question_image;
-using VokimiStorageKeysLib.general_voki.result_image;
 
 namespace GeneralVokiCreationService.Application;
 
@@ -9,7 +7,6 @@ public interface IMainStorageBucket
 {
     public Task<ErrOr<VokiCoverKey>> UploadVokiCover(VokiId vokiId, FileData file);
 
-    Task<ErrOrNothing> DeleteVokiCover(VokiCoverKey key);
 
     public Task<ErrOr<GeneralVokiQuestionImageKey>> UploadVokiQuestionImage(
         VokiId vokiId,

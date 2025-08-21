@@ -1,11 +1,8 @@
-﻿using Amazon;
-using Amazon.Runtime;
+﻿using Amazon.Runtime;
 using Amazon.S3;
-using ApiShared;
-using InfrastructureShared.Storage;
-using SharedKernel.auth;
-using VokimiStorageService.buckets;
-using S3BucketConf = VokimiStorageService.buckets.S3BucketConf;
+using InfrastructureShared.Storage.storage_service;
+using VokimiStorageService.s3_storage.s3;
+using VokimiStorageService.s3_storage.storage_service;
 
 namespace VokimiStorageService.extensions;
 
@@ -22,8 +19,8 @@ internal static class BuilderServicesExtensions
             new AmazonS3Config { ServiceURL = s3Config.ServiceUrl }
         ));
 
-        string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
-        services.AddSingleton(new S3BucketConf(mainBucketName));
-        services.AddScoped<MainStorageBucket>();
+        services.AddSingleton(s3Config.MainBucket); //S3MainBucketConf
+        services.AddScoped<IS3MainBucketClient, S3MainBucketClient>();
+        services.AddScoped<IStorageService, StorageService>();
     }
 }

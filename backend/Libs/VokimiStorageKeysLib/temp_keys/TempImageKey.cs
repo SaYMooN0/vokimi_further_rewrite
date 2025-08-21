@@ -9,7 +9,7 @@ public class TempImageKey : ITempKey
 
     public ImageFileExtension Extension { get; }
 
-
+    IFileExtension ITempKey.Extension => Extension;
     public TempImageKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(
             this, CheckAndExtractExtension(value, out var ext)
@@ -18,7 +18,7 @@ public class TempImageKey : ITempKey
         Extension = ext;
     }
 
-    public static TempImageKey CreateWithExtenstion(ImageFileExtension ext) => new(
+    public static TempImageKey CreateWithExtension(ImageFileExtension ext) => new(
         $"{KeyConsts.TempFolder}/{Guid.NewGuid()}-{Guid.NewGuid()}.{ext}"
     );
 

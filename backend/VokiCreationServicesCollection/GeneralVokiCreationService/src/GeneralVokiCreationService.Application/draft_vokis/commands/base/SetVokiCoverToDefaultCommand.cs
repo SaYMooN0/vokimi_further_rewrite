@@ -13,14 +13,27 @@ internal sealed class SetVokiCoverToDefaultCommandHandler :
     ICommandHandler<SetVokiCoverToDefaultCommand, VokiCoverKey>
 {
     private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IMainStorageBucket _mainStorageBucket;
 
-    public SetVokiCoverToDefaultCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
+    public SetVokiCoverToDefaultCommandHandler(
+        IDraftGeneralVokiRepository draftGeneralVokiRepository,
+        IMainStorageBucket mainStorageBucket
+    ) {
         _draftGeneralVokiRepository = draftGeneralVokiRepository;
+        _mainStorageBucket = mainStorageBucket;
     }
 
     public async Task<ErrOr<VokiCoverKey>> Handle(SetVokiCoverToDefaultCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
-        voki.SetCoverToDefault();
+
+        VokiCoverKey defaultVokiCover = VokiCoverKey.CreateWithId(
+            command.VokiId, CommonStorageItemKey.DefaultVokiCover.ImageExtension
+        ).AsSuccess();
+        var copyRes = await _mainStorageBucket.CopyDefaultVokiCoverForNewVoki(defaultVokiCover);
+        if (copyRes.IsErr(out var err)) {
+            return err;
+        }
+        voki.UpdateCover(defaultVokiCover);
         await _draftGeneralVokiRepository.Update(voki);
         return voki.Cover;
     }

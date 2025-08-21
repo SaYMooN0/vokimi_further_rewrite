@@ -40,9 +40,7 @@ public class UserProfilePicKey : BaseStorageImageKey
         return CreateNewForUser(userId, extOrErr.AsSuccess());
     }
 
-    public bool IsForUser(AppUserId userId) {
-        return UserId == userId;
-    }
+    public bool IsForUser(AppUserId userId) => UserId == userId;
 
     private static class Scheme
     {
@@ -61,7 +59,7 @@ public class UserProfilePicKey : BaseStorageImageKey
 
             userId = new AppUserId(new Guid(parts["userId"]));
             ext = ImageFileExtension.Create(parts["ext"]).AsSuccess();
-            
+
             return ErrOrNothing.Nothing;
         }
     }
