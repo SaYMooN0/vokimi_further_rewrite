@@ -1,4 +1,4 @@
-﻿namespace InfrastructureShared.Storage.storage_service;
+﻿namespace VokimiStorageService.s3_storage.storage_service;
 
 public interface IStorageService
 {

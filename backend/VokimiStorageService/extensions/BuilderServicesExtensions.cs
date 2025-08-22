@@ -1,6 +1,5 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
-using InfrastructureShared.Storage.storage_service;
 using VokimiStorageService.s3_storage.s3;
 using VokimiStorageService.s3_storage.storage_service;
 

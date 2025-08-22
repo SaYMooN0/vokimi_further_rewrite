@@ -8,6 +8,7 @@ using GeneralVokiCreationService.Infrastructure.persistence.repositories;
 using GeneralVokiCreationService.Infrastructure.storage;
 using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
+using InfrastructureShared.Storage;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -139,10 +140,8 @@ public static class DependencyInjection
             new AmazonS3Config { ServiceURL = s3Config.ServiceUrl }
         ));
 
-        string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
-        services.AddSingleton(new S3BucketConf(mainBucketName));
-
-        services.AddScoped<IMainStorageBucket, MainS3Bucket>();
+        services.AddSingleton(s3Config.MainBucket); //S3MainBucketConf
+        services.AddScoped<IMainStorageBucket, MainStorageBucket>();
 
         return services;
     }

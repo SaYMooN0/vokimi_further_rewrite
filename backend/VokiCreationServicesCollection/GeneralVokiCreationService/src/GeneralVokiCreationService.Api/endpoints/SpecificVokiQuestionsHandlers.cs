@@ -27,10 +27,6 @@ internal static class SpecificVokiQuestionsHandlers
         // group.MapDelete("/delete", DeleteVokiQuestion);
         // group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
         // group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
-
-
-        group.MapPost("/upload-image", UploadVokiQuestionImage)
-            .DisableAntiforgery();
     }
 
     private static async Task<IResult> GetVokiQuestionFullData(
@@ -104,22 +100,6 @@ internal static class SpecificVokiQuestionsHandlers
         }));
     }
 
-    private static async Task<IResult> UploadVokiQuestionImage(
-        HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<UploadVokiQuestionImageCommand, GeneralVokiQuestionImageKey> handler,
-        [FromForm] IFormFile file
-    ) {
-        VokiId vokiId = httpContext.GetVokiIdFromRoute();
-        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
-
-        UploadVokiQuestionImageCommand command = new(vokiId, questionId,
-            new(file.OpenReadStream(), file.FileName, file.ContentType));
-        var result = await handler.Handle(command, ct);
-
-        return CustomResults.FromErrOr(result, (key) => Results.Json(
-            new { ImageKey = key.ToString() }
-        ));
-    }
     // private static async Task<IResult> MoveQuestionUpInOrder(
     //     CancellationToken ct, HttpContext httpContext,
     //     ICommandHandler<MoveQuestionUpInOrderCommand, ImmutableDictionary<GeneralVokiQuestionId, ushort>> handler

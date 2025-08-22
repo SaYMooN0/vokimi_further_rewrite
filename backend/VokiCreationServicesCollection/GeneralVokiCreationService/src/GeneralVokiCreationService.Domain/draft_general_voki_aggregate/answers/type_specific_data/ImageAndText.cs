@@ -1,4 +1,4 @@
-﻿using VokimiStorageKeysLib.general_voki.answer_image;
+﻿using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 
@@ -16,7 +16,10 @@ public abstract partial class BaseVokiAnswerTypeData
         }
         public override IEnumerable<object> GetEqualityComponents() => [Text, Image];
 
-        public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
-            Image.IsWithIds(vokiId, questionId);
+        public bool IsForCorrectVokiQuestion(
+            VokiId vokiId,
+            GeneralVokiQuestionId questionId,
+            GeneralVokiAnswerId answerId
+        ) => Image.IsWithIds(vokiId, questionId, answerId);
     }
 }

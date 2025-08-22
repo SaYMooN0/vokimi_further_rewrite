@@ -1,5 +1,5 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
-using VokimiStorageKeysLib.general_voki.result_image;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 

@@ -1,5 +1,4 @@
-﻿using InfrastructureShared.Storage.images_compression;
-using InfrastructureShared.Storage.storage_service;
+﻿using VokimiStorageService.s3_storage.images_compression;
 using VokimiStorageService.s3_storage.s3;
 
 namespace VokimiStorageService.s3_storage.storage_service;

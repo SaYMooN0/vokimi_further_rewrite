@@ -76,6 +76,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     }
 
     public ErrOr<VokiQuestionAnswer> AddNewAnswer(
+        GeneralVokiAnswerId id,
         BaseVokiAnswerTypeData answerData,
         ImmutableHashSet<GeneralVokiResultId> relatedResultIds
     ) {

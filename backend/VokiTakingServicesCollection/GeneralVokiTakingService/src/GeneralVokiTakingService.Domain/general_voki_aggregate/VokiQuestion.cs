@@ -1,5 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
-using VokimiStorageKeysLib.general_voki.question_image;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 

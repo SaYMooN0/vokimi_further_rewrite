@@ -13,12 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
 using UserProfilesService.Application;
-using UserProfilesService.Application.app_users;
 using UserProfilesService.Domain.common.interfaces.repositories;
 using UserProfilesService.Infrastructure.persistence;
 using UserProfilesService.Infrastructure.persistence.repositories;
 using UserProfilesService.Infrastructure.storage;
-using S3BucketConf = UserProfilesService.Infrastructure.storage.S3BucketConf;
 
 namespace UserProfilesService.Infrastructure;
 
@@ -147,9 +145,7 @@ public static class DependencyInjection
             new AmazonS3Config { ServiceURL = s3Config.ServiceUrl }
         ));
 
-        string mainBucketName = s3Config.BucketNames["Main"] ?? throw new Exception("Main bucket is not set");
-
-        services.AddSingleton(new S3BucketConf(mainBucketName));
+        services.AddSingleton(s3Config.MainBucket); //S3MainBucketConf
         services.AddScoped<IMainStorageBucket, MainStorageBucket>();
 
         return services;

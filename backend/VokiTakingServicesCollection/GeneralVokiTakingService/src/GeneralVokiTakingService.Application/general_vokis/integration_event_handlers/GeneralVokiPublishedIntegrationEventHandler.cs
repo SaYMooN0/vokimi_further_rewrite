@@ -6,10 +6,8 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using MassTransit;
 using SharedKernel.common.vokis;
 using SharedKernel.integration_events.voki_publishing;
-using VokimiStorageKeysLib.general_voki.answer_audio;
-using VokimiStorageKeysLib.general_voki.answer_image;
-using VokimiStorageKeysLib.general_voki.question_image;
-using VokimiStorageKeysLib.general_voki.result_image;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
+using static SharedKernel.integration_events.voki_publishing.GeneralVokiAnswerTypeDataIntegrationEventDto;
 
 namespace GeneralVokiTakingService.Application.general_vokis.integration_event_handlers;
 
@@ -60,37 +58,27 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
         GeneralVokiAnswerType type, Dictionary<string, string> f
     ) => type.Match(
         textOnly: () => GeneralVokiAnswerText
-            .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Text])
+            .Create(f[Keys.Text])
             .Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.TextOnly(text)),
-        //
-        imageOnly: () => GeneralVokiAnswerImageKey
-            .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Image])
-            .Bind<BaseVokiAnswerTypeData>(image => new BaseVokiAnswerTypeData.ImageOnly(image)),
-        //
+        imageOnly: () => new BaseVokiAnswerTypeData.ImageOnly(new(f[Keys.Image])),
         imageAndText: () => GeneralVokiAnswerText
-            .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Text])
-            .Bind(text => GeneralVokiAnswerImageKey
-                .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Image])
-                .Bind<BaseVokiAnswerTypeData>(image => new BaseVokiAnswerTypeData.ImageAndText(text, image))),
-        //
+            .Create(f[Keys.Text])
+            .Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.ImageAndText(
+                text, new GeneralVokiAnswerImageKey(f[Keys.Image])
+            )),
         colorOnly: () => HexColor
-            .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Color])
+            .Create(f[Keys.Color])
             .Bind<BaseVokiAnswerTypeData>(color => new BaseVokiAnswerTypeData.ColorOnly(color)),
-        //
         colorAndText: () => GeneralVokiAnswerText
-            .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Text])
-            .Bind(text => HexColor.Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Color])
-                .Bind<BaseVokiAnswerTypeData>(color => new BaseVokiAnswerTypeData.ColorAndText(text, color))),
-        //
-        audioOnly: () => GeneralVokiAnswerAudioKey
-            .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Audio])
-            .Bind<BaseVokiAnswerTypeData>(audio => new BaseVokiAnswerTypeData.AudioOnly(audio)),
-        //
+            .Create(f[Keys.Text])
+            .Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.ColorAndText(
+                text, new HexColor(f[Keys.Color])
+            )),
+        audioOnly: () => new BaseVokiAnswerTypeData.AudioOnly(new(f[Keys.Audio])),
         audioAndText: () => GeneralVokiAnswerText
-            .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Text])
-            .Bind(text => GeneralVokiAnswerAudioKey
-                .Create(f[GeneralVokiAnswerTypeDataIntegrationEventDto.Keys.Audio])
-                .Bind<BaseVokiAnswerTypeData>(audio => new BaseVokiAnswerTypeData.AudioAndText(text, audio)))
-        //
+            .Create(f[Keys.Text])
+            .Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.AudioAndText(
+                text, new GeneralVokiAnswerAudioKey(f[Keys.Audio])
+            ))
     ).AsSuccess();
 }

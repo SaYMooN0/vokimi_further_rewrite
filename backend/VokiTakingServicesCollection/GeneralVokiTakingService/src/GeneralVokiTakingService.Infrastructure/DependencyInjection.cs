@@ -1,14 +1,9 @@
-﻿using Amazon.Runtime;
-using Amazon.S3;
-using ApplicationShared;
-using GeneralVokiTakingService.Application;
+﻿using ApplicationShared;
 using GeneralVokiTakingService.Domain.common.interfaces.repositories;
 using GeneralVokiTakingService.Infrastructure.persistence;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories;
-using GeneralVokiTakingService.Infrastructure.storage;
 using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
-using InfrastructureShared.Storage;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
-using S3BucketConf = GeneralVokiTakingService.Infrastructure.storage.S3BucketConf;
 
 namespace GeneralVokiTakingService.Infrastructure;
 
@@ -33,8 +27,7 @@ public static class DependencyInjection
             .AddPersistence(configuration, env)
             .AddAuth(configuration)
             .AddConfiguredMassTransit(configuration)
-            .AddIntegrationEventsPublisher()
-            .AddS3(configuration);
+            .AddIntegrationEventsPublisher();
     }
 
     private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
@@ -137,22 +130,6 @@ public static class DependencyInjection
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IGeneralVokisRepository, GeneralVokisRepository>();
         services.AddScoped<IGeneralVokiTakenRecordsRepository, GeneralVokiTakenRecordsRepository>();
-
-        return services;
-    }
-    private static IServiceCollection AddS3(this IServiceCollection services, IConfiguration configuration) {
-        var s3Config = configuration.GetSection("S3").Get<S3Config>();
-        if (s3Config is null) {
-            throw new Exception("S3 is not configured");
-        }
-
-        services.AddSingleton<IAmazonS3>(_ => new AmazonS3Client(
-            new BasicAWSCredentials(s3Config.AccessKey, s3Config.SecretKey),
-            new AmazonS3Config { ServiceURL = s3Config.ServiceUrl }
-        ));
-
-        services.AddSingleton(s3Config.MainBucket); //S3MainBucketConf
-        services.AddScoped<IMainStorageBucket, MainStorageBucket>();
 
         return services;
     }

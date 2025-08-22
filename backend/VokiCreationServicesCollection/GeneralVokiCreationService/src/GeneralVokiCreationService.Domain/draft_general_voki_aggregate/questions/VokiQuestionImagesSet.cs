@@ -1,5 +1,5 @@
 ﻿using SharedKernel.exceptions;
-using VokimiStorageKeysLib.general_voki.question_image;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 

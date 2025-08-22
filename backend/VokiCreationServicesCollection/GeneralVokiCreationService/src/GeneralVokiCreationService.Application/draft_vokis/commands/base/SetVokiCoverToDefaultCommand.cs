@@ -29,10 +29,11 @@ internal sealed class SetVokiCoverToDefaultCommandHandler :
         VokiCoverKey defaultVokiCover = VokiCoverKey.CreateWithId(
             command.VokiId, CommonStorageItemKey.DefaultVokiCover.ImageExtension
         ).AsSuccess();
-        var copyRes = await _mainStorageBucket.CopyDefaultVokiCoverForNewVoki(defaultVokiCover);
+        var copyRes = await _mainStorageBucket.CopyDefaultVokiCoverForVoki(defaultVokiCover);
         if (copyRes.IsErr(out var err)) {
             return err;
         }
+
         voki.UpdateCover(defaultVokiCover);
         await _draftGeneralVokiRepository.Update(voki);
         return voki.Cover;

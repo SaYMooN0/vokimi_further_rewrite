@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VokimiStorageKeysLib.general_voki.question_image;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
 

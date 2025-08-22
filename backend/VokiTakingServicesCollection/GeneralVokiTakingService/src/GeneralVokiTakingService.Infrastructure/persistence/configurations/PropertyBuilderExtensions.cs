@@ -1,6 +1,6 @@
 ﻿using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VokimiStorageKeysLib.general_voki.question_image;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.configurations;
 

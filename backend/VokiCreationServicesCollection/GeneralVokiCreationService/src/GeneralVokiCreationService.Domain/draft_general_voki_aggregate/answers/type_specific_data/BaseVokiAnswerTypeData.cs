@@ -25,5 +25,9 @@ public abstract partial class BaseVokiAnswerTypeData : ValueObject
 
 public interface IVokiAnswerTypeDataWithStorageKey
 {
-    public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId);
+    public bool IsForCorrectVokiQuestion(
+        VokiId vokiId,
+        GeneralVokiQuestionId questionId,
+        GeneralVokiAnswerId answerId
+    );
 }

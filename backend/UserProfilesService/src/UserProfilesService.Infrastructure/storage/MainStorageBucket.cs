@@ -1,14 +1,12 @@
 ﻿using Amazon.S3;
 using InfrastructureShared.Storage;
-using InfrastructureShared.Storage.s3;
 using Microsoft.Extensions.Logging;
 using UserProfilesService.Application;
-using VokimiStorageKeysLib;
 using VokimiStorageKeysLib.concrete_keys;
 
 namespace UserProfilesService.Infrastructure.storage;
 
-internal class MainStorageBucket : StorageBucketAccessor, IMainStorageBucket
+internal class MainStorageBucket : BaseMainS3Bucket, IMainStorageBucket
 {
     public MainStorageBucket(
         IAmazonS3 s3Client,
@@ -18,11 +16,12 @@ internal class MainStorageBucket : StorageBucketAccessor, IMainStorageBucket
 
 
     public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromDefaults(AppUserId userId) {
-        var newKey = UserProfilePicKey.CreateNewForUser(userId, "webp").AsSuccess();
+        var newKey = UserProfilePicKey.CreateNewForUser(userId, CommonStorageItemKey.DefaultProfilePic.ImageExtension)
+            .AsSuccess();
 
-        ErrOrNothing res = await CopySingleObjectAsync(
-            source: KeyConsts.DefaultUserProfilePic,
-            destinationKey: newKey
+        ErrOrNothing res = await CopyStandardToStandard(
+            source: CommonStorageItemKey.DefaultProfilePic,
+            destination: newKey
         );
         if (res.IsErr(out var err)) {
             return err;

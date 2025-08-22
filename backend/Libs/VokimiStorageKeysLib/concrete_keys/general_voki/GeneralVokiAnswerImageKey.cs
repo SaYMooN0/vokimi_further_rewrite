@@ -42,21 +42,6 @@ public class GeneralVokiAnswerImageKey : BaseStorageImageKey
         return new GeneralVokiAnswerImageKey(key);
     }
 
-    public static ErrOr<GeneralVokiAnswerImageKey> Create(
-        VokiId vokiId,
-        GeneralVokiQuestionId questionId,
-        GeneralVokiAnswerId answerId,
-        string extension
-    )
-    {
-        var extOrErr = ImageFileExtension.Create(extension);
-        if (extOrErr.IsErr(out var err))
-        {
-            return err;
-        }
-
-        return Create(vokiId, questionId, answerId, extOrErr.AsSuccess());
-    }
 
     public bool IsWithIds(
         VokiId expectedVokiId,

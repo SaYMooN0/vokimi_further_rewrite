@@ -4,7 +4,6 @@ using GeneralVokiCreationService.Application.draft_vokis.commands.results;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
  using Microsoft.AspNetCore.Mvc;
- using VokimiStorageKeysLib.general_voki.result_image;
 
  namespace GeneralVokiCreationService.Api.endpoints;
 

@@ -5,9 +5,9 @@ namespace GeneralVokiCreationService.Application;
 
 public interface IMainStorageBucket
 {
+    Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(VokiCoverKey defaultVokiCover);
+
     public Task<ErrOr<VokiCoverKey>> UploadVokiCover(VokiId vokiId, FileData file);
-
-
     public Task<ErrOr<GeneralVokiQuestionImageKey>> UploadVokiQuestionImage(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
@@ -31,4 +31,5 @@ public interface IMainStorageBucket
         GeneralVokiResultId resultId,
         FileData file
     );
+
 }

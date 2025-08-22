@@ -1,6 +1,5 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using VokimiStorageKeysLib.general_voki.result_image;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters.results;
 

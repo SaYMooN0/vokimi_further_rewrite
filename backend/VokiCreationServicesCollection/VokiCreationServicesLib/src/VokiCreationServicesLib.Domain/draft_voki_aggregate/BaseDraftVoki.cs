@@ -1,5 +1,4 @@
 ﻿using SharedKernel.common.vokis;
-using SharedKernel.exceptions;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.concrete_keys;
@@ -83,17 +82,6 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
                 )
             ];
         }
-
-        if (this.Cover.IsDefault()) {
-            return [
-                VokiPublishingIssue.Warning(
-                    message: "You are using the default cover",
-                    source: "Cover",
-                    fixRecommendation: "Consider selecting a custom cover that better represents your Voki"
-                )
-            ];
-        }
-
         return [];
     }
 

@@ -1,4 +1,4 @@
-﻿using VokimiStorageKeysLib.general_voki.result_image;
+﻿using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 

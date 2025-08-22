@@ -3,7 +3,7 @@ using SixLabors.ImageSharp.Formats;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using SixLabors.ImageSharp.Formats.Webp;
 
-namespace InfrastructureShared.Storage.images_compression;
+namespace VokimiStorageService.s3_storage.images_compression;
 
 internal sealed class ImageFileCompressor : IImageFileCompressor
 {

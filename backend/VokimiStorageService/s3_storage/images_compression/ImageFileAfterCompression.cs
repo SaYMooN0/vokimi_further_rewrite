@@ -1,4 +1,4 @@
-﻿namespace InfrastructureShared.Storage.images_compression;
+﻿namespace VokimiStorageService.s3_storage.images_compression;
 
 public sealed record ImageFileAfterCompression(
     Stream Stream,

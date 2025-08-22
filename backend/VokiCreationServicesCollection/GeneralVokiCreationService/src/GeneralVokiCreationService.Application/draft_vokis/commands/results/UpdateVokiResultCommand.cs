@@ -2,7 +2,7 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
-using VokimiStorageKeysLib.general_voki.result_image;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.results;
 
