@@ -2,18 +2,13 @@
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 
-public abstract partial class BaseVokiAnswerTypeData
+public abstract partial record BaseVokiAnswerTypeData
 {
-    public sealed class ImageOnly : BaseVokiAnswerTypeData, IVokiAnswerTypeDataWithStorageKey
+    public sealed record ImageOnly(
+        GeneralVokiAnswerImageKey Image
+    ) : BaseVokiAnswerTypeData, IVokiAnswerTypeDataWithStorageKey
     {
-        public GeneralVokiAnswerImageKey Image { get; }
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.ImageOnly;
-
-        public ImageOnly(GeneralVokiAnswerImageKey image) {
-            Image = image;
-        }
-
-        public override IEnumerable<object> GetEqualityComponents() => [Image];
 
         public bool IsForCorrectVokiQuestion(
             VokiId vokiId,

@@ -1,5 +1,4 @@
-﻿using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.base_keys;
+﻿using VokimiStorageKeysLib.base_keys;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate.events;
 

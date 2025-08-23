@@ -76,7 +76,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     }
 
     public ErrOr<VokiQuestionAnswer> AddNewAnswer(
-        GeneralVokiAnswerId id,
+        GeneralVokiAnswerId answerId,
         BaseVokiAnswerTypeData answerData,
         ImmutableHashSet<GeneralVokiResultId> relatedResultIds
     ) {
@@ -95,7 +95,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         }
 
         var creationRes = VokiQuestionAnswer.CreateNew(
-            answerData, (ushort)_answers.Count, relatedResultIds
+            answerId, answerData, (ushort)_answers.Count, relatedResultIds
         );
 
         if (creationRes.IsErr(out var err)) {

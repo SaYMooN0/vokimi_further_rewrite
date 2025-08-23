@@ -2,6 +2,7 @@
 using VokimiStorageKeysLib.extension;
 
 namespace VokimiStorageKeysLib.concrete_keys.general_voki;
+
 public class GeneralVokiQuestionImageKey : BaseStorageImageKey
 {
     protected override string Value { get; }
@@ -9,8 +10,7 @@ public class GeneralVokiQuestionImageKey : BaseStorageImageKey
     public GeneralVokiQuestionId QuestionId { get; }
     public override ImageFileExtension ImageExtension { get; }
 
-    public GeneralVokiQuestionImageKey(string value)
-    {
+    public GeneralVokiQuestionImageKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(
             this,
             Scheme.IsKeyValid(value, out var vokiId, out var questionId, out var ext)
@@ -21,39 +21,11 @@ public class GeneralVokiQuestionImageKey : BaseStorageImageKey
         ImageExtension = ext;
         Value = value;
     }
+    public static GeneralVokiQuestionImageKey CreateForQuestion(
+        VokiId vokiId, GeneralVokiQuestionId questionId, ImageFileExtension extension
+    ) => new($"{KeyConsts.VokisFolder}/{vokiId}/questions/{questionId}/images/{Guid.NewGuid()}.{extension.Value}");
 
-
-    public static ErrOr<GeneralVokiQuestionImageKey> Create(
-        VokiId vokiId,
-        GeneralVokiQuestionId questionId,
-        ImageFileExtension extension
-    )
-    {
-        var key = $"{KeyConsts.VokisFolder}/{vokiId}/questions/{questionId}/images/{Guid.NewGuid()}.{extension.Value}";
-        var validate = Scheme.IsKeyValid(key, out _, out _, out _);
-        if (validate.IsErr(out var err))
-        {
-            return err;
-        }
-
-        return new GeneralVokiQuestionImageKey(key);
-    }
-
-    public static ErrOr<GeneralVokiQuestionImageKey> Create(
-        VokiId vokiId,
-        GeneralVokiQuestionId questionId,
-        string extension
-    )
-    {
-        var extOrErr = ImageFileExtension.Create(extension);
-        if (extOrErr.IsErr(out var err))
-        {
-            return err;
-        }
-        return Create(vokiId, questionId, extOrErr.AsSuccess());
-    }
-
-    public bool IsWithIds(VokiId expectedVokiId, GeneralVokiQuestionId expectedQuestionId)=>
+    public bool IsWithIds(VokiId expectedVokiId, GeneralVokiQuestionId expectedQuestionId) =>
         VokiId == expectedVokiId && QuestionId == expectedQuestionId;
 
     private static class Scheme
@@ -68,11 +40,9 @@ public class GeneralVokiQuestionImageKey : BaseStorageImageKey
             out VokiId vokiId,
             out GeneralVokiQuestionId questionId,
             out ImageFileExtension ext
-        )
-        {
+        ) {
             var parseResult = Parser.TryParse(key);
-            if (parseResult.IsErr(out var err))
-            {
+            if (parseResult.IsErr(out var err)) {
                 vokiId = default!;
                 questionId = default!;
                 ext = default;

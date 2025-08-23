@@ -3,9 +3,10 @@ using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.results;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
- using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
 
- namespace GeneralVokiCreationService.Api.endpoints;
+namespace GeneralVokiCreationService.Api.endpoints;
 
 internal static class SpecificVokiResultsHandlers
 {
@@ -17,8 +18,6 @@ internal static class SpecificVokiResultsHandlers
         group.MapGet("/", GetVokiResult);
         group.MapPut("/update", UpdateVokiResult)
             .WithRequestValidation<UpdateVokiResultRequest>();
-        group.MapPost("/upload-image", UploadResultImage)
-            .DisableAntiforgery();
 
         group.MapDelete("/delete", DeleteVokiResult);
     }
@@ -46,8 +45,8 @@ internal static class SpecificVokiResultsHandlers
         GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
         var request = httpContext.GetValidatedRequest<UpdateVokiResultRequest>();
 
-        UpdateVokiResultCommand command = new(id, resultId,
-            request.ParsedName, request.ParsedText, request.ParsedImage
+        UpdateVokiResultCommand command = new(
+            id, resultId,request.ParsedName, request.ParsedText, request.ParsedImageKey
         );
         var result = await handler.Handle(command, ct);
 
@@ -56,22 +55,6 @@ internal static class SpecificVokiResultsHandlers
         );
     }
 
-    private static async Task<IResult> UploadResultImage(
-        CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<UploadResultImageCommand, GeneralVokiResultImageKey> handler,
-        [FromForm] IFormFile file
-    ) {
-        VokiId vokiId = httpContext.GetVokiIdFromRoute();
-        GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
-
-        UploadResultImageCommand command = new(vokiId, resultId,
-            new(file.OpenReadStream(), file.FileName, file.ContentType));
-        var result = await handler.Handle(command, ct);
-
-        return CustomResults.FromErrOr(result, (img) => Results.Json(
-            new { ImageKey = img.ToString() }
-        ));
-    }
     private static async Task<IResult> DeleteVokiResult(
         CancellationToken ct, HttpContext httpContext,
         ICommandHandler<DeleteVokiResultCommand> handler

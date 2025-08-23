@@ -21,20 +21,9 @@ public class GeneralVokiResultImageKey : BaseStorageImageKey
         ImageExtension = ext;
         Value = value;
     }
-
-
-    public static ErrOr<GeneralVokiResultImageKey> Create(
+    public static GeneralVokiResultImageKey CreateForResult(
         VokiId vokiId, GeneralVokiResultId resultId, ImageFileExtension extension
-    ) {
-        var key = $"{KeyConsts.VokisFolder}/{vokiId}/results/{resultId}.{extension}";
-        var validate = Scheme.IsKeyValid(key, out _, out _, out _);
-        if (validate.IsErr(out var err)) {
-            return err;
-        }
-
-        return new GeneralVokiResultImageKey(key);
-    }
-
+    ) => new($"{KeyConsts.VokisFolder}/{vokiId}/results/{resultId}.{extension}");
     public bool IsWithIds(VokiId expectedVokiId, GeneralVokiResultId expectedResultId) =>
         VokiId == expectedVokiId && ResultId == expectedResultId;
 

@@ -5,8 +5,6 @@ using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
-using Microsoft.AspNetCore.Mvc;
-using VokimiStorageKeysLib.general_voki.question_image;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -72,7 +70,7 @@ internal static class SpecificVokiQuestionsHandlers
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
         var request = httpContext.GetValidatedRequest<UpdateQuestionImagesRequest>();
 
-        UpdateQuestionImagesCommand command = new(id, questionId, request.ParsedImagesSet);
+        UpdateQuestionImagesCommand command = new(id, questionId, request.ParsedTempKeys);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (imgsSet) => Results.Json(new {

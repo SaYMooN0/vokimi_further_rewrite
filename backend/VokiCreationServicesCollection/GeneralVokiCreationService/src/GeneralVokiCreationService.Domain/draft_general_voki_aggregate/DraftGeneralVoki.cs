@@ -279,7 +279,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         if (
-            CheckIfAnswerDataBelongs(questionId, newAnswerTypeData).IsErr(out var err)
+            CheckIfAnswerDataBelongs(questionId, answerId, newAnswerTypeData).IsErr(out var err)
             || CheckIfResultsExist(newRelatedResultIds).IsErr(out err)
         ) {
             return err;

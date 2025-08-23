@@ -25,39 +25,13 @@ public class GeneralVokiAnswerAudioKey : BaseStorageAudioKey
         Value = value;
     }
 
-    public static ErrOr<GeneralVokiAnswerAudioKey> Create(
-        VokiId vokiId,
-        GeneralVokiQuestionId questionId,
-        GeneralVokiAnswerId answerId,
-        AudioFileExtension extension
-    )
-    {
-        var key = $"{KeyConsts.VokisFolder}/{vokiId}/questions/{questionId}/answers/{answerId}.{extension.Value}";
-        var validate = Scheme.IsKeyValid(key, out _, out _, out _, out _);
-        if (validate.IsErr(out var err))
-        {
+    public static ErrOr<GeneralVokiAnswerAudioKey> FromString(string value) {
+        if (Scheme.IsKeyValid(value, out _, out _, out _, out _).IsErr(out var err)) {
             return err;
         }
 
-        return new GeneralVokiAnswerAudioKey(key);
+        return new GeneralVokiAnswerAudioKey(value);
     }
-
-    public static ErrOr<GeneralVokiAnswerAudioKey> Create(
-        VokiId vokiId,
-        GeneralVokiQuestionId questionId,
-        GeneralVokiAnswerId answerId,
-        string extension
-    )
-    {
-        var extOrErr = AudioFileExtension.Create(extension);
-        if (extOrErr.IsErr(out var err))
-        {
-            return err;
-        }
-
-        return Create(vokiId, questionId, answerId, extOrErr.AsSuccess());
-    }
-
     public bool IsWithIds(
         VokiId expectedVokiId,
         GeneralVokiQuestionId expectedQuestionId,
@@ -104,4 +78,6 @@ public class GeneralVokiAnswerAudioKey : BaseStorageAudioKey
             return ErrOrNothing.Nothing;
         }
     }
+
+   
 }

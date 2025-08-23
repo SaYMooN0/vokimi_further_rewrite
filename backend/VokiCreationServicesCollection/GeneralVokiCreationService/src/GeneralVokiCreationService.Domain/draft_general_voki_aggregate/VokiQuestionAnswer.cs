@@ -11,6 +11,7 @@ public class VokiQuestionAnswer : Entity<GeneralVokiAnswerId>
     public ImmutableHashSet<GeneralVokiResultId> RelatedResultIds { get; private set; }
 
     public static ErrOr<VokiQuestionAnswer> CreateNew(
+        GeneralVokiAnswerId answerId,
         BaseVokiAnswerTypeData typeData,
         ushort orderInQuestion,
         ImmutableHashSet<GeneralVokiResultId> relatedResultIds
@@ -20,7 +21,7 @@ public class VokiQuestionAnswer : Entity<GeneralVokiAnswerId>
         }
 
         return new VokiQuestionAnswer() {
-            Id = GeneralVokiAnswerId.CreateNew(),
+            Id = answerId,
             OrderInQuestion = orderInQuestion,
             TypeData = typeData,
             RelatedResultIds = relatedResultIds

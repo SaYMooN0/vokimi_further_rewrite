@@ -7,10 +7,10 @@ public class VokiQuestionImagesSet : ValueObject
 
 {
     public const int MaxImagesForQuestionCount = 5;
-    public  ImmutableArray<GeneralVokiQuestionImageKey> Keys { get; }
+    public ImmutableArray<GeneralVokiQuestionImageKey> Keys { get; }
 
     private VokiQuestionImagesSet(ImmutableArray<GeneralVokiQuestionImageKey> keys) {
-        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(keys));
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(keys.Length));
         this.Keys = keys;
     }
 
@@ -19,12 +19,12 @@ public class VokiQuestionImagesSet : ValueObject
     public override IEnumerable<object> GetEqualityComponents() => Keys;
 
     public static ErrOr<VokiQuestionImagesSet> Create(ImmutableArray<GeneralVokiQuestionImageKey> keys) =>
-        CheckForErr(keys).IsErr(out var err) ? err : new VokiQuestionImagesSet(keys);
+        CheckForErr(keys.Length).IsErr(out var err) ? err : new VokiQuestionImagesSet(keys);
 
-    public static ErrOrNothing CheckForErr(ImmutableArray<GeneralVokiQuestionImageKey> keys) =>
-        keys.Length > MaxImagesForQuestionCount
+    public static ErrOrNothing CheckForErr(int count) =>
+        count > MaxImagesForQuestionCount
             ? ErrFactory.LimitExceeded(
                 $"A question can have at most {MaxImagesForQuestionCount} images",
-                $"Current count is {keys.Length}")
+                $"Current count is {count}")
             : ErrOrNothing.Nothing;
 }

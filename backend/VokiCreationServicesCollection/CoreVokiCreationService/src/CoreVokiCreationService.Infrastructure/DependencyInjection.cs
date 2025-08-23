@@ -1,9 +1,14 @@
-﻿using ApplicationShared;
+﻿using Amazon.Runtime;
+using Amazon.S3;
+using ApplicationShared;
+using CoreVokiCreationService.Application;
 using CoreVokiCreationService.Domain.common.interfaces.repositories;
 using CoreVokiCreationService.Infrastructure.persistence;
 using CoreVokiCreationService.Infrastructure.persistence.repositories;
+using CoreVokiCreationService.Infrastructure.storage;
 using InfrastructureShared.auth;
 using InfrastructureShared.domain_events_publisher;
+using InfrastructureShared.Storage;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +32,8 @@ public static class DependencyInjection
             .AddPersistence(configuration, env)
             .AddAuth(configuration)
             .AddConfiguredMassTransit(configuration)
-            .AddIntegrationEventsPublisher();
+            .AddIntegrationEventsPublisher()
+            .AddS3(configuration);
     }
 
     private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
@@ -128,6 +134,23 @@ public static class DependencyInjection
         );
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IDraftVokiRepository, DraftVokiRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddS3(this IServiceCollection services, IConfiguration configuration) {
+        var s3Config = configuration.GetSection("S3").Get<S3Config>();
+        if (s3Config is null) {
+            throw new Exception("S3 is not configured");
+        }
+
+        services.AddSingleton<IAmazonS3>(_ => new AmazonS3Client(
+            new BasicAWSCredentials(s3Config.AccessKey, s3Config.SecretKey),
+            new AmazonS3Config { ServiceURL = s3Config.ServiceUrl }
+        ));
+
+        services.AddSingleton(s3Config.MainBucket); //S3MainBucketConf
+        services.AddScoped<IMainStorageBucket, MainStorageBucket>();
 
         return services;
     }

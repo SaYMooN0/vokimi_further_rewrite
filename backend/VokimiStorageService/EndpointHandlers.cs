@@ -1,5 +1,9 @@
 ﻿using ApiShared;
+using ApiShared.extensions;
+using Microsoft.AspNetCore.Mvc;
+using SharedKernel.domain.ids;
 using VokimiStorageService.s3_storage.s3;
+using VokimiStorageService.s3_storage.storage_service;
 
 namespace VokimiStorageService;
 
@@ -8,9 +12,11 @@ internal static class EndpointHandlers
     internal static void MapEndpointHandlers(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup("/");
 
-        group
+        group.MapGet("/main/{*fileKey}", GetFileFromStorage)
+            .DisableAntiforgery();
+        group.MapPut("/upload-temp-image", UploadTempImage)
             .DisableAntiforgery()
-            .MapGet("/main/{*fileKey}", GetFileFromStorage);
+            .RequireAuthorization();
     }
 
     private static async Task<IResult> GetFileFromStorage(
@@ -25,5 +31,18 @@ internal static class EndpointHandlers
                 fileDownloadName: fileKey
             )
         );
+    }
+
+    private static async Task<IResult> UploadTempImage(
+        HttpContext httpContext, CancellationToken ct,
+        [FromForm] IFormFile file,
+        IStorageService storageService
+    ) {
+        FileData fileData = new(file.OpenReadStream(), file.ContentType);
+        ErrOr<TempImageKey> res = await storageService.PutTempImageFile(fileData, ct);
+
+        return CustomResults.FromErrOr(res, (key) => Results.Json(
+            new { TempKey = key.ToString() }
+        ));
     }
 }

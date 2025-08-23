@@ -21,18 +21,10 @@ public class VokiCoverKey : BaseStorageImageKey
     }
 
 
-    public static ErrOr<VokiCoverKey> CreateWithId(VokiId id, ImageFileExtension extension) {
-        var key = $"{KeyConsts.VokisFolder}/{id}/cover.{extension}";
+    public static VokiCoverKey CreateWithId(VokiId id, ImageFileExtension extension) =>
+        new($"{KeyConsts.VokisFolder}/{id}/cover.{extension}");
 
-        var validate = Scheme.IsKeyValid(key, out _, out _);
-        if (validate.IsErr(out var err)) {
-            return err;
-        }
-
-        return new VokiCoverKey(key);
-    }
-
-    public bool IsWithId(VokiId expectedId) =>  VokiId == expectedId;
+    public bool IsWithId(VokiId expectedId) => VokiId == expectedId;
 
     private static class Scheme
     {
@@ -51,7 +43,7 @@ public class VokiCoverKey : BaseStorageImageKey
 
             vokiId = new VokiId(new Guid(parts["vokiId"]));
             ext = ImageFileExtension.Create(parts["ext"]).AsSuccess();
-           
+
             return ErrOrNothing.Nothing;
         }
     }

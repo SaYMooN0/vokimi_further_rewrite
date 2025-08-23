@@ -1,35 +1,27 @@
-﻿using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.concrete_keys;
+﻿using VokimiStorageKeysLib.concrete_keys;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
+using VokimiStorageKeysLib.temp_keys;
 
 namespace GeneralVokiCreationService.Application;
 
 public interface IMainStorageBucket
 {
-    Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(VokiCoverKey defaultVokiCover);
-
-    public Task<ErrOr<VokiCoverKey>> UploadVokiCover(VokiId vokiId, FileData file);
-    public Task<ErrOr<GeneralVokiQuestionImageKey>> UploadVokiQuestionImage(
-        VokiId vokiId,
-        GeneralVokiQuestionId questionId,
-        FileData file
+    Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(
+        VokiCoverKey defaultVokiCover
     );
 
-    public Task<ErrOrNothing> DeleteUnusedQuestionImages(
-        VokiId vokiId,
-        GeneralVokiQuestionId questionId,
-        IEnumerable<GeneralVokiQuestionImageKey> usedKeys
+    public Task<ErrOrNothing> CopyVokiCoverFromTempToStandard(
+        TempImageKey temp,
+        VokiCoverKey destination
     );
 
-    public Task<ErrOrNothing> DeleteUnusedResultImages(
-        VokiId vokiId,
-        GeneralVokiResultId resultId,
-        GeneralVokiResultImageKey? currentKey
+    public Task<ErrOrNothing> CopyVokiResultImageFromTempToStandard(
+        TempImageKey temp,
+        GeneralVokiResultImageKey destination
     );
 
-    Task<ErrOr<GeneralVokiResultImageKey>> UploadVokiResultImage(
-        VokiId vokiId,
-        GeneralVokiResultId resultId,
-        FileData file
+    public Task<ErrOrNothing> CopyVokiQuestionImageFromTempToStandard(
+        TempImageKey temp,
+        GeneralVokiQuestionImageKey destination
     );
-
 }

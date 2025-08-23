@@ -1,12 +1,12 @@
 ﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
-using VokimiStorageKeysLib;
 using VokimiStorageKeysLib.concrete_keys;
+using VokimiStorageKeysLib.temp_keys;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 
-public sealed record UpdateVokiCoverCommand(VokiId VokiId, FileData File) :
+public sealed record UpdateVokiCoverCommand(VokiId VokiId, TempImageKey CoverKey) :
     ICommand<VokiCoverKey>,
     IWithVokiAccessValidationStep;
 
@@ -25,12 +25,15 @@ internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVoki
 
     public async Task<ErrOr<VokiCoverKey>> Handle(UpdateVokiCoverCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
-        var uploadingRes = await _mainStorageBucket.UploadVokiCover(command.VokiId, command.File);
-        if (uploadingRes.IsErr(out var err)) {
+        VokiCoverKey destination = VokiCoverKey.CreateWithId(command.VokiId, command.CoverKey.Extension);
+        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiCoverFromTempToStandard(
+            command.CoverKey, destination
+        );
+        if (copyingRes.IsErr(out var err)) {
             return err;
         }
 
-        var coverUpdateRes = voki.UpdateCover(uploadingRes.AsSuccess());
+        var coverUpdateRes = voki.UpdateCover(destination);
         if (coverUpdateRes.IsErr(out err)) {
             return err;
         }

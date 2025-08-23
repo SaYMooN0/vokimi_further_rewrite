@@ -64,7 +64,4 @@ public class ErrOrNothing
         AddNextIfErr(next);
         return this;
     }
-
-    public ErrOrNothing Or(ErrOrNothing second) =>
-        IsErr(out var err) ? err : second;
 }

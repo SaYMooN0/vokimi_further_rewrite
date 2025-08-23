@@ -2,6 +2,7 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokimiStorageKeysLib.concrete_keys;
+using VokimiStorageKeysLib.extension;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 
@@ -25,10 +26,8 @@ internal sealed class SetVokiCoverToDefaultCommandHandler :
 
     public async Task<ErrOr<VokiCoverKey>> Handle(SetVokiCoverToDefaultCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
-
-        VokiCoverKey defaultVokiCover = VokiCoverKey.CreateWithId(
-            command.VokiId, CommonStorageItemKey.DefaultVokiCover.ImageExtension
-        ).AsSuccess();
+        ImageFileExtension ext = CommonStorageItemKey.DefaultVokiCover.ImageExtension;
+        VokiCoverKey defaultVokiCover = VokiCoverKey.CreateWithId(command.VokiId, ext);
         var copyRes = await _mainStorageBucket.CopyDefaultVokiCoverForVoki(defaultVokiCover);
         if (copyRes.IsErr(out var err)) {
             return err;

@@ -1,4 +1,4 @@
-﻿namespace VokimiStorageKeysLib;
+﻿namespace VokimiStorageService;
 
 public record class FileData(
     Stream Stream,

@@ -4,18 +4,16 @@ import type { ResponseResult } from "./result-types";
 
 class VokimiStorageBucket {
     private _baseUrl: string;
-    private _bucketName: string;
 
 
-    constructor(baseUrl: string, bucketName: string) {
+    constructor(baseUrl: string) {
         this._baseUrl = baseUrl;
-        this._bucketName = bucketName;
     }
     public fileSrc(key: string): string {
         if (key.startsWith('/')) {
-            return `${this._baseUrl}/${this._bucketName}${key}`;
+            return `${this._baseUrl}${key}`;
         }
-        return `${this._baseUrl}/${this._bucketName}/${key}`;
+        return `${this._baseUrl}/${key}`;
     }
 
     public fileSrcWithVersion(key: string, version: string | number | undefined = undefined): string {
@@ -24,12 +22,12 @@ class VokimiStorageBucket {
         }
         return `${this.fileSrc(key)}?v=${version}`;
     }
-    public async uploadFile(key: string, file: Blob | File): Promise<ResponseResult<string>> {
+    public async uploadTempImage(file: Blob | File): Promise<ResponseResult<string>> {
         try {
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch(`${this._baseUrl}/${this._bucketName}/upload/${encodeURIComponent(key)}`, {
+            const response = await fetch(`${this._baseUrl}/upload-temp-image`, {
                 method: 'PUT',
                 body: formData
             });
@@ -37,7 +35,7 @@ class VokimiStorageBucket {
 
             if (response.ok) {
                 const data = await response.json();
-                return { isSuccess: true, data: data.fileKey };
+                return { isSuccess: true, data: data.tempKey };
 
             }
 
@@ -69,4 +67,4 @@ class VokimiStorageBucket {
         return [ErrUtils.createUnknown("Response not in JSON format")];
     }
 }
-export const StorageBucketMain = new VokimiStorageBucket('/api/voki-storage', 'main');
+export const StorageBucketMain = new VokimiStorageBucket('/api/voki-storage/main');

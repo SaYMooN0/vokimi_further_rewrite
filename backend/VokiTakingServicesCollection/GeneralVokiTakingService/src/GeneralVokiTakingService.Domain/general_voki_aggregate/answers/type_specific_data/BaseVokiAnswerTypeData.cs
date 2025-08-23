@@ -1,9 +1,8 @@
-﻿using VokimiStorageKeysLib;
-using VokimiStorageKeysLib.base_keys;
+﻿using VokimiStorageKeysLib.base_keys;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 
-public abstract partial class BaseVokiAnswerTypeData : ValueObject
+public abstract partial record BaseVokiAnswerTypeData
 {
     public abstract GeneralVokiAnswerType MatchingEnum { get; }
 
@@ -24,11 +23,9 @@ public abstract partial class BaseVokiAnswerTypeData : ValueObject
         audioOnly: () => audioOnly((AudioOnly)this),
         audioAndText: () => audioAndText((AudioAndText)this)
     );
-
 }
 
 public interface IVokiAnswerTypeDataWithStorageKey
 {
     public BaseStorageKey Key { get; }
 }
-
