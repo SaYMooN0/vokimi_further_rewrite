@@ -1,5 +1,5 @@
 ﻿using AuthService.Infrastructure.persistence;
-using InfrastructureShared;
+using InfrastructureShared.Base;
 using Microsoft.AspNetCore.Builder;
 
 namespace AuthService.Infrastructure;

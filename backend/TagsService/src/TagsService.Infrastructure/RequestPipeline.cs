@@ -1,4 +1,4 @@
-﻿using InfrastructureShared;
+﻿using InfrastructureShared.Base;
 using Microsoft.AspNetCore.Builder;
 using TagsService.Infrastructure.persistence;
 

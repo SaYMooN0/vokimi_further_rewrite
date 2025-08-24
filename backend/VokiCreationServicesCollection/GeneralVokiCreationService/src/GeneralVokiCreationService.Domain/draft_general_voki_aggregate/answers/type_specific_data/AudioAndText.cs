@@ -1,5 +1,4 @@
-﻿using VokimiStorageKeysLib.base_keys;
-using VokimiStorageKeysLib.concrete_keys.general_voki;
+﻿using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 

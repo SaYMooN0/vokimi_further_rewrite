@@ -1,7 +1,7 @@
 ﻿using GeneralVokiTakingService.Domain.app_user_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
-using InfrastructureShared.domain_events_publisher;
+using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence;

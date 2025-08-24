@@ -1,7 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using SharedKernel.domain;
-using SharedKernel.errs;
-using SharedKernel.errs.utils;
 using SharedKernel.exceptions;
 
 namespace AuthService.Domain.common;

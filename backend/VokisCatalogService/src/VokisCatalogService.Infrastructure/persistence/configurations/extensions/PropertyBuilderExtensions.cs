@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using InfrastructureShared.persistence.value_converters.guid_based_ids;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokisCatalogService.Infrastructure.persistence.configurations.value_converters;
 

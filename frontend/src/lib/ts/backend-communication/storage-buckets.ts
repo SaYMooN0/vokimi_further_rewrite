@@ -31,8 +31,6 @@ class VokimiStorageBucket {
                 method: 'PUT',
                 body: formData
             });
-
-
             if (response.ok) {
                 const data = await response.json();
                 return { isSuccess: true, data: data.tempKey };

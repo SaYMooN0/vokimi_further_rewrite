@@ -1,8 +1,7 @@
-using InfrastructureShared;
+using InfrastructureShared.Base;
 using UserProfilesService.Api.extensions;
 using UserProfilesService.Application;
 using UserProfilesService.Infrastructure;
-using UserProfilesService.Infrastructure.persistence;
 
 namespace UserProfilesService.Api;
 

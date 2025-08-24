@@ -44,8 +44,9 @@ public class UserProfilePicKey : BaseStorageImageKey
 
     private static class Scheme
     {
-        private const string Template = $"{KeyConsts.UserProfilePicsFolder}/<userId:id>.<ext:imageExt>";
-        private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
+        private static readonly KeyTemplateParser Parser = new(
+            $"{KeyConsts.UserProfilePicsFolder}/<userId:id>.<ext:imageExt>"
+        );
 
         public static ErrOrNothing IsKeyValid(string key, out AppUserId userId, out ImageFileExtension ext) {
             var parseResult = Parser.TryParse(key);

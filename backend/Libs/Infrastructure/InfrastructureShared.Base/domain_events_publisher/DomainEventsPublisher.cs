@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.domain.events;
 
-namespace InfrastructureShared.domain_events_publisher;
+namespace InfrastructureShared.Base.domain_events_publisher;
 
 public sealed class DomainEventsPublisher(IServiceProvider serviceProvider) : IDomainEventsPublisher
 {

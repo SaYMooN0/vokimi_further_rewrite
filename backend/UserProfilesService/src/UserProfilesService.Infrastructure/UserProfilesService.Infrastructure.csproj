@@ -6,9 +6,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\..\Libs\InfrastructureShared.Storage\InfrastructureShared.Storage.csproj" />
-      <ProjectReference Include="..\..\..\Libs\InfrastructureShared\InfrastructureShared.csproj" />
-      <ProjectReference Include="..\UserProfilesService.Application\UserProfilesService.Application.csproj" />
+        <ProjectReference Include="..\..\..\Libs\Infrastructure\InfrastructureShared.Base\InfrastructureShared.Base.csproj"/>
+        <ProjectReference Include="..\..\..\Libs\Infrastructure\Infrastructure.Auth\Infrastructure.Auth.csproj"/>
+        <ProjectReference Include="..\..\..\Libs\Infrastructure\InfrastructureShared.Storage\InfrastructureShared.Storage.csproj" />
+        <ProjectReference Include="..\UserProfilesService.Application\UserProfilesService.Application.csproj"/>
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3"/>

@@ -1,8 +1,7 @@
 using GeneralVokiTakingService.Api.extensions;
 using GeneralVokiTakingService.Application;
 using GeneralVokiTakingService.Infrastructure;
-using GeneralVokiTakingService.Infrastructure.persistence;
-using InfrastructureShared;
+using InfrastructureShared.Base;
 
 namespace GeneralVokiTakingService.Api;
 

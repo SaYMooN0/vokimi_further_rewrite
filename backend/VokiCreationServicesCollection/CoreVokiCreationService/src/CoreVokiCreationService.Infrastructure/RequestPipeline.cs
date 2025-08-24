@@ -1,5 +1,5 @@
 ﻿using CoreVokiCreationService.Infrastructure.persistence;
-using InfrastructureShared;
+using InfrastructureShared.Base;
 using Microsoft.AspNetCore.Builder;
 
 namespace CoreVokiCreationService.Infrastructure;

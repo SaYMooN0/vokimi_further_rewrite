@@ -11,8 +11,7 @@ public class GeneralVokiAnswerAudioKey : BaseStorageAudioKey
     public GeneralVokiAnswerId AnswerId { get; }
     public override AudioFileExtension AudioExtension { get; }
 
-    public GeneralVokiAnswerAudioKey(string value)
-    {
+    public GeneralVokiAnswerAudioKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(
             this,
             Scheme.IsKeyValid(value, out var vokiId, out var questionId, out var answerId, out var ext)
@@ -32,12 +31,12 @@ public class GeneralVokiAnswerAudioKey : BaseStorageAudioKey
 
         return new GeneralVokiAnswerAudioKey(value);
     }
+
     public bool IsWithIds(
         VokiId expectedVokiId,
         GeneralVokiQuestionId expectedQuestionId,
         GeneralVokiAnswerId expectedAnswerId
-    )
-    {
+    ) {
         return VokiId == expectedVokiId &&
                QuestionId == expectedQuestionId &&
                AnswerId == expectedAnswerId;
@@ -45,10 +44,9 @@ public class GeneralVokiAnswerAudioKey : BaseStorageAudioKey
 
     private static class Scheme
     {
-        private const string Template =
-            $"{KeyConsts.VokisFolder}/<vokiId:id>/questions/<questionId:id>/answers/<answerId:id>.<ext:audioExt>";
-
-        private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
+        private static readonly KeyTemplateParser Parser = new(
+            $"{KeyConsts.VokisFolder}/<vokiId:id>/questions/<questionId:id>/answers/<answerId:id>.<ext:audioExt>"
+        );
 
         public static ErrOrNothing IsKeyValid(
             string key,
@@ -56,11 +54,9 @@ public class GeneralVokiAnswerAudioKey : BaseStorageAudioKey
             out GeneralVokiQuestionId questionId,
             out GeneralVokiAnswerId answerId,
             out AudioFileExtension ext
-        )
-        {
+        ) {
             var parseResult = Parser.TryParse(key);
-            if (parseResult.IsErr(out var err))
-            {
+            if (parseResult.IsErr(out var err)) {
                 vokiId = default!;
                 questionId = default!;
                 answerId = default!;
@@ -78,6 +74,4 @@ public class GeneralVokiAnswerAudioKey : BaseStorageAudioKey
             return ErrOrNothing.Nothing;
         }
     }
-
-   
 }

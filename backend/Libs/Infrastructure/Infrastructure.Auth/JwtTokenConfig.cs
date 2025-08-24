@@ -1,4 +1,4 @@
-﻿namespace InfrastructureShared.auth;
+﻿namespace Infrastructure.Auth;
 
 public class JwtTokenConfig
 {

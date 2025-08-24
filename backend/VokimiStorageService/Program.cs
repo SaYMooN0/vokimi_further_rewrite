@@ -13,7 +13,10 @@ public class Program
         });
         builder.ConfigureLogging();
 
-        builder.Services.AddS3Storage(builder.Configuration);
+        builder.Services
+            .AddAuth(builder.Configuration)
+            .AddWeb(builder.Configuration)
+            .AddS3Storage(builder.Configuration);
 
         var app = builder.Build();
 
@@ -27,8 +30,7 @@ public class Program
         app.AddExceptionHandlingMiddleware();
 
         app.MapEndpointHandlers();
-        
+
         app.Run();
     }
-    
 }

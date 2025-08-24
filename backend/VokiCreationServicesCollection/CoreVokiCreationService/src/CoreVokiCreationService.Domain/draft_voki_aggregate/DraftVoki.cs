@@ -1,5 +1,4 @@
-﻿using CoreVokiCreationService.Domain.app_user_aggregate.events;
-using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
+﻿using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.rules;
 using SharedKernel.common.vokis;
 using VokimiStorageKeysLib.concrete_keys;
@@ -34,7 +33,6 @@ public class DraftVoki : AggregateRoot<VokiId>
     public static DraftVoki Create(VokiName name, VokiType type, AppUserId primaryAuthorId, DateTime creationDate) {
         VokiId vokiId = VokiId.CreateNew();
         VokiCoverKey cover = VokiCoverKey.CreateWithId(vokiId, CommonStorageItemKey.DefaultVokiCover.ImageExtension);
-
         DraftVoki newVoki = new(vokiId, type, name, cover, primaryAuthorId, creationDate);
         newVoki.AddDomainEvent(new NewDraftVokiInitializedEvent(
             newVoki.Id,

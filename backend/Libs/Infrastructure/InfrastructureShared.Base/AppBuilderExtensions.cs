@@ -2,7 +2,7 @@
 using Serilog;
 using Serilog.Events;
 
-namespace InfrastructureShared;
+namespace InfrastructureShared.Base;
 
 public static class AppBuilderExtensions
 {

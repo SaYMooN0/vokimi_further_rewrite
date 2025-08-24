@@ -1,9 +1,13 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.auth;
+using SharedKernel.domain.ids;
+using SharedKernel.errs;
+using SharedKernel.errs.utils;
 
-namespace InfrastructureShared.auth;
+namespace Infrastructure.Auth;
 
 public class TokenParser : ITokenParser
 {
@@ -11,8 +15,10 @@ public class TokenParser : ITokenParser
     private readonly string _issuer;
     private readonly string _audience;
     private static readonly JwtSecurityTokenHandler JwtSecurityTokenHandler = new();
+    private readonly ILogger<TokenParser> _logger;
 
-    public TokenParser(JwtTokenConfig options) {
+    public TokenParser(JwtTokenConfig options, ILogger<TokenParser> logger) {
+        _logger = logger;
         _secretKey = options.SecretKey;
         _issuer = options.Issuer;
         _audience = options.Audience;
@@ -44,7 +50,8 @@ public class TokenParser : ITokenParser
 
             return new AppUserId(Guid.Parse(userIdClaim));
         }
-        catch (Exception) {
+        catch (Exception ex) {
+            _logger.LogError("Couldn't parse jwt token. Ex: {exception}", ex.Message);
             return AuthErr;
         }
     }

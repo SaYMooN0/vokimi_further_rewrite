@@ -5,8 +5,6 @@ using GeneralVokiCreationService.Infrastructure.persistence;
 using GeneralVokiTakingService.Infrastructure.persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using SharedKernel.domain.ids;
 using TagsService.Infrastructure.persistence;
 using UserProfilesService.Infrastructure.persistence;
 using VokisCatalogService.Infrastructure.persistence;

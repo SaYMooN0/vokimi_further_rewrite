@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace InfrastructureShared.persistence.value_converters.guid_based_ids;
+namespace InfrastructureShared.Base.persistence.value_converters.guid_based_ids;
 
 internal class GuidBasedIdImmutableHashSetConverter<T> : ValueConverter<ImmutableHashSet<T>, Guid[]>
     where T : GuidBasedId

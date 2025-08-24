@@ -62,4 +62,6 @@ public class TempAudioKey : ITempKey
 
     public bool Equals(ITempKey? other) =>
         other is not null && string.Equals(Value, other.Value, StringComparison.Ordinal);
+    public override string ToString() => Value;
+
 }

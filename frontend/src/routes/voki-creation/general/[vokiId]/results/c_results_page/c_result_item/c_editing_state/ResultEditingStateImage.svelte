@@ -24,14 +24,9 @@
 				return;
 			}
 			isLoadingImage = true;
-			const formData = new FormData();
-			formData.append('file', file);
-			const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ imageKey: string }>(
-				`/vokis/${vokiId}/results/${resultId}/upload-image`,
-				{ method: 'POST', body: formData }
-			);
+			const response = await StorageBucketMain.uploadTempImage(file);
 			if (response.isSuccess) {
-				image = response.data.imageKey;
+				image = response.data;
 			} else {
 				errs = response.errs;
 			}

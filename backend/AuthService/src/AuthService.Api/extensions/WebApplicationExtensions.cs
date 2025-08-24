@@ -1,5 +1,4 @@
 ﻿using AuthService.Api.endpoints;
-using MassTransit;
 
 namespace AuthService.Api.extensions;
 

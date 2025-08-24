@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using CoreVokiCreationService.Domain.common.interfaces.repositories;
+﻿using CoreVokiCreationService.Domain.common.interfaces.repositories;
 using SharedKernel.auth;
 
 namespace CoreVokiCreationService.Application.draft_vokis.queries;

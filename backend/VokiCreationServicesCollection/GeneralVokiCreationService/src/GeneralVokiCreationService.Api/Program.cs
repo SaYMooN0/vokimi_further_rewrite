@@ -1,8 +1,7 @@
 using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application;
 using GeneralVokiCreationService.Infrastructure;
-using GeneralVokiCreationService.Infrastructure.persistence;
-using InfrastructureShared;
+using InfrastructureShared.Base;
 
 namespace GeneralVokiCreationService.Api;
 

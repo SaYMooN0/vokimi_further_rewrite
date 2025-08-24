@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using AuthService.Application.abstractions;
 using AuthService.Domain.app_user_aggregate;
-using InfrastructureShared.auth;
+using Infrastructure.Auth;
 using Microsoft.IdentityModel.Tokens;
 using SharedKernel.auth;
 

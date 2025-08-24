@@ -11,13 +11,14 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 public sealed record UpdateQuestionImagesCommand(
     VokiId VokiId,
     GeneralVokiQuestionId QuestionId,
-    TempImageKey[] NewImages
+    TempImageKey[] TempKeys,
+    GeneralVokiQuestionImageKey[] SavedKeys
 ) :
     ICommand<VokiQuestionImagesSet>,
     IWithVokiAccessValidationStep;
 
-internal sealed class
-    UpdateQuestionImagesCommandHandler : ICommandHandler<UpdateQuestionImagesCommand, VokiQuestionImagesSet>
+internal sealed class UpdateQuestionImagesCommandHandler :
+    ICommandHandler<UpdateQuestionImagesCommand, VokiQuestionImagesSet>
 {
     private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
     private readonly IMainStorageBucket _mainStorageBucket;
@@ -32,12 +33,13 @@ internal sealed class
     public async Task<ErrOr<VokiQuestionImagesSet>> Handle(UpdateQuestionImagesCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
 
-        if (VokiQuestionImagesSet.CheckForErr(command.NewImages.Length).IsErr(out var err)) {
+        if (Validate(command.QuestionId, command.TempKeys, command.SavedKeys).IsErr(out var err)) {
             return err;
         }
 
-        List<GeneralVokiQuestionImageKey> resultList = new(command.NewImages.Length);
-        foreach (var tempKey in command.NewImages) {
+        List<GeneralVokiQuestionImageKey> resultKeys = [..command.SavedKeys];
+
+        foreach (TempImageKey tempKey in command.TempKeys) {
             ImageFileExtension ext = tempKey.Extension;
             var destination = GeneralVokiQuestionImageKey.CreateForQuestion(command.VokiId, command.QuestionId, ext);
             var copyingRes = await _mainStorageBucket.CopyVokiQuestionImageFromTempToStandard(
@@ -47,10 +49,10 @@ internal sealed class
                 return ErrFactory.Unspecified("Couldn't update question images from", details: err.Message);
             }
 
-            resultList.Add(destination);
+            resultKeys.Add(destination);
         }
 
-        var imagesSetRes = VokiQuestionImagesSet.Create(resultList.ToImmutableArray());
+        ErrOr<VokiQuestionImagesSet> imagesSetRes = VokiQuestionImagesSet.Create([..resultKeys]);
         if (imagesSetRes.IsErr(out err)) {
             return err;
         }
@@ -62,5 +64,21 @@ internal sealed class
 
         await _draftGeneralVokiRepository.Update(voki);
         return res.AsSuccess().Images;
+    }
+
+    private static ErrOrNothing Validate(
+        GeneralVokiQuestionId questionId,
+        TempImageKey[] tempKeys, GeneralVokiQuestionImageKey[] savedKeys
+    ) {
+        int totalCount = tempKeys.Length + savedKeys.Length;
+        if (VokiQuestionImagesSet.CheckForErr(totalCount).IsErr(out var err)) {
+            return err;
+        }
+
+        if (savedKeys.Any(k => k.QuestionId != questionId)) {
+            return ErrFactory.Conflict("Not all saved images belong to this question");
+        }
+
+        return ErrOrNothing.Nothing;
     }
 }

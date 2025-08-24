@@ -3,28 +3,16 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
+	import CoverChangingDialog from './c_cover_section/CoverChangingDialog.svelte';
 
 	let { cover, vokiId }: { cover: string; vokiId: string } = $props<{
 		cover: string;
 		vokiId: string;
 	}>();
-	let version = $state(0);
-	async function handleImageInputChange(event: Event) {
-		const input = event.target as HTMLInputElement;
-		if (input.files && input.files.length > 0) {
-			isLoading = true;
-			const response = await vokiCreationApi.updateVokiCover(vokiId, input.files[0]);
-			if (response.isSuccess) {
-				cover = response.data.newCover;
-				version++;
-			} else {
-				toast.error("Couldn't update voki cover");
-			}
-			isLoading = false;
-		}
-	}
 	const vokiCreationApi = getVokiCreationPageApiService();
-
+	let version = $state(0);
+	let isLoading = $state(false);
+	let changeCoverDialog = $state<CoverChangingDialog>()!;
 	async function changeImageToDefault() {
 		isLoading = true;
 		const response = await vokiCreationApi.setVokiCoverToDefault(vokiId);
@@ -35,10 +23,24 @@
 		}
 		isLoading = false;
 	}
-	let isLoading = $state(false);
+	async function updateVokiCoverWithNewSelected(newCover: string) {
+		isLoading = true;
+		const response = await vokiCreationApi.updateVokiCover(vokiId, newCover);
+		if (response.isSuccess) {
+			cover = response.data.newCover;
+			version++;
+		} else {
+			toast.error("Couldn't update voki cover");
+		}
+		isLoading = false;
+	}
 </script>
 
 <div class="img-container">
+	<CoverChangingDialog
+		bind:this={changeCoverDialog}
+		updateCoverToNew={updateVokiCoverWithNewSelected}
+	/>
 	{#if isLoading}
 		<div class="loading-container">
 			<CubesLoader sizeRem={5} />
@@ -46,14 +48,9 @@
 		</div>
 	{:else}
 		<img src={StorageBucketMain.fileSrcWithVersion(cover, version)} alt="voki cover" />
-		<label for="voki-cover-input" class="img-btn change-btn">Change cover</label>
-		<input
-			type="file"
-			id="voki-cover-input"
-			accept=".jpg,.png,.webp"
-			hidden
-			onchange={handleImageInputChange}
-		/>
+		<button class="img-btn change-btn" onclick={() => changeCoverDialog.open()}>Change cover</button
+		>
+
 		<button class="img-btn set-default-btn" onclick={changeImageToDefault}>Set to default </button>
 	{/if}
 </div>

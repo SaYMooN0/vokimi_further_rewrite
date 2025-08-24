@@ -28,8 +28,9 @@ public class VokiCoverKey : BaseStorageImageKey
 
     private static class Scheme
     {
-        private const string Template = $"{KeyConsts.VokisFolder}/<vokiId:id>/cover.<ext:imageExt>";
-        private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
+        private static readonly KeyTemplateParser Parser = new(
+            $"{KeyConsts.VokisFolder}/<vokiId:id>/cover.<ext:imageExt>"
+        );
 
         public static ErrOrNothing IsKeyValid(string key, out VokiId vokiId, out ImageFileExtension ext) {
             var parseResult = Parser.TryParse(key);

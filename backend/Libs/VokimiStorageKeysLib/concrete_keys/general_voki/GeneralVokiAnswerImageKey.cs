@@ -43,10 +43,9 @@ public class GeneralVokiAnswerImageKey : BaseStorageImageKey
 
     private static class Scheme
     {
-        private const string Template =
-            $"{KeyConsts.VokisFolder}/<vokiId:id>/questions/<questionId:id>/answers/<answerId:id>.<ext:imageExt>";
-
-        private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
+        private static readonly KeyTemplateParser Parser = new(
+            $"{KeyConsts.VokisFolder}/<vokiId:id>/questions/<questionId:id>/answers/<answerId:id>.<ext:imageExt>"
+        );
 
         public static ErrOrNothing IsKeyValid(
             string key,

@@ -7,9 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\..\Libs\InfrastructureShared.Storage\InfrastructureShared.Storage.csproj" />
-        <ProjectReference Include="..\..\..\..\Libs\InfrastructureShared\InfrastructureShared.csproj"/>
-        <ProjectReference Include="..\..\..\VokiCreationServicesLib\src\VokiCreationServicesLib.Infrastructure\VokiCreationServicesLib.Infrastructure.csproj" />
+        <ProjectReference Include="..\..\..\..\Libs\Infrastructure\Infrastructure.Auth\Infrastructure.Auth.csproj"/>
+        <ProjectReference Include="..\..\..\..\Libs\Infrastructure\InfrastructureShared.Base\InfrastructureShared.Base.csproj"/>
+        <ProjectReference Include="..\..\..\..\Libs\Infrastructure\InfrastructureShared.Storage\InfrastructureShared.Storage.csproj" />
+        <ProjectReference Include="..\..\..\VokiCreationServicesLib\src\VokiCreationServicesLib.Infrastructure\VokiCreationServicesLib.Infrastructure.csproj"/>
         <ProjectReference Include="..\GeneralVokiCreationService.Application\GeneralVokiCreationService.Application.csproj"/>
     </ItemGroup>
     <ItemGroup>

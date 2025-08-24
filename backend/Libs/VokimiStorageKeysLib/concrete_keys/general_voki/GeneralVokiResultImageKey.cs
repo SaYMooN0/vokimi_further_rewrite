@@ -21,18 +21,25 @@ public class GeneralVokiResultImageKey : BaseStorageImageKey
         ImageExtension = ext;
         Value = value;
     }
+
     public static GeneralVokiResultImageKey CreateForResult(
         VokiId vokiId, GeneralVokiResultId resultId, ImageFileExtension extension
     ) => new($"{KeyConsts.VokisFolder}/{vokiId}/results/{resultId}.{extension}");
+    public static ErrOr<GeneralVokiResultImageKey> FromString(string value) {
+        if (Scheme.IsKeyValid(value, out _, out _, out _).IsErr(out var err)) {
+            return err;
+        }
+
+        return new GeneralVokiResultImageKey(value);
+    }
     public bool IsWithIds(VokiId expectedVokiId, GeneralVokiResultId expectedResultId) =>
         VokiId == expectedVokiId && ResultId == expectedResultId;
 
     private static class Scheme
     {
-        private const string Template =
-            $"{KeyConsts.VokisFolder}/<vokiId:id>/results/<resultId:id>.<ext:imageExt>";
-
-        private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
+        private static readonly KeyTemplateParser Parser = new(
+            $"{KeyConsts.VokisFolder}/<vokiId:id>/results/<resultId:id>.<ext:imageExt>"
+        );
 
         public static ErrOrNothing IsKeyValid(
             string key,

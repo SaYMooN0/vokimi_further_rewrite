@@ -27,7 +27,6 @@
 	async function publishVokiButtonPressed() {
 		const response = await vokiCreationApi.publish(vokiId);
 		if (response.isSuccess) {
-			console.log(response.data);
 			if ('issues' in response.data) {
 				toast.error('During publishing some publishing issues were found. Please check them');
 				showNewIssuesOnIssuesFound(response.data.issues);

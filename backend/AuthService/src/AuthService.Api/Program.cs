@@ -1,8 +1,7 @@
 using AuthService.Api.extensions;
 using AuthService.Application;
 using AuthService.Infrastructure;
-using AuthService.Infrastructure.persistence;
-using InfrastructureShared;
+using InfrastructureShared.Base;
 
 namespace AuthService.Api;
 

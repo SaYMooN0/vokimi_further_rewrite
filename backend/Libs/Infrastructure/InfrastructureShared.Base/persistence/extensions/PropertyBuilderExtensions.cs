@@ -1,9 +1,8 @@
 ﻿using System.Collections.Immutable;
-using InfrastructureShared.persistence.value_converters;
-using InfrastructureShared.persistence.value_converters.guid_based_ids;
+using InfrastructureShared.Base.persistence.value_converters.guid_based_ids;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace InfrastructureShared.persistence.extensions;
+namespace InfrastructureShared.Base.persistence.extensions;
 
 public static class PropertyBuilderExtensions
 {

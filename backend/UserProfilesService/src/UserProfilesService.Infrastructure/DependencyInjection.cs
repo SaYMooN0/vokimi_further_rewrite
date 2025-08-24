@@ -1,8 +1,8 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
 using ApplicationShared;
-using InfrastructureShared.auth;
-using InfrastructureShared.domain_events_publisher;
+using Infrastructure.Auth;
+using InfrastructureShared.Base.domain_events_publisher;
 using InfrastructureShared.Storage;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;

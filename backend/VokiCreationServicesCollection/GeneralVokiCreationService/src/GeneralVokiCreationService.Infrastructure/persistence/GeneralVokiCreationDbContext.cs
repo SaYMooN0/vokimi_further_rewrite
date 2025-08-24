@@ -1,6 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.app_user_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using InfrastructureShared.domain_events_publisher;
+using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence;

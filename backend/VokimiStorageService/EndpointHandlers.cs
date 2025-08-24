@@ -1,7 +1,6 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
 using Microsoft.AspNetCore.Mvc;
-using SharedKernel.domain.ids;
 using VokimiStorageService.s3_storage.s3;
 using VokimiStorageService.s3_storage.storage_service;
 
@@ -10,13 +9,13 @@ namespace VokimiStorageService;
 internal static class EndpointHandlers
 {
     internal static void MapEndpointHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/");
+        var group = endpoints.MapGroup("/main");
 
-        group.MapGet("/main/{*fileKey}", GetFileFromStorage)
+        group.MapGet("/{*fileKey}", GetFileFromStorage)
             .DisableAntiforgery();
         group.MapPut("/upload-temp-image", UploadTempImage)
             .DisableAntiforgery()
-            .RequireAuthorization();
+            .WithAuthenticationRequired();
     }
 
     private static async Task<IResult> GetFileFromStorage(

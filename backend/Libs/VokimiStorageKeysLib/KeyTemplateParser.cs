@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 using SharedKernel.errs.utils;
 using VokimiStorageKeysLib.extension;
 
@@ -8,47 +9,54 @@ public sealed class KeyTemplateParser
 {
     private readonly Regex _regex;
     private readonly ImmutableDictionary<string, PlaceholderType> _typesByPlaceholder;
-    private readonly ImmutableHashSet<string> _allowedExtensions;
 
-    public KeyTemplateParser(string template, ImmutableHashSet<string> allowedExtensions) {
-        if (allowedExtensions is null || allowedExtensions.Count == 0) {
-            throw new ArgumentException("Allowed extensions must be non-empty");
-        }
-
-        _allowedExtensions = allowedExtensions
-            .Select(e => e.TrimStart('.').ToLowerInvariant())
-            .ToImmutableHashSet();
-
+    public KeyTemplateParser(string template) {
         Dictionary<string, PlaceholderType> typesByPlaceholderName = new(StringComparer.Ordinal);
+        StringBuilder sb = new();
+        int pos = 0;
 
-        string pattern = "^" + PlaceholderRegex.Replace(template, match => {
-            string placeholderName = match.Groups[1].Value;
-            string placeholderType = match.Groups[2].Success ? match.Groups[2].Value : "str";
+        foreach (Match m in PlaceholderRegex.Matches(template)) {
+            if (m.Index > pos) {
+                sb.Append(Regex.Escape(template.AsSpan(pos, m.Index - pos).ToString()));
+            }
+
+            string placeholderName = m.Groups["name"].Value;
+            string placeholderType = m.Groups["type"].Value;
 
             if (!SupportedPlaceholderTypes.TryGetValue(placeholderType, out var typeDef)) {
                 throw new NotSupportedException($"Unsupported placeholder type: {placeholderType}");
             }
 
-            if (typesByPlaceholderName.ContainsKey(placeholderName)) {
+            if (!typesByPlaceholderName.TryAdd(placeholderName, typeDef)) {
                 throw new NotSupportedException($"Duplicate placeholder '{placeholderName}' is not allowed");
             }
 
-            typesByPlaceholderName[placeholderName] = typeDef;
+            sb
+                .Append("(?<")
+                .Append(placeholderName)
+                .Append('>')
+                .Append(typeDef.BodyRegex.ToString())
+                .Append(')');
 
-            var body = typeDef.BodyRegex.ToString();
-            return $"(?<{placeholderName}>{body})";
-        });
+            pos = m.Index + m.Length;
+        }
 
-        _typesByPlaceholder = typesByPlaceholderName.ToImmutableDictionary();
+
+        if (pos < template.Length) {
+            sb.Append(Regex.Escape(template.Substring(pos)));
+        }
+
+        string pattern = "^" + sb + "$";
         _regex = new Regex(pattern, DefaultRegexOptions);
+        _typesByPlaceholder = typesByPlaceholderName.ToImmutableDictionary(StringComparer.Ordinal);
     }
 
-    private const RegexOptions DefaultRegexOptions = RegexOptions.Compiled |
-                                                     RegexOptions.CultureInvariant |
-                                                     RegexOptions.ExplicitCapture;
+    private const RegexOptions DefaultRegexOptions = RegexOptions.Compiled | RegexOptions.CultureInvariant;
 
-
-    private static readonly Regex PlaceholderRegex = new(@"<(\w+)(?::(\w+))?>", DefaultRegexOptions);
+    private static readonly Regex PlaceholderRegex = new(
+        @"<(?<name>[A-Za-z_][A-Za-z0-9_]*)(?::(?<type>\w+))?>",
+        DefaultRegexOptions
+    );
 
     private sealed record PlaceholderType(
         string Name,
@@ -96,6 +104,7 @@ public sealed class KeyTemplateParser
 
             result[name] = placeholderValue;
         }
+
         return result;
     }
 }

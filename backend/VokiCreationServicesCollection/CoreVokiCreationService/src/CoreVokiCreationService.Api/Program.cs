@@ -1,8 +1,7 @@
 using CoreVokiCreationService.Api.extensions;
 using CoreVokiCreationService.Application;
 using CoreVokiCreationService.Infrastructure;
-using CoreVokiCreationService.Infrastructure.persistence;
-using InfrastructureShared;
+using InfrastructureShared.Base;
 
 namespace CoreVokiCreationService.Api;
 

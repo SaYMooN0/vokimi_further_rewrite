@@ -1,5 +1,9 @@
-﻿using Amazon.Runtime;
+﻿using System.Text.Json.Serialization;
+using Amazon.Runtime;
 using Amazon.S3;
+using ApiShared;
+using Infrastructure.Auth;
+using SharedKernel.auth;
 using VokimiStorageService.s3_storage.images_compression;
 using VokimiStorageService.s3_storage.s3;
 using VokimiStorageService.s3_storage.storage_service;
@@ -23,5 +27,24 @@ internal static class BuilderServicesExtensions
         services.AddScoped<IS3MainBucketClient, S3MainBucketClient>();
         services.AddScoped<IStorageService, StorageService>();
         services.AddScoped<IImageFileCompressor, ImageFileCompressor>();
+    }
+    internal static IServiceCollection AddWeb(this IServiceCollection services, IConfiguration configuration) {
+        services.AddOpenApi();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IUserContext, UserContextProvider>();
+        services.ConfigureHttpJsonOptions(options => {
+            options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+        return services;
+    }
+    internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
+        var jwtTokenConfig = configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
+        if (jwtTokenConfig is null) {
+            throw new Exception("JWT token config not configured");
+        }
+
+        services.AddSingleton(jwtTokenConfig);
+        services.AddScoped<ITokenParser, TokenParser>();
+        return services;
     }
 }

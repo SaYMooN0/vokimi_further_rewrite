@@ -1,6 +1,6 @@
 ﻿using ApplicationShared;
-using InfrastructureShared.auth;
-using InfrastructureShared.domain_events_publisher;
+using Infrastructure.Auth;
+using InfrastructureShared.Base.domain_events_publisher;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

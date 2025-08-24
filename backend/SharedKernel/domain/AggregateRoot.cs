@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using SharedKernel.domain.events;
-using SharedKernel.domain.ids;
 
 namespace SharedKernel.domain;
 

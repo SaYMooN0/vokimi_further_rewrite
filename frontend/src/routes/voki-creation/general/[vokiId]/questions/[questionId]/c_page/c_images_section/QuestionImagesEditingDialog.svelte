@@ -8,6 +8,7 @@
 	import DialogQuestionImageView from './c_images_dialog/DialogQuestionImageView.svelte';
 	import GeneralVokiAddQuestionImage from './c_images_dialog/GeneralVokiAddQuestionImage.svelte';
 	import QuestionHasNoImages from './c_images_dialog/QuestionHasNoImages.svelte';
+	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 
 	let {
 		questionId,
@@ -47,13 +48,9 @@
 	async function uploadAndAddImg(file: File): Promise<void> {
 		const formData = new FormData();
 		formData.append('file', file);
-
-		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ imageKey: string }>(
-			`/vokis/${vokiId}/questions/${questionId}/upload-image`,
-			{ method: 'POST', body: formData }
-		);
+		const response = await StorageBucketMain.uploadTempImage(file);
 		if (response.isSuccess) {
-			images = [...images, response.data.imageKey];
+			images = [...images, response.data];
 		} else {
 			errs = response.errs;
 		}
@@ -87,7 +84,6 @@
 </DialogWithCloseButton>
 
 <style>
-
 	:global(#voki-creation-question-images-dialog .dialog-content) {
 		display: flex;
 		flex-direction: column;

@@ -1,5 +1,4 @@
-﻿using AuthService.Domain.common;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace AuthService.Infrastructure.persistence.configurations.value_converters;
 

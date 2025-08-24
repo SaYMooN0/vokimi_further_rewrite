@@ -1,6 +1,6 @@
 ﻿using AuthService.Domain.app_user_aggregate;
 using AuthService.Domain.unconfirmed_user_aggregate;
-using InfrastructureShared.domain_events_publisher;
+using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Infrastructure.persistence;

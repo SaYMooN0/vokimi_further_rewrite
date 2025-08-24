@@ -25,10 +25,8 @@
 		const response = await vokiCreationApi.checkForPublishingIssues(vokiId);
 		if (response.isSuccess) {
 			pageState = { name: 'Fetched', issues: response.data.issues };
-			console.log(pageState);
 		} else {
 			pageState = { name: 'Error', errs: response.errs };
-			console.log(pageState);
 		}
 	}
 	let vokiPublishedDialog = $state<VokiPublishedDialog>()!;

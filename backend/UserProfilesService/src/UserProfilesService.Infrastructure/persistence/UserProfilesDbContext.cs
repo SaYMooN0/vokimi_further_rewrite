@@ -1,4 +1,4 @@
-﻿using InfrastructureShared.domain_events_publisher;
+﻿using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 using UserProfilesService.Domain.app_user_aggregate;
 

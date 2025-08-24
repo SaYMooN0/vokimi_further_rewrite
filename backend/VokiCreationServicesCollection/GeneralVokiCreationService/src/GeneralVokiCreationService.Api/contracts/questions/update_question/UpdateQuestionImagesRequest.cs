@@ -1,4 +1,7 @@
-﻿using VokimiStorageKeysLib.temp_keys;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using VokimiStorageKeysLib;
+using VokimiStorageKeysLib.concrete_keys.general_voki;
+using VokimiStorageKeysLib.temp_keys;
 
 namespace GeneralVokiCreationService.Api.contracts.questions.update_question;
 
@@ -7,22 +10,37 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
     public string[] NewImages { get; init; }
 
     public ErrOrNothing Validate() {
-        var keysRes = NewImages.Select(TempImageKey.FromString).ToArray();
-        var keyErrs = keysRes.Where(r => r.IsErr()).ToArray();
-        if (keyErrs.Length > 0) {
-            ErrOrNothing errs = ErrOrNothing.Nothing;
-            foreach (var e in keyErrs) {
-                errs.AddNextIfErr(e);
-            }
-
-            return errs;
+        if (VokiQuestionImagesSet.CheckForErr(NewImages.Length).IsErr(out var err)) {
+            return err;
         }
 
-        ParsedTempKeys = keysRes
-            .Select(k => k.AsSuccess())
+        ErrOrNothing parsingErrs = ErrOrNothing.Nothing;
+
+        var possibleTemp = NewImages
+            .Where(k => k.StartsWith(KeyConsts.TempFolder))
+            .Select(TempImageKey.FromString)
             .ToArray();
-        return ErrOrNothing.Nothing;
+        foreach (var possibleErr in possibleTemp) {
+            parsingErrs.AddNextIfErr(possibleErr);
+        }
+
+        var possibleSaved = NewImages
+            .Where(k => !k.StartsWith(KeyConsts.TempFolder))
+            .Select(GeneralVokiQuestionImageKey.FromString)
+            .ToArray();
+        foreach (var possibleErr in possibleSaved) {
+            parsingErrs.AddNextIfErr(possibleErr);
+        }
+
+        if (parsingErrs.IsErr(out err)) {
+            return err;
+        }
+
+        ParsedTempKeys = possibleTemp.Select(t => t.AsSuccess()).ToArray();
+        ParsedSavedKeys = possibleSaved.Select(t => t.AsSuccess()).ToArray();
+        return parsingErrs;
     }
 
     public TempImageKey[] ParsedTempKeys { get; private set; }
+    public GeneralVokiQuestionImageKey[] ParsedSavedKeys { get; private set; }
 }

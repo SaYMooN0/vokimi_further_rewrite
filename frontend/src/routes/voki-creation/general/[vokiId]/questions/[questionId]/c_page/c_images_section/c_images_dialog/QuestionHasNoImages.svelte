@@ -78,7 +78,6 @@
 		border-radius: 1rem;
 		text-align: center;
 		transition: all 0.12s ease-in;
-		cursor: pointer;
 	}
 
 	.no-images.dragging:not(.loading) {

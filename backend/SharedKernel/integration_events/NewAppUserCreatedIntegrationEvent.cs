@@ -1,6 +1,4 @@
-﻿using SharedKernel.common;
-
-namespace SharedKernel.integration_events;
+﻿namespace SharedKernel.integration_events;
 
 public record class NewAppUserCreatedIntegrationEvent(
     AppUserId CreatedUserId,

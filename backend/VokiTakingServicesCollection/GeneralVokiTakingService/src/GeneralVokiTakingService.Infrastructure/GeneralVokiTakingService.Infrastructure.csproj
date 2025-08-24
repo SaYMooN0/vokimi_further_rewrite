@@ -7,13 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\..\Libs\InfrastructureShared\InfrastructureShared.csproj" />
+      <ProjectReference Include="..\..\..\..\Libs\Infrastructure\Infrastructure.Auth\Infrastructure.Auth.csproj" />
+      <ProjectReference Include="..\..\..\..\Libs\Infrastructure\InfrastructureShared.Base\InfrastructureShared.Base.csproj" />
       <ProjectReference Include="..\GeneralVokiTakingService.Application\GeneralVokiTakingService.Application.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3"/>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="storage\" />
     </ItemGroup>
 </Project>

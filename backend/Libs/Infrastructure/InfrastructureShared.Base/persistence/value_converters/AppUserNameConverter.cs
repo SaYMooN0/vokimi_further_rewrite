@@ -1,9 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using SharedKernel;
-using SharedKernel.common;
 using SharedKernel.common.app_users;
 
-namespace InfrastructureShared.persistence.value_converters;
+namespace InfrastructureShared.Base.persistence.value_converters;
 
 public class AppUserNameConverter : ValueConverter<AppUserName, string>
 {

@@ -21,19 +21,27 @@ public class GeneralVokiQuestionImageKey : BaseStorageImageKey
         ImageExtension = ext;
         Value = value;
     }
+
     public static GeneralVokiQuestionImageKey CreateForQuestion(
         VokiId vokiId, GeneralVokiQuestionId questionId, ImageFileExtension extension
     ) => new($"{KeyConsts.VokisFolder}/{vokiId}/questions/{questionId}/images/{Guid.NewGuid()}.{extension.Value}");
+
+    public static ErrOr<GeneralVokiQuestionImageKey> FromString(string value) {
+        if (Scheme.IsKeyValid(value, out _, out _, out _).IsErr(out var err)) {
+            return err;
+        }
+
+        return new GeneralVokiQuestionImageKey(value);
+    }
 
     public bool IsWithIds(VokiId expectedVokiId, GeneralVokiQuestionId expectedQuestionId) =>
         VokiId == expectedVokiId && QuestionId == expectedQuestionId;
 
     private static class Scheme
     {
-        private const string Template =
-            $"{KeyConsts.VokisFolder}/<vokiId:id>/questions/<questionId:id>/images/<version:id>.<ext:imageExt>";
-
-        private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
+        private static readonly KeyTemplateParser Parser = new(
+            $"{KeyConsts.VokisFolder}/<vokiId:id>/questions/<questionId:id>/images/<version:id>.<ext:imageExt>"
+        );
 
         public static ErrOrNothing IsKeyValid(
             string key,

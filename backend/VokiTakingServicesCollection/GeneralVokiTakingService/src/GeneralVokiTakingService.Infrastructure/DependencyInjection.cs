@@ -2,8 +2,8 @@
 using GeneralVokiTakingService.Domain.common.interfaces.repositories;
 using GeneralVokiTakingService.Infrastructure.persistence;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories;
-using InfrastructureShared.auth;
-using InfrastructureShared.domain_events_publisher;
+using Infrastructure.Auth;
+using InfrastructureShared.Base.domain_events_publisher;
 using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

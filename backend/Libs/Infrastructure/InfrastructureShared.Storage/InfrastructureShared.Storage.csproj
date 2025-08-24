@@ -12,7 +12,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj" />
-      <ProjectReference Include="..\VokimiStorageKeysLib\VokimiStorageKeysLib.csproj" />
+      <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
+      <ProjectReference Include="..\..\VokimiStorageKeysLib\VokimiStorageKeysLib.csproj" />
     </ItemGroup>
 </Project>

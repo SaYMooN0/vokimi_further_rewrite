@@ -3,8 +3,6 @@ using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.results;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using Microsoft.AspNetCore.Mvc;
-using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -46,7 +44,7 @@ internal static class SpecificVokiResultsHandlers
         var request = httpContext.GetValidatedRequest<UpdateVokiResultRequest>();
 
         UpdateVokiResultCommand command = new(
-            id, resultId,request.ParsedName, request.ParsedText, request.ParsedImageKey
+            id, resultId,request.ParsedName, request.ParsedText, request.NewImage
         );
         var result = await handler.Handle(command, ct);
 

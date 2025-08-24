@@ -14,7 +14,9 @@ public readonly struct ImageFileExtension : IFileExtension
 
 
     public static readonly Regex ExtPattern =
-        new("^[a-z0-9]{1,10}$", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        new("[a-z0-9]{1,10}", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+
+    private static readonly ImmutableHashSet<string> WhiteList = ["jpeg", "jpg", "webp", "png"];
 
     public static ErrOrNothing Validate(string input) {
         if (string.IsNullOrWhiteSpace(input)) {
@@ -49,13 +51,6 @@ public readonly struct ImageFileExtension : IFileExtension
     public static readonly ImageFileExtension Png = new("png");
     public static readonly ImageFileExtension Webp = new("webp");
 
-    public static readonly ImmutableHashSet<string> WhiteList =
-        ImmutableHashSet.CreateRange(StringComparer.Ordinal, [
-            Jpg.Value,
-            Jpeg.Value,
-            Png.Value,
-            Webp.Value,
-        ]);
 
     public bool Equals(IFileExtension? other) =>
         other is not null && string.Equals(Value, other.Value, StringComparison.Ordinal);

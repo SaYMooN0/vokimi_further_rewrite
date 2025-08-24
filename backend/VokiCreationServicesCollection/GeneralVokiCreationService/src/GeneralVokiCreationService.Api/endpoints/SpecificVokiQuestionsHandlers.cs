@@ -38,7 +38,7 @@ internal static class SpecificVokiQuestionsHandlers
         var result = await handler.Handle(query, ct);
 
         var questionOrErr = result.Bind(v => v.QuestionWithId(questionId));
-        return CustomResults.FromErrOr(questionOrErr, (question ) => Results.Json(
+        return CustomResults.FromErrOr(questionOrErr, (question) => Results.Json(
             VokiQuestionFullDataResponse.Create(
                 question,
                 result.AsSuccess().Results //because if question is not err than result is definitely not err
@@ -70,7 +70,7 @@ internal static class SpecificVokiQuestionsHandlers
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
         var request = httpContext.GetValidatedRequest<UpdateQuestionImagesRequest>();
 
-        UpdateQuestionImagesCommand command = new(id, questionId, request.ParsedTempKeys);
+        UpdateQuestionImagesCommand command = new(id, questionId, request.ParsedTempKeys, request.ParsedSavedKeys);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (imgsSet) => Results.Json(new {

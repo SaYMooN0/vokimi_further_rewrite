@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
-namespace InfrastructureShared;
+namespace InfrastructureShared.Base;
 
 public class EventualConsistencyMiddleware<T> where T : DbContext
 {

@@ -1,6 +1,4 @@
-﻿using ApplicationShared.messaging;
-using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.domain.events;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace AuthService.Application;
 

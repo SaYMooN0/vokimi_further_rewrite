@@ -1,8 +1,7 @@
-using InfrastructureShared;
+using InfrastructureShared.Base;
 using TagsService.Api.extensions;
 using TagsService.Application;
 using TagsService.Infrastructure;
-using TagsService.Infrastructure.persistence;
 
 namespace TagsService.Api;
 

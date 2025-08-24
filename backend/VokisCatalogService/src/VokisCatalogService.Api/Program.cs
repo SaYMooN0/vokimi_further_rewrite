@@ -1,8 +1,7 @@
-using InfrastructureShared;
+using InfrastructureShared.Base;
 using VokisCatalogService.Api.extensions;
 using VokisCatalogService.Application;
 using VokisCatalogService.Infrastructure;
-using VokisCatalogService.Infrastructure.persistence;
 
 namespace VokisCatalogService.Api;
 

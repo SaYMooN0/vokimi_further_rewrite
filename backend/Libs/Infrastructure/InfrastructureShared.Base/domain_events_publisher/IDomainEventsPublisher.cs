@@ -1,6 +1,6 @@
 ﻿using SharedKernel.domain.events;
 
-namespace InfrastructureShared.domain_events_publisher;
+namespace InfrastructureShared.Base.domain_events_publisher;
 
 public interface IDomainEventsPublisher
 {

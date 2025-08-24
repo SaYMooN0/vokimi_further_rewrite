@@ -1,6 +1,5 @@
 ﻿using AuthService.Application.abstractions;
 using AuthService.Domain.app_user_aggregate;
-using AuthService.Domain.common.interfaces;
 using AuthService.Domain.unconfirmed_user_aggregate;
 using SharedKernel;
 using SharedKernel.auth;

@@ -25,8 +25,9 @@ public class CommonStorageItemKey : BaseStorageImageKey
 
     private static class Scheme
     {
-        private const string Template = $"{KeyConsts.CommonFolder}/<name:str>.<ext:imageExt>";
-        private static readonly KeyTemplateParser Parser = new(Template, AllowedExtensions);
+        private static readonly KeyTemplateParser Parser = new(
+            $"{KeyConsts.CommonFolder}/<name:str>.<ext:imageExt>"
+        );
 
         public static ErrOrNothing IsKeyValid(string key, out string name, out ImageFileExtension ext) {
             var parseResult = Parser.TryParse(key);
