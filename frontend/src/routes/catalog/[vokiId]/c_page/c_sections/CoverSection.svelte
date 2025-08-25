@@ -4,6 +4,7 @@
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
 	import AddToAlbumButtonIcon from './c_cover_section_icons/AddToAlbumButtonIcon.svelte';
+	import AlbumsBlockedButtonIcon from './c_cover_section_icons/AlbumsBlockedButtonIcon.svelte';
 	import ManageVokiButtonIcon from './c_cover_section_icons/ManageVokiButtonIcon.svelte';
 	import TakeVokiButtonIcon from './c_cover_section_icons/TakeVokiButtonIcon.svelte';
 	interface Props {
@@ -36,8 +37,8 @@
 				{/if}
 			{/snippet}
 			{#snippet unauthenticated()}
-				<button class="add-to-album-btn">
-					<AddToAlbumButtonIcon />
+				<button class="add-to-album-btn" disabled>
+					<AlbumsBlockedButtonIcon />
 					<label class="btn-text">Add to album</label>
 				</button>
 			{/snippet}

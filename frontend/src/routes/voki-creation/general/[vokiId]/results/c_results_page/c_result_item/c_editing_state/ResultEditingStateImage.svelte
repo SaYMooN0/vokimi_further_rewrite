@@ -1,18 +1,15 @@
 <script lang="ts">
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 
 	let {
 		image = $bindable(),
 		errs = $bindable(),
-		vokiId,
 		resultId
-	}: { image: string | null; errs: Err[]; vokiId: string; resultId: string } = $props<{
+	}: { image: string | null; errs: Err[]; resultId: string } = $props<{
 		image: string | null;
 		errs: Err[];
-		vokiId: string;
 		resultId: string;
 	}>();
 	async function handleInputChange(event: Event) {

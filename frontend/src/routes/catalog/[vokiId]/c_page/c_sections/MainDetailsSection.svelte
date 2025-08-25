@@ -15,20 +15,23 @@
 
 <div class="main-details-section">
 	<div class="value-container type-value">
+		<label class="value-name">Type:</label>
 		<svg><use href="#{StringUtils.pascalToKebab(type)}-voki-type-icon" /></svg>
-		<label>{type}</label>
+		<label class="value-label">{type}</label>
 	</div>
 	<div class="separator"></div>
 	<div class="value-container language-value">
+		<label class="value-name">Language:</label>
 		<svg><use href="#languages-icons-{StringUtils.pascalToKebab(language)}" /></svg>
-		<label>{LanguageUtils.name(language)}</label>
+		<label class="value-label">{LanguageUtils.name(language)}</label>
 	</div>
 	<div class="separator"></div>
-	<label>{isAgeRestricted ? 'Age restricted' : 'No age restriction'}</label>
+	<label class="value-label">{isAgeRestricted ? 'Age restricted' : 'No age restriction'}</label>
 </div>
 
 <style>
 	.main-details-section {
+		margin-top: 0.25rem;
 		display: grid;
 		grid-template-columns: 1fr auto 1fr auto 1fr;
 		justify-content: center;
@@ -46,10 +49,16 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
+		gap: 0.25rem;
 		align-items: center;
-		gap: 0.5rem;
 	}
-	.main-details-section label {
+	.value-name {
+		margin-right: 0.675rem;
+		color: var(--secondary-foreground);
+		font-size: 1.15rem;
+		font-weight: 450;
+	}
+	.value-label {
 		font-size: 1.25rem;
 		font-weight: 450;
 	}
@@ -63,5 +72,6 @@
 		height: 1.5rem;
 		aspect-ratio: var(--lang-icon-aspect-ratio);
 		border-radius: 0.375rem;
+		stroke-width: 1.9;
 	}
 </style>

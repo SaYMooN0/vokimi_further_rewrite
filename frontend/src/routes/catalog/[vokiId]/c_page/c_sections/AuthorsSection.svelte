@@ -7,7 +7,7 @@
 </script>
 
 <div class="authors-section">
-	<label>by: </label>
+	<label class="by-label">by: </label>
 	{#await UsersStore.Get(primaryAuthorId)}
 		loading user...
 	{:then user}
@@ -30,4 +30,15 @@
 </div>
 
 <style>
+	.by-label {
+		font-size: 1rem;
+		font-weight: 450;
+		margin-right: 0.5rem;
+	}
+	.authors-section {
+		margin-top: 0.25rem;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+	}
 </style>

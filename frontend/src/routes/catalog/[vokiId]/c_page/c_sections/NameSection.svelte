@@ -6,11 +6,10 @@
 
 <style>
 	.voki-name {
-		font-size: 2rem;
+		font-size: 2.25rem;
 		font-weight: 500;
 		margin: 0;
 		text-indent: 0.5em;
 		word-break: break-all;
-
 	}
 </style>

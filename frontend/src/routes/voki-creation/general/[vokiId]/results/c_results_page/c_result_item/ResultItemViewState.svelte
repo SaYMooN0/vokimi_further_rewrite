@@ -2,7 +2,6 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import { toast } from 'svelte-sonner';
 	import type { ResultOverViewData } from '../../types';
 	import ResultItemButtons from './ResultItemButtons.svelte';
 	import { getConfirmActionDialogOpenFunction } from '../../../../../../c_layout/ts_layout_contexts/confirm-action-dialog-context';
@@ -60,7 +59,11 @@
 <div class="result-content">
 	<p class="result-text">{result.text}</p>
 	{#if result.image}
-		<img class="result-image" src={StorageBucketMain.fileSrc(result.image)} alt="result" />
+		<img
+			class="result-image"
+			src={StorageBucketMain.fileSrcWithVersion(result.image)}
+			alt="result"
+		/>
 	{/if}
 </div>
 <ResultItemButtons

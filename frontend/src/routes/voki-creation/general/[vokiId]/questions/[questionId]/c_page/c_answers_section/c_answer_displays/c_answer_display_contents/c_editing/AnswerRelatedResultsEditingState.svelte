@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FieldNotSetLabel from '../../../../../../../../../c_shared/FieldNotSetLabel.svelte';
+	import FieldNotSetLabel from '../../../../../../../../../../../lib/components/FieldNotSetLabel.svelte';
 	import { getQuestionPageContext } from '../../../../../question-page-context.svelte';
 
 	let {

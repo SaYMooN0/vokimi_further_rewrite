@@ -2,7 +2,7 @@
 	import type { VokiDetails } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import { LanguageUtils } from '$lib/ts/language';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import FieldNotSetLabel from '../../FieldNotSetLabel.svelte';
+	import FieldNotSetLabel from '../../../../../lib/components/FieldNotSetLabel.svelte';
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import DetailsSectionEditState from './c_details_section/DetailsSectionEditState.svelte';
 	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';

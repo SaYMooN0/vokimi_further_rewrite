@@ -33,5 +33,6 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         RatingsCount = 0;
         CommentsCount = 0;
         VokiTakingsCount = 0;
+        PublicationDate = publicationDate;
     }
 }

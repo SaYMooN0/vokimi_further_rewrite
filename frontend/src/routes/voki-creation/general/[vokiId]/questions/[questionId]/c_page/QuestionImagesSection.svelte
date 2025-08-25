@@ -1,5 +1,5 @@
 <script lang="ts">
-	import FieldNotSetLabel from '../../../../../c_shared/FieldNotSetLabel.svelte';
+	import FieldNotSetLabel from '../../../../../../../lib/components/FieldNotSetLabel.svelte';
 	import VokiCreationDefaultButton from '../../../../../c_shared/VokiCreationDefaultButton.svelte';
 	import VokiCreationFieldName from '../../../../../c_shared/VokiCreationFieldName.svelte';
 	import QuestionImagesEditingDialog from './c_images_section/QuestionImagesEditingDialog.svelte';

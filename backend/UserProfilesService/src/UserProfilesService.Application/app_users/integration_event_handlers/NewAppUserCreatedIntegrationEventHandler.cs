@@ -21,7 +21,7 @@ public class NewAppUserCreatedIntegrationEventHandler : IConsumer<NewAppUserCrea
     public async Task Consume(ConsumeContext<NewAppUserCreatedIntegrationEvent> context) {
         var picRes = await _mainStorageBucket.CopyUserProfilePicFromDefaults(context.Message.CreatedUserId);
         if (picRes.IsErr(out var err)) {
-            UnexpectedBehaviourException.ThrowErr(err);
+           return;
         }
 
         AppUser user = new AppUser(
