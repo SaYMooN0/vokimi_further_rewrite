@@ -60,7 +60,6 @@
 	<ResultEditingStateImage
 		bind:image={resultEditing.image}
 		bind:errs
-		{vokiId}
 		resultId={result.id}
 	/>
 </div>

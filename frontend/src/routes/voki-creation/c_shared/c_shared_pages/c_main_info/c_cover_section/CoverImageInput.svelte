@@ -83,8 +83,8 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		height: 100%;
 		width: 100%;
+		height: 100%;
 		margin: 1rem;
 		border: 0.125rem dashed var(--muted);
 		border-radius: 1rem;
@@ -143,14 +143,15 @@
 		background-color: var(--primary-hov);
 		transform: scale(1.06);
 	}
+
     h1 {
 		margin-bottom: 0.5rem;
 		color: var(--text);
 		font-size: 1.375rem;
 		font-weight: 700;
+        letter-spacing: 0.5px;
 		transition: inherit;
         cursor: default;
-        letter-spacing: 0.5px;
 	}
 
 	p {
@@ -160,6 +161,7 @@
         cursor: default;
 
 	}
+
 	:global(.img-input-errs-block) {
 		margin-top: 0.5rem;
 	}

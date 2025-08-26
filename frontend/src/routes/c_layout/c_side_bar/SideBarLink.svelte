@@ -14,8 +14,8 @@
 	{href}
 	class:collapsed={isCollapsed}
 	class="link"
-	onmouseenter={(e) => animateIcon()}
-	onfocus={(e) => animateIcon()}
+	onmouseenter={() => animateIcon()}
+	onfocus={() => animateIcon()}
 >
 	{@render children()}
 	<label>{text}</label>

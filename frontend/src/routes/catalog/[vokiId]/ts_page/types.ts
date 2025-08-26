@@ -16,4 +16,5 @@ export type VokiOverviewInfo = {
     tags: string[];
     ratingsCount: number;
     commentsCount: number;
+    publicationDate: Date;
 };

@@ -8,12 +8,12 @@
 <label class="not-set {className}">
 	<svg>
 		<use href="#common-crossed-circle-icon" />
-	</svg>
-	{text}
+	</svg>{text}
 </label>
 
 <style>
 	.not-set {
+		text-indent: 0;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -24,8 +24,9 @@
 		border-radius: 0.5rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
+		font-size: 1rem;
 		font-weight: 440;
-		box-shadow:var(--shadow-xs);
+		box-shadow: var(--shadow-xs);
 	}
 
 	.not-set > svg {

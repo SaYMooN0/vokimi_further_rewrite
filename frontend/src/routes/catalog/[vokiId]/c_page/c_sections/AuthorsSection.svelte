@@ -31,12 +31,12 @@
 
 <style>
 	.by-label {
+		margin-right: 0.5rem;
 		font-size: 1rem;
 		font-weight: 450;
-		margin-right: 0.5rem;
 	}
+
 	.authors-section {
-		margin-top: 0.25rem;
 		display: flex;
 		flex-direction: row;
 		align-items: center;

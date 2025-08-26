@@ -12,15 +12,15 @@
 
 <style>
 	.author-view {
-		height: auto;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		width: fit-content;
-		border-radius: 1.5rem;
-		padding: 0.25rem;
-		box-shadow: var(--shadow-xs);
 		gap: 0.25rem;
+		width: fit-content;
+		height: auto;
+		padding: 0.25rem;
+		border-radius: 1.5rem;
+		box-shadow: var(--shadow-xs);
 		cursor: pointer;
 	}
 
@@ -30,13 +30,15 @@
 		object-fit: fill;
 		border-radius: 50%;
 	}
+
 	.author-view > label {
-		cursor: inherit;
+		padding-right: 0.375rem;
+		color: var(--text);
 		font-size: 1.25rem;
 		font-weight: 450;
-		color: var(--text);
-		padding-right: 0.375rem;
+		cursor: inherit;
 	}
+
 	.author-view:hover {
 		box-shadow: var(--shadow-md), var(--shadow-xs);
 	}

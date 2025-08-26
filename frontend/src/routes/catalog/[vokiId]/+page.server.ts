@@ -8,7 +8,7 @@ export type VokiPageTab = typeof TABS[number];
 
 export const load: PageServerLoad = async ({ url, params, fetch }) => {
     const raw = (url.searchParams.get('tab') ?? '').toLowerCase();
-    const tab = (TABS as readonly string[]).includes(raw) ? raw : 'about' as VokiPageTab;
+    const tab: VokiPageTab = ((TABS as readonly string[]).includes(raw) ? raw : 'about') as VokiPageTab;
 
     return {
         response: await ApiVokisCatalog.serverFetchJsonResponse<VokiOverviewInfo>(

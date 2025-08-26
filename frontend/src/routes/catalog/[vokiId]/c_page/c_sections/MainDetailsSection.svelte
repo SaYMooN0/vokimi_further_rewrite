@@ -31,43 +31,45 @@
 
 <style>
 	.main-details-section {
-		margin-top: 0.25rem;
 		display: grid;
 		grid-template-columns: 1fr auto 1fr auto 1fr;
 		justify-content: center;
-		align-items: center;
-		justify-items: center;
+		place-items: center center;
 	}
 
 	.separator {
-		width: 0;
-		box-shadow: var(--shadow-xs);
+		width: 1px;
 		height: 100%;
 		background-color: var(--muted);
 	}
+
 	.value-container {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
-		gap: 0.25rem;
 		align-items: center;
+		gap: 0.25rem;
 	}
+
 	.value-name {
 		margin-right: 0.675rem;
 		color: var(--secondary-foreground);
 		font-size: 1.15rem;
 		font-weight: 450;
 	}
+
 	.value-label {
 		font-size: 1.25rem;
 		font-weight: 450;
 	}
+
 	.type-value > svg {
-		height: 1.75rem;
 		width: 1.75rem;
+		height: 1.75rem;
 		color: var(--primary);
 		stroke-width: 1.8;
 	}
+
 	.language-value > svg {
 		height: 1.5rem;
 		aspect-ratio: var(--lang-icon-aspect-ratio);

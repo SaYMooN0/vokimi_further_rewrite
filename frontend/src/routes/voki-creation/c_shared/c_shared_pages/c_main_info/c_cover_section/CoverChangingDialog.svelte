@@ -47,6 +47,7 @@
 		width: 38rem;
 		height: 26rem;
 	}
+
 	img {
 		width: 100%;
 		border-radius: 1rem;
