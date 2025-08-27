@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
 	import AudioAndTextAnswerEditing from './c_contents/AudioAndTextAnswerEditing.svelte';
 	import AudioOnlyAnswerEditing from './c_contents/AudioOnlyAnswerEditing.svelte';
 	import ColorAndTextAnswerEditing from './c_contents/ColorAndTextAnswerEditing.svelte';
@@ -8,9 +7,10 @@
 	import ImageOnlyAnswerEditing from './c_contents/ImageOnlyAnswerEditing.svelte';
 	import TextOnlyAnswerEditing from './c_contents/TextOnlyAnswerEditing.svelte';
 	import IncorrectAnswerTypeMessage from '../c_shared/IncorrectAnswerTypeMessage.svelte';
+	import type { GeneralVokiCreationAnswerData } from '../../../../../types';
 
-	let { answer = $bindable() }: { answer: GeneralVokiAnswerTypeData } = $props<{
-		answer: GeneralVokiAnswerTypeData;
+	let { answer = $bindable() }: { answer: GeneralVokiCreationAnswerData } = $props<{
+		answer: GeneralVokiCreationAnswerData;
 	}>();
 </script>
 

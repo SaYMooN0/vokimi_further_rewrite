@@ -1,11 +1,11 @@
 <script lang="ts">
-	let { vokiName, typeName }: { vokiName: string; typeName: string } = $props<{
-		vokiName: string;
-		typeName: string;
-	}>();
+	import { page } from '$app/state';
+	import type { Snippet } from 'svelte';
+	const { children }: { children: Snippet } = $props();
 </script>
 
-<h1>Creation of the new <label>{vokiName}</label>{typeName} voki</h1>
+<h1>Taking {page.data.vokiTypeName}<label>{page.data.vokiName}</label>voki</h1>
+{@render children()}
 
 <style>
 	h1 {
@@ -15,19 +15,18 @@
 		height: var(--side-bar-links-top-padding);
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
-        font-weight: 440;
+		font-weight: 440;
 		margin: 0;
 	}
 
 	h1 label {
 		display: inline-block;
 		max-width: calc(60vw - 4rem);
-        margin: 0 0.25rem;
+		margin: 0 0.25rem;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;
 		color: var(--primary);
-        font-weight: 490;
-
+		font-weight: 490;
 	}
 </style>

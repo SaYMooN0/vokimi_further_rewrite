@@ -88,12 +88,4 @@
 		letter-spacing: 0.2px;
 		text-align: start;
 	}
-
-	
-
-
-	.manage-voki-btn :global(svg) {
-		padding: 0.125rem;
-		stroke-width: 1.8;
-	}
 </style>

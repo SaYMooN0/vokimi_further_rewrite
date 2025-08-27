@@ -1,10 +1,8 @@
 <script lang="ts">
-	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
-	import type { QuestionAnswerData } from '../../../types';
+	import type { GeneralVokiCreationAnswerData, QuestionAnswerData } from '../../../types';
 	import AnswerDisplayContentWrapper from './AnswerDisplayContentWrapper.svelte';
 	import AnswerContentEditingState from './c_answer_display_contents/c_editing/AnswerContentEditingState.svelte';
 	import AnswerRelatedResultsEditingState from './c_answer_display_contents/c_editing/AnswerRelatedResultsEditingState.svelte';
@@ -12,7 +10,7 @@
 	interface Props {
 		vokiId: string;
 		questionId: string;
-		answer: GeneralVokiAnswerTypeData;
+		answer: GeneralVokiCreationAnswerData;
 		deleteAnswer: () => void;
 		addNewSavedAnswer: (answer: QuestionAnswerData) => void;
 		openRelatedResultsSelectingDialog: (

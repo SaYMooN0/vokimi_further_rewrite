@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { AnswerDataColorOnly} from '$lib/ts/voki';
+	import type { AnswerDataColorOnly } from "../../../../../../types";
+
 
 	const { answer }: { answer: AnswerDataColorOnly } = $props<{
 		answer: AnswerDataColorOnly;

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { AnswerDataTextOnly } from '$lib/ts/voki';
 	import { TextareaAutosize } from 'runed';
+	import type { AnswerDataTextOnly } from '../../../../../../types';
 
 	let { answer = $bindable() }: { answer: AnswerDataTextOnly } = $props<{
 		answer: AnswerDataTextOnly;

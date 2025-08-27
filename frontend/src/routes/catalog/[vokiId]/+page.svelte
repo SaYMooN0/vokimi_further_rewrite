@@ -12,8 +12,12 @@
 	import { VokiPageState } from './voki-page-state.svelte';
 
 	let { data }: PageProps = $props();
-
-	let pageState = new VokiPageState(data.vokiId, data.currentTab);
+	let pageState = new VokiPageState(
+		data.vokiId,
+		data.currentTab,
+		data.response.isSuccess ? data.response.data.ratingsCount : 0,
+		data.response.isSuccess ? data.response.data.commentsCount : 0
+	);
 </script>
 
 {#if !data.response.isSuccess}
@@ -34,10 +38,9 @@
 			<div class="tabs-section">
 				<TabLinksContainer
 					currentTab={pageState.currentTab}
-					changeTab={(newTab) => {
-						pageState.currentTab = newTab;
-						console.log('current', pageState.currentTab, 'new', newTab);
-					}}
+					changeTab={(newTab) => (pageState.currentTab = newTab)}
+					commentsCount={pageState.commentsCount}
+					ratingsCount={pageState.ratingsCount}
 				/>
 				<div class="current-tab">
 					{#if pageState.currentTab === 'about'}

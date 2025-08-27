@@ -1,9 +1,9 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerType } from '$lib/ts/voki';
+	import type {GeneralVokiAnswerType } from '$lib/ts/voki';
 	import ListEmptyMessage from '../../../../../c_shared/ListEmptyMessage.svelte';
 	import VokiCreationBasicHeader from '../../../../../c_shared/VokiCreationBasicHeader.svelte';
-	import { type QuestionAnswerData, createEmptyGeneralVokiAnswerTypeData } from '../types';
+	import { type GeneralVokiCreationAnswerData, type QuestionAnswerData, createEmptyGeneralVokiAnswerTypeData } from '../types';
 	import AnswerRelatedResultsSelectingDialog from './c_answers_section/AnswerRelatedResultsSelectingDialog.svelte';
 	import GeneralVokiCreationNewAnswerDisplay from './c_answers_section/c_answer_displays/GeneralVokiCreationNewAnswerDisplay.svelte';
 	import GeneralVokiCreationSavedAnswerDisplay from './c_answers_section/c_answer_displays/GeneralVokiCreationSavedAnswerDisplay.svelte';
@@ -16,7 +16,7 @@
 	}
 	let { questionId, vokiId, answers = $bindable(), answersType }: Props = $props();
 	const maxAnswersForQuestionCount = 60;
-	let unsavedAnswers = $state<GeneralVokiAnswerTypeData[]>([]);
+	let unsavedAnswers = $state<GeneralVokiCreationAnswerData[]>([]);
 	let resultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
 
 	function addNewUnsavedAnswer() {

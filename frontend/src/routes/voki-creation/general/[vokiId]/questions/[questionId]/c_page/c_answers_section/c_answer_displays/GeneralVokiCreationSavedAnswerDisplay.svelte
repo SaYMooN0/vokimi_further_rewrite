@@ -1,6 +1,5 @@
 <script lang="ts">
-	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
-	import type { QuestionAnswerData } from '../../../types';
+	import type { GeneralVokiCreationAnswerData, QuestionAnswerData } from '../../../types';
 	import SavedAnswerDisplayEditing from './c_saved_answer/SavedAnswerDisplayEditing.svelte';
 	import SavedAnswerDisplayView from './c_saved_answer/SavedAnswerDisplayView.svelte';
 
@@ -25,7 +24,7 @@
 	}: Props = $props();
 
 	type isEditingState =
-		| { isEditing: true; answer: GeneralVokiAnswerTypeData }
+		| { isEditing: true; answer: GeneralVokiCreationAnswerData }
 		| { isEditing: false };
 	let currentState = $state<isEditingState>({ isEditing: false });
 </script>

@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { AnswerDataColorOnly} from '$lib/ts/voki';
+	import type { AnswerDataColorOnly } from "../../../../../../types";
+
 
 	let { answer = $bindable() }: { answer: AnswerDataColorOnly } = $props<{
 		answer: AnswerDataColorOnly;

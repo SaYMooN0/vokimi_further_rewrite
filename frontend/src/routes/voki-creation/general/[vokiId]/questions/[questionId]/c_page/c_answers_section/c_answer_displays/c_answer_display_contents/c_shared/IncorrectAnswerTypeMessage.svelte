@@ -1,8 +1,9 @@
 <script lang="ts">
-	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
+	import type { GeneralVokiCreationAnswerData } from "../../../../../types";
 
-	const { answer }: { answer?: GeneralVokiAnswerTypeData } = $props<{
-		answer?: GeneralVokiAnswerTypeData;
+
+	const { answer }: { answer?: GeneralVokiCreationAnswerData } = $props<{
+		answer?: GeneralVokiCreationAnswerData;
 	}>();
 </script>
 

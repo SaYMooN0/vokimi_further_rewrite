@@ -1,5 +1,6 @@
 <script lang="ts">
-	import type { AnswerDataAudioOnly} from '$lib/ts/voki';
+	import type { AnswerDataAudioOnly } from "../../../../../../types";
+
 
 	let { answer = $bindable() }: { answer: AnswerDataAudioOnly } = $props<{
 		answer: AnswerDataAudioOnly;

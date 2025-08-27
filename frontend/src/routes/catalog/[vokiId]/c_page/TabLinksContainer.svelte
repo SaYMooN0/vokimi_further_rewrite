@@ -3,10 +3,19 @@
 
 	let {
 		currentTab,
-		changeTab
-	}: { currentTab: VokiPageTab; changeTab: (tab: VokiPageTab) => void } = $props<{
+		changeTab,
+		commentsCount,
+		ratingsCount
+	}: {
 		currentTab: VokiPageTab;
 		changeTab: (tab: VokiPageTab) => void;
+		commentsCount: number;
+		ratingsCount: number;
+	} = $props<{
+		currentTab: VokiPageTab;
+		changeTab: (tab: VokiPageTab) => void;
+		commentsCount: number;
+		ratingsCount: number;
 	}>();
 </script>
 
@@ -20,14 +29,14 @@
 		class:active={currentTab === 'ratings'}
 		onclick={() => changeTab('ratings')}
 	>
-		Ratings
+		Ratings ({ratingsCount})
 	</div>
 	<div
 		class="tab-link"
 		class:active={currentTab === 'comments'}
 		onclick={() => changeTab('comments')}
 	>
-		Comments
+		Comments ({commentsCount})
 	</div>
 </div>
 

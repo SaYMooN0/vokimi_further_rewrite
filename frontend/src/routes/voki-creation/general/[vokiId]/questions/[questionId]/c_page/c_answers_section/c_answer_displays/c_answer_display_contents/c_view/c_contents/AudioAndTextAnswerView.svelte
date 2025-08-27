@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { AnswerDataAudioAndText } from '$lib/ts/voki';
+	import type { AnswerDataAudioAndText } from '../../../../../../types';
 
 	const { answer }: { answer: AnswerDataAudioAndText } = $props<{
 		answer: AnswerDataAudioAndText;

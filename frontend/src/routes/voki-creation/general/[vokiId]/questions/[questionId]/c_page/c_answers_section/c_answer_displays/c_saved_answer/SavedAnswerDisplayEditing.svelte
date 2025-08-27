@@ -2,8 +2,7 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import type { GeneralVokiAnswerTypeData } from '$lib/ts/voki';
-	import type { QuestionAnswerData } from '../../../../types';
+	import type { GeneralVokiCreationAnswerData, QuestionAnswerData } from '../../../../types';
 	import AnswerDisplayContentWrapper from '../AnswerDisplayContentWrapper.svelte';
 	import AnswerContentEditingState from '../c_answer_display_contents/c_editing/AnswerContentEditingState.svelte';
 	import AnswerRelatedResultsEditingState from '../c_answer_display_contents/c_editing/AnswerRelatedResultsEditingState.svelte';
@@ -30,7 +29,7 @@
 	}: Props = $props();
 
 	let savingErrs = $state<Err[]>([]);
-	let answerData = $state<GeneralVokiAnswerTypeData>(answer.typeData);
+	let answerData = $state<GeneralVokiCreationAnswerData>(answer.typeData);
 	let answerResults = $state<string[]>(answer.relatedResultIds);
 
 	async function saveAnswer() {

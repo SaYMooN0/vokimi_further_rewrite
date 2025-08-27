@@ -1,5 +1,7 @@
 <script lang="ts">
-	import type { AnswerDataImageOnly } from '$lib/ts/voki';
+	import type { AnswerDataImageOnly } from "../../../../../../types";
+
+
 
 	let { answer = $bindable() }: { answer: AnswerDataImageOnly } = $props<{
 		answer: AnswerDataImageOnly;

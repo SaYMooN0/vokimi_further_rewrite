@@ -14,6 +14,7 @@ public record class VokiOverviewResponse(
     bool IsAgeRestricted,
     Language Language,
     string[] Tags,
+    DateTime PublicationDate,
     uint RatingsCount,
     uint CommentsCount
 )
@@ -29,6 +30,7 @@ public record class VokiOverviewResponse(
         v.Details.IsAgeRestricted,
         v.Details.Language,
         v.Tags.Select(t => t.ToString()).ToArray(),
+        v.PublicationDate,
         v.RatingsCount,
         v.CommentsCount
     );
