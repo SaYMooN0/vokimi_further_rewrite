@@ -5,6 +5,7 @@ import type { GeneralVokiTakingData } from "./types";
 export const load: ServerLoad = async ({ cookies, params, fetch }) => {
     const isVokiStarted = cookies.get(`${params.vokiId}-started`) === 'true';
     if (!isVokiStarted) {
+        console.log('redirecting to catalog, cookie:', cookies.get(`${params.vokiId}-started`));
         throw redirect(301, `/catalog/${params.vokiId}`);
     }
 

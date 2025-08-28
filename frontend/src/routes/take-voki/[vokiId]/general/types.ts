@@ -17,10 +17,11 @@ export type GeneralVokiTakingQuestionData = {
     maxAnswersCount: number;
     answers: GeneralVokiTakingAnswerData[]
 }
-type GeneralVokiTakingAnswerData = {
+export type GeneralVokiTakingAnswerData = {
     id: string;
     typeData: GeneralVokiAnswerTypeData;
 }
+
 export type GeneralVokiAnswerTextOnly = { text: string; };
 export type GeneralVokiAnswerImageOnly = { image: string; };
 export type GeneralVokiAnswerImageAndText = { image: string; text: string; };
@@ -37,3 +38,6 @@ export type GeneralVokiAnswerTypeData =
     | GeneralVokiAnswerColorAndText
     | GeneralVokiAnswerAudioOnly
     | GeneralVokiAnswerAudioAndText;
+export type GeneralVokiTakingResultData={
+    
+}
