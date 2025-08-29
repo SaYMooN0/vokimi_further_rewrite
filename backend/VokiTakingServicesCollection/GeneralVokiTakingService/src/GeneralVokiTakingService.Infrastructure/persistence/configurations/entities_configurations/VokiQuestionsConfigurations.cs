@@ -1,6 +1,8 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
 using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,9 +19,8 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .HasGuidBasedIdConversion();
 
         builder.Property(x => x.Text);
-        builder
-            .Property(x => x.Images)
-            .HasVokiQuestionImagesArrayConverter();
+        builder.Property(x => x.ImageSet)
+            .HasConversion(new ObjectToJsonConverter<VokiQuestionImagesSet>());
         
         builder.Property(x => x.AnswersType);
         builder.Property(x => x.OrderInVoki);

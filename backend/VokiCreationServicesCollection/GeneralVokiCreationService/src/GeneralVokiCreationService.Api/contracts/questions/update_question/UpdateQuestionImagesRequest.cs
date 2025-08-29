@@ -8,12 +8,21 @@ namespace GeneralVokiCreationService.Api.contracts.questions.update_question;
 public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
 {
     public string[] NewImages { get; init; }
+    public double Width { get; init; }
+    public double Height { get; init; }
 
     public ErrOrNothing Validate() {
         if (VokiQuestionImagesSet.CheckForErr(NewImages.Length).IsErr(out var err)) {
             return err;
         }
 
+        var aspectRatioCreationRes = VokiQuestionImagesAspectRatio.Create(Width, Height);
+        if (aspectRatioCreationRes.IsErr(out err)) {
+            return err;
+        }
+
+        ParsedAspectRatio = aspectRatioCreationRes.AsSuccess();
+        
         ErrOrNothing parsingErrs = ErrOrNothing.Nothing;
 
         var possibleTemp = NewImages
@@ -43,4 +52,5 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
 
     public TempImageKey[] ParsedTempKeys { get; private set; }
     public GeneralVokiQuestionImageKey[] ParsedSavedKeys { get; private set; }
+    public VokiQuestionImagesAspectRatio ParsedAspectRatio { get; set; }
 }

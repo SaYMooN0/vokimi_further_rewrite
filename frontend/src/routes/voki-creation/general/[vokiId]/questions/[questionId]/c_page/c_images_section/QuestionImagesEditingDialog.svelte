@@ -9,6 +9,8 @@
 	import GeneralVokiAddQuestionImage from './c_images_dialog/GeneralVokiAddQuestionImage.svelte';
 	import QuestionHasNoImages from './c_images_dialog/QuestionHasNoImages.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import type { GeneralVokiCreationQuestionImageSet } from '../../types';
+	import QuestionImagesAspectRationInput from './c_images_dialog/QuestionImagesAspectRationInput.svelte';
 
 	let {
 		questionId,
@@ -17,31 +19,46 @@
 	}: {
 		questionId: string;
 		vokiId: string;
-		updateParent: (images: string[]) => void;
+		updateParent: (imageSet: GeneralVokiCreationQuestionImageSet) => void;
 	} = $props<{
 		questionId: string;
 		vokiId: string;
-		updateParent: (images: string[]) => void;
+		updateParent: (imageSet: GeneralVokiCreationQuestionImageSet) => void;
 	}>();
 
 	let images: string[] = $state<string[]>([]);
+	let aspectRatio: { width: number; height: number } = $state({ width: 1, height: 1 });
+
 	let dialogElement = $state<DialogWithCloseButton>()!;
 	let errs = $state<Err[]>([]);
 	const maxImagesCount = 5;
 	async function saveData() {
-		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ newImages: string[] }>(
+		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
+			newKeys: string[];
+			newWidth: number;
+			newHeight: number;
+		}>(
 			`/vokis/${vokiId}/questions/${questionId}/update-images`,
-			RequestJsonOptions.PATCH({ newImages: images })
+			RequestJsonOptions.PATCH({
+				newImages: images,
+				width: aspectRatio.width,
+				height: aspectRatio.height
+			})
 		);
 		if (response.isSuccess) {
-			updateParent(response.data.newImages);
+			updateParent({
+				keys: response.data.newKeys,
+				width: response.data.newWidth,
+				height: response.data.newHeight
+			});
 			dialogElement.close();
 		} else {
 			errs = response.errs;
 		}
 	}
-	export function open(imgs: string[]) {
-		images = imgs;
+	export function open(imageSet: GeneralVokiCreationQuestionImageSet) {
+		images = imageSet.keys;
+		aspectRatio = { width: imageSet.width, height: imageSet.height };
 		errs = [];
 		dialogElement.open();
 	}
@@ -76,6 +93,8 @@
 				<GeneralVokiAddQuestionImage uploadImage={uploadAndAddImg} />
 			{/if}
 		</div>
+		<p class="choose-aspect-ratio">Choose images aspect ratio</p>
+		<QuestionImagesAspectRationInput bind:aspectRatio={aspectRatio} />
 	{/if}
 	{#if errs.length > 0}
 		<DefaultErrBlock errList={errs} />

@@ -8,18 +8,30 @@ public class VokiQuestionImagesSet : ValueObject
 {
     public const int MaxImagesForQuestionCount = 5;
     public ImmutableArray<GeneralVokiQuestionImageKey> Keys { get; }
+    public VokiQuestionImagesAspectRatio AspectRatio { get; }
 
-    private VokiQuestionImagesSet(ImmutableArray<GeneralVokiQuestionImageKey> keys) {
+    private VokiQuestionImagesSet(
+        ImmutableArray<GeneralVokiQuestionImageKey> keys,
+        VokiQuestionImagesAspectRatio aspectRatio
+    ) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(keys.Length));
         this.Keys = keys;
+        AspectRatio = aspectRatio;
     }
 
-    public static VokiQuestionImagesSet Empty => new(ImmutableArray<GeneralVokiQuestionImageKey>.Empty);
+    public static VokiQuestionImagesSet Default => new(
+        ImmutableArray<GeneralVokiQuestionImageKey>.Empty,
+        VokiQuestionImagesAspectRatio.Default
+    );
 
-    public override IEnumerable<object> GetEqualityComponents() => Keys;
+    public override IEnumerable<object> GetEqualityComponents() => [..Keys, AspectRatio];
 
-    public static ErrOr<VokiQuestionImagesSet> Create(ImmutableArray<GeneralVokiQuestionImageKey> keys) =>
-        CheckForErr(keys.Length).IsErr(out var err) ? err : new VokiQuestionImagesSet(keys);
+    public static ErrOr<VokiQuestionImagesSet> Create(
+        ImmutableArray<GeneralVokiQuestionImageKey> keys,
+        VokiQuestionImagesAspectRatio aspectRatio
+    ) => CheckForErr(keys.Length).IsErr(out var err)
+        ? err
+        : new VokiQuestionImagesSet(keys, aspectRatio);
 
     public static ErrOrNothing CheckForErr(int count) =>
         count > MaxImagesForQuestionCount

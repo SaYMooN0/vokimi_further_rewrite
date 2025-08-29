@@ -24,7 +24,7 @@
 			vokiId={data.vokiId!}
 		/>
 		<QuestionImagesSection
-			images={data.data.images}
+			imageSet={data.data.imageSet}
 			questionId={data.questionId!}
 			vokiId={data.vokiId!}
 		/>

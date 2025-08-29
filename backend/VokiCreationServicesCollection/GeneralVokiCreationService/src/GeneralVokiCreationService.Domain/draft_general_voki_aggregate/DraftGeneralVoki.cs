@@ -53,6 +53,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return newGeneralVoki;
     }
 
+    public void UpdateTakingProcessSettings(VokiTakingProcessSettings newSettings) {
+        TakingProcessSettings = newSettings;
+    }
+
     public ErrOr<GeneralVokiQuestionId> AddNewQuestion(GeneralVokiAnswerType answersType) {
         if (_questions.Count >= MaxQuestionsCount) {
             return ErrFactory.LimitExceeded(
@@ -63,10 +67,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         VokiQuestion question = VokiQuestion.CreateNew((ushort)_questions.Count, answersType);
         _questions.Add(question);
         return question.Id;
-    }
-
-    public void UpdateTakingProcessSettings(VokiTakingProcessSettings newSettings) {
-        TakingProcessSettings = newSettings;
     }
 
     public ErrOr<VokiQuestion> QuestionWithId(GeneralVokiQuestionId questionId) {
@@ -94,7 +94,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return questionToUpdate;
     }
 
-    public ErrOr<VokiQuestion> UpdateQuestionImages(GeneralVokiQuestionId questionId, VokiQuestionImagesSet newImages) {
+    public ErrOr<VokiQuestion> UpdateQuestionImages(GeneralVokiQuestionId questionId, VokiQuestionImagesSet newImageSet) {
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
             return ErrFactory.NotFound.Common(
@@ -103,7 +103,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        var incorrectKeys = newImages.Keys
+        var incorrectKeys = newImageSet.Keys
             .Where(k => !k.IsWithIds(Id, questionId))
             .Select(k => k.ToString())
             .ToArray();
@@ -114,9 +114,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        var oldImages = questionToUpdate.Images;
+        var oldImages = questionToUpdate.ImageSet;
 
-        var res = questionToUpdate.UpdateImages(newImages);
+        var res = questionToUpdate.UpdateImages(newImageSet);
         if (res.IsErr(out var err)) {
             return err;
         }
@@ -145,6 +145,127 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return questionToUpdate;
     }
 
+    public ErrOrNothing MoveQuestionUpInOrder(GeneralVokiQuestionId questionId) {
+        var question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find question to move up",
+                $"Voki with id {Id} doesn't have a question with id {questionId}"
+            );
+        }
+
+        if (question.OrderInVoki == 0) {
+            return ErrOrNothing.Nothing;
+        }
+
+        var neighbor = _questions.FirstOrDefault(q => q.OrderInVoki == question.OrderInVoki - 1);
+        if (neighbor is null) {
+            return ErrFactory.Conflict(
+                "Cannot move question up",
+                $"No neighbor with order {question.OrderInVoki - 1} found. Voki id: {Id}, question id: {questionId}"
+            );
+        }
+
+        question.MoveOrderUp();
+        neighbor.MoveOrderDown();
+
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOrNothing MoveQuestionDownInOrder(GeneralVokiQuestionId questionId) {
+        var question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return ErrFactory.NotFound.Common(
+                "Could not find question to move down",
+                $"Voki with id {Id} doesn't have a question with id {questionId}"
+            );
+        }
+
+        if (question.OrderInVoki == _questions.Count - 1) {
+            return ErrOrNothing.Nothing;
+        }
+
+        var neighbor = _questions.FirstOrDefault(q => q.OrderInVoki == question.OrderInVoki + 1);
+        if (neighbor is null) {
+            return ErrFactory.Conflict(
+                "Cannot move question down",
+                $"No neighbor with order {question.OrderInVoki + 1} found. Voki id: {Id}, question id: {questionId}"
+            );
+        }
+
+        question.MoveOrderDown();
+        neighbor.MoveOrderUp();
+
+        return ErrOrNothing.Nothing;
+    }
+
+    public bool DeleteQuestion(GeneralVokiQuestionId questionId) {
+        var question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return false;
+        }
+
+        var order = question.OrderInVoki;
+        _questions.Remove(question);
+
+        foreach (var q in _questions.Where(q => q.OrderInVoki > order)) {
+            q.MoveOrderUp();
+        }
+
+        return true;
+    }
+
+
+    public ErrOr<VokiQuestionAnswer> AddNewAnswerToQuestion(
+        GeneralVokiQuestionId questionId,
+        BaseVokiAnswerTypeData answerData,
+        ImmutableHashSet<GeneralVokiResultId> relatedResultIds
+    ) {
+        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return ErrFactory.NotFound.Common("Cannot add new answer to question because question not fount");
+        }
+
+        GeneralVokiAnswerId answerId = GeneralVokiAnswerId.CreateNew();
+        if (
+            CheckIfAnswerDataBelongs(questionId, answerId, answerData).IsErr(out var err)
+            || CheckIfResultsExist(relatedResultIds).IsErr(out err)
+        ) {
+            return err;
+        }
+
+        var res = question.AddNewAnswer(answerId, answerData, relatedResultIds);
+        return res;
+    }
+
+    public ErrOr<VokiQuestionAnswer> UpdateQuestionAnswer(
+        GeneralVokiQuestionId questionId, GeneralVokiAnswerId answerId,
+        BaseVokiAnswerTypeData newAnswerTypeData, ImmutableHashSet<GeneralVokiResultId> newRelatedResultIds
+    ) {
+        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return ErrFactory.NotFound.Common("Cannot add update question answer because question doesn't exist");
+        }
+
+        if (
+            CheckIfAnswerDataBelongs(questionId, answerId, newAnswerTypeData).IsErr(out var err)
+            || CheckIfResultsExist(newRelatedResultIds).IsErr(out err)
+        ) {
+            return err;
+        }
+
+        return question.UpdateAnswer(answerId, newAnswerTypeData, newRelatedResultIds);
+    }
+
+    public bool DeleteQuestionAnswer(GeneralVokiQuestionId questionId, GeneralVokiAnswerId answerId) {
+        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return false;
+        }
+
+        bool wasDeleted = question.DeleteAnswer(answerId);
+        return wasDeleted;
+    }
 
     public ErrOr<VokiResult> ResultWithId(GeneralVokiResultId resultId) {
         VokiResult? requestedResult = _results.FirstOrDefault(q => q.Id == resultId);
@@ -247,56 +368,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOr<VokiQuestionAnswer> AddNewAnswerToQuestion(
-        GeneralVokiQuestionId questionId,
-        BaseVokiAnswerTypeData answerData,
-        ImmutableHashSet<GeneralVokiResultId> relatedResultIds
-    ) {
-        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
-        if (question is null) {
-            return ErrFactory.NotFound.Common("Cannot add new answer to question because question not fount");
-        }
-
-        GeneralVokiAnswerId answerId = GeneralVokiAnswerId.CreateNew();
-        if (
-            CheckIfAnswerDataBelongs(questionId, answerId, answerData).IsErr(out var err)
-            || CheckIfResultsExist(relatedResultIds).IsErr(out err)
-        ) {
-            return err;
-        }
-
-        var res = question.AddNewAnswer(answerId, answerData, relatedResultIds);
-        return res;
-    }
-
-    public ErrOr<VokiQuestionAnswer> UpdateQuestionAnswer(
-        GeneralVokiQuestionId questionId, GeneralVokiAnswerId answerId,
-        BaseVokiAnswerTypeData newAnswerTypeData, ImmutableHashSet<GeneralVokiResultId> newRelatedResultIds
-    ) {
-        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
-        if (question is null) {
-            return ErrFactory.NotFound.Common("Cannot add update question answer because question doesn't exist");
-        }
-
-        if (
-            CheckIfAnswerDataBelongs(questionId, answerId, newAnswerTypeData).IsErr(out var err)
-            || CheckIfResultsExist(newRelatedResultIds).IsErr(out err)
-        ) {
-            return err;
-        }
-
-        return question.UpdateAnswer(answerId, newAnswerTypeData, newRelatedResultIds);
-    }
-
-    public bool DeleteQuestionAnswer(GeneralVokiQuestionId questionId, GeneralVokiAnswerId answerId) {
-        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
-        if (question is null) {
-            return false;
-        }
-
-        bool wasDeleted = question.DeleteAnswer(answerId);
-        return wasDeleted;
-    }
 
     private List<VokiPublishingIssue> CheckQuestionsForPublishingIssues() {
         if (_questions.Count < MinQuestionsCount) {
@@ -395,7 +466,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
         QuestionDomainEventDto ParseQuestionToDto(VokiQuestion q) {
             return new QuestionDomainEventDto(
-                q.Id, q.Text, q.Images, q.AnswersType, q.OrderInVoki,
+                q.Id, q.Text, q.ImageSet, q.AnswersType, q.OrderInVoki,
                 q.Answers.Select(a =>
                     new AnswerDomainEventDto(a.Id, a.OrderInQuestion, a.TypeData, a.RelatedResultIds.ToArray())
                 ).ToArray(),

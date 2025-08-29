@@ -16,7 +16,7 @@ public record class VokiQuestionBriefDataResponse(
     public static VokiQuestionBriefDataResponse Create(VokiQuestion question) => new(
         question.Id.ToString(),
         question.Text.ToString(),
-        question.Images.Keys.Select(k => k.ToString()).ToArray(),
+        question.ImageSet.Keys.Select(k => k.ToString()).ToArray(),
         question.AnswersType,
         question.OrderInVoki,
         ShuffleAnswers: question.ShuffleAnswers,

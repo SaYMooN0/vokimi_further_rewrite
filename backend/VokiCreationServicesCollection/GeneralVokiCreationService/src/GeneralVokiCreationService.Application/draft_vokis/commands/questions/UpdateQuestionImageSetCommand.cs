@@ -8,29 +8,30 @@ using VokimiStorageKeysLib.temp_keys;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 
-public sealed record UpdateQuestionImagesCommand(
+public sealed record UpdateQuestionImageSetCommand(
     VokiId VokiId,
     GeneralVokiQuestionId QuestionId,
     TempImageKey[] TempKeys,
-    GeneralVokiQuestionImageKey[] SavedKeys
+    GeneralVokiQuestionImageKey[] SavedKeys,
+    VokiQuestionImagesAspectRatio ImagesAspectRatio
 ) :
     ICommand<VokiQuestionImagesSet>,
     IWithVokiAccessValidationStep;
 
-internal sealed class UpdateQuestionImagesCommandHandler :
-    ICommandHandler<UpdateQuestionImagesCommand, VokiQuestionImagesSet>
+internal sealed class UpdateQuestionImageSetCommandHandler :
+    ICommandHandler<UpdateQuestionImageSetCommand, VokiQuestionImagesSet>
 {
     private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
     private readonly IMainStorageBucket _mainStorageBucket;
 
-    public UpdateQuestionImagesCommandHandler(
+    public UpdateQuestionImageSetCommandHandler(
         IDraftGeneralVokiRepository draftGeneralVokiRepository, IMainStorageBucket mainStorageBucket
     ) {
         _draftGeneralVokiRepository = draftGeneralVokiRepository;
         _mainStorageBucket = mainStorageBucket;
     }
 
-    public async Task<ErrOr<VokiQuestionImagesSet>> Handle(UpdateQuestionImagesCommand command, CancellationToken ct) {
+    public async Task<ErrOr<VokiQuestionImagesSet>> Handle(UpdateQuestionImageSetCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
 
         if (Validate(command.QuestionId, command.TempKeys, command.SavedKeys).IsErr(out var err)) {
@@ -52,7 +53,9 @@ internal sealed class UpdateQuestionImagesCommandHandler :
             resultKeys.Add(destination);
         }
 
-        ErrOr<VokiQuestionImagesSet> imagesSetRes = VokiQuestionImagesSet.Create([..resultKeys]);
+        ErrOr<VokiQuestionImagesSet> imagesSetRes = VokiQuestionImagesSet.Create(
+            [..resultKeys], command.ImagesAspectRatio
+        );
         if (imagesSetRes.IsErr(out err)) {
             return err;
         }
@@ -63,7 +66,7 @@ internal sealed class UpdateQuestionImagesCommandHandler :
         }
 
         await _draftGeneralVokiRepository.Update(voki);
-        return res.AsSuccess().Images;
+        return res.AsSuccess().ImageSet;
     }
 
     private static ErrOrNothing Validate(

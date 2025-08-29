@@ -2,10 +2,15 @@
 	import FieldNotSetLabel from '../../../../../../../lib/components/FieldNotSetLabel.svelte';
 	import VokiCreationDefaultButton from '../../../../../c_shared/VokiCreationDefaultButton.svelte';
 	import VokiCreationFieldName from '../../../../../c_shared/VokiCreationFieldName.svelte';
+	import type { GeneralVokiCreationQuestionImageSet } from '../types';
 	import QuestionImagesEditingDialog from './c_images_section/QuestionImagesEditingDialog.svelte';
 
-	let { images, questionId, vokiId }: { images: string[]; questionId: string; vokiId: string } =
-		$props<{ images: string[]; questionId: string; vokiId: string }>();
+	interface Props {
+		imageSet: GeneralVokiCreationQuestionImageSet;
+		questionId: string;
+		vokiId: string;
+	}
+	let { imageSet, questionId, vokiId }: Props = $props();
 	let dialogElement = $state<QuestionImagesEditingDialog>()!;
 </script>
 
@@ -13,15 +18,15 @@
 	bind:this={dialogElement}
 	{questionId}
 	{vokiId}
-	updateParent={(newImages) => (images = newImages)}
+	updateParent={(newImageSet) => (imageSet = newImageSet)}
 />
 <div class="field">
 	<VokiCreationFieldName fieldName="Images:" />
-	{#if images.length === 0}
+	{#if imageSet.keys.length === 0}
 		<FieldNotSetLabel text="No images selected" />
 	{/if}
 </div>
-<VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open(images)} />
+<VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open(imageSet)} />
 
 <style>
 	.field {

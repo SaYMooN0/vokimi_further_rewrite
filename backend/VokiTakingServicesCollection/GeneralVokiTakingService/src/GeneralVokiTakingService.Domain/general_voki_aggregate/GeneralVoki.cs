@@ -57,7 +57,7 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
             .ToList();
 
         foreach (var question in questions) {
-            keys.AddRange(question.Images.Select(k => k as BaseStorageKey));
+            keys.AddRange(question.ImageSet.Keys.Select(k => k as BaseStorageKey));
             var answerKeys = question.Answers
                 .Select(a => a.TypeData)
                 .OfType<IVokiAnswerTypeDataWithStorageKey>()
@@ -66,7 +66,7 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
         }
 
         keys.Add(coverKey);
-        
+
         return keys;
     }
 }

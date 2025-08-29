@@ -12,7 +12,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
 
     private VokiQuestion() { }
     public VokiQuestionText Text { get; private set; }
-    public VokiQuestionImagesSet Images { get; private set; }
+    public VokiQuestionImagesSet ImageSet { get; private set; }
     public GeneralVokiAnswerType AnswersType { get; }
     public ushort OrderInVoki { get; private set; }
     private readonly List<VokiQuestionAnswer> _answers;
@@ -24,14 +24,14 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     private VokiQuestion(
         GeneralVokiQuestionId id,
         VokiQuestionText text,
-        VokiQuestionImagesSet images,
+        VokiQuestionImagesSet imageSet,
         ushort orderInVoki,
         GeneralVokiAnswerType answersType,
         QuestionAnswersCountLimit answersCountLimit
     ) {
         Id = id;
         Text = text;
-        Images = images;
+        ImageSet = imageSet;
         AnswersType = answersType;
         OrderInVoki = orderInVoki;
         _answers = [];
@@ -45,7 +45,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     ) => new(
         GeneralVokiQuestionId.CreateNew(),
         GeneralVokiPresets.GetRandomQuestionText(),
-        VokiQuestionImagesSet.Empty,
+        VokiQuestionImagesSet.Default,
         orderInVoki,
         answersType,
         QuestionAnswersCountLimit.SingleChoice()
@@ -56,12 +56,21 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         Text = questionText;
     }
 
+    public void MoveOrderUp() {
+        if (OrderInVoki > 0) {
+            OrderInVoki--;
+        }
+    }
+
+    public void MoveOrderDown() {
+        OrderInVoki++;
+    }
     public ErrOrNothing UpdateImages(VokiQuestionImagesSet images) {
         if (images.Keys.Any(k => k.QuestionId != Id)) {
             return ErrFactory.Conflict("One or more images does not belong to this question");
         }
 
-        Images = images;
+        ImageSet = images;
         return ErrOrNothing.Nothing;
     }
 

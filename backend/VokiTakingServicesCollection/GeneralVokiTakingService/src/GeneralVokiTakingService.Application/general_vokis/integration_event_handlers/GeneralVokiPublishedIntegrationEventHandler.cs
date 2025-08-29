@@ -38,12 +38,15 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
 
     private static VokiQuestion QuestionFromEventDto(GeneralVokiQuestionIntegrationEventDto q) => new(
         q.Id, q.Text,
-        q.Images.Select(key => new GeneralVokiQuestionImageKey(key)).ToImmutableArray(),
+        ImageSetFromEventDto(q.Images, q.ImagesAspectRatio),
         q.AnswersType, q.OrderInVoki,
         q.Answers.Select(a => AnswerFromEventDto(a, q.AnswersType)).ToImmutableArray(),
         q.ShuffleAnswers,
         new QuestionAnswersCountLimit(minAnswers: q.MinAnswersCount, maxAnswers: q.MaxAnswersCount)
     );
+
+    private static VokiQuestionImagesSet ImageSetFromEventDto(string[] images, double aspectRatio) =>
+        new(images.Select(key => new GeneralVokiQuestionImageKey(key)).ToImmutableArray(), aspectRatio);
 
     private static VokiQuestionAnswer AnswerFromEventDto(
         GeneralVokiAnswerIntegrationEventDto a,

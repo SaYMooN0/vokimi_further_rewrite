@@ -27,7 +27,7 @@ public record GeneralVokiPublishedEvent(
 public record QuestionDomainEventDto(
     GeneralVokiQuestionId Id,
     VokiQuestionText Text,
-    VokiQuestionImagesSet Images,
+    VokiQuestionImagesSet ImageSet,
     GeneralVokiAnswerType AnswersType,
     ushort OrderInVoki,
     AnswerDomainEventDto[] Answers,

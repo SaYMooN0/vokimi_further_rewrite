@@ -24,8 +24,8 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .HasConversion<VokiQuestionTextConverter>();
 
         builder
-            .Property(x => x.Images)
-            .HasVokiQuestionImagesSetConversion();
+            .Property(x => x.ImageSet)
+            .HasConversion<VokiQuestionImagesSetConverter>();
 
         builder.Ignore(x => x.Answers);
         builder

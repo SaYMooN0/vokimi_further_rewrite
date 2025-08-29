@@ -7,7 +7,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
 {
     private VokiQuestion() { }
     public string Text { get; }
-    public ImmutableArray<GeneralVokiQuestionImageKey> Images { get; }
+    public VokiQuestionImagesSet ImageSet { get; }
     public GeneralVokiAnswerType AnswersType { get; }
     public ushort OrderInVoki { get; }
     public bool ShuffleAnswers { get; }
@@ -18,14 +18,14 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     public VokiQuestion(
         GeneralVokiQuestionId id,
         string text,
-        ImmutableArray<GeneralVokiQuestionImageKey> images,
+        VokiQuestionImagesSet imageSet,
         GeneralVokiAnswerType answersType,
         ushort orderInVoki,
         ImmutableArray<VokiQuestionAnswer> answers,
         bool shuffleAnswers, QuestionAnswersCountLimit answersCountLimit) {
         Id = id;
         Text = text;
-        Images = images;
+        ImageSet = imageSet;
         AnswersType = answersType;
         OrderInVoki = orderInVoki;
         Answers = answers;

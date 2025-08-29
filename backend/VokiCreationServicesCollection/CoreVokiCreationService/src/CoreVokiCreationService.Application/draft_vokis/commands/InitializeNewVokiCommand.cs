@@ -7,10 +7,10 @@ using SharedKernel.common.vokis;
 namespace CoreVokiCreationService.Application.draft_vokis.commands;
 
 public sealed record InitializeNewVokiCommand(VokiType VokiType, VokiName VokiName)
-    : ICommand<(VokiId Id, VokiType Type)>;
+    : ICommand<DraftVoki>;
 
 internal sealed class InitializeNewVokiCommandHandler :
-    ICommandHandler<InitializeNewVokiCommand, (VokiId Id, VokiType Type)>
+    ICommandHandler<InitializeNewVokiCommand, DraftVoki>
 {
     private readonly IUserContext _userContext;
     private readonly IDraftVokiRepository _draftVokiRepository;
@@ -31,8 +31,7 @@ internal sealed class InitializeNewVokiCommandHandler :
 
     private static readonly VokiType[] ImplementedTypes = [VokiType.General];
 
-    public async Task<ErrOr<(VokiId Id, VokiType Type)>>
-        Handle(InitializeNewVokiCommand command, CancellationToken ct) {
+    public async Task<ErrOr<DraftVoki>> Handle(InitializeNewVokiCommand command, CancellationToken ct) {
         if (!ImplementedTypes.Contains(command.VokiType)) {
             return ErrFactory.NotImplemented("Specified voki type is not implemented");
         }
@@ -46,6 +45,6 @@ internal sealed class InitializeNewVokiCommandHandler :
         }
 
         await _draftVokiRepository.Add(voki);
-        return (voki.Id, voki.Type);
+        return voki;
     }
 }

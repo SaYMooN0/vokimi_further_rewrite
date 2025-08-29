@@ -22,9 +22,9 @@ internal static class SpecificVokiQuestionsHandlers
             .WithRequestValidation<UpdateQuestionImagesRequest>();
         group.MapPatch("/update-answer-settings", UpdateQuestionAnswerSettings)
             .WithRequestValidation<UpdateQuestionAnswerSettingsRequest>();
+        group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
+        group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
         // group.MapDelete("/delete", DeleteVokiQuestion);
-        // group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
-        // group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
     }
 
     private static async Task<IResult> GetVokiQuestionFullData(
@@ -64,17 +64,21 @@ internal static class SpecificVokiQuestionsHandlers
 
     private static async Task<IResult> UpdateQuestionImages(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<UpdateQuestionImagesCommand, VokiQuestionImagesSet> handler
+        ICommandHandler<UpdateQuestionImageSetCommand, VokiQuestionImagesSet> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
         var request = httpContext.GetValidatedRequest<UpdateQuestionImagesRequest>();
 
-        UpdateQuestionImagesCommand command = new(id, questionId, request.ParsedTempKeys, request.ParsedSavedKeys);
+        UpdateQuestionImageSetCommand command = new(
+            id, questionId, request.ParsedTempKeys, request.ParsedSavedKeys, request.ParsedAspectRatio
+        );
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (imgsSet) => Results.Json(new {
-            NewImages = imgsSet.Keys.Select(s => s.ToString()).ToArray()
+            NewKeys = imgsSet.Keys.Select(s => s.ToString()).ToArray(),
+            NewWidth = imgsSet.AspectRatio.Width,
+            NewHeight = imgsSet.AspectRatio.Height
         }));
     }
 
@@ -98,19 +102,46 @@ internal static class SpecificVokiQuestionsHandlers
         }));
     }
 
-    // private static async Task<IResult> MoveQuestionUpInOrder(
-    //     CancellationToken ct, HttpContext httpContext,
-    //     ICommandHandler<MoveQuestionUpInOrderCommand, ImmutableDictionary<GeneralVokiQuestionId, ushort>> handler
-    // ) {
-    //     VokiId id = httpContext.GetVokiIdFromRoute();
-    //     GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
-    //
-    //
-    //     MoveQuestionUpInOrderCommand command = new(id, questionId);
-    //     var result = await handler.Handle(command, ct);
-    //
-    //     return CustomResults.FromErrOr(result, (questionsOrder) => Results.Json(
-    //         new { Id = questionId.ToString() }
-    //     ));
-    // }
+    private static async Task<IResult> MoveQuestionUpInOrder(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<MoveQuestionUpInOrderCommand, ImmutableArray<VokiQuestion>> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+
+        MoveQuestionUpInOrderCommand command = new(id, questionId);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (questions) => Results.Json(
+            ListAllQuestionsBriefDataResponse.Create(questions)
+        ));
+    }
+
+    private static async Task<IResult> MoveQuestionDownInOrder(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<MoveQuestionDownInOrderCommand, ImmutableArray<VokiQuestion>> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+
+        MoveQuestionDownInOrderCommand command = new(id, questionId);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (questions) => Results.Json(
+            ListAllQuestionsBriefDataResponse.Create(questions)
+        ));
+    }
+
+    private static async Task<IResult> DeleteVokiQuestion(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<DeleteVokiQuestionCommand> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+
+        DeleteVokiQuestionCommand command = new(id, questionId);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
+    }
 }

@@ -31,6 +31,7 @@ public sealed record class GeneralVokiQuestionIntegrationEventDto(
     GeneralVokiQuestionId Id,
     string Text,
     string[] Images,
+    Double ImagesAspectRatio,
     GeneralVokiAnswerType AnswersType,
     ushort OrderInVoki,
     GeneralVokiAnswerIntegrationEventDto[] Answers,

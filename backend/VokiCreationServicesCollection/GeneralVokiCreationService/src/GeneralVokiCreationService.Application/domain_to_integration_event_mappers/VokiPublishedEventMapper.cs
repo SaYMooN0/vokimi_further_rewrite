@@ -21,14 +21,15 @@ public static class VokiPublishedEventMapper
     public static GeneralVokiQuestionIntegrationEventDto[] QuestionIntegrationEventDtoArray(
         QuestionDomainEventDto[] questions
     ) => questions
-        .Select(VokiPublishedEventMapper.QuestionDtoFromQuestion)
+        .Select(QuestionDtoFromQuestion)
         .ToArray();
 
 
     private static GeneralVokiQuestionIntegrationEventDto QuestionDtoFromQuestion(QuestionDomainEventDto q) => new(
         q.Id,
         q.Text.ToString(),
-        q.Images.Keys.Select(i => i.ToString()).ToArray(),
+        Images: q.ImageSet.Keys.Select(i => i.ToString()).ToArray(),
+        ImagesAspectRatio: q.ImageSet.AspectRatio.GetRatio(),
         q.AnswersType,
         q.OrderInVoki,
         q.Answers.Select(a => new GeneralVokiAnswerIntegrationEventDto(

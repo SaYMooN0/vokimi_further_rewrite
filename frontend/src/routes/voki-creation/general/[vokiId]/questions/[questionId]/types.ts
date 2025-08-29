@@ -3,7 +3,7 @@ import type { GeneralVokiAnswerType } from "$lib/ts/voki";
 export type QuestionFullInfo = {
     id: string;
     text: string;
-    images: string[];
+    imageSet: GeneralVokiCreationQuestionImageSet;
     answersType: GeneralVokiAnswerType;
     answers: QuestionAnswerData[];
     shuffleAnswers: boolean;
@@ -22,7 +22,11 @@ export type ResultIdWithName = {
     id: string;
     name: string;
 }
-
+export type GeneralVokiCreationQuestionImageSet = {
+    width: number;
+    height: number;
+    keys: string[]
+}
 export function createEmptyGeneralVokiAnswerTypeData(type: GeneralVokiAnswerType): GeneralVokiCreationAnswerData {
     switch (type) {
         case 'TextOnly':
