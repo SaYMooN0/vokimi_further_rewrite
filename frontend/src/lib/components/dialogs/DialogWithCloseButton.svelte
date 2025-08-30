@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import BaseDialog from './BaseDialog.svelte';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 
 	let {
 		children,
@@ -22,7 +23,7 @@
 </script>
 
 <BaseDialog bind:this={dialog} {dialogId}>
-	{#if subheading}
+	{#if !StringUtils.isNullOrWhiteSpace(subheading)}
 		<h1 class="subheading">{subheading}</h1>
 	{/if}
 	<button class="dialog-close-btn" onclick={() => close()}>

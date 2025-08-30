@@ -33,14 +33,15 @@
 		width: 100%;
 		row-gap: 0.375rem;
 	}
+
 	.tag-box {
 		margin-left: 0.375rem;
 		border-radius: 0.25rem;
 		font-size: 1rem;
 	}
+
 	.tag {
 		padding: 0.125rem 0.375rem;
-
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
 		box-shadow: var(--shadow-xs);
@@ -48,13 +49,13 @@
 
 	.suggest-tag-btn {
 		padding: 0.125rem 0.675rem;
-
+		margin-left: auto;
+		border: none;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-		border: none;
 		cursor: pointer;
-		margin-left: auto;
 	}
+
 	.suggest-tag-btn:hover {
 		background-color: var(--primary-hov);
 	}

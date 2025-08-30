@@ -69,6 +69,7 @@
 		border-radius: 0.25rem;
 		cursor: default;
 	}
+
 	.buttons-container > :global(*:focus) {
 		outline: var(--primary) solid 0.125rem;
 	}
@@ -83,9 +84,9 @@
 	.buttons-container > :global(* > .btn-text) {
 		width: 8.5rem;
 		font-size: 1.25rem;
-		cursor: inherit;
 		font-weight: 450;
-		letter-spacing: 0.2px;
 		text-align: start;
+		letter-spacing: 0.2px;
+		cursor: inherit;
 	}
 </style>

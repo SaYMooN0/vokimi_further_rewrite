@@ -56,6 +56,7 @@
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
+
 	.take-voki-btn:hover {
 		background-color: var(--primary-hov);
 	}

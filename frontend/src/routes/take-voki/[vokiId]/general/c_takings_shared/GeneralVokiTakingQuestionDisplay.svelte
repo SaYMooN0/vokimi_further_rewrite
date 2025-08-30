@@ -44,16 +44,19 @@
 		flex-direction: column;
 		align-items: center;
 	}
+
 	.question-num {
-		font-size: 1.125rem;
 		color: var(--muted-foreground);
+		font-size: 1.125rem;
 	}
+
 	.question-text {
 		margin: 4px 0;
+		color: var(--text);
 		font-size: 24px;
 		font-weight: 500;
-		color: var(--text);
 	}
+
 	.images-container {
 		display: flex;
 		flex-wrap: wrap;
@@ -62,17 +65,18 @@
 	}
 
 	.images-container img {
-		object-fit: contain;
+		width: 100%;
 		min-width: 20rem;
 		max-width: 38rem;
 		min-height: 15rem;
 		max-height: 25rem;
-		width: 100%;
-		border-radius: 0rem;
+		border-radius: 0;
+		object-fit: contain;
 	}
+
 	.answers-count-label {
-		font-size: 18px;
-		color: var(--text);
 		margin: 0;
+		color: var(--text);
+		font-size: 18px;
 	}
 </style>

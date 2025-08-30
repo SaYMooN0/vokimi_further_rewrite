@@ -23,14 +23,15 @@
 
 <style>
 	.voki-initialized-container {
-		margin: auto 0;
 		display: flex;
 		flex-direction: column;
-		width: 100%;
 		align-items: center;
 		gap: 2rem;
+		width: 100%;
 		padding: 1rem 2rem;
+		margin: auto 0;
 	}
+
 	.initialized-msg {
 		margin: 0;
 		color: var(--muted-foreground);
@@ -38,8 +39,9 @@
 		font-weight: 500;
 		text-align: center;
 	}
+
 	.name {
-		font-weight: 600;
 		color: var(--primary);
+		font-weight: 600;
 	}
 </style>

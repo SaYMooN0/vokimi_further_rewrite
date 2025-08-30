@@ -87,10 +87,11 @@
 	.tabs-section {
 		display: flex;
 		flex-direction: column;
+		padding: 0 0.5rem;
 		border-radius: 0.5rem;
 		box-shadow: var(--shadow-xs);
-		padding: 0 0.5rem;
 	}
+
 	.current-tab {
 		margin: 0.75rem 0;
 	}

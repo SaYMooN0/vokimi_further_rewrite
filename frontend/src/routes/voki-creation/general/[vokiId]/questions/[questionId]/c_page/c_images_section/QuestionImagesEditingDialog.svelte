@@ -5,12 +5,11 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import DialogQuestionImageView from './c_images_dialog/DialogQuestionImageView.svelte';
-	import GeneralVokiAddQuestionImage from './c_images_dialog/GeneralVokiAddQuestionImage.svelte';
 	import QuestionHasNoImages from './c_images_dialog/QuestionHasNoImages.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { GeneralVokiCreationQuestionImageSet } from '../../types';
 	import QuestionImagesAspectRationInput from './c_images_dialog/QuestionImagesAspectRationInput.svelte';
+	import AddedImagesView from './c_images_dialog/QuestionAddedImagesView.svelte';
 
 	let {
 		questionId,
@@ -31,8 +30,8 @@
 
 	let dialogElement = $state<DialogWithCloseButton>()!;
 	let errs = $state<Err[]>([]);
-	const maxImagesCount = 5;
 	async function saveData() {
+		errs = [];
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
 			newKeys: string[];
 			newWidth: number;
@@ -62,7 +61,8 @@
 		errs = [];
 		dialogElement.open();
 	}
-	async function uploadAndAddImg(file: File): Promise<void> {
+	async function uploadAndAddImage(file: File): Promise<void> {
+		errs = [];
 		const formData = new FormData();
 		formData.append('file', file);
 		const response = await StorageBucketMain.uploadTempImage(file);
@@ -72,29 +72,32 @@
 			errs = response.errs;
 		}
 	}
-	function removeImg(img: string) {
+	function removeImage(img: string) {
+		errs = [];
 		images = images.filter((i) => i != img);
 	}
+	const maxImagesCount = 5;
 </script>
 
 <DialogWithCloseButton
 	bind:this={dialogElement}
 	dialogId="voki-creation-question-images-dialog"
-	subheading="Question images"
+	subheading={images.length === 0 ? 'Add question images' : undefined}
 >
 	{#if images.length == 0}
-		<QuestionHasNoImages uploadImage={uploadAndAddImg} />
+		<QuestionHasNoImages uploadImage={uploadAndAddImage} />
 	{:else}
-		<div class="imgs-container">
-			{#each images as img}
-				<DialogQuestionImageView {img} {removeImg} />
-			{/each}
-			{#if images.length < maxImagesCount}
-				<GeneralVokiAddQuestionImage uploadImage={uploadAndAddImg} />
-			{/if}
-		</div>
-		<p class="choose-aspect-ratio">Choose images aspect ratio</p>
-		<QuestionImagesAspectRationInput bind:aspectRatio={aspectRatio} />
+		<p class="subheading">Question images ({images.length}/{maxImagesCount})</p>
+		<AddedImagesView
+			{maxImagesCount}
+			{images}
+			widthRatio={aspectRatio.width}
+			heightRatio={aspectRatio.height}
+			{removeImage}
+			{uploadAndAddImage}
+		/>
+		<p class="subheading">Choose images aspect ratio</p>
+		<QuestionImagesAspectRationInput bind:aspectRatio />
 	{/if}
 	{#if errs.length > 0}
 		<DefaultErrBlock errList={errs} />
@@ -106,19 +109,15 @@
 	:global(#voki-creation-question-images-dialog .dialog-content) {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
 	}
-
-	.imgs-container {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		gap: 1rem;
-		max-width: min(90vw, 90rem);
-	}
-
 	:global(#voki-creation-question-images-dialog .dialog-content > .primary-btn) {
 		align-self: center;
+	}
+	.subheading {
+		margin: 0 0 0.5rem ;
+		color: var(--text);
+		font-size: 1.5rem;
+		font-weight: 550;
+		text-align: center;
 	}
 </style>

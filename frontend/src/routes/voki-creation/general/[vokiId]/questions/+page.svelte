@@ -3,10 +3,9 @@
 	import type { PageProps } from './$types';
 	import QuestionInitializingDialog from './c_questions_page/QuestionInitializingDialog.svelte';
 	import VokiTakingProcessSettingsSection from './c_questions_page/VokiTakingProcessSettingsSection.svelte';
-	import GeneralVokiCreationQuestionItem from './c_questions_page/GeneralVokiCreationQuestionItem.svelte';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import VokiCreationBasicHeader from '../../../c_shared/VokiCreationBasicHeader.svelte';
 	import ListEmptyMessage from '../../../c_shared/ListEmptyMessage.svelte';
+	import GeneralVokiCreationQuestionsList from './c_questions_page/GeneralVokiCreationQuestionsList.svelte';
 
 	let { data }: PageProps = $props();
 	let questionInitializingDialog = $state<QuestionInitializingDialog>()!;
@@ -25,16 +24,7 @@
 		/>
 	{:else}
 		<VokiTakingProcessSettingsSection vokiId={data.vokiId!} settings={data.data.settings} />
-		<VokiCreationBasicHeader header={`Voki questions (${data.data.questions.length})`} />
-		<div class="questions">
-			{#each data.data.questions as question}
-				<GeneralVokiCreationQuestionItem
-					vokiId={data.vokiId!}
-					{question}
-					questionsCount={data.data.questions.length}
-				/>
-			{/each}
-		</div>
+		<GeneralVokiCreationQuestionsList questionsProps={data.data.questions} vokiId={data.vokiId!} />
 		{#if data.data.questions.length < maxQuestionsCount}
 			<div class="add-new-question-btn-container">
 				<PrimaryButton onclick={() => questionInitializingDialog.open()}
@@ -46,12 +36,6 @@
 {/if}
 
 <style>
-	.questions {
-		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-	}
-
 	.add-new-question-btn-container {
 		display: flex;
 		justify-content: center;

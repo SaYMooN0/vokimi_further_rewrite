@@ -1,9 +1,13 @@
 <script lang="ts">
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 
-	const { uploadImage }: { uploadImage: (image: File) => Promise<void> } = $props<{
+	interface Props {
+		widthRatio: number;
+		heightRatio: number;
 		uploadImage: (image: File) => Promise<void>;
-	}>();
+	}
+
+	let { widthRatio, heightRatio, uploadImage }: Props = $props();
 
 	async function handleInputChange(event: Event) {
 		const files = (event.target as HTMLInputElement).files;
@@ -21,7 +25,7 @@
 </script>
 
 {#if isLoading}
-	<div class="loading-container">
+	<div class="loading-container" style="aspect-ratio: {widthRatio} / {heightRatio};">
 		<CubesLoader sizeRem={4} />
 		<h1>Uploading image...</h1>
 	</div>
@@ -42,7 +46,7 @@
 		border-radius: 1rem;
 		background-color: var(--secondary);
 		animation: var(--default-fade-in-animation);
-		aspect-ratio: 1/1;
+		height: 100%;
 	}
 
 	.loading-container > h1 {
@@ -51,7 +55,7 @@
 		font-size: 1.25rem;
 		font-weight: 550;
 		letter-spacing: 0.5px;
-		white-space: nowrap;
+		text-align: center;
 	}
 
 	.upload-button {
@@ -60,12 +64,12 @@
 		justify-content: center;
 		align-items: center;
 		gap: 1rem;
-		height: 10rem;
+		height: 100%;
 		padding: 0 1rem;
-		border: 0.1875rem dashed var(--muted-foreground);
+		border: 0.1875rem dashed var(--secondary-foreground);
 		border-radius: 0.5rem;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 500;
 		letter-spacing: 0.25px;

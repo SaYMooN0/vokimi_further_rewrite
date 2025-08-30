@@ -13,10 +13,10 @@
 		justify-content: center;
 		align-items: center;
 		height: var(--side-bar-links-top-padding);
+		margin: 0;
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 440;
-		margin: 0;
 	}
 
 	h1 label {

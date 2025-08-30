@@ -27,6 +27,7 @@
 		gap: 0.5rem;
 		
 	}
+
 	.publication-date {
 		margin: 0;
 	}

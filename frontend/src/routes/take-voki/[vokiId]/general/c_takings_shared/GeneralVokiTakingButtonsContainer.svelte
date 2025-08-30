@@ -53,46 +53,52 @@
 		grid-template-columns: 1fr 1fr 1fr;
 		align-items: center;
 	}
+
 	.dummy {
-		opacity: 0;
 		font-size: 0.5rem;
+		opacity: 0;
 	}
 
 	.next-prev-btns {
-		background-color: var(--primary);
-		height: 2rem;
 		width: 8rem;
-		font-size: 1.25rem;
-		font-weight: 450;
+		height: 2rem;
 		border: none;
 		border-radius: 0.25rem;
+		background-color: var(--primary);
 		color: var(--primary-foreground);
+		font-size: 1.25rem;
+		font-weight: 450;
 		cursor: pointer;
 	}
+
 	.next-prev-btns:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.next-prev-btns.inactive {
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
 		cursor: not-allowed;
 	}
+
 	.next-prev-btns.reduced {
 		transform: scale(0.9);
 	}
+
 	.finish-btn {
-		background-color: var(--primary);
-		height: 2.5rem;
 		width: 10rem;
-		font-size: 1.25rem;
-		font-weight: 450;
+		height: 2.5rem;
 		border: none;
 		border-radius: 0.25rem;
+		background-color: var(--primary);
 		color: var(--primary-foreground);
-		cursor: pointer;
-		transform: scale(1);
+		font-size: 1.25rem;
+		font-weight: 450;
 		transition: all 0.12s ease-in;
+		transform: scale(1);
+		cursor: pointer;
 	}
+
 	.finish-btn.hidden {
 		opacity: 0;
 		transform: scale(0);

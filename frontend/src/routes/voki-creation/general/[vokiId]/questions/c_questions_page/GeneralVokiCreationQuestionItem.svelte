@@ -4,26 +4,30 @@
 	import QuestionOrderButtons from './c_question_item/QuestionOrderButtons.svelte';
 	import QuestionProps from './c_question_item/QuestionProps.svelte';
 
-	let {
-		vokiId,
-		question,
-		questionsCount
-	}: { vokiId: string; question: QuestionBriefInfo; questionsCount: number } = $props<{
+	interface Props {
 		vokiId: string;
 		question: QuestionBriefInfo;
 		questionsCount: number;
-	}>();
-	async function deleteQuestion() {
-		toast.error('Question deleting is not implemented yet');
+		moveQuestionUpInOrder: () => void;
+		moveQuestionDownInOrder: () => void;
+		deleteQuestion: () => void;
 	}
+	let {
+		vokiId,
+		question,
+		questionsCount,
+		moveQuestionDownInOrder,
+		moveQuestionUpInOrder,
+		deleteQuestion
+	}: Props = $props();
 </script>
 
 <div class="question">
 	<QuestionOrderButtons
-		{vokiId}
-		questionId={question.id}
 		questionOrder={question.orderInVoki}
 		{questionsCount}
+		{moveQuestionUpInOrder}
+		{moveQuestionDownInOrder}
 	/>
 	<div class="question-content">
 		<p class="text">

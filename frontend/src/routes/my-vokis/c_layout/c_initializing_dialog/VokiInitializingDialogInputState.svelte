@@ -95,13 +95,14 @@
 <style>
 	
 	.loading-container {
-		margin: auto 0;
 		display: flex;
 		flex-direction: column;
-		width: 100%;
 		align-items: center;
 		gap: 2rem;
+		width: 100%;
+		margin: auto 0;
 	}
+
 	.loading-container p {
 		margin: 0;
 		color: var(--secondary-foreground);
@@ -109,12 +110,14 @@
 		font-weight: 600;
         letter-spacing: 0.25px;
 	}
+
 	.subheading {
 		width: fit-content;
 		margin: 0 0 1rem;
 		font-size: 2rem;
 		font-weight: 500;
 	}
+
 	.voki-type-container {
 		display: flex;
 		flex-direction: row;
@@ -149,6 +152,6 @@
 
 	:global(.primary-btn.initialize-voki-btn) {
 		padding: 0.25rem 1.5rem;
-		margin: auto auto 0rem;
+		margin: auto auto 0;
 	}
 </style>

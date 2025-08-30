@@ -27,6 +27,7 @@
 		gap: 2rem;
 		margin-top: 12rem;
 	}
+
 	.link {
 		background-color: var(--primary);
 		text-decoration: none;

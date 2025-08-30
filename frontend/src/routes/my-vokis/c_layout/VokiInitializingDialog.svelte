@@ -40,6 +40,7 @@
 		width: 48rem;
 		height: 36rem;
 	}
+
 	:global(#voki-initializing-dialog .dialog-content:has(.voki-initialized-container)) {
 		width: unset;
 		height: unset;

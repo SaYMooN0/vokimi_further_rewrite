@@ -24,7 +24,7 @@ internal static class SpecificVokiQuestionsHandlers
             .WithRequestValidation<UpdateQuestionAnswerSettingsRequest>();
         group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
         group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
-        // group.MapDelete("/delete", DeleteVokiQuestion);
+        group.MapDelete("/delete", DeleteVokiQuestion);
     }
 
     private static async Task<IResult> GetVokiQuestionFullData(
@@ -134,7 +134,7 @@ internal static class SpecificVokiQuestionsHandlers
 
     private static async Task<IResult> DeleteVokiQuestion(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<DeleteVokiQuestionCommand> handler
+        ICommandHandler<DeleteVokiQuestionCommand, ImmutableArray<VokiQuestion>> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
@@ -142,6 +142,8 @@ internal static class SpecificVokiQuestionsHandlers
         DeleteVokiQuestionCommand command = new(id, questionId);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
+        return CustomResults.FromErrOr(result, (questions) => Results.Json(
+            ListAllQuestionsBriefDataResponse.Create(questions)
+        ));
     }
 }

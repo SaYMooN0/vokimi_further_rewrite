@@ -23,9 +23,10 @@
 	.description {
 		margin: 0;
 	}
+
 	.description > .value {
-		font-weight: 440;
 		font-size: 1.25rem;
+		font-weight: 440;
 		text-indent: 0.5em;
 		word-break: break-all;
 	}

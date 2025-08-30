@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import FieldNotSetLabel from '../../../../../../../lib/components/FieldNotSetLabel.svelte';
 	import VokiCreationDefaultButton from '../../../../../c_shared/VokiCreationDefaultButton.svelte';
 	import VokiCreationFieldName from '../../../../../c_shared/VokiCreationFieldName.svelte';
@@ -20,12 +21,27 @@
 	{vokiId}
 	updateParent={(newImageSet) => (imageSet = newImageSet)}
 />
-<div class="field">
-	<VokiCreationFieldName fieldName="Images:" />
-	{#if imageSet.keys.length === 0}
+{#if imageSet.keys.length === 0}
+	<div class="field">
+		<VokiCreationFieldName fieldName="Images:" />
 		<FieldNotSetLabel text="No images selected" />
-	{/if}
-</div>
+	</div>
+{:else}
+	<div class="field"><VokiCreationFieldName fieldName="Images:" /></div>
+	<div class="images-container">
+		{#each imageSet.keys as image}
+			<img
+				src={StorageBucketMain.fileSrc(image)}
+				alt="question-img"
+				style="aspect-ratio: {imageSet.width} / {imageSet.height};"
+			/>
+		{/each}
+	</div>
+	<div class="field aspect-ratio">
+		<VokiCreationFieldName fieldName="Images aspect ratio:" />
+		<label>{imageSet.width} : {imageSet.height}</label>
+	</div>
+{/if}
 <VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open(imageSet)} />
 
 <style>
@@ -34,5 +50,24 @@
 		flex-direction: row;
 		align-items: center;
 		margin-top: 1.5rem;
+	}
+	.images-container {
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: start;
+		gap: 1rem;
+		margin-top: 1rem;
+	}
+	.images-container img {
+		height: 14rem;
+		border-radius: 1rem;
+		box-shadow: var(--shadow-xs), var(--shadow);
+	}
+	.field.aspect-ratio > label {
+		color: var(--text);
+		font-size: 1.375rem;
+		font-weight: 450;
+		text-decoration: none;
 	}
 </style>

@@ -1,36 +1,21 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
-
-	let {
-		vokiId,
-		questionId,
-		questionOrder,
-		questionsCount
-	}: {
-		vokiId: string;
-		questionId: string;
+	interface Props {
+		moveQuestionUpInOrder: () => void;
+		moveQuestionDownInOrder: () => void;
 		questionOrder: number;
 		questionsCount: number;
-	} = $props<{
-		vokiId: string;
-		questionId: string;
-		questionOrder: number;
-		questionsCount: number;
-	}>();
-	async function moveUpInOrder() {
-		toast.error("Question order buttons aren't implemented yet");
 	}
-	async function moveDownInOrder() {
-		toast.error("Question order buttons aren't implemented yet");
-	}
+	let { moveQuestionUpInOrder, moveQuestionDownInOrder, questionOrder, questionsCount }: Props =
+		$props();
 </script>
 
 <div class="change-order-btns">
 	{#if questionOrder != 0}
-		<svg onclick={() => moveUpInOrder()}><use href="#caret-up-icon" /></svg>
+		<svg onclick={() => moveQuestionUpInOrder()}><use href="#caret-up-icon" /></svg>
 	{/if}
 	{#if questionOrder != questionsCount - 1}
-		<svg onclick={() => moveDownInOrder()}><use href="#caret-down-icon" /></svg>
+		<svg onclick={() => moveQuestionDownInOrder()}><use href="#caret-down-icon" /></svg>
 	{/if}
 </div>
 
