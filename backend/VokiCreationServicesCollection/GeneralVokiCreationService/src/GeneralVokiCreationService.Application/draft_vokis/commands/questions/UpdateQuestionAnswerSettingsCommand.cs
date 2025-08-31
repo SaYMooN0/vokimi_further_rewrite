@@ -17,14 +17,14 @@ public sealed record UpdateQuestionAnswerSettingsCommand(
 internal sealed class UpdateQuestionAnswerSettingsCommandHandler :
     ICommandHandler<UpdateQuestionAnswerSettingsCommand, VokiQuestion>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public UpdateQuestionAnswerSettingsCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public UpdateQuestionAnswerSettingsCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task<ErrOr<VokiQuestion>> Handle(UpdateQuestionAnswerSettingsCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId))!;
         var res = voki.UpdateQuestionAnswerSettings(
             command.QuestionId, command.NewCountLimit, command.ShuffleAnswers
         );
@@ -32,7 +32,7 @@ internal sealed class UpdateQuestionAnswerSettingsCommandHandler :
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return res.AsSuccess();
     }
 }

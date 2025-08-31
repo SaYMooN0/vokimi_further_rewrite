@@ -13,15 +13,15 @@ public sealed record PublishVokiWithWarningsIgnoredCommand(VokiId VokiId) :
 internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
     ICommandHandler<PublishVokiWithWarningsIgnoredCommand, VokiSuccessfullyPublishedResult>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
 
     public PublishVokiWithWarningsIgnoredCommandHandler(
-        IDraftGeneralVokiRepository draftGeneralVokiRepository,
+        IDraftGeneralVokisRepository draftGeneralVokisRepository,
         IDateTimeProvider dateTimeProvider
     ) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _dateTimeProvider = dateTimeProvider;
     }
 
@@ -29,13 +29,13 @@ internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
         PublishVokiWithWarningsIgnoredCommand command,
         CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
         var publishingRes = voki.PublishWithWarningsIgnored(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {
             return err;
         }
 
-        await _draftGeneralVokiRepository.Delete(voki);
+        await _draftGeneralVokisRepository.Delete(voki);
 
         return new VokiSuccessfullyPublishedResult(voki.Id, voki.Cover, voki.Name);
     }

@@ -20,19 +20,19 @@ public sealed record UpdateVokiResultCommand(
 
 internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVokiResultCommand, VokiResult>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IMainStorageBucket _mainStorageBucket;
 
     public UpdateResultTextCommandHandler(
-        IDraftGeneralVokiRepository draftGeneralVokiRepository,
+        IDraftGeneralVokisRepository draftGeneralVokisRepository,
         IMainStorageBucket mainStorageBucket
     ) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _mainStorageBucket = mainStorageBucket;
     }
 
     public async Task<ErrOr<VokiResult>> Handle(UpdateVokiResultCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithResults(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId))!;
         var imageRes = await HandleImage(command.NewImage, command.VokiId, command.ResultId);
         if (imageRes.IsErr(out var err)) {
             return err;
@@ -43,7 +43,7 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return res.AsSuccess();
     }
 

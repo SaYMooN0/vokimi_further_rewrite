@@ -21,18 +21,18 @@ public sealed record UpdateQuestionImageSetCommand(
 internal sealed class UpdateQuestionImageSetCommandHandler :
     ICommandHandler<UpdateQuestionImageSetCommand, VokiQuestionImagesSet>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IMainStorageBucket _mainStorageBucket;
 
     public UpdateQuestionImageSetCommandHandler(
-        IDraftGeneralVokiRepository draftGeneralVokiRepository, IMainStorageBucket mainStorageBucket
+        IDraftGeneralVokisRepository draftGeneralVokisRepository, IMainStorageBucket mainStorageBucket
     ) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _mainStorageBucket = mainStorageBucket;
     }
 
     public async Task<ErrOr<VokiQuestionImagesSet>> Handle(UpdateQuestionImageSetCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId))!;
 
         if (Validate(command.QuestionId, command.TempKeys, command.SavedKeys).IsErr(out var err)) {
             return err;
@@ -65,7 +65,7 @@ internal sealed class UpdateQuestionImageSetCommandHandler :
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return res.AsSuccess().ImageSet;
     }
 

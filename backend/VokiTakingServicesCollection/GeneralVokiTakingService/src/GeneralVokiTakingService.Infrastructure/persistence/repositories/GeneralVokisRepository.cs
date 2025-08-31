@@ -22,4 +22,9 @@ internal class GeneralVokisRepository : IGeneralVokisRepository
         .AsNoTracking()
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 
+    public Task<GeneralVoki?> GetWithQuestionAnswersAsNoTracking(VokiId vokiId) => _db.Vokis
+        .AsNoTracking()
+        .Include(v => v.Questions)
+        .ThenInclude(q => q.Answers)
+        .FirstOrDefaultAsync(v => v.Id == vokiId);
 }

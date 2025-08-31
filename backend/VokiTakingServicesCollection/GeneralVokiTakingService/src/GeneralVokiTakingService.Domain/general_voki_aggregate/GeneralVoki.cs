@@ -9,7 +9,7 @@ namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 public sealed class GeneralVoki : AggregateRoot<VokiId>
 {
     private GeneralVoki() { }
-    private IReadOnlyCollection<VokiQuestion> Questions { get; }
+    public IReadOnlyCollection<VokiQuestion> Questions { get; }
     public bool ForceSequentialAnswering { get; }
     private bool ShuffleQuestions { get; }
     private IReadOnlyCollection<VokiResult> Results { get; }

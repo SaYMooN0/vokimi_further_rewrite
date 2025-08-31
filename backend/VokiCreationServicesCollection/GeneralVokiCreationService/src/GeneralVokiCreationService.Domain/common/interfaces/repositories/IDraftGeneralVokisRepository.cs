@@ -4,7 +4,7 @@ using VokiCreationServicesLib.Domain.repositories;
 
 namespace GeneralVokiCreationService.Domain.common.interfaces.repositories;
 
-public interface IDraftGeneralVokiRepository : IDraftVokiRepository
+public interface IDraftGeneralVokisRepository : IDraftVokiRepository
 {
     Task<DraftGeneralVoki?> GetById(VokiId vokiId);
     new Task<DraftGeneralVoki?> GetByIdAsNoTracking(VokiId vokiId);

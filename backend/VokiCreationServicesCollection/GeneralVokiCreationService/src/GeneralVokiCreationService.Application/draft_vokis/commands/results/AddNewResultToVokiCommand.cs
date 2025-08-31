@@ -13,13 +13,13 @@ public sealed record AddNewResultToVokiCommand(VokiId VokiId, VokiResultName Res
 internal sealed class AddNewResultToVokiCommandHandler :
     ICommandHandler<AddNewResultToVokiCommand, ImmutableArray<VokiResult>>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public AddNewResultToVokiCommandHandler(
-        IDraftGeneralVokiRepository draftGeneralVokiRepository, IDateTimeProvider dateTimeProvider
+        IDraftGeneralVokisRepository draftGeneralVokisRepository, IDateTimeProvider dateTimeProvider
     ) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _dateTimeProvider = dateTimeProvider;
     }
 
@@ -27,13 +27,13 @@ internal sealed class AddNewResultToVokiCommandHandler :
     public async Task<ErrOr<ImmutableArray<VokiResult>>> Handle(
         AddNewResultToVokiCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithResults(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId))!;
         var res = voki.AddNewResult(command.ResultName, _dateTimeProvider);
         if (res.IsErr(out var err)) {
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return voki.Results;
     }
 }

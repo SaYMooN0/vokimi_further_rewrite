@@ -9,10 +9,10 @@ namespace GeneralVokiCreationService.Application.draft_vokis.integration_event_h
 
 public class GeneralDraftVokiInitializedIntegrationEventHandler : IConsumer<GeneralDraftVokiInitializedIntegrationEvent>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public GeneralDraftVokiInitializedIntegrationEventHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public GeneralDraftVokiInitializedIntegrationEventHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task Consume(ConsumeContext<GeneralDraftVokiInitializedIntegrationEvent> context) {
@@ -23,6 +23,6 @@ public class GeneralDraftVokiInitializedIntegrationEventHandler : IConsumer<Gene
             new VokiCoverKey(context.Message.Cover),
             context.Message.CreationDate
         );
-        await _draftGeneralVokiRepository.Add(newGeneralVoki);
+        await _draftGeneralVokisRepository.Add(newGeneralVoki);
     }
 }

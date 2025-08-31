@@ -12,10 +12,10 @@ public sealed record GetVokiPublishingIssuesQuery(VokiId VokiId) :
 internal sealed class GetVokiPublishingIssuesQueryHandler : IQueryHandler<GetVokiPublishingIssuesQuery,
     ImmutableArray<VokiPublishingIssue>>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public GetVokiPublishingIssuesQueryHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public GetVokiPublishingIssuesQueryHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task<ErrOr<ImmutableArray<VokiPublishingIssue>>> Handle(
@@ -23,7 +23,7 @@ internal sealed class GetVokiPublishingIssuesQueryHandler : IQueryHandler<GetVok
         CancellationToken ct
     ) {
         DraftGeneralVoki voki =
-            (await _draftGeneralVokiRepository.GetWithQuestionAnswersAndResultsAsNoTracking(query.VokiId))!;
+            (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(query.VokiId))!;
         return voki.CheckForPublishingIssues();
     }
 }

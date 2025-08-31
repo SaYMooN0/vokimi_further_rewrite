@@ -12,16 +12,16 @@ public sealed record UpdateVokiDetailsCommand(VokiId VokiId, VokiDetails NewDeta
 internal sealed class UpdateVokiDetailsCommandHandler :
     ICommandHandler<UpdateVokiDetailsCommand, VokiDetails>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public UpdateVokiDetailsCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public UpdateVokiDetailsCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task<ErrOr<VokiDetails>> Handle(UpdateVokiDetailsCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetById(command.VokiId))!;
         voki.UpdateDetails(command.NewDetails);
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return voki.Details;
     }
 }

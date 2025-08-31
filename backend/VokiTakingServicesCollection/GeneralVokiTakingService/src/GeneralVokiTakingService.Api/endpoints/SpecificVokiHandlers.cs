@@ -1,4 +1,6 @@
-﻿namespace GeneralVokiTakingService.Api.endpoints;
+﻿using GeneralVokiTakingService.Application.general_vokis.commands;
+
+namespace GeneralVokiTakingService.Api.endpoints;
 
 internal static class SpecificVokiHandlers
 {
@@ -7,20 +9,20 @@ internal static class SpecificVokiHandlers
 
         group.WithGroupAuthenticationRequired();
 
-        // group.MapGet("/", GetVokiTakingData);
+        group.MapPost("/start-taking", StartVokiTaking);
     }
 
-    // private static async Task<IResult> GetVokiTakingData(
-    //     CancellationToken ct, HttpContext httpContext,
-    //     IQueryHandler<GetVokiQuery, DraftGeneralVoki> handler
-    // ) {
-    //     VokiId id = httpContext.GetVokiIdFromRoute();
-    //
-    //     GetVokiQuery query = new(id);
-    //     var result = await handler.Handle(query, ct);
-    //
-    //     return CustomResults.FromErrOr(result, (voki) => Results.Json(
-    //         VokiTakingDataResponse.Create(voki)
-    //     ));
-    // }
+    private static async Task<IResult> StartVokiTaking(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<StartVokiTakingCommand, StartVokiTakingCommandResponse> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+
+        StartVokiTakingCommand command = new(id);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (vokiTakingData) => Results.Json(
+            VokiTakingDataResponse.Create(voki)
+        ));
+    }
 }

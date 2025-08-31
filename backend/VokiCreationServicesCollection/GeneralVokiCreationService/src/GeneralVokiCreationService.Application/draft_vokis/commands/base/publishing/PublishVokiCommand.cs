@@ -21,20 +21,20 @@ public abstract record PublishVokiCommandResult
 internal sealed class PublishVokiCommandHandler :
     ICommandHandler<PublishVokiCommand, PublishVokiCommandResult>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
 
     public PublishVokiCommandHandler(
-        IDraftGeneralVokiRepository draftGeneralVokiRepository,
+        IDraftGeneralVokisRepository draftGeneralVokisRepository,
         IDateTimeProvider dateTimeProvider
     ) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<ErrOr<PublishVokiCommandResult>> Handle(PublishVokiCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
         var issues = voki.CheckForPublishingIssues();
         if (issues.Any()) {
             return new PublishVokiCommandResult.FailedToPublish(issues);
@@ -45,7 +45,7 @@ internal sealed class PublishVokiCommandHandler :
             return err;
         }
 
-        await _draftGeneralVokiRepository.Delete(voki);
+        await _draftGeneralVokisRepository.Delete(voki);
         return new PublishVokiCommandResult.Success(
             new VokiSuccessfullyPublishedResult(voki.Id, voki.Cover, voki.Name)
         );

@@ -17,16 +17,16 @@ public sealed record AddNewAnswerToVokiQuestionCommand(
 internal sealed class AddNewAnswerToVokiQuestionCommandHandler :
     ICommandHandler<AddNewAnswerToVokiQuestionCommand, VokiQuestionAnswer>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public AddNewAnswerToVokiQuestionCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public AddNewAnswerToVokiQuestionCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task<ErrOr<VokiQuestionAnswer>> Handle(
         AddNewAnswerToVokiQuestionCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
         var res = voki.AddNewAnswerToQuestion(
             command.QuestionId, command.AnswerData, command.RelatedResultIds
         );
@@ -34,7 +34,7 @@ internal sealed class AddNewAnswerToVokiQuestionCommandHandler :
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return res.AsSuccess();
     }
 }

@@ -12,14 +12,14 @@ public sealed record GetVokiResultQuery(VokiId VokiId, GeneralVokiResultId Resul
 internal sealed class GetVokiResultQueryHandler 
     : IQueryHandler<GetVokiResultQuery, VokiResult>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public GetVokiResultQueryHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public GetVokiResultQueryHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task<ErrOr<VokiResult>> Handle(GetVokiResultQuery query, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithResultsAsNoTracking(query.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResultsAsNoTracking(query.VokiId))!;
         return voki.ResultWithId(query.ResultId);
     }
 }

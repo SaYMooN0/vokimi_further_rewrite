@@ -11,13 +11,13 @@ public sealed record GetVokiWithQuestionsQuery(VokiId VokiId) :
 internal sealed class GetVokiWithQuestionsQueryHandler 
     : IQueryHandler<GetVokiWithQuestionsQuery, DraftGeneralVoki>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public GetVokiWithQuestionsQueryHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public GetVokiWithQuestionsQueryHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task<ErrOr<DraftGeneralVoki>> Handle(GetVokiWithQuestionsQuery query, CancellationToken ct) {
-        return (await _draftGeneralVokiRepository.GetWithQuestionsAsNoTracking(query.VokiId))!;
+        return (await _draftGeneralVokisRepository.GetWithQuestionsAsNoTracking(query.VokiId))!;
     }
 }

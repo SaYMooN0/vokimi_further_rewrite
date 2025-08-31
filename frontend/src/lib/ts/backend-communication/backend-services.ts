@@ -71,6 +71,7 @@ export class BackendService {
                 return { isSuccess: true, data };
 
             }
+            console.log('response', response);
             const contentType = response.headers.get("content-type");
             if (contentType?.includes("application/json")) {
                 const json = await response.json();

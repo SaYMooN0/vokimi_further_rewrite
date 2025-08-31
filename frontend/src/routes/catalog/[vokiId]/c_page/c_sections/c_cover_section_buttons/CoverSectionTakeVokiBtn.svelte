@@ -30,7 +30,7 @@
 </script>
 
 <a
-	href="/take-voki/{StringUtils.pascalToKebab(vokiType)}/{vokiId}"
+	href="/take-voki/{vokiId}/{StringUtils.pascalToKebab(vokiType)}"
 	class="take-voki-btn"
 	onmouseenter={() => animateIcon()}
 	onfocus={() => animateIcon()}

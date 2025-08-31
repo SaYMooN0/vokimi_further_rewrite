@@ -10,13 +10,13 @@ public sealed record GetVokiQuery(VokiId VokiId) :
 
 internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, DraftGeneralVoki>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public GetVokiQueryHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public GetVokiQueryHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
     public async Task<ErrOr<DraftGeneralVoki>> Handle(GetVokiQuery query, CancellationToken ct) {
-        return (await _draftGeneralVokiRepository.GetByIdAsNoTracking(query.VokiId))!; 
+        return (await _draftGeneralVokisRepository.GetByIdAsNoTracking(query.VokiId))!; 
         // no null check because IWithVokiAccessValidationStep already inculdes it
     }
 }

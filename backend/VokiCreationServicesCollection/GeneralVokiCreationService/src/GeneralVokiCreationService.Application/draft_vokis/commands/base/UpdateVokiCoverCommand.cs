@@ -12,19 +12,19 @@ public sealed record UpdateVokiCoverCommand(VokiId VokiId, TempImageKey CoverKey
 
 internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVokiCoverCommand, VokiCoverKey>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IMainStorageBucket _mainStorageBucket;
 
     public UpdateVokiCoverCommandHandler(
-        IDraftGeneralVokiRepository draftGeneralVokiRepository,
+        IDraftGeneralVokisRepository draftGeneralVokisRepository,
         IMainStorageBucket mainStorageBucket
     ) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _mainStorageBucket = mainStorageBucket;
     }
 
     public async Task<ErrOr<VokiCoverKey>> Handle(UpdateVokiCoverCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetById(command.VokiId))!;
         VokiCoverKey destination = VokiCoverKey.CreateWithId(command.VokiId, command.CoverKey.Extension);
         ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiCoverFromTempToStandard(
             command.CoverKey, destination
@@ -38,7 +38,7 @@ internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVoki
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return voki.Cover;
     }
 }

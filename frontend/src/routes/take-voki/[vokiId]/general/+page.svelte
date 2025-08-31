@@ -14,6 +14,7 @@
 
 		return 'default';
 	}
+	console.log(data);
 </script>
 
 {#if data.response.isSuccess}

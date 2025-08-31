@@ -14,20 +14,20 @@ public sealed record MoveQuestionUpInOrderCommand(
 internal sealed class MoveQuestionUpInOrderCommandHandler :
     ICommandHandler<MoveQuestionUpInOrderCommand, ImmutableArray<VokiQuestion>>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public MoveQuestionUpInOrderCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public MoveQuestionUpInOrderCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task<ErrOr<ImmutableArray<VokiQuestion>>> Handle(MoveQuestionUpInOrderCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId))!;
         ErrOrNothing res = voki.MoveQuestionUpInOrder(command.QuestionId);
         if (res.IsErr(out var err)) {
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return voki.Questions;
     }
 }

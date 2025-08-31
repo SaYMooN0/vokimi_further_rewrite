@@ -12,10 +12,10 @@ public sealed record AddNewQuestionToVokiCommand(VokiId VokiId, GeneralVokiAnswe
 internal sealed class AddNewQuestionToVokiCommandHandler :
     ICommandHandler<AddNewQuestionToVokiCommand, GeneralVokiQuestionId>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public AddNewQuestionToVokiCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public AddNewQuestionToVokiCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     private static readonly GeneralVokiAnswerType[] SupportedTyped = [
@@ -29,13 +29,13 @@ internal sealed class AddNewQuestionToVokiCommandHandler :
             return ErrFactory.NotImplemented("Selected type is not implemented yet");
         }
 
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestions(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId))!;
         var res = voki.AddNewQuestion(command.AnswersType);
         if (res.IsErr(out var err)) {
             return err;
         }
 
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return res.AsSuccess();
     }
 }

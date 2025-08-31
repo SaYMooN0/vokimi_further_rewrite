@@ -14,20 +14,20 @@ public sealed record DeleteVokiQuestionAnswerCommand(
 
 internal sealed class DeleteVokiQuestionAnswerCommandHandler : ICommandHandler<DeleteVokiQuestionAnswerCommand>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public DeleteVokiQuestionAnswerCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public DeleteVokiQuestionAnswerCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
 
     public async Task<ErrOrNothing> Handle(
         DeleteVokiQuestionAnswerCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetWithQuestionAnswers(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswers(command.VokiId))!;
         bool wasDeleted = voki.DeleteQuestionAnswer(command.QuestionId, command.AnswerId);
         if (wasDeleted) {
-            await _draftGeneralVokiRepository.Update(voki);
+            await _draftGeneralVokisRepository.Update(voki);
         }
 
         return ErrOrNothing.Nothing;

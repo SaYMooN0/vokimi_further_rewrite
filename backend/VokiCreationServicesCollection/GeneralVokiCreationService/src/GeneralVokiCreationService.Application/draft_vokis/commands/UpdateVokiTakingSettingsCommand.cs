@@ -11,18 +11,18 @@ public sealed record UpdateVokiTakingProcessSettingsCommand(VokiId VokiId, VokiT
 internal sealed class UpdateVokiTakingProcessSettingsCommandHandler :
     ICommandHandler<UpdateVokiTakingProcessSettingsCommand, VokiTakingProcessSettings>
 {
-    private readonly IDraftGeneralVokiRepository _draftGeneralVokiRepository;
+    private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
 
-    public UpdateVokiTakingProcessSettingsCommandHandler(IDraftGeneralVokiRepository draftGeneralVokiRepository) {
-        _draftGeneralVokiRepository = draftGeneralVokiRepository;
+    public UpdateVokiTakingProcessSettingsCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+        _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
 
     public async Task<ErrOr<VokiTakingProcessSettings>> Handle(
         UpdateVokiTakingProcessSettingsCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokiRepository.GetById(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetById(command.VokiId))!;
         voki.UpdateTakingProcessSettings(command.NewSettings);
-        await _draftGeneralVokiRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki);
         return voki.TakingProcessSettings;
     }
 }

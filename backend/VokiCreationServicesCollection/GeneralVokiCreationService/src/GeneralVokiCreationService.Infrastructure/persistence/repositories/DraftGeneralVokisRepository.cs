@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GeneralVokiCreationService.Infrastructure.persistence.repositories;
 
-internal class DraftGeneralVokiRepository : IDraftGeneralVokiRepository
+internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
 {
     private readonly GeneralVokiCreationDbContext _db;
 
-    public DraftGeneralVokiRepository(GeneralVokiCreationDbContext db) {
+    public DraftGeneralVokisRepository(GeneralVokiCreationDbContext db) {
         _db = db;
     }
 
