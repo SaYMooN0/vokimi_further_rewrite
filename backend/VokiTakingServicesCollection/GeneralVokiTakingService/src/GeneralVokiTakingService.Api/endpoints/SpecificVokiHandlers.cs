@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Application.general_vokis.commands;
+﻿using GeneralVokiTakingService.Api.contracts;
+using GeneralVokiTakingService.Application.general_vokis.commands;
 
 namespace GeneralVokiTakingService.Api.endpoints;
 
@@ -22,7 +23,7 @@ internal static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (vokiTakingData) => Results.Json(
-            VokiTakingDataResponse.Create(voki)
+            GeneralVokiTakingResponse.Create(vokiTakingData)
         ));
     }
 }

@@ -11,18 +11,9 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
     private GeneralVoki() { }
     public IReadOnlyCollection<VokiQuestion> Questions { get; }
     public bool ForceSequentialAnswering { get; }
-    private bool ShuffleQuestions { get; }
+    public bool ShuffleQuestions { get; }
     private IReadOnlyCollection<VokiResult> Results { get; }
     public ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; private set; }
-
-    public ImmutableArray<VokiQuestion> OrderedQuestionForTaking() {
-        if (ShuffleQuestions) {
-            return Questions.OrderBy(_ => Guid.NewGuid()).ToImmutableArray();
-        }
-
-        return Questions.OrderBy(q => q.OrderInVoki).ToImmutableArray();
-    }
-
     public GeneralVoki(
         VokiId id,
         ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,

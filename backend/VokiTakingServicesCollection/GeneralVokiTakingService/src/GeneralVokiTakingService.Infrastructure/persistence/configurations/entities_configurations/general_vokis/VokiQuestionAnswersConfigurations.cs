@@ -4,7 +4,7 @@ using InfrastructureShared.Base.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.entities_configurations;
+namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.entities_configurations.general_vokis;
 
 public class VokiQuestionAnswersConfigurations : IEntityTypeConfiguration<VokiQuestionAnswer>
 {

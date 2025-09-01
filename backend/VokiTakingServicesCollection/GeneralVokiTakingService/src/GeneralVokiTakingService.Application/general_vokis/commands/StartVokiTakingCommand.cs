@@ -1,6 +1,11 @@
-﻿using GeneralVokiTakingService.Domain.common.interfaces.repositories;
+﻿using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.common.interfaces.repositories;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
+using SharedKernel;
 using SharedKernel.auth;
+using SharedKernel.common.vokis;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
@@ -12,10 +17,16 @@ internal sealed class StartVokiTakingCommandHandler :
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
     private readonly IUserContext _userContext;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public StartVokiTakingCommandHandler(IGeneralVokisRepository generalVokisRepository, IUserContext userContext) {
+    public StartVokiTakingCommandHandler(
+        IGeneralVokisRepository generalVokisRepository,
+        IUserContext userContext,
+        IDateTimeProvider dateTimeProvider
+    ) {
         _generalVokisRepository = generalVokisRepository;
         _userContext = userContext;
+        _dateTimeProvider = dateTimeProvider;
     }
 
 
@@ -27,27 +38,71 @@ internal sealed class StartVokiTakingCommandHandler :
             );
         }
 
+        AppUserId? vokiTaker = _userContext.UserIdFromToken().IsSuccess(out var id) ? id : null;
+
+        BaseVokiTakingSession takingSession;
         if (voki.ForceSequentialAnswering) {
-            return await StartVokiTakingWithSequentialAnswering(voki);
+            takingSession = SessionWithSequentialAnswering.Create(
+                voki.Id, vokiTaker, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
+            );
         }
         else {
-            return await StartVokiTakingWithFreeAnswering(voki);
+            takingSession = SessionWithFreeAnswering.Create(
+                voki.Id, vokiTaker, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
+            );
         }
+
+        return StartVokiTakingCommandResponse.Create(voki, takingSession);
     }
-
-    private async Task<StartVokiTakingWithSequentialAnsweringCommandResponse> StartVokiTakingWithSequentialAnswering(
-        GeneralVoki voki
-    ) { }
-
-    private async Task<StartVokiTakingWithFreeAnsweringCommandResponse> StartVokiTakingWithFreeAnswering(
-        GeneralVoki voki
-    ) { }
 }
 
-public abstract record StartVokiTakingCommandResponse(VokiId Id, bool ForceSequentialAnswering);
+public record StartVokiTakingCommandResponse(
+    VokiId Id,
+    bool ForceSequentialAnswering,
+    StartVokiTakingCommandResponseQuestionData[] Questions,
+    VokiTakingSessionId SessionId,
+    DateTime StartedAt
+)
+{
+    public static StartVokiTakingCommandResponse Create(
+        GeneralVoki voki, BaseVokiTakingSession takingSession
+    ) {
+        var idToOrder = takingSession.QuestionIdToOrder();
+        var questions = voki.Questions
+            .Select(q => StartVokiTakingCommandResponseQuestionData.Create(q, idToOrder[q.Id]))
+            .ToArray();
 
-public record StartVokiTakingWithSequentialAnsweringCommandResponse(VokiId Id)
-    : StartVokiTakingCommandResponse(Id, true);
+        return new(
+            voki.Id,
+            voki.ForceSequentialAnswering,
+            questions,
+            takingSession.Id,
+            takingSession.StartTime
+        );
+    }
+}
 
-public record StartVokiTakingWithFreeAnsweringCommandResponse(VokiId Id)
-    : StartVokiTakingCommandResponse(Id, false);
+public record StartVokiTakingCommandResponseQuestionData(
+    GeneralVokiQuestionId Id,
+    string Text,
+    VokiQuestionImagesSet ImagesSet,
+    GeneralVokiAnswerType AnswerType,
+    ushort OrderInVokiTaking,
+    ushort MinAnswersCount,
+    ushort MaxAnswersCount,
+    VokiQuestionAnswer[] Answers
+)
+{
+    public static StartVokiTakingCommandResponseQuestionData Create(
+        VokiQuestion question, ushort orderInVokiTaking
+    ) => new(
+        question.Id,
+        question.Text,
+        question.ImageSet,
+        question.AnswersType,
+        orderInVokiTaking,
+        question.AnswersCountLimit.MinAnswers,
+        question.AnswersCountLimit.MaxAnswers,
+        question.Answers.ToArray()
+    );
+}

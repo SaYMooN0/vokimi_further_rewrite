@@ -2,17 +2,18 @@ import type { GeneralVokiAnswerType } from "$lib/ts/voki";
 
 export type GeneralVokiTakingData = {
     id: string;
+    forceSequentialAnswering: boolean;
     questions: GeneralVokiTakingQuestionData[];
     takingSessionId: string;
-    serverStartTime: Date;
-    forceSequentialAnswering: boolean;
+    startedAd: Date;
 }
 export type GeneralVokiTakingQuestionData = {
     id: string;
     text: string;
-    images: string[];
-    answersType: GeneralVokiAnswerType;
-    order: number;
+    imageKeys: string[];
+    imagesAspectRatio: number;
+    answerType: GeneralVokiAnswerType;
+    orderInVokiTaking: number;
     minAnswersCount: number;
     maxAnswersCount: number;
     answers: GeneralVokiTakingAnswerData[]
@@ -38,6 +39,6 @@ export type GeneralVokiAnswerTypeData =
     | GeneralVokiAnswerColorAndText
     | GeneralVokiAnswerAudioOnly
     | GeneralVokiAnswerAudioAndText;
-export type GeneralVokiTakingResultData={
-    
+export type GeneralVokiTakingResultData = {
+
 }

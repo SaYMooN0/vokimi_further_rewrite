@@ -1,4 +1,7 @@
-﻿using SharedKernel.exceptions;
+﻿using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
+using SharedKernel.exceptions;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -10,26 +13,40 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     private ImmutableArray<SequentialTakingAnsweredQuestion> _answered { get; set; }
 
     private SessionWithSequentialAnswering(
-        VokiId vokiId,
-        AppUserId? vokiTaker,
-        DateTime startTime,
-        ImmutableArray<TakingSessionExpectedQuestion> questions
-    ) : base(vokiId, vokiTaker, startTime, questions) { }
+        VokiTakingSessionId id, VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
+        ImmutableArray<TakingSessionExpectedQuestion> questions,
+        ushort currentQuestionOrder
+    ) : base(id, vokiId, vokiTaker, startTime, questions) {
+        CurrentQuestionOrder = currentQuestionOrder;
+    }
 
     public static SessionWithSequentialAnswering Create(
-        VokiId vokiId,
-        AppUserId? vokiTaker,
-        DateTime startTime,
-        ImmutableArray<TakingSessionExpectedQuestion> questions
+        VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
+        IEnumerable<VokiQuestion> vokiQuestions, bool shuffleQuestions
     ) {
-        var firstQuestion = questions.MinBy(q => q.OrderInVokiTaking)!;
+        VokiQuestion[] ordered = (
+            shuffleQuestions
+                ? vokiQuestions.OrderBy(_ => Guid.NewGuid())
+                : vokiQuestions.OrderBy(q => q.OrderInVoki)
+        ).ToArray();
 
-        SessionWithSequentialAnswering s = new(vokiId, vokiTaker, startTime, questions) {
-            CurrentQuestionOrder = firstQuestion.OrderInVokiTaking
-        };
+        List<TakingSessionExpectedQuestion> sessionQuestion = new(ordered.Length);
+        for (ushort i = 0; i < ordered.Length; i++) {
+            var question = ordered[i];
+            sessionQuestion.Add(new TakingSessionExpectedQuestion(
+                question.Id,
+                OrderInVokiTaking: i,
+                question.AnswersCountLimit.MinAnswers,
+                question.AnswersCountLimit.MaxAnswers,
+                question.Answers.Select(a => a.Id).ToImmutableArray()
+            ));
+        }
 
-
-        return s;
+        return new SessionWithSequentialAnswering(
+            VokiTakingSessionId.CreateNew(), vokiId, vokiTaker, startTime,
+            questions: sessionQuestion.ToImmutableArray(),
+            currentQuestionOrder: 0
+        );
     }
 
     public TakingSessionExpectedQuestion GetCurrentQuestion() {

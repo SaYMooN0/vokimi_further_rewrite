@@ -3,7 +3,7 @@ using InfrastructureShared.Base.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.entities_configurations;
+namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.entities_configurations.general_vokis;
 
 public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
 {
@@ -22,8 +22,8 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
             .IsRequired()            
             .OnDelete(DeleteBehavior.Cascade);
         
-        builder.Property<bool>("ShuffleQuestions");
         builder.Property(x => x.ForceSequentialAnswering);
+        builder.Property(x => x.ShuffleQuestions);
         
         builder
             .HasMany<VokiResult>("Results")

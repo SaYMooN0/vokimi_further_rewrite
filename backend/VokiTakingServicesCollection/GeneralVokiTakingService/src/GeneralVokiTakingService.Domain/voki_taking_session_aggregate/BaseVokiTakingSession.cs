@@ -15,6 +15,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
     protected ImmutableArray<TakingSessionExpectedQuestion> Questions { get; }
 
     protected BaseVokiTakingSession(
+        VokiTakingSessionId vokiTakingSessionId,
         VokiId vokiId,
         AppUserId? vokiTaker,
         DateTime startTime,
@@ -25,10 +26,15 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
                 ErrFactory.ValueOutOfRange("Session cannot be created without questions")
             );
         }
-
+        Id = vokiTakingSessionId;
         VokiId = vokiId;
         VokiTaker = vokiTaker;
         StartTime = startTime;
         Questions = questions;
     }
+
+    public ImmutableDictionary<GeneralVokiQuestionId, ushort> QuestionIdToOrder() => Questions.ToImmutableDictionary(
+        q => q.QuestionId,
+        q => q.OrderInVokiTaking
+    );
 }
