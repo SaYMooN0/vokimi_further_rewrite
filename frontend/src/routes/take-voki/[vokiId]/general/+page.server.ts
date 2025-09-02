@@ -1,6 +1,7 @@
 import { ApiVokiTakingGeneral } from "$lib/ts/backend-communication/backend-services";
 import { redirect, type ServerLoad } from "@sveltejs/kit";
 import type { GeneralVokiTakingData } from "./types";
+import { RequestJsonOptions } from "$lib/ts/request-json-options";
 
 export const load: ServerLoad = async ({ cookies, params, fetch }) => {
     const isVokiStarted = cookies.get(`${params.vokiId}-started`) === 'true';
@@ -11,7 +12,7 @@ export const load: ServerLoad = async ({ cookies, params, fetch }) => {
 
     return {
         response: await ApiVokiTakingGeneral.serverFetchJsonResponse<GeneralVokiTakingData>(
-            fetch, `/vokis/${params.vokiId}`, { method: 'GET' }
+            fetch, `/vokis/${params.vokiId}/start-taking`, RequestJsonOptions.POST({})
         ),
         vokiId: params.vokiId,
         vokiTypeName: "General"

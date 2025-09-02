@@ -53,7 +53,7 @@ internal class SequentialTakingAnsweredQuestionsArrayConverter :
 internal class SequentialTakingAnsweredQuestionsArrayComparer : ValueComparer<ImmutableArray<SequentialTakingAnsweredQuestion>>
 {
     public SequentialTakingAnsweredQuestionsArrayComparer() : base(
-        (t1, t2) => t1.SequenceEqual(t2),
+        (t1, t2) => t1.SequenceEqual(t2!, EqualityComparer<SequentialTakingAnsweredQuestion>.Default),
         t => t.Select(x => x!.GetHashCode()).Aggregate((x, y) => x ^ y),
         t => t.ToImmutableArray()
     ) { }

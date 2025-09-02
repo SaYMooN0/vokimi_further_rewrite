@@ -2,6 +2,7 @@
 	import UnableLoadVokiToTake from '../c_pages_shared/UnableLoadVokiToTake.svelte';
 	import type { PageProps } from './$types';
 	import DefaultGeneralVokiTaking from './DefaultGeneralVokiTaking.svelte';
+	import SequentialAnsweringGeneralVokiTaking from './SequentialAnsweringGeneralVokiTaking.svelte';
 	import type { GeneralVokiTakingData } from './types';
 
 	let { data }: PageProps = $props();
@@ -20,6 +21,8 @@
 {#if data.response.isSuccess}
 	{#if vokiTakingCase(data.response.data) === 'default'}
 		<DefaultGeneralVokiTaking takingData={data.response.data} />
+	{:else if vokiTakingCase(data.response.data) === 'sequentialAnswering'}
+		<SequentialAnsweringGeneralVokiTaking takingData={data.response.data} />
 	{/if}
 {:else}
 	<UnableLoadVokiToTake

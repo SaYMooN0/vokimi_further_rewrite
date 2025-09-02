@@ -20,8 +20,8 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
 
         builder.Property(x => x.Text);
         builder.Property(x => x.ImageSet)
-            .HasConversion(new ObjectToJsonConverter<VokiQuestionImagesSet>());
-        
+            .HasConversion<VokiQuestionImagesSetConverter>();
+
         builder.Property(x => x.AnswersType);
         builder.Property(x => x.OrderInVoki);
         builder.Property(x => x.ShuffleAnswers);
@@ -33,9 +33,7 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .HasMany<VokiQuestionAnswer>("Answers")
             .WithOne()
             .HasForeignKey("QuestionId")
-            .IsRequired()            
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
-
-       
     }
 }

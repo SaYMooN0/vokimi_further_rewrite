@@ -12,7 +12,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
     public DateTime StartTime { get; }
 
     public abstract bool IsWithForceSequentialAnswering { get; }
-    protected ImmutableArray<TakingSessionExpectedQuestion> Questions { get; }
+    public ImmutableArray<TakingSessionExpectedQuestion> Questions { get; }
 
     protected BaseVokiTakingSession(
         VokiTakingSessionId vokiTakingSessionId,

@@ -1,16 +1,20 @@
+import { ApiVokiTakingGeneral } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
+import { RequestJsonOptions } from "$lib/ts/request-json-options";
 import type { GeneralVokiTakingData, GeneralVokiTakingQuestionData, GeneralVokiTakingResultData } from "../types";
 
 export class DefaultGeneralVokiTakingState {
     readonly vokiId: string;
-    readonly #takingSessionId: string;
-    readonly #serverStartTime: Date;
+    readonly #sessionId: string;
+    readonly #serverStartedAt: Date;
+    readonly #clientStartedAt: Date;
     readonly #questions: GeneralVokiTakingQuestionData[];
 
     receivedResult: GeneralVokiTakingResultData | null = $state(null);
     //question id : answer id - is selected
     readonly chosenAnswers = $state(new Map<string, Map<string, boolean>>());
-    currentQuestionIndex = $state(0);
+    currentQuestionOrder = $state(0);
+    currentQuestion: GeneralVokiTakingQuestionData | undefined;
 
     constructor(data: GeneralVokiTakingData) {
         if (data.forceSequentialAnswering) {
@@ -18,21 +22,26 @@ export class DefaultGeneralVokiTakingState {
         }
 
         this.vokiId = data.id;
-        this.#takingSessionId = data.takingSessionId;
-        this.#serverStartTime = data.serverStartTime;
+        this.#sessionId = data.sessionId;
+        this.#serverStartedAt = data.startedAt;
+        this.#clientStartedAt = new Date();
         this.#questions = data.questions;
         this.#questions.forEach(q => this.chosenAnswers.set(q.id, new Map(q.answers.map(a => [a.id, false]))));
+        this.currentQuestion = $derived<GeneralVokiTakingQuestionData | undefined>(
+            this.#questions.find(q => q.orderInVokiTaking === this.currentQuestionOrder)
+        );
     }
+
     goToPreviousQuestion(): Err[] {
-        if (this.currentQuestionIndex > 0) {
-            this.currentQuestionIndex -= 1;
+        if (this.currentQuestionOrder > 0) {
+            this.currentQuestionOrder -= 1;
             return [];
         }
         return [{ message: "Cannot go to previous question, because it is the first question" }];
     }
     goToNextQuestion(): Err[] {
-        if (this.currentQuestionIndex < this.#questions.length - 1) {
-            this.currentQuestionIndex += 1;
+        if (this.currentQuestionOrder < this.#questions.length - 1) {
+            this.currentQuestionOrder += 1;
             return [];
         }
         return [{ message: "Cannot go to next question, because it is the last question" }];
@@ -41,17 +50,45 @@ export class DefaultGeneralVokiTakingState {
         if (questionIndex < 0 || questionIndex >= this.#questions.length) {
             return [{ message: "Cannot jump to specific question, because it does not exist" }];
         }
-        this.currentQuestionIndex = questionIndex;
+        this.currentQuestionOrder = questionIndex;
         return [];
 
     }
-    async finishAndSend(): Promise<Err[]> {
-        return [];
-    }
+
     isCurrentQuestionLast(): boolean {
-        return this.currentQuestionIndex === this.#questions.length - 1;
+        return this.currentQuestionOrder === this.#questions.length - 1;
     }
     isCurrentQuestionFirst(): boolean {
-        return this.currentQuestionIndex === 0;
+        return this.currentQuestionOrder === 0;
+    }
+
+    async finishAndSend(): Promise<Err[]> {
+        const errs = this.checkErrsBeforeFinish();
+        if (errs.length > 0) {
+            return errs;
+        }
+        const response = await ApiVokiTakingGeneral.fetchJsonResponse<{}>(
+            `/vokis/${this.vokiId}/finish-taking-with-free-answering`,
+            RequestJsonOptions.POST({
+                serverStart: this.#serverStartedAt,
+                clientStart: this.#clientStartedAt,
+                sessionId: this.#sessionId,
+
+            })
+        );
+
+        if (response.isSuccess) {
+            //remove cookies
+            //show result
+        } else {
+            return response.errs;
+        }
+        return [];
+    }
+    checkErrsBeforeFinish(): Err[] {
+        return [];
+    }
+    totalQuestionsCount() {
+        return this.#questions.length
     }
 }

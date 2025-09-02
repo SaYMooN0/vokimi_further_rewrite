@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
+	import { onMount } from 'svelte';
 	import type { PageProps } from './$types';
 	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
 	import CoverSection from './c_page/c_sections/CoverSection.svelte';
@@ -18,6 +20,12 @@
 		data.response.isSuccess ? data.response.data.ratingsCount : 0,
 		data.response.isSuccess ? data.response.data.commentsCount : 0
 	);
+	onMount(() => {
+		if (browser) {
+			const expires = new Date(Date.now() + 10 * 60 * 1000).toUTCString();
+			document.cookie = `${data.vokiId}-started=true; path=/; expires=${expires}; SameSite=Lax`;
+		}
+	});
 </script>
 
 {#if !data.response.isSuccess}

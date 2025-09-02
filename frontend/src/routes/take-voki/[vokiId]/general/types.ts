@@ -4,8 +4,8 @@ export type GeneralVokiTakingData = {
     id: string;
     forceSequentialAnswering: boolean;
     questions: GeneralVokiTakingQuestionData[];
-    takingSessionId: string;
-    startedAd: Date;
+    sessionId: string;
+    startedAt: Date;
 }
 export type GeneralVokiTakingQuestionData = {
     id: string;

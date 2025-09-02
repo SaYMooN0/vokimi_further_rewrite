@@ -65,6 +65,7 @@ export class BackendService {
                 ...options,
                 credentials: 'include'
             });
+            console.log(response);
             if (response.ok) {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);

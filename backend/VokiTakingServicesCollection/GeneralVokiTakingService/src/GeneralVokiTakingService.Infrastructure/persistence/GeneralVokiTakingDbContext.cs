@@ -20,6 +20,8 @@ public class GeneralVokiTakingDbContext : DbContext
     public DbSet<GeneralVoki> Vokis { get; init; } = null!;
     public DbSet<GeneralVokiTakenRecord> VokiTakenRecords { get; init; } = null!;
     public DbSet<BaseVokiTakingSession> BaseVokiTakingSessions { get; init; } = null!;
+    public DbSet<SessionWithFreeAnswering> VokiTakingSessionsWithFreeAnswering { get; init; } = null!;
+    public DbSet<SessionWithSequentialAnswering> VokiTakingSessionsWithSequentialAnswering { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GeneralVokiTakingDbContext).Assembly);

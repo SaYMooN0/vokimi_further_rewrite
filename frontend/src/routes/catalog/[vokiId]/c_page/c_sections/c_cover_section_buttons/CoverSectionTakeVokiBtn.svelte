@@ -13,20 +13,6 @@
 			isHovered = false;
 		}, 600);
 	}
-	function setVokiStartedCookie() {
-		const expires = new Date(Date.now() + 10 * 60 * 1000).toUTCString();
-		document.cookie = `${vokiId}-started=true; path=/; expires=${expires}; SameSite=Lax`;
-	}
-
-	function onPointerDown(e: PointerEvent) {
-		setVokiStartedCookie();
-	}
-
-	function onKeyDown(e: KeyboardEvent) {
-		if (e.key === 'Enter' || e.key === ' ') {
-			setVokiStartedCookie();
-		}
-	}
 </script>
 
 <a
@@ -34,8 +20,6 @@
 	class="take-voki-btn"
 	onmouseenter={() => animateIcon()}
 	onfocus={() => animateIcon()}
-	onpointerdown={onPointerDown}
-	onkeydown={onKeyDown}
 >
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
 		<path

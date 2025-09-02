@@ -19,22 +19,6 @@
 </script>
 
 <div class="btns-container">
-	{#if nextBtnState === 'hidden'}
-		<div class="dummy">What were you expecting to see here?</div>
-	{:else}
-		<button
-			class="next-prev-btns"
-			class:reduced={showFinishBtn}
-			class:inactive={nextBtnState === 'inactive'}
-			onclick={onNextBtnClick}>Next</button
-		>
-	{/if}
-	<button
-		class="finish-btn"
-		onclick={onFinishBtnClick}
-		class:hidden={!showFinishBtn}
-		disabled={!showFinishBtn}>Finish</button
-	>
 	{#if prevBtnState === 'hidden'}
 		<div class="dummy">What were you expecting to see here?</div>
 	{:else}
@@ -43,6 +27,22 @@
 			class:reduced={showFinishBtn}
 			class:inactive={prevBtnState === 'inactive'}
 			onclick={onPrevBtnClick}>Previous</button
+		>
+	{/if}
+	<button
+		class="finish-btn"
+		onclick={onFinishBtnClick}
+		class:hidden={!showFinishBtn}
+		disabled={!showFinishBtn}>Finish</button
+	>
+	{#if nextBtnState === 'hidden'}
+		<div class="dummy">What were you expecting to see here?</div>
+	{:else}
+		<button
+			class="next-prev-btns"
+			class:reduced={showFinishBtn}
+			class:inactive={nextBtnState === 'inactive'}
+			onclick={onNextBtnClick}>Next</button
 		>
 	{/if}
 </div>

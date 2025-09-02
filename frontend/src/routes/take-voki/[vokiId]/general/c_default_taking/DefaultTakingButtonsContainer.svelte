@@ -7,7 +7,7 @@
 	}>();
 
 	let nextBtnState: 'inactive' | 'active' = $derived(
-		vokiTakingState.isCurrentQuestionFirst() ? 'inactive' : 'active'
+		vokiTakingState.isCurrentQuestionLast() ? 'inactive' : 'active'
 	);
 	function nextQuestionBtnPressed() {
 		const err = vokiTakingState.goToNextQuestion();
@@ -16,7 +16,7 @@
 		}
 	}
 	let prevBtnState: 'inactive' | 'active' = $derived(
-		vokiTakingState.isCurrentQuestionLast() ? 'inactive' : 'active'
+		vokiTakingState.isCurrentQuestionFirst() ? 'inactive' : 'active'
 	);
 	function prevQuestionBtnPressed() {
 		const err = vokiTakingState.goToPreviousQuestion();

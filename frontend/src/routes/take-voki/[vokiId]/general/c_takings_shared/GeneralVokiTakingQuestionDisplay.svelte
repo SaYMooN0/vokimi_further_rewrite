@@ -3,7 +3,8 @@
 
 	interface Props {
 		text: string;
-		images: string[];
+		imageKeys: string[];
+		imagesAspectRatio: number;
 		minAnswersCount: number;
 		maxAnswersCount: number;
 		totalQuestionsCount: number;
@@ -11,7 +12,8 @@
 	}
 	let {
 		text,
-		images,
+		imageKeys,
+		imagesAspectRatio,
 		minAnswersCount,
 		maxAnswersCount,
 		totalQuestionsCount,
@@ -25,8 +27,12 @@
 	</label>
 	<h2 class="question-text">{text}</h2>
 	<div class="images-container">
-		{#each images as image}
-			<img src={StorageBucketMain.fileSrc(image)} alt="question-img" />
+		{#each imageKeys as image}
+			<img
+				src={StorageBucketMain.fileSrc(image)}
+				alt="question-img"
+				style="aspect-ratio: {imagesAspectRatio}"
+			/>
 		{/each}
 	</div>
 	<label class="answers-count-label">

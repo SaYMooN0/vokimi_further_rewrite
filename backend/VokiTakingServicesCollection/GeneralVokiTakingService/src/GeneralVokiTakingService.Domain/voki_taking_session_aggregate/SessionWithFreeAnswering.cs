@@ -43,7 +43,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
                 OrderInVokiTaking: i,
                 question.AnswersCountLimit.MinAnswers,
                 question.AnswersCountLimit.MaxAnswers,
-                question.Answers.Select(a => a.Id).ToImmutableArray()
+                question.Answers.Select(a => a.Id).ToImmutableHashSet()
             ));
         }
 

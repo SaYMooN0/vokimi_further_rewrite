@@ -9,12 +9,13 @@ namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.ent
 public class SessionsWithSequentialAnsweringConfigurations : IEntityTypeConfiguration<SessionWithSequentialAnswering>
 {
     public void Configure(EntityTypeBuilder<SessionWithSequentialAnswering> builder) {
-        builder.ToTable("SessionWithSequentialAnswering");
+        builder.ToTable("SessionsWithSequentialAnswering");
         builder.HasBaseType<BaseVokiTakingSession>();
 
         builder.Property(x => x.CurrentQuestionOrder);
         builder
             .Property<ImmutableArray<SequentialTakingAnsweredQuestion>>(" _answered")
-            .HasSequentialTakingAnsweredQuestionsConversion();
+            .HasSequentialTakingAnsweredQuestionsConversion()
+            .HasColumnName("AnsweredQuestions");
     }
 }

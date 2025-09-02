@@ -8,8 +8,15 @@ public static class PropertyBuilderExtensions
 {
     public static PropertyBuilder<TId> HasGuidBasedIdConversion<TId>(
         this PropertyBuilder<TId> builder
-    ) where TId : GuidBasedId {
+    ) where TId : notnull, GuidBasedId {
         return builder.HasConversion(new GuidBasedIdConverter<TId>());
+    }
+
+
+    public static PropertyBuilder<TId?> HasNullableGuidBasedIdConversion<TId>(
+        this PropertyBuilder<TId?> builder
+    ) where TId : GuidBasedId {
+        return builder.HasConversion(new NullableGuidBasedIdConverter<TId>());
     }
 
     public static PropertyBuilder<HashSet<T>> HasGuidBasedIdsHashSetConversion<T>(

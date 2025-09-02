@@ -1,21 +1,18 @@
 <script lang="ts">
-	import type { GeneralVokiTakingAnswerData } from '../types';
+	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
+	import type { GeneralVokiAnswerTypeData } from '../types';
+	import GeneralVokiTakingAnswersDisplay from './c_answers_display/GeneralVokiTakingTextOnlyAnswers.svelte';
 
 	interface Props {
-		answersList: GeneralVokiTakingAnswerData[];
-		selectedAnswersMap: Map<string, boolean>;
+		answerType: GeneralVokiAnswerType;
+		answers: { typeData: GeneralVokiAnswerTypeData; id: string }[];
+		chosenAnswersMap: Map<string, boolean>;
 	}
-	let incorrectAnswersCountMessage = $state('');
+	let { answerType, answers, chosenAnswersMap }: Props = $props();
 </script>
 
-{#if incorrectAnswersCountMessage != ''}
-	<div class="incorrect-answers-count-message">{incorrectAnswersCountMessage}</div>
+{#if answerType === 'TextOnly'}
+	<GeneralVokiTakingAnswersDisplay {answers} {chosenAnswersMap} />
+{:else}
+	<h1>Unknown answer type</h1>
 {/if}
-
-<style>
-	.incorrect-answers-count-message {
-		border: var(--err-foreground) 0.125rem solid;
-		background-color: var(--err-back);
-		color: var(--err-foreground);
-	}
-</style>

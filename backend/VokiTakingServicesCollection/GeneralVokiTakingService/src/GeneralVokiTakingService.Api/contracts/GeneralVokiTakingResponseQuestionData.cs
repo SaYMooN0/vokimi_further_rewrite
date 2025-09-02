@@ -41,12 +41,13 @@ public record GeneralVokiTakingResponseAnswerData(
     );
 
     private static Dictionary<string, string> AnswerTypeDataToDictionary(BaseVokiAnswerTypeData data) => data.Match(
-        textOnly: d => new Dictionary<string, string> { ["Text"] = d.Text.ToString() },
-        imageOnly: d => new() { ["Image"] = d.Image.ToString() },
-        imageAndText: d => new() { ["Text"] = d.Text.ToString(), ["Image"] = d.Image.ToString() },
-        colorOnly: d => new() { ["Color"] = d.Color.ToString() },
-        colorAndText: d => new() { ["Text"] = d.Text.ToString(), ["Color"] = d.Color.ToString() },
-        audioOnly: d => new() { ["Audio"] = d.Audio.ToString() },
-        audioAndText: d => new() { ["Text"] = d.Text.ToString(), ["Audio"] = d.Audio.ToString() }
+        textOnly: d => new Dictionary<string, string> { ["text"] = d.Text.ToString() },
+        imageOnly: d => new() { ["image"] = d.Image.ToString() },
+        imageAndText: d => new() { ["text"] = d.Text.ToString(), ["image"] = d.Image.ToString() },
+        colorOnly: d => new() { ["color"] = d.Color.ToString() },
+        colorAndText: d => new() { ["text"] = d.Text.ToString(), ["color"] = d.Color.ToString() },
+        audioOnly: d => new() { ["audio"] = d.Audio.ToString() },
+        audioAndText: d => new() { ["text"] = d.Text.ToString(), ["audio"] = d.Audio.ToString() }
     );
+
 }

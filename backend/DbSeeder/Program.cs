@@ -33,7 +33,6 @@ async Task ClearAllDbs() {
         UserProfilesDbContext(config),
         CoreVokiCreationDbContext(config),
         GeneralVokiCreationDbContext(config),
-        
         VokisCatalogTakingDbContext(config),
         VokisCatalogTakingDbContext(config),
         GeneralVokiTakingDbContext(config)
