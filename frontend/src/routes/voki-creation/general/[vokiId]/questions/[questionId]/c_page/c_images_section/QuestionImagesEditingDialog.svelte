@@ -110,9 +110,11 @@
 		display: flex;
 		flex-direction: column;
 	}
+
 	:global(#voki-creation-question-images-dialog .dialog-content > .primary-btn) {
 		align-self: center;
 	}
+
 	.subheading {
 		margin: 0 0 0.5rem ;
 		color: var(--text);

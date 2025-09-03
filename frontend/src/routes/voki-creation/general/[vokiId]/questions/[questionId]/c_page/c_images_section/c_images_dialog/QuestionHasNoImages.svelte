@@ -74,11 +74,11 @@
 		align-items: center;
 		width: 40rem;
 		height: 18rem;
+		margin-bottom: 2rem;
 		border: 0.125rem dashed var(--muted);
 		border-radius: 1rem;
 		text-align: center;
 		transition: all 0.12s ease-in;
-		margin-bottom: 2rem;
 	}
 
 	.no-images.dragging:not(.loading) {

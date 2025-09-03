@@ -42,11 +42,11 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		height: 100%;
 		padding: 0 1rem;
 		border-radius: 1rem;
 		background-color: var(--secondary);
 		animation: var(--default-fade-in-animation);
-		height: 100%;
 	}
 
 	.loading-container > h1 {
@@ -54,8 +54,8 @@
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 550;
-		letter-spacing: 0.5px;
 		text-align: center;
+		letter-spacing: 0.5px;
 	}
 
 	.upload-button {

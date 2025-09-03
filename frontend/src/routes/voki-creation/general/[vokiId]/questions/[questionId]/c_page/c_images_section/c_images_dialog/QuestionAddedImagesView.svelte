@@ -38,22 +38,24 @@
 		gap: 1rem;
 		width: min(80rem, 90vw);
 		height: 18rem;
-		overflow-x: auto;
-		margin: 0 auto 2rem;
 		padding: 0.75rem 0.5rem 0.25rem;
+		margin: 0 auto 2rem;
 		transition: all 0.12s ease;
+		overflow: auto hidden;
 		overscroll-behavior: contain;
-		overflow-y: hidden;
 	}
+
 	.imgs-container::-webkit-scrollbar {
 		height: 0.675rem;
-		background-color: var(--muted);
 		border-radius: 0.25rem;
+		background-color: var(--muted);
 	}
+
 	.imgs-container::-webkit-scrollbar-thumb {
 		border-radius: 0.25rem;
 		background-color: var(--primary);
 	}
+
 	.imgs-container::-webkit-scrollbar-thumb:hover {
 		background-color: var(--primary);
 	}

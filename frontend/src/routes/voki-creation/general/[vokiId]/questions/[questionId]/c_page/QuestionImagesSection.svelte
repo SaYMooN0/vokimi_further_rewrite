@@ -51,19 +51,22 @@
 		align-items: center;
 		margin-top: 1.5rem;
 	}
+
 	.images-container {
-		width: 100%;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: start;
 		gap: 1rem;
+		width: 100%;
 		margin-top: 1rem;
 	}
+
 	.images-container img {
 		height: 14rem;
 		border-radius: 1rem;
 		box-shadow: var(--shadow-xs), var(--shadow);
 	}
+
 	.field.aspect-ratio > label {
 		color: var(--text);
 		font-size: 1.375rem;

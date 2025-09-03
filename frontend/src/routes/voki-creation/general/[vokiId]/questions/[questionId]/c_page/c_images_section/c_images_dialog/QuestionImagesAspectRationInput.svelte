@@ -82,70 +82,78 @@
 		flex-direction: column;
 		gap: 1rem;
 	}
+
 	.main-options {
 		display: flex;
 		flex-direction: row;
-		align-items: center;
 		justify-content: center;
-		width: fit-content;
+		align-items: center;
 		gap: 1rem;
+		width: fit-content;
 	}
+
 	.aspect-ratio-option {
+		width: 5rem;
+		height: 2rem;
+		border: none;
+		border-radius: 2rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		border-radius: 2rem;
-		box-shadow: var(--shadow);
-		font-weight: 450;
 		font-size: 1.25rem;
-		height: 2rem;
-		width: 5rem;
-		border: none;
+		font-weight: 450;
+		box-shadow: var(--shadow);
 	}
+
 	.aspect-ratio-option:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.aspect-ratio-option.chosen {
-		font-weight: 500;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
+		font-weight: 500;
 	}
+
 	.custom-btn {
 		width: 8rem;
 		margin-left: 1rem;
 	}
+
 	.custom-inputs {
-		opacity: 0;
-		height: 0;
-		transition: all 0.2s ease-in;
-		interpolate-size: allow-keywords;
-		font-size: 0;
 		display: grid;
-		grid-template-columns: 1fr 8rem 1fr;
 		align-items: center;
 		gap: 1rem;
+		height: 0;
+		font-size: 0;
+		opacity: 0;
+		transition: all 0.2s ease-in;
+		interpolate-size: allow-keywords;
+		grid-template-columns: 1fr 8rem 1fr;
 	}
 
 	.custom-inputs:not(.open) > :global(*) {
 		display: none;
 	}
+
 	.custom-inputs.open {
 		height: auto;
+		font-size: 1.25rem;
 		opacity: 1;
-		font-size: 1.25rem;
 	}
+
 	.custom-inputs label {
-		font-size: 1.25rem;
-		color: var(--muted-foreground);
-		border-radius: 2rem;
-		font-weight: 450;
-		height: 2rem;
-		align-items: center;
-		justify-content: center;
 		display: flex;
 		flex-direction: row;
+		justify-content: center;
+		align-items: center;
 		gap: 0.375rem;
 		width: 100%;
+		height: 2rem;
 		margin-bottom: 1rem;
+		border-radius: 2rem;
+		color: var(--muted-foreground);
+		font-size: 1.25rem;
+		font-weight: 450;
 	}
 </style>

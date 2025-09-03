@@ -32,9 +32,10 @@
 <style>
 	.answer {
 		padding: 2rem;
-		box-shadow: var(--shadow-xs);
 		margin: 1rem 0;
+		box-shadow: var(--shadow-xs);
 	}
+
 	.answer.chosen {
 		background-color: var(--secondary);
 	}
