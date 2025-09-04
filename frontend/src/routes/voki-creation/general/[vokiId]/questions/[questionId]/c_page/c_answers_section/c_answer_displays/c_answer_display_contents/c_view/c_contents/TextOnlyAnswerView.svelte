@@ -24,7 +24,8 @@
 		box-sizing: border-box;
 		font-size: 1.125rem;
 		font-weight: 500;
-				word-break: break-all;
+			word-break: normal;
+		overflow-wrap: anywhere;
 
 	}
 </style>

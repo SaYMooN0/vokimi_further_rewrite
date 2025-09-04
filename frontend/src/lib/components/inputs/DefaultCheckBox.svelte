@@ -32,8 +32,6 @@
 		border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 0.25rem;
 		transition: all 0.2s ease;
-		transform: translate3d(0, 0, 0);
-		transform: scale(1);
 		vertical-align: middle;
 	}
 
@@ -43,7 +41,6 @@
 		box-sizing: border-box;
 		padding: 0.125rem;
 		transition: all 0.3s ease;
-		transform: translate3d(0, 0, 0);
 		fill: none;
 		stroke: var(--primary-foreground);
 		stroke-width: 2;
@@ -62,7 +59,6 @@
 	.input:checked + .cbx span {
 		border-color: var(--primary);
 		background: var(--primary);
-		animation: wave-46 0.4s ease;
 	}
 
 	.input:checked + .cbx span svg {

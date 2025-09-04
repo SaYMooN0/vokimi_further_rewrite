@@ -36,8 +36,8 @@
 		{/each}
 	</div>
 	<label class="answers-count-label">
-		{#if minAnswersCount === maxAnswersCount && minAnswersCount === 1}
-			Choose 1 answer
+		{#if minAnswersCount === maxAnswersCount}
+			Choose {minAnswersCount} answer
 		{:else}
 			Choose from {minAnswersCount} to {maxAnswersCount} answers
 		{/if}

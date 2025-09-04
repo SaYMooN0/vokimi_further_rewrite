@@ -5,10 +5,16 @@
 
 	interface Props {
 		question: GeneralVokiTakingQuestionData;
-		chosenAnswers: Map<string, boolean>;
+		chosenAnswers: Record<string, boolean>;
 		totalQuestionsCount: number;
+		isMultipleChoice: boolean;
 	}
-	let { question, chosenAnswers, totalQuestionsCount }: Props = $props();
+	let {
+		question,
+		chosenAnswers = $bindable(),
+		totalQuestionsCount,
+		isMultipleChoice
+	}: Props = $props();
 </script>
 
 <GeneralVokiTakingQuestionDisplay
@@ -23,5 +29,6 @@
 <GeneralVokiTakingAnswersDisplay
 	answerType={question.answerType}
 	answers={question.answers}
-	chosenAnswersMap={chosenAnswers}
+	bind:chosenAnswers
+	{isMultipleChoice}
 />

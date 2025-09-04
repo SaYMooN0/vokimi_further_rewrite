@@ -106,7 +106,8 @@
 		font-size: 1.5rem;
 		font-weight: 500;
 		text-decoration: none;
-		word-break: break-all;
+	word-break: normal;
+		overflow-wrap: anywhere;
 
 	}
 </style>

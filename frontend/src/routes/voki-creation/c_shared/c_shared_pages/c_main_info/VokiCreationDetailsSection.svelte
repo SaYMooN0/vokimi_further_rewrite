@@ -60,7 +60,8 @@
 		color: var(--text);
 		font-size: 1.5rem;
 		font-weight: 500;
-		word-break: break-all;
+		word-break: normal;
+		overflow-wrap: anywhere;
 
 	}
 

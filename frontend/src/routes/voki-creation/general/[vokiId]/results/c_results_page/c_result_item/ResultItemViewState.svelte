@@ -79,7 +79,8 @@
 		font-weight: 475;
 		letter-spacing: 0.5px;
 		text-indent: 0.5em;
-		word-break: break-all;
+		word-break: normal;
+		overflow-wrap: anywhere;
 	}
 
 	.result-content {
@@ -88,7 +89,8 @@
 	}
 
 	.result-text {
-		word-break: break-all;
+		word-break: normal;
+		overflow-wrap: anywhere;
 		font-size: 1.25rem;
 		font-weight: 420;
 		letter-spacing: 0.1px;

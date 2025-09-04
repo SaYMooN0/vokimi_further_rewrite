@@ -12,7 +12,7 @@ export class DefaultGeneralVokiTakingState {
 
     receivedResult: GeneralVokiTakingResultData | null = $state(null);
     //question id : answer id - is selected
-    readonly chosenAnswers = $state(new Map<string, Map<string, boolean>>());
+    readonly chosenAnswers = $state<Record<string, Record<string, boolean>>>({});
     currentQuestionOrder = $state(0);
     currentQuestion: GeneralVokiTakingQuestionData | undefined;
 
@@ -26,7 +26,12 @@ export class DefaultGeneralVokiTakingState {
         this.#serverStartedAt = data.startedAt;
         this.#clientStartedAt = new Date();
         this.#questions = data.questions;
-        this.#questions.forEach(q => this.chosenAnswers.set(q.id, new Map(q.answers.map(a => [a.id, false]))));
+        this.#questions.forEach(q => {
+            this.chosenAnswers[q.id] = Object.fromEntries(
+                q.answers.map(a => [a.id, false])
+            ) as Record<string, boolean>;
+        });
+
         this.currentQuestion = $derived<GeneralVokiTakingQuestionData | undefined>(
             this.#questions.find(q => q.orderInVokiTaking === this.currentQuestionOrder)
         );

@@ -53,7 +53,8 @@
 	.tag-display span {
 		font-size: 1.125rem;
 		cursor: default;
-		word-break: break-all;
+		word-break: normal;
+		overflow-wrap: anywhere;
 	}
 
 	.tag-display svg {

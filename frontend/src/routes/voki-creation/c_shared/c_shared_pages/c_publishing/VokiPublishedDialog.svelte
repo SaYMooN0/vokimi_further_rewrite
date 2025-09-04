@@ -76,7 +76,8 @@
 		font-size: 1.5rem;
 		font-weight: 520;
 		letter-spacing: 0.4px;
-		word-break: break-all;
+		word-break: normal;
+		overflow-wrap: anywhere;
 	}
 
 	.view-button {

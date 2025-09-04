@@ -1,42 +1,63 @@
 <script lang="ts">
 	import type { GeneralVokiAnswerTextOnly, GeneralVokiAnswerTypeData } from '../../types';
+	import GeneralTakingAnswerChosenIndicator from './c_shared/GeneralTakingAnswerChosenIndicator.svelte';
 
-	function isChecked(id: string) {
-		return chosenAnswersMap.get(id) ?? false;
-	}
-
-	function toggle(id: string) {
-		let current = chosenAnswersMap.get(id)!;
-		chosenAnswersMap.set(id, !current);
-	}
 	let {
 		answers,
-		chosenAnswersMap
+		isMultipleChoice,
+		isAnswerChosen,
+		chooseAnswer
 	}: {
 		answers: { typeData: GeneralVokiAnswerTextOnly; id: string }[];
-		chosenAnswersMap: Map<string, boolean>;
+		isMultipleChoice: boolean;
+		isAnswerChosen: (answerId: string) => boolean;
+		chooseAnswer: (answerId: string) => void;
 	} = $props<{
 		answers: { typeData: GeneralVokiAnswerTypeData; id: string }[];
-		chosenAnswersMap: Map<string, boolean>;
+		isMultipleChoice: boolean;
+		isAnswerChosen: (answerId: string) => boolean;
+		chooseAnswer: (answerId: string) => void;
 	}>();
 </script>
 
 <div class="answers-container">
 	{#each answers as answer}
-		<div class="answer" class:chosen={isChecked(answer.id)} onclick={() => toggle(answer.id)}>
-			{answer.typeData.text}
+		<div
+			class="answer"
+			class:chosen={isAnswerChosen(answer.id)}
+			onclick={() => chooseAnswer(answer.id)}
+		>
+			<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
+			<label>
+				{answer.typeData.text}
+			</label>
 		</div>
 	{/each}
 </div>
 
 <style>
 	.answer {
-		padding: 2rem;
 		margin: 1rem 0;
-		box-shadow: var(--shadow-xs);
+		padding: 0.5rem 1rem;
+		box-shadow: var(--shadow), var(--shadow-xs);
+		border-radius: 0.5rem;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: center;
+		gap: 0.5rem;
+		transition: transform 0.18s ease;
 	}
-
+	.answer > label {
+		cursor: default;
+		word-break: normal;
+		overflow-wrap: anywhere;
+		text-indent: 0.25em;
+		font-size: 1.125rem;
+		font-weight: 400;
+	}
+	.answer:hover,
 	.answer.chosen {
-		background-color: var(--secondary);
+		transform: scale(1.009);
+		transition: transform 0.25s ease;
 	}
 </style>
