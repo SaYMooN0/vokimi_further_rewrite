@@ -5,6 +5,7 @@
 	import type { QuestionBriefInfo } from '../types';
 	import GeneralVokiCreationQuestionItem from './GeneralVokiCreationQuestionItem.svelte';
 	import VokiCreationBasicHeader from '../../../../c_shared/VokiCreationBasicHeader.svelte';
+	import { getConfirmActionDialogOpenFunction } from '../../../../../c_layout/ts_layout_contexts/confirm-action-dialog-context';
 
 	let { questionsProps, vokiId }: { questionsProps: QuestionBriefInfo[]; vokiId: string } = $props<{
 		questionsProps: QuestionBriefInfo[];
@@ -31,15 +32,35 @@
 			toast.error(response.errs[0].message);
 		}
 	}
-	async function deleteQuestion(questionId: string) {
-		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
-			questions: QuestionBriefInfo[];
-		}>(`/vokis/${vokiId}/questions/${questionId}/delete`, RequestJsonOptions.DELETE({}));
-		if (response.isSuccess) {
-			questions = response.data.questions;
-		} else {
-			toast.error(response.errs[0].message);
-		}
+	const { open: openConfirmationDialog, close: closeConfirmationDialog } =
+		getConfirmActionDialogOpenFunction();
+
+	function openQuestionDeleteConfirmationDialog(questionId: string) {
+		const deleteQuestion = async (questionId: string) => {
+			const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
+				questions: QuestionBriefInfo[];
+			}>(`/vokis/${vokiId}/questions/${questionId}/delete`, RequestJsonOptions.DELETE({}));
+			if (response.isSuccess) {
+				questions = response.data.questions;
+				return [];
+			} else {
+				return response.errs;
+			}
+		};
+		const q = questions.find((q) => q.id === questionId)!;
+		const questionPreview = q.text.length > 40 ? q.text.slice(0, 30) + '...' : q.text;
+		openConfirmationDialog({
+			mainContent: {
+				mainText: `Are you sure you want to delete the "${questionPreview}" question?`,
+				subheading: undefined
+			},
+			dialogButtons: {
+				confirmBtnText: 'Delete',
+				confirmBtnOnclick: () => deleteQuestion(questionId),
+				cancelBtnText: 'Cancel',
+				cancelBtnOnclick: closeConfirmationDialog
+			}
+		});
 	}
 </script>
 
@@ -57,7 +78,7 @@
 				moveQuestionDownInOrder(question.id);
 			}}
 			deleteQuestion={() => {
-				deleteQuestion(question.id);
+				openQuestionDeleteConfirmationDialog(question.id);
 			}}
 		/>
 	{/each}

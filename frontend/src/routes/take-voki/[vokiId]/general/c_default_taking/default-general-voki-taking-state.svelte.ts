@@ -10,7 +10,6 @@ export class DefaultGeneralVokiTakingState {
     readonly #clientStartedAt: Date;
     readonly #questions: GeneralVokiTakingQuestionData[];
 
-    receivedResult: GeneralVokiTakingResultData | null = $state(null);
     //question id : answer id - is selected
     readonly chosenAnswers = $state<Record<string, Record<string, boolean>>>({});
     currentQuestionOrder = $state(0);
@@ -37,19 +36,15 @@ export class DefaultGeneralVokiTakingState {
         );
     }
 
-    goToPreviousQuestion(): Err[] {
+    goToPreviousQuestion(): void {
         if (this.currentQuestionOrder > 0) {
             this.currentQuestionOrder -= 1;
-            return [];
         }
-        return [{ message: "Cannot go to previous question, because it is the first question" }];
     }
-    goToNextQuestion(): Err[] {
+    goToNextQuestion(): void {
         if (this.currentQuestionOrder < this.#questions.length - 1) {
             this.currentQuestionOrder += 1;
-            return [];
         }
-        return [{ message: "Cannot go to next question, because it is the last question" }];
     }
     jumpToSpecificQuestion(questionIndex: number): Err[] {
         if (questionIndex < 0 || questionIndex >= this.#questions.length) {
@@ -60,14 +55,11 @@ export class DefaultGeneralVokiTakingState {
 
     }
 
-    isCurrentQuestionLast(): boolean {
-        return this.currentQuestionOrder === this.#questions.length - 1;
-    }
-    isCurrentQuestionFirst(): boolean {
-        return this.currentQuestionOrder === 0;
-    }
+    isCurrentQuestionLast() { return this.currentQuestionOrder === this.#questions.length - 1; }
+    isCurrentQuestionFirst() { return this.currentQuestionOrder === 0; }
+    totalQuestionsCount() { return this.#questions.length }
 
-    async finishAndSend(): Promise<Err[]> {
+    async finishTakingAndReceiveResult(): Promise<Err[] | GeneralVokiTakingResultData> {
         const errs = this.checkErrsBeforeFinish();
         if (errs.length > 0) {
             return errs;
@@ -92,8 +84,5 @@ export class DefaultGeneralVokiTakingState {
     }
     checkErrsBeforeFinish(): Err[] {
         return [];
-    }
-    totalQuestionsCount() {
-        return this.#questions.length
     }
 }

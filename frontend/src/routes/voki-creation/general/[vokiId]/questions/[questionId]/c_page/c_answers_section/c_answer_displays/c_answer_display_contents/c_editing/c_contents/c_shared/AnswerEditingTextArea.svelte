@@ -26,6 +26,7 @@
 		font-weight: 500;
 		outline: 0.125rem solid var(--secondary);
 		resize: none;
+		min-height: 100%;
 	}
 
 	.answer-textarea:hover {

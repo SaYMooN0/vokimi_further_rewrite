@@ -21,7 +21,9 @@ internal sealed class AddNewQuestionToVokiCommandHandler :
     private static readonly GeneralVokiAnswerType[] SupportedTyped = [
         GeneralVokiAnswerType.TextOnly,
         GeneralVokiAnswerType.ColorOnly,
-        GeneralVokiAnswerType.ColorAndText
+        GeneralVokiAnswerType.ColorAndText,
+        GeneralVokiAnswerType.ImageOnly,
+        GeneralVokiAnswerType.ImageAndText,
     ];
 
     public async Task<ErrOr<GeneralVokiQuestionId>> Handle(AddNewQuestionToVokiCommand command, CancellationToken ct) {

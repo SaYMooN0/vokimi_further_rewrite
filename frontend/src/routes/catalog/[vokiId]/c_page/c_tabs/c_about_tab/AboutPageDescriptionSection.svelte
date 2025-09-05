@@ -4,11 +4,9 @@
 	import AboutPageFieldNameLabel from './AboutPageFieldNameLabel.svelte';
 
 	let { description }: { description: string } = $props<{ description: string }>();
-	description =
-		'dsadjklas hdas dhjka hdjkash dhajks hdahsjkdhjkah jhdjah hdjksahj dhjs hdjhj dhjkas';
 </script>
 
-<p class="description">
+<p class="description" class:no-value={StringUtils.isNullOrWhiteSpace(description)}>
 	<AboutPageFieldNameLabel fieldName="Description:" />
 	{#if StringUtils.isNullOrWhiteSpace(description)}
 		<FieldNotSetLabel text="No description" />
@@ -22,12 +20,20 @@
 <style>
 	.description {
 		margin: 0;
+		text-align: justify;
+		padding-right: 0.125rem;
+	}
+	.description {
+		display: flex;
+		align-items: center;
 	}
 
 	.description > .value {
+		width: 100%;
 		font-size: 1.25rem;
 		font-weight: 440;
 		text-indent: 0.5em;
-		word-break: break-all;
+		word-break: normal;
+		overflow-wrap: anywhere;
 	}
 </style>

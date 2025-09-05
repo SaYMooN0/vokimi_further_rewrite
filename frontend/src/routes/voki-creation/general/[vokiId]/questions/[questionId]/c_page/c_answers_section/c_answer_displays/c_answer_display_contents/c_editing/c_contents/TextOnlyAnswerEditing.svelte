@@ -17,5 +17,6 @@
 		flex-direction: column;
 		place-items: center center;
 		width: 100%;
+		height: 100%;
 	}
 </style>

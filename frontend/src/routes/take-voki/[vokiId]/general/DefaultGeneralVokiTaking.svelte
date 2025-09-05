@@ -3,12 +3,15 @@
 	import DefaultTakingButtonsContainer from './c_default_taking/DefaultTakingButtonsContainer.svelte';
 	import DefaultTakingCurrentQuestionView from './c_default_taking/DefaultTakingCurrentQuestionView.svelte';
 	import GeneralVokiReceivedResultView from './c_takings_shared/GeneralVokiReceivedResultView.svelte';
-	import type { GeneralVokiTakingData, GeneralVokiTakingQuestionData } from './types';
+	import type { GeneralVokiTakingData, GeneralVokiTakingResultData } from './types';
 
 	let { takingData }: { takingData: GeneralVokiTakingData } = $props<{
 		takingData: GeneralVokiTakingData;
 	}>();
+
 	let vokiTakingState = new DefaultGeneralVokiTakingState(takingData);
+	let receivedResult: GeneralVokiTakingResultData | null = $state(null);
+
 	function isCurrentQuestionWithMultipleChoice() {
 		const isSingle =
 			vokiTakingState.currentQuestion!.minAnswersCount === 1 &&
@@ -17,7 +20,7 @@
 	}
 </script>
 
-{#if vokiTakingState.receivedResult === null}
+{#if receivedResult === null}
 	{#if vokiTakingState.currentQuestion}
 		<DefaultTakingCurrentQuestionView
 			question={vokiTakingState.currentQuestion}
@@ -31,7 +34,7 @@
 	<DefaultTakingButtonsContainer {vokiTakingState} />
 {:else}
 	<GeneralVokiReceivedResultView
-		result={vokiTakingState.receivedResult}
+		result={receivedResult}
 		allowToSeeResultsList={true}
 		vokiId={vokiTakingState.vokiId}
 	/>

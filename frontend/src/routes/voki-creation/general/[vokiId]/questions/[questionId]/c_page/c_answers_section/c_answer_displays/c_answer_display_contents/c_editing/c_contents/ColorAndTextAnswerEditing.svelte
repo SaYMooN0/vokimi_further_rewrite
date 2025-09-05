@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { TextareaAutosize } from 'runed';
 	import type { AnswerDataColorAndText } from '../../../../../../types';
-	import AnswerEditingColorInput from './c_shared/AnswerEditingColorInput.svelte';
 	import AnswerEditingTextArea from './c_shared/AnswerEditingTextArea.svelte';
+	import AnswerEditingBasicColorInput from './c_shared/AnswerEditingBasicColorInput.svelte';
 
 	let { answer = $bindable() }: { answer: AnswerDataColorAndText } = $props<{
 		answer: AnswerDataColorAndText;
@@ -14,16 +13,19 @@
 </script>
 
 <div class="answer-content">
-	<AnswerEditingColorInput bind:color={answer.color} />
 	<AnswerEditingTextArea bind:text={answer.text} />
+	<AnswerEditingBasicColorInput bind:color={answer.color} />
 </div>
 
 <style>
 	.answer-content {
 		width: 100%;
 		display: grid;
-		grid-template-columns: auto 1fr;
+		grid-template-columns: 1fr auto;
 		gap: 1rem;
 		padding: 0.5rem 0 0;
+		height: 100%;
+		align-items: center;
+
 	}
 </style>

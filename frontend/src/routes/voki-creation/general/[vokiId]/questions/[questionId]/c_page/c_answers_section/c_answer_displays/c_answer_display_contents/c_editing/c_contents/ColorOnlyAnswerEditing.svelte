@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { ColorUtils } from '$lib/ts/utils/color-utils';
 	import type { AnswerDataColorOnly } from '../../../../../../types';
-	import AnswerEditingColorInput from './c_shared/AnswerEditingColorInput.svelte';
+	import AnswerEditingBasicColorInput from './c_shared/AnswerEditingBasicColorInput.svelte';
 
 	let { answer = $bindable() }: { answer: AnswerDataColorOnly } = $props<{
 		answer: AnswerDataColorOnly;
@@ -25,7 +25,7 @@
 </script>
 
 <div class="answer-content">
-	<AnswerEditingColorInput bind:color={answer.color} />
+	<AnswerEditingBasicColorInput bind:color={answer.color} />
 	<div class="shades">
 		{#each shades as shade}
 			<div class="shade" style="--shade:{shade}" onclick={() => (answer.color = shade)}></div>
@@ -67,8 +67,9 @@
 		height: fit-content;
 		justify-content: center;
 		border-radius: 0.875rem;
-		border: 0.125rem solid var(--secondary-foreground);
-		background-color: var(--secondary-foreground);
+		/* border: 0.125rem solid var(--secondary-foreground); */
+		/* background-color: var(--secondary-foreground);
+		 */
 	}
 
 	.shade {
@@ -76,21 +77,26 @@
 		height: 7rem;
 		background: var(--shade);
 		cursor: pointer;
-		transition: transform 0.2s ease-out;
+		transition: all 0.2s ease-out;
 		z-index: 1;
+	}
+	.shade:hover {
+		transform: scaleY(1.14) scaleX(1.02);
+		border-radius: 0.25rem;
+		z-index: 2;
+		box-shadow: var(--shadow-md);
 	}
 	.shade:first-child {
 		border-radius: 0.75rem 0 0 0.75rem;
-		transform-origin: left;
 	}
-
+	.shade:first-child:hover {
+		border-radius: 0.75rem 0.25rem 0.25rem 0.75rem;
+	}
 	.shade:last-child {
 		border-radius: 0 0.75rem 0.75rem 0;
-		transform-origin: right;
 	}
-	.shade:hover {
-		transform: scaleX(1.2);
-		z-index: 2;
+	.shade:last-child:hover {
+		border-radius: 0.25rem 0.75rem 0.75rem 0.25rem;
 	}
 	.presets {
 		display: flex;

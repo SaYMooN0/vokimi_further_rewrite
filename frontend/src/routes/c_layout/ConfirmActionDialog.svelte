@@ -34,13 +34,14 @@
 		dialog.close();
 	}
 	async function onConfirm() {
+		console.log(isDialogButtons(buttons), '121');
 		if (isDialogButtons(buttons)) {
 			let res = await buttons.confirmBtnOnclick();
-			if (res) {
+			if (res && res.length > 0) {
 				confirmErrs = res;
+			} else {
+				dialog.close();
 			}
-		} else {
-			dialog.close();
 		}
 	}
 	let confirmErrs = $state<Err[]>([]);
@@ -84,6 +85,7 @@
 		font-size: 2rem;
 		font-weight: 450;
 		text-align: center;
+		text-wrap: pretty;
 	}
 
 	.buttons button {

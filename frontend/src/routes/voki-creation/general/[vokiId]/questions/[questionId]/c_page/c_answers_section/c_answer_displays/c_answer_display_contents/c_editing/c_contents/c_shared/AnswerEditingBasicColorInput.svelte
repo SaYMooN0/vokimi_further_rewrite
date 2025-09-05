@@ -25,7 +25,7 @@
 		position: relative;
 		display: inline-block;
 		height: 6rem;
-		--color-input-radius: 1rem;
+		--color-input-radius: 0.5rem;
 	}
 
 	.color-input {

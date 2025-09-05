@@ -26,7 +26,7 @@ public sealed class GeneralVokiAnswerText : ValueObject
         {
             return ErrFactory.IncorrectFormat(
                 "Answer text is too short",
-                $"Answer must be at least {AnswerTextMinLength} characters long"
+                $"Answer must be at least {AnswerTextMinLength} characters long. Current length: {len}"
             );
         }
 
@@ -34,7 +34,7 @@ public sealed class GeneralVokiAnswerText : ValueObject
         {
             return ErrFactory.IncorrectFormat(
                 "Answer text is too long",
-                $"Answer must not exceed {AnswerTextMaxLength} characters long"
+                $"Answer must not exceed {AnswerTextMaxLength} characters long. Current length: {len}"
             );
         }
 

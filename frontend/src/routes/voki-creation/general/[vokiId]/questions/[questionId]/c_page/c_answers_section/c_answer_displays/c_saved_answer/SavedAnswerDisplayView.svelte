@@ -14,12 +14,19 @@
 		vokiId: string;
 		questionId: string;
 		startEditing: () => void;
-		updateParentOnDelete: (answerId:string) => void;
+		updateParentOnDelete: (answerId: string) => void;
 	}
-	let { answer = $bindable(), vokiId, questionId, startEditing, updateParentOnDelete }: Props = $props();
+	let {
+		answer = $bindable(),
+		vokiId,
+		questionId,
+		startEditing,
+		updateParentOnDelete
+	}: Props = $props();
 
 	const { open: openConfirmationDialog, close: closeConfirmationDialog } =
 		getConfirmActionDialogOpenFunction();
+
 	function openAnswerDeleteConfirmationDialog() {
 		const deleteAnswer = async () => {
 			const response = await ApiVokiCreationGeneral.fetchVoidResponse(

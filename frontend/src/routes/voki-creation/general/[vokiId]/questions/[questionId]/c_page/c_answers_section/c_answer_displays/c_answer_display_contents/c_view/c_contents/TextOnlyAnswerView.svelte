@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { AnswerDataTextOnly } from "../../../../../../types";
-
+	import type { AnswerDataTextOnly } from '../../../../../../types';
+	import AnswersViewTextDisplay from './c_shared/AnswersViewTextDisplay.svelte';
 
 	const { answer }: { answer: AnswerDataTextOnly } = $props<{
 		answer: AnswerDataTextOnly;
@@ -8,7 +8,7 @@
 </script>
 
 <div class="answer-content">
-	<p>{answer.text}</p>
+	<AnswersViewTextDisplay text={answer.text} />
 </div>
 
 <style>
@@ -17,15 +17,5 @@
 		flex-direction: column;
 		place-items: center center;
 		width: 100%;
-	}
-
-	p {
-		width: 100%;
-		box-sizing: border-box;
-		font-size: 1.125rem;
-		font-weight: 500;
-			word-break: normal;
-		overflow-wrap: anywhere;
-
 	}
 </style>
