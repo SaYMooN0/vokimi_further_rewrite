@@ -19,11 +19,12 @@
 
 <style>
 	.description {
+		padding-right: 0.125rem;
 		margin: 0;
 		text-align: justify;
-		padding-right: 0.125rem;
 	}
-	.description {
+
+	.description.no-value {
 		display: flex;
 		align-items: center;
 	}

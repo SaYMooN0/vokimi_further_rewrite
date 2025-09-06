@@ -22,7 +22,12 @@ public class TempAudioKey : ITempKey
         $"{KeyConsts.TempFolder}/{Guid.NewGuid()}-{Guid.NewGuid()}.{ext}"
     );
 
-    private ErrOrNothing CheckAndExtractExtension(string value, out AudioFileExtension ext) {
+    public static ErrOr<TempAudioKey> FromString(string value) =>
+        CheckAndExtractExtension(value, out _).IsErr(out var err)
+            ? err
+            : new TempAudioKey(value);
+
+    private static ErrOrNothing CheckAndExtractExtension(string value, out AudioFileExtension ext) {
         ext = default;
 
         if (string.IsNullOrWhiteSpace(value)) {
@@ -62,6 +67,6 @@ public class TempAudioKey : ITempKey
 
     public bool Equals(ITempKey? other) =>
         other is not null && string.Equals(Value, other.Value, StringComparison.Ordinal);
-    public override string ToString() => Value;
 
+    public override string ToString() => Value;
 }

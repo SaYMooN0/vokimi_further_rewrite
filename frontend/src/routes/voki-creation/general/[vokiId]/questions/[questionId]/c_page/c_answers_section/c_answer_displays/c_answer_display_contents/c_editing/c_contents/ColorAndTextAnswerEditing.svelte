@@ -19,13 +19,13 @@
 
 <style>
 	.answer-content {
-		width: 100%;
 		display: grid;
-		grid-template-columns: 1fr auto;
-		gap: 1rem;
-		padding: 0.5rem 0 0;
-		height: 100%;
 		align-items: center;
+		gap: 1rem;
+		width: 100%;
+		height: 100%;
+		padding: 0.5rem 0 0;
+		grid-template-columns: 1fr auto;
 
 	}
 </style>

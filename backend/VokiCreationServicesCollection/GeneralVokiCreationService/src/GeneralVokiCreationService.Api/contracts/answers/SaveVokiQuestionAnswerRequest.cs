@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
+﻿using GeneralVokiCreationService.Application.dtos;
 
 namespace GeneralVokiCreationService.Api.contracts.answers;
 
@@ -17,11 +17,6 @@ public class SaveVokiQuestionAnswerRequest : IRequestWithValidationNeeded
             return ErrFactory.NoValue.Common($"{nameof(AnswerData)} is empty");
         }
 
-        var parseRes = AnswerData.ParseToAnswerData();
-        if (parseRes.IsErr(out var err)) {
-            return err;
-        }
-
         if (RelateResultIds.Length > MaxRelatedResultsCount) {
             return ErrFactory.LimitExceeded("Too many related results provided");
         }
@@ -34,11 +29,8 @@ public class SaveVokiQuestionAnswerRequest : IRequestWithValidationNeeded
             );
         }
 
-        ParsedAnswerData = parseRes.AsSuccess();
         return ErrOrNothing.Nothing;
     }
-
-    public BaseVokiAnswerTypeData ParsedAnswerData { get; private set; }
 
     public ImmutableHashSet<GeneralVokiResultId> ParsedResultIds => RelateResultIds
         .Select(id => new GeneralVokiResultId(new(id)))

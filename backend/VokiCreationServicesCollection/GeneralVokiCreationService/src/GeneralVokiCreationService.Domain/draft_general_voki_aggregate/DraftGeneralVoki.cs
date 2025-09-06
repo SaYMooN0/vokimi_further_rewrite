@@ -226,15 +226,14 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             return ErrFactory.NotFound.Common("Cannot add new answer to question because question not fount");
         }
 
-        GeneralVokiAnswerId answerId = GeneralVokiAnswerId.CreateNew();
         if (
-            CheckIfAnswerDataBelongs(questionId, answerId, answerData).IsErr(out var err)
+            CheckIfAnswerDataBelongs(questionId, answerData).IsErr(out var err)
             || CheckIfResultsExist(relatedResultIds).IsErr(out err)
         ) {
             return err;
         }
 
-        var res = question.AddNewAnswer(answerId, answerData, relatedResultIds);
+        var res = question.AddNewAnswer(answerData, relatedResultIds);
         return res;
     }
 
@@ -248,7 +247,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         if (
-            CheckIfAnswerDataBelongs(questionId, answerId, newAnswerTypeData).IsErr(out var err)
+            CheckIfAnswerDataBelongs(questionId, newAnswerTypeData).IsErr(out var err)
             || CheckIfResultsExist(newRelatedResultIds).IsErr(out err)
         ) {
             return err;
@@ -341,12 +340,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
     private ErrOrNothing CheckIfAnswerDataBelongs(
-        GeneralVokiQuestionId questionId, GeneralVokiAnswerId answerId, BaseVokiAnswerTypeData data
+        GeneralVokiQuestionId questionId, BaseVokiAnswerTypeData data
     ) {
-        if (data is IVokiAnswerTypeDataWithStorageKey keyWithCheckNeeded) {
-            if (!keyWithCheckNeeded.IsForCorrectVokiQuestion(Id, questionId, answerId)) {
-                return ErrFactory.Conflict("Answer data does not belong to this question");
-            }
+        if (data is IVokiAnswerTypeDataWithStorageKey key && !key.IsForCorrectVokiQuestion(Id, questionId)) {
+            return ErrFactory.Conflict("Answer data does not belong to this question");
         }
 
         return ErrOrNothing.Nothing;

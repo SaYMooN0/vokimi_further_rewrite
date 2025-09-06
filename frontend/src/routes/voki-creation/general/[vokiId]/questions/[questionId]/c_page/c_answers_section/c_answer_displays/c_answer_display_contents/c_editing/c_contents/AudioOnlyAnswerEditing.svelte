@@ -1,10 +1,11 @@
 <script lang="ts">
-	import type { AnswerDataAudioOnly } from "../../../../../../types";
-
-
-	let { answer = $bindable() }: { answer: AnswerDataAudioOnly } = $props<{
+	import type { AnswerDataAudioOnly } from '../../../../../../types';
+	interface Props {
 		answer: AnswerDataAudioOnly;
-	}>();
+		vokiId: string;
+		questionId: string;
+	}
+	let { answer = $bindable(), vokiId, questionId }: Props = $props();
 </script>
 
 <div class="answer-content">

@@ -38,10 +38,10 @@
 <style>
 	.btns-container {
 		display: grid;
-		grid-template-columns: auto 1fr auto;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		padding: 0 5rem;
+		grid-template-columns: auto 1fr auto;
 	}
 
 	.next-prev-btns {
@@ -53,9 +53,9 @@
 		color: var(--primary-foreground);
 		font-size: 1.25rem;
 		font-weight: 450;
-		cursor: pointer;
 		letter-spacing: 0.75px;
 		transition: transform 0.12s ease-in;
+		cursor: pointer;
 	}
 
 	.next-prev-btns:hover {
@@ -69,12 +69,11 @@
 	}
 
 	.next-prev-btns.reduced {
-		transform: scale(0.85);
 		border-radius: 0.25rem;
+		transform: scale(0.85);
 	}
 
 	.finish-btn {
-		justify-self: center;
 		width: 10rem;
 		height: 2.5rem;
 		border: none;
@@ -83,10 +82,11 @@
 		color: var(--primary-foreground);
 		font-size: 1.375rem;
 		font-weight: 500;
+		letter-spacing: 1px;
 		transition: all 0.12s ease-in;
 		transform: scale(1);
 		cursor: pointer;
-		letter-spacing: 1px;
+		justify-self: center;
 	}
 
 	.finish-btn.hidden {

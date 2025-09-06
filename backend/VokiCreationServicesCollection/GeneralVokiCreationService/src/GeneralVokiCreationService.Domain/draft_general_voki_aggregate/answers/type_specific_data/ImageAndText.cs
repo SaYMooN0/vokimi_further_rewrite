@@ -12,11 +12,8 @@ public abstract partial record BaseVokiAnswerTypeData
         : BaseVokiAnswerTypeData, IVokiAnswerTypeDataWithStorageKey
     {
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.ImageAndText;
-        public bool IsForCorrectVokiQuestion(
-            VokiId vokiId,
-            GeneralVokiQuestionId questionId,
-            GeneralVokiAnswerId answerId
-        ) => Image.IsWithIds(vokiId, questionId, answerId);
+        public bool IsForCorrectVokiQuestion(VokiId vokiId,GeneralVokiQuestionId questionId) =>
+            Image.IsWithIds(vokiId, questionId);
 
     }
 }

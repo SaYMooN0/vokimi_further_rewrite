@@ -6,22 +6,12 @@ namespace GeneralVokiCreationService.Application;
 
 public interface IMainStorageBucket
 {
-    Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(
-        VokiCoverKey defaultVokiCover
-    );
+    Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(VokiCoverKey defaultVokiCover);
+    Task<ErrOrNothing> CopyVokiCoverFromTempToStandard(TempImageKey temp, VokiCoverKey destination);
+    Task<ErrOrNothing> CopyVokiResultImageFromTempToStandard(TempImageKey temp, GeneralVokiResultImageKey destination);
 
-    public Task<ErrOrNothing> CopyVokiCoverFromTempToStandard(
-        TempImageKey temp,
-        VokiCoverKey destination
-    );
+    Task<ErrOrNothing> CopyVokiQuestionImageFromTempToStandard(TempImageKey temp, GeneralVokiQuestionImageKey destination);
 
-    public Task<ErrOrNothing> CopyVokiResultImageFromTempToStandard(
-        TempImageKey temp,
-        GeneralVokiResultImageKey destination
-    );
-
-    public Task<ErrOrNothing> CopyVokiQuestionImageFromTempToStandard(
-        TempImageKey temp,
-        GeneralVokiQuestionImageKey destination
-    );
+    Task<ErrOrNothing> CopyVokiAnswerImageFromTempToStandard(TempImageKey temp, GeneralVokiAnswerImageKey destination);
+    Task<ErrOrNothing> CopyVokiAnswerAudioFromTempToStandard(TempAudioKey temp, GeneralVokiAnswerAudioKey destination);
 }

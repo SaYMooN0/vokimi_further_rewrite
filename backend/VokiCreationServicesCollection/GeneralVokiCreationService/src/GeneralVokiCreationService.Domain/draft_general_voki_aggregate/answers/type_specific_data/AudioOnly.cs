@@ -9,11 +9,8 @@ public abstract partial record BaseVokiAnswerTypeData
     ) : BaseVokiAnswerTypeData, IVokiAnswerTypeDataWithStorageKey
     {
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.AudioOnly;
-        public bool IsForCorrectVokiQuestion(
-            VokiId vokiId,
-            GeneralVokiQuestionId questionId,
-            GeneralVokiAnswerId answerId
-        ) => Audio.IsWithIds(vokiId, questionId, answerId);
 
+        public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
+            Audio.IsWithIds(vokiId, questionId);
     }
 }

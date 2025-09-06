@@ -13,23 +13,25 @@
 
 <style>
 	.answer-content {
-		width: 100%;
-		height: 100%;
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		flex-direction: column;
 		gap: 0.5rem;
+		width: 100%;
+		height: 100%;
 	}
+
 	.color {
+		width: 90%;
 		height: 60%;
 		min-height: 4rem;
-		width: 90%;
 		border-radius: 0.5rem;
 	}
+
 	label {
+		color: var(--secondary-foreground);
 		font-size: 0.875rem;
 		font-weight: 500;
-		color: var(--secondary-foreground);
 	}
 </style>

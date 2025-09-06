@@ -21,9 +21,11 @@
 		word-break: normal;
 		overflow-wrap: anywhere;
 	}
+
 	.reduce-font-size-1 {
 		font-size: 2rem;
 	}
+
 	.reduce-font-size-2 {
 		font-size: 1.75rem;
 	}

@@ -17,6 +17,7 @@
 <style>
 	.answer-textarea {
 		width: 100%;
+		min-height: 100%;
 		box-sizing: border-box;
 		padding: 0.25rem 0.375rem;
 		border: none;
@@ -26,7 +27,6 @@
 		font-weight: 500;
 		outline: 0.125rem solid var(--secondary);
 		resize: none;
-		min-height: 100%;
 	}
 
 	.answer-textarea:hover {

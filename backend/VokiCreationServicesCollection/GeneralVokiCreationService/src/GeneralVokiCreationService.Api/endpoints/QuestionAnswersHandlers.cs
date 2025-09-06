@@ -31,7 +31,7 @@ internal static class QuestionAnswersHandlers
         var request = httpContext.GetValidatedRequest<SaveVokiQuestionAnswerRequest>();
 
         AddNewAnswerToVokiQuestionCommand command = new(
-            id, questionId, request.ParsedAnswerData, request.ParsedResultIds);
+            id, questionId, request.AnswerData, request.ParsedResultIds);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (answer) => Results.Json(

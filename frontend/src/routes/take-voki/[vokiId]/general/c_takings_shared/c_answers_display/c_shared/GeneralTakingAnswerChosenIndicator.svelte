@@ -61,29 +61,31 @@
 	.multiple.chosen svg {
 		stroke-dashoffset: 0;
 	}
+
 	.single {
-		border-radius: 50%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		border-radius: 50%;
 	}
+
 	.single span {
 		display: inline-block;
 		width: 0%;
-		aspect-ratio: 1;
 		border-radius: 50%;
-		transition: inherit;
-
 		opacity: 0;
+		transition: inherit;
+		aspect-ratio: 1;
 	}
+
 	.single.chosen {
 		border-color: var(--primary);
 	}
-	.single.chosen span {
-		transform: scale(1);
-		width: 70%;
 
+	.single.chosen span {
+		width: 70%;
 		background: var(--primary);
 		opacity: 1;
+		transform: scale(1);
 	}
 </style>
