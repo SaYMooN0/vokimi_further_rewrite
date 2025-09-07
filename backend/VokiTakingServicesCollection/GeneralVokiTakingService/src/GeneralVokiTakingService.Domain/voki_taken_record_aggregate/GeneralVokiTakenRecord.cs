@@ -1,8 +1,45 @@
-﻿using VokiTakingServicesLib.Domain.voki_taken_record_aggregate;
+﻿using VokiTakingServicesLib.Domain.common;
+using VokiTakingServicesLib.Domain.voki_taken_record_aggregate;
 
 namespace GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 
 public sealed class GeneralVokiTakenRecord : BaseVokiTakenRecord
 {
+    private GeneralVokiTakenRecord() { }
     public override VokiType VokiType => VokiType.General;
+    public GeneralVokiResultId ReceivedResultId { get; }
+    public ImmutableArray<VokiTakenRecordQuestionDetails> QuestionDetails { get; }
+    public bool WasVokiWithForcedSequentialOrder { get; }
+
+    private GeneralVokiTakenRecord(
+        VokiTakenRecordId id,
+        VokiId takenVokiId,
+        AppUserId? vokiTakerId,
+        DateTime testTakingStart,
+        DateTime testTakingEnd,
+        GeneralVokiResultId receivedResultId,
+        ImmutableArray<VokiTakenRecordQuestionDetails> questionDetails,
+        bool wasVokiWithForcedSequentialOrder
+    ) : base(id, takenVokiId, vokiTakerId, testTakingStart, testTakingEnd) {
+        ReceivedResultId = receivedResultId;
+        QuestionDetails = questionDetails;
+        WasVokiWithForcedSequentialOrder = wasVokiWithForcedSequentialOrder;
+    }
+
+    public static GeneralVokiTakenRecord CreateNew(
+        VokiId takenVokiId,
+        AppUserId? vokiTakerId,
+        DateTime testTakingStart,
+        DateTime testTakingEnd,
+        GeneralVokiResultId receivedResultId,
+        ImmutableArray<VokiTakenRecordQuestionDetails> questionDetails,
+        bool wasVokiWithForcedSequentialOrder
+    ) {
+        GeneralVokiTakenRecord newRecord = new(
+            VokiTakenRecordId.CreateNew(), takenVokiId, vokiTakerId,
+            testTakingStart, testTakingEnd,
+            receivedResultId, questionDetails, wasVokiWithForcedSequentialOrder
+        );
+        return newRecord;
+    }
 }

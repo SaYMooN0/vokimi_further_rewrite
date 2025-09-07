@@ -6,6 +6,7 @@ export type GeneralVokiTakingData = {
     questions: GeneralVokiTakingQuestionData[];
     sessionId: string;
     startedAt: Date;
+    totalQuestionsCount: number;
 }
 export type GeneralVokiTakingQuestionData = {
     id: string;

@@ -7,10 +7,8 @@
 
 	interface Props {
 		answer: AnswerDataImageOnly;
-		vokiId: string;
-		questionId: string;
 	}
-	let { answer = $bindable(), vokiId, questionId }: Props = $props();
+	let { answer = $bindable() }: Props = $props();
 	let isLoading = $state(false);
 	let isDragging = $state(false);
 	let uploadingErrs = $state<Err[]>([]);
@@ -74,7 +72,7 @@
 		</div>
 	{:else}
 		<div
-			class="color-input-container"
+			class="img-input-container"
 			class:dragging={isDragging}
 			ondrop={(e) => ondrop(e)}
 			{ondragover}
@@ -137,7 +135,7 @@
 		color: var(--accent-foreground);
 	}
 	.loading,
-	.color-input-container {
+	.img-input-container {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
@@ -150,7 +148,7 @@
 		animation: var(--default-fade-in-animation);
 	}
 
-	.color-input-container {
+	.img-input-container {
 		gap: 0.75rem;
 		border: 0.125rem dashed var(--muted);
 		border-radius: 1rem;
@@ -162,7 +160,7 @@
 		background-color: var(--secondary);
 	}
 
-	.color-input-container.dragging {
+	.img-input-container.dragging {
 		border-color: var(--primary);
 		background-color: var(--secondary);
 	}

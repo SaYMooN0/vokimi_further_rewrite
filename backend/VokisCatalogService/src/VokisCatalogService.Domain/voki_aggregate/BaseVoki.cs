@@ -35,4 +35,10 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         VokiTakingsCount = 0;
         PublicationDate = publicationDate;
     }
+
+    public void UpdateVokiTakingsCount(uint newVokiTakingsCount) {
+        if (newVokiTakingsCount > VokiTakingsCount) {
+            VokiTakingsCount = newVokiTakingsCount;
+        }
+    }
 }

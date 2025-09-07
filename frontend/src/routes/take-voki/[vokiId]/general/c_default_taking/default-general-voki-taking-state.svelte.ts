@@ -9,15 +9,18 @@ export class DefaultGeneralVokiTakingState {
     readonly #serverStartedAt: Date;
     readonly #clientStartedAt: Date;
     readonly #questions: GeneralVokiTakingQuestionData[];
+    readonly totalQuestionsCount: number;
 
-    //question id : answer id - is selected
+    // question id : answer id - is selected
     readonly chosenAnswers = $state<Record<string, Record<string, boolean>>>({});
     currentQuestionOrder = $state(0);
     currentQuestion: GeneralVokiTakingQuestionData | undefined;
 
     constructor(data: GeneralVokiTakingData) {
         if (data.forceSequentialAnswering) {
-            throw new Error("Cannot create GeneralVokiTakingState, because voki force sequential answering");
+            throw new Error(
+                "Cannot create GeneralVokiTakingState, because voki force sequential answering"
+            );
         }
 
         this.vokiId = data.id;
@@ -25,6 +28,14 @@ export class DefaultGeneralVokiTakingState {
         this.#serverStartedAt = data.startedAt;
         this.#clientStartedAt = new Date();
         this.#questions = data.questions;
+        this.totalQuestionsCount = data.totalQuestionsCount;
+
+        if (this.#questions.length !== this.totalQuestionsCount) {
+            throw new Error(
+                `GeneralVokiTakingState inconsistency: questions length (${this.#questions.length}) != totalQuestionsCount (${this.totalQuestionsCount})`
+            );
+        }
+
         this.#questions.forEach(q => {
             this.chosenAnswers[q.id] = Object.fromEntries(
                 q.answers.map(a => [a.id, false])
@@ -32,7 +43,9 @@ export class DefaultGeneralVokiTakingState {
         });
 
         this.currentQuestion = $derived<GeneralVokiTakingQuestionData | undefined>(
-            this.#questions.find(q => q.orderInVokiTaking === this.currentQuestionOrder)
+            this.#questions.find(
+                q => q.orderInVokiTaking === this.currentQuestionOrder
+            )
         );
     }
 
@@ -41,23 +54,33 @@ export class DefaultGeneralVokiTakingState {
             this.currentQuestionOrder -= 1;
         }
     }
+
     goToNextQuestion(): void {
-        if (this.currentQuestionOrder < this.#questions.length - 1) {
+        if (this.currentQuestionOrder < this.totalQuestionsCount - 1) {
             this.currentQuestionOrder += 1;
         }
     }
+
     jumpToSpecificQuestion(questionIndex: number): Err[] {
-        if (questionIndex < 0 || questionIndex >= this.#questions.length) {
-            return [{ message: "Cannot jump to specific question, because it does not exist" }];
+        if (questionIndex < 0 || questionIndex >= this.totalQuestionsCount) {
+            return [
+                {
+                    message:
+                        "Cannot jump to specific question, because it does not exist"
+                }
+            ];
         }
         this.currentQuestionOrder = questionIndex;
         return [];
-
     }
 
-    isCurrentQuestionLast() { return this.currentQuestionOrder === this.#questions.length - 1; }
-    isCurrentQuestionFirst() { return this.currentQuestionOrder === 0; }
-    totalQuestionsCount() { return this.#questions.length }
+    isCurrentQuestionLast() {
+        return this.currentQuestionOrder === this.totalQuestionsCount - 1;
+    }
+
+    isCurrentQuestionFirst() {
+        return this.currentQuestionOrder === 0;
+    }
 
     async finishTakingAndReceiveResult(): Promise<Err[] | GeneralVokiTakingResultData> {
         const errs = this.checkErrsBeforeFinish();
@@ -69,19 +92,17 @@ export class DefaultGeneralVokiTakingState {
             RequestJsonOptions.POST({
                 serverStart: this.#serverStartedAt,
                 clientStart: this.#clientStartedAt,
-                sessionId: this.#sessionId,
-
+                sessionId: this.#sessionId
             })
         );
 
         if (response.isSuccess) {
-            //remove cookies
-            //show result
-        } else {
-            return response.errs;
-        }
-        return [];
+            // remove cookies
+            // show result
+        } 
+        return response;
     }
+
     checkErrsBeforeFinish(): Err[] {
         return [];
     }

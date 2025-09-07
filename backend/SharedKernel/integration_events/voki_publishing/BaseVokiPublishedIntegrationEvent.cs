@@ -2,10 +2,10 @@
 using SharedKernel.common;
 
 namespace SharedKernel.integration_events.voki_publishing;
-// @formatter:off
-[JsonDerivedType(typeof(GeneralVokiPublishedIntegrationEvent),    typeDiscriminator: nameof(GeneralVokiPublishedIntegrationEvent))]
-// @formatter:on
 
+// @formatter:off
+[JsonDerivedType(typeof(GeneralVokiPublishedIntegrationEvent), typeDiscriminator: nameof(GeneralVokiPublishedIntegrationEvent))]
+// @formatter:on
 public abstract record class BaseVokiPublishedIntegrationEvent(
     VokiId VokiId,
     AppUserId PrimaryAuthorId,

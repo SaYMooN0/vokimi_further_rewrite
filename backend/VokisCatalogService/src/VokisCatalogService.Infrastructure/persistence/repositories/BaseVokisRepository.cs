@@ -38,4 +38,12 @@ internal class BaseVokisRepository : IBaseVokisRepository
         _db.BaseVokis.AsNoTracking()
             .Where(v => queryVokiIds.Contains(v.Id))
             .ToArrayAsync();
+
+    public async Task<BaseVoki?> GetById(VokiId vokiId) =>
+        await _db.BaseVokis.FindAsync(vokiId);
+
+    public async Task Update(BaseVoki voki) {
+        _db.BaseVokis.Update(voki);
+        await _db.SaveChangesAsync();
+    }
 }

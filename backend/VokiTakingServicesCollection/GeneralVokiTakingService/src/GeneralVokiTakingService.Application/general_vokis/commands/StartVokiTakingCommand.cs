@@ -61,23 +61,33 @@ public record StartVokiTakingCommandResponse(
     bool ForceSequentialAnswering,
     StartVokiTakingCommandResponseQuestionData[] Questions,
     VokiTakingSessionId SessionId,
-    DateTime StartedAt
+    DateTime StartedAt,
+    ushort TotalQuestionsCount
 )
 {
     public static StartVokiTakingCommandResponse Create(
         GeneralVoki voki, BaseVokiTakingSession takingSession
     ) {
+        StartVokiTakingCommandResponseQuestionData[] questions;
         var idToOrder = takingSession.QuestionIdToOrder();
-        var questions = voki.Questions
-            .Select(q => StartVokiTakingCommandResponseQuestionData.Create(q, idToOrder[q.Id]))
-            .ToArray();
+        if (takingSession.IsWithForceSequentialAnswering) {
+            var firstQuestionInTaking = idToOrder.MinBy(idToOrder => idToOrder.Value);
+            var question = voki.Questions.FirstOrDefault(q => q.Id == firstQuestionInTaking.Key)!;
+            questions = [StartVokiTakingCommandResponseQuestionData.Create(question, firstQuestionInTaking.Value)];
+        }
+        else {
+            questions = voki.Questions
+                .Select(q => StartVokiTakingCommandResponseQuestionData.Create(q, idToOrder[q.Id]))
+                .ToArray();
+        }
 
         return new(
             voki.Id,
             voki.ForceSequentialAnswering,
             questions,
             takingSession.Id,
-            takingSession.StartTime
+            takingSession.StartTime,
+            (ushort)voki.Questions.Count
         );
     }
 }

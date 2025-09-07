@@ -3,10 +3,8 @@
 
 	interface Props {
 		answer: AnswerDataAudioAndText;
-		vokiId: string;
-		questionId: string;
 	}
-	let { answer = $bindable(), vokiId, questionId }: Props = $props();
+	let { answer = $bindable() }: Props = $props();
 </script>
 
 <div class="answer-content">

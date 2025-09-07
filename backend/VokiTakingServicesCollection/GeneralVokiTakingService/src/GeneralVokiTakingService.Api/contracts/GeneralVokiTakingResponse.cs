@@ -7,7 +7,8 @@ public record GeneralVokiTakingResponse(
     bool ForceSequentialAnswering,
     GeneralVokiTakingResponseQuestionData[] Questions,
     string SessionId,
-    DateTime StartedAt
+    DateTime StartedAt,
+    ushort TotalQuestionsCount
 )
 {
     public static GeneralVokiTakingResponse Create(StartVokiTakingCommandResponse commandResponse) => new(
@@ -15,6 +16,7 @@ public record GeneralVokiTakingResponse(
         commandResponse.ForceSequentialAnswering,
         commandResponse.Questions.Select(GeneralVokiTakingResponseQuestionData.Create).ToArray(),
         commandResponse.SessionId.ToString(),
-        commandResponse.StartedAt
+        commandResponse.StartedAt,
+        commandResponse.TotalQuestionsCount
     );
 }
