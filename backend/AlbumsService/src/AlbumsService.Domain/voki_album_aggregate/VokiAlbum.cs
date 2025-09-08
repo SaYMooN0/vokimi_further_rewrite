@@ -1,7 +1,4 @@
-﻿using SharedKernel.domain;
-using SharedKernel.domain.ids;
-
-namespace AlbumsService.Domain;
+﻿namespace AlbumsService.Domain.voki_album_aggregate;
 
 public class VokiAlbum : AggregateRoot<VokiAlbumId>
 {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using GeneralVokiCreationService.Application.draft_vokis.commands.answers.auxiliary;
+using Microsoft.Extensions.DependencyInjection;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiCreationService.Application;
@@ -27,15 +28,17 @@ public static class DependencyInjection
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
-        
+
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(VokiAccessValidationStepHandler.QueryHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(VokiAccessValidationStepHandler.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(VokiAccessValidationStepHandler.CommandBaseHandler<>));
-        
+
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(VokiPrimaryAuthorValidationStepHandler.QueryHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(VokiPrimaryAuthorValidationStepHandler.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(VokiPrimaryAuthorValidationStepHandler.CommandBaseHandler<>));
-        
+
+        services.AddSingleton<DraftVokiAnswerDataSavingService>();
+
         return services;
     }
 }

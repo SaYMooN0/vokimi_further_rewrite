@@ -41,4 +41,21 @@ internal class MainStorageBucket : BaseMainS3Bucket, IMainStorageBucket
         source: temp,
         destination: destination
     );
+
+    public Task<ErrOrNothing> CopyVokiAnswerImageFromTempToStandard(
+        TempImageKey temp,
+        GeneralVokiAnswerImageKey destination
+    ) => CopyTempToStandard(
+        source: temp,
+        destination: destination
+    );
+
+    public Task<ErrOrNothing> CopyVokiAnswerAudioFromTempToStandard(
+        TempAudioKey temp,
+        GeneralVokiAnswerAudioKey destination
+    ) =>
+        CopyTempToStandard(
+            source: temp,
+            destination: destination
+        );
 }

@@ -1,9 +1,8 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using SharedKernel.common.vokis;
-using VokimiStorageKeysLib.concrete_keys.general_voki;
 
-namespace GeneralVokiCreationService.Application.dtos;
+namespace GeneralVokiCreationService.Application.draft_vokis.commands.answers.auxiliary;
 
 public record VokiAnswerTypeDataDto(
     GeneralVokiAnswerType Type,

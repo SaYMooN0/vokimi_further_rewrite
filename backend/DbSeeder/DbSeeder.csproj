@@ -8,11 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AlbumsService\src\AlbumsService.Infrastructure\AlbumsService.Infrastructure.csproj" />
       <ProjectReference Include="..\AuthService\src\AuthService.Infrastructure\AuthService.Infrastructure.csproj" />
       <ProjectReference Include="..\TagsService\src\TagsService.Infrastructure\TagsService.Infrastructure.csproj" />
       <ProjectReference Include="..\UserProfilesService\src\UserProfilesService.Infrastructure\UserProfilesService.Infrastructure.csproj" />
+      <ProjectReference Include="..\VokiCommentsService\src\VokiCommentsService.Infrastructure\VokiCommentsService.Infrastructure.csproj" />
       <ProjectReference Include="..\VokiCreationServicesCollection\CoreVokiCreationService\src\CoreVokiCreationService.Infrastructure\CoreVokiCreationService.Infrastructure.csproj" />
       <ProjectReference Include="..\VokiCreationServicesCollection\GeneralVokiCreationService\src\GeneralVokiCreationService.Infrastructure\GeneralVokiCreationService.Infrastructure.csproj" />
+      <ProjectReference Include="..\VokiRatingsService\src\VokiRatingsService.Infrastructure\VokiRatingsService.Infrastructure.csproj" />
       <ProjectReference Include="..\VokisCatalogService\src\VokisCatalogService.Infrastructure\VokisCatalogService.Infrastructure.csproj" />
       <ProjectReference Include="..\VokiTakingServicesCollection\GeneralVokiTakingService\src\GeneralVokiTakingService.Infrastructure\GeneralVokiTakingService.Infrastructure.csproj" />
     </ItemGroup>

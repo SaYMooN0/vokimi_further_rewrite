@@ -1,4 +1,5 @@
-﻿using AuthService.Infrastructure.persistence;
+﻿using AlbumsService.Infrastructure.persistence;
+using AuthService.Infrastructure.persistence;
 using CoreVokiCreationService.Infrastructure.persistence;
 using DbSeeder;
 using GeneralVokiCreationService.Infrastructure.persistence;
@@ -7,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using TagsService.Infrastructure.persistence;
 using UserProfilesService.Infrastructure.persistence;
+using VokiCommentsService.Infrastructure.persistence;
+using VokiRatingsService.Infrastructure.persistence;
 using VokisCatalogService.Infrastructure.persistence;
 
 Dictionary<string, Func<Task>> actions = new() {
@@ -83,5 +86,23 @@ VokisCatalogTakingDbContext VokisCatalogTakingDbContext(IConfiguration config) =
 GeneralVokiTakingDbContext GeneralVokiTakingDbContext(IConfiguration config) => new(
     new DbContextOptionsBuilder<GeneralVokiTakingDbContext>().UseNpgsql(
         config.GetConnectionString("GeneralVokiTakingServiceDb")
+    ).Options, FakePublisher.Instance
+);
+
+VokiRatingsDbContext VokiRatingsDbContext(IConfiguration config) => new(
+    new DbContextOptionsBuilder<VokiRatingsDbContext>().UseNpgsql(
+        config.GetConnectionString("VokiRatingsServiceDb")
+    ).Options, FakePublisher.Instance
+);
+
+VokiCommentsDbContext VokiCommentsDbContext(IConfiguration config) => new(
+    new DbContextOptionsBuilder<VokiCommentsDbContext>().UseNpgsql(
+        config.GetConnectionString("VokiCommentsServiceDb")
+    ).Options, FakePublisher.Instance
+);
+
+AlbumsDbContext AlbumsDbContext(IConfiguration config) => new(
+    new DbContextOptionsBuilder<AlbumsDbContext>().UseNpgsql(
+        config.GetConnectionString("AlbumsServiceDb")
     ).Options, FakePublisher.Instance
 );

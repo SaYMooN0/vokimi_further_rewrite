@@ -49,7 +49,7 @@ internal static class QuestionAnswersHandlers
         var request = httpContext.GetValidatedRequest<SaveVokiQuestionAnswerRequest>();
 
         UpdateVokiQuestionAnswerCommand command = new(
-            vokiId, questionId, answerId, request.ParsedAnswerData, request.ParsedResultIds
+            vokiId, questionId, answerId, request.AnswerData, request.ParsedResultIds
         );
         var result = await handler.Handle(command, ct);
 

@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Application.dtos;
+﻿using GeneralVokiCreationService.Application.draft_vokis.commands.answers.auxiliary;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 namespace GeneralVokiCreationService.Api.contracts.questions;
