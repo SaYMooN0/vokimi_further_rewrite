@@ -158,4 +158,8 @@ export const ApiVokiCreationCore = new BackendService('/api/voki-creation/core')
 export const ApiTags = new BackendService('/api/tags');
 export const ApiUserProfiles = new BackendService('/api/user-profiles');
 export const ApiVokisCatalog = new BackendService('/api/vokis-catalog');
+export const ApiVokiComments = new BackendService('/api/voki-comments');
+export const ApiVokiRatings = new BackendService('/api/voki-ratings');
+export const ApiAlbums = new BackendService('/api/albums');
+
 export const ApiVokiTakingGeneral = new BackendService('/api/voki-taking/general');

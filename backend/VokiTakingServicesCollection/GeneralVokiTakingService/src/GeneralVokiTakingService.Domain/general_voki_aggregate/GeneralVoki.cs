@@ -14,6 +14,7 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
     public bool ShuffleQuestions { get; }
     private IReadOnlyCollection<VokiResult> Results { get; }
     public ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; private set; }
+
     public GeneralVoki(
         VokiId id,
         ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
@@ -59,5 +60,13 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
         keys.Add(coverKey);
 
         return keys;
+    }
+
+    public ErrOr<VokiResult> FinishVokiTaking(
+        DateTime startTime,
+        DateTime finishTime,
+        Dictionary<GeneralVokiQuestionId, HashSet<GeneralVokiAnswerId>> chosenAnswers
+    ) {
+        throw new NotImplementedException();
     }
 }

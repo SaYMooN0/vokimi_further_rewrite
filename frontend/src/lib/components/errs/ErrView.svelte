@@ -64,9 +64,9 @@
 		width: 1.5rem;
 		height: 1.5rem;
 		transition: transform 0.17s ease-in;
-		transform: scale(1.2);
+		transform-origin: center;
 		cursor: pointer;
-		stroke-width: 2;
+		stroke-width: 2.5;
 	}
 
 	:global(.err-message > .rotate-down) {
@@ -98,21 +98,21 @@
 
 	@keyframes rotate-down {
 		from {
-			transform: rotate(0deg) scale(1.2);
+			transform: rotate(0deg);
 		}
 
 		to {
-			transform: rotate(-180deg) scale(1.2);
+			transform: rotate(-180deg);
 		}
 	}
 
 	@keyframes rotate-up {
 		from {
-			transform: rotate(-180deg) scale(1.2);
+			transform: rotate(-180deg);
 		}
 
 		to {
-			transform: rotate(0deg) scale(1.2);
+			transform: rotate(0deg);
 		}
 	}
 </style>

@@ -3,6 +3,13 @@ export type Err = {
     code?: number;
     details?: string;
 }
+export type ErrType =
+    | 'Unspecified'
+    | 'NoAccess'
+    | 'AuthRequired'
+    | 'NotImplemented'
+    | 'NotFound'
+    | 'Other';
 
 export class ErrUtils {
     static UnspecifiedErrCode = 0;
@@ -34,5 +41,24 @@ export class ErrUtils {
             code: typeof obj.code === 'number' ? obj.code : undefined,
             details: typeof obj.details === 'string' ? obj.details : undefined
         };
+    }
+    static getErrTypeByCode(e: Err): ErrType {
+        if (!e.code || e.code === 0) {
+            return 'Unspecified';
+        }
+        const code = e.code;
+        if (code === 1) {
+            return 'NotImplemented';
+        }
+        if (code >= 23000 && code < 24000) {
+            return 'NotFound';
+        }
+        if (code === 31000) {
+            return 'NoAccess';
+        }
+        if (code === 32000) {
+            return 'AuthRequired';
+        }
+        return 'Other';
     }
 }

@@ -13,7 +13,7 @@ public class AppUsersRepository : IAppUsersRepository
     }
 
     public async Task Add(AppUser user) {
-        _db.AppUsers.Add(user);
+        await _db.AppUsers.AddAsync(user);
         await _db.SaveChangesAsync();
     }
 

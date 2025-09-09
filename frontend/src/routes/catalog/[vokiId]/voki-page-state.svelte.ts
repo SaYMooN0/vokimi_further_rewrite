@@ -1,7 +1,7 @@
 import type { VokiPageTab } from "./+page.server";
 
 export class VokiPageState {
-    vokiId: string;
+    readonly vokiId: string;
     currentTab: VokiPageTab = $state('about');
     ratingsCount: number = $state(0);
     commentsCount: number = $state(0);
@@ -9,6 +9,6 @@ export class VokiPageState {
         this.vokiId = vokiId;
         this.currentTab = pageTab;
         this.ratingsCount = ratingsCount;
-        this.commentsCount = commentsCount;
+        this.commentsCount = commentsCount; 
     }
 }

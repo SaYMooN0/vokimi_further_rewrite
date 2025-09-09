@@ -67,7 +67,7 @@
 		box-sizing: border-box;
 
 		--side-bar-links-top-padding: 4rem;
-		--width-limit: min(112rem, 100%);
+		--width-limit: 90vw;
 	}
 
 	.width-limit {
@@ -79,25 +79,28 @@
 		grid-template-columns: auto 1fr;
 	}
 
-	.page.full-width {
-		--width-limit: 100% !important;
+	@media (1920px <= width) {
+		.page {
+			--width-limit: 112rem;
+		}
 	}
-
-	@media (width >= 1536px) and (width <= 1919px) {
+	@media (1536px <= width <= 1919px) {
 		.page {
 			--width-limit: 94vw;
 		}
 	}
-
-	@media (width >= 1366px) and (width <= 1535px) {
+	@media (1366px <= width <= 1535px) {
 		.page {
-			--width-limit: min(80rem, 100%);
+			--width-limit: 80rem;
+		}
+	}
+	@media (width <= 1365px) {
+		.page {
+			--width-limit: 90vw;
 		}
 	}
 
-	@media (width <= 1365px) {
-		.page {
-			--width-limit: min(70rem, 98vw);
-		}
+	.page.full-width {
+		--width-limit: 100% !important;
 	}
 </style>

@@ -24,3 +24,11 @@ public class VokiAlbumId(Guid value) : GuidBasedId(value)
 {
     public static VokiAlbumId CreateNew() => new(Guid.CreateVersion7());
 }
+public class VokiCommentId(Guid value) : GuidBasedId(value)
+{
+    public static VokiCommentId CreateNew() => new(Guid.CreateVersion7());
+}
+public class VokiRatingId(Guid value) : GuidBasedId(value)
+{
+    public static VokiRatingId CreateNew() => new(Guid.CreateVersion7());
+}

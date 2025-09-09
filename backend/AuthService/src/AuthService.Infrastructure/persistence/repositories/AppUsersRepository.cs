@@ -24,9 +24,8 @@ internal class AppUsersRepository : IAppUsersRepository
         .AsNoTracking()
         .FirstOrDefaultAsync(u => u.Email == email);
 
-    public Task Add(AppUser user) {
-        _db.AppUsers.Add(user);
-        return _db.SaveChangesAsync();
+    public async Task Add(AppUser user) {
+        await _db.AppUsers.AddAsync(user);
+        await _db.SaveChangesAsync();
     }
-
 }

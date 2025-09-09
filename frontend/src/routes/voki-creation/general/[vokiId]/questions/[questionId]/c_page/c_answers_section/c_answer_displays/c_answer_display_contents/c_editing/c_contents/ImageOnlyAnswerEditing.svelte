@@ -93,54 +93,58 @@
 
 <style>
 	.answer-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		width: 100%;
 		height: 100%;
 		padding: 0 2rem;
-		display: flex;
-		align-items: center;
-		flex-direction: column;
 	}
 
 	.answer-content > :global(.err-block) {
 		width: 100%;
 		margin-top: 0.5rem;
 	}
+
 	.img-selected {
-		width: 100%;
-		height: 100%;
 		display: flex;
 		display: grid;
-		grid-template-columns: auto 1fr;
 		align-items: center;
 		gap: 1rem;
+		width: 100%;
+		height: 100%;
+		grid-template-columns: auto 1fr;
 	}
+
 	img {
-		object-fit: contain;
-		max-height: 16rem;
 		max-width: 28rem;
+		max-height: 16rem;
 		border-radius: 0.5rem;
+		object-fit: contain;
 	}
+
 	.change-img-btn {
+		height: fit-content;
+		padding: 0.375rem 0.75rem;
+		border-radius: 0.5rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		border-radius: 0.5rem;
-		padding: 0.375rem 0.75rem;
-		text-align: center;
 		font-size: 1.125rem;
 		font-weight: 450;
-		height: fit-content;
+		text-align: center;
 	}
+
 	.change-img-btn:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.loading,
 	.img-input-container {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-
 		width: 100%;
 		height: 100%;
 		min-height: 8rem;
@@ -198,9 +202,9 @@
 	}
 
 	p {
+		margin: 0 1rem;
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 500;
-		margin: 0 1rem;
 	}
 </style>

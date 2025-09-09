@@ -70,13 +70,14 @@
 
 <style>
 	.answer-content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		width: 100%;
 		height: 100%;
 		padding: 0 2rem;
-		display: flex;
-		align-items: center;
-		flex-direction: column;
 	}
+
 	.main {
 		display: grid;
 		grid-template-columns: 1fr 18rem;

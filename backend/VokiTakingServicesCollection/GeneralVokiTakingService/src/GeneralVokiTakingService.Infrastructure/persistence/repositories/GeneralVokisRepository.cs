@@ -12,9 +12,9 @@ internal class GeneralVokisRepository : IGeneralVokisRepository
         _db = db;
     }
 
-    public Task Add(GeneralVoki voki) {
-        _db.Vokis.Add(voki);
-        return _db.SaveChangesAsync();
+    public async Task Add(GeneralVoki voki) {
+        await _db.Vokis.AddAsync(voki);
+        await _db.SaveChangesAsync();
     }
 
 

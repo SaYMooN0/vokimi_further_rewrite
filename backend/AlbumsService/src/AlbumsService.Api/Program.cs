@@ -1,27 +1,43 @@
+using AlbumsService.Api.extensions;
+using AlbumsService.Application;
+using AlbumsService.Infrastructure;
+using ApiShared;
+using InfrastructureShared.Base;
+
 namespace AlbumsService.Api;
+
 
 public class Program
 {
     public static void Main(string[] args) {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Host.UseDefaultServiceProvider((_, options) => {
+            options.ValidateScopes = false;
+            options.ValidateOnBuild = true;
+        });
+        builder.ConfigureLogging();
 
-        // Add services to the container.
-        builder.Services.AddAuthorization();
-
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        builder.Services
+            .AddPresentation(builder.Configuration)
+            .AddApplication()
+            .AddInfrastructure(builder.Configuration, builder.Environment);
+        ;
 
         var app = builder.Build();
+        app.AddInfrastructureMiddleware();
 
-        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment()) {
             app.MapOpenApi();
         }
+        else {
+            app.UseHttpsRedirection();
+        }
 
-        app.UseHttpsRedirection();
+        app.AddExceptionHandlingMiddleware();
 
-        app.UseAuthorization();
-
+        app.MapEndpoints();
+        
+        app.AllowFrontendCors();
         app.Run();
     }
 }

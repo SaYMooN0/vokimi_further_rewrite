@@ -93,6 +93,9 @@ export default defineConfig({
 			...createProxyEntry('/api/tags', 5201),
 			...createProxyEntry('/api/user-profiles', 5202),
 			...createProxyEntry('/api/vokis-catalog', 5203),
+			...createProxyEntry('/api/albums', 5204),
+			...createProxyEntry('/api/vokis-comments', 5205),
+			...createProxyEntry('/api/vokis-ratings', 5206),
 		}
 	}
 });

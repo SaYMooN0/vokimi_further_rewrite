@@ -25,13 +25,13 @@
 {:else if answer.type === 'ColorAndText'}
 	<ColorAndTextAnswerEditing bind:answer />
 {:else if answer.type === 'ImageOnly'}
-	<ImageOnlyAnswerEditing bind:answer {vokiId} {questionId} />
+	<ImageOnlyAnswerEditing bind:answer  />
 {:else if answer.type === 'ImageAndText'}
-	<ImageAndTextAnswerEditing bind:answer {vokiId} {questionId} />
+	<ImageAndTextAnswerEditing bind:answer />
 {:else if answer.type === 'AudioOnly'}
-	<AudioOnlyAnswerEditing bind:answer {vokiId} {questionId}/>
+	<AudioOnlyAnswerEditing bind:answer />
 {:else if answer.type === 'AudioAndText'}
-	<AudioAndTextAnswerEditing bind:answer {vokiId} {questionId}  />
+	<AudioAndTextAnswerEditing bind:answer   />
 {:else}
 	<IncorrectAnswerTypeMessage {answer} />
 {/if}

@@ -1,4 +1,5 @@
-﻿using InfrastructureShared.Base.domain_events_publisher;
+﻿using AlbumsService.Domain.app_user_aggregate;
+using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlbumsService.Infrastructure.persistence;
@@ -12,6 +13,8 @@ public class AlbumsDbContext : DbContext
     ) : base(options) {
         _publisher = publisher;
     }
+
+    public DbSet<AppUser> AppUsers { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AlbumsDbContext).Assembly);

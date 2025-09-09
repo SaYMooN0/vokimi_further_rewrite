@@ -52,6 +52,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             sessionQuestion.ToImmutableArray()
         );
     }
+
 }
 
 public record SessionWithFreeAnsweringAnsweredQuestion(

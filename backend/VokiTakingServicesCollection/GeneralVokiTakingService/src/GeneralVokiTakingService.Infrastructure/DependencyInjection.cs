@@ -1,7 +1,9 @@
 ﻿using ApplicationShared;
 using GeneralVokiTakingService.Domain.common.interfaces.repositories;
+using GeneralVokiTakingService.Domain.common.interfaces.repositories.taking_sessions;
 using GeneralVokiTakingService.Infrastructure.persistence;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories;
+using GeneralVokiTakingService.Infrastructure.persistence.repositories.taking_sessions;
 using Infrastructure.Auth;
 using InfrastructureShared.Base.domain_events_publisher;
 using MassTransit;
@@ -130,7 +132,7 @@ public static class DependencyInjection
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IGeneralVokisRepository, GeneralVokisRepository>();
         services.AddScoped<IGeneralVokiTakenRecordsRepository, GeneralVokiTakenRecordsRepository>();
-        services.AddScoped<IVokiTakingSessionsRepository, VokiTakingSessionsRepository>();
+        services.AddScoped<IBaseTakingSessionsRepository, BaseTakingSessionsRepository>();
 
         return services;
     }

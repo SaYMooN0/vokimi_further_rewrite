@@ -12,9 +12,10 @@ internal class DraftVokiRepository : IDraftVokiRepository
         _db = db;
     }
 
-    public Task Add(DraftVoki voki) {
-        _db.Vokis.Add(voki);
-        return _db.SaveChangesAsync();
+
+    public async Task Add(DraftVoki voki) {
+        await _db.Vokis.AddAsync(voki);
+        await _db.SaveChangesAsync();
     }
 
     public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId) =>
