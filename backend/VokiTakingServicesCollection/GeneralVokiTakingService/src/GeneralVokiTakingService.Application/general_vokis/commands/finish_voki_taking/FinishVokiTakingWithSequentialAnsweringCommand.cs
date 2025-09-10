@@ -4,9 +4,12 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate;
 namespace GeneralVokiTakingService.Application.general_vokis.commands.finish_voki_taking;
 
 public sealed record FinishVokiTakingWithSequentialAnsweringCommand(
-    VokiId VokiId,
-    VokiTakingSessionId SessionId,
-    Dictionary<GeneralVokiQuestionId, HashSet<GeneralVokiAnswerId>> ChosenAnswers
+    VokiId VokiId
+    // VokiTakingSessionId SessionId,
+    // GeneralVokiQuestionId LastQuestionId,
+    // HashSet<GeneralVokiAnswerId> ChosenAnswers,
+    // ushort AnswerOrder,
+    // DateTime ClientFinishTime
 ) : ICommand<VokiResult>;
 
 internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :

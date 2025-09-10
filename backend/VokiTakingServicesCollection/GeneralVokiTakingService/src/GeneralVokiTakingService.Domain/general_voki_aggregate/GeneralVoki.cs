@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
+﻿using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
 using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.concrete_keys;
@@ -62,11 +63,13 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
         return keys;
     }
 
-    public ErrOr<VokiResult> FinishVokiTaking(
+    public ErrOr<VokiTakingFinishedSuccessfullyData> FinishVokiTaking(
         DateTime startTime,
         DateTime finishTime,
-        Dictionary<GeneralVokiQuestionId, HashSet<GeneralVokiAnswerId>> chosenAnswers
+        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers,
+        AppUserId? vokiTakerId
     ) {
+        AddDomainEvent(new GeneralVokiTakenEvent(Id, vokiTakerId));
         throw new NotImplementedException();
     }
 }

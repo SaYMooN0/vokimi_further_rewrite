@@ -2,6 +2,7 @@
 
 public class VokiAlbum : AggregateRoot<VokiAlbumId>
 {
+    //owner
     //name visibility 
     //content visibility 
 }

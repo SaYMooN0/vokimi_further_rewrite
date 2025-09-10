@@ -4,8 +4,7 @@ namespace GeneralVokiTakingService.Domain.common.interfaces.repositories;
 
 public interface IGeneralVokisRepository
 {
-    Task<GeneralVoki?> GetByIdAsNoTracking(VokiId vokiId);
-
     Task Add(GeneralVoki voki);
+    public Task<GeneralVoki?> GetWithQuestionAnswersAndResultsAsNoTracking(VokiId vokiId);
     public Task<GeneralVoki?> GetWithQuestionAnswersAsNoTracking(VokiId vokiId);
 }

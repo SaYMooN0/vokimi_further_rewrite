@@ -14,4 +14,9 @@ public class SessionsWithFreeAnsweringRepository : ISessionsWithFreeAnsweringRep
 
     public async Task<SessionWithFreeAnswering?> GetById(VokiTakingSessionId sessionId) =>
         await _db.VokiTakingSessionsWithFreeAnswering.FindAsync(sessionId);
+
+    public async Task Delete(SessionWithFreeAnswering question) {
+        _db.VokiTakingSessionsWithFreeAnswering.Remove(question);
+        await _db.SaveChangesAsync();
+    }
 }

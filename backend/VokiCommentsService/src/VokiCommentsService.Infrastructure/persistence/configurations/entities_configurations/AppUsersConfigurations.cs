@@ -2,9 +2,9 @@
 using InfrastructureShared.Base.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VokisCatalogService.Domain.app_user_aggregate;
+using VokiCommentsService.Domain.app_user_aggregate;
 
-namespace VokisCatalogService.Infrastructure.persistence.configurations.entities_configurations;
+namespace VokiCommentsService.Infrastructure.persistence.configurations.entities_configurations;
 
 internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 {
@@ -15,17 +15,9 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
-
+        
         builder
-            .Property(x => x.InitializedVokiIds)
-            .HasGuidBasedIdsImmutableHashSetConversion();
-
-        builder
-            .Property(x => x.CoAuthoredVokiIds)
-            .HasGuidBasedIdsImmutableHashSetConversion();
-
-        builder
-            .Property(x => x.TakenVokiIds)
+            .Property(x=>x.CommentIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }

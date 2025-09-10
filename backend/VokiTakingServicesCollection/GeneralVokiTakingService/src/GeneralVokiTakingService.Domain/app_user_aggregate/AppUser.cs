@@ -12,5 +12,8 @@ public class AppUser : AggregateRoot<AppUserId>
     }
 
     public ImmutableHashSet<VokiTakenRecordId> GeneralVokiTakenRecordIds { get; private set; }
-    
+
+    public void AddVokiTakenRecordId(VokiTakenRecordId id) {
+        GeneralVokiTakenRecordIds = GeneralVokiTakenRecordIds.Add(id);
+    }
 }

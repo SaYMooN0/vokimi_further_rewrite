@@ -18,13 +18,17 @@ internal class GeneralVokisRepository : IGeneralVokisRepository
     }
 
 
-    public Task<GeneralVoki?> GetByIdAsNoTracking(VokiId vokiId) => _db.Vokis
-        .AsNoTracking()
-        .FirstOrDefaultAsync(v => v.Id == vokiId);
-
     public Task<GeneralVoki?> GetWithQuestionAnswersAsNoTracking(VokiId vokiId) => _db.Vokis
         .AsNoTracking()
         .Include(v => v.Questions)
         .ThenInclude(q => q.Answers)
+        .FirstOrDefaultAsync(v => v.Id == vokiId);
+
+    public Task<GeneralVoki?> GetWithQuestionAnswersAndResultsAsNoTracking(VokiId vokiId) => _db.Vokis
+        .AsNoTracking()
+        .Include(v => v.Questions)
+        .ThenInclude(q => q.Answers)
+        .AsSplitQuery()
+        .Include(v => EF.Property<IReadOnlyCollection<VokiResult>>(v, "Results"))
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 }

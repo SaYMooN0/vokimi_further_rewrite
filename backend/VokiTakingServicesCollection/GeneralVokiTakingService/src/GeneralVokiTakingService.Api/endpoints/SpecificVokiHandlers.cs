@@ -12,10 +12,14 @@ internal static class SpecificVokiHandlers
         var group = endpoints.MapGroup("/vokis/{vokiId}/");
 
         group.MapPost("/start-taking", StartVokiTaking);
-        group.MapPost("/finish-taking-with-free-answering", FinishVokiTakingWithFreeAnswering)
+        
+        group.MapPost("/free-answering/finish", FinishVokiTakingWithFreeAnswering)
             .WithRequestValidation<FinishVokiTakingWithFreeAnsweringRequest>();
-        group.MapPost("/finish-taking-with-sequential-answering", FinishVokiTakingWithSequentialAnswering)
+        
+        group.MapPost("/sequential-answering/finish", FinishVokiTakingWithSequentialAnswering)
             .WithRequestValidation<FinishVokiTakingWithSequentialAnsweringRequest>();
+        // group.MapPost("/sequential-answering/answer-question", AnswerQuestionForSequentialAnsweringSession)
+        //     .WithRequestValidation<FinishVokiTakingWithSequentialAnsweringRequest>();
     }
 
     private static async Task<IResult> StartVokiTaking(
@@ -37,8 +41,13 @@ internal static class SpecificVokiHandlers
         ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, VokiResult> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
+        var request = httpContext.GetValidatedRequest<FinishVokiTakingWithFreeAnsweringRequest>();
 
-        FinishVokiTakingWithFreeAnsweringCommand command = new(id);
+        FinishVokiTakingWithFreeAnsweringCommand command = new(    id, request.ParsedSessionId, request.ParsedChosenAnswers,
+            request.ClientStartTime,
+            request.ServerStartTime,
+            request.ClientFinishTime
+            );
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (res) => Results.Json(
@@ -59,4 +68,11 @@ internal static class SpecificVokiHandlers
             VokiTakenReceivedResultResponse.Create(res)
         ));
     }
+    // private static async Task<IResult> AnswerQuestionForSequentialAnsweringSession(
+    //     CancellationToken ct, HttpContext httpContext
+    // ) {
+    //     VokiId id = httpContext.GetVokiIdFromRoute();
+    //     var request = httpContext.GetValidatedRequest<FinishVokiTakingWithSequentialAnsweringRequest>();
+    //
+    // }
 }
