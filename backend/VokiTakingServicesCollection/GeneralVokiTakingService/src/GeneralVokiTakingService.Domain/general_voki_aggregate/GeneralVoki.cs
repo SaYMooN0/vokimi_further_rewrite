@@ -1,5 +1,4 @@
-﻿using GeneralVokiTakingService.Domain.common;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
+﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
 using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.concrete_keys;
@@ -63,13 +62,69 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
         return keys;
     }
 
-    public ErrOr<VokiTakingFinishedSuccessfullyData> FinishVokiTaking(
-        DateTime startTime,
-        DateTime finishTime,
-        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers,
-        AppUserId? vokiTakerId
+    public ErrOr<VokiResult> GetResultByChosenAnswers(
+        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
     ) {
-        AddDomainEvent(new GeneralVokiTakenEvent(Id, vokiTakerId));
-        throw new NotImplementedException();
+        var questionsById = Questions.ToDictionary(q => q.Id);
+        foreach (var providedId in chosenAnswers.Keys) {
+            if (!questionsById.ContainsKey(providedId)) {
+                return ErrFactory.IncorrectFormat("You answered a question that is not part of this test");
+            }
+        }
+
+        foreach (var q in Questions) {
+            if (
+                !chosenAnswers.TryGetValue(q.Id, out var provided)
+                || provided is null
+                || provided.Count == 0
+            ) {
+                var preview = string.IsNullOrEmpty(q.Text)
+                    ? ""
+                    : (q.Text.Length < 30 ? q.Text : q.Text.Substring(0, 25) + " ...");
+                var min = q.AnswersCountLimit.MinAnswers;
+                var max = q.AnswersCountLimit.MaxAnswers;
+                var expectedText = (min == max) ? $"exactly {min} answer(s)" : $"from {min} to {max} answers";
+                return ErrFactory.NoValue.Common($"You did not answer the question: \"{preview}\". Choose {expectedText}");
+            }
+
+            var count = provided.Count;
+            if (count < q.AnswersCountLimit.MinAnswers || count > q.AnswersCountLimit.MaxAnswers) {
+                var preview = string.IsNullOrEmpty(q.Text)
+                    ? ""
+                    : (q.Text.Length < 30 ? q.Text : q.Text.Substring(0, 25) + " ...");
+                var min = q.AnswersCountLimit.MinAnswers;
+                var max = q.AnswersCountLimit.MaxAnswers;
+                var expectedText = (min == max) ? $"exactly {min} answer(s)" : $"from {min} to {max} answers";
+                return ErrFactory.ValueOutOfRange($"Incorrect answers count for \"{preview}\". Choose {expectedText}");
+            }
+
+            var allowedIds = q.Answers.Select(a => a.Id).ToImmutableHashSet();
+            if (!provided.IsSubsetOf(allowedIds)) {
+                var preview = string.IsNullOrEmpty(q.Text)
+                    ? ""
+                    : (q.Text.Length < 30 ? q.Text : q.Text.Substring(0, 25) + " ...");
+                return ErrFactory.IncorrectFormat(
+                    $"Your selection includes an option that is not available for \"{preview}\". Please select only from the shown options");
+            }
+        }
+
+        Dictionary<GeneralVokiResultId, int> resultsScore = new();
+        foreach (var q in Questions) {
+            ImmutableHashSet<GeneralVokiAnswerId> answersForQuestion = chosenAnswers[q.Id];
+
+            var answersById = q.Answers.ToDictionary(a => a.Id);
+            foreach (var ansId in answersForQuestion) {
+                foreach (var resultId in answersById[ansId].RelatedResultIds) {
+                    resultsScore[resultId] = resultsScore.GetValueOrDefault(resultId, 0) + 1;
+                }
+            }
+        }
+
+        if (resultsScore.Count == 0) {
+            return ErrFactory.Conflict("Cannot determine result based on chosen answers");
+        }
+
+        var bestResultId = resultsScore.MaxBy(kvp => kvp.Value).Key;
+        return Results.First(r => r.Id == bestResultId);
     }
 }

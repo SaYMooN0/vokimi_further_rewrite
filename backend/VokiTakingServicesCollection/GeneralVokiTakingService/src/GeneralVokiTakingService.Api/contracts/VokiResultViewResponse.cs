@@ -2,14 +2,14 @@
 
 namespace GeneralVokiTakingService.Api.contracts;
 
-public record class VokiTakenReceivedResultResponse(
+public record class VokiResultViewResponse(
     string Id,
     string Name,
     string Text,
     string? Image
 )
 {
-    public static VokiTakenReceivedResultResponse Create(VokiResult result) => new(
+    public static VokiResultViewResponse Create(VokiResult result) => new(
         result.Id.ToString(),
         result.Name,
         result.Text,

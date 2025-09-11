@@ -133,6 +133,8 @@ public static class DependencyInjection
         services.AddScoped<IGeneralVokisRepository, GeneralVokisRepository>();
         services.AddScoped<IGeneralVokiTakenRecordsRepository, GeneralVokiTakenRecordsRepository>();
         services.AddScoped<IBaseTakingSessionsRepository, BaseTakingSessionsRepository>();
+        services.AddScoped<ISessionsWithFreeAnsweringRepository, SessionsWithFreeAnsweringRepository>();
+        services.AddScoped<ISessionsWithSequentialAnsweringRepository, SessionsWithSequentialAnsweringRepository>();
 
         return services;
     }

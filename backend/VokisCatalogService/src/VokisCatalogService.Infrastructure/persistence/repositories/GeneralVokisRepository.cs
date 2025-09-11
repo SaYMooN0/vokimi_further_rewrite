@@ -5,9 +5,9 @@ namespace VokisCatalogService.Infrastructure.persistence.repositories;
 
 public class GeneralVokisRepository : IGeneralVokisRepository
 {
-    private readonly VokisCatalogTakingDbContext _db;
+    private readonly VokisCatalogDbContext _db;
 
-    public GeneralVokisRepository(VokisCatalogTakingDbContext db) {
+    public GeneralVokisRepository(VokisCatalogDbContext db) {
         _db = db;
     }
 

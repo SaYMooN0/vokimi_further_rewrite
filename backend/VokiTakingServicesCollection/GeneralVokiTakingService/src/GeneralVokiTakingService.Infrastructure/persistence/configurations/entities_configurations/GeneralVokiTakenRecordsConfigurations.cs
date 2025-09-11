@@ -1,4 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
+using GeneralVokiTakingService.Infrastructure.persistence.configurations.extensions;
 using InfrastructureShared.Base.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,11 +15,29 @@ public class GeneralVokiTakenRecordsConfigurations : IEntityTypeConfiguration<Ge
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
-        
+
         builder
             .Property(x => x.TakenVokiId)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
-        
+
+        builder
+            .Property(x => x.VokiTakerId)
+            .ValueGeneratedNever()
+            .HasNullableGuidBasedIdConversion();
+
+        builder.Property(x => x.StartTime);
+        builder.Property(x => x.FinishTime);
+
+        builder
+            .Property(x => x.ReceivedResultId)
+            .ValueGeneratedNever()
+            .HasGuidBasedIdConversion();
+
+        builder
+            .Property(x => x.QuestionDetails)
+            .HasVokiTakenQuestionDetailsArrayConversion();
+
+        builder.Property(x => x.WasWithSequentialAnswering);
     }
 }

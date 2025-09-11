@@ -1,5 +1,6 @@
 ﻿using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -53,6 +54,51 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         );
     }
 
+    public ErrOrNothing ValidateChosenAnswers(
+        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
+    ) {
+        var errs = ErrOrNothing.Nothing;
+
+        if (chosenAnswers is null) {
+            errs.AddNext(ErrFactory.NoValue.Common("Chosen answers are missing"));
+            return errs;
+        }
+
+        ImmutableDictionary<GeneralVokiQuestionId, TakingSessionExpectedQuestion> expectedById = Questions
+            .ToImmutableDictionary(q => q.QuestionId, q => q);
+
+        foreach (var providedQuestionId in chosenAnswers.Keys) {
+            if (!expectedById.ContainsKey(providedQuestionId)) {
+                errs.AddNext(ErrFactory.IncorrectFormat(
+                    "You answered a question that is not part of this test"
+                ));
+            }
+        }
+
+        foreach (var kv in expectedById) {
+            var question = kv.Value;
+            chosenAnswers.TryGetValue(kv.Key, out var providedSet);
+
+            errs.AddNextIfErr(ValidateSingleQuestionAnswers(question, providedSet));
+        }
+
+        return errs;
+    }
+
+    public ImmutableArray<VokiTakenQuestionDetails> GatherQuestionDetails(
+        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
+    ) {
+        ImmutableDictionary<GeneralVokiQuestionId, ushort> questionIdToOrder = Questions
+            .ToImmutableDictionary(q => q.QuestionId, q => q.OrderInVokiTaking);
+
+        return chosenAnswers
+            .Select(qToAnswers => new VokiTakenQuestionDetails(
+                qToAnswers.Key,
+                qToAnswers.Value,
+                questionIdToOrder[qToAnswers.Key]
+            ))
+            .ToImmutableArray();
+    }
 }
 
 public record SessionWithFreeAnsweringAnsweredQuestion(

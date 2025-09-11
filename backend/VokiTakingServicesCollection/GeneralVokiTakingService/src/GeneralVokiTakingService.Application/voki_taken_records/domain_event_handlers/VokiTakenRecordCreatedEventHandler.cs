@@ -2,7 +2,7 @@
 using GeneralVokiTakingService.Domain.common.interfaces.repositories;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate.events;
 
-namespace GeneralVokiTakingService.Application.app_users.domain_event_handlers;
+namespace GeneralVokiTakingService.Application.voki_taken_records.domain_event_handlers;
 
 internal class VokiTakenRecordCreatedEventHandler : IDomainEventHandler<VokiTakenRecordCreatedEvent>
 {

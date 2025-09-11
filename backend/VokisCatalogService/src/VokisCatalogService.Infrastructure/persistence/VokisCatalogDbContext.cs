@@ -6,12 +6,12 @@ using VokisCatalogService.Domain.voki_aggregate.voki_types;
 
 namespace VokisCatalogService.Infrastructure.persistence;
 
-public class VokisCatalogTakingDbContext : DbContext
+public class VokisCatalogDbContext : DbContext
 {
     private readonly IDomainEventsPublisher _publisher;
 
-    public VokisCatalogTakingDbContext(
-        DbContextOptions<VokisCatalogTakingDbContext> options, IDomainEventsPublisher publisher
+    public VokisCatalogDbContext(
+        DbContextOptions<VokisCatalogDbContext> options, IDomainEventsPublisher publisher
     ) : base(options) {
         _publisher = publisher;
     }
@@ -20,7 +20,7 @@ public class VokisCatalogTakingDbContext : DbContext
     public DbSet<GeneralVoki> GeneralVokis { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(VokisCatalogTakingDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(VokisCatalogDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 

@@ -84,16 +84,19 @@
 			--width-limit: 112rem;
 		}
 	}
+
 	@media (1536px <= width <= 1919px) {
 		.page {
 			--width-limit: 94vw;
 		}
 	}
+
 	@media (1366px <= width <= 1535px) {
 		.page {
 			--width-limit: 80rem;
 		}
 	}
+
 	@media (width <= 1365px) {
 		.page {
 			--width-limit: 90vw;

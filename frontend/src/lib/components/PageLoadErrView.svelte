@@ -71,15 +71,17 @@
 
 <style>
 	.page-load-err {
-		margin: 4rem auto 0;
 		display: flex;
 		flex-direction: column;
+		margin: 4rem auto 0;
 	}
+
 	.err-content-view {
 		display: flex;
 		flex-direction: column;
 		gap: 0.25rem;
 	}
+
 	.err-content-view > p {
 		color: var(--text);
 		font-size: 1rem;

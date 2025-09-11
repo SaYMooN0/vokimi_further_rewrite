@@ -67,7 +67,29 @@ export namespace ColorUtils {
 		return { r: Math.round(r * 255), g: Math.round(g * 255), b: Math.round(b * 255) };
 	}
 
+
+	// Validation & normalization
+	export function normalizeHex6(hex: string): string | null {
+		let t = hex.trim().replace(/^#/, '');
+		if (/^[0-9a-f]{3}$/i.test(t)) {
+			t = t.split('').map((c) => c + c).join('');
+		}
+		if (!/^[0-9a-f]{6}$/i.test(t)) return null;
+		return ('#' + t).toUpperCase();
+	}
+
+	export function isHex6(t: string): boolean {
+		return /^#([a-fA-F0-9]{6})$/.test(t);
+	}
+
 	// Ops
+
+	export function contrastTextColor(bgHex: string, dark = "#171717", light = "#FFFFFF"): string {
+		const rgb = hexToRgb(bgHex);
+		if (!rgb) return dark;
+		const l = 0.2126 * (rgb.r / 255) + 0.7152 * (rgb.g / 255) + 0.0722 * (rgb.b / 255);
+		return l > 0.6 ? dark : light;
+	}
 	export function adjustLightness(hex: string, delta: number): string {
 		const rgb = hexToRgb(hex);
 		if (!rgb) return hex;
@@ -77,19 +99,14 @@ export namespace ColorUtils {
 		return rgbToHex(r, g, b).toUpperCase();
 	}
 
-	// Validation & normalization
-	export function isHex6(t: string): boolean {
-		return /^#([a-fA-F0-9]{6})$/.test(t);
-	}
-
-	 export const colorPresets = [
-        '#5B57E2',
-        '#FF3B30',
-        '#007AFF',
-        '#FFD60A',
-        '#34C759',
-        '#000000',
-        '#FFFFFF',
-        '#FF9500'
-    ];
+	export const colorPresets = [
+		'#5B57E2',
+		'#FF3B30',
+		'#007AFF',
+		'#FFD60A',
+		'#34C759',
+		'#000000',
+		'#FFFFFF',
+		'#FF9500'
+	];
 }

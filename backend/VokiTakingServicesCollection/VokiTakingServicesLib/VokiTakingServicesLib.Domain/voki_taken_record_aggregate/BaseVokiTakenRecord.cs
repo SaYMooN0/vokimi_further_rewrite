@@ -11,21 +11,21 @@ public abstract class BaseVokiTakenRecord : AggregateRoot<VokiTakenRecordId>
     public VokiId TakenVokiId { get; }
     public AppUserId? VokiTakerId { get; }
     public abstract VokiType VokiType { get; }
-    public DateTime TestTakingStart { get; }
-    public DateTime TestTakingEnd { get; }
+    public DateTime StartTime { get; }
+    public DateTime FinishTime { get; }
 
     protected BaseVokiTakenRecord(
         VokiTakenRecordId id,
         VokiId takenVokiId,
         AppUserId? vokiTakerId,
-        DateTime testTakingStart,
-        DateTime testTakingEnd
+        DateTime startTime,
+        DateTime finishTime
     ) {
         Id = id;
         TakenVokiId = takenVokiId;
         VokiTakerId = vokiTakerId;
-        TestTakingStart = testTakingStart;
-        TestTakingEnd = testTakingEnd;
+        StartTime = startTime;
+        FinishTime = finishTime;
         VokiTakerId = vokiTakerId;
     }
 }

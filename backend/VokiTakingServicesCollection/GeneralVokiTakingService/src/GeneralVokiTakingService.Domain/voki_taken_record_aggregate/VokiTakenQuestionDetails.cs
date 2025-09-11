@@ -1,6 +1,6 @@
-﻿namespace GeneralVokiTakingService.Domain.common;
+﻿namespace GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 
-public record  VokiTakenQuestionDetails(
+public record VokiTakenQuestionDetails(
     GeneralVokiQuestionId QuestionId,
     ImmutableHashSet<GeneralVokiAnswerId> ChosenAnswerIds,
     ushort OrderInVokiTaking

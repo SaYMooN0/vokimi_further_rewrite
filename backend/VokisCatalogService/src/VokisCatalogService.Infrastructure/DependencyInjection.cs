@@ -112,7 +112,7 @@ public static class DependencyInjection
     ) {
         string dbConnectionString = configuration.GetConnectionString("VokisCatalogServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<VokisCatalogTakingDbContext>(options => {
+        services.AddDbContext<VokisCatalogDbContext>(options => {
                 options.UseNpgsql(dbConnectionString);
                 if (env.IsDevelopment()) {
                     options.EnableDetailedErrors();

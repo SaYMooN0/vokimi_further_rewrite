@@ -6,7 +6,6 @@ using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
 using SharedKernel.auth;
-using VokiTakingServicesLib.Domain.common;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands.finish_voki_taking;
 
@@ -17,10 +16,10 @@ public sealed record FinishVokiTakingWithFreeAnsweringCommand(
     DateTime ClientStartTime,
     DateTime ServerStartTime,
     DateTime ClientFinishTime
-) : ICommand<VokiResult>;
+) : ICommand<FinishVokiTakingCommandsResult>;
 
 internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
-    ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, VokiResult>
+    ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, FinishVokiTakingCommandsResult>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
     private readonly IUserContext _userContext;
@@ -42,7 +41,8 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
     }
 
-    public async Task<ErrOr<VokiResult>> Handle(FinishVokiTakingWithFreeAnsweringCommand command, CancellationToken ct) {
+    public async Task<ErrOr<FinishVokiTakingCommandsResult>> Handle(FinishVokiTakingWithFreeAnsweringCommand command,
+        CancellationToken ct) {
         GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
@@ -53,16 +53,7 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             return ErrFactory.NotFound.Common("Could not finish voki taking because taking session was not started");
         }
 
-        AppUserId? vokiTakerId = _userContext.UserIdFromToken().IsSuccess(out var id) ? id : null;
-        if (
-            session.VokiTaker is not null
-            && vokiTakerId is not null
-            && vokiTakerId != session.VokiTaker
-        ) {
-            return ErrFactory.Conflict("Could not finish voki taking because it was started by another user");
-        }
 
-        vokiTakerId ??= session.VokiTaker;
         if (
             session.ValidateTime(
                 currentTime: _dateTimeProvider.UtcNow, clientStartTime: command.ClientStartTime,
@@ -72,22 +63,31 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             return err;
         }
 
-        var vokiTakingRes = voki.FinishVokiTaking(
-            command.ClientStartTime,
-            command.ClientFinishTime,
-            command.ChosenAnswers,
-            vokiTakerId
-        );
-        if (vokiTakingRes.IsErr(out err)) {
+        
+        if (session.ValidateVokiTaker(_userContext, out var vokiTakerId).IsErr(out err)) {
             return err;
         }
 
-        throw new NotImplementedException();
+        if (session.ValidateChosenAnswers(command.ChosenAnswers).IsErr(out err)) {
+            return err;
+        }
 
-        var resultData = vokiTakingRes.AsSuccess();
-        GeneralVokiTakenRecord vokiTakenRecord = GeneralVokiTakenRecord.CreateNew(resultData);
+        ErrOr<VokiResult> resOrErr = voki.GetResultByChosenAnswers(command.ChosenAnswers);
+        if (resOrErr.IsErr(out err)) {
+            return err;
+        }
+
+        VokiResult receivedResult = resOrErr.AsSuccess();
+        GeneralVokiTakenRecord vokiTakenRecord = GeneralVokiTakenRecord.CreateNew(
+            command.VokiId, vokiTakerId,
+            command.ClientStartTime, command.ClientFinishTime,
+            session.IsWithForceSequentialAnswering, receivedResult.Id,
+            session.GatherQuestionDetails(command.ChosenAnswers)
+        );
         await _generalVokiTakenRecordsRepository.Add(vokiTakenRecord);
-
         await _sessionsWithFreeAnsweringRepository.Delete(session);
+
+        TimeSpan timeTaken = command.ClientFinishTime - command.ClientStartTime;
+        return new FinishVokiTakingCommandsResult(receivedResult, timeTaken);
     }
 }

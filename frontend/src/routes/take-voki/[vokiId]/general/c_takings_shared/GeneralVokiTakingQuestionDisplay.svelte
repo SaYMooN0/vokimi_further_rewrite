@@ -73,11 +73,12 @@
 	.images-container img {
 		width: 100%;
 		min-width: 20rem;
-		max-width: 38rem;
+		max-width: 32rem;
 		min-height: 15rem;
 		max-height: 25rem;
 		border-radius: 0;
-		object-fit: contain;
+		object-fit: fill;
+		border-radius: 1rem;
 	}
 
 	.answers-count-label {

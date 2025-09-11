@@ -12,10 +12,10 @@ internal static class SpecificVokiHandlers
         var group = endpoints.MapGroup("/vokis/{vokiId}/");
 
         group.MapPost("/start-taking", StartVokiTaking);
-        
+
         group.MapPost("/free-answering/finish", FinishVokiTakingWithFreeAnswering)
             .WithRequestValidation<FinishVokiTakingWithFreeAnsweringRequest>();
-        
+
         group.MapPost("/sequential-answering/finish", FinishVokiTakingWithSequentialAnswering)
             .WithRequestValidation<FinishVokiTakingWithSequentialAnsweringRequest>();
         // group.MapPost("/sequential-answering/answer-question", AnswerQuestionForSequentialAnsweringSession)
@@ -38,26 +38,27 @@ internal static class SpecificVokiHandlers
 
     private static async Task<IResult> FinishVokiTakingWithFreeAnswering(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, VokiResult> handler
+        ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, FinishVokiTakingCommandsResult> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<FinishVokiTakingWithFreeAnsweringRequest>();
 
-        FinishVokiTakingWithFreeAnsweringCommand command = new(    id, request.ParsedSessionId, request.ParsedChosenAnswers,
+        FinishVokiTakingWithFreeAnsweringCommand command = new(
+            id, request.ParsedSessionId, request.ParsedChosenAnswers,
             request.ClientStartTime,
             request.ServerStartTime,
             request.ClientFinishTime
-            );
+        );
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (res) => Results.Json(
-            VokiTakenReceivedResultResponse.Create(res)
+            VokiTakenResponse.Create(res)
         ));
     }
 
     private static async Task<IResult> FinishVokiTakingWithSequentialAnswering(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<FinishVokiTakingWithSequentialAnsweringCommand, VokiResult> handler
+        ICommandHandler<FinishVokiTakingWithSequentialAnsweringCommand, FinishVokiTakingCommandsResult> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
@@ -65,7 +66,7 @@ internal static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (res) => Results.Json(
-            VokiTakenReceivedResultResponse.Create(res)
+            VokiTakenResponse.Create(res)
         ));
     }
     // private static async Task<IResult> AnswerQuestionForSequentialAnsweringSession(

@@ -1,7 +1,13 @@
 <script lang="ts">
 	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
 	import type { GeneralVokiAnswerTypeData } from '../types';
-	import GeneralVokiTakingAnswersDisplay from './c_answers_display/GeneralVokiTakingTextOnlyAnswers.svelte';
+	import GeneralVokiTakingAudioAndTextAnswer from './c_answers_display/GeneralVokiTakingAudioAndTextAnswer.svelte';
+	import GeneralVokiTakingAudioOnlyAnswer from './c_answers_display/GeneralVokiTakingAudioOnlyAnswer.svelte';
+	import GeneralVokiTakingColorAndTextAnswer from './c_answers_display/GeneralVokiTakingColorAndTextAnswer.svelte';
+	import GeneralVokiTakingColorOnlyAnswer from './c_answers_display/GeneralVokiTakingColorOnlyAnswer.svelte';
+	import GeneralVokiTakingImageAndTextAnswer from './c_answers_display/GeneralVokiTakingImageAndTextAnswer.svelte';
+	import GeneralVokiTakingImageOnlyAnswer from './c_answers_display/GeneralVokiTakingImageOnlyAnswer.svelte';
+	import GeneralVokiTakingTextOnlyAnswer from './c_answers_display/GeneralVokiTakingTextOnlyAnswer.svelte';
 
 	interface Props {
 		answerType: GeneralVokiAnswerType;
@@ -27,7 +33,49 @@
 </script>
 
 {#if answerType === 'TextOnly'}
-	<GeneralVokiTakingAnswersDisplay {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
+	<GeneralVokiTakingTextOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
+{:else if answerType === 'ImageOnly'}
+	<GeneralVokiTakingImageOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
+{:else if answerType === 'AudioOnly'}
+	<GeneralVokiTakingAudioOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
+{:else if answerType === 'ColorOnly'}
+	<GeneralVokiTakingColorOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
+{:else if answerType === 'ImageAndText'}
+	<GeneralVokiTakingImageAndTextAnswer
+		{answers}
+		{isMultipleChoice}
+		{isAnswerChosen}
+		{chooseAnswer}
+	/>
+{:else if answerType === 'AudioAndText'}
+	<GeneralVokiTakingAudioAndTextAnswer
+		{answers}
+		{isMultipleChoice}
+		{isAnswerChosen}
+		{chooseAnswer}
+	/>
+{:else if answerType === 'ColorAndText'}
+	<GeneralVokiTakingColorAndTextAnswer
+		{answers}
+		{isMultipleChoice}
+		{isAnswerChosen}
+		{chooseAnswer}
+	/>
 {:else}
-	<h1>Unknown answer type</h1>
+	<div class="anwer-type-error">
+		<h1>This anser type is not supported</h1>
+	</div>
 {/if}
+
+<style>
+	:global(.answers-container > .answer) {
+		box-shadow: var(--shadow), var(--shadow-xs);
+		transition: transform 0.18s ease;
+	}
+
+	:global(.answers-container > .answer:hover),
+	:global(.answers-container > .answer.chosen) {
+		transition: transform 0.25s ease;
+		transform: scale(1.009);
+	}
+</style>

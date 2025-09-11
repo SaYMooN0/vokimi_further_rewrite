@@ -43,8 +43,6 @@
 		padding: 0.5rem 1rem;
 		margin: 1rem 0;
 		border-radius: 0.5rem;
-		box-shadow: var(--shadow), var(--shadow-xs);
-		transition: transform 0.18s ease;
 		grid-template-columns: auto 1fr;
 	}
 
@@ -55,11 +53,5 @@
 		word-break: normal;
 		overflow-wrap: anywhere;
 		text-indent: 0.25em;
-	}
-
-	.answer:hover,
-	.answer.chosen {
-		transition: transform 0.25s ease;
-		transform: scale(1.009);
 	}
 </style>

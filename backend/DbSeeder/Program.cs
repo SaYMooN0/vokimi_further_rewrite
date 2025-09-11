@@ -36,9 +36,12 @@ async Task ClearAllDbs() {
         UserProfilesDbContext(config),
         CoreVokiCreationDbContext(config),
         GeneralVokiCreationDbContext(config),
-        VokisCatalogTakingDbContext(config),
-        VokisCatalogTakingDbContext(config),
-        GeneralVokiTakingDbContext(config)
+        VokisCatalogDbContext(config),
+        GeneralVokiTakingDbContext(config),
+        
+        VokiRatingsDbContext(config),
+        VokiCommentsDbContext(config),
+        AlbumsDbContext(config)
     ];
     foreach (var db in dbs) {
         await db.Database.EnsureDeletedAsync();
@@ -77,8 +80,8 @@ GeneralVokiCreationDbContext GeneralVokiCreationDbContext(IConfiguration config)
     ).Options, FakePublisher.Instance
 );
 
-VokisCatalogTakingDbContext VokisCatalogTakingDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<VokisCatalogTakingDbContext>().UseNpgsql(
+VokisCatalogDbContext VokisCatalogDbContext(IConfiguration config) => new(
+    new DbContextOptionsBuilder<VokisCatalogDbContext>().UseNpgsql(
         config.GetConnectionString("VokisCatalogServiceDb")
     ).Options, FakePublisher.Instance
 );
@@ -88,7 +91,6 @@ GeneralVokiTakingDbContext GeneralVokiTakingDbContext(IConfiguration config) => 
         config.GetConnectionString("GeneralVokiTakingServiceDb")
     ).Options, FakePublisher.Instance
 );
-
 VokiRatingsDbContext VokiRatingsDbContext(IConfiguration config) => new(
     new DbContextOptionsBuilder<VokiRatingsDbContext>().UseNpgsql(
         config.GetConnectionString("VokiRatingsServiceDb")

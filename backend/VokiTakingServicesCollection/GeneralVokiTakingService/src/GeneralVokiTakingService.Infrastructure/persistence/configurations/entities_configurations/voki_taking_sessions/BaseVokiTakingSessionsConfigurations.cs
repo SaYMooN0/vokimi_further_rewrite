@@ -30,6 +30,6 @@ public class BaseVokiTakingSessionsConfigurations : IEntityTypeConfiguration<Bas
 
         builder
             .Property(x => x.Questions)
-            .HasSessionExpectedQuestionConversion();
+            .HasSessionExpectedQuestionsConversion();
     }
 }

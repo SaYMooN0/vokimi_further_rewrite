@@ -5,9 +5,9 @@ namespace VokisCatalogService.Infrastructure.persistence.repositories;
 
 internal class AppUsersRepository : IAppUsersRepository
 {
-    private readonly VokisCatalogTakingDbContext _db;
+    private readonly VokisCatalogDbContext _db;
 
-    public AppUsersRepository(VokisCatalogTakingDbContext db) {
+    public AppUsersRepository(VokisCatalogDbContext db) {
         _db = db;
     }
 

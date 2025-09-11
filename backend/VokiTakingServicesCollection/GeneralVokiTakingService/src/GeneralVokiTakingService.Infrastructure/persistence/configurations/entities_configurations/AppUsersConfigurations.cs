@@ -14,5 +14,9 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
+        
+        builder
+            .Property(x => x.GeneralVokiTakenRecordIds)
+            .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }

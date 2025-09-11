@@ -1,4 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.common;
+using SharedKernel.auth;
 using SharedKernel.exceptions;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
@@ -82,6 +83,56 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
 
         return ErrOrNothing.Nothing;
     }
+
+    protected static ErrOrNothing ValidateSingleQuestionAnswers(
+        TakingSessionExpectedQuestion question,
+        ImmutableHashSet<GeneralVokiAnswerId>? providedSet
+    ) {
+        ErrOrNothing errs = ErrOrNothing.Nothing;
+        int questionNumber = question.OrderInVokiTaking + 1;
+        string expectedText = question.MinAnswersCount == question.MaxAnswersCount
+            ? $"exactly {question.MinAnswersCount} answer(s)"
+            : $"from {question.MinAnswersCount} to {question.MaxAnswersCount} answers";
+
+        if (providedSet is null || providedSet.Count == 0) {
+            errs.AddNext(ErrFactory.NoValue.Common(
+                $"You did not answer question {questionNumber}. Choose {expectedText}"
+            ));
+            return errs;
+        }
+
+        var count = providedSet.Count;
+        if (count < question.MinAnswersCount || count > question.MaxAnswersCount) {
+            errs.AddNext(ErrFactory.ValueOutOfRange(
+                $"Question {questionNumber}: choose {expectedText}"
+            ));
+        }
+
+        if (!providedSet.IsSubsetOf(question.AnswerIds)) {
+            errs.AddNext(ErrFactory.IncorrectFormat(
+                $"Question {questionNumber}: some selected answers are not available. Please select only from the shown options"
+            ));
+        }
+
+        return errs;
+    }
+
+    public ErrOrNothing ValidateVokiTaker(IUserContext userContext, out AppUserId? resolvedVokiTaker) {
+        AppUserId? contextId = userContext.UserIdFromToken().IsSuccess(out var id) ? id : null;
+        if (
+            this.VokiTaker is not null
+            && contextId is not null
+            && contextId != this.VokiTaker
+        ) {
+            resolvedVokiTaker = null;
+            return ErrFactory.Conflict("Could not finish voki taking because it was started by another user");
+        }
+
+        resolvedVokiTaker = contextId ?? this.VokiTaker;
+
+        return ErrOrNothing.Nothing;
+    }
+
 
     private static readonly TimeSpan ServerStartTolerance = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan ClientFinishTolerance = TimeSpan.FromMinutes(5);

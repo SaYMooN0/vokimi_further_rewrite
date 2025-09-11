@@ -83,7 +83,7 @@
 	}
 
 	.single.chosen span {
-		width: 70%;
+		width: 0.675rem;
 		background: var(--primary);
 		opacity: 1;
 		transform: scale(1);

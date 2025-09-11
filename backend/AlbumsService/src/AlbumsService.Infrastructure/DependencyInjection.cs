@@ -111,7 +111,7 @@ public static class DependencyInjection
         IConfiguration configuration,
         IWebHostEnvironment env
     ) {
-        string dbConnectionString = configuration.GetConnectionString("VokiCommentsServiceDb")
+        string dbConnectionString = configuration.GetConnectionString("AlbumsServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<AlbumsDbContext>(options => {
                 options.UseNpgsql(dbConnectionString);

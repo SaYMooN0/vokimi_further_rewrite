@@ -1,7 +1,4 @@
-﻿using GeneralVokiTakingService.Domain.common;
-using GeneralVokiTakingService.Domain.general_voki_aggregate;
-
-namespace GeneralVokiTakingService.Application.general_vokis.commands.finish_voki_taking;
+﻿namespace GeneralVokiTakingService.Application.general_vokis.commands.finish_voki_taking;
 
 public sealed record FinishVokiTakingWithSequentialAnsweringCommand(
     VokiId VokiId
@@ -10,12 +7,12 @@ public sealed record FinishVokiTakingWithSequentialAnsweringCommand(
     // HashSet<GeneralVokiAnswerId> ChosenAnswers,
     // ushort AnswerOrder,
     // DateTime ClientFinishTime
-) : ICommand<VokiResult>;
+) : ICommand<FinishVokiTakingCommandsResult>;
 
 internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
-    ICommandHandler<FinishVokiTakingWithSequentialAnsweringCommand, VokiResult>
+    ICommandHandler<FinishVokiTakingWithSequentialAnsweringCommand, FinishVokiTakingCommandsResult>
 {
-    public async Task<ErrOr<VokiResult>> Handle(FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct) {
+    public async Task<ErrOr<FinishVokiTakingCommandsResult>> Handle(FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct) {
         return ErrFactory.NotImplemented();
     }
 }
