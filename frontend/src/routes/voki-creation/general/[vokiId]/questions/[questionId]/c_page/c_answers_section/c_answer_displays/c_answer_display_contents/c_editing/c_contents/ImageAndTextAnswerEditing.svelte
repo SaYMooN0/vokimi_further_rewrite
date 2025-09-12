@@ -4,6 +4,7 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { Err } from '$lib/ts/err';
 	import type { AnswerDataImageAndText } from '../../../../../../types';
+	import GeneralVokiCreationAnswerDisplayImage from '../../c_shared/GeneralVokiCreationAnswerDisplayImage.svelte';
 	import AnswerEditingTextArea from './c_shared/AnswerEditingTextArea.svelte';
 
 	interface Props {
@@ -43,19 +44,15 @@
 		<AnswerEditingTextArea bind:text={answer.text} />
 		<div class="image-part">
 			{#if isLoading}
-				<div class="loading">
-					<CubesLoader sizeRem={4} />
-				</div>
+				<CubesLoader sizeRem={4} />
 			{:else if answer.image}
-				<div class="img-selected">
-					<img src={StorageBucketMain.fileSrcWithVersion(answer.image)} />
-					<label class="change-img-btn unselectable">
-						<span>Change image</span>
-						<input type="file" accept="image/*" onchange={handleInputChange} hidden />
-					</label>
-				</div>
+				<GeneralVokiCreationAnswerDisplayImage src={answer.image} maxWidth={20} />
+				<label class="img-button unselectable">
+					<span>Change image</span>
+					<input type="file" accept="image/*" onchange={handleInputChange} hidden />
+				</label>
 			{:else}
-				<label class="upload-button unselectable">
+				<label class="img-button unselectable">
 					<svg><use href="#add-image-icon" /></svg>
 					<span>Add image</span>
 					<input type="file" accept="image/*" onchange={handleInputChange} hidden />
@@ -75,17 +72,52 @@
 		align-items: center;
 		width: 100%;
 		height: 100%;
-		padding: 0 2rem;
+		padding: 0;
 	}
 
 	.main {
 		display: grid;
-		grid-template-columns: 1fr 18rem;
+		grid-template-columns: 1fr auto;
 		gap: 1rem;
 		width: 100%;
 		height: 100%;
 	}
 
+	.image-part {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		min-width: 12rem;
+		gap: 0.5rem;
+		transition:
+			height 0.12s ease,
+			width 0.12s ease;
+	}
+	.img-button {
+		width: 100%;
+		padding: 0.375rem 0;
+		border-radius: 0.375rem;
+		background-color: var(--primary);
+		color: var(--primary-foreground);
+		font-size: 1.25rem;
+		font-weight: 420;
+		text-align: center;
+		cursor: pointer;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+	}
+	.img-button > svg {
+		height: 1.25rem;
+		width: 1.25rem;
+		stroke-width: 2;
+	}
+	.img-button:hover {
+		background-color: var(--primary-hov);
+	}
 	.answer-content > :global(.err-block) {
 		width: 100%;
 		margin-top: 0.5rem;

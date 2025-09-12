@@ -133,7 +133,7 @@
 		width: 100%;
 		max-height: 50rem;
 		overflow-y: auto;
-		padding: 0 1rem;
+		padding: 0.25rem 1rem;
 	}
 
 	.result {
@@ -143,7 +143,7 @@
 		width: 100%;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.5rem;
-		font-size: 1.125rem;
+		font-size: 1.25rem;
 		font-weight: 450;
 	}
 

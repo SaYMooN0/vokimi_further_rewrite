@@ -4,6 +4,7 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { Err } from '$lib/ts/err';
 	import type { AnswerDataImageOnly } from '../../../../../../types';
+	import GeneralVokiCreationAnswerDisplayImage from '../../c_shared/GeneralVokiCreationAnswerDisplayImage.svelte';
 
 	interface Props {
 		answer: AnswerDataImageOnly;
@@ -68,7 +69,7 @@
 				<span>Change image</span>
 				<input type="file" accept="image/*" onchange={handleInputChange} hidden />
 			</label>
-			<img src={StorageBucketMain.fileSrcWithVersion(answer.image)} />
+			<GeneralVokiCreationAnswerDisplayImage src={answer.image} />
 		</div>
 	{:else}
 		<div
@@ -116,13 +117,6 @@
 		grid-template-columns: auto 1fr;
 	}
 
-	img {
-		max-width: 28rem;
-		max-height: 16rem;
-		border-radius: 0.5rem;
-		object-fit: contain;
-	}
-
 	.change-img-btn {
 		height: fit-content;
 		padding: 0.375rem 0.75rem;
@@ -132,6 +126,7 @@
 		font-size: 1.125rem;
 		font-weight: 450;
 		text-align: center;
+		cursor: pointer;
 	}
 
 	.change-img-btn:hover {

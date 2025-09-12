@@ -32,7 +32,9 @@
 		border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 0.25rem;
 		transition: all 0.2s ease;
-		vertical-align: middle;
+		display: flex;
+		align-content: center;
+		justify-content: center;
 	}
 
 	.cbx span svg {
