@@ -68,12 +68,17 @@
 {/if}
 
 <style>
+	:global(.answers-container) {
+		scroll-behavior: smooth;
+	}
 	:global(.answers-container > .answer) {
 		box-shadow: var(--shadow), var(--shadow-xs);
 		transition: transform 0.18s ease;
+		scroll-margin: 12vh 0;
 	}
 
 	:global(.answers-container > .answer:hover),
+	:global(.answers-container > .answer:focus),
 	:global(.answers-container > .answer.chosen) {
 		transition: transform 0.25s ease;
 		transform: scale(1.009);

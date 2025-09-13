@@ -76,7 +76,6 @@
 		max-width: 32rem;
 		min-height: 15rem;
 		max-height: 25rem;
-		border-radius: 0;
 		object-fit: fill;
 		border-radius: 1rem;
 	}

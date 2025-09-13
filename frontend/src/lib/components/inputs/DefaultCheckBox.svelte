@@ -27,14 +27,13 @@
 
 	.cbx span {
 		display: inline-block;
+		display: flex;
+		place-content: center center;
 		width: 1.25rem;
 		height: 1.25rem;
 		border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 0.25rem;
 		transition: all 0.2s ease;
-		display: flex;
-		align-content: center;
-		justify-content: center;
 	}
 
 	.cbx span svg {

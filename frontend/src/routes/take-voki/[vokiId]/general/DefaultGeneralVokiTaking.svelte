@@ -24,7 +24,7 @@
 	{#if vokiTakingState.currentQuestion}
 		<DefaultTakingCurrentQuestionView
 			question={vokiTakingState.currentQuestion}
-			chosenAnswers={vokiTakingState.chosenAnswers[vokiTakingState.currentQuestion.id]}
+			bind:chosenAnswers={vokiTakingState.chosenAnswers[vokiTakingState.currentQuestion.id]}
 			totalQuestionsCount={vokiTakingState.totalQuestionsCount}
 			isMultipleChoice={isCurrentQuestionWithMultipleChoice()}
 		/>

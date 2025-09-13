@@ -10,7 +10,6 @@
 
 <style>
 	.vokis-container {
-		display: flex;
 		display: grid;
 		gap: 0.5rem;
 		width: 100%;

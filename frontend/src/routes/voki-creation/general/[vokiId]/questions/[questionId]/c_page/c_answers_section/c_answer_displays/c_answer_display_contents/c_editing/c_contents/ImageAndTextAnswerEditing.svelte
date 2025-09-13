@@ -88,13 +88,19 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		min-width: 12rem;
 		gap: 0.5rem;
+		min-width: 12rem;
 		transition:
 			height 0.12s ease,
 			width 0.12s ease;
 	}
+
 	.img-button {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
 		width: 100%;
 		padding: 0.375rem 0;
 		border-radius: 0.375rem;
@@ -104,20 +110,18 @@
 		font-weight: 420;
 		text-align: center;
 		cursor: pointer;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
 	}
+
 	.img-button > svg {
-		height: 1.25rem;
 		width: 1.25rem;
+		height: 1.25rem;
 		stroke-width: 2;
 	}
+
 	.img-button:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.answer-content > :global(.err-block) {
 		width: 100%;
 		margin-top: 0.5rem;

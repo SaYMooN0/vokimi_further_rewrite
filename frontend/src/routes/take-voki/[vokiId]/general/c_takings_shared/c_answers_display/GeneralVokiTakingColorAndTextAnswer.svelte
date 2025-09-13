@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ColorUtils } from '$lib/ts/utils/color-utils';
 	import type { GeneralVokiAnswerColorAndText, GeneralVokiAnswerTypeData } from '../../types';
+	import { answersKeyboardNav, type AnswerRef } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './c_shared/GeneralTakingAnswerChosenIndicator.svelte';
 
 	let {
@@ -19,31 +20,40 @@
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
 	}>();
+
+	let container: HTMLDivElement = $state<HTMLDivElement>()!;
 </script>
 
-<div class="answers-container">
+<div
+	class="answers-container"
+	bind:this={container}
+	use:answersKeyboardNav={{
+		answers: answers as AnswerRef[],
+		chooseAnswer,
+		focusOnMount: true,
+		selector: '.answer',
+		useSpacebarToChoose: true
+	}}
+	tabindex="-1"
+	role={isMultipleChoice ? 'group' : 'radiogroup'}
+	aria-label="Answer choices"
+>
 	{#each answers as answer}
 		<div
 			class="answer"
 			class:chosen={isAnswerChosen(answer.id)}
 			onclick={() => chooseAnswer(answer.id)}
-			role="button"
 			tabindex="0"
-			aria-pressed={isAnswerChosen(answer.id)}
+			role={isMultipleChoice ? 'checkbox' : 'radio'}
+			aria-checked={isAnswerChosen(answer.id)}
 			style={`
-					--chip:${ColorUtils.normalizeHex6(answer.typeData.color) ?? answer.typeData.color};
-					--chipText:${ColorUtils.contrastTextColor(answer.typeData.color)};
-				`}
+        --chip:${ColorUtils.normalizeHex6(answer.typeData.color) ?? answer.typeData.color};
+        --chip-text:${ColorUtils.contrastTextColor(answer.typeData.color)};
+      `}
 		>
 			<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
-
-			<div class="color-chip">
-				<span class="chip-text">{answer.typeData.color}</span>
-			</div>
-
-			<label class="text">
-				{answer.typeData.text}
-			</label>
+			<div class="color-chip"><span class="chip-text">{answer.typeData.color}</span></div>
+			<label class="text">{answer.typeData.text}</label>
 			<div class="color-chip-thin"></div>
 		</div>
 	{/each}
@@ -57,25 +67,24 @@
 
 	.answer {
 		display: grid;
-		grid-template-columns: auto 1fr;
-		align-items: center;
-		gap: 0.75rem;
-		padding: 0.5rem 1rem;
-		grid-template-columns: auto auto 1fr auto;
 		align-items: center;
 		gap: 0.75rem;
 		height: fit-content;
+		padding: 0.5rem 1rem;
 		border-radius: 0.5rem;
+		grid-template-columns: auto 1fr;
+		grid-template-columns: auto auto 1fr auto;
 	}
+
 	.color-chip {
+		display: grid;
 		width: 10rem;
 		height: 3rem;
+		padding: 0 0.5rem;
 		border-radius: 0.5rem;
 		background: var(--chip);
-		color: var(--chipText);
-		display: grid;
+		color: var(--chip-text);
 		place-items: center;
-		padding: 0 0.5rem;
 		white-space: nowrap;
 	}
 
@@ -84,17 +93,11 @@
 		font-weight: 600;
 		opacity: 0.95;
 	}
+
 	.color-chip-thin {
 		width: 1rem;
 		height: 100%;
-		background: var(--chip);
 		border-radius: 0.5rem;
-	}
-	.text {
-		font-size: 1.25rem;
-		font-weight: 450;
-		cursor: default;
-		word-break: normal;
-		overflow-wrap: anywhere;
+		background: var(--chip);
 	}
 </style>
