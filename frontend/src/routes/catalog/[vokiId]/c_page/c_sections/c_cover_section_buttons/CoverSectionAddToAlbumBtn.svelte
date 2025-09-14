@@ -5,20 +5,23 @@
 		isHovered = true;
 		setTimeout(() => {
 			isHovered = false;
-		}, 600);
+		}, 500);
 	}
 </script>
 
 <button class="add-to-album-btn" onmouseenter={() => animateIcon()} onfocus={() => animateIcon()}>
-	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-		<path
-			d="M12 4V20M20 12H4"
-			stroke="currentColor"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-			data-custom="0"
-			class:hov={isHovered}
-		></path>
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		fill="none"
+		class="plus"
+		class:animate={isHovered}
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		stroke="currentColor"
+	>
+		<path d="M5 12h14" class="horizontal" />
+		<path d="M12 5v14" class="vertical" />
 	</svg>
 	<label class="btn-text">Add to album</label>
 </button>
@@ -29,30 +32,40 @@
 		color: var(--secondary-foreground);
 	}
 
-	.add-to-album-btn:hover {
+	.add-to-album-btn:hover,
+	.add-to-album-btn:focus {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 	}
-
-	path {
-		transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-		transform-origin: center;
-		transform: none;
+	.horizontal,
+	.vertical {
+		stroke-dasharray: 14;
+		stroke-dashoffset: 0;
+		transition: stroke-dashoffset 0.15s ease-out;
 	}
 
-	path[data-custom='0'].hov {
-		animation: a0 0.6s forwards;
+	.plus.animate .horizontal {
+		opacity: 0;
+		animation: lineAnimation 0.2s ease-out forwards;
 	}
 
-	@keyframes a0 {
+	.plus.animate .vertical {
+		opacity: 0;
+		animation: lineAnimation 0.2s ease-out 0.25s forwards;
+	}
+
+	@keyframes lineAnimation {
 		0% {
 			opacity: 0;
-			transform: translateY(6px) scale(0.5);
+			stroke-dashoffset: 14;
 		}
-
-		80% {
+		15% {
 			opacity: 1;
-			transform: translateY(0) scale(1);
+			stroke-dashoffset: 14;
+		}
+		100% {
+			opacity: 1;
+			stroke-dashoffset: 0;
 		}
 	}
 </style>

@@ -58,7 +58,8 @@
 		width: 100%;
 	}
 
-	.buttons-container > :global(*) {
+	.buttons-container > :global(button),
+	.buttons-container > :global(a) {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
@@ -68,20 +69,25 @@
 		border: none;
 		border-radius: 0.25rem;
 		cursor: default;
+		outline: none;
+		transition: transform 0.08s ease-out;
 	}
 
-	.buttons-container > :global(*:focus) {
-		outline: var(--primary) solid 0.125rem;
+	.buttons-container > :global(button:focus),
+	.buttons-container > :global(a:focus) {
+		transform: scale(1.02);
 	}
 
-	.buttons-container > :global(* > svg) {
+	.buttons-container > :global(a > :nth-child(1)),
+	.buttons-container > :global(button > :nth-child(1)) {
 		width: 1.75rem;
-		height: 1.875rem;
+		height: 1.75rem;
 		margin-right: 0.5rem;
 		stroke-width: 2;
 	}
 
-	.buttons-container > :global(* > .btn-text) {
+	.buttons-container > :global(a > .btn-text),
+	.buttons-container > :global(button > .btn-text) {
 		width: 8.5rem;
 		font-size: 1.25rem;
 		font-weight: 450;

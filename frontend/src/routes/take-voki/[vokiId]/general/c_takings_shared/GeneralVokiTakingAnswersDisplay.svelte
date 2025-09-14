@@ -71,6 +71,7 @@
 	:global(.answers-container) {
 		scroll-behavior: smooth;
 	}
+
 	:global(.answers-container > .answer) {
 		box-shadow: var(--shadow), var(--shadow-xs);
 		transition: transform 0.18s ease;

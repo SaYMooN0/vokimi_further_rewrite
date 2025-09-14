@@ -63,7 +63,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 
     public ImmutableArray<VokiTakenQuestionDetails> GatherQuestionDetails() {
         //check thal all questions are answered
-        throw new NotImplementedException();
+        throw new  NotImplementedException();
         return _answered
             .Select(q => new VokiTakenQuestionDetails(
                 q.QuestionId,

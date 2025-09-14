@@ -3,12 +3,7 @@
 	import SideBar from './c_layout/SideBar.svelte';
 	import SignInDialog from './c_layout/SignInDialog.svelte';
 	import AppToaster from './c_layout/AppToaster.svelte';
-	import vokiTypesIconsSprite from '$lib/icons/voki-type-icons.svg?raw';
-	import commonIconsSprite from '$lib/icons/common-icons.svg?raw';
-	import caretIconsSprite from '$lib/icons/caret-icons.svg?raw';
-	import errorIconsSprite from '$lib/icons/error-icons.svg?raw';
 	import ConfirmActionDialog from './c_layout/ConfirmActionDialog.svelte';
-	import languagesIconsSprite from '$lib/icons/languages-icons.svg?raw';
 
 	import {
 		registerConfirmActionDialogOpenFunction,
@@ -18,6 +13,7 @@
 		registerSignInDialogOpenFunction,
 		type SignInDialogState
 	} from './c_layout/ts_layout_contexts/sign-in-dialog-context';
+	import LayoutSprites from './c_layout/LayoutSprites.svelte';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
@@ -31,15 +27,9 @@
 	});
 </script>
 
-<div class="sprites">
-	{@html vokiTypesIconsSprite}
-	{@html commonIconsSprite}
-	{@html caretIconsSprite}
-	{@html errorIconsSprite}
-	{@html languagesIconsSprite}
-</div>
 <SignInDialog bind:this={signInDialog} />
 <ConfirmActionDialog bind:this={confirmActionDialog} />
+<LayoutSprites />
 <div class="page" class:full-width={isFullWidthMode}>
 	<div class="width-limit">
 		<SideBar />
@@ -51,15 +41,6 @@
 <AppToaster />
 
 <style>
-	.sprites {
-		height: 0;
-	}
-
-	.sprites > :global(svg) {
-		width: 0;
-		height: 0;
-	}
-
 	.page {
 		display: flex;
 		flex-direction: column;

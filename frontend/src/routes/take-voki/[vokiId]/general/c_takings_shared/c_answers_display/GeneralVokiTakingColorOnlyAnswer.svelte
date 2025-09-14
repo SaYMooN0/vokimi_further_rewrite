@@ -69,30 +69,34 @@
 		justify-content: center;
 		gap: 2rem;
 	}
+
 	.answer {
-		flex: 0 1 18rem;
 		display: grid;
+		gap: 0.5rem;
 		height: 7rem;
 		padding: 1rem;
-		gap: 0.5rem;
 		border-radius: 1rem;
+		flex: 0 1 18rem;
 	}
+
 	.color-div {
 		--color-div-border-radius: 0.675rem;
-		height: 100%;
-		width: 100%;
-		border-radius: var(--color-div-border-radius);
+
 		position: relative;
+		width: 100%;
+		height: 100%;
 		border: 1px solid var(--muted);
+		border-radius: var(--color-div-border-radius);
 	}
+
 	.indicator-container {
 		position: absolute;
 		bottom: -1rem;
-		background-color: var(--back);
+		left: 50%;
 		padding: 0.5rem;
 		border-radius: var(--color-div-border-radius);
-		border-top: 1px solid var(--muted);
-		left: 50%;
+		background-color: var(--back);
 		transform: translateX(-50%);
+		border-top: 1px solid var(--muted);
 	}
 </style>

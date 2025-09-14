@@ -61,6 +61,7 @@
 		flex-direction: column;
 		gap: 1rem;
 	}
+
 	.answer {
 		display: grid;
 		align-items: center;

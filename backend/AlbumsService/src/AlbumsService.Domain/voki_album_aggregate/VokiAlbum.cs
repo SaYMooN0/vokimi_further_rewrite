@@ -5,4 +5,6 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
     //owner
     //name visibility 
     //content visibility 
+    //color 1
+    //color 2
 }

@@ -1,17 +1,40 @@
 <script lang="ts">
-	import { toast } from 'svelte-sonner';
+	import type { Err } from '$lib/ts/err';
+	import type { GeneralVokiTakingResultData } from '../types';
 	import type { DefaultGeneralVokiTakingState } from './default-general-voki-taking-state.svelte';
-	let { vokiTakingState }: { vokiTakingState: DefaultGeneralVokiTakingState } = $props<{
+	interface Props {
 		vokiTakingState: DefaultGeneralVokiTakingState;
-	}>();
+		vokiTakingErrs: (Err & { questionOrder?: number })[];
+		onResultReceived: (receivedResult: GeneralVokiTakingResultData) => void;
+	}
+	let { vokiTakingState, vokiTakingErrs = $bindable(), onResultReceived }: Props = $props();
 
 	let isNextBtnInactive = $derived(vokiTakingState.isCurrentQuestionLast());
 	let isPrevBtnInactive = $derived(vokiTakingState.isCurrentQuestionFirst());
 
-	function finishBtnPressed() {
-		toast.error('Not implemented yet');
-	}
 	let showFinishBtn = $derived(vokiTakingState.isCurrentQuestionLast());
+	async function finishBtnPressed() {
+		const response = await vokiTakingState.finishTakingAndReceiveResult();
+		if (response.isSuccess) {
+			onResultReceived(response.data);
+		} else if (response.errs.length > 0) {
+			vokiTakingErrs = response.errs;
+		} else {
+			vokiTakingErrs = [{ message: 'Something went wrong' }];
+		}
+	}
+	function onNextButtonClicked() {
+		if (vokiTakingErrs.length > 0) {
+			vokiTakingErrs = [];
+		}
+		vokiTakingState.goToNextQuestion();
+	}
+	function onPrevButtonClicked() {
+		if (vokiTakingErrs.length > 0) {
+			vokiTakingErrs = [];
+		}
+		vokiTakingState.goToPreviousQuestion();
+	}
 </script>
 
 <div class="btns-container">
@@ -19,7 +42,7 @@
 		class="next-prev-btns"
 		class:reduced={showFinishBtn}
 		class:inactive={isPrevBtnInactive}
-		onclick={() => vokiTakingState.goToPreviousQuestion()}>Previous</button
+		onclick={onPrevButtonClicked}>Previous</button
 	>
 	<button
 		class="finish-btn"
@@ -31,7 +54,7 @@
 		class="next-prev-btns"
 		class:reduced={showFinishBtn}
 		class:inactive={isNextBtnInactive}
-		onclick={() => vokiTakingState.goToNextQuestion()}>Next</button
+		onclick={onNextButtonClicked}>Next</button
 	>
 </div>
 
