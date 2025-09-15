@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
-	import type { GeneralVokiTakingResultData } from '../types';
+	import type { GeneralVokiTakenResult } from '../types';
 	import type { DefaultGeneralVokiTakingState } from './default-general-voki-taking-state.svelte';
 	interface Props {
 		vokiTakingState: DefaultGeneralVokiTakingState;
 		vokiTakingErrs: (Err & { questionOrder?: number })[];
-		onResultReceived: (receivedResult: GeneralVokiTakingResultData) => void;
+		onResultReceived: (receivedResult: GeneralVokiTakenResult) => void;
 	}
 	let { vokiTakingState, vokiTakingErrs = $bindable(), onResultReceived }: Props = $props();
 

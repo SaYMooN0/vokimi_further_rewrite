@@ -51,7 +51,6 @@ internal sealed class StartVokiTakingCommandHandler :
                 voki.Id, vokiTaker, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
             );
         }
-
         return StartVokiTakingCommandResponse.Create(voki, takingSession);
     }
 }

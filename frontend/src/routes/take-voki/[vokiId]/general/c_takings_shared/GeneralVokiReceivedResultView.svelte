@@ -1,7 +1,7 @@
 <script lang="ts">
-	import type { GeneralVokiTakingResultData } from '../types';
+	import type { GeneralVokiTakenReceivedVokiResult } from '../types';
 	interface Props {
-		result: GeneralVokiTakingResultData;
+		result: GeneralVokiTakenReceivedVokiResult;
 		allowToSeeResultsList: boolean;
 		vokiId: string;
 	}

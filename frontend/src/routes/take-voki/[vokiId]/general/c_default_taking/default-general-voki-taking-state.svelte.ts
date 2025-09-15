@@ -2,7 +2,7 @@ import { ApiVokiTakingGeneral } from "$lib/ts/backend-communication/backend-serv
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
 import { RequestJsonOptions } from "$lib/ts/request-json-options";
-import type { GeneralVokiTakingData, GeneralVokiTakingQuestionData, GeneralVokiTakingResultData } from "../types";
+import type { GeneralVokiTakingQuestionData, GeneralVokiTakingData, GeneralVokiTakenResult } from "../types";
 
 export class DefaultGeneralVokiTakingState {
     readonly vokiId: string;
@@ -10,13 +10,16 @@ export class DefaultGeneralVokiTakingState {
     readonly #serverStartedAt: Date;
     readonly #clientStartedAt: Date;
     readonly #questions: GeneralVokiTakingQuestionData[];
+
+    readonly #clearVokiSeenUpdateTimer: () => void;
+
     readonly totalQuestionsCount: number;
 
     readonly chosenAnswers = $state<Record<string, Record<string, boolean>>>({});
     currentQuestionOrder = $state(0);
     currentQuestion: GeneralVokiTakingQuestionData | undefined;
 
-    constructor(data: GeneralVokiTakingData) {
+    constructor(data: GeneralVokiTakingData, clearVokiSeenUpdateTimer: () => void) {
         if (data.forceSequentialAnswering) {
             throw new Error(
                 "Cannot create GeneralVokiTakingState, because voki force sequential answering"
@@ -29,6 +32,7 @@ export class DefaultGeneralVokiTakingState {
         this.#clientStartedAt = new Date();
         this.#questions = data.questions;
         this.totalQuestionsCount = data.totalQuestionsCount;
+
 
         if (this.#questions.length !== this.totalQuestionsCount) {
             throw new Error(
@@ -47,6 +51,8 @@ export class DefaultGeneralVokiTakingState {
                 q => q.orderInVokiTaking === this.currentQuestionOrder
             )
         );
+
+        this.#clearVokiSeenUpdateTimer = clearVokiSeenUpdateTimer;
     }
 
     goToPreviousQuestion(): void {
@@ -86,28 +92,39 @@ export class DefaultGeneralVokiTakingState {
 
     async finishTakingAndReceiveResult(): Promise<
         | { isSuccess: false, errs: ErrMessageWithQuestionOrder[] }
-        | ResponseResult<GeneralVokiTakingResultData>
+        | ResponseResult<GeneralVokiTakenResult>
     > {
         const errs = this.checkErrsBeforeFinish();
         if (errs.length > 0) {
             return { isSuccess: false, errs };
         }
-        const response = await ApiVokiTakingGeneral.fetchJsonResponse<{}>(
-            `/vokis/${this.vokiId}/finish-taking-with-free-answering`,
-            RequestJsonOptions.POST({
-                serverStart: this.#serverStartedAt,
-                clientStart: this.#clientStartedAt,
-                sessionId: this.#sessionId
-            })
+        const response = await ApiVokiTakingGeneral.fetchJsonResponse<GeneralVokiTakenResult>(
+            `/vokis/${this.vokiId}/free-answering/finish`,
+            RequestJsonOptions.POST(this.createVokiTakenData())
         );
 
         if (response.isSuccess) {
-            // remove cookies
-            // show result
+            this.#clearVokiSeenUpdateTimer();
+            return response;
         }
         return response;
     }
-
+    createVokiTakenData() {
+        return {
+            chosenAnswers: Object.fromEntries(
+                Object.entries(this.chosenAnswers).map(([qId, answers]) => [
+                    qId,
+                    Object.entries(answers)
+                        .filter(([, isSelected]) => isSelected)
+                        .map(([answerId]) => answerId)
+                ])
+            ),
+            serverStartTime: this.#serverStartedAt,
+            clientStartTime: this.#clientStartedAt,
+            clientFinishTime: new Date(),
+            sessionId: this.#sessionId
+        };
+    }
     checkErrsBeforeFinish(): ErrMessageWithQuestionOrder[] {
         const errs: ErrMessageWithQuestionOrder[] = [];
 
@@ -126,7 +143,7 @@ export class DefaultGeneralVokiTakingState {
 
             if (chosenCount === 0 && min > 0) {
                 errs.push({
-                    message: `Question ${title} is not answered. Please choose at least ${min} ${min === 1 ? 'answer' : 'answers'}.`,
+                    message: `Question ${title} is not answered. Please choose at least ${min} ${min === 1 ? 'answer' : 'answers'}`,
                     questionOrder: q.orderInVokiTaking
                 });
                 continue;
@@ -134,7 +151,7 @@ export class DefaultGeneralVokiTakingState {
 
             if (chosenCount < min) {
                 errs.push({
-                    message: `Question ${title}: you chose ${chosenCount}, but at least ${min} ${min === 1 ? 'answer is' : 'answers are'} required.`,
+                    message: `Question ${title}: you chose ${chosenCount}, but at least ${min} ${min === 1 ? 'answer is' : 'answers are'} required`,
                     questionOrder: q.orderInVokiTaking
                 });
                 continue;
@@ -142,7 +159,7 @@ export class DefaultGeneralVokiTakingState {
 
             if (chosenCount > max) {
                 errs.push({
-                    message: `Question ${title}: you chose ${chosenCount}, but at most ${max} ${max === 1 ? 'answer is' : 'answers are'} allowed.`,
+                    message: `Question ${title}: you chose ${chosenCount}, but at most ${max} ${max === 1 ? 'answer is' : 'answers are'} allowed`,
                     questionOrder: q.orderInVokiTaking
                 });
                 continue;

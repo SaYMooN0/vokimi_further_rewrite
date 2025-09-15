@@ -23,7 +23,7 @@
 			</label>
 			<label class="details">
 				{#if ErrUtils.hasNonEmptyDetails(err)}
-					{err.details}
+					Details: {err.details}
 				{/if}
 			</label>
 		</div>
@@ -31,7 +31,36 @@
 </div>
 
 <style>
+	.errs {
+		margin: 1rem 0;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		gap: 0.5rem;
+	}
+	.err {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		padding: 0.125rem 0.25rem;
+		border-radius: 0.25rem;
+		background-color: var(--err-back);
+		color: var(--err-foreground);
+		box-shadow: var(--err-shadow);
+	}
+	.message {
+		font-size: 1.125rem;
+		font-weight: 450;
+		text-indent: 0.5em;
+	}
+	.details {
+		font-size: 1rem;
+		font-weight: 420;
+		text-indent: 0.5em;
+		padding: 0 0.25rem;
+	}
 	.err.can-jump:hover {
 		text-decoration: underline;
+		text-decoration-thickness: 0.125rem;
 	}
 </style>

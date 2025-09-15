@@ -5,18 +5,20 @@
 	import DefaultTakingButtonsContainer from './c_default_taking/DefaultTakingButtonsContainer.svelte';
 	import DefaultTakingCurrentQuestionView from './c_default_taking/DefaultTakingCurrentQuestionView.svelte';
 	import GeneralVokiReceivedResultView from './c_takings_shared/GeneralVokiReceivedResultView.svelte';
-	import type { GeneralVokiTakingData, GeneralVokiTakingResultData } from './types';
+	import type { GeneralVokiTakenResult, GeneralVokiTakingData } from './types';
 
-	let { takingData }: { takingData: GeneralVokiTakingData } = $props<{
+	interface Props {
 		takingData: GeneralVokiTakingData;
-	}>();
+		clearVokiSeenUpdateTimer: () => void;
+	}
+	let { takingData, clearVokiSeenUpdateTimer }: Props = $props();
 
-	let vokiTakingState = new DefaultGeneralVokiTakingState(takingData);
+	let vokiTakingState = new DefaultGeneralVokiTakingState(takingData, clearVokiSeenUpdateTimer);
 
 	type ErrWithOrder = Err & { questionOrder?: number };
 	let vokiTakingErrs = $state<ErrWithOrder[]>([]);
 
-	let receivedResult: GeneralVokiTakingResultData | null = $state(null);
+	let vokiTakenData: GeneralVokiTakenResult | null = $state(null);
 
 	function isCurrentQuestionWithMultipleChoice() {
 		const isSingle =
@@ -30,7 +32,7 @@
 	}
 </script>
 
-{#if receivedResult === null}
+{#if vokiTakenData === null}
 	{#if vokiTakingState.currentQuestion}
 		<DefaultTakingCurrentQuestionView
 			question={vokiTakingState.currentQuestion}
@@ -48,11 +50,11 @@
 	<DefaultTakingButtonsContainer
 		{vokiTakingState}
 		bind:vokiTakingErrs
-		onResultReceived={(result) => (receivedResult = result)}
+		onResultReceived={(result) => (vokiTakenData = result)}
 	/>
 {:else}
 	<GeneralVokiReceivedResultView
-		result={receivedResult}
+		result={vokiTakenData.receivedResult}
 		allowToSeeResultsList={true}
 		vokiId={vokiTakingState.vokiId}
 	/>

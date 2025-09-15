@@ -41,8 +41,10 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
     }
 
-    public async Task<ErrOr<FinishVokiTakingCommandsResult>> Handle(FinishVokiTakingWithFreeAnsweringCommand command,
-        CancellationToken ct) {
+    public async Task<ErrOr<FinishVokiTakingCommandsResult>> Handle(
+        FinishVokiTakingWithFreeAnsweringCommand command,
+        CancellationToken ct
+    ) {
         GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
@@ -63,7 +65,7 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             return err;
         }
 
-        
+
         if (session.ValidateVokiTaker(_userContext, out var vokiTakerId).IsErr(out err)) {
             return err;
         }

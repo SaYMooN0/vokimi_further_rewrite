@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import type { PageProps } from './$types';
 	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
 	import CoverSection from './c_page/c_sections/CoverSection.svelte';
@@ -12,6 +12,7 @@
 	import TabLinksContainer from './c_page/TabLinksContainer.svelte';
 	import VokiNotLoaded from './c_page/VokiNotLoaded.svelte';
 	import { VokiPageState } from './voki-page-state.svelte';
+	import { VokiCatalogVisitMarkerCookie } from '$lib/ts/cookies/voki-catalog-visit-marker-cookie';
 
 	let { data }: PageProps = $props();
 	let pageState = new VokiPageState(
@@ -20,10 +21,21 @@
 		data.response.isSuccess ? data.response.data.ratingsCount : 0,
 		data.response.isSuccess ? data.response.data.commentsCount : 0
 	);
+
+
+	let refreshTimer: number | undefined;
 	onMount(() => {
 		if (browser) {
-			const expires = new Date(Date.now() + 10 * 60 * 1000).toUTCString();
-			document.cookie = `${data.vokiId}-started=true; path=/; expires=${expires}; SameSite=Lax`;
+			VokiCatalogVisitMarkerCookie.markSeenFor5Mins(data.vokiId);
+
+			refreshTimer = window.setInterval(() => {
+				VokiCatalogVisitMarkerCookie.markSeenFor5Mins(data.vokiId);
+			}, 60_000);
+		}
+	});
+	onDestroy(() => {
+		if (refreshTimer) {
+			clearInterval(refreshTimer);
 		}
 	});
 </script>

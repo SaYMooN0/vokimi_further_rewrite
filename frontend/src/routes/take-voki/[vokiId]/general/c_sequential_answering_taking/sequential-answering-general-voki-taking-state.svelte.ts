@@ -5,15 +5,19 @@ import type { GeneralVokiTakingData, GeneralVokiTakingQuestionData, GeneralVokiT
 export class SequentialAnsweringGeneralVokiTakingState {
     readonly vokiId: string;
     currentQuestion: GeneralVokiTakingQuestionData | undefined;
+    readonly #clearVokiSeenUpdateTimer: () => void;
+
     isCurrentQuestionLast() { return true; }
 
 
-    constructor(data: GeneralVokiTakingData) {
+    constructor(data: GeneralVokiTakingData, clearVokiSeenUpdateTimer: () => void) {
         this.vokiId = data.id;
-        
+
         if (!data.forceSequentialAnswering) {
             throw new Error("Cannot create GeneralVokiTakingState, because voki force sequential answering");
         }
+
+        this.#clearVokiSeenUpdateTimer = clearVokiSeenUpdateTimer;
 
     }
     async goToNextQuestion(): Promise<Err[]> {

@@ -4,11 +4,11 @@ namespace GeneralVokiTakingService.Api.contracts.finish_voki_taking;
 
 public record class VokiTakenResponse(
     VokiResultViewResponse ReceivedResult,
-    TimeSpan TimeTaken
+    double TimeTakenMilliseconds
 )
 {
     public static VokiTakenResponse Create(FinishVokiTakingCommandsResult data) => new(
         VokiResultViewResponse.Create(data.ReceivedResult),
-        data.TimeTaken
+        data.TimeTaken.Milliseconds
     );
 }
