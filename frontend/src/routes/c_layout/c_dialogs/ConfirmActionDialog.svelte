@@ -5,7 +5,7 @@
 		ConfirmActionDialogButtons,
 		ConfirmActionDialogContent,
 		ConfirmActionDialogMainContent
-	} from './ts_layout_contexts/confirm-action-dialog-context';
+	} from '../ts_layout_contexts/confirm-action-dialog-context';
 	import type { Err } from '$lib/ts/err';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 

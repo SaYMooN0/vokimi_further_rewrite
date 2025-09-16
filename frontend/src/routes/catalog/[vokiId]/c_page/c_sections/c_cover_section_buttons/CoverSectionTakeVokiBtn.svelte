@@ -34,32 +34,37 @@
 	.take-voki-btn:focus {
 		background-color: var(--primary-hov);
 	}
+
 	.icon-container {
 		position: relative;
-		height: auto;
 		width: auto;
+		height: auto;
 		transition: all 0.2s ease-out;
 	}
+
 	.dot {
-		height: 0.25rem;
-		width: 0.25rem;
-		border-radius: 50%;
-		background-color: var(--primary-foreground);
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		transform: translate(-30%, -50%);
-		transition: inherit;
+		width: 0.25rem;
+		height: 0.25rem;
+		border-radius: 50%;
+		background-color: var(--primary-foreground);
 		opacity: 0;
+		transition: inherit;
+		transform: translate(-30%, -50%);
 	}
+
 	.take-voki-btn:hover .dot,
 	.take-voki-btn:focus .dot {
-		transform: translate(-120%, -50%);
 		opacity: 1;
+		transform: translate(-120%, -50%);
 	}
+
 	svg {
 		transition: inherit;
 	}
+
 	.take-voki-btn:hover svg,
 	.take-voki-btn:focus svg {
 		transform: translateX(3px);

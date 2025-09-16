@@ -1,6 +1,6 @@
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
-import type { GeneralVokiTakingData, GeneralVokiTakingQuestionData, GeneralVokiTakingResultData } from "../types";
+import type { GeneralVokiTakenResult, GeneralVokiTakingData, GeneralVokiTakingQuestionData } from "../types";
 
 export class SequentialAnsweringGeneralVokiTakingState {
     readonly vokiId: string;
@@ -29,10 +29,14 @@ export class SequentialAnsweringGeneralVokiTakingState {
         //     this.currentQuestionOrder += 1;
         return [];
     }
-    async finishTakingAndReceiveResult(): Promise<ResponseResult<GeneralVokiTakingResultData>> {
+    async finishTakingAndReceiveResult(): Promise<
+        | { isSuccess: false, errs: ErrMessageWithQuestionOrder[] }
+        | ResponseResult<GeneralVokiTakenResult>
+    > {
         //validate current chosen
         // check if last
         // command finish voki taking
         return { isSuccess: false, errs: [] };
     }
 }
+type ErrMessageWithQuestionOrder = { message: string, questionOrder: number };

@@ -1,35 +1,18 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte';
 	import SideBar from './c_layout/SideBar.svelte';
-	import SignInDialog from './c_layout/SignInDialog.svelte';
 	import AppToaster from './c_layout/AppToaster.svelte';
-	import ConfirmActionDialog from './c_layout/ConfirmActionDialog.svelte';
-
-	import {
-		registerConfirmActionDialogOpenFunction,
-		type ConfirmActionDialogContent
-	} from './c_layout/ts_layout_contexts/confirm-action-dialog-context';
-	import {
-		registerSignInDialogOpenFunction,
-		type SignInDialogState
-	} from './c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import LayoutSprites from './c_layout/LayoutSprites.svelte';
+	import LayoutDialogs from './c_layout/LayoutDialogs.svelte';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
-	let signInDialog = $state<SignInDialog>()!;
-	let confirmActionDialog = $state<ConfirmActionDialog>()!;
-
-	registerSignInDialogOpenFunction((state: SignInDialogState) => signInDialog.open(state));
-	registerConfirmActionDialogOpenFunction({
-		open: (content: ConfirmActionDialogContent) => confirmActionDialog.open(content),
-		close: () => confirmActionDialog.close()
-	});
 </script>
 
-<SignInDialog bind:this={signInDialog} />
-<ConfirmActionDialog bind:this={confirmActionDialog} />
+<LayoutDialogs />
 <LayoutSprites />
+<AppToaster />
+
 <div class="page" class:full-width={isFullWidthMode}>
 	<div class="width-limit">
 		<SideBar />
@@ -38,7 +21,6 @@
 		</div>
 	</div>
 </div>
-<AppToaster />
 
 <style>
 	.page {

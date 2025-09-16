@@ -37,6 +37,7 @@
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 	}
+
 	.horizontal,
 	.vertical {
 		stroke-dasharray: 14;
@@ -59,10 +60,12 @@
 			opacity: 0;
 			stroke-dashoffset: 14;
 		}
+
 		15% {
 			opacity: 1;
 			stroke-dashoffset: 14;
 		}
+
 		100% {
 			opacity: 1;
 			stroke-dashoffset: 0;

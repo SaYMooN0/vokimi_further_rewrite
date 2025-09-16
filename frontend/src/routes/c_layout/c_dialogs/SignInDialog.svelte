@@ -1,13 +1,13 @@
 <script lang="ts">
-	import LoginState from './c_sign_in_dialog/LoginState.svelte';
-	import type { SignInDialogState } from './ts_layout_contexts/sign-in-dialog-context';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
+	import type { SignInDialogState } from '../ts_layout_contexts/sign-in-dialog-context';
 	import ConfirmationLinkState from './c_sign_in_dialog/ConfirmationLinkState.svelte';
+	import LoginState from './c_sign_in_dialog/LoginState.svelte';
 	import SignUpState from './c_sign_in_dialog/SignUpState.svelte';
 
 	export function open(state: SignInDialogState | null = null) {
-		signUpState?.clear();
-		loginState?.clear();
+		signUpStateComponent?.clear();
+		loginStateComponent?.clear();
 
 		dialog.open();
 		if (state) {
@@ -19,21 +19,21 @@
 	let email = $state('');
 	let password = $state('');
 
-	let signUpState = $state<SignUpState>();
-	let loginState = $state<LoginState>();
+	let signUpStateComponent = $state<SignUpState>()!;
+	let loginStateComponent = $state<LoginState>()!;
 </script>
 
 <DialogWithCloseButton bind:this={dialog} dialogId="sign-in-dialog">
 	{#if dialogState === 'login'}
 		<LoginState
-			bind:this={loginState}
+			bind:this={loginStateComponent}
 			bind:email
 			bind:password
 			changeState={(val) => (dialogState = val)}
 		/>
 	{:else if dialogState === 'signup'}
 		<SignUpState
-			bind:this={signUpState}
+			bind:this={signUpStateComponent}
 			bind:email
 			bind:password
 			changeState={(val) => (dialogState = val)}

@@ -55,19 +55,24 @@
 	.rotate-animation {
 		animation: rotateAnimation 0.65s ease-in-out;
 	}
+
 	@keyframes rotateAnimation {
 		0% {
 			transform: rotate(0deg);
 		}
+
 		20% {
 			transform: rotate(12deg);
 		}
+
 		40% {
 			transform: rotate(-10deg);
 		}
+
 		60% {
 			transform: rotate(8deg);
 		}
+
 		100% {
 			transform: rotate(0deg);
 		}

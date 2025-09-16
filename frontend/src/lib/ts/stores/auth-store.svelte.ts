@@ -3,7 +3,7 @@ import { StringUtils } from "../utils/string-utils";
 
 
 const EMPTY_DATE = new Date(1970, 0, 1);
-export class AuthStore {
+class AuthStore {
     private _userId: string | null = null;
     private _lastFetched: Date;
     constructor(userId: string | null, lastFetched: Date) {

@@ -11,11 +11,9 @@
 
 	interface Props {
 		answer: GeneralVokiCreationAnswerData;
-		vokiId: string;
-		questionId: string;
 	}
 
-	let { answer = $bindable(), vokiId, questionId}: Props = $props();
+	let { answer = $bindable() }: Props = $props();
 </script>
 
 {#if answer.type === 'TextOnly'}
@@ -25,13 +23,13 @@
 {:else if answer.type === 'ColorAndText'}
 	<ColorAndTextAnswerEditing bind:answer />
 {:else if answer.type === 'ImageOnly'}
-	<ImageOnlyAnswerEditing bind:answer  />
+	<ImageOnlyAnswerEditing bind:answer />
 {:else if answer.type === 'ImageAndText'}
 	<ImageAndTextAnswerEditing bind:answer />
 {:else if answer.type === 'AudioOnly'}
 	<AudioOnlyAnswerEditing bind:answer />
 {:else if answer.type === 'AudioAndText'}
-	<AudioAndTextAnswerEditing bind:answer   />
+	<AudioAndTextAnswerEditing bind:answer />
 {:else}
 	<IncorrectAnswerTypeMessage {answer} />
 {/if}

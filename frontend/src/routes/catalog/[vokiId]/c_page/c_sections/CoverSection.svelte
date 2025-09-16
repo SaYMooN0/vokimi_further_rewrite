@@ -2,8 +2,7 @@
 	import AuthView from '$lib/components/AuthView.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { VokiType } from '$lib/ts/voki';
-	import CoverSectionAddToAlbum from './c_cover_section_buttons/CoverSectionAddToAlbumBtn.svelte';
-	import CoverSectionAlbumsBlockedBtn from './c_cover_section_buttons/CoverSectionAlbumsBlockedBtn.svelte';
+	import CoverSectionAddToAlbumBtn from './c_cover_section_buttons/CoverSectionAddToAlbumBtn.svelte';
 	import CoverSectionManageVokiBtn from './c_cover_section_buttons/CoverSectionManageVokiBtn.svelte';
 	import CoverSectionTakeVokiBtn from './c_cover_section_buttons/CoverSectionTakeVokiBtn.svelte';
 	interface Props {
@@ -19,15 +18,12 @@
 	<img class="voki-cover" src={StorageBucketMain.fileSrc(cover)} alt="voki cover" />
 	<div class="buttons-container">
 		<CoverSectionTakeVokiBtn {vokiId} {vokiType} />
+		<CoverSectionAddToAlbumBtn {vokiId} />
 		<AuthView>
 			{#snippet authenticated(authData)}
-				<CoverSectionAddToAlbum {vokiId} />
 				{#if usersWithAccessToManage.includes(authData.userId)}
 					<CoverSectionManageVokiBtn {vokiId} />
 				{/if}
-			{/snippet}
-			{#snippet unauthenticated()}
-				<CoverSectionAlbumsBlockedBtn />
 			{/snippet}
 		</AuthView>
 	</div>
@@ -68,9 +64,9 @@
 		height: 2rem;
 		border: none;
 		border-radius: 0.25rem;
+		transition: transform 0.08s ease-out;
 		cursor: default;
 		outline: none;
-		transition: transform 0.08s ease-out;
 	}
 
 	.buttons-container > :global(button:focus),

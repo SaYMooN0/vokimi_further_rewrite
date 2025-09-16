@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
-	import type { GeneralVokiTakingResultData } from '../types';
+	import type { GeneralVokiTakenResult } from '../types';
 	import type { SequentialAnsweringGeneralVokiTakingState } from './sequential-answering-general-voki-taking-state.svelte';
 	interface Props {
 		vokiTakingState: SequentialAnsweringGeneralVokiTakingState;
-		showResultOnVokiTakingFinished: (result: GeneralVokiTakingResultData) => void;
+		showResultOnVokiTakingFinished: (result: GeneralVokiTakenResult) => void;
 	}
 	let { vokiTakingState, showResultOnVokiTakingFinished }: Props = $props();
 	let navigationErrs = $state<Err[]>([]);

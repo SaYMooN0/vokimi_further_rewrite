@@ -68,7 +68,7 @@
 		secondaryBtnIconId="#common-trash-can-icon"
 		secondaryBtnOnClick={() => deleteAnswer()}
 	>
-		<AnswerContentEditingState bind:answer {vokiId} {questionId} />
+		<AnswerContentEditingState bind:answer />
 	</AnswerDisplayContentWrapper>
 </div>
 

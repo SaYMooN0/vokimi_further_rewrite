@@ -1,5 +1,7 @@
 ﻿using AlbumsService.Domain.voki_album_aggregate;
+using AlbumsService.Infrastructure.persistence.configurations.value_converters;
 using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,5 +16,26 @@ internal class VokiAlbumsConfiguration : IEntityTypeConfiguration<VokiAlbum>
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
+
+        builder
+            .Property(x => x.OwnerId)
+            .ValueGeneratedNever()
+            .HasGuidBasedIdConversion();
+
+        builder
+            .Property(x => x.Name)
+            .HasConversion<AlbumNameConverter>();
+
+        builder
+            .Property(x => x.Icon)
+            .HasConversion<AlbumIconConverter>();
+
+        builder
+            .Property(x => x.MainColor)
+            .HasConversion<HexColorConverter>();
+
+        builder
+            .Property(x => x.SecondColor)
+            .HasConversion<HexColorConverter>();
     }
 }
