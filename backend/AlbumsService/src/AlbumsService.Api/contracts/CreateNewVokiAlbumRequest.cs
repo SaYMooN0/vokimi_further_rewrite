@@ -18,8 +18,8 @@ public class CreateNewVokiAlbumRequest : IRequestWithValidationNeeded
             .WithNextIfErr(HexColor.CheckHexColorForErr(MainColor))
             .WithNextIfErr(HexColor.CheckHexColorForErr(SecondColor));
 
-    public AlbumName ParsedName { get; private set; }
-    public AlbumIcon ParsedIcon { get; private set; }
-    public HexColor ParsedMainColor { get; private set; }
-    public HexColor ParsedSecondColor { get; private set; }
+    public AlbumName ParsedName => AlbumName.Create(Name).AsSuccess();
+    public AlbumIcon ParsedIcon => AlbumIcon.Create(Icon).AsSuccess();
+    public HexColor ParsedMainColor=> HexColor.Create(MainColor).AsSuccess();
+    public HexColor ParsedSecondColor => HexColor.Create(SecondColor).AsSuccess();
 }

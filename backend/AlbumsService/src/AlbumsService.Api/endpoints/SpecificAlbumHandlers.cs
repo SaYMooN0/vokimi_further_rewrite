@@ -9,5 +9,6 @@ internal static class SpecificAlbumHandlers
             .WithGroupAuthenticationRequired();
 
         // group.MapPatch("/update", UpdateAlbum);
+        // group.MapDelete("/delete", DeleteAlbum);
     }
 }

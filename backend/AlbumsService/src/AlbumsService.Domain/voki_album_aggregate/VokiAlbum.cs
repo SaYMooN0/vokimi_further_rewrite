@@ -2,18 +2,18 @@
 
 public class VokiAlbum : AggregateRoot<VokiAlbumId>
 {
-    private VokiAlbum() { }
+    // private VokiAlbum() { }
     public AppUserId OwnerId { get; }
     public AlbumName Name { get; private set; }
     public AlbumIcon Icon { get; private set; }
-
     public HexColor MainColor { get; private set; }
     public HexColor SecondColor { get; private set; }
     public ImmutableHashSet<VokiId> VokiIds { get; private set; }
+    public DateTime CreationDate { get; }
 
     private VokiAlbum(
         VokiAlbumId id, AppUserId ownerId, AlbumName name, AlbumIcon icon,
-        HexColor mainColor, HexColor secondColor, ImmutableHashSet<VokiId> vokiIds
+        HexColor mainColor, HexColor secondColor, DateTime creationDate, ImmutableHashSet<VokiId> vokiIds
     ) {
         Id = id;
         OwnerId = ownerId;
@@ -21,11 +21,15 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
         Icon = icon;
         MainColor = mainColor;
         SecondColor = secondColor;
+        CreationDate = creationDate;
         VokiIds = vokiIds;
     }
 
-    public VokiAlbum CreateNew(AppUserId ownerId, AlbumName name, AlbumIcon icon, HexColor mainColor, HexColor secondColor) {
-        VokiAlbum album = new(VokiAlbumId.CreateNew(), ownerId, name, icon, mainColor, secondColor, []);
+    public static VokiAlbum CreateNew(
+        AppUserId ownerId, AlbumName name, AlbumIcon icon,
+        HexColor mainColor, HexColor secondColor, DateTime creationDate
+    ) {
+        VokiAlbum album = new(VokiAlbumId.CreateNew(), ownerId, name, icon, mainColor, secondColor, creationDate, []);
         return album;
     }
 }

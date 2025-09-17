@@ -1,4 +1,5 @@
 ﻿using AlbumsService.Domain.app_user_aggregate;
+using AlbumsService.Domain.voki_album_aggregate;
 using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ public class AlbumsDbContext : DbContext
     }
 
     public DbSet<AppUser> AppUsers { get; init; } = null!;
+    public DbSet<VokiAlbum> VokiAlbums { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AlbumsDbContext).Assembly);
