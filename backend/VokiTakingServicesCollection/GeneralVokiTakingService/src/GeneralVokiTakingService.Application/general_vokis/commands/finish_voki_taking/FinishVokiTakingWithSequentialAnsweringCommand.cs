@@ -7,12 +7,12 @@ public sealed record FinishVokiTakingWithSequentialAnsweringCommand(
     // HashSet<GeneralVokiAnswerId> ChosenAnswers,
     // ushort AnswerOrder,
     // DateTime ClientFinishTime
-) : ICommand<FinishVokiTakingCommandsResult>;
+) : ICommand<GeneralVokiResultId>;
 
 internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
-    ICommandHandler<FinishVokiTakingWithSequentialAnsweringCommand, FinishVokiTakingCommandsResult>
+    ICommandHandler<FinishVokiTakingWithSequentialAnsweringCommand, GeneralVokiResultId>
 {
-    public async Task<ErrOr<FinishVokiTakingCommandsResult>> Handle(FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct) {
+    public async Task<ErrOr<GeneralVokiResultId>> Handle(FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct) {
         return ErrFactory.NotImplemented();
     }
 }

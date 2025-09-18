@@ -2,7 +2,7 @@
 
 public class VokiAlbum : AggregateRoot<VokiAlbumId>
 {
-    // private VokiAlbum() { }
+    private VokiAlbum() { }
     public AppUserId OwnerId { get; }
     public AlbumName Name { get; private set; }
     public AlbumIcon Icon { get; private set; }

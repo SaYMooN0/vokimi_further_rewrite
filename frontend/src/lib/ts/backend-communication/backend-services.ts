@@ -17,8 +17,6 @@ export class BackendService {
                 ...options,
                 credentials: 'include'
             });
-            console.log('111111111111111111111111111111111111111111');
-
             console.log(response);
             if (response.ok) {
                 const text = await response.text();

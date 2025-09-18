@@ -1,11 +1,10 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
-	import type { GeneralVokiTakenResult } from '../types';
 	import type { DefaultGeneralVokiTakingState } from './default-general-voki-taking-state.svelte';
 	interface Props {
 		vokiTakingState: DefaultGeneralVokiTakingState;
 		vokiTakingErrs: (Err & { questionOrder?: number })[];
-		onResultReceived: (receivedResult: GeneralVokiTakenResult) => void;
+		onResultReceived: (receivedResultId: string) => void;
 	}
 	let { vokiTakingState, vokiTakingErrs = $bindable(), onResultReceived }: Props = $props();
 
@@ -16,7 +15,7 @@
 	async function finishBtnPressed() {
 		const response = await vokiTakingState.finishTakingAndReceiveResult();
 		if (response.isSuccess) {
-			onResultReceived(response.data);
+			onResultReceived(response.data.receivedResultId);
 		} else if (response.errs.length > 0) {
 			vokiTakingErrs = response.errs;
 		} else {

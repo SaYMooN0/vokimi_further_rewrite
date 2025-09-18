@@ -19,15 +19,17 @@
 
 <style>
 	.all-albums-view {
-		height: 100%;
-		width: 100%;
 		display: grid;
+		width: 100%;
+		height: 100%;
 		grid-template-columns: 1fr auto;
 	}
+
 	.list {
 		display: flex;
 		flex-direction: column;
 	}
+
 	.create-new-btn {
 		padding: 0.25rem 1rem;
 		border: none;

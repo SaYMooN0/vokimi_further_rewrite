@@ -2,7 +2,6 @@
 	import { browser } from '$app/environment';
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageProps } from './$types';
-	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
 	import CoverSection from './c_page/c_sections/CoverSection.svelte';
 	import MainDetailsSection from './c_page/c_sections/MainDetailsSection.svelte';
 	import NameSection from './c_page/c_sections/NameSection.svelte';
@@ -13,6 +12,7 @@
 	import VokiNotLoaded from './c_page/VokiNotLoaded.svelte';
 	import { VokiPageState } from './voki-page-state.svelte';
 	import { VokiCatalogVisitMarkerCookie } from '$lib/ts/cookies/voki-catalog-visit-marker-cookie';
+	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
 
 	let { data }: PageProps = $props();
 	let pageState = new VokiPageState(

@@ -63,7 +63,8 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
             return ErrFactory.Conflict("Client finish time cannot be in the future");
         }
 
-        if (providedServerStartTime != StartTime) {
+        var serverStartTimeDelta = (providedServerStartTime - StartTime).Duration();
+        if (serverStartTimeDelta > TimeSpan.FromMilliseconds(1)) {
             return ErrFactory.Conflict("Provided server start time does not match the session start time");
         }
 

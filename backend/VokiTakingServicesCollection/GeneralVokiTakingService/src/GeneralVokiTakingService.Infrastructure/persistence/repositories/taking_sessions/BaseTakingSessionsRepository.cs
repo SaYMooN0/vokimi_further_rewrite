@@ -11,8 +11,8 @@ internal class BaseTakingSessionsRepository : IBaseTakingSessionsRepository
         _db = db;
     }
 
-    public Task Add(BaseVokiTakingSession session) {
-        _db.BaseVokiTakingSessions.Add(session);
-        return _db.SaveChangesAsync();
+    public async Task Add(BaseVokiTakingSession session) {
+        await _db.BaseVokiTakingSessions.AddAsync(session);
+        await _db.SaveChangesAsync();
     }
 }

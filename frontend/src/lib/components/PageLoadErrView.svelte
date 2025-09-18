@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ErrUtils, type Err, type ErrType } from '$lib/ts/err';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
+	import type { Snippet } from 'svelte';
 	import { getSignInDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import DefaultErrBlock from './errs/DefaultErrBlock.svelte';
 
@@ -9,8 +10,10 @@
 	interface Props {
 		errs: Err[];
 		defaultMessage?: string;
+		additionalParams?: { name: string; value: any }[];
+		children?: Snippet;
 	}
-	let { errs, defaultMessage = undefined }: Props = $props();
+	let { errs, defaultMessage = undefined, additionalParams = [], children }: Props = $props();
 
 	function chooseMessageType(): ErrType | 'ListEmpty' | 'ErrList' {
 		if (errs.length === 0) {
@@ -67,6 +70,14 @@
 		<h1>Resource you are trying to access is not implemented yet</h1>
 		{@render errContentView(errs[0])}
 	{/if}
+	<div class="additional-params">
+		{#each additionalParams ?? [] as param}
+			<p>{param.name}: {param.value}</p>
+		{/each}
+	</div>
+	<div class="children">
+		{@render children?.()}
+	</div>
 </div>
 
 <style>
@@ -86,5 +97,21 @@
 		color: var(--text);
 		font-size: 1rem;
 		font-weight: 420;
+	}
+
+	.additional-params {
+		display: flex;
+		flex-direction: column;
+		margin-top: 1rem;
+	}
+
+	.additional-params > p {
+		color: var(--text);
+		font-size: 1rem;
+		font-weight: 420;
+	}
+
+	.children {
+		margin-top: 1rem;	
 	}
 </style>

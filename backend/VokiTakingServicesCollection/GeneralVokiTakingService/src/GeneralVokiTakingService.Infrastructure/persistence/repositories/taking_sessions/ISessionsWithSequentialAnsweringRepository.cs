@@ -14,4 +14,9 @@ public class SessionsWithSequentialAnsweringRepository : ISessionsWithSequential
 
     public async Task<SessionWithSequentialAnswering?> GetById(VokiTakingSessionId sessionId) =>
         await _db.VokiTakingSessionsWithSequentialAnswering.FindAsync(sessionId);
+
+    public async Task Delete(SessionWithSequentialAnswering question) {
+        _db.VokiTakingSessionsWithSequentialAnswering.Remove(question);
+        await _db.SaveChangesAsync();
+    }
 }

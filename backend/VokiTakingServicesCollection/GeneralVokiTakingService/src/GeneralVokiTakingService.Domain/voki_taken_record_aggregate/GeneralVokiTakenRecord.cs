@@ -44,7 +44,8 @@ public sealed class GeneralVokiTakenRecord : BaseVokiTakenRecord
         newRecord.AddDomainEvent(new VokiTakenRecordCreatedEvent(
             newRecord.Id,
             newRecord.TakenVokiId,
-            newRecord.VokiTakerId
+            newRecord.VokiTakerId,
+            newRecord.ReceivedResultId
         ));
         return newRecord;
     }

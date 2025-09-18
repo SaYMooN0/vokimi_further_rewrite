@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { UsersStore } from '$lib/ts/stores/users-store-svelte';
+	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
 	import AuthorView from './c_authors_section/AuthorView.svelte';
 
 	let { primaryAuthorId, coAuthorIds }: { primaryAuthorId: string; coAuthorIds: string[] } =

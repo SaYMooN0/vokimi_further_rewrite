@@ -1,4 +1,5 @@
-﻿using VokiTakingServicesLib.Domain.common;
+﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using VokiTakingServicesLib.Domain.common;
 
 namespace GeneralVokiTakingService.Domain.app_user_aggregate;
 
@@ -12,8 +13,10 @@ public class AppUser : AggregateRoot<AppUserId>
     }
 
     public ImmutableHashSet<VokiTakenRecordId> GeneralVokiTakenRecordIds { get; private set; }
+    private ImmutableHashSet<GeneralVokiResultId> ReceivedResultIds { get; set; }
 
-    public void AddVokiTakenRecordId(VokiTakenRecordId id) {
+    public void VokiTaken(VokiTakenRecordId id, GeneralVokiResultId receivedResultId) {
         GeneralVokiTakenRecordIds = GeneralVokiTakenRecordIds.Add(id);
+        ReceivedResultIds = ReceivedResultIds.Add(receivedResultId);
     }
 }

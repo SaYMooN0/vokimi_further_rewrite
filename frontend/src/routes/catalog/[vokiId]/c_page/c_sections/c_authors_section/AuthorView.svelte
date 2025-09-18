@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import type { UserPreviewData } from '$lib/ts/stores/users-store-svelte';
+	import type { UserPreviewData } from '$lib/ts/stores/users-store.svelte';
 
 	let { user }: { user: UserPreviewData } = $props<{ user: UserPreviewData }>();
 </script>

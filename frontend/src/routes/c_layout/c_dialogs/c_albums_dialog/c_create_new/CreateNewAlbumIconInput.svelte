@@ -19,7 +19,9 @@
 	}
 </script>
 
-<div style="--icon-color-1: {mainColor}; --icon-color-2: {secondColor};" onclick={openInput}>
+<div style="
+
+--icon-color-1: {mainColor}; --icon-color-2: {secondColor};" onclick={openInput}>
 	<svg><use href="#{icon}"></use></svg>
 </div>
 

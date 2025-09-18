@@ -16,7 +16,7 @@ public class SessionsWithFreeAnsweringRepository : ISessionsWithFreeAnsweringRep
         await _db.VokiTakingSessionsWithFreeAnswering.FindAsync(sessionId);
 
     public async Task Delete(SessionWithFreeAnswering question) {
-        _db.VokiTakingSessionsWithFreeAnswering.Remove(question);
+        _db.BaseVokiTakingSessions.Remove(question);
         await _db.SaveChangesAsync();
     }
 }

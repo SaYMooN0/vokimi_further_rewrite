@@ -58,9 +58,10 @@ public class FinishVokiTakingWithFreeAnsweringRequest : IRequestWithValidationNe
             }
 
             var parsedAnswers = answersArray
-                .Where(id => !Guid.TryParse(id, out _))
+                .Where(id => Guid.TryParse(id, out _))
                 .Select(g => new GeneralVokiAnswerId(new(g)))
                 .ToImmutableHashSet();
+
 
             ParsedChosenAnswers.Add(new(questionGuid), parsedAnswers);
         }

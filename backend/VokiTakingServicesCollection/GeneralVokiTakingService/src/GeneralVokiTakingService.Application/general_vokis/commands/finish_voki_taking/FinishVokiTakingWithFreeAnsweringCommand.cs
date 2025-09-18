@@ -1,5 +1,4 @@
 ﻿using GeneralVokiTakingService.Domain.common;
-using GeneralVokiTakingService.Domain.common.interfaces.repositories;
 using GeneralVokiTakingService.Domain.common.interfaces.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
@@ -16,10 +15,10 @@ public sealed record FinishVokiTakingWithFreeAnsweringCommand(
     DateTime ClientStartTime,
     DateTime ServerStartTime,
     DateTime ClientFinishTime
-) : ICommand<FinishVokiTakingCommandsResult>;
+) : ICommand<GeneralVokiResultId>;
 
 internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
-    ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, FinishVokiTakingCommandsResult>
+    ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, GeneralVokiResultId>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
     private readonly IUserContext _userContext;
@@ -41,11 +40,11 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
     }
 
-    public async Task<ErrOr<FinishVokiTakingCommandsResult>> Handle(
+    public async Task<ErrOr<GeneralVokiResultId>> Handle(
         FinishVokiTakingWithFreeAnsweringCommand command,
         CancellationToken ct
     ) {
-        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId);
+        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(command.VokiId);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
         }
@@ -89,7 +88,6 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
         await _generalVokiTakenRecordsRepository.Add(vokiTakenRecord);
         await _sessionsWithFreeAnsweringRepository.Delete(session);
 
-        TimeSpan timeTaken = command.ClientFinishTime - command.ClientStartTime;
-        return new FinishVokiTakingCommandsResult(receivedResult, timeTaken);
+        return receivedResult.Id;
     }
 }

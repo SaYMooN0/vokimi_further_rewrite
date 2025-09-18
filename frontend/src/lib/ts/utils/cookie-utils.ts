@@ -1,3 +1,5 @@
+import { browser } from "$app/environment";
+
 export namespace CookieUtils {
     export type SetCookieOpts = {
         seconds?: number;
@@ -7,21 +9,26 @@ export namespace CookieUtils {
     };
 
     export function setCookie(name: string, value: string, opts: SetCookieOpts = {}) {
-        const {
-            seconds = 180,
-            path = '/',
-            sameSite = 'Lax',
-            secure = location.protocol === 'https:',
-        } = opts;
+        if (browser) {
 
-        const expires = new Date(Date.now() + seconds * 1000).toUTCString();
-        let cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; Expires=${expires}; Path=${path}; SameSite=${sameSite}`;
-        if (secure) cookie += '; Secure';
-        document.cookie = cookie;
+            const {
+                seconds = 180,
+                path = '/',
+                sameSite = 'Lax',
+                secure = location.protocol === 'https:',
+            } = opts;
+
+            const expires = new Date(Date.now() + seconds * 1000).toUTCString();
+            let cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; Expires=${expires}; Path=${path}; SameSite=${sameSite}`;
+            if (secure) cookie += '; Secure';
+            document.cookie = cookie;
+        }
     }
 
     export function deleteCookie(name: string, path = '/') {
-        document.cookie = `${encodeURIComponent(name)}=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=${path}`;
+        if (browser) {
+            document.cookie = `${encodeURIComponent(name)}=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=${path}`;
+        }
     }
 
     export function getCookie(name: string): string | undefined {

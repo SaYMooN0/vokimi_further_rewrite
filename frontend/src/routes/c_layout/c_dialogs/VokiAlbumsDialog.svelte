@@ -71,8 +71,8 @@
 
 <style>
 	:global(#user-voki-albums-dialog > .dialog-content) {
-		height: 20rem;
 		width: 40rem;
+		height: 20rem;
 		animation: var(--default-fade-in-animation);
 	}
 </style>

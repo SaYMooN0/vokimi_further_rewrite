@@ -2,11 +2,12 @@
 	import { browser } from '$app/environment';
 	import { VokiCatalogVisitMarkerCookie } from '$lib/ts/cookies/voki-catalog-visit-marker-cookie';
 	import { onMount, onDestroy } from 'svelte';
-	import UnableLoadVokiToTake from '../c_pages_shared/UnableLoadVokiToTake.svelte';
 	import type { PageProps } from './$types';
 	import DefaultGeneralVokiTaking from './DefaultGeneralVokiTaking.svelte';
 	import SequentialAnsweringGeneralVokiTaking from './SequentialAnsweringGeneralVokiTaking.svelte';
 	import type { GeneralVokiTakingData } from './types';
+	import { goto } from '$app/navigation';
+	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 
 	let { data }: PageProps = $props();
 	function vokiTakingCase(
@@ -18,8 +19,16 @@
 
 		return 'default';
 	}
-
+	function onResultReceived(receivedResultId: string) {
+		goto(`/take-voki/${data.vokiId}/general/result/${receivedResultId}`);
+	}
 	let refreshTimer: number | undefined;
+	function clearMarkerCookie() {
+		if (refreshTimer) {
+			clearInterval(refreshTimer);
+		}
+		VokiCatalogVisitMarkerCookie.clear(data.vokiId);
+	}
 	onMount(() => {
 		if (browser) {
 			VokiCatalogVisitMarkerCookie.markSeenFor5Mins(data.vokiId);
@@ -29,30 +38,26 @@
 			}, 60_000);
 		}
 	});
-	function clearRefreshTimer() {
-		if (refreshTimer) {
-			clearInterval(refreshTimer);
-		}
-	}
-	onDestroy(clearRefreshTimer);
+	onDestroy(clearMarkerCookie);
 </script>
 
 {#if data.response.isSuccess}
 	{#if vokiTakingCase(data.response.data) === 'default'}
 		<DefaultGeneralVokiTaking
 			takingData={data.response.data}
-			clearVokiSeenUpdateTimer={clearRefreshTimer}
+			clearVokiSeenUpdateTimer={clearMarkerCookie}
+			{onResultReceived}
 		/>
 	{:else if vokiTakingCase(data.response.data) === 'sequentialAnswering'}
 		<SequentialAnsweringGeneralVokiTaking
 			takingData={data.response.data}
-			clearVokiSeenUpdateTimer={clearRefreshTimer}
+			clearVokiSeenUpdateTimer={clearMarkerCookie}
 		/>
 	{/if}
 {:else}
-	<UnableLoadVokiToTake
+	<PageLoadErrView
+		defaultMessage="Unable to load requested {data.vokiTypeName} voki"
 		errs={data.response.errs}
-		vokiId={data.vokiId!}
-		vokiTypeName={data.vokiTypeName}
+		additionalParams={[{ name: 'vokiId', value: data.vokiId }]}
 	/>
 {/if}

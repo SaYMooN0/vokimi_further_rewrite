@@ -22,7 +22,7 @@ internal class VokiTakenRecordCreatedEventHandler : IDomainEventHandler<VokiTake
             UnexpectedBehaviourException.ThrowErr(ErrFactory.NotFound.User("Voki taker not found"));
         }
 
-        vokiTaker!.AddVokiTakenRecordId(e.VokiTakenRecordId);
+        vokiTaker!.VokiTaken(e.VokiTakenRecordId, e.ReceivedResultId);
         await _appUsersRepository.Update(vokiTaker);
     }
 }

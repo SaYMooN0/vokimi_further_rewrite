@@ -1,5 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.common;
-using GeneralVokiTakingService.Domain.common.interfaces.repositories;
+using GeneralVokiTakingService.Domain.common.interfaces.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
@@ -18,15 +18,18 @@ internal sealed class StartVokiTakingCommandHandler :
     private readonly IGeneralVokisRepository _generalVokisRepository;
     private readonly IUserContext _userContext;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IBaseTakingSessionsRepository _baseTakingSessionsRepository;
 
     public StartVokiTakingCommandHandler(
         IGeneralVokisRepository generalVokisRepository,
         IUserContext userContext,
-        IDateTimeProvider dateTimeProvider
+        IDateTimeProvider dateTimeProvider,
+        IBaseTakingSessionsRepository baseTakingSessionsRepository
     ) {
         _generalVokisRepository = generalVokisRepository;
         _userContext = userContext;
         _dateTimeProvider = dateTimeProvider;
+        _baseTakingSessionsRepository = baseTakingSessionsRepository;
     }
 
 
@@ -51,6 +54,8 @@ internal sealed class StartVokiTakingCommandHandler :
                 voki.Id, vokiTaker, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
             );
         }
+
+        await _baseTakingSessionsRepository.Add(takingSession);
         return StartVokiTakingCommandResponse.Create(voki, takingSession);
     }
 }

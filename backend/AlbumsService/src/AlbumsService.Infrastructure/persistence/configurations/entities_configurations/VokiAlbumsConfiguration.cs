@@ -39,5 +39,9 @@ internal class VokiAlbumsConfiguration : IEntityTypeConfiguration<VokiAlbum>
             .HasConversion<HexColorConverter>();
 
         builder.Property(x => x.CreationDate);
+
+        builder
+            .Property(x => x.VokiIds)
+            .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }

@@ -2,6 +2,7 @@
 using AlbumsService.Api.contracts;
 using AlbumsService.Application.voki_albums;
 using AlbumsService.Application.voki_albums.commands;
+using AlbumsService.Application.voki_albums.queries;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApiShared;
 using ApiShared.extensions;

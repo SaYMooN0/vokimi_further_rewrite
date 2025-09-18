@@ -2,7 +2,7 @@
 using AlbumsService.Domain.voki_album_aggregate;
 using SharedKernel.auth;
 
-namespace AlbumsService.Application.voki_albums;
+namespace AlbumsService.Application.voki_albums.queries;
 
 public sealed record ListUserAlbumsSortedQuery() : IQuery<VokiAlbum[]>;
 

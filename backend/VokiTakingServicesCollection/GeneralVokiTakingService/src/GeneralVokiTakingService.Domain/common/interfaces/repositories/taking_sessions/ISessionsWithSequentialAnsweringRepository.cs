@@ -5,4 +5,6 @@ namespace GeneralVokiTakingService.Domain.common.interfaces.repositories.taking_
 public interface ISessionsWithSequentialAnsweringRepository
 {
     Task<SessionWithSequentialAnswering?> GetById(VokiTakingSessionId sessionId);
+    Task Delete(SessionWithSequentialAnswering question);
+
 }
