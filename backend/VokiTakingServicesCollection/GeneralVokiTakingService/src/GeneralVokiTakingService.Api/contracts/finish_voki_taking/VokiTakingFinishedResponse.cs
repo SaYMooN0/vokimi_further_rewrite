@@ -3,3 +3,4 @@
 public record class VokiTakingFinishedResponse(
     string ReceivedResultId
 );
+

@@ -1,5 +1,8 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
+using SharedKernel.auth;
+using SharedKernel.common.vokis.general_vokis;
+using SharedKernel.exceptions;
 using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.concrete_keys;
 using VokiTakingServicesLib.Domain.common;
@@ -12,8 +15,9 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
     public IReadOnlyCollection<VokiQuestion> Questions { get; }
     public bool ForceSequentialAnswering { get; }
     public bool ShuffleQuestions { get; }
-    private IReadOnlyCollection<VokiResult> Results { get; }
+    private IReadOnlyCollection<VokiResult> _results { get; }
     public ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; private set; }
+    public GeneralVokiResultsVisibility ResultsVisibility { get; } = GeneralVokiResultsVisibility.Anyone;
 
     public GeneralVoki(
         VokiId id,
@@ -22,7 +26,7 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
     ) {
         Id = id;
         Questions = questions;
-        Results = results;
+        _results = results;
         ForceSequentialAnswering = forceSequentialAnswering;
         ShuffleQuestions = shuffleQuestions;
         VokiTakenRecordIds = [];
@@ -62,7 +66,7 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
         return keys;
     }
 
-    public ErrOr<VokiResult> GetResultByChosenAnswers(
+    public ErrOr<GeneralVokiResultId> GetResultIdByChosenAnswers(
         Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
     ) {
         var questionsById = Questions.ToDictionary(q => q.Id);
@@ -125,6 +129,67 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
         }
 
         var bestResultId = resultsScore.MaxBy(kvp => kvp.Value).Key;
-        return Results.First(r => r.Id == bestResultId);
+        return _results.First(r => r.Id == bestResultId).Id;
+    }
+
+
+    public ErrOr<VokiResult> GetResultToViewByAnyOne(GeneralVokiResultId resultId) {
+        if (ResultsVisibility != GeneralVokiResultsVisibility.Anyone) {
+            UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
+                $"Could not show result for anyone, when visibility is set to {GeneralVokiResultsVisibility.Anyone}"
+            ));
+        }
+
+        var result = _results.FirstOrDefault(r => r.Id == resultId);
+        if (result is null) {
+            return ErrFactory.NotFound.Common("Voki doesn't have requested result");
+        }
+
+        return result;
+    }
+
+    public ErrOr<VokiResult> GetResultToViewByUserAfterTaking(
+        GeneralVokiResultId resultId,ISet<GeneralVokiResultId> userReceivedResultIds
+    ) {
+        if (ResultsVisibility != GeneralVokiResultsVisibility.AfterTaking) {
+            UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
+                $"Could not show result after taking, when visibility is set to {ResultsVisibility}"
+            ));
+        }
+
+        var vokiResultIds = _results.Select(r => r.Id);
+        bool userHasTaken = userReceivedResultIds.Overlaps(vokiResultIds);
+        if (!userHasTaken) {
+            return ErrFactory.NoAccess("To see this result you need to take this voki as a logged in user");
+        }
+
+        var result = _results.FirstOrDefault(r => r.Id == resultId);
+        if (result is null) {
+            return ErrFactory.NotFound.Common("Voki doesn't have requested result");
+        }
+
+        return result;
+    }
+
+
+    public ErrOr<VokiResult> GetOnlyReceivedResultToViewByUser(
+        GeneralVokiResultId resultId,ISet<GeneralVokiResultId> userReceivedResultIds
+    ) {
+        if (ResultsVisibility != GeneralVokiResultsVisibility.OnlyReceived) {
+            UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
+                $"Could not show result only if received, when visibility is set to {ResultsVisibility}"
+            ));
+        }
+
+        if (!userReceivedResultIds.Contains(resultId)) {
+            return ErrFactory.NoAccess("To see this result you need to receive it as a logged in user");
+        }
+
+        var result = _results.FirstOrDefault(r => r.Id == resultId);
+        if (result is null) {
+            return ErrFactory.NotFound.Common("Voki doesn't have requested result");
+        }
+
+        return result;
     }
 }

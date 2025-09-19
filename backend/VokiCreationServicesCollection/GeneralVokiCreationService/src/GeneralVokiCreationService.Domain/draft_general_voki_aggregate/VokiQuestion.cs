@@ -1,5 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;

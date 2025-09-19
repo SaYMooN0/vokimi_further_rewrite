@@ -1,10 +1,9 @@
-﻿using GeneralVokiTakingService.Domain.common.interfaces.repositories;
-using GeneralVokiTakingService.Domain.general_voki_aggregate;
+﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.answers;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using MassTransit;
-using SharedKernel.common.vokis;
+using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.integration_events.voki_publishing;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 using static SharedKernel.integration_events.voki_publishing.GeneralVokiAnswerTypeDataIntegrationEventDto;

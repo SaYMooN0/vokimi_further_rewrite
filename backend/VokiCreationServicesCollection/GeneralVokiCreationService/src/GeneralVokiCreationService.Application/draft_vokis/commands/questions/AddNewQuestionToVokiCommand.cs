@@ -1,6 +1,7 @@
 ﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel.common.vokis;
+using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;

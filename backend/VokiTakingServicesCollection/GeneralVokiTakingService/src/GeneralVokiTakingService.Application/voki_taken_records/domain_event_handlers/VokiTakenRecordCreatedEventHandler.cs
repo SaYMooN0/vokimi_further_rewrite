@@ -17,12 +17,12 @@ internal class VokiTakenRecordCreatedEventHandler : IDomainEventHandler<VokiTake
             return;
         }
 
-        AppUser? vokiTaker = await _appUsersRepository.GetById(e.VokiTakerId);
+        AppUser? vokiTaker = await _appUsersRepository.GetById(e.VokiTakerId, ct);
         if (vokiTaker is null) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.NotFound.User("Voki taker not found"));
         }
 
         vokiTaker!.VokiTaken(e.VokiTakenRecordId, e.ReceivedResultId);
-        await _appUsersRepository.Update(vokiTaker);
+        await _appUsersRepository.Update(vokiTaker, ct);
     }
 }

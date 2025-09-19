@@ -3,6 +3,7 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate.answers;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.common.vokis;
+using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
 

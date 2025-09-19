@@ -1,4 +1,5 @@
-﻿using VokimiStorageKeysLib.base_keys;
+﻿using SharedKernel.common.vokis.general_vokis;
+using VokimiStorageKeysLib.base_keys;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 

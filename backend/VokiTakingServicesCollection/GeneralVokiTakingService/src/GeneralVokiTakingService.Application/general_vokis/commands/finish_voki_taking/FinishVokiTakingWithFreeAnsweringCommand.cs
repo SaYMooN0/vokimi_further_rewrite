@@ -44,7 +44,7 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
         FinishVokiTakingWithFreeAnsweringCommand command,
         CancellationToken ct
     ) {
-        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(command.VokiId);
+        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
         }
@@ -73,21 +73,21 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             return err;
         }
 
-        ErrOr<VokiResult> resOrErr = voki.GetResultByChosenAnswers(command.ChosenAnswers);
+        ErrOr<GeneralVokiResultId> resOrErr = voki.GetResultIdByChosenAnswers(command.ChosenAnswers);
         if (resOrErr.IsErr(out err)) {
             return err;
         }
 
-        VokiResult receivedResult = resOrErr.AsSuccess();
+        GeneralVokiResultId resultId = resOrErr.AsSuccess();
         GeneralVokiTakenRecord vokiTakenRecord = GeneralVokiTakenRecord.CreateNew(
             command.VokiId, vokiTakerId,
             command.ClientStartTime, command.ClientFinishTime,
-            session.IsWithForceSequentialAnswering, receivedResult.Id,
+            session.IsWithForceSequentialAnswering, resultId,
             session.GatherQuestionDetails(command.ChosenAnswers)
         );
         await _generalVokiTakenRecordsRepository.Add(vokiTakenRecord);
         await _sessionsWithFreeAnsweringRepository.Delete(session);
 
-        return receivedResult.Id;
+        return resultId;
     }
 }

@@ -1,7 +1,10 @@
 ﻿using GeneralVokiTakingService.Api.contracts;
 using GeneralVokiTakingService.Api.contracts.finish_voki_taking;
+using GeneralVokiTakingService.Api.extensions;
 using GeneralVokiTakingService.Application.general_vokis.commands;
 using GeneralVokiTakingService.Application.general_vokis.commands.finish_voki_taking;
+using GeneralVokiTakingService.Application.general_vokis.queries;
+using GeneralVokiTakingService.Domain.general_voki_aggregate;
 
 namespace GeneralVokiTakingService.Api.endpoints;
 
@@ -17,11 +20,11 @@ internal static class SpecificVokiHandlers
 
         group.MapPost("/sequential-answering/finish", FinishVokiTakingWithSequentialAnswering)
             .WithRequestValidation<FinishVokiTakingWithSequentialAnsweringRequest>();
-        
+
         // group.MapPost("/sequential-answering/answer-question", AnswerQuestionForSequentialAnsweringSession)
         //     .WithRequestValidation<FinishVokiTakingWithSequentialAnsweringRequest>();
 
-        // group.MapGet("/results/{resultId}", ViewVokiResult);
+        group.MapGet("/results/{resultId}", ViewVokiResult);
     }
 
     private static async Task<IResult> StartVokiTaking(
@@ -71,6 +74,7 @@ internal static class SpecificVokiHandlers
             new VokiTakingFinishedResponse(resId.ToString())
         ));
     }
+
     // private static async Task<IResult> AnswerQuestionForSequentialAnsweringSession(
     //     CancellationToken ct, HttpContext httpContext
     // ) {
@@ -78,4 +82,19 @@ internal static class SpecificVokiHandlers
     //     var request = httpContext.GetValidatedRequest<FinishVokiTakingWithSequentialAnsweringRequest>();
     //
     // }
+    private static async Task<IResult> ViewVokiResult(
+        CancellationToken ct, HttpContext httpContext,
+        IQueryHandler<ViewVokiResultQuery, VokiResult> handler
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+        GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
+
+
+        ViewVokiResultQuery command = new(vokiId, resultId);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result, (vokiResult) => Results.Json(
+            VokiResultViewResponse.Create(vokiResult)
+        ));
+    }
 }

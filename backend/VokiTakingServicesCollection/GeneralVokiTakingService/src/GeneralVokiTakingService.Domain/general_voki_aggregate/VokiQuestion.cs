@@ -1,4 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
+using SharedKernel.common.vokis.general_vokis;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;

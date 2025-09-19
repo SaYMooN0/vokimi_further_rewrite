@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.common.vokis;
+﻿namespace SharedKernel.common.vokis.general_vokis;
 
 public enum GeneralVokiAnswerType
 {

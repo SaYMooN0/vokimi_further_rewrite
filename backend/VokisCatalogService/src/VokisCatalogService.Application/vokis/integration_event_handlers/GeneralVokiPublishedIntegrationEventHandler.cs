@@ -1,5 +1,6 @@
 ﻿using MassTransit;
 using SharedKernel.common.vokis;
+using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.integration_events.voki_publishing;
 using VokimiStorageKeysLib.concrete_keys;
 using VokisCatalogService.Domain.common.interfaces.repositories;

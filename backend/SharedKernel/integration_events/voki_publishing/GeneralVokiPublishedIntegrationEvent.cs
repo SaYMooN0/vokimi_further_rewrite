@@ -1,5 +1,6 @@
 ﻿using SharedKernel.common;
 using SharedKernel.common.vokis;
+using SharedKernel.common.vokis.general_vokis;
 
 namespace SharedKernel.integration_events.voki_publishing;
 

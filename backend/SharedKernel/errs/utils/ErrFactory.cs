@@ -53,7 +53,10 @@ public static class ErrFactory
         public static Err Voki(string msg = "Voki not found", string? details = null) =>
             new(msg, ErrCodes.NotFound.Voki, details);
 
-        public static Err GeneralVokiId(string msg = "General Voki not found", string? details = null) =>
+        public static Err VokiContent(string msg = "Voki content not found", string? details = null) =>
+            new(msg, ErrCodes.NotFound.VokiContent, details);
+
+        public static Err GeneralVoki(string msg = "General Voki not found", string? details = null) =>
             new(msg, ErrCodes.NotFound.GeneralVoki, details);
     }
 

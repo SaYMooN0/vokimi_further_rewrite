@@ -31,6 +31,7 @@ public static class ErrCodes
         public const ushort User = 23_001;
         public const ushort Voki = 23_010;
         public const ushort GeneralVoki = 23_011;
+        public const ushort VokiContent = 23_020;
     }
 
     #endregion

@@ -6,6 +6,7 @@ using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
 using SharedKernel.auth;
 using SharedKernel.common.vokis;
+using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
@@ -34,7 +35,7 @@ internal sealed class StartVokiTakingCommandHandler :
 
 
     public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(StartVokiTakingCommand command, CancellationToken ct) {
-        var voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId);
+        var voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki(
                 "Requested Voki was not found", $"Voki with id: {command.VokiId} does not exist"
