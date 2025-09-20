@@ -3,8 +3,10 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate.answers;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using MassTransit;
+using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.integration_events.voki_publishing;
+using VokimiStorageKeysLib.concrete_keys;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 using static SharedKernel.integration_events.voki_publishing.GeneralVokiAnswerTypeDataIntegrationEventDto;
 
@@ -21,11 +23,15 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
     public async Task Consume(ConsumeContext<GeneralVokiPublishedIntegrationEvent> context) {
         var e = context.Message;
         var voki = GeneralVoki.CreateNew(
-            e.VokiId, new(e.Cover),
+            e.VokiId,
+            new VokiCoverKey(e.Cover),
+            name: new VokiName(e.Name),
+            authenticatedOnlyTaking: e.AuthenticatedOnlyTaking,
             e.Questions.Select(QuestionFromEventDto).ToImmutableArray(),
             e.Results.Select(ResultFromEventDto).ToImmutableArray(),
             forceSequentialAnswering: e.ForceSequentialAnswering,
-            shuffleQuestions: e.ShuffleQuestions
+            shuffleQuestions: e.ShuffleQuestions,
+            e.ResultsVisibility
         );
         await _generalVokisRepository.Add(voki);
     }

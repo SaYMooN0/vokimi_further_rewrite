@@ -2,6 +2,7 @@ import type { GeneralVokiAnswerType } from "$lib/ts/voki";
 
 export type GeneralVokiTakingData = {
     id: string;
+    vokiName: string;
     forceSequentialAnswering: boolean;
     questions: GeneralVokiTakingQuestionData[];
     sessionId: string;

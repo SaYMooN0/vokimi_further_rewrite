@@ -36,11 +36,11 @@
 			{LanguageUtils.name(details.language)}
 		</p>
 		<p class="field">
-			<VokiCreationFieldName fieldName="Age restriction:" />
-			{#if details.isAgeRestricted}
-				Age restricted
+			<VokiCreationFieldName fieldName="Mature content:" />
+			{#if details.hasMatureContent}
+				Has mature content
 			{:else}
-				No age restriction
+				No mature content
 			{/if}
 		</p>
 		<VokiCreationDefaultButton text="Edit details" onclick={() => (isEditing = true)} />

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using VokiTakingServicesLib.Application;
 
 namespace GeneralVokiTakingService.Application;
 
@@ -26,6 +27,9 @@ public static class DependencyInjection
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
+
+        services.AddLibStepHandlers();
+        
         return services;
     }
 }

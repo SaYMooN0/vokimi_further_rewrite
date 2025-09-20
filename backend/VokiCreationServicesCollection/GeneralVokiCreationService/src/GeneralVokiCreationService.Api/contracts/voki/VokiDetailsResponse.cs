@@ -5,12 +5,12 @@ namespace GeneralVokiCreationService.Api.contracts.voki;
 public record class VokiDetailsResponse(
     string Description,
     Language Language,
-    bool IsAgeRestricted
+    bool HasMatureContent
 )
 {
     public static VokiDetailsResponse FromDetails(VokiDetails details) => new(
         details.Description.ToString(),
         details.Language,
-        details.IsAgeRestricted
+        details.HasMatureContent
     );
 }

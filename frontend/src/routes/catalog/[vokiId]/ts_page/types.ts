@@ -11,7 +11,7 @@ export type VokiOverviewInfo = {
     primaryAuthorId: string;
     coAuthorIds: string[];
     description: string;
-    isAgeRestricted: boolean;
+    hasMatureContent: boolean;
     language: Language;
     tags: string[];
     ratingsCount: number;

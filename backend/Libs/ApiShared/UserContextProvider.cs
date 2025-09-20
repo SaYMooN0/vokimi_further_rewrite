@@ -42,7 +42,7 @@ public class UserContextProvider : IUserContext
             return true;
         }
 
-        userId = default;
+        userId = default!;
         return false;
     }
 }

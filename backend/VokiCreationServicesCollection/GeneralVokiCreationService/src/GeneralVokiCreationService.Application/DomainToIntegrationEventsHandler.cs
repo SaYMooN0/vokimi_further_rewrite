@@ -32,21 +32,22 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
 
     public async Task Handle(GeneralVokiPublishedEvent e, CancellationToken ct) =>
         await _integrationEventPublisher.Publish(new GeneralVokiPublishedIntegrationEvent(
-            e.VokiId,
+            e.VokiId, 
             e.PrimaryAuthorId,
             CoAuthors: e.CoAuthors.ToArray(),
             Name: e.Name.ToString(),
             Cover: e.Cover.ToString(),
             Description: e.Details.Description.ToString(),
-            IsAgeRestricted: e.Details.IsAgeRestricted,
+            HasMatureContent: e.Details.HasMatureContent,
             Language: e.Details.Language,
             Tags: e.Tags.Value.ToArray(),
             InitializingDate: e.InitializingDate,
             PublishingDate: e.PublishingDate,
+            AuthenticatedOnlyTaking: e.InteractionSettings.AuthenticatedOnlyTaking,
             VokiPublishedEventMapper.QuestionIntegrationEventDtoArray(e.Questions),
-            ForceSequentialAnswering: e.ForceSequentialAnswering,
-            ShuffleQuestions: e.ShuffleQuestions,
-            VokiPublishedEventMapper.ResultIntegrationEventDtoArray(e.Results)
-
+            ForceSequentialAnswering: e.TakingProcessSettings.ForceSequentialAnswering,
+            ShuffleQuestions: e.TakingProcessSettings.ShuffleQuestions,
+            VokiPublishedEventMapper.ResultIntegrationEventDtoArray(e.Results),
+            ResultsVisibility: e.InteractionSettings.ResultsVisibility
         ), ct);
 }

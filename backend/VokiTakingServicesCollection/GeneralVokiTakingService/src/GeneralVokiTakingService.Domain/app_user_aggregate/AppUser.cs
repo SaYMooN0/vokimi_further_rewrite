@@ -9,6 +9,7 @@ public class AppUser : AggregateRoot<AppUserId>
     public AppUser(AppUserId id) {
         Id = id;
         GeneralVokiTakenRecordIds = [];
+        ReceivedResultIds = [];
     }
 
     public ImmutableHashSet<VokiTakenRecordId> GeneralVokiTakenRecordIds { get; private set; }

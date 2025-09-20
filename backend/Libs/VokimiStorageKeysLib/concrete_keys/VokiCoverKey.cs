@@ -35,7 +35,7 @@ public class VokiCoverKey : BaseStorageImageKey
         public static ErrOrNothing IsKeyValid(string key, out VokiId vokiId, out ImageFileExtension ext) {
             var parseResult = Parser.TryParse(key);
             if (parseResult.IsErr(out var err)) {
-                vokiId = default;
+                vokiId = default!;
                 ext = default;
                 return err;
             }

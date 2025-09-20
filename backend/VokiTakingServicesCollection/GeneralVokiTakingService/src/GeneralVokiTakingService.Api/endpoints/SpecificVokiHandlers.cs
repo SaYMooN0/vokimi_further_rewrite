@@ -37,7 +37,7 @@ internal static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (vokiTakingData) => Results.Json(
-            GeneralVokiTakingResponse.Create(vokiTakingData)
+            StartTakingResponse.Create(vokiTakingData)
         ));
     }
 

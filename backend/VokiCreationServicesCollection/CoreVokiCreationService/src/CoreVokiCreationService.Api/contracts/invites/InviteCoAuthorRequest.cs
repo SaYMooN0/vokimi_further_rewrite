@@ -2,7 +2,7 @@
 
 public class InviteCoAuthorRequest : IRequestWithValidationNeeded
 {
-    public string NewCoAuthorId { get; init; }
+    public string NewCoAuthorId { get; init; } = "";
 
     public ErrOrNothing Validate() =>
         Guid.TryParse(NewCoAuthorId, out var _)

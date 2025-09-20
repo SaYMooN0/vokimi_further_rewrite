@@ -160,6 +160,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokiCommentsService.Infrast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokiCommentsService.Application", "VokiCommentsService\src\VokiCommentsService.Application\VokiCommentsService.Application.csproj", "{44E765BB-DA0D-4BA8-A323-93FA1D2C198A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokiTakingServicesLib.Application", "VokiTakingServicesCollection\VokiTakingServicesLib\VokiTakingServicesLib.Application\VokiTakingServicesLib.Application.csproj", "{51445647-BFD5-4719-B78D-310AAEACC04A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -233,6 +235,7 @@ Global
 		{4BCBBFBE-5A33-4D75-A029-D33E7E60A97F} = {B2972E29-562B-4F81-97DA-B72B1903FD57}
 		{1507C6B6-9F52-47AD-9611-9F0568F18C83} = {B2972E29-562B-4F81-97DA-B72B1903FD57}
 		{44E765BB-DA0D-4BA8-A323-93FA1D2C198A} = {B2972E29-562B-4F81-97DA-B72B1903FD57}
+		{51445647-BFD5-4719-B78D-310AAEACC04A} = {6505998A-55BF-41E1-8139-C31474D5CFFE}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2CAB55A2-15A7-401C-94C6-F8B273B50F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -447,5 +450,9 @@ Global
 		{44E765BB-DA0D-4BA8-A323-93FA1D2C198A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44E765BB-DA0D-4BA8-A323-93FA1D2C198A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44E765BB-DA0D-4BA8-A323-93FA1D2C198A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51445647-BFD5-4719-B78D-310AAEACC04A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51445647-BFD5-4719-B78D-310AAEACC04A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51445647-BFD5-4719-B78D-310AAEACC04A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51445647-BFD5-4719-B78D-310AAEACC04A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

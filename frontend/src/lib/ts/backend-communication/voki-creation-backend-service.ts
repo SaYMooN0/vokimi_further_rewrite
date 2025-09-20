@@ -13,7 +13,7 @@ export type VokiMainInfo = {
 export type VokiDetails = {
     description: string;
     language: Language;
-    isAgeRestricted: boolean;
+    hasMatureContent: boolean;
 }
 export type VokiPublishingIssueType = 'Problem' | 'Warning';
 export type VokiPublishingIssue = {
@@ -80,7 +80,7 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
             RequestJsonOptions.PATCH({
                 newDescription: details.description,
                 newLanguage: details.language,
-                newIsAgeRestricted: details.isAgeRestricted
+                newHasMatureContent: details.hasMatureContent
             })
         );
     }

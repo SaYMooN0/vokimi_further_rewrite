@@ -1,5 +1,4 @@
 ﻿using SharedKernel.common;
-using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace SharedKernel.integration_events.voki_publishing;
@@ -11,21 +10,24 @@ public record class GeneralVokiPublishedIntegrationEvent(
     string Name,
     string Cover,
     string Description,
-    bool IsAgeRestricted,
+    bool HasMatureContent,
     Language Language,
     VokiTagId[] Tags,
     DateTime InitializingDate,
     DateTime PublishingDate,
+    bool AuthenticatedOnlyTaking,
     //Voki Type specific 
     GeneralVokiQuestionIntegrationEventDto[] Questions,
     bool ForceSequentialAnswering,
     bool ShuffleQuestions,
-    GeneralVokiResultIntegrationEventDto[] Results
+    GeneralVokiResultIntegrationEventDto[] Results,
+    GeneralVokiResultsVisibility ResultsVisibility
 ) : BaseVokiPublishedIntegrationEvent(
     VokiId, PrimaryAuthorId, CoAuthors,
     Name, Cover, Description,
-    IsAgeRestricted, Language, Tags,
-    InitializingDate, PublishingDate
+    HasMatureContent, Language, Tags,
+    InitializingDate, PublishingDate,
+    AuthenticatedOnlyTaking
 );
 
 public sealed record class GeneralVokiQuestionIntegrationEventDto(

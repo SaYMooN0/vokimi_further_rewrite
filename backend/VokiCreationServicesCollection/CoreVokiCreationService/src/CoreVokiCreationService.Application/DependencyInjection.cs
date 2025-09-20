@@ -27,21 +27,30 @@ public static class DependencyInjection
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
+        
+        services.AddStepHandlers();
+
+        return services;
+    }
+
+    private static IServiceCollection AddStepHandlers(this IServiceCollection services) {
+        // @formatter:off
 
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(VokiAccessValidationStepHandler.QueryHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(VokiAccessValidationStepHandler.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(VokiAccessValidationStepHandler.CommandBaseHandler<>));
 
-        services.TryDecorate(typeof(IQueryHandler<,>),
-            typeof(WithMultipleVokiAccessValidationStepHandler.QueryHandler<,>));
-        services.TryDecorate(typeof(ICommandHandler<,>),
-            typeof(WithMultipleVokiAccessValidationStepHandler.CommandHandler<,>));
-        services.TryDecorate(typeof(ICommandHandler<>),
-            typeof(WithMultipleVokiAccessValidationStepHandler.CommandBaseHandler<>));
+        services.TryDecorate(typeof(IQueryHandler<,>),typeof(WithMultipleVokiAccessValidationStepHandler.QueryHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>),typeof(WithMultipleVokiAccessValidationStepHandler.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<>),typeof(WithMultipleVokiAccessValidationStepHandler.CommandBaseHandler<>));
 
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(VokiPrimaryAuthorValidationStepHandler.QueryHandler<,>));
-        services.TryDecorate(typeof(ICommandHandler<,>), typeof(VokiPrimaryAuthorValidationStepHandler.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>),typeof(VokiPrimaryAuthorValidationStepHandler.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(VokiPrimaryAuthorValidationStepHandler.CommandBaseHandler<>));
+        
+        // @formatter:on
+
+
         return services;
     }
 }

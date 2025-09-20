@@ -19,6 +19,6 @@ export type PublishedVokiBriefInfo = {
     cover: string;
     primaryAuthorId: string;
     coAuthorIds: string[];
-    isAgeRestricted: boolean;
+    hasMatureContent: boolean;
     language: Language;
 };

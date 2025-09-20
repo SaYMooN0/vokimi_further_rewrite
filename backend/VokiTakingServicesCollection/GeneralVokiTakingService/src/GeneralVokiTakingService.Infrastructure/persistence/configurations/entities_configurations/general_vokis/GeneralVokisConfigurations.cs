@@ -1,7 +1,9 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using VokiTakingServicesLib.Domain.common;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.entities_configurations.general_vokis;
 
@@ -14,28 +16,33 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
-
+        
+        builder
+            .Property(x => x.Name)
+            .HasConversion<VokiNameConverter>();
+        
         builder
             .HasMany<VokiQuestion>("Questions")
             .WithOne()
             .HasForeignKey("VokiId")
-            .IsRequired()            
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         builder.Property(x => x.ForceSequentialAnswering);
         builder.Property(x => x.ShuffleQuestions);
-        
+
         builder
-            .HasMany<VokiResult>("Results")
+            .HasMany<VokiResult>("_results")
             .WithOne()
             .HasForeignKey("VokiId")
-            .IsRequired()            
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder
-            .Property(x => x.VokiTakenRecordIds)
+            .Property<ImmutableHashSet<VokiTakenRecordId>>("VokiTakenRecordIds")
             .HasGuidBasedIdsImmutableHashSetConversion();
 
-       
+        builder.Property(x => x.ResultsVisibility);
+        builder.Property<bool>("AuthenticatedOnlyTaking");
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
+using VokiTakingServicesLib.Domain.common.interfaces.repositories;
 
 namespace GeneralVokiTakingService.Infrastructure;
 
@@ -130,9 +131,13 @@ public static class DependencyInjection
         );
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
-        services.AddScoped<IGeneralVokisRepository, GeneralVokisRepository>();
+        
         services.AddScoped<IGeneralVokiTakenRecordsRepository, GeneralVokiTakenRecordsRepository>();
         
+        services.AddScoped<IBaseVokisRepository, GeneralVokisRepository>();
+        services.AddScoped<IGeneralVokisRepository, GeneralVokisRepository>();
+       
+
         services.AddScoped<IBaseTakingSessionsRepository, BaseTakingSessionsRepository>();
         services.AddScoped<ISessionsWithFreeAnsweringRepository, SessionsWithFreeAnsweringRepository>();
         services.AddScoped<ISessionsWithSequentialAnsweringRepository, SessionsWithSequentialAnsweringRepository>();

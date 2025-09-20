@@ -8,12 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\..\Libs\ApplicationShared\ApplicationShared.csproj"/>
+        <ProjectReference Include="..\..\..\VokiTakingServicesLib\VokiTakingServicesLib.Application\VokiTakingServicesLib.Application.csproj" />
         <ProjectReference Include="..\GeneralVokiTakingService.Domain\GeneralVokiTakingService.Domain.csproj"/>
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Scrutor" Version="6.1.0"/>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="voki_taken_records\" />
     </ItemGroup>
 </Project>

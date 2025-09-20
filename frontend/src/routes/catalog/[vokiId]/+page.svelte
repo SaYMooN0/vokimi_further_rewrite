@@ -53,7 +53,7 @@
 			<MainDetailsSection
 				type={data.response.data.type}
 				language={data.response.data.language}
-				isAgeRestricted={data.response.data.isAgeRestricted}
+				hasMatureContent={data.response.data.hasMatureContent}
 			/>
 			<div class="tabs-section">
 				<TabLinksContainer

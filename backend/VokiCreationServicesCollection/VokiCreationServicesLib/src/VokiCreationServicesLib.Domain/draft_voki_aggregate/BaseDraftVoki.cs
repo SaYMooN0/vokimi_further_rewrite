@@ -14,7 +14,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     public VokiCoverKey Cover { get; private set; }
     public VokiDetails Details { get; private set; }
     public VokiTagsSet Tags { get; private set; }
-
+    protected abstract IVokiInteractionSettings BaseInteractionSettings { get; }
     public DateTime CreationDate { get; }
 
     protected BaseDraftVoki(
@@ -82,6 +82,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
                 )
             ];
         }
+
         return [];
     }
 

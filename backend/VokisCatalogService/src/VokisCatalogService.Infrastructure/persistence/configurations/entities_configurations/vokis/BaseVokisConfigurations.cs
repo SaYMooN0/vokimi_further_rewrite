@@ -38,7 +38,7 @@ public class BaseVokisConfigurations : IEntityTypeConfiguration<BaseVoki>
 
         builder.OwnsOne(v => v.Details, d => {
             d.Property(p => p.Language).HasColumnName("Details_Language");
-            d.Property(p => p.IsAgeRestricted).HasColumnName("Details_IsAgeRestricted");
+            d.Property(p => p.HasMatureContent).HasColumnName("Details_HasMatureContent");
             d.Property(p => p.Description).HasColumnName("Details_Description");
         });
 

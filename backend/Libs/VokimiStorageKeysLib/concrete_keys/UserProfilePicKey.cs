@@ -51,7 +51,7 @@ public class UserProfilePicKey : BaseStorageImageKey
         public static ErrOrNothing IsKeyValid(string key, out AppUserId userId, out ImageFileExtension ext) {
             var parseResult = Parser.TryParse(key);
             if (parseResult.IsErr(out var err)) {
-                userId = default;
+                userId = default!;
                 ext = default;
                 return err;
             }

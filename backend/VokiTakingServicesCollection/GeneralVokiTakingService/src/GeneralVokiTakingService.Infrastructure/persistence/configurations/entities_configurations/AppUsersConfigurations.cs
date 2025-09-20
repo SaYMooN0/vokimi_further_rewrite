@@ -17,6 +17,10 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
         
         builder
             .Property(x => x.GeneralVokiTakenRecordIds)
+            .HasGuidBasedIdsImmutableHashSetConversion(); 
+        
+        builder
+            .Property(x => x.ReceivedResultIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }

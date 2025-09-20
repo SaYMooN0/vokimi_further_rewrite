@@ -31,7 +31,7 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
 
         builder.ComplexProperty(x => x.Details, b => {
             b.Property(d => d.Language).HasColumnName("Details_Language");
-            b.Property(d => d.IsAgeRestricted).HasColumnName("Details_IsAgeRestricted");
+            b.Property(d => d.HasMatureContent).HasColumnName("Details_HasMatureContent");
             b
                 .Property(d => d.Description)
                 .HasColumnName("Details_Description")
@@ -57,6 +57,11 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
         builder.ComplexProperty(x => x.TakingProcessSettings, b => {
             b.Property(s => s.ShuffleQuestions);
             b.Property(d => d.ForceSequentialAnswering);
+        }); 
+        
+        builder.ComplexProperty(x => x.InteractionSettings, b => {
+            b.Property(s => s.AuthenticatedOnlyTaking);
+            b.Property(d => d.ResultsVisibility);
         });
 
         builder.Ignore(x => x.Questions);

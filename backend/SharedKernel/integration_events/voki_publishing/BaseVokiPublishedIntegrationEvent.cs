@@ -13,9 +13,10 @@ public abstract record class BaseVokiPublishedIntegrationEvent(
     string Name,
     string Cover,
     string Description,
-    bool IsAgeRestricted,
+    bool HasMatureContent,
     Language Language,
     VokiTagId[] Tags,
     DateTime InitializingDate,
-    DateTime PublishingDate
+    DateTime PublishingDate,
+    bool AuthenticatedOnlyTaking
 ) : IIntegrationEvent;

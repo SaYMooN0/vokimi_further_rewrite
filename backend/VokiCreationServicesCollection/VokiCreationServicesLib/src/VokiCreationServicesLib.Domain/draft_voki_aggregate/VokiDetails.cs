@@ -4,7 +4,7 @@ namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 public record class VokiDetails(
     VokiDescription Description,
-    bool IsAgeRestricted,
+    bool HasMatureContent,
     Language Language
 )
 {

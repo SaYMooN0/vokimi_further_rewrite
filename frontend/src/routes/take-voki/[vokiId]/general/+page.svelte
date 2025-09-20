@@ -8,6 +8,7 @@
 	import type { GeneralVokiTakingData } from './types';
 	import { goto } from '$app/navigation';
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
+	import VokiTakingHeader from '../c_types_shared/VokiTakingHeader.svelte';
 
 	let { data }: PageProps = $props();
 	function vokiTakingCase(
@@ -42,6 +43,8 @@
 </script>
 
 {#if data.response.isSuccess}
+	<VokiTakingHeader vokiType={'General'} vokiName={data.response.data.vokiName} />
+
 	{#if vokiTakingCase(data.response.data) === 'default'}
 		<DefaultGeneralVokiTaking
 			takingData={data.response.data}
@@ -56,7 +59,7 @@
 	{/if}
 {:else}
 	<PageLoadErrView
-		defaultMessage="Unable to load requested {data.vokiTypeName} voki"
+		defaultMessage="Unable to load requested general voki"
 		errs={data.response.errs}
 		additionalParams={[{ name: 'vokiId', value: data.vokiId }]}
 	/>

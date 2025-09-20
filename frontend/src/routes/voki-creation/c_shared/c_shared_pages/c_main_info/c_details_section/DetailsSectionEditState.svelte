@@ -32,7 +32,7 @@
 	let descriptionTextarea = $state<HTMLTextAreaElement>(null!);
 	let description = $state(details.description);
 	let language = $state(details.language);
-	let isAgeRestricted = $state(details.isAgeRestricted);
+	let hasMatureContent = $state(details.hasMatureContent);
 	let savingErrs = $state<Err[]>([]);
 	const vokiCreationApi = getVokiCreationPageApiService();
 	new TextareaAutosize({ element: () => descriptionTextarea, input: () => description });
@@ -41,7 +41,7 @@
 		const response = await vokiCreationApi.updateVokiDetails(vokiId, {
 			description,
 			language,
-			isAgeRestricted
+			hasMatureContent
 		});
 		if (response.isSuccess) {
 			updateParent(response.data);
@@ -65,8 +65,8 @@
 	<DefaultLanguageSelect bind:value={language} />
 </p>
 <p class="field-p">
-	<VokiCreationFieldName fieldName="Age restriction:" />
-	<DefaultCheckBox bind:checked={isAgeRestricted} />
+	<VokiCreationFieldName fieldName="Mature content:" />
+	<DefaultCheckBox bind:checked={hasMatureContent} />
 </p>
 <DefaultErrBlock errList={savingErrs} />
 <VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />

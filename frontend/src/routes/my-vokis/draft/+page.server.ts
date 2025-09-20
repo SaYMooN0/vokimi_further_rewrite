@@ -6,18 +6,10 @@ export const load: ServerLoad = async ({ cookies, fetch }) => {
         path: '/',
         maxAge: 3 * 24 * 3600 // 3 days
     });
-    const response = await ApiVokiCreationCore.serverFetchJsonResponse<{ vokiIds: string[] }>(
-        fetch, '/list-user-voki-ids', { method: 'GET' }
-    );
-    let pageData;
-    if (response.isSuccess) {
-        pageData = { draftVokiIds: response.data.vokiIds };
-    }
-    else {
-        pageData = { errs: response.errs };
-    }
     return {
         currentTab: 'draft',
-        ...pageData
+        response: await ApiVokiCreationCore.serverFetchJsonResponse<{ vokiIds: string[] }>(
+            fetch, '/list-user-voki-ids', { method: 'GET' }
+        )
     };
 };

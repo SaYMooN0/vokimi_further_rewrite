@@ -19,9 +19,9 @@ public record GeneralVokiPublishedEvent(
     DateTime InitializingDate,
     DateTime PublishingDate,
     //Voki Type specific 
+    VokiTakingProcessSettings TakingProcessSettings,
+    GeneralVokiInteractionSettings InteractionSettings,
     QuestionDomainEventDto[] Questions,
-    bool ForceSequentialAnswering,
-    bool ShuffleQuestions,
     ResultDomainEventDto[] Results
 ) : IDomainEvent;
 

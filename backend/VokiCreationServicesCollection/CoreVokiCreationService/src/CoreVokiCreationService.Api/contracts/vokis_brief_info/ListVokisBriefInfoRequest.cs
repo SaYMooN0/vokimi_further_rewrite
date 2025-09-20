@@ -2,11 +2,11 @@
 
 public class ListVokisBriefInfoRequest : IRequestWithValidationNeeded
 {
-    public string[] Ids { get; init; }
+    public string[] Ids { get; init; } = [];
     private const int MaxAllowedIds = 200;
 
     public ErrOrNothing Validate() {
-        if (Ids is null || Ids.Length == 0) {
+        if (Ids.Length == 0) {
             return ErrFactory.NoValue.Common("No voki ids were provided");
         }
 

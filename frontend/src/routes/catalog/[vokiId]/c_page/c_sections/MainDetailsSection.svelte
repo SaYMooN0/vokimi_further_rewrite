@@ -1,16 +1,13 @@
 <script lang="ts">
 	import { LanguageUtils, type Language } from '$lib/ts/language';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-
-	const {
-		type,
-		language,
-		isAgeRestricted
-	}: { type: string; language: Language; isAgeRestricted: boolean } = $props<{
-		type: string;
+	import type { VokiType } from '$lib/ts/voki';
+	interface Props {
+		type: VokiType;
 		language: Language;
-		isAgeRestricted: boolean;
-	}>();
+		hasMatureContent: boolean;
+	}
+	const { type, language, hasMatureContent }: Props = $props();
 </script>
 
 <div class="main-details-section">
@@ -26,7 +23,7 @@
 		<label class="value-label">{LanguageUtils.name(language)}</label>
 	</div>
 	<div class="separator"></div>
-	<label class="value-label">{isAgeRestricted ? 'Age restricted' : 'No age restriction'}</label>
+	<label class="value-label">{hasMatureContent ? 'Mature content' : 'No mature content'}</label>
 </div>
 
 <style>

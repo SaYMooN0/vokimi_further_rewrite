@@ -1,44 +1,52 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
-using SharedKernel.auth;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.exceptions;
 using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.concrete_keys;
 using VokiTakingServicesLib.Domain.common;
+using VokiTakingServicesLib.Domain.general_voki_aggregate;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 
-public sealed class GeneralVoki : AggregateRoot<VokiId>
+public sealed class GeneralVoki : BaseVoki
 {
     private GeneralVoki() { }
     public IReadOnlyCollection<VokiQuestion> Questions { get; }
     public bool ForceSequentialAnswering { get; }
     public bool ShuffleQuestions { get; }
     private IReadOnlyCollection<VokiResult> _results { get; }
-    public ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; private set; }
-    public GeneralVokiResultsVisibility ResultsVisibility { get; } = GeneralVokiResultsVisibility.Anyone;
+    private ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; set; }
+    public GeneralVokiResultsVisibility ResultsVisibility { get; }
 
     public GeneralVoki(
         VokiId id,
+        VokiName name, bool authenticatedOnlyTaking,
         ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
-        bool forceSequentialAnswering, bool shuffleQuestions
-    ) {
+        bool forceSequentialAnswering, bool shuffleQuestions,
+        GeneralVokiResultsVisibility resultsVisibility
+    ) : base(name, authenticatedOnlyTaking) {
         Id = id;
         Questions = questions;
         _results = results;
         ForceSequentialAnswering = forceSequentialAnswering;
         ShuffleQuestions = shuffleQuestions;
+        ResultsVisibility = resultsVisibility;
         VokiTakenRecordIds = [];
     }
 
 
     public static GeneralVoki CreateNew(
         VokiId id, VokiCoverKey coverKey,
+        VokiName name, bool authenticatedOnlyTaking,
         ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
-        bool forceSequentialAnswering, bool shuffleQuestions
+        bool forceSequentialAnswering, bool shuffleQuestions,
+        GeneralVokiResultsVisibility resultsVisibility
     ) {
-        var voki = new GeneralVoki(id, questions, results, forceSequentialAnswering, shuffleQuestions);
+        GeneralVoki voki = new(
+            id, name, authenticatedOnlyTaking, questions, results,
+            forceSequentialAnswering, shuffleQuestions, resultsVisibility
+        );
         List<BaseStorageKey> vokiContentKeys = GatherVokiContentKeys(coverKey, questions, results);
         voki.AddDomainEvent(new PublishedVokiCreatedEvent(voki.Id, vokiContentKeys.ToArray()));
         return voki;
@@ -66,6 +74,15 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
         return keys;
     }
 
+    public void AddNewVokiTakenRecord(VokiTakenRecordId newRecordId, AppUserId? vokiTakerId) {
+        if (VokiTakenRecordIds.Contains(newRecordId)) {
+            return;
+        }
+
+        VokiTakenRecordIds = VokiTakenRecordIds.Add(newRecordId);
+        AddDomainEvent(new VokiGotNewVokiTakenRecordEvent(Id, vokiTakerId, (uint)VokiTakenRecordIds.Count));
+    }
+
     public ErrOr<GeneralVokiResultId> GetResultIdByChosenAnswers(
         Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
     ) {
@@ -88,7 +105,8 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
                 var min = q.AnswersCountLimit.MinAnswers;
                 var max = q.AnswersCountLimit.MaxAnswers;
                 var expectedText = (min == max) ? $"exactly {min} answer(s)" : $"from {min} to {max} answers";
-                return ErrFactory.NoValue.Common($"You did not answer the question: \"{preview}\". Choose {expectedText}");
+                return ErrFactory.NoValue.Common(
+                    $"You did not answer the question: \"{preview}\". Choose {expectedText}");
             }
 
             var count = provided.Count;
@@ -149,7 +167,7 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
     }
 
     public ErrOr<VokiResult> GetResultToViewByUserAfterTaking(
-        GeneralVokiResultId resultId,ISet<GeneralVokiResultId> userReceivedResultIds
+        GeneralVokiResultId resultId, ISet<GeneralVokiResultId> userReceivedResultIds
     ) {
         if (ResultsVisibility != GeneralVokiResultsVisibility.AfterTaking) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
@@ -173,7 +191,7 @@ public sealed class GeneralVoki : AggregateRoot<VokiId>
 
 
     public ErrOr<VokiResult> GetOnlyReceivedResultToViewByUser(
-        GeneralVokiResultId resultId,ISet<GeneralVokiResultId> userReceivedResultIds
+        GeneralVokiResultId resultId, ISet<GeneralVokiResultId> userReceivedResultIds
     ) {
         if (ResultsVisibility != GeneralVokiResultsVisibility.OnlyReceived) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(

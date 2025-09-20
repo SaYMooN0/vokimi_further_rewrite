@@ -20,7 +20,7 @@ public class VokiTagsSetConverter : ValueConverter<VokiTagsSet, string[]>
 internal class VokiTagsSetComparer : ValueComparer<VokiTagsSet>
 {
     public VokiTagsSetComparer() : base(
-        (set1, set2) => set1.Value.SetEquals(set2.Value),
+        (set1, set2) => set1!.Value.SetEquals(set2!.Value),
         set => set.Value.Aggregate(0, (hash, tagId) => HashCode.Combine(hash, tagId.GetHashCode())),
         set => VokiTagsSet.Create(set.Value.ToImmutableHashSet()).AsSuccess()
     )

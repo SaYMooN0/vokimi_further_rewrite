@@ -7,11 +7,13 @@ using SharedKernel;
 using SharedKernel.auth;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
+using VokiTakingServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
 public sealed record StartVokiTakingCommand(VokiId VokiId) :
-    ICommand<StartVokiTakingCommandResponse>;
+    ICommand<StartVokiTakingCommandResponse>,
+    IWithVokTakingAccessValidationStep;
 
 internal sealed class StartVokiTakingCommandHandler :
     ICommandHandler<StartVokiTakingCommand, StartVokiTakingCommandResponse>
@@ -34,7 +36,8 @@ internal sealed class StartVokiTakingCommandHandler :
     }
 
 
-    public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(StartVokiTakingCommand command, CancellationToken ct) {
+    public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(StartVokiTakingCommand command,
+        CancellationToken ct) {
         var voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki(
@@ -63,6 +66,7 @@ internal sealed class StartVokiTakingCommandHandler :
 
 public record StartVokiTakingCommandResponse(
     VokiId Id,
+    VokiName Name,
     bool ForceSequentialAnswering,
     StartVokiTakingCommandResponseQuestionData[] Questions,
     VokiTakingSessionId SessionId,
@@ -86,13 +90,9 @@ public record StartVokiTakingCommandResponse(
                 .ToArray();
         }
 
-        return new(
-            voki.Id,
-            voki.ForceSequentialAnswering,
-            questions,
-            takingSession.Id,
-            takingSession.StartTime,
-            (ushort)voki.Questions.Count
+        return new StartVokiTakingCommandResponse(
+            voki.Id, voki.Name, voki.ForceSequentialAnswering, questions,
+            takingSession.Id, takingSession.StartTime, (ushort)voki.Questions.Count
         );
     }
 }

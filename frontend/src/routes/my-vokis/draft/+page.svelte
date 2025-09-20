@@ -11,19 +11,19 @@
 	let { data }: PageProps = $props();
 </script>
 
-{#if data.errs}
-	<DefaultErrBlock errList={data.errs} />
+{#if !data.response.isSuccess}
+	<DefaultErrBlock errList={data.response.errs} />
 {:else}
 	<VokiItemsGridContainer>
-		{#await MyDraftVokisCacheStore.EnsureExist(data.draftVokiIds)}
-			{#each data.draftVokiIds as _}
+		{#await MyDraftVokisCacheStore.EnsureExist(data.response.data.vokiIds)}
+			{#each data.response.data.vokiIds as _}
 				<VokiSkeletonItem />
 			{/each}
 		{:then _}
-			{#if data.draftVokiIds.length === 0}
+			{#if data.response.data.vokiIds.length === 0}
 				<h1>You don't have any draft vokis</h1>
 			{:else}
-				{#each data.draftVokiIds as vokiId}
+				{#each data.response.data.vokiIds as vokiId}
 					{#await MyDraftVokisCacheStore.Get(vokiId)}
 						<VokiSkeletonItem />
 					{:then voki}

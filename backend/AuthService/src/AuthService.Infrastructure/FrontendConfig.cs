@@ -2,7 +2,6 @@
 
 public class FrontendConfig
 {
-    public string BaseUrl { get; init; }
-    public string ConfirmRegistrationPath { get; init; }
-
+    public string BaseUrl { get; init; } = null!;
+    public string ConfirmRegistrationPath { get; init; } = null!;
 }

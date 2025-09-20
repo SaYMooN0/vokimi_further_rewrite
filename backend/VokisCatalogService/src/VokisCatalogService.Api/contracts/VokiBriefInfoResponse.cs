@@ -10,7 +10,7 @@ internal sealed record class VokiBriefInfoResponse(
     string Cover,
     string PrimaryAuthorId,
     string[] CoAuthorIds,
-    bool IsAgeRestricted,
+    bool HasMatureContent,
     Language Language
 )
 {
@@ -21,7 +21,7 @@ internal sealed record class VokiBriefInfoResponse(
         v.Cover.ToString(),
         v.PrimaryAuthorId.ToString(),
         v.CoAuthorIds.Select(id => id.ToString()).ToArray(),
-        v.Details.IsAgeRestricted,
+        v.Details.HasMatureContent,
         v.Details.Language
     );
 }

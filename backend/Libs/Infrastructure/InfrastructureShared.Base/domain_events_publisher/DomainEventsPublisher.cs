@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.domain.events;
+using SharedKernel.exceptions;
 
 namespace InfrastructureShared.Base.domain_events_publisher;
 
@@ -52,7 +53,14 @@ public sealed class DomainEventsPublisher(IServiceProvider serviceProvider) : ID
                 domainEventType,
                 et => typeof(HandlerWrapper<>).MakeGenericType(et));
 
-            return (HandlerWrapper)Activator.CreateInstance(wrapperType, handler);
+            var instance = Activator.CreateInstance(wrapperType, handler);
+            if (instance is null || instance is not HandlerWrapper) {
+                UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
+                    $"Could not create {nameof(HandlerWrapper)} from {wrapperType} using handler of type {handler?.GetType().Name ?? "null"}"
+                ));
+            }
+
+            return (HandlerWrapper)instance!;
         }
     }
 

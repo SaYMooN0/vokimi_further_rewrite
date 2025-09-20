@@ -50,60 +50,53 @@ async Task ClearAllDbs() {
 }
 
 AuthDbContext AuthDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<AuthDbContext>().UseNpgsql(
-        config.GetConnectionString("AuthServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<AuthDbContext>(config, "AuthServiceDb"), FakePublisher.Instance
 );
 
 TagsDbContext TagsDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<TagsDbContext>().UseNpgsql(
-        config.GetConnectionString("TagsServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<TagsDbContext>(config, "TagsServiceDb"), FakePublisher.Instance
 );
 
 UserProfilesDbContext UserProfilesDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<UserProfilesDbContext>().UseNpgsql(
-        config.GetConnectionString("UserProfilesServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<UserProfilesDbContext>(config, "UserProfilesServiceDb"), FakePublisher.Instance
 );
 
 CoreVokiCreationDbContext CoreVokiCreationDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<CoreVokiCreationDbContext>().UseNpgsql(
-        config.GetConnectionString("CoreVokiCreationServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<CoreVokiCreationDbContext>(config, "CoreVokiCreationServiceDb"), FakePublisher.Instance
 );
 
 GeneralVokiCreationDbContext GeneralVokiCreationDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<GeneralVokiCreationDbContext>().UseNpgsql(
-        config.GetConnectionString("GeneralVokiCreationServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<GeneralVokiCreationDbContext>(config, "GeneralVokiCreationServiceDb"), FakePublisher.Instance
 );
 
 VokisCatalogDbContext VokisCatalogDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<VokisCatalogDbContext>().UseNpgsql(
-        config.GetConnectionString("VokisCatalogServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<VokisCatalogDbContext>(config, "VokisCatalogServiceDb"), FakePublisher.Instance
 );
 
 GeneralVokiTakingDbContext GeneralVokiTakingDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<GeneralVokiTakingDbContext>().UseNpgsql(
-        config.GetConnectionString("GeneralVokiTakingServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<GeneralVokiTakingDbContext>(config, "GeneralVokiTakingServiceDb"), FakePublisher.Instance
 );
+
 VokiRatingsDbContext VokiRatingsDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<VokiRatingsDbContext>().UseNpgsql(
-        config.GetConnectionString("VokiRatingsServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<VokiRatingsDbContext>(config, "VokiRatingsServiceDb"), FakePublisher.Instance
 );
 
 VokiCommentsDbContext VokiCommentsDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<VokiCommentsDbContext>().UseNpgsql(
-        config.GetConnectionString("VokiCommentsServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<VokiCommentsDbContext>(config, "VokiCommentsServiceDb"), FakePublisher.Instance
 );
 
 AlbumsDbContext AlbumsDbContext(IConfiguration config) => new(
-    new DbContextOptionsBuilder<AlbumsDbContext>().UseNpgsql(
-        config.GetConnectionString("AlbumsServiceDb")
-    ).Options, FakePublisher.Instance
+    DbOptions<AlbumsDbContext>(config, "AlbumsServiceDb"), FakePublisher.Instance
 );
+
+
+static DbContextOptions<T> DbOptions<T>(
+    IConfiguration config,
+    string str
+) where T : DbContext {
+    string connection = config.GetConnectionString(str)
+                        ?? throw new NullReferenceException($"Connection string '{str}' is not provided");
+
+    DbContextOptionsBuilder<T> optionsBuilder = new();
+    return optionsBuilder.UseNpgsql(connection).Options;
+}

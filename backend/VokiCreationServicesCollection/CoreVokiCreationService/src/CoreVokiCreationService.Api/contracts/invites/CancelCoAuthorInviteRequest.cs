@@ -2,7 +2,7 @@
 
 public class CancelCoAuthorInviteRequest : IRequestWithValidationNeeded
 {
-    public string CoAuthorId { get; init; }
+    public string CoAuthorId { get; init; } = "";
 
     public ErrOrNothing Validate() =>
         Guid.TryParse(CoAuthorId, out var _)

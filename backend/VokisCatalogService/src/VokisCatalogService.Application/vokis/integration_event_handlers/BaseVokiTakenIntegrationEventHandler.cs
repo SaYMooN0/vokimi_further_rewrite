@@ -29,8 +29,8 @@ public class BaseVokiTakenIntegrationEventHandler : IConsumer<BaseVokiTakenInteg
         voki.UpdateVokiTakingsCount(context.Message.NewVokiTakingsCount);
         await _baseVokisRepository.Update(voki);
 
-        if (context.Message.VokiTaker is not null) {
-            AppUser? vokiTaker = await _appUsersRepository.GetById(context.Message.VokiTaker);
+        if (context.Message.VokiTakerId is not null) {
+            AppUser? vokiTaker = await _appUsersRepository.GetById(context.Message.VokiTakerId);
             if (vokiTaker is not null) {
                 vokiTaker.AddTakenVoki(context.Message.VokiId);
                 await _appUsersRepository.Update(vokiTaker);

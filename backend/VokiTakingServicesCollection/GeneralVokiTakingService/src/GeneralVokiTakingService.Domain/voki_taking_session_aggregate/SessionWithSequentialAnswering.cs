@@ -51,26 +51,27 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     }
 
     public TakingSessionExpectedQuestion GetCurrentQuestion() {
-        TakingSessionExpectedQuestion? current = Questions
-            .FirstOrDefault(q => q.OrderInVokiTaking == CurrentQuestionOrder);
+        TakingSessionExpectedQuestion? current = Questions.FirstOrDefault(
+            q => q.OrderInVokiTaking == CurrentQuestionOrder
+        );
 
         if (current is null) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.ValueOutOfRange("No unanswered questions left"));
         }
 
-        return current;
+        return current!;
     }
 
     public ImmutableArray<VokiTakenQuestionDetails> GatherQuestionDetails() {
-        //check thal all questions are answered
-        throw new  NotImplementedException();
-        return _answered
-            .Select(q => new VokiTakenQuestionDetails(
-                q.QuestionId,
-                q.ChosenAnswerIds,
-                q.OrderInVokiTaking
-            ))
-            .ToImmutableArray();
+        //check that all questions are answered
+        throw new NotImplementedException();
+        // return _answered
+        //     .Select(q => new VokiTakenQuestionDetails(
+        //         q.QuestionId,
+        //         q.ChosenAnswerIds,
+        //         q.OrderInVokiTaking
+        //     ))
+        //     .ToImmutableArray();
     }
 
     public ErrOrNothing MarkQuestionAsAnswered(SequentialTakingAnsweredQuestion data) {

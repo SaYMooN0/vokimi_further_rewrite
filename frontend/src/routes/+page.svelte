@@ -10,6 +10,8 @@
 
 {#if data.errs}
 	<PageLoadErrView errs={data.errs} defaultMessage="Could not load vokis catalog" />
+{:else if data.data.vokis.length === 0}
+	<h1>Voki catalog is empty</h1>
 {:else}
 	<VokiItemsGridContainer>
 		{#each data.data.vokis as voki}

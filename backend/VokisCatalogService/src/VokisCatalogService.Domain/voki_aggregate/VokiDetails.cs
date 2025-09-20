@@ -2,6 +2,6 @@
 
 public record class VokiDetails(
     string Description,
-    bool IsAgeRestricted,
+    bool HasMatureContent,
     Language Language
 );

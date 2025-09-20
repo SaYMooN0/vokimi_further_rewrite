@@ -6,9 +6,6 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Scrutor" Version="6.1.0"/>
-    </ItemGroup>
-    <ItemGroup>
         <ProjectReference Include="..\VokiCommentsService.Domain\VokiCommentsService.Domain.csproj"/>
         <ProjectReference Include="..\..\..\Libs\ApplicationShared\ApplicationShared.csproj"/>
     </ItemGroup>

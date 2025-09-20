@@ -42,7 +42,7 @@
 		{/each}
 	{/if}
 	{#if relatedResultIds.length < maxResultsCount}
-		<button class="add-btn" onclick={() => openRelatedResultsSelectingDialog()}>
+		<button class="add-btn unselectable" onclick={() => openRelatedResultsSelectingDialog()}>
 			<svg><use href="#common-plus-icon" /></svg>
 			related results
 		</button>

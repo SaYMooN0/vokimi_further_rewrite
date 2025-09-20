@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { Language } from '$lib/ts/language';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
@@ -10,8 +11,11 @@
 			cover: string;
 			primaryAuthorId: string;
 			coAuthorIds: string[];
-			language?: Language;
-			isAgeRestricted?: boolean;
+			flags?: {
+				language: Language;
+				hasMatureContent: boolean;
+				authenticatedOnlyTaking: boolean;
+			};
 		};
 		link: string;
 		onMoreBtnClick: () => void;
@@ -22,6 +26,14 @@
 <a href={link} class="voki-item">
 	<div class="cover-container">
 		<img class="voki-cover" src={StorageBucketMain.fileSrc(voki.cover)} alt="voki cover" />
+		{#if voki.flags}
+			<div class="flags-container">
+				<div class="flag language">
+					<svg><use href="#languages-icons-{StringUtils.pascalToKebab(voki.flags.language)}" /></svg
+					>
+				</div>
+			</div>
+		{/if}
 	</div>
 	<div class="bottom-items">
 		<div class="name-line">

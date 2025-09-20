@@ -6,14 +6,20 @@
 	import ConfirmActionDialog from './c_layout/c_dialogs/ConfirmActionDialog.svelte';
 	import SignInDialog from './c_layout/c_dialogs/SignInDialog.svelte';
 	import VokiAlbumsDialog from './c_layout/c_dialogs/VokiAlbumsDialog.svelte';
-	import { registerConfirmActionDialogOpenFunction, type ConfirmActionDialogContent } from './c_layout/ts_layout_contexts/confirm-action-dialog-context';
-	import { registerSignInDialogOpenFunction, type SignInDialogState } from './c_layout/ts_layout_contexts/sign-in-dialog-context';
+	import {
+		registerConfirmActionDialogOpenFunction,
+		type ConfirmActionDialogContent
+	} from './c_layout/ts_layout_contexts/confirm-action-dialog-context';
+	import {
+		registerSignInDialogOpenFunction,
+		type SignInDialogState
+	} from './c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import { registerAlbumsDialogOpenFunction } from './c_layout/ts_layout_contexts/user-voki-albums-context';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
 
-		let signInDialog = $state<SignInDialog>()!;
+	let signInDialog = $state<SignInDialog>()!;
 	let confirmActionDialog = $state<ConfirmActionDialog>()!;
 	let vokiAlbumsDialog = $state<VokiAlbumsDialog>()!;
 
@@ -25,7 +31,6 @@
 	registerAlbumsDialogOpenFunction(() => vokiAlbumsDialog.open());
 </script>
 
-
 <SignInDialog bind:this={signInDialog} />
 <ConfirmActionDialog bind:this={confirmActionDialog} />
 <VokiAlbumsDialog bind:this={vokiAlbumsDialog} />
@@ -35,7 +40,7 @@
 
 <div class="page" class:full-width={isFullWidthMode}>
 	<div class="width-limit">
-		<SideBar /> 
+		<SideBar />
 		<div id="page-content">
 			{@render children()}
 		</div>
@@ -60,6 +65,18 @@
 		height: 100%;
 		margin: 0 auto;
 		grid-template-columns: auto 1fr;
+	}
+	#page-content > :global(*) {
+		animation: 0.2s page-fade-in;
+	}
+	@keyframes page-fade-in {
+		from {
+			opacity: 0.2;
+		}
+
+		to {
+			opacity: 1;
+		}
 	}
 
 	@media (1920px <= width) {

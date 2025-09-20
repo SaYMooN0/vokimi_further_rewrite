@@ -12,7 +12,7 @@ public sealed record FinishVokiTakingWithSequentialAnsweringCommand(
 internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
     ICommandHandler<FinishVokiTakingWithSequentialAnsweringCommand, GeneralVokiResultId>
 {
-    public async Task<ErrOr<GeneralVokiResultId>> Handle(FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct) {
-        return ErrFactory.NotImplemented();
+    public Task<ErrOr<GeneralVokiResultId>> Handle(FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct) {
+        return Task.FromResult<ErrOr<GeneralVokiResultId>>(ErrFactory.NotImplemented());
     }
 }

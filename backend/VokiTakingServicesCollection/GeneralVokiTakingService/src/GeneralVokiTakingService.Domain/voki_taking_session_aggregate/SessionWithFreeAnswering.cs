@@ -13,12 +13,10 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     public ImmutableArray<SessionWithFreeAnsweringAnsweredQuestion> AnsweredQuestions { get; private set; }
 
     public ErrOrNothing SaveAnswers( /*new list*/) {
-        throw new NotImplementedException();
         if (VokiTaker is null) {
             return ErrFactory.AuthRequired();
         }
-
-        return ErrOrNothing.Nothing;
+        throw new NotImplementedException();
     }
 
     private SessionWithFreeAnswering(

@@ -24,6 +24,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
     private DraftGeneralVoki() { }
     public VokiTakingProcessSettings TakingProcessSettings { get; private set; }
+    public GeneralVokiInteractionSettings InteractionSettings { get; private set; }
+    protected override IVokiInteractionSettings BaseInteractionSettings => InteractionSettings;
+
     private readonly List<VokiQuestion> _questions;
     public ImmutableArray<VokiQuestion> Questions => _questions.ToImmutableArray();
     private readonly List<VokiResult> _results;
@@ -39,6 +42,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         creationDate
     ) {
         TakingProcessSettings = VokiTakingProcessSettings.Default;
+        InteractionSettings = GeneralVokiInteractionSettings.Default;
         _questions = [];
         _results = [];
     }
@@ -95,7 +99,8 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return questionToUpdate;
     }
 
-    public ErrOr<VokiQuestion> UpdateQuestionImages(GeneralVokiQuestionId questionId, VokiQuestionImagesSet newImageSet) {
+    public ErrOr<VokiQuestion>
+        UpdateQuestionImages(GeneralVokiQuestionId questionId, VokiQuestionImagesSet newImageSet) {
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
             return ErrFactory.NotFound.Common(
@@ -388,6 +393,19 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             ];
         }
 
+        int questionsWithNoResultCount = _questions.Count(q =>
+            q.Answers.Count(a => a.RelatedResultIds.Count == 0) > q.AnswersCountLimit.MinAnswers);
+        if (questionsWithNoResultCount >= _questions.Count) {
+            return [
+                VokiPublishingIssue.Problem(
+                    message: "Voki can be taken in the way that no answers leading to any result was chosen",
+                    source: "Questions",
+                    fixRecommendation:
+                    "Add related results to more answers, increase questions' minimal answers count limit or remove some answers with no related results"
+                )
+            ];
+        }
+
         return _questions.SelectMany(q => q.CheckForPublishingIssues()).ToList();
     }
 
@@ -398,9 +416,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         if (_results.Count < MinResultsCount) {
             issues.Add(
                 VokiPublishingIssue.Problem(
-                    message: $"Too few results ({_results.Count}). Minimum required is {MinResultsCount}.",
+                    message: $"Too few results ({_results.Count}). Minimum required is {MinResultsCount}",
                     source: "Results",
-                    fixRecommendation: $"Add at least {MinResultsCount - _results.Count} more result(s)."
+                    fixRecommendation: $"Add at least {MinResultsCount - _results.Count} more result(s)"
                 )
             );
         }
@@ -408,9 +426,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         if (_results.Count > MaxResultsCount) {
             issues.Add(
                 VokiPublishingIssue.Problem(
-                    message: $"Too many results ({_results.Count}). Maximum allowed is {MaxResultsCount}.",
+                    message: $"Too many results ({_results.Count}). Maximum allowed is {MaxResultsCount}",
                     source: "Results",
-                    fixRecommendation: $"Remove {_results.Count - MaxResultsCount} result(s) to meet the limit."
+                    fixRecommendation: $"Remove {_results.Count - MaxResultsCount} result(s) to meet the limit"
                 )
             );
         }
@@ -419,10 +437,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         if (resultImages > 0 && resultImages < _results.Count) {
             issues.Add(
                 VokiPublishingIssue.Warning(
-                    message: "Some results have images while others do not.",
+                    message: "Some results have images while others do not",
                     source: "Results",
                     fixRecommendation:
-                    "Consider adding images to all results or removing them from all to keep presentation consistent."
+                    "Consider adding images to all results or removing them from all to keep presentation consistent"
                 )
             );
         }
@@ -435,9 +453,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             if (!resultsAnswersLeadTo.Contains(result.Id)) {
                 issues.Add(
                     VokiPublishingIssue.Problem(
-                        message: $"Result \"{result.Name}\" is not linked to any answer.",
+                        message: $"Result \"{result.Name}\" is not linked to any answer",
                         source: "Results",
-                        fixRecommendation: "Make this result related to at least one answer or remove it."
+                        fixRecommendation: "Make this result related to at least one answer or remove it"
                     )
                 );
             }
@@ -477,9 +495,8 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             Name, Cover, Details, Tags,
             InitializingDate: CreationDate,
             PublishingDate: dateTimeProvider.UtcNow,
+            TakingProcessSettings, InteractionSettings,
             _questions.Select(ParseQuestionToDto).ToArray(),
-            ForceSequentialAnswering: TakingProcessSettings.ForceSequentialAnswering,
-            ShuffleQuestions: TakingProcessSettings.ShuffleQuestions,
             _results.Select(r => new ResultDomainEventDto(r.Id, r.Name, r.Text, r.Image)).ToArray()
         ));
         return ErrOrNothing.Nothing;
