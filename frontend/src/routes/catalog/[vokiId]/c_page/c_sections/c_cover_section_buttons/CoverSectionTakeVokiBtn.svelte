@@ -1,14 +1,36 @@
 <script lang="ts">
+	import AuthView from '$lib/components/AuthView.svelte';
+	import { getAuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
-
-	let { vokiId, vokiType }: { vokiId: string; vokiType: VokiType } = $props<{
+	import AuthNeededToTakeVokiDialog from './с_buttons/AuthNeededToTakeVokiDialog.svelte';
+	interface Props {
 		vokiId: string;
 		vokiType: VokiType;
-	}>();
+		authenticatedOnlyTaking: boolean;
+	}
+	let { vokiId, vokiType, authenticatedOnlyTaking }: Props = $props();
+
+	let authNeededToTakeVokiDialog = $state<AuthNeededToTakeVokiDialog>()!;
 </script>
 
-<a href="/take-voki/{vokiId}/{StringUtils.pascalToKebab(vokiType)}" class="take-voki-btn">
+{#snippet openDialogBtn()}
+	<button class="take-voki-btn" onclick={() => authNeededToTakeVokiDialog.open()}>
+		{@render btnContent()}
+	</button>
+{/snippet}
+{#snippet takeVokiLink()}
+	<a href="/take-voki/{vokiId}/{StringUtils.pascalToKebab(vokiType)}" class="take-voki-btn">
+		{@render btnContent()}
+	</a>
+{/snippet}
+<AuthNeededToTakeVokiDialog bind:this={authNeededToTakeVokiDialog} />
+<AuthView
+	loading={openDialogBtn}
+	authenticated={takeVokiLink}
+	unauthenticated={authenticatedOnlyTaking ? openDialogBtn : takeVokiLink}
+></AuthView>
+{#snippet btnContent()}
 	<div class="icon-container">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
 			<path
@@ -22,7 +44,7 @@
 	</div>
 
 	<label class="btn-text">Take voki</label>
-</a>
+{/snippet}
 
 <style>
 	.take-voki-btn {

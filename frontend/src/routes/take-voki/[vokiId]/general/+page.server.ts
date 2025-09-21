@@ -12,6 +12,7 @@ export const load: ServerLoad = async ({ cookies, params, fetch }) => {
     if (!VokiCatalogVisitMarkerCookie.checkIfSeen(cookies, vokiId)) {
         throw redirect(303, `/catalog/${vokiId}`);
     }
+    console.log("ds");
     return {
         response: await ApiVokiTakingGeneral.serverFetchJsonResponse<GeneralVokiTakingData>(
             fetch, `/vokis/${params.vokiId}/start-taking`, RequestJsonOptions.POST({})

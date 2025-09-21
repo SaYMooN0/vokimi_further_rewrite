@@ -14,7 +14,8 @@ export type VokiOverviewInfo = {
     hasMatureContent: boolean;
     language: Language;
     tags: string[];
+    publicationDate: Date;
     ratingsCount: number;
     commentsCount: number;
-    publicationDate: Date;
+    authenticatedOnlyTaking: boolean;
 };

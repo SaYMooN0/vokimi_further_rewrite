@@ -36,9 +36,9 @@ export function createEmptyGeneralVokiAnswerTypeData(type: GeneralVokiAnswerType
         case 'ImageAndText':
             return { type: 'ImageAndText', relatedResultIds: [], image: '', text: '' };
         case 'ColorOnly':
-            return { type: 'ColorOnly', relatedResultIds: [], color: '' };
+            return { type: 'ColorOnly', relatedResultIds: [], color: '#bfbfbf' };
         case 'ColorAndText':
-            return { type: 'ColorAndText', relatedResultIds: [], color: '', text: '' };
+            return { type: 'ColorAndText', relatedResultIds: [], color: '#bfbfbf', text: '' };
         case 'AudioOnly':
             return { type: 'AudioOnly', relatedResultIds: [], audio: '' };
         case 'AudioAndText':

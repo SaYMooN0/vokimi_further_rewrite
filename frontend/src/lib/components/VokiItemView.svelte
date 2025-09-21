@@ -4,6 +4,7 @@
 	import type { Language } from '$lib/ts/language';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { toast } from 'svelte-sonner';
+	import { getVokiFlagsInfoDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
 
 	interface Props {
 		voki: {
@@ -11,27 +12,41 @@
 			cover: string;
 			primaryAuthorId: string;
 			coAuthorIds: string[];
-			flags?: {
-				language: Language;
-				hasMatureContent: boolean;
-				authenticatedOnlyTaking: boolean;
-			};
 		};
 		link: string;
 		onMoreBtnClick: () => void;
+		flags?: {
+			language: Language;
+			hasMatureContent: boolean;
+			authenticatedOnlyTaking: boolean;
+		};
 	}
-	let { voki, link, onMoreBtnClick }: Props = $props();
+	let { voki, link, onMoreBtnClick, flags }: Props = $props();
+	const openVokiFlagsInfoDialog = getVokiFlagsInfoDialogOpenFunction();
+	function onFlagClick(e: MouseEvent) {
+		e.preventDefault();
+		openVokiFlagsInfoDialog();
+	}
 </script>
 
 <a href={link} class="voki-item">
 	<div class="cover-container">
 		<img class="voki-cover" src={StorageBucketMain.fileSrc(voki.cover)} alt="voki cover" />
-		{#if voki.flags}
+		{#if flags}
 			<div class="flags-container">
-				<div class="flag language">
-					<svg><use href="#languages-icons-{StringUtils.pascalToKebab(voki.flags.language)}" /></svg
-					>
+				<div class="flag language interactable" onclick={onFlagClick}>
+					<svg><use href="#languages-icons-{StringUtils.pascalToKebab(flags.language)}" /></svg>
 				</div>
+				{#if flags.hasMatureContent}
+					<div class="flag mature-content interactable" onclick={onFlagClick}>
+						<svg><use href="#common-mature-content-icon" /></svg>
+					</div>
+				{/if}
+				{#if flags.authenticatedOnlyTaking}
+					<div class="flag mature-content interactable" onclick={onFlagClick}>
+						<svg><use href="#common-auth-only-taking-icon" /></svg>
+					</div>
+				{/if}
 			</div>
 		{/if}
 	</div>
@@ -85,7 +100,47 @@
 		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
 		cursor: pointer;
 	}
-
+	.cover-container {
+		position: relative;
+	}
+	.flags-container {
+		position: absolute;
+		top: 0.375rem;
+		right: 0.375rem;
+		display: flex;
+		gap: 0.375rem;
+		flex-direction: row-reverse;
+	}
+	.flag {
+		width: 1.675rem;
+		height: 1.675rem;
+		padding: 0.125rem;
+		box-sizing: border-box;
+		background-color: var(--back);
+		box-shadow: var(--shadow), var(--shadow-xs);
+		border-radius: 28%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		transition:
+			opacity 0.2s ease-in-out,
+			transform 0.05s ease-in,
+			background-color 0.08s ease-in;
+	}
+	.flag > svg {
+		height: 100%;
+		width: 100%;
+	}
+	.flag.language > svg {
+		border-radius: 0.25rem;
+		width: 100%;
+		height: unset;
+		aspect-ratio: var(--lang-icon-aspect-ratio);
+	}
+	.flag > svg:not(.language) {
+		stroke-width: 1.6;
+		color: var(--accent-foreground);
+	}
 	.voki-item:not(:has(.interactable:hover)):active {
 		background-color: var(--secondary);
 	}
@@ -118,7 +173,17 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
-
+	.voki-item:not(:has(.interactable:hover)):hover .flag {
+		opacity: 0.6;
+	}
+	.flag:hover {
+		transform: scale(1.06);
+		box-shadow: var(--shadow-md), var(--shadow-xs);
+	}
+	.flag:active {
+		transform: scale(0.98);
+		background-color: var(--secondary);
+	}
 	.voki-item:not(:has(.interactable:hover)):hover .voki-name {
 		text-decoration: underline;
 		text-decoration-thickness: 0.125rem;

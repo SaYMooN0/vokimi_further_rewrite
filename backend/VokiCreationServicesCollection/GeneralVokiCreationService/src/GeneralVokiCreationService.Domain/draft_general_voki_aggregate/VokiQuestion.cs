@@ -200,7 +200,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
             return [
                 VokiPublishingIssue.Problem(
                     message:
-                    $"[\"{preview}\"] question's answer count is below the configured minimum({AnswersCountLimit.MaxAnswers})",
+                    $"[\"{preview}\"] question's answer count is below the configured maximum({AnswersCountLimit.MaxAnswers})",
                     source: "Question answers",
                     fixRecommendation:
                     $"Decrease the maximum limit or add at least {AnswersCountLimit.MaxAnswers - _answers.Count} answer(s)"

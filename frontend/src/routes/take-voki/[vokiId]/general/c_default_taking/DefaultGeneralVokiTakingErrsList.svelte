@@ -1,5 +1,4 @@
 <script lang="ts">
-	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import { ErrUtils, type Err } from '$lib/ts/err';
 	import { toast } from 'svelte-sonner';
 	interface Props {
@@ -8,16 +7,19 @@
 	}
 	let { errs, jumpToSpecificQuestion }: Props = $props();
 	function onErrClick(err: Err & { questionOrder?: number }) {
-		if (err.questionOrder) {
-			const resErrs = jumpToSpecificQuestion(err.questionOrder);
+		if (isErrWithOrder(err)) {
+			const resErrs = jumpToSpecificQuestion(err.questionOrder!);
 			if (resErrs.length > 0) toast.error(resErrs[0].message);
 		}
+	}
+	function isErrWithOrder(err: Err & { questionOrder?: number }): boolean {
+		return err.questionOrder !== undefined && err.questionOrder !== null;
 	}
 </script>
 
 <div class="errs">
 	{#each errs as err}
-		<div class="err" class:can-jump={err.questionOrder} onclick={() => onErrClick(err)}>
+		<div class="err" class:can-jump={isErrWithOrder(err)} onclick={() => onErrClick(err)}>
 			<label class="message">
 				{err.message}
 			</label>

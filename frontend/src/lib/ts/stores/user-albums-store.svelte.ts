@@ -15,8 +15,8 @@ export class AlbumsStore {
     #cachedAlbums = $state<VokisAlbumData[] | null>(null);
     #lastFetched = 0;
 
-    async #fetchAlbums(): Promise<ResponseResult<VokisAlbumData[]>> {
-        return ApiAlbums.fetchJsonResponse<VokisAlbumData[]>(
+    async #fetchAlbums(): Promise<ResponseResult<{ albums: VokisAlbumData[] }>> {
+        return ApiAlbums.fetchJsonResponse(
             `/user-albums`,
             { method: 'GET' }
         );
@@ -24,7 +24,7 @@ export class AlbumsStore {
     async refresh(): Promise<VokisAlbumData[] | null> {
         const response = await this.#fetchAlbums();
         if (response.isSuccess) {
-            this.#cachedAlbums = response.data;
+            this.#cachedAlbums = response.data.albums;
             this.#lastFetched = Date.now();
             return this.#cachedAlbums;
         } else {

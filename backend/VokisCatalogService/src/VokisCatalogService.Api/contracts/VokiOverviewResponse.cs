@@ -16,7 +16,8 @@ public record class VokiOverviewResponse(
     string[] Tags,
     DateTime PublicationDate,
     uint RatingsCount,
-    uint CommentsCount
+    uint CommentsCount,
+    bool AuthenticatedOnlyTaking
 )
 {
     public static VokiOverviewResponse Create(BaseVoki v) => new(
@@ -32,6 +33,7 @@ public record class VokiOverviewResponse(
         v.Tags.Select(t => t.ToString()).ToArray(),
         v.PublicationDate,
         v.RatingsCount,
-        v.CommentsCount
+        v.CommentsCount,
+        v.AuthenticatedOnlyTaking
     );
 }

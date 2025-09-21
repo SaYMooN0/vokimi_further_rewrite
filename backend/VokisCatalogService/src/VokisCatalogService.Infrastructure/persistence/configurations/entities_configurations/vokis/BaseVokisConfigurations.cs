@@ -52,5 +52,7 @@ public class BaseVokisConfigurations : IEntityTypeConfiguration<BaseVoki>
         builder.Property(x => x.RatingsCount);
         builder.Property(x => x.CommentsCount);
         builder.Property(x => x.VokiTakingsCount);
+        
+        builder.Property(x => x.AuthenticatedOnlyTaking);
     }
 }

@@ -3,21 +3,22 @@
 	import BaseDialog from './BaseDialog.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 
-	let {
-		children,
-		subheading,
-		dialogId
-	}: { children: Snippet; subheading?: string; dialogId?: string } = $props<{
+	interface Props {
 		children: Snippet;
 		subheading?: string;
 		dialogId?: string;
-	}>();
+		onBeforeClose?: () => void;
+	}
+	let { children, subheading, dialogId, onBeforeClose }: Props = $props();
 
 	let dialog = $state<BaseDialog>()!;
 	export function open() {
 		dialog.open();
 	}
 	export function close() {
+		if (onBeforeClose) {
+			onBeforeClose();
+		}
 		dialog.close();
 	}
 </script>

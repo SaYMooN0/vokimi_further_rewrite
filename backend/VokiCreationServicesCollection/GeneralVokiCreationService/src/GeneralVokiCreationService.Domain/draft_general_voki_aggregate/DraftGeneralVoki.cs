@@ -394,7 +394,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         int questionsWithNoResultCount = _questions.Count(q =>
-            q.Answers.Count(a => a.RelatedResultIds.Count == 0) > q.AnswersCountLimit.MinAnswers);
+            q.Answers.Count(a => a.RelatedResultIds.Count == 0) >= q.AnswersCountLimit.MinAnswers);
         if (questionsWithNoResultCount >= _questions.Count) {
             return [
                 VokiPublishingIssue.Problem(

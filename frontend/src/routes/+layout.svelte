@@ -15,6 +15,8 @@
 		type SignInDialogState
 	} from './c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import { registerAlbumsDialogOpenFunction } from './c_layout/ts_layout_contexts/user-voki-albums-context';
+	import VokiItemFlagsInfoDialog from './c_layout/c_dialogs/VokiItemFlagsInfoDialog.svelte';
+	import { registerVokiFlagsInfoDialogOpenFunction } from './c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
@@ -22,18 +24,21 @@
 	let signInDialog = $state<SignInDialog>()!;
 	let confirmActionDialog = $state<ConfirmActionDialog>()!;
 	let vokiAlbumsDialog = $state<VokiAlbumsDialog>()!;
+	let vokiItemFlagsInfoDialog = $state<VokiItemFlagsInfoDialog>()!;
 
 	registerSignInDialogOpenFunction((state: SignInDialogState) => signInDialog.open(state));
 	registerConfirmActionDialogOpenFunction({
 		open: (content: ConfirmActionDialogContent) => confirmActionDialog.open(content),
 		close: () => confirmActionDialog.close()
 	});
-	registerAlbumsDialogOpenFunction(() => vokiAlbumsDialog.open());
+	registerAlbumsDialogOpenFunction((vokiId) => vokiAlbumsDialog.open(vokiId));
+	registerVokiFlagsInfoDialogOpenFunction(() => vokiItemFlagsInfoDialog.open());
 </script>
 
 <SignInDialog bind:this={signInDialog} />
 <ConfirmActionDialog bind:this={confirmActionDialog} />
 <VokiAlbumsDialog bind:this={vokiAlbumsDialog} />
+<VokiItemFlagsInfoDialog bind:this={vokiItemFlagsInfoDialog} />
 
 <LayoutSprites />
 <AppToaster />

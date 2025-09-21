@@ -10,14 +10,21 @@
 		cover: string;
 		usersWithAccessToManage: string[];
 		vokiType: VokiType;
+		authenticatedOnlyTaking: boolean;
 	}
-	let { vokiId, cover, usersWithAccessToManage, vokiType }: Props = $props();
+	let { vokiId, cover, usersWithAccessToManage, vokiType, authenticatedOnlyTaking }: Props =
+		$props();
+
 </script>
 
 <div class="voki-cover-section">
 	<img class="voki-cover" src={StorageBucketMain.fileSrc(cover)} alt="voki cover" />
 	<div class="buttons-container">
-		<CoverSectionTakeVokiBtn {vokiId} {vokiType} />
+		<CoverSectionTakeVokiBtn
+			{vokiId}
+			{vokiType}
+			{authenticatedOnlyTaking}
+		/>
 		<CoverSectionAddToAlbumBtn {vokiId} />
 		<AuthView>
 			{#snippet authenticated(authData)}

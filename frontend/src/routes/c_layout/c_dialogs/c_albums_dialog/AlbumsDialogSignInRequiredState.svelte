@@ -1,24 +1,20 @@
 <script lang="ts">
-	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import { getSignInDialogOpenFunction } from '../../ts_layout_contexts/sign-in-dialog-context';
 
-	let dialog = $state<DialogWithCloseButton>()!;
-	export function open() {
-		dialog.open();
-	}
+	let { closeDialog }: { closeDialog: () => void } = $props<{ closeDialog: () => void }>();
 	const openSignInDialog = getSignInDialogOpenFunction();
 
 	function createNewAccount() {
-		dialog.close();
+		closeDialog();
 		openSignInDialog('signup');
 	}
 	function login() {
-		dialog.close();
+		closeDialog();
 		openSignInDialog('login');
 	}
 </script>
 
-<DialogWithCloseButton bind:this={dialog} dialogId="sign-in-to-use-albums">
+<div class="sign-in-required">
 	<svg class="icon-1"><use href="#albums-bookmark-1-icon" /></svg>
 	<svg class="icon-2"><use href="#albums-bookmark-2-icon" /></svg>
 	<svg class="icon-3"><use href="#albums-clock-1-icon" /></svg>
@@ -31,7 +27,7 @@
 		<button onclick={createNewAccount}>Create an account</button>
 		<label onclick={login} class="login-btn">I already have an account</label>
 	</div>
-</DialogWithCloseButton>
+</div>
 
 <style>
 	h1 {

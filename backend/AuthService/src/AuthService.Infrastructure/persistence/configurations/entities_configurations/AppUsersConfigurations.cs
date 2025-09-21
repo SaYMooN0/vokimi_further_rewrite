@@ -20,7 +20,8 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .Property(x => x.Email)
             .HasConversion<EmailConverter>();
 
-        builder
-            .Property(x => x.PasswordHash);
+        builder.Property(x => x.PasswordHash);
+        builder.Property(x => x.RegistrationDate);
+        builder.Property(x => x.PasswordUpdateDate);
     }
 }

@@ -3,7 +3,6 @@
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import type { Err } from '$lib/ts/err';
 	import { albumsStore, type VokisAlbumData } from '$lib/ts/stores/user-albums-store.svelte';
-	import { onMount } from 'svelte';
 	import AlbumsDialogCreateNewState from './c_albums_dialog/AlbumsDialogCreateNewState.svelte';
 	import AlbumsDialogErrView from './c_albums_dialog/AlbumsDialogErrView.svelte';
 	import AlbumsDialogLoadingState from './c_albums_dialog/AlbumsDialogLoadingState.svelte';
@@ -15,11 +14,14 @@
 
 	type AlbumsDialogState = 'albums' | 'create-new' | 'loading';
 
+	let currentOperatingVokiId = $state<string | null>(null);
 	let dialogState = $state<AlbumsDialogState>('albums');
 	let loadingErr = $state<Err | null>(null);
+	let albums = $state<VokisAlbumData[]>([]);
 
-	export function open() {
+	export function open(vokiId: string) {
 		dialogState = 'loading';
+		currentOperatingVokiId = vokiId;
 		dialog.open();
 		refresh();
 	}
@@ -36,13 +38,16 @@
 			}
 		});
 	}
-	let albums = $state<VokisAlbumData[]>([]);
+	function onClose() {
+		currentOperatingVokiId = null;
+	}
 </script>
 
 <DialogWithCloseButton
 	bind:this={dialog}
 	dialogId="user-voki-albums-dialog"
 	subheading={dialogState === 'create-new' ? 'Create new album' : undefined}
+	onBeforeClose={() => onClose()}
 >
 	<AuthView>
 		{#snippet authenticated()}
@@ -64,7 +69,7 @@
 			{/if}
 		{/snippet}
 		{#snippet unauthenticated()}
-			<AlbumsDialogSignInRequiredState />
+			<AlbumsDialogSignInRequiredState closeDialog={() => dialog.close()} />
 		{/snippet}
 	</AuthView>
 </DialogWithCloseButton>

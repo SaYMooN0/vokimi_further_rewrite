@@ -21,4 +21,5 @@ export type PublishedVokiBriefInfo = {
     coAuthorIds: string[];
     hasMatureContent: boolean;
     language: Language;
+	authenticatedOnlyTaking: boolean;
 };

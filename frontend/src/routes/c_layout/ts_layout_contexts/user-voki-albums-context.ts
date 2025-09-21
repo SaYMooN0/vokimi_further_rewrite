@@ -1,13 +1,13 @@
 import { setContext, getContext } from "svelte";
 
-const signInKey = Symbol("open-voki-albums-dialog-function");
-type openVokiAlbumsDialogFunction = () => void;
+const openFunctionKey = Symbol("open-voki-albums-dialog-function");
+type openVokiAlbumsDialogFunction = (vokiId: string) => void;
 
 export function registerAlbumsDialogOpenFunction(openDialog: openVokiAlbumsDialogFunction) {
-    setContext(signInKey, openDialog);
+    setContext(openFunctionKey, openDialog);
 }
 
 export function getAlbumsDialogOpenFunction() {
-    return getContext<openVokiAlbumsDialogFunction>(signInKey);
+    return getContext<openVokiAlbumsDialogFunction>(openFunctionKey);
 }
 

@@ -85,6 +85,7 @@
 			cover={data.response.data.cover}
 			usersWithAccessToManage={[data.response.data.primaryAuthorId]}
 			vokiType={data.response.data.type}
+			authenticatedOnlyTaking={true}
 		/>
 	</div>
 {/if}
