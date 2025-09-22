@@ -1,4 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.exceptions;
@@ -17,7 +18,8 @@ public sealed class GeneralVoki : BaseVoki
     public bool ShuffleQuestions { get; }
     private IReadOnlyCollection<VokiResult> _results { get; }
     private ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; set; }
-    public GeneralVokiResultsVisibility ResultsVisibility { get; }
+    public GeneralVokiResultsVisibility ResultsVisibility { get; private set; }
+    public bool ShowResultsDistribution { get; private set; }
 
     public GeneralVoki(
         VokiId id,
@@ -175,9 +177,8 @@ public sealed class GeneralVoki : BaseVoki
             ));
         }
 
-        var vokiResultIds = _results.Select(r => r.Id);
-        bool userHasTaken = userReceivedResultIds.Overlaps(vokiResultIds);
-        if (!userHasTaken) {
+
+        if (!UserHasTakenThisVoki(userReceivedResultIds)) {
             return ErrFactory.NoAccess("To see this result you need to take this voki as a logged in user");
         }
 
@@ -210,4 +211,65 @@ public sealed class GeneralVoki : BaseVoki
 
         return result;
     }
+
+    public IEnumerable<VokiResult> ResultsReceivedByUser(ISet<GeneralVokiResultId> userReceivedResultIds) =>
+        _results.Where(r => userReceivedResultIds.Contains(r.Id));
+
+
+    public ErrOr<IEnumerable<VokiResultWithDistributionPercent>> AllResultsWithDistributionForAuthenticatedUser(
+        ISet<GeneralVokiResultId> userReceivedResultIds,
+        IReadOnlyDictionary<GeneralVokiResultId, uint> resultIdsToCount
+    ) => ResultsVisibility.Match(
+        anyone: () => ErrOr<IEnumerable<VokiResultWithDistributionPercent>>.Success(
+            AttachDistributionToResults(_results, resultIdsToCount)
+        ),
+        afterTaking: () => UserHasTakenThisVoki(userReceivedResultIds)
+            ? ErrOr<IEnumerable<VokiResultWithDistributionPercent>>.Success(
+                AttachDistributionToResults(_results, resultIdsToCount)
+            )
+            : ErrFactory.NoAccess("To see all voki results you need to take this voki at least one time as a logged in user"),
+        onlyReceived: () => UserHasReceivedAllResults(userReceivedResultIds)
+            ? ErrOr<IEnumerable<VokiResultWithDistributionPercent>>.Success(
+                AttachDistributionToResults(_results, resultIdsToCount)
+            )
+            : ErrFactory.NoAccess("Author set so that to see all voki results you need to firstly receive them all")
+    );
+
+    public ErrOr<IEnumerable<VokiResultWithDistributionPercent>> AllResultsWithDistributionForNonAuthenticatedUser(
+        IReadOnlyDictionary<GeneralVokiResultId, uint> resultIdsToCount
+    ) => ResultsVisibility.Match(
+        anyone: () => ErrOr<IEnumerable<VokiResultWithDistributionPercent>>.Success(
+            AttachDistributionToResults(_results, resultIdsToCount)
+        ),
+        afterTaking: () => ErrFactory.NoAccess(
+            "To see all voki results you need to take this voki at least one time as a logged in user"
+        ),
+        onlyReceived: () => ErrFactory.NoAccess(
+            "Author set so that to see all voki results you need to firstly receive them all"
+        )
+    );
+
+    private IEnumerable<VokiResultWithDistributionPercent> AttachDistributionToResults(
+        IEnumerable<VokiResult> results, IReadOnlyDictionary<GeneralVokiResultId, uint> resultIdsToCount
+    ) {
+        if (!ShowResultsDistribution || resultIdsToCount.Count == 0) {
+            return results
+                .Select(r => new VokiResultWithDistributionPercent(r, 0));
+        }
+
+        double total = resultIdsToCount.Values.Sum(x => x);
+        return results
+            .Select(r => {
+                resultIdsToCount.TryGetValue(r.Id, out var count);
+                double percent = total == 0 ? 0 : count * 100d / total;
+                return new VokiResultWithDistributionPercent(r, percent);
+            });
+    }
+
+
+    private bool UserHasTakenThisVoki(ISet<GeneralVokiResultId> userReceivedResultIds) =>
+        userReceivedResultIds.Overlaps(_results.Select(r => r.Id));
+
+    private bool UserHasReceivedAllResults(ISet<GeneralVokiResultId> userReceivedResultIds) =>
+        userReceivedResultIds.IsSupersetOf(_results.Select(r => r.Id));
 }

@@ -1,6 +1,6 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
 
-namespace GeneralVokiTakingService.Api.contracts;
+namespace GeneralVokiTakingService.Api.contracts.view_results;
 
 public record class VokiResultViewResponse(
     string Id,

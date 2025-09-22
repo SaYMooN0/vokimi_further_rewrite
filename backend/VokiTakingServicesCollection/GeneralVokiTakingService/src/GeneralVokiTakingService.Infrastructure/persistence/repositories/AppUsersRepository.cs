@@ -1,5 +1,6 @@
 ﻿using GeneralVokiTakingService.Domain.app_user_aggregate;
 using GeneralVokiTakingService.Domain.common.interfaces.repositories;
+using Microsoft.EntityFrameworkCore;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories;
 
@@ -23,4 +24,7 @@ internal class AppUsersRepository : IAppUsersRepository
         _db.Update(user);
         await _db.SaveChangesAsync(ct);
     }
+
+    public async Task<AppUser?> GetByIdAsNoTracking(AppUserId userId, CancellationToken ct) =>
+        await _db.AppUsers.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId, ct);
 }

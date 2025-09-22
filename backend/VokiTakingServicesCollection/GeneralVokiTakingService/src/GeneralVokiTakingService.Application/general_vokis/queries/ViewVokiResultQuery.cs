@@ -28,15 +28,12 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
             return ErrFactory.NotFound.GeneralVoki();
         }
 
-        return await GetResultToViewByUser(voki, query.ResultId, ct);
-    }
-
-    private Task<ErrOr<VokiResult>> GetResultToViewByUser(GeneralVoki voki, GeneralVokiResultId resultId, CancellationToken ct) =>
-        voki.ResultsVisibility.Match(
-            anyone: () => Task.FromResult(voki.GetResultToViewByAnyOne(resultId)),
-            afterTaking: () => ResultToViewByUserAfterTaking(voki, resultId, ct),
-            onlyReceived: () => OnlyReceivedResultToViewByUser(voki, resultId, ct)
+        return await voki.ResultsVisibility.Match(
+            anyone: () => Task.FromResult(voki.GetResultToViewByAnyOne(query.ResultId)),
+            afterTaking: () => ResultToViewByUserAfterTaking(voki, query.ResultId, ct),
+            onlyReceived: () => OnlyReceivedResultToViewByUser(voki, query.ResultId, ct)
         );
+    }
 
     private async Task<ErrOr<VokiResult>> ResultToViewByUserAfterTaking(
         GeneralVoki voki,
@@ -48,7 +45,7 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
             return ErrFactory.NoAccess("To see this voki results you need to login and take this voki at least once");
         }
 
-        AppUser? user = await _appUsersRepository.GetById(idOrErr.AsSuccess(), ct);
+        AppUser? user = await _appUsersRepository.GetByIdAsNoTracking(idOrErr.AsSuccess(), ct);
         if (user is null) {
             return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
         }
@@ -66,7 +63,7 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
             return ErrFactory.NoAccess("To see this voki results you need to login and take this voki at least once");
         }
 
-        AppUser? user = await _appUsersRepository.GetById(idOrErr.AsSuccess(), ct);
+        AppUser? user = await _appUsersRepository.GetByIdAsNoTracking(idOrErr.AsSuccess(), ct);
         if (user is null) {
             return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
         }
