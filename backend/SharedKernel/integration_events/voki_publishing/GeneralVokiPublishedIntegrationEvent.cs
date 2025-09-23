@@ -21,7 +21,8 @@ public record class GeneralVokiPublishedIntegrationEvent(
     bool ForceSequentialAnswering,
     bool ShuffleQuestions,
     GeneralVokiResultIntegrationEventDto[] Results,
-    GeneralVokiResultsVisibility ResultsVisibility
+    GeneralVokiResultsVisibility ResultsVisibility,
+    bool ShowResultsDistribution
 ) : BaseVokiPublishedIntegrationEvent(
     VokiId, PrimaryAuthorId, CoAuthors,
     Name, Cover, Description,

@@ -16,11 +16,11 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
-        
+
         builder
             .Property(x => x.Name)
             .HasConversion<VokiNameConverter>();
-        
+
         builder
             .HasMany<VokiQuestion>("Questions")
             .WithOne()
@@ -42,7 +42,10 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
             .Property<ImmutableHashSet<VokiTakenRecordId>>("VokiTakenRecordIds")
             .HasGuidBasedIdsImmutableHashSetConversion();
 
-        builder.Property(x => x.ResultsVisibility);
-        builder.Property<bool>("AuthenticatedOnlyTaking");
+        builder.ComplexProperty(x => x.InteractionSettings, b => {
+            b.Property(s => s.AuthenticatedOnlyTaking);
+            b.Property(d => d.ResultsVisibility);
+            b.Property(d => d.ShowResultsDistribution);
+        });
     }
 }

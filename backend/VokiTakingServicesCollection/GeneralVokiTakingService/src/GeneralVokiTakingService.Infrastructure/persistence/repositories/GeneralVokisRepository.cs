@@ -1,7 +1,7 @@
 ﻿using GeneralVokiTakingService.Domain.common.interfaces.repositories;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using Microsoft.EntityFrameworkCore;
-using VokiTakingServicesLib.Domain.general_voki_aggregate;
+using VokiTakingServicesLib.Domain.base_voki_aggregate;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories;
 

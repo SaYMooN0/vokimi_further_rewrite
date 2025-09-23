@@ -26,12 +26,15 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
             e.VokiId,
             new VokiCoverKey(e.Cover),
             name: new VokiName(e.Name),
-            authenticatedOnlyTaking: e.AuthenticatedOnlyTaking,
             e.Questions.Select(QuestionFromEventDto).ToImmutableArray(),
             e.Results.Select(ResultFromEventDto).ToImmutableArray(),
             forceSequentialAnswering: e.ForceSequentialAnswering,
             shuffleQuestions: e.ShuffleQuestions,
-            e.ResultsVisibility
+            GeneralVokiInteractionSettings.Create(
+                e.AuthenticatedOnlyTaking,
+                e.ResultsVisibility,
+                showResultsDistribution: e.ShowResultsDistribution
+            ).AsSuccess()
         );
         await _generalVokisRepository.Add(voki);
     }

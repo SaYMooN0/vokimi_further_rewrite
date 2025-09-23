@@ -5,8 +5,8 @@ using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.exceptions;
 using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.concrete_keys;
+using VokiTakingServicesLib.Domain.base_voki_aggregate;
 using VokiTakingServicesLib.Domain.common;
-using VokiTakingServicesLib.Domain.general_voki_aggregate;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 
@@ -18,36 +18,34 @@ public sealed class GeneralVoki : BaseVoki
     public bool ShuffleQuestions { get; }
     private IReadOnlyCollection<VokiResult> _results { get; }
     private ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; set; }
-    public GeneralVokiResultsVisibility ResultsVisibility { get; private set; }
-    public bool ShowResultsDistribution { get; private set; }
+    public GeneralVokiInteractionSettings InteractionSettings { get; private set; }
+    protected override IVokiInteractionSettings BaseInteractionSettings => InteractionSettings;
 
     public GeneralVoki(
-        VokiId id,
-        VokiName name, bool authenticatedOnlyTaking,
-        ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
-        bool forceSequentialAnswering, bool shuffleQuestions,
-        GeneralVokiResultsVisibility resultsVisibility
-    ) : base(name, authenticatedOnlyTaking) {
+        VokiId id, VokiName name, ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
+        bool forceSequentialAnswering, bool shuffleQuestions, GeneralVokiInteractionSettings interactionSettings
+    ) : base(name) {
         Id = id;
         Questions = questions;
         _results = results;
         ForceSequentialAnswering = forceSequentialAnswering;
         ShuffleQuestions = shuffleQuestions;
-        ResultsVisibility = resultsVisibility;
+        InteractionSettings = interactionSettings;
+        ShuffleQuestions = shuffleQuestions;
         VokiTakenRecordIds = [];
     }
 
 
     public static GeneralVoki CreateNew(
-        VokiId id, VokiCoverKey coverKey,
-        VokiName name, bool authenticatedOnlyTaking,
+        VokiId id, VokiCoverKey coverKey, VokiName name,
         ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
-        bool forceSequentialAnswering, bool shuffleQuestions,
-        GeneralVokiResultsVisibility resultsVisibility
+        bool forceSequentialAnswering, bool shuffleQuestions, GeneralVokiInteractionSettings interactionSettings
     ) {
         GeneralVoki voki = new(
-            id, name, authenticatedOnlyTaking, questions, results,
-            forceSequentialAnswering, shuffleQuestions, resultsVisibility
+            id, name, questions, results,
+            forceSequentialAnswering: forceSequentialAnswering,
+            shuffleQuestions: shuffleQuestions,
+            interactionSettings
         );
         List<BaseStorageKey> vokiContentKeys = GatherVokiContentKeys(coverKey, questions, results);
         voki.AddDomainEvent(new PublishedVokiCreatedEvent(voki.Id, vokiContentKeys.ToArray()));
@@ -154,7 +152,7 @@ public sealed class GeneralVoki : BaseVoki
 
 
     public ErrOr<VokiResult> GetResultToViewByAnyOne(GeneralVokiResultId resultId) {
-        if (ResultsVisibility != GeneralVokiResultsVisibility.Anyone) {
+        if (InteractionSettings.ResultsVisibility != GeneralVokiResultsVisibility.Anyone) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
                 $"Could not show result for anyone, when visibility is set to {GeneralVokiResultsVisibility.Anyone}"
             ));
@@ -171,9 +169,9 @@ public sealed class GeneralVoki : BaseVoki
     public ErrOr<VokiResult> GetResultToViewByUserAfterTaking(
         GeneralVokiResultId resultId, ISet<GeneralVokiResultId> userReceivedResultIds
     ) {
-        if (ResultsVisibility != GeneralVokiResultsVisibility.AfterTaking) {
+        if (InteractionSettings.ResultsVisibility != GeneralVokiResultsVisibility.AfterTaking) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
-                $"Could not show result after taking, when visibility is set to {ResultsVisibility}"
+                $"Could not show result after taking, when visibility is set to {InteractionSettings.ResultsVisibility}"
             ));
         }
 
@@ -194,9 +192,9 @@ public sealed class GeneralVoki : BaseVoki
     public ErrOr<VokiResult> GetOnlyReceivedResultToViewByUser(
         GeneralVokiResultId resultId, ISet<GeneralVokiResultId> userReceivedResultIds
     ) {
-        if (ResultsVisibility != GeneralVokiResultsVisibility.OnlyReceived) {
+        if (InteractionSettings.ResultsVisibility != GeneralVokiResultsVisibility.OnlyReceived) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
-                $"Could not show result only if received, when visibility is set to {ResultsVisibility}"
+                $"Could not show result only if received, when visibility is set to {InteractionSettings.ResultsVisibility}"
             ));
         }
 
@@ -219,7 +217,7 @@ public sealed class GeneralVoki : BaseVoki
     public ErrOr<IEnumerable<VokiResultWithDistributionPercent>> AllResultsWithDistributionForAuthenticatedUser(
         ISet<GeneralVokiResultId> userReceivedResultIds,
         IReadOnlyDictionary<GeneralVokiResultId, uint> resultIdsToCount
-    ) => ResultsVisibility.Match(
+    ) => InteractionSettings.ResultsVisibility.Match(
         anyone: () => ErrOr<IEnumerable<VokiResultWithDistributionPercent>>.Success(
             AttachDistributionToResults(_results, resultIdsToCount)
         ),
@@ -237,7 +235,7 @@ public sealed class GeneralVoki : BaseVoki
 
     public ErrOr<IEnumerable<VokiResultWithDistributionPercent>> AllResultsWithDistributionForNonAuthenticatedUser(
         IReadOnlyDictionary<GeneralVokiResultId, uint> resultIdsToCount
-    ) => ResultsVisibility.Match(
+    ) => InteractionSettings.ResultsVisibility.Match(
         anyone: () => ErrOr<IEnumerable<VokiResultWithDistributionPercent>>.Success(
             AttachDistributionToResults(_results, resultIdsToCount)
         ),
@@ -252,7 +250,7 @@ public sealed class GeneralVoki : BaseVoki
     private IEnumerable<VokiResultWithDistributionPercent> AttachDistributionToResults(
         IEnumerable<VokiResult> results, IReadOnlyDictionary<GeneralVokiResultId, uint> resultIdsToCount
     ) {
-        if (!ShowResultsDistribution || resultIdsToCount.Count == 0) {
+        if (!InteractionSettings.ShowResultsDistribution || resultIdsToCount.Count == 0) {
             return results
                 .Select(r => new VokiResultWithDistributionPercent(r, 0));
         }

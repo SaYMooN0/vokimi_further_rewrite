@@ -5,24 +5,24 @@ using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
 
-namespace VokiTakingServicesLib.Domain.general_voki_aggregate;
+namespace VokiTakingServicesLib.Domain.base_voki_aggregate;
 
-public class BaseVoki : AggregateRoot<VokiId>
+public abstract class BaseVoki : AggregateRoot<VokiId>
 {
     protected BaseVoki() { }
     public VokiName Name { get; }
-    private bool AuthenticatedOnlyTaking { get; }
+    protected abstract IVokiInteractionSettings BaseInteractionSettings { get; }
+
 
     public ErrOrNothing CheckUserAccessToTake(IUserContext userContext) {
-        if (AuthenticatedOnlyTaking && userContext.UserIdFromToken().IsErr()) {
+        if (BaseInteractionSettings.AuthenticatedOnlyTaking && userContext.UserIdFromToken().IsErr()) {
             return ErrFactory.NoAccess("To take this Voki you need to be signed in");
         }
 
         return ErrOrNothing.Nothing;
     }
 
-    protected BaseVoki(VokiName name, bool authenticatedOnlyTaking) {
+    protected BaseVoki(VokiName name) {
         Name = name;
-        AuthenticatedOnlyTaking = authenticatedOnlyTaking;
     }
 }

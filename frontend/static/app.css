@@ -34,6 +34,7 @@
   --voki-cover-border-radius: 0.875rem;
 
   /* other */
+  --side-bar-links-top-padding: 4rem;
   --lang-icon-aspect-ratio: 1.4/1;
   --default-fade-in-animation: default-fade-in 0.08s ease-in-out;
 
@@ -75,4 +76,3 @@ textarea {
     opacity: 1;
   }
 }
-

@@ -1,8 +1,8 @@
 ﻿using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.exceptions;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate;
+using VokiTakingServicesLib.Domain.base_voki_aggregate;
 
-namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 
 public class GeneralVokiInteractionSettings : ValueObject, IVokiInteractionSettings
 {

@@ -59,7 +59,6 @@
 		width: 100%;
 		box-sizing: border-box;
 
-		--side-bar-links-top-padding: 4rem;
 		--width-limit: 90vw;
 	}
 

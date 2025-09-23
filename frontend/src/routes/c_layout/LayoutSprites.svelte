@@ -5,6 +5,7 @@
 	import errorIconsSprite from '$lib/icons/error-icons.svg?raw';
 	import languagesIconsSprite from '$lib/icons/languages-icons.svg?raw';
 	import albumIconsSprite from '$lib/icons/album-icons.svg?raw';
+	import imageIconsSprite from '$lib/icons/image-icons.svg?raw';
 </script>
 
 <div class="sprites">
@@ -14,6 +15,7 @@
 	{@html errorIconsSprite}
 	{@html languagesIconsSprite}
 	{@html albumIconsSprite}
+	{@html imageIconsSprite}
 </div>
 
 <style>

@@ -21,7 +21,7 @@
 		return 'default';
 	}
 	function onResultReceived(receivedResultId: string) {
-		goto(`/take-voki/${data.vokiId}/general/result/${receivedResultId}`);
+		goto(`/take-voki/${data.vokiId}/general/results/${receivedResultId}`);
 	}
 	let refreshTimer: number | undefined;
 	function clearMarkerCookie() {

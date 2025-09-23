@@ -1,18 +1,23 @@
 ﻿using GeneralVokiTakingService.Application.general_vokis.queries;
+using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Api.contracts.view_results;
 
-public record  ViewReceivedResultsResponse(
+public record ViewReceivedResultsResponse(
     ResultPreviewWithUserTakingsResponse[] Results,
-    GeneralVokiResultsVisibility ResultsVisibility
+    GeneralVokiResultsVisibility ResultsVisibility,
+    string VokiName
 )
 {
     public static ViewReceivedResultsResponse Create(
-        VokiReceivedResultsQueryResult queryResult
+        ImmutableArray<VokiResultWithTakingDates> results,
+        GeneralVokiResultsVisibility resultsVisibility,
+        VokiName vokiName
     ) => new(
-        queryResult.Results.Select(ResultPreviewWithUserTakingsResponse.Create).ToArray(),
-        queryResult.ResultsVisibility
+        results.Select(ResultPreviewWithUserTakingsResponse.Create).ToArray(),
+        resultsVisibility,
+        vokiName.ToString()
     );
 }
 

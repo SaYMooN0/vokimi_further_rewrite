@@ -1,6 +1,7 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.dtos;
 using SharedKernel.auth;
+using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Application.general_vokis.queries;
@@ -39,8 +40,9 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
         return (await GetVokiResultsWithDistribution(voki, ct)).Bind<ViewAllVokiResultsQueryResult>(
             results => new ViewAllVokiResultsQueryResult(
                 results.ToImmutableArray(),
-                voki.ShowResultsDistribution,
-                voki.ResultsVisibility
+                voki.InteractionSettings.ShowResultsDistribution,
+                voki.InteractionSettings.ResultsVisibility,
+                voki.Name
             )
         );
     }
@@ -72,5 +74,6 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
 public sealed record ViewAllVokiResultsQueryResult(
     ImmutableArray<VokiResultWithDistributionPercent> Results,
     bool ShowResultsDistribution,
-    GeneralVokiResultsVisibility ResultsVisibility
+    GeneralVokiResultsVisibility ResultsVisibility,
+    VokiName VokiName
 );

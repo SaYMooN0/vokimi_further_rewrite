@@ -1,7 +1,6 @@
 ﻿using GeneralVokiTakingService.Api.contracts.view_results;
 using GeneralVokiTakingService.Api.extensions;
 using GeneralVokiTakingService.Application.general_vokis.queries;
-using GeneralVokiTakingService.Domain.general_voki_aggregate;
 
 namespace GeneralVokiTakingService.Api.endpoints;
 
@@ -20,7 +19,7 @@ internal static class SpecificVokiResultsHandlers
 
     private static async Task<IResult> ViewSpecificResult(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ViewVokiResultQuery, VokiResult> handler
+        IQueryHandler<ViewVokiResultQuery, ViewVokiResultQueryResult> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
         GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
@@ -29,8 +28,8 @@ internal static class SpecificVokiResultsHandlers
         ViewVokiResultQuery query = new(vokiId, resultId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (vokiResult) => Results.Json(
-            VokiResultViewResponse.Create(vokiResult)
+        return CustomResults.FromErrOr(result, (success) => Results.Json(
+            ViewSingleResultResponse.Create(success.Result, success.ResultsVisibility, success.VokiName)
         ));
     }
 
@@ -43,8 +42,13 @@ internal static class SpecificVokiResultsHandlers
         ViewAllVokiResultsQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (r) => Results.Json(
-            ViewAllVokiResultsResponse.Create(r.Results, r.ShowResultsDistribution, r.ResultsVisibility)
+        return CustomResults.FromErrOr(result, (success) => Results.Json(
+            ViewAllVokiResultsResponse.Create(
+                success.Results,
+                success.ShowResultsDistribution,
+                success.ResultsVisibility,
+                success.VokiName
+            )
         ));
     }
 
@@ -57,8 +61,8 @@ internal static class SpecificVokiResultsHandlers
         VokiReceivedResultsQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (r) => Results.Json(
-            ViewReceivedResultsResponse.Create(r)
+        return CustomResults.FromErrOr(result, (success) => Results.Json(
+            ViewReceivedResultsResponse.Create(success.Results, success.ResultsVisibility, success.VokiName)
         ));
     }
 }

@@ -1,5 +1,6 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using SharedKernel.auth;
+using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Application.general_vokis.queries;
@@ -37,7 +38,7 @@ internal sealed class VokiReceivedResultsQueryHandler : IQueryHandler<VokiReceiv
             .ForVokiByUserAsNoTracking(previewQuery.VokiId, userId, ct);
 
         if (records.Length == 0) {
-            return new VokiReceivedResultsQueryResult([], voki.ResultsVisibility);
+            return new VokiReceivedResultsQueryResult([], voki.InteractionSettings.ResultsVisibility, voki.Name);
         }
 
         var receivedResultIds = records
@@ -59,13 +60,14 @@ internal sealed class VokiReceivedResultsQueryHandler : IQueryHandler<VokiReceiv
             .OrderByDescending(x => x.VokiTakings.Length)
             .ToImmutableArray();
 
-        return new VokiReceivedResultsQueryResult(resultsToReturn, voki.ResultsVisibility);
+        return new VokiReceivedResultsQueryResult(resultsToReturn, voki.InteractionSettings.ResultsVisibility, voki.Name);
     }
 }
 
 public sealed record VokiReceivedResultsQueryResult(
     ImmutableArray<VokiResultWithTakingDates> Results,
-    GeneralVokiResultsVisibility ResultsVisibility
+    GeneralVokiResultsVisibility ResultsVisibility,
+    VokiName VokiName
 );
 
 public record VokiResultWithTakingDates(VokiResult Result, (DateTime Start, DateTime Finish)[] VokiTakings);

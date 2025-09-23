@@ -1,13 +1,14 @@
 ﻿using GeneralVokiTakingService.Domain.app_user_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using SharedKernel.auth;
+using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Application.general_vokis.queries;
 
-public sealed record ViewVokiResultQuery(VokiId VokiId, GeneralVokiResultId ResultId) : IQuery<VokiResult>;
+public sealed record ViewVokiResultQuery(VokiId VokiId, GeneralVokiResultId ResultId) : IQuery<ViewVokiResultQueryResult>;
 
-internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQuery, VokiResult>
+internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQuery, ViewVokiResultQueryResult>
 {
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IGeneralVokisRepository _generalVokisRepository;
@@ -22,16 +23,19 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
     }
 
 
-    public async Task<ErrOr<VokiResult>> Handle(ViewVokiResultQuery query, CancellationToken ct) {
+    public async Task<ErrOr<ViewVokiResultQueryResult>> Handle(ViewVokiResultQuery query, CancellationToken ct) {
         GeneralVoki? voki = await _generalVokisRepository.GetWithResultsByIdAsNoTracking(query.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.GeneralVoki();
         }
 
-        return await voki.ResultsVisibility.Match(
+        ErrOr<VokiResult> resultOrErr = await voki.InteractionSettings.ResultsVisibility.Match(
             anyone: () => Task.FromResult(voki.GetResultToViewByAnyOne(query.ResultId)),
             afterTaking: () => ResultToViewByUserAfterTaking(voki, query.ResultId, ct),
             onlyReceived: () => OnlyReceivedResultToViewByUser(voki, query.ResultId, ct)
+        );
+        return resultOrErr.Bind<ViewVokiResultQueryResult>(result =>
+            new ViewVokiResultQueryResult(result, voki.InteractionSettings.ResultsVisibility, voki.Name)
         );
     }
 
@@ -71,3 +75,9 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
         return voki.GetOnlyReceivedResultToViewByUser(resultId, user.ReceivedResultIds);
     }
 }
+
+public sealed record ViewVokiResultQueryResult(
+    VokiResult Result,
+    GeneralVokiResultsVisibility ResultsVisibility,
+    VokiName VokiName
+);

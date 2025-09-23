@@ -62,6 +62,7 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
         builder.ComplexProperty(x => x.InteractionSettings, b => {
             b.Property(s => s.AuthenticatedOnlyTaking);
             b.Property(d => d.ResultsVisibility);
+            b.Property(d => d.ShowResultsDistribution);
         });
 
         builder.Ignore(x => x.Questions);

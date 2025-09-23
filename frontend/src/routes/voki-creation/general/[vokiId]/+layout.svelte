@@ -7,7 +7,6 @@
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
 	import generalVokiCreationIconsSprite from '$lib/icons/general-voki-creation-icons.svg?raw';
-	import imageIconsSprite from '$lib/icons/image-icons.svg?raw';
 	const { children }: { children: Snippet } = $props();
 	setVokiCreationPageApiService('General');
 </script>
@@ -15,7 +14,6 @@
 <div class="sprites">
 	{@html vokiAnswerTypesIconsSprite}
 	{@html generalVokiCreationIconsSprite}
-	{@html imageIconsSprite}
 </div>
 
 <VokiCreationHeader vokiName="Voki name bla bla ki name ki name " typeName="general" />

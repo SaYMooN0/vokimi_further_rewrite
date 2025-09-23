@@ -11,7 +11,6 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
     IDomainEventHandler<VokiNameUpdatedEvent>,
     IDomainEventHandler<VokiCoverUpdatedEvent>,
     IDomainEventHandler<GeneralVokiPublishedEvent>
-
 // and all other domain events that need to be published as integration events
 {
     private readonly IIntegrationEventPublisher _integrationEventPublisher;
@@ -32,7 +31,7 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
 
     public async Task Handle(GeneralVokiPublishedEvent e, CancellationToken ct) =>
         await _integrationEventPublisher.Publish(new GeneralVokiPublishedIntegrationEvent(
-            e.VokiId, 
+            e.VokiId,
             e.PrimaryAuthorId,
             CoAuthors: e.CoAuthors.ToArray(),
             Name: e.Name.ToString(),
@@ -48,6 +47,7 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
             ForceSequentialAnswering: e.TakingProcessSettings.ForceSequentialAnswering,
             ShuffleQuestions: e.TakingProcessSettings.ShuffleQuestions,
             VokiPublishedEventMapper.ResultIntegrationEventDtoArray(e.Results),
-            ResultsVisibility: e.InteractionSettings.ResultsVisibility
+            ResultsVisibility: e.InteractionSettings.ResultsVisibility,
+            ShowResultsDistribution: e.InteractionSettings.ShowResultsDistribution
         ), ct);
 }
