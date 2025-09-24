@@ -9,7 +9,7 @@ internal static class SpecificVokiResultsHandlers
     internal static void MapSpecificVokiResultsHandlers(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup("/vokis/{vokiId}/results");
 
-        group.MapGet("/{resultId}", ViewSpecificResult); //return results visibility
+        group.MapGet("/{resultId}", ViewSpecificResult);
 
         group.MapGet("/all", ViewAllVokiResults);
 
@@ -24,13 +24,10 @@ internal static class SpecificVokiResultsHandlers
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
         GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
 
-
         ViewVokiResultQuery query = new(vokiId, resultId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (success) => Results.Json(
-            ViewSingleResultResponse.Create(success.Result, success.ResultsVisibility, success.VokiName)
-        ));
+        return CustomResults.FromErrOrToJson<ViewVokiResultQueryResult, ViewSingleResultResponse>(result);
     }
 
     private static async Task<IResult> ViewAllVokiResults(
@@ -42,14 +39,7 @@ internal static class SpecificVokiResultsHandlers
         ViewAllVokiResultsQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (success) => Results.Json(
-            ViewAllVokiResultsResponse.Create(
-                success.Results,
-                success.ShowResultsDistribution,
-                success.ResultsVisibility,
-                success.VokiName
-            )
-        ));
+        return CustomResults.FromErrOrToJson<ViewAllVokiResultsQueryResult, ViewAllVokiResultsResponse>(result);
     }
 
     private static async Task<IResult> ViewVokiReceivedResults(
@@ -61,8 +51,6 @@ internal static class SpecificVokiResultsHandlers
         VokiReceivedResultsQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (success) => Results.Json(
-            ViewReceivedResultsResponse.Create(success.Results, success.ResultsVisibility, success.VokiName)
-        ));
+        return CustomResults.FromErrOrToJson<VokiReceivedResultsQueryResult, ViewReceivedResultsResponse>(result);
     }
 }

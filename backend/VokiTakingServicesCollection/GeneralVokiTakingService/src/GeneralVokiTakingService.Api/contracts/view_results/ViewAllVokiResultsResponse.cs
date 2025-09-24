@@ -1,5 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.dtos;
-using SharedKernel.common.vokis;
+﻿using GeneralVokiTakingService.Application.general_vokis.queries;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.dtos;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Api.contracts.view_results;
@@ -9,18 +9,15 @@ public record class ViewAllVokiResultsResponse(
     bool ShowResultsDistribution,
     GeneralVokiResultsVisibility ResultsVisibility,
     string VokiName
-)
+) : ICreatableResponse<ViewAllVokiResultsQueryResult>
 {
-    public static ViewAllVokiResultsResponse Create(
-        IEnumerable<VokiResultWithDistributionPercent> results,
-        bool allowResultsPercentage,
-        GeneralVokiResultsVisibility resultsVisibility,
-        VokiName vokiName
-    ) => new(
-        results.Select(VokiResultPreviewWithPercentageResponse.Create).ToArray(),
-        allowResultsPercentage,
-        resultsVisibility,
-        vokiName.ToString()
+    public static ICreatableResponse<ViewAllVokiResultsQueryResult> Create(
+        ViewAllVokiResultsQueryResult queryResult
+    ) => new ViewAllVokiResultsResponse(
+        queryResult.Results.Select(VokiResultPreviewWithPercentageResponse.Create).ToArray(),
+        queryResult.ShowResultsDistribution,
+        queryResult.ResultsVisibility,
+        queryResult.VokiName.ToString()
     );
 }
 

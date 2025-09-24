@@ -38,7 +38,12 @@ internal sealed class VokiReceivedResultsQueryHandler : IQueryHandler<VokiReceiv
             .ForVokiByUserAsNoTracking(previewQuery.VokiId, userId, ct);
 
         if (records.Length == 0) {
-            return new VokiReceivedResultsQueryResult([], voki.InteractionSettings.ResultsVisibility, voki.Name);
+            return new VokiReceivedResultsQueryResult(
+                [],
+                voki.InteractionSettings.ResultsVisibility,
+                voki.Name,
+                voki.ResultsCount
+            );
         }
 
         var receivedResultIds = records
@@ -60,14 +65,20 @@ internal sealed class VokiReceivedResultsQueryHandler : IQueryHandler<VokiReceiv
             .OrderByDescending(x => x.VokiTakings.Length)
             .ToImmutableArray();
 
-        return new VokiReceivedResultsQueryResult(resultsToReturn, voki.InteractionSettings.ResultsVisibility, voki.Name);
+        return new VokiReceivedResultsQueryResult(
+            resultsToReturn,
+            voki.InteractionSettings.ResultsVisibility,
+            voki.Name,
+            voki.ResultsCount
+        );
     }
 }
 
 public sealed record VokiReceivedResultsQueryResult(
     ImmutableArray<VokiResultWithTakingDates> Results,
     GeneralVokiResultsVisibility ResultsVisibility,
-    VokiName VokiName
+    VokiName VokiName,
+    uint TotalResultsCount
 );
 
 public record VokiResultWithTakingDates(VokiResult Result, (DateTime Start, DateTime Finish)[] VokiTakings);

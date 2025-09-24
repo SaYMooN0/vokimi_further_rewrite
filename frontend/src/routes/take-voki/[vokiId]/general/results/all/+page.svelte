@@ -1,6 +1,7 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 	import GeneralVokiResultPagesHeading from '../c_pages_shared/GeneralVokiResultPagesHeading.svelte';
+	import GeneralVokiResultPagesVokiNameSpan from '../c_pages_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
 	import type { PageProps } from './$types';
 	import GeneralVokiResultWithDistributionItem from './c_page/GeneralVokiResultWithDistributionItem.svelte';
 
@@ -9,8 +10,9 @@
 
 {#if data.response.isSuccess}
 	<GeneralVokiResultPagesHeading>
-		All results of the general
-		<span class="header-voki-name">{data.response.data.vokiName}</span>
+		All results of the
+		<GeneralVokiResultPagesVokiNameSpan vokiName={data.response.data.vokiName} />
+		general Voki
 	</GeneralVokiResultPagesHeading>
 	<div class="results-grid">
 		{#each data.response.data.results as r}

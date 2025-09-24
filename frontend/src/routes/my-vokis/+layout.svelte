@@ -156,6 +156,7 @@
 	:global(.my-vokis-page > .create-new-voki-btn > svg) {
 		height: 1.75rem;
 	}
+
 	@keyframes loading-fade-in {
 		0% {
 			opacity: 0;

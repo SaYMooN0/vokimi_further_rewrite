@@ -53,10 +53,10 @@
 	}
 
 	.rotate-animation {
-		animation: rotateAnimation 0.65s ease-in-out;
+		animation: rotate-animation 0.65s ease-in-out;
 	}
 
-	@keyframes rotateAnimation {
+	@keyframes rotate-animation {
 		0% {
 			transform: rotate(0deg);
 		}

@@ -1,5 +1,4 @@
-﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
-using SharedKernel.common.vokis;
+﻿using GeneralVokiTakingService.Application.general_vokis.queries;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Api.contracts.view_results;
@@ -10,19 +9,18 @@ public record class ViewSingleResultResponse(
     string Text,
     string? Image,
     GeneralVokiResultsVisibility ResultsVisibility,
-    string VokiName
-)
+    string VokiName,
+    uint ResultsCount
+) : ICreatableResponse<ViewVokiResultQueryResult>
 {
-    public static ViewSingleResultResponse Create(
-        VokiResult result,
-        GeneralVokiResultsVisibility resultsVisibility,
-        VokiName vokiName
-    ) => new(
-        result.Id.ToString(),
-        result.Name,
-        result.Text,
-        result.Image?.ToString() ?? null,
-        resultsVisibility,
-        vokiName.ToString()
-    );
+    public static ICreatableResponse<ViewVokiResultQueryResult> Create(ViewVokiResultQueryResult queryResult) =>
+        new ViewSingleResultResponse(
+            queryResult.Result.Id.ToString(),
+            queryResult.Result.Name,
+            queryResult.Result.Text,
+            queryResult.Result.Image?.ToString() ?? null,
+            queryResult.ResultsVisibility,
+            queryResult.VokiName.ToString(),
+            queryResult.TotalResultsCount
+        );
 }

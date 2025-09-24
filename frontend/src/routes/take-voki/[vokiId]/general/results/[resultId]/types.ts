@@ -5,6 +5,8 @@ export type GeneralVokiSingleResultViewData = {
     name: string;
     text: string;
     image: string | null;
-    ResultsVisibility: GeneralVokiResultsVisibility;
-    ResultsCount: number;
+    resultsVisibility: GeneralVokiResultsVisibility;
+    resultsCount: number;
+    vokiName: string;
 }
+

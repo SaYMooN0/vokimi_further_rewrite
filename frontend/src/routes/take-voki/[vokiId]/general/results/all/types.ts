@@ -7,8 +7,8 @@ export type ViewAllVokiResultsResponse = {
     resultsVisibility: GeneralVokiResultsVisibility;
 }
 export type VokiResultWithDistributionPercent = {
-    Id: string
-    Name: string
-    Image: string | null
-    DistributionPercent: number
+    id: string
+    name: string
+    image: string | null
+    distributionPercent: number
 }

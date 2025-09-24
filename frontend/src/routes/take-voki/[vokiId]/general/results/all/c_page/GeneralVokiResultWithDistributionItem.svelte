@@ -10,11 +10,11 @@
 </script>
 
 <div class="result-item">
-	{#if result.Image}
+	{#if result.image}
 		<img
 			class="result-image"
-			src={StorageBucketMain.fileSrc(result.Image)}
-			alt={`Image for result "${result.Name}"`}
+			src={StorageBucketMain.fileSrc(result.image)}
+			alt={`Image for result "${result.name}"`}
 		/>
 	{:else}
 		<div class="no-image">
@@ -24,20 +24,20 @@
 	{/if}
 
 	<div class="item-body">
-		<h3 class="result-name">{result.Name}</h3>
+		<h3 class="result-name">{result.name}</h3>
 		{#if showDistribution}
 			<div
 				class="progress"
 				aria-valuemin="0"
 				aria-valuemax="100"
-				aria-valuenow={Math.round(result.DistributionPercent)}
+				aria-valuenow={Math.round(result.distributionPercent)}
 			>
 				<div
 					class="progress-fill"
-					style={`width:${Math.max(0, Math.min(100, result.DistributionPercent))}%`}
+					style={`width:${Math.max(0, Math.min(100, result.distributionPercent))}%`}
 				/>
 			</div>
-			<label class="percent-label">{Math.round(result.DistributionPercent)}%</label>
+			<label class="percent-label">{Math.round(result.distributionPercent)}%</label>
 		{:else}
 			<div class="distribution-hidden">Author decided to hide results distribution</div>
 		{/if}
@@ -59,32 +59,36 @@
 		width: 4.5rem;
 		height: 4.5rem;
 		border-radius: 0.5rem;
-		object-fit: cover;
-		box-shadow: var(--shadow-xs);
 		background: var(--secondary);
+		box-shadow: var(--shadow-xs);
+		object-fit: cover;
 	}
+
 	.no-image {
-		height: 100%;
-		aspect-ratio: 1/1;
 		display: grid;
-		grid-template-rows: 1fr auto;
-		color: var(--secondary-foreground);
-		justify-items: center;
-		background-color: var(--secondary);
+		height: 100%;
 		padding: 0.375rem;
-		border-radius: 0.75rem;
 		border: 0.125rem solid var(--secondary-foreground);
+		border-radius: 0.75rem;
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+		aspect-ratio: 1/1;
+		grid-template-rows: 1fr auto;
+		justify-items: center;
 	}
+
 	.no-image svg {
 		width: 100%;
 		height: 100%;
-        stroke-width: 1.125;
+		stroke-width: 1.125;
 	}
+
 	.no-image span {
+		padding: 0.25rem 0;
 		font-size: 0.875rem;
 		font-weight: 500;
-        padding: 0.25rem 0;
 	}
+
 	.item-body {
 		display: grid;
 		gap: 0.5rem;
@@ -92,9 +96,9 @@
 
 	.result-name {
 		margin: 0;
+		color: var(--text);
 		font-size: 1.1rem;
 		font-weight: 600;
-		color: var(--text);
 	}
 
 	.progress {
@@ -115,7 +119,6 @@
 			color-mix(in srgb, var(--primary) 70%, var(--back) 30%),
 			var(--primary)
 		);
-
 		box-shadow: var(--shadow);
 		transition: width 220ms ease;
 	}

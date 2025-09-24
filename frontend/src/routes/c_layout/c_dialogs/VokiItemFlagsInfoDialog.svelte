@@ -51,63 +51,70 @@
 		grid-template-columns: 1fr auto 1fr auto 1fr;
 		gap: 1rem;
 	}
+
 	.columns-sep {
 		width: 0.125rem;
 		height: 100%;
 		border-radius: 0.125rem;
 		background-color: var(--secondary);
 	}
+
 	.flag-info {
 		display: grid;
 		grid-template-rows: 8rem auto;
 		width: 16rem;
 		justify-items: center;
 	}
+
 	.single-icon-container {
 		height: 5rem;
 		align-self: center;
 	}
+
 	.single-icon-container > svg {
-		height: 100%;
 		width: 100%;
+		height: 100%;
 		color: var(--accent-foreground);
 		stroke-width: 1.6;
 	}
+
 	.flag-icon {
-		align-self: center;
-		padding: 0.25rem;
-		box-sizing: border-box;
-		background-color: var(--back);
-		box-shadow: var(--shadow), var(--shadow-xs);
-		border-radius: 24%;
-		aspect-ratio: 1/1;
         display: flex;
         justify-content: center;
         align-items: center;
+		box-sizing: border-box;
+		padding: 0.25rem;
+		border-radius: 24%;
+		background-color: var(--back);
+		box-shadow: var(--shadow), var(--shadow-xs);
+		align-self: center;
+		aspect-ratio: 1/1;
 	}
+
 	.flag-info > label {
+		padding: 1rem 0;
+		font-size: 1.125rem;
 		text-align: justify;
 		text-indent: 0.5em;
-		font-size: 1.125rem;
-		padding: 1rem 0;
 	}
+
 	.flag-name {
 		font-weight: 500;
 	}
 
 	.language-icons {
 		display: flex;
+		flex-flow: row wrap;
+		place-content: center center;
 		gap: 0.75rem;
-		flex-direction: row;
-		flex-wrap: wrap;
-		justify-content: center;
-		align-content: center;
 	}
+
 	.language-icons svg {
 		height: 2rem;
 		aspect-ratio: var(--lang-icon-aspect-ratio);
 		border-radius: 0.375rem;
 	}
+
 	svg:has(use[href='#languages-icons-other']) {
 		stroke-width: 1.4;
 	}

@@ -52,6 +52,8 @@ public sealed class GeneralVoki : BaseVoki
         return voki;
     }
 
+    public uint ResultsCount => (uint)_results.Count;
+
     private static List<BaseStorageKey> GatherVokiContentKeys(
         VokiCoverKey coverKey, ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results
     ) {

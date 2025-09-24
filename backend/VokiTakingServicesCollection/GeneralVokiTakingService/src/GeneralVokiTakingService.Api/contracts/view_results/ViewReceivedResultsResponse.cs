@@ -7,17 +7,17 @@ namespace GeneralVokiTakingService.Api.contracts.view_results;
 public record ViewReceivedResultsResponse(
     ResultPreviewWithUserTakingsResponse[] Results,
     GeneralVokiResultsVisibility ResultsVisibility,
-    string VokiName
-)
+    string VokiName,
+    uint ResultsCount
+) : ICreatableResponse<VokiReceivedResultsQueryResult>
 {
-    public static ViewReceivedResultsResponse Create(
-        ImmutableArray<VokiResultWithTakingDates> results,
-        GeneralVokiResultsVisibility resultsVisibility,
-        VokiName vokiName
-    ) => new(
-        results.Select(ResultPreviewWithUserTakingsResponse.Create).ToArray(),
-        resultsVisibility,
-        vokiName.ToString()
+    public static ICreatableResponse<VokiReceivedResultsQueryResult> Create(
+        VokiReceivedResultsQueryResult queryResult
+    ) => new ViewReceivedResultsResponse(
+        queryResult.Results.Select(ResultPreviewWithUserTakingsResponse.Create).ToArray(),
+        queryResult.ResultsVisibility,
+        queryResult.VokiName.ToString(),
+        queryResult.TotalResultsCount
     );
 }
 

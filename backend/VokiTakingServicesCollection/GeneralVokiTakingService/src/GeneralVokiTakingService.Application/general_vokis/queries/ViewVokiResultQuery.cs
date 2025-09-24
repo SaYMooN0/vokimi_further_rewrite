@@ -35,7 +35,7 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
             onlyReceived: () => OnlyReceivedResultToViewByUser(voki, query.ResultId, ct)
         );
         return resultOrErr.Bind<ViewVokiResultQueryResult>(result =>
-            new ViewVokiResultQueryResult(result, voki.InteractionSettings.ResultsVisibility, voki.Name)
+            new ViewVokiResultQueryResult(result, voki.InteractionSettings.ResultsVisibility, voki.Name, voki.ResultsCount)
         );
     }
 
@@ -79,5 +79,6 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
 public sealed record ViewVokiResultQueryResult(
     VokiResult Result,
     GeneralVokiResultsVisibility ResultsVisibility,
-    VokiName VokiName
+    VokiName VokiName,
+    uint TotalResultsCount
 );

@@ -100,47 +100,54 @@
 		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
 		cursor: pointer;
 	}
+
 	.cover-container {
 		position: relative;
 	}
+
 	.flags-container {
 		position: absolute;
 		top: 0.375rem;
 		right: 0.375rem;
 		display: flex;
-		gap: 0.375rem;
 		flex-direction: row-reverse;
+		gap: 0.375rem;
 	}
+
 	.flag {
-		width: 1.675rem;
-		height: 1.675rem;
-		padding: 0.125rem;
-		box-sizing: border-box;
-		background-color: var(--back);
-		box-shadow: var(--shadow), var(--shadow-xs);
-		border-radius: 28%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		width: 1.675rem;
+		height: 1.675rem;
+		box-sizing: border-box;
+		padding: 0.125rem;
+		border-radius: 28%;
+		background-color: var(--back);
+		box-shadow: var(--shadow), var(--shadow-xs);
 		transition:
 			opacity 0.2s ease-in-out,
 			transform 0.05s ease-in,
 			background-color 0.08s ease-in;
 	}
+
 	.flag > svg {
-		height: 100%;
 		width: 100%;
+		height: 100%;
 	}
+
 	.flag.language > svg {
-		border-radius: 0.25rem;
 		width: 100%;
 		height: unset;
+		border-radius: 0.25rem;
 		aspect-ratio: var(--lang-icon-aspect-ratio);
 	}
+
 	.flag > svg:not(.language) {
 		stroke-width: 1.6;
 		color: var(--accent-foreground);
 	}
+
 	.voki-item:not(:has(.interactable:hover)):active {
 		background-color: var(--secondary);
 	}
@@ -173,17 +180,21 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
+
 	.voki-item:not(:has(.interactable:hover)):hover .flag {
 		opacity: 0.6;
 	}
+
 	.flag:hover {
-		transform: scale(1.06);
 		box-shadow: var(--shadow-md), var(--shadow-xs);
+		transform: scale(1.06);
 	}
+
 	.flag:active {
-		transform: scale(0.98);
 		background-color: var(--secondary);
+		transform: scale(0.98);
 	}
+
 	.voki-item:not(:has(.interactable:hover)):hover .voki-name {
 		text-decoration: underline;
 		text-decoration-thickness: 0.125rem;

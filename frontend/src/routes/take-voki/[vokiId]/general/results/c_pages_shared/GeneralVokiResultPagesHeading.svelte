@@ -8,13 +8,13 @@
 
 <style>
 	.results-header {
+		min-height: var(--side-bar-links-top-padding);
 		padding: 0.75rem 4rem;
 		margin: 0;
+		color: var(--secondary-foreground);
 		font-size: 1.75rem;
 		font-weight: 650;
-		color: var(--secondary-foreground);
-		min-height: var(--side-bar-links-top-padding);
-		letter-spacing: 0.25px;
 		text-align: center;
+		letter-spacing: 0.25px;
 	}
 </style>

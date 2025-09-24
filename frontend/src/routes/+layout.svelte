@@ -70,9 +70,11 @@
 		margin: 0 auto;
 		grid-template-columns: auto 1fr;
 	}
+
 	#page-content > :global(*) {
 		animation: 0.2s page-fade-in;
 	}
+
 	@keyframes page-fade-in {
 		from {
 			opacity: 0.2;
