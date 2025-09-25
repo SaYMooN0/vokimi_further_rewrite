@@ -13,7 +13,7 @@
 		display: grid;
 		gap: 0.5rem;
 		width: 100%;
-		padding: 0.125rem 0.25rem;
+		padding: 0.5rem 0;
 		grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
 	}
 

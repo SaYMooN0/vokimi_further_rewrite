@@ -8,12 +8,14 @@ internal record class VokiQuestionAnswerResponse(
     ushort Order,
     VokiAnswerTypeDataDto TypeData,
     string[] RelatedResultIds
-)
+) : ICreatableResponse<VokiQuestionAnswer>
 {
-    public static VokiQuestionAnswerResponse Create(VokiQuestionAnswer answer) => new(
+    public static VokiQuestionAnswerResponse FromAnswer(VokiQuestionAnswer answer) => new (
         answer.Id.ToString(),
         answer.OrderInQuestion,
         VokiAnswerTypeDataDto.FromAnswerData(answer.TypeData),
         answer.RelatedResultIds.Select(id => id.ToString()).ToArray()
     );
+
+    public static ICreatableResponse<VokiQuestionAnswer> Create(VokiQuestionAnswer answer) => FromAnswer(answer);
 }

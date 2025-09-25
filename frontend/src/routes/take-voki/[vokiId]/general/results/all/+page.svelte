@@ -1,24 +1,28 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import GeneralVokiResultPagesHeading from '../c_pages_shared/GeneralVokiResultPagesHeading.svelte';
+	import GeneralVokiResultPagesHeader from '../c_pages_shared/GeneralVokiResultPagesHeader.svelte';
 	import GeneralVokiResultPagesVokiNameSpan from '../c_pages_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
 	import type { PageProps } from './$types';
 	import GeneralVokiResultWithDistributionItem from './c_page/GeneralVokiResultWithDistributionItem.svelte';
+	import type { ViewAllVokiResultsResponse } from './types';
 
 	let { data }: PageProps = $props();
+	function getResultsSortedByDescendingDistribution(data: ViewAllVokiResultsResponse) {
+		return data.results.sort((a, b) => b.distributionPercent - a.distributionPercent);
+	}
 </script>
 
 {#if data.response.isSuccess}
-	<GeneralVokiResultPagesHeading>
-		All results of the
+	<GeneralVokiResultPagesHeader>
+		All({data.response.data.results.length}) results of the
 		<GeneralVokiResultPagesVokiNameSpan vokiName={data.response.data.vokiName} />
 		general Voki
-	</GeneralVokiResultPagesHeading>
+	</GeneralVokiResultPagesHeader>
 	<div class="results-grid">
-		{#each data.response.data.results as r}
+		{#each getResultsSortedByDescendingDistribution(data.response.data) as r}
 			<div class="results-list">
 				<GeneralVokiResultWithDistributionItem
-					showDistribution={data.response.data.showDistribution}
+					showDistribution={data.response.data.showResultsDistribution}
 					result={r}
 				/>
 			</div>

@@ -30,13 +30,10 @@ internal static class QuestionAnswersHandlers
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
         var request = httpContext.GetValidatedRequest<SaveVokiQuestionAnswerRequest>();
 
-        AddNewAnswerToVokiQuestionCommand command = new(
-            id, questionId, request.AnswerData, request.ParsedResultIds);
+        AddNewAnswerToVokiQuestionCommand command = new(id, questionId, request.AnswerData, request.ParsedResultIds);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (answer) => Results.Json(
-            VokiQuestionAnswerResponse.Create(answer)
-        ));
+        return CustomResults.FromErrOrToJson<VokiQuestionAnswer, VokiQuestionAnswerResponse>(result);
     }
 
     private static async Task<IResult> UpdateVokiQuestionAnswer(
@@ -48,14 +45,10 @@ internal static class QuestionAnswersHandlers
         GeneralVokiAnswerId answerId = httpContext.GetAnswerIdFromRoute();
         var request = httpContext.GetValidatedRequest<SaveVokiQuestionAnswerRequest>();
 
-        UpdateVokiQuestionAnswerCommand command = new(
-            vokiId, questionId, answerId, request.AnswerData, request.ParsedResultIds
-        );
+        UpdateVokiQuestionAnswerCommand command = new(vokiId, questionId, answerId, request.AnswerData, request.ParsedResultIds);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (answer) => Results.Json(
-            VokiQuestionAnswerResponse.Create(answer)
-        ));
+        return CustomResults.FromErrOrToJson<VokiQuestionAnswer, VokiQuestionAnswerResponse>(result);
     }
 
     private static async Task<IResult> DeleteVokiQuestionAnswer(

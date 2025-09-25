@@ -6,12 +6,11 @@
 
 <style>
 	.voki-name {
-		display: inline-block;
-		max-width: calc(40vw - 4rem);
+		max-width: 18rem;
 		margin: 0 0.25rem;
-		color: var(--accent);
+		color: var(--primary);
 		font-size: inherit;
-		font-weight: 650;
+		font-weight: 640;
 		text-overflow: ellipsis;
 		overflow: hidden;
 		white-space: nowrap;

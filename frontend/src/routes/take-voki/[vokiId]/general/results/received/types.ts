@@ -10,9 +10,10 @@ export type ResultPreviewWithUserTakingsData = {
     id: string,
     name: string,
     image: string | null,
-    takings: TakingPeriodData[]
+    takings: GeneralVokiTakenRecordData[]
 }
-export type TakingPeriodData = {
+export type GeneralVokiTakenRecordData = {
+    id: string;
     start: Date,
     finish: Date
 }

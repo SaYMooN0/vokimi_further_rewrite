@@ -1,22 +1,40 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import GeneralVokiResultPagesHeading from '../c_pages_shared/GeneralVokiResultPagesHeading.svelte';
+	import GeneralVokiResultPagesHeader from '../c_pages_shared/GeneralVokiResultPagesHeader.svelte';
 	import GeneralVokiResultPagesVokiNameSpan from '../c_pages_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
 	import type { PageProps } from './$types';
+	import GeneralVokiReceivedResultItem from './c_pages/GeneralVokiReceivedResultItem.svelte';
 
 	let { data }: PageProps = $props();
 </script>
 
 {#if data.response.isSuccess}
-	<GeneralVokiResultPagesHeading>
+	<GeneralVokiResultPagesHeader>
 		My received results of the
 		<GeneralVokiResultPagesVokiNameSpan vokiName={data.response.data.vokiName} />
 		general Voki ({data.response.data.results.length} out of {data.response.data.resultsCount})
-	</GeneralVokiResultPagesHeading>
+	</GeneralVokiResultPagesHeader>
+
+	<ul class="results">
+		{#each data.response.data.results as result}
+			<GeneralVokiReceivedResultItem {result} vokiId={data.vokiId!} />
+		{/each}
+	</ul>
 {:else}
 	<PageLoadErrView
 		defaultMessage="Unable to load all received voki results "
+		authRequiredMessage="To see your received results, you need to sign in"
 		errs={data.response.errs}
 		additionalParams={[{ name: 'vokiId', value: data.vokiId }]}
 	/>
 {/if}
+
+<style>
+	.results {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		display: grid;
+		gap: 0.75rem;
+	}
+</style>

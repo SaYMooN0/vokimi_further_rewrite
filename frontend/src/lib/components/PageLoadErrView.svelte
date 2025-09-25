@@ -10,10 +10,17 @@
 	interface Props {
 		errs: Err[];
 		defaultMessage?: string;
+		authRequiredMessage?: string;
 		additionalParams?: { name: string; value: any }[];
 		children?: Snippet;
 	}
-	let { errs, defaultMessage = undefined, additionalParams = [], children }: Props = $props();
+	let {
+		errs,
+		defaultMessage = undefined,
+		authRequiredMessage = undefined,
+		additionalParams = [],
+		children
+	}: Props = $props();
 
 	function chooseMessageType(): ErrType | 'ListEmpty' | 'ErrList' {
 		if (errs.length === 0) {
@@ -45,7 +52,7 @@
 	{:else if messageType === 'ListEmpty'}
 		<h1>Something went wrong. Please, try again later</h1>
 	{:else if messageType === 'AuthRequired'}
-		<h1>Page sign in required</h1>
+		<h1>{authRequiredMessage ?? 'Page sign in required'}</h1>
 		{@render errContentView(errs[0])}
 		<div class="btns-container">
 			<button class="login-btn" onclick={() => openSignInDialog('login')}>Login</button>
@@ -112,6 +119,6 @@
 	}
 
 	.children {
-		margin-top: 1rem;	
+		margin-top: 1rem;
 	}
 </style>

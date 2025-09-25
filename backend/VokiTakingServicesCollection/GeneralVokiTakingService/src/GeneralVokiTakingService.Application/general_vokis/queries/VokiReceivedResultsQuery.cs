@@ -1,7 +1,9 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using SharedKernel.auth;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
+using VokiTakingServicesLib.Domain.common;
 
 namespace GeneralVokiTakingService.Application.general_vokis.queries;
 
@@ -27,14 +29,13 @@ internal sealed class VokiReceivedResultsQueryHandler : IQueryHandler<VokiReceiv
         AppUserId userId = _userContext.AuthenticatedUserId;
 
 
-        GeneralVoki? voki = await _generalVokisRepository
-            .GetWithResultsByIdAsNoTracking(previewQuery.VokiId, ct);
+        GeneralVoki? voki = await _generalVokisRepository.GetWithResultsByIdAsNoTracking(previewQuery.VokiId, ct);
 
         if (voki is null) {
             return ErrFactory.NotFound.GeneralVoki();
         }
 
-        var records = await _generalVokiTakenRecordsRepository
+        GeneralVokiTakenRecord[] records = await _generalVokiTakenRecordsRepository
             .ForVokiByUserAsNoTracking(previewQuery.VokiId, userId, ct);
 
         if (records.Length == 0) {
@@ -50,35 +51,35 @@ internal sealed class VokiReceivedResultsQueryHandler : IQueryHandler<VokiReceiv
             .Select(r => r.ReceivedResultId)
             .ToImmutableHashSet();
 
-        IEnumerable<VokiResult> results = voki.ResultsReceivedByUser(receivedResultIds);
-
-        var takingsByResultId = records
-            .GroupBy(r => r.ReceivedResultId)
-            .ToDictionary(
-                g => g.Key,
-                g => g.Select(r => (r.StartTime, r.FinishTime))
-                    .OrderByDescending(t => t.StartTime)
-                    .ToArray()
-            );
-        ImmutableArray<VokiResultWithTakingDates> resultsToReturn = results
-            .Select(r => new VokiResultWithTakingDates(r, takingsByResultId.GetValueOrDefault(r.Id, defaultValue: [])))
-            .OrderByDescending(x => x.VokiTakings.Length)
-            .ToImmutableArray();
 
         return new VokiReceivedResultsQueryResult(
-            resultsToReturn,
+            GatherVokiTakenRecordsForResult(records, voki.ResultsReceivedByUser(receivedResultIds)),
             voki.InteractionSettings.ResultsVisibility,
             voki.Name,
             voki.ResultsCount
         );
     }
+
+    private ImmutableArray<(VokiResult, GeneralVokiTakenRecord[])> GatherVokiTakenRecordsForResult(
+        GeneralVokiTakenRecord[] records,
+        IEnumerable<VokiResult> results
+    ) {
+        Dictionary<GeneralVokiResultId, GeneralVokiTakenRecord[]> takingsByResultId = records
+            .GroupBy(r => r.ReceivedResultId)
+            .ToDictionary(
+                g => g.Key,
+                g => g.OrderByDescending(r => r.StartTime).ToArray()
+            );
+        return results
+            .Select(r => (r, takingsByResultId.GetValueOrDefault(r.Id, defaultValue: [])))
+            .OrderByDescending(tuple => tuple.Item2.Length)
+            .ToImmutableArray();
+    }
 }
 
 public sealed record VokiReceivedResultsQueryResult(
-    ImmutableArray<VokiResultWithTakingDates> Results,
+    ImmutableArray<(VokiResult Result, GeneralVokiTakenRecord[] Records)> ResultsWithTakings,
     GeneralVokiResultsVisibility ResultsVisibility,
     VokiName VokiName,
     uint TotalResultsCount
 );
-
-public record VokiResultWithTakingDates(VokiResult Result, (DateTime Start, DateTime Finish)[] VokiTakings);

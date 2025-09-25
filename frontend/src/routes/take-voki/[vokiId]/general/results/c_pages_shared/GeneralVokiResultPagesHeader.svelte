@@ -9,12 +9,14 @@
 <style>
 	.results-header {
 		min-height: var(--side-bar-links-top-padding);
-		padding: 0.75rem 4rem;
+		padding: 0.75rem 2rem;
 		margin: 0;
 		color: var(--secondary-foreground);
-		font-size: 1.75rem;
-		font-weight: 650;
-		text-align: center;
+		font-size: 1.5rem;
+		font-weight: 550;
 		letter-spacing: 0.25px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 </style>

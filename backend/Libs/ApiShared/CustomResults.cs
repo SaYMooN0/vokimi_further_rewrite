@@ -27,7 +27,3 @@ public static class CustomResults
     public static IResult Deleted() => Results.StatusCode(StatusCodes.Status202Accepted);
 }
 
-public interface ICreatableResponse<TSource>
-{
-    static abstract ICreatableResponse<TSource> Create(TSource success);
-}

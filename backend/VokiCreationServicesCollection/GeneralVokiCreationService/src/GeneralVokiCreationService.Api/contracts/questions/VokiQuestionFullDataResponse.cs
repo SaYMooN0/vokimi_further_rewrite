@@ -23,7 +23,10 @@ internal record class VokiQuestionFullDataResponse(
         question.Text.ToString(),
         QuestionImageSetResponse.Create(question.ImageSet),
         question.AnswersType,
-        question.Answers.Select(VokiQuestionAnswerResponse.Create).OrderBy(a => a.Order).ToArray(),
+        question.Answers
+            .Select(VokiQuestionAnswerResponse.FromAnswer)
+            .OrderBy(a => a.Order)
+            .ToArray(),
         question.ShuffleAnswers,
         question.AnswersCountLimit.MinAnswers,
         question.AnswersCountLimit.MaxAnswers,
@@ -31,7 +34,7 @@ internal record class VokiQuestionFullDataResponse(
     );
 }
 
-internal record  QuestionImageSetResponse(double Width, double Height, string[] Keys)
+internal record QuestionImageSetResponse(double Width, double Height, string[] Keys)
 {
     public static QuestionImageSetResponse Create(VokiQuestionImagesSet set) => new(
         set.AspectRatio.Width,
