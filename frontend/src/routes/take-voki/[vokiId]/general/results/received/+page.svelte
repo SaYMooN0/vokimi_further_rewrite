@@ -31,10 +31,10 @@
 
 <style>
 	.results {
-		list-style: none;
-		padding: 0;
-		margin: 0;
 		display: grid;
 		gap: 0.75rem;
+		padding: 0;
+		margin: 0;
+		list-style: none;
 	}
 </style>

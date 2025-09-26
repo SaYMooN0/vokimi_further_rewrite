@@ -22,9 +22,9 @@
 		position: relative;
 		display: inline-block;
 		width: 100%;
-		height: 6rem;
+		height: 4rem;
 
-		--color-input-radius: 0.5rem;
+		--color-input-radius: 0.75rem;
 	}
 
 	.color-input {

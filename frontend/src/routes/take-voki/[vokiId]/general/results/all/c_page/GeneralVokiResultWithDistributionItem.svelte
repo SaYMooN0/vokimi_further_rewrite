@@ -59,12 +59,14 @@
 		word-break: normal;
 		overflow-wrap: anywhere;
 	}
+
 	.distribution {
 		display: grid;
 		grid-template-columns: 1fr auto;
 		align-items: center;
 		gap: 0.125rem;
 	}
+
 	.bar {
 		position: relative;
 		width: 100%;
@@ -88,13 +90,14 @@
 	}
 
 	.percent-label {
-		min-width: 4.5rem;
 		display: inline-block;
+		min-width: 4.5rem;
 		border-radius: 0.5rem;
 		font-size: 1rem;
 		font-weight: 550;
 		text-align: center;
 	}
+
 	.distribution-hidden {
 		width: fit-content;
 		padding: 0.125rem 0.75rem;

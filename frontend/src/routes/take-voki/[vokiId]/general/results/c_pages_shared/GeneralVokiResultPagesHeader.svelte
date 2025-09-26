@@ -8,6 +8,9 @@
 
 <style>
 	.results-header {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		min-height: var(--side-bar-links-top-padding);
 		padding: 0.75rem 2rem;
 		margin: 0;
@@ -15,8 +18,5 @@
 		font-size: 1.5rem;
 		font-weight: 550;
 		letter-spacing: 0.25px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
 	}
 </style>

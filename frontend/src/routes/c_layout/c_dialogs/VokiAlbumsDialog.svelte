@@ -41,12 +41,21 @@
 	function onClose() {
 		currentOperatingVokiId = null;
 	}
+	function dialogSubheading() {
+		if (dialogState === 'create-new') {
+			return 'Create new album';
+		}
+		if (dialogState === 'albums' && albums.length === 0) {
+			return 'Start organizing your Vokis with albums';
+		}
+		return undefined;
+	}
 </script>
 
 <DialogWithCloseButton
 	bind:this={dialog}
 	dialogId="user-voki-albums-dialog"
-	subheading={dialogState === 'create-new' ? 'Create new album' : undefined}
+	subheading={dialogSubheading()}
 	onBeforeClose={() => onClose()}
 >
 	<AuthView>
@@ -76,8 +85,8 @@
 
 <style>
 	:global(#user-voki-albums-dialog > .dialog-content) {
-		width: 40rem;
-		height: 20rem;
+		width: 44rem;
+		height: 24rem;
 		animation: var(--default-fade-in-animation);
 	}
 </style>

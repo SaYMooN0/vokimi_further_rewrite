@@ -24,12 +24,13 @@
 
 <style>
 	.img-container {
-		height: fit-content;
-		width: fit-content;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		width: fit-content;
+		height: fit-content;
 	}
+
 	.result-image {
 		width: 100%;
 		height: 100%;
@@ -39,7 +40,6 @@
 	}
 
 	.no-image {
-		aspect-ratio: 1/1;
 		display: grid;
 		padding: 0.375rem;
 		border: 0.125rem solid var(--secondary-foreground);

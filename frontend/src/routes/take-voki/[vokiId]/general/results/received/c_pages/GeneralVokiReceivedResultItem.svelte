@@ -59,62 +59,69 @@
 
 <style>
 	.result {
-		box-shadow: var(--shadow-xs);
-        border-radius: 1rem;
-		padding: 0.75rem;
-		grid-template-columns: 8rem 1fr;
-		gap: 1rem;
 		display: grid;
+		gap: 1rem;
+		padding: 0.75rem;
+        border-radius: 1rem;
+		box-shadow: var(--shadow-xs);
+		grid-template-columns: 8rem 1fr;
 	}
+
 	.result-img {
 		height: fit-content;
 	}
 
 	.result-main {
 		display: grid;
-		gap: 0.5rem;
 		align-content: start;
+		gap: 0.5rem;
 	}
 
 	.result-name {
-		margin: 0.125rem 0 0 0;
+		margin: 0.125rem 0 0;
 		font-size: 1.125rem;
-		line-height: 1.25;
 		font-weight: 650;
+		line-height: 1.25;
         text-indent: 0.5em;
         word-break: normal;
 		overflow-wrap: anywhere;
 	}
+
 	.buttons-container {
 		display: flex;
 		flex-direction: row;
 		justify-content: right;
 		gap: 0.75rem;
 	}
+
 	.buttons-container > * {
 		display: inline-flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		width: fit-content;
 		height: 2rem;
-		font-weight: 550;
-		font-size: 0.875rem;
-		border-radius: 0.375rem;
 		padding: 0 1rem;
 		border: none;
-		width: fit-content;
+		border-radius: 0.375rem;
+		font-size: 0.875rem;
+		font-weight: 550;
 		transition: background-color 0.12s ease;
 	}
+
 	.buttons-container > *:active {
 		transform: scale(0.985);
 	}
+
 	.result-page-link {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 	}
+
 	.result-page-link:hover {
 		background: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.toggle-takings-btn {
 		gap: 0.25rem;
 		min-width: 10rem;
@@ -123,57 +130,64 @@
 		cursor: pointer;
 		user-select: none;
 	}
+
 	.toggle-takings-btn:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.toggle-takings-btn svg {
 		display: inline-block;
-		height: 1.125rem;
 		width: 1.125rem;
-		transform: rotate(0deg);
+		height: 1.125rem;
 		transition: transform 0.15s ease;
+		transform: rotate(0deg);
 	}
+
 	.toggle-takings-btn.open svg {
 		transform: rotate(-180deg);
 	}
+
 	.takings-container {
 		max-height: 0;
-		overflow: hidden;
+		margin-top: 0.5rem;
+		opacity: 0;
 		transition:
 			max-height 0.2s ease,
 			opacity 0.2s ease,
 			padding-top 0.2s ease;
-		opacity: 0;
-		margin-top: 0.5rem;
+		overflow: hidden;
 	}
+
 	.takings-container.open {
 		max-height: 30rem;
-		opacity: 1;
 		padding-top: 0.5rem;
+		opacity: 1;
 	}
 
 	.takings-column-names {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
+		align-content: center;
 		gap: 0.5rem;
 		margin-bottom: 0.375rem;
+		grid-template-columns: 1fr 1fr 1fr;
 		justify-items: center;
-		align-content: center;
 		border-top: 0.125rem solid var(--secondary);
 		border-bottom: 0.125rem solid var(--secondary) !important;
 	}
+
 	.takings-column-names > span {
 		color: var(--secondary-foreground);
-		font-weight: 550;
 		font-size: 1rem;
+		font-weight: 550;
 	}
+
 	.takings-container > div {
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
 		gap: 0.5rem;
 		padding: 0.375rem 0.25rem;
-		font-weight: 550;
-		font-size: 1rem;
 		color: var(--text);
+		font-size: 1rem;
+		font-weight: 550;
+		grid-template-columns: 1fr 1fr 1fr;
 	}
 </style>

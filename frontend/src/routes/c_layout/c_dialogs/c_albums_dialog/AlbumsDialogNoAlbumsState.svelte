@@ -5,6 +5,12 @@
 </script>
 
 <div class="no-albums">
-	<label>You have not created any albums yet</label>
-	<PrimaryButton onclick={createNew}>Create first Vokis album</PrimaryButton>
+	<PrimaryButton onclick={createNew}>Create first album</PrimaryButton>
 </div>
+<style>
+	.no-albums {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+</style>
