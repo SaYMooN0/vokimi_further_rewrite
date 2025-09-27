@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { relativeTime } from 'svelte-relative-time';
 	import GeneralVokiResultPreviewImage from '../../c_pages_shared/GeneralVokiResultPreviewImage.svelte';
+	import { DateUtils } from '$lib/ts/utils/date-utils';
 
 	interface Props {
 		result: {
@@ -48,8 +50,13 @@
 
 			{#each result.takings as t}
 				<div>
-					<span>{t.start}</span>
-					<span>{t.finish}</span>
+					<label>
+						{DateUtils.toLocale(t.start)}
+					</label>
+					<label>
+						{DateUtils.toLocale(t.finish)}
+					</label>
+
 					<span>{(t.start, t.finish)}</span>
 				</div>
 			{/each}
@@ -62,7 +69,7 @@
 		display: grid;
 		gap: 1rem;
 		padding: 0.75rem;
-        border-radius: 1rem;
+		border-radius: 1rem;
 		box-shadow: var(--shadow-xs);
 		grid-template-columns: 8rem 1fr;
 	}
@@ -82,8 +89,8 @@
 		font-size: 1.125rem;
 		font-weight: 650;
 		line-height: 1.25;
-        text-indent: 0.5em;
-        word-break: normal;
+		text-indent: 0.5em;
+		word-break: normal;
 		overflow-wrap: anywhere;
 	}
 

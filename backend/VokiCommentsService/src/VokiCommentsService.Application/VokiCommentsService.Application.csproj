@@ -9,4 +9,7 @@
         <ProjectReference Include="..\VokiCommentsService.Domain\VokiCommentsService.Domain.csproj"/>
         <ProjectReference Include="..\..\..\Libs\ApplicationShared\ApplicationShared.csproj"/>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="common\" />
+    </ItemGroup>
 </Project>

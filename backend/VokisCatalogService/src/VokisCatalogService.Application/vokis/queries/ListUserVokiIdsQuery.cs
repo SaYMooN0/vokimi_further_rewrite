@@ -1,5 +1,5 @@
 ﻿using SharedKernel.auth;
-using VokisCatalogService.Domain.common.interfaces.repositories;
+using VokisCatalogService.Application.common.repositories;
 
 namespace VokisCatalogService.Application.vokis.queries;
 

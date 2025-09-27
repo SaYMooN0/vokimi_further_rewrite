@@ -1,4 +1,5 @@
-﻿using SharedKernel.auth;
+﻿using AuthService.Application.common.repositories;
+using SharedKernel.auth;
 
 namespace AuthService.Application.app_users.queries;
 

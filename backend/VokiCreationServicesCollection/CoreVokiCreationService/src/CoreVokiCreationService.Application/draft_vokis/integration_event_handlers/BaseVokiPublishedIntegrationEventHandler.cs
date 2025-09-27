@@ -1,4 +1,4 @@
-﻿using CoreVokiCreationService.Domain.common.interfaces.repositories;
+﻿using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using MassTransit;
 using SharedKernel.integration_events.voki_publishing;

@@ -1,5 +1,5 @@
-﻿using VokiCommentsService.Domain.app_user_aggregate;
-using VokiCommentsService.Domain.common.interfaces.repositories;
+﻿using VokiCommentsService.Application.common.repositories;
+using VokiCommentsService.Domain.app_user_aggregate;
 
 namespace VokiCommentsService.Infrastructure.persistence.repositories;
 

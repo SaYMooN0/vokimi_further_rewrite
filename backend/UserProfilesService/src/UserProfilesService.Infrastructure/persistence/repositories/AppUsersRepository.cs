@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using UserProfilesService.Application.common.repositories;
 using UserProfilesService.Domain.app_user_aggregate;
-using UserProfilesService.Domain.common.interfaces.repositories;
 
 namespace UserProfilesService.Infrastructure.persistence.repositories;
 

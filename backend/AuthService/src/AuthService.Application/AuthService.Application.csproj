@@ -10,4 +10,8 @@
         <ProjectReference Include="..\..\..\Libs\ApplicationShared\ApplicationShared.csproj" />
         <ProjectReference Include="..\AuthService.Domain\AuthService.Domain.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="common\" />
+    </ItemGroup>
 </Project>

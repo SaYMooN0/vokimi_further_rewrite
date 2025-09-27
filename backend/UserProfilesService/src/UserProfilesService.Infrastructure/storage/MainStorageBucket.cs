@@ -2,6 +2,7 @@
 using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
 using UserProfilesService.Application;
+using UserProfilesService.Application.common;
 using VokimiStorageKeysLib.concrete_keys;
 
 namespace UserProfilesService.Infrastructure.storage;

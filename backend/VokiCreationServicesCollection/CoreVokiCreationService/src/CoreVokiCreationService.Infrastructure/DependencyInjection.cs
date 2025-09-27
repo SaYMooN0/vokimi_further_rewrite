@@ -2,7 +2,8 @@
 using Amazon.S3;
 using ApplicationShared;
 using CoreVokiCreationService.Application;
-using CoreVokiCreationService.Domain.common.interfaces.repositories;
+using CoreVokiCreationService.Application.common;
+using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Infrastructure.persistence;
 using CoreVokiCreationService.Infrastructure.persistence.repositories;
 using CoreVokiCreationService.Infrastructure.storage;

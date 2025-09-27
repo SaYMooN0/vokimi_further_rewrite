@@ -1,5 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.common;
-using GeneralVokiTakingService.Domain.common.interfaces.repositories.taking_sessions;
+﻿using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
+using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories.taking_sessions;

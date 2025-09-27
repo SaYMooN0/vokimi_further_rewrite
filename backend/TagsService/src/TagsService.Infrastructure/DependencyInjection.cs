@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
-using TagsService.Domain.common.interfaces.repositories;
+using TagsService.Application.common.repositories;
 using TagsService.Infrastructure.persistence;
 using TagsService.Infrastructure.persistence.repositories;
 

@@ -1,4 +1,4 @@
-﻿using TagsService.Domain.common.interfaces.repositories;
+﻿using TagsService.Application.common.repositories;
 
 namespace TagsService.Infrastructure.persistence.repositories;
 

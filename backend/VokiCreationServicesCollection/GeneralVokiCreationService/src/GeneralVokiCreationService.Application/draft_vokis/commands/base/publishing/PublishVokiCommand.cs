@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Domain.common.interfaces.repositories;
+﻿using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel;
 using VokiCreationServicesLib.Application;

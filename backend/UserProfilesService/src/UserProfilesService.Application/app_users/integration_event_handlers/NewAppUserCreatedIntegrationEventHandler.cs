@@ -1,7 +1,8 @@
 ﻿using MassTransit;
 using SharedKernel.integration_events;
+using UserProfilesService.Application.common;
+using UserProfilesService.Application.common.repositories;
 using UserProfilesService.Domain.app_user_aggregate;
-using UserProfilesService.Domain.common.interfaces.repositories;
 
 namespace UserProfilesService.Application.app_users.integration_event_handlers;
 

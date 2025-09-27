@@ -1,5 +1,5 @@
-﻿using GeneralVokiCreationService.Application.draft_vokis.commands.answers.auxiliary;
-using GeneralVokiCreationService.Domain.common.interfaces.repositories;
+﻿using GeneralVokiCreationService.Application.common.repositories;
+using GeneralVokiCreationService.Application.draft_vokis.commands.answers.auxiliary;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using VokiCreationServicesLib.Application.pipeline_behaviors;

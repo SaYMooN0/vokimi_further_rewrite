@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using SharedKernel.integration_events;
+using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.app_user_aggregate;
-using VokiRatingsService.Domain.common.interfaces.repositories;
 
 namespace VokiRatingsService.Application.app_users.integration_event_handlers;
 

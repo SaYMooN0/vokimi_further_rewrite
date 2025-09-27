@@ -1,4 +1,4 @@
-﻿using AlbumsService.Domain.common.interfaces.repositories;
+﻿using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.voki_album_aggregate;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,5 +1,5 @@
-﻿using AlbumsService.Domain.app_user_aggregate;
-using AlbumsService.Domain.common.interfaces.repositories;
+﻿using AlbumsService.Application.common.repositories;
+using AlbumsService.Domain.app_user_aggregate;
 using AlbumsService.Domain.voki_album_aggregate;
 using SharedKernel;
 using SharedKernel.auth;

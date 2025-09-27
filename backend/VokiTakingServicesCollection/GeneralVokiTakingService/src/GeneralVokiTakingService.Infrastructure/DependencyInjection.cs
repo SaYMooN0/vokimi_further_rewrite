@@ -1,6 +1,6 @@
 ﻿using ApplicationShared;
-using GeneralVokiTakingService.Domain.common.interfaces.repositories;
-using GeneralVokiTakingService.Domain.common.interfaces.repositories.taking_sessions;
+using GeneralVokiTakingService.Application.common.repositories;
+using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Infrastructure.persistence;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories.taking_sessions;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
-using VokiTakingServicesLib.Domain.common.interfaces.repositories;
+using VokiTakingServicesLib.Application.repositories;
 
 namespace GeneralVokiTakingService.Infrastructure;
 

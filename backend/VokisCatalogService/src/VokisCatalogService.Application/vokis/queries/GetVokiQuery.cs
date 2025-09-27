@@ -1,4 +1,4 @@
-using VokisCatalogService.Domain.common.interfaces.repositories;
+using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.voki_aggregate;
 
 namespace VokisCatalogService.Application.vokis.queries;

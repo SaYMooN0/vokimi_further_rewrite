@@ -1,4 +1,5 @@
 ﻿using AuthService.Application.abstractions;
+using AuthService.Application.common.repositories;
 using AuthService.Domain.app_user_aggregate;
 using AuthService.Domain.unconfirmed_user_aggregate;
 using SharedKernel;

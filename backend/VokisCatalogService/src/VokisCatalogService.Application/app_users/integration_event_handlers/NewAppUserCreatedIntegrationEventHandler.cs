@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using SharedKernel.integration_events;
+using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.app_user_aggregate;
-using VokisCatalogService.Domain.common.interfaces.repositories;
 
 namespace VokisCatalogService.Application.app_users.integration_event_handlers;
 

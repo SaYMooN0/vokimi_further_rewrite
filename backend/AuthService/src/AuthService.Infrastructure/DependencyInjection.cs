@@ -1,7 +1,6 @@
 ﻿using ApplicationShared;
 using AuthService.Application.abstractions;
-using AuthService.Domain.common.interfaces;
-using AuthService.Domain.common.interfaces.repositories;
+using AuthService.Application.common.repositories;
 using AuthService.Infrastructure.auth;
 using AuthService.Infrastructure.email_service;
 using AuthService.Infrastructure.persistence;

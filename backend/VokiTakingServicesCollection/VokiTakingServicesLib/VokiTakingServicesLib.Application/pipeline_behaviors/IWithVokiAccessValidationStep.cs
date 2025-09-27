@@ -3,8 +3,8 @@ using SharedKernel.auth;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
+using VokiTakingServicesLib.Application.repositories;
 using VokiTakingServicesLib.Domain.base_voki_aggregate;
-using VokiTakingServicesLib.Domain.common.interfaces.repositories;
 
 namespace VokiTakingServicesLib.Application.pipeline_behaviors;
 

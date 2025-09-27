@@ -1,6 +1,6 @@
 ﻿using AuthService.Application.abstractions;
+using AuthService.Application.common.repositories;
 using AuthService.Domain.app_user_aggregate;
-using AuthService.Domain.common.interfaces;
 using SharedKernel.auth;
 
 namespace AuthService.Application.app_users.queries;

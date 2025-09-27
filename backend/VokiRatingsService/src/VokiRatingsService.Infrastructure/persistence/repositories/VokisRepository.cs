@@ -1,4 +1,4 @@
-﻿using VokiRatingsService.Domain.common.interfaces.repositories;
+﻿using VokiRatingsService.Application.common.repositories;
 
 namespace VokiRatingsService.Infrastructure.persistence.repositories;
 

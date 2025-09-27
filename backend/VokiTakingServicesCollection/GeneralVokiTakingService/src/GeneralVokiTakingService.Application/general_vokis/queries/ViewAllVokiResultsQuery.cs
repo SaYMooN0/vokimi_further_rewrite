@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
+﻿using GeneralVokiTakingService.Application.common.repositories;
+using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.dtos;
 using SharedKernel.auth;
 using SharedKernel.common.vokis;

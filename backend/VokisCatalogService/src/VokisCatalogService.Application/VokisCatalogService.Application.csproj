@@ -10,4 +10,8 @@
       <ProjectReference Include="..\..\..\Libs\ApplicationShared\ApplicationShared.csproj" />
       <ProjectReference Include="..\VokisCatalogService.Domain\VokisCatalogService.Domain.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="common\" />
+    </ItemGroup>
 </Project>

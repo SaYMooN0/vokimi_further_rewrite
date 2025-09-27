@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
-using VokisCatalogService.Domain.common.interfaces.repositories;
+using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Infrastructure.persistence;
 using VokisCatalogService.Infrastructure.persistence.repositories;
 

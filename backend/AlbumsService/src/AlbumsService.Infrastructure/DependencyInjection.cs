@@ -1,4 +1,4 @@
-﻿using AlbumsService.Domain.common.interfaces.repositories;
+﻿using AlbumsService.Application.common.repositories;
 using AlbumsService.Infrastructure.persistence;
 using AlbumsService.Infrastructure.persistence.repositories;
 using ApplicationShared;

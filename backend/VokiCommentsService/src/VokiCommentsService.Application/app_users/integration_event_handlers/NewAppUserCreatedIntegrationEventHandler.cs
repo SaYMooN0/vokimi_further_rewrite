@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using SharedKernel.integration_events;
+using VokiCommentsService.Application.common.repositories;
 using VokiCommentsService.Domain.app_user_aggregate;
-using VokiCommentsService.Domain.common.interfaces.repositories;
 
 namespace VokiCommentsService.Application.app_users.integration_event_handlers;
 

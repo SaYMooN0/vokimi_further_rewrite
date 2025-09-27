@@ -1,5 +1,5 @@
-﻿using CoreVokiCreationService.Application.pipeline_behaviors;
-using CoreVokiCreationService.Domain.common.interfaces.repositories;
+﻿using CoreVokiCreationService.Application.common.repositories;
+using CoreVokiCreationService.Application.pipeline_behaviors;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
 namespace CoreVokiCreationService.Application.draft_vokis.commands.invites;

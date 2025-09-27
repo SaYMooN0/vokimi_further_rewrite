@@ -1,4 +1,4 @@
-﻿using AuthService.Domain.common.interfaces.repositories;
+﻿using AuthService.Application.common.repositories;
 using AuthService.Domain.unconfirmed_user_aggregate;
 using Microsoft.EntityFrameworkCore;
 

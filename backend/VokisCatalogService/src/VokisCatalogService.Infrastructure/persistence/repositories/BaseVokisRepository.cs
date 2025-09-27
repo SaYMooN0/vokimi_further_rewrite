@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VokisCatalogService.Domain.common.interfaces.repositories;
+using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.voki_aggregate;
 
 namespace VokisCatalogService.Infrastructure.persistence.repositories;

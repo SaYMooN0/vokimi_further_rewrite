@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
-using VokiRatingsService.Domain.common.interfaces.repositories;
+using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Infrastructure.persistence;
 using VokiRatingsService.Infrastructure.persistence.repositories;
 
@@ -46,8 +46,10 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddConfiguredMassTransit(this IServiceCollection services,
-        IConfiguration configuration) {
+    private static IServiceCollection AddConfiguredMassTransit(
+        this IServiceCollection services,
+        IConfiguration configuration
+    ) {
         var rabbitConfig = configuration.GetSection("MessageBroker");
 
         var host = rabbitConfig["Host"] ?? throw new ArgumentException("MessageBroker:Host is not configured");
@@ -130,6 +132,7 @@ public static class DependencyInjection
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IVokisRepository, VokisRepository>();
+        services.AddScoped<IVokiRatingsRepository, VokiRatingsRepository>();
 
         return services;
     }

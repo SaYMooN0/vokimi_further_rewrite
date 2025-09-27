@@ -2,7 +2,8 @@
 using Amazon.S3;
 using ApplicationShared;
 using GeneralVokiCreationService.Application;
-using GeneralVokiCreationService.Domain.common.interfaces.repositories;
+using GeneralVokiCreationService.Application.common;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Infrastructure.persistence;
 using GeneralVokiCreationService.Infrastructure.persistence.repositories;
 using GeneralVokiCreationService.Infrastructure.storage;
@@ -17,7 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
-using VokiCreationServicesLib.Domain.repositories;
+using VokiCreationServicesLib.Application.repositories;
 
 namespace GeneralVokiCreationService.Infrastructure;
 

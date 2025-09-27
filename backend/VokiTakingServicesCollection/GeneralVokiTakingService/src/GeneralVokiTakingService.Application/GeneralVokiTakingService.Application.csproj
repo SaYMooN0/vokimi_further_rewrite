@@ -11,4 +11,8 @@
         <ProjectReference Include="..\..\..\VokiTakingServicesLib\VokiTakingServicesLib.Application\VokiTakingServicesLib.Application.csproj" />
         <ProjectReference Include="..\GeneralVokiTakingService.Domain\GeneralVokiTakingService.Domain.csproj"/>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="common\" />
+    </ItemGroup>
 </Project>

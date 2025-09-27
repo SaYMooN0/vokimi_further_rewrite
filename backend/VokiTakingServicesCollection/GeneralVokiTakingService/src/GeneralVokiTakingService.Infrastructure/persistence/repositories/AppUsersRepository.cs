@@ -1,5 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.app_user_aggregate;
-using GeneralVokiTakingService.Domain.common.interfaces.repositories;
+﻿using GeneralVokiTakingService.Application.common.repositories;
+using GeneralVokiTakingService.Domain.app_user_aggregate;
 using Microsoft.EntityFrameworkCore;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories;

@@ -1,4 +1,4 @@
-﻿using GeneralVokiTakingService.Domain.common.interfaces.repositories;
+﻿using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using Microsoft.EntityFrameworkCore;
 

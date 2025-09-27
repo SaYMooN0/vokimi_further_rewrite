@@ -1,4 +1,4 @@
-﻿using VokiCommentsService.Domain.common.interfaces.repositories;
+﻿using VokiCommentsService.Application.common.repositories;
 
 namespace VokiCommentsService.Infrastructure.persistence.repositories;
 

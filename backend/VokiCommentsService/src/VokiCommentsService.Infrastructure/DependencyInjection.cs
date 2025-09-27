@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SharedKernel.auth;
-using VokiCommentsService.Domain.common.interfaces.repositories;
+using VokiCommentsService.Application.common.repositories;
 using VokiCommentsService.Infrastructure.persistence;
 using VokiCommentsService.Infrastructure.persistence.repositories;
 

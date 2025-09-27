@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
+﻿using GeneralVokiTakingService.Application.common.repositories;
+using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.answers;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;

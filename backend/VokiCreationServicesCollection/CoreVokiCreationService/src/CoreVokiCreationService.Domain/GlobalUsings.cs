@@ -1,5 +1,4 @@
 ﻿global using System.Collections.Immutable;
-global using CoreVokiCreationService.Domain.common;
 global using SharedKernel.common;
 global using SharedKernel.domain;
 global using SharedKernel.domain.events;

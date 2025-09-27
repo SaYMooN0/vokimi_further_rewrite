@@ -1,5 +1,5 @@
-﻿using VokisCatalogService.Domain.app_user_aggregate;
-using VokisCatalogService.Domain.common.interfaces.repositories;
+﻿using VokisCatalogService.Application.common.repositories;
+using VokisCatalogService.Domain.app_user_aggregate;
 using VokisCatalogService.Domain.voki_aggregate.events;
 
 namespace VokisCatalogService.Application.app_users.domain_event_handlers;

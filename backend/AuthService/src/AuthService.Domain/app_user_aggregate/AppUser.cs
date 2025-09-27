@@ -1,5 +1,4 @@
 ﻿using AuthService.Domain.app_user_aggregate.events;
-using AuthService.Domain.common.interfaces;
 using SharedKernel;
 using SharedKernel.common.app_users;
 
