@@ -19,3 +19,9 @@ export type VokiOverviewInfo = {
     commentsCount: number;
     authenticatedOnlyTaking: boolean;
 };
+
+export type VokiRatingData = {
+    value: number;
+    userId: string;
+    dateTime: Date;
+};

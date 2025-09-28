@@ -1,13 +1,13 @@
 ﻿using InfrastructureShared.Base.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VokiRatingsService.Domain.app_user_aggregate;
+using VokiRatingsService.Domain.voki_aggregate;
 
 namespace VokiRatingsService.Infrastructure.persistence.configurations.entities_configurations;
 
-internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
+internal class VokisConfigurations : IEntityTypeConfiguration<Voki>
 {
-    public void Configure(EntityTypeBuilder<AppUser> builder) {
+    public void Configure(EntityTypeBuilder<Voki> builder) {
         builder
             .HasKey(x => x.Id);
         builder
@@ -17,10 +17,6 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 
         builder
             .Property(x => x.RatingIds)
-            .HasGuidBasedIdsImmutableHashSetConversion();
-
-        builder
-            .Property<ImmutableHashSet<VokiId>>("TakenVokiIds")
             .HasGuidBasedIdsImmutableHashSetConversion();
     }
 }

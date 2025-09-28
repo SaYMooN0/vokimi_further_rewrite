@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
 	import { toast } from 'svelte-sonner';
-	import AboutPageFieldNameLabel from './AboutPageFieldNameLabel.svelte';
+	import AboutPageFieldNameLabel from './AboutTabFieldNameLabel.svelte';
 
 	let { tags, vokiId }: { tags: string[]; vokiId: string } = $props<{
 		tags: string[];

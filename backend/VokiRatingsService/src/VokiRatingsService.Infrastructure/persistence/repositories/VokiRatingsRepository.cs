@@ -12,30 +12,37 @@ public class VokiRatingsRepository : IVokiRatingsRepository
         _db = db;
     }
 
-    public Task<VokiRating?> GetByUserForVoki(AppUserId userId, VokiId vokiId) =>
-        _db.Ratings.FirstOrDefaultAsync(r => r.VokiId == vokiId && r.UserId == userId);
+    public Task<VokiRating?> GetByUserForVoki(AppUserId userId, VokiId vokiId, CancellationToken ct) =>
+        _db.Ratings.FirstOrDefaultAsync(r => r.VokiId == vokiId && r.UserId == userId, cancellationToken: ct);
 
-    public async Task Update(VokiRating rating) {
+    public Task<VokiRating[]> GetForVokiAsNoTracking(VokiId vokiId, CancellationToken ct) => _db.Ratings
+        .AsNoTracking()
+        .Where(r => r.VokiId == vokiId)
+        .ToArrayAsync(cancellationToken: ct);
+
+    public async Task Update(VokiRating rating, CancellationToken ct) {
         _db.Ratings.Update(rating);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
 
-    public async Task Add(VokiRating rating) {
+    public async Task Add(VokiRating rating, CancellationToken ct) {
         _db.Ratings.Add(rating);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<(uint RatingsSum, uint RatingsCount)> GetRatingsSumAndCountForVoki(VokiId commandVokiId) {
+    public async Task<(uint RatingsSum, uint RatingsCount)> GetRatingsSumAndCountForVoki(
+        VokiId vokiId, CancellationToken ct
+    ) {
         var baseQuery = _db.Ratings
             .AsNoTracking()
-            .Where(r => r.VokiId == commandVokiId);
+            .Where(r => r.VokiId == vokiId);
 
-        var count = await baseQuery.LongCountAsync();
+        var count = await baseQuery.CountAsync(cancellationToken: ct);
         if (count == 0) {
             return (0u, 0u);
         }
 
-        var sum = await baseQuery.SumAsync(r => r.Current.Value);
+        int sum = await baseQuery.SumAsync(r => r.Current.Value, cancellationToken: ct);
 
         return ((uint)sum, (uint)count);
     }

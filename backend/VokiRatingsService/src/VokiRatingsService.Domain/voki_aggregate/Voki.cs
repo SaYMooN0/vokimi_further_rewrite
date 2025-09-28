@@ -3,14 +3,14 @@
 public class Voki : AggregateRoot<VokiId>
 {
     private Voki() { }
-    public ImmutableHashSet<VokiRatingId> Ratings { get; private set; }
+    public ImmutableHashSet<VokiRatingId> RatingIds { get; private set; }
 
     public Voki(VokiId id) {
         Id = id;
-        Ratings = [];
+        RatingIds = [];
     }
 
     public void AddRating(VokiRatingId vokiRatingId) {
-        Ratings = Ratings.Add(vokiRatingId);
+        RatingIds = RatingIds.Add(vokiRatingId);
     }
 }

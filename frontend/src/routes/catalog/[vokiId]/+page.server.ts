@@ -1,6 +1,6 @@
 import { ApiVokisCatalog } from "$lib/ts/backend-communication/backend-services";
 import type { PageServerLoad } from "./$types";
-import type { VokiOverviewInfo } from "./ts_page/types";
+import type { VokiOverviewInfo } from "./types";
 
 
 const TABS = ['about', 'comments', 'ratings'] as const;

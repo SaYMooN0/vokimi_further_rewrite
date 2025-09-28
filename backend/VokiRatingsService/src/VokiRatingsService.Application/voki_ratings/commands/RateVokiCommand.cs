@@ -46,16 +46,16 @@ internal sealed class RateVokiCommandHandler :
         }
 
         var ratingValue = creationRes.AsSuccess();
-        VokiRating? rating = await _vokiRatingsRepository.GetByUserForVoki(userId, command.VokiId);
+        VokiRating? rating = await _vokiRatingsRepository.GetByUserForVoki(userId, command.VokiId,ct);
 
 
         if (rating is null) {
             rating = VokiRating.CreateNew(userId, command.VokiId, ratingValue);
-            await _vokiRatingsRepository.Add(rating);
+            await _vokiRatingsRepository.Add(rating,ct);
         }
         else {
             rating.Update(ratingValue);
-            await _vokiRatingsRepository.Update(rating);
+            await _vokiRatingsRepository.Update(rating,ct);
         }
 
         return ratingValue;

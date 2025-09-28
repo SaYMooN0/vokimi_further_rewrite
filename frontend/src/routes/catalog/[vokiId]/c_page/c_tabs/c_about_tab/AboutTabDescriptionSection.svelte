@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import AboutPageFieldNameLabel from './AboutPageFieldNameLabel.svelte';
+	import AboutPageFieldNameLabel from './AboutTabFieldNameLabel.svelte';
 
 	let { description }: { description: string } = $props<{ description: string }>();
 </script>
