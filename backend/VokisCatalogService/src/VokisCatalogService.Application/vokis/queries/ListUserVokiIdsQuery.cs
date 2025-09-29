@@ -17,6 +17,6 @@ internal sealed class ListUserVokiIdsQueryHandler : IQueryHandler<ListUserVokiId
 
     public async Task<ErrOr<VokiId[]>> Handle(ListUserVokiIdsQuery query, CancellationToken ct) {
         AppUserId userId = _userContext.AuthenticatedUserId;
-        return await _baseVokisRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(userId);
+        return await _baseVokisRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(userId, ct);
     }
 }

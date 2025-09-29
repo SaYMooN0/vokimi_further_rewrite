@@ -1,7 +1,4 @@
-﻿using ApiShared;
-using ApiShared.extensions;
-using ApplicationShared.messaging;
-using SharedKernel.domain.ids;
+﻿using ApiShared.extensions;
 using VokiRatingsService.Api.contracts;
 using VokiRatingsService.Application.voki_ratings.commands;
 using VokiRatingsService.Application.voki_ratings.queries;
@@ -15,7 +12,7 @@ internal static class SpecificVokiHandlers
         var group = endpoints.MapGroup("/vokis/{vokiId}/");
 
         group.MapGet("/ratings", GetVokiRatingsData);
-        group.MapGet("/other-with-average", GetVokiOtherUsersRatingsWithAverage);
+        group.MapGet("/all-with-average", GetVokiOtherUsersRatingsWithAverage);
 
         group.MapPost("/rate", RateVoki)
             .WithAuthenticationRequired()
@@ -36,16 +33,14 @@ internal static class SpecificVokiHandlers
 
     private static async Task<IResult> GetVokiOtherUsersRatingsWithAverage(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<VokiOtherUsersRatingsWithAverageQuery, VokiOtherUsersRatingsWithAverageQueryResult> handler
+        IQueryHandler<ListVokiRatingsForVokiQuery, VokiRating[]> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        VokiOtherUsersRatingsWithAverageQuery query = new(vokiId);
+        ListVokiRatingsForVokiQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (queryResult) => Results.Json(
-            new RatingsWithAverageResponse([], queryResult.AverageRating)
-        ));
+        return CustomResults.FromErrOrToJson<VokiRating[], RatingsWithAverageResponse>(result);
     }
 
     private static async Task<IResult> RateVoki(

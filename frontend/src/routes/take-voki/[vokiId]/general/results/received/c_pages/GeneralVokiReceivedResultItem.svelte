@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { relativeTime } from 'svelte-relative-time';
 	import GeneralVokiResultPreviewImage from '../../c_pages_shared/GeneralVokiResultPreviewImage.svelte';
 	import { DateUtils } from '$lib/ts/utils/date-utils';
 

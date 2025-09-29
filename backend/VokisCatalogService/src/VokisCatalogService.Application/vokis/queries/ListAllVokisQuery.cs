@@ -15,6 +15,6 @@ internal sealed class ListAllVokisQueryHandler : IQueryHandler<ListAllVokisQuery
     }
 
     public async Task<ErrOr<BaseVoki[]>> Handle(ListAllVokisQuery query, CancellationToken ct) =>
-        await _baseVokisRepository.GetAllSortedAsNoTracking();
+        await _baseVokisRepository.GetAllSortedAsNoTracking(ct);
      
 }

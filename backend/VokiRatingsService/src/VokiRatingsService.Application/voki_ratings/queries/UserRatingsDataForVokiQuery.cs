@@ -35,57 +35,28 @@ internal sealed class UserRatingsDataForVokiQueryHandler :
     private async Task<ErrOr<UserRatingsDataForVokiQueryResult>> GetRatingsDataForAuthenticatedUser(
         AppUserId userId, VokiId vokiId, CancellationToken ct
     ) {
-        VokiRating[] ratings = await _vokiRatingsRepository.GetForVokiAsNoTracking(vokiId, ct);
+        VokiRating[] ratings = (await _vokiRatingsRepository.GetForVokiAsNoTracking(vokiId, ct));
         VokiRating? userRating = ratings.SingleOrDefault(r => r.UserId == userId);
+        bool hasTaken = false;
 
         if (userRating is not null) {
-            var others = ratings
-                .Where(r => r.UserId != userId)
-                .ToImmutableArray();
-
-            return new UserRatingsDataForVokiQueryResult(
-                UserHasTaken: true,
-                UserRating: userRating,
-                OtherUserRatings: others
-            );
+            hasTaken = true;
+        }
+        else {
+            AppUser user = (await _appUsersRepository.GetByIdAsNoTracking(userId, ct))!;
+            hasTaken = user.HasTaken(vokiId);
         }
 
-        AppUser user = (await _appUsersRepository.GetByIdAsNoTracking(userId, ct))!;
-        bool hasTaken = user.HasTaken(vokiId);
 
-        return new UserRatingsDataForVokiQueryResult(
-            UserHasTaken: hasTaken,
-            UserRating: null,
-            OtherUserRatings: ratings.ToImmutableArray()
-        );
+        return new UserRatingsDataForVokiQueryResult(hasTaken, ratings);
     }
 
     private async Task<ErrOr<UserRatingsDataForVokiQueryResult>> GetRatingsDataForNotAuthenticatedUser(
         VokiId vokiId, CancellationToken ct
-    ) {
-        var ratings = await _vokiRatingsRepository.GetForVokiAsNoTracking(vokiId, ct);
-        return UserRatingsDataForVokiQueryResult.ForNotAuthenticatedUser(ratings.ToImmutableArray());
-    }
+    ) => new UserRatingsDataForVokiQueryResult(
+        false,
+        await _vokiRatingsRepository.GetForVokiAsNoTracking(vokiId, ct)
+    );
 }
 
-public sealed record UserRatingsDataForVokiQueryResult(
-    bool UserHasTaken,
-    VokiRating? UserRating,
-    ImmutableArray<VokiRating> OtherUserRatings
-)
-{
-    public static UserRatingsDataForVokiQueryResult ForNotAuthenticatedUser(
-        ImmutableArray<VokiRating> otherUserRatings
-    ) => new(false, null, otherUserRatings);
-
-    public double AverageRating() {
-        double sum = OtherUserRatings.Sum(r => r.Current.Value);
-        double count = OtherUserRatings.Length;
-        if (UserRating is not null) {
-            sum += UserRating.Current.Value;
-            count += 1;
-        }
-
-        return count == 0 ? 0 : sum / count;
-    }
-}
+public sealed record UserRatingsDataForVokiQueryResult(bool UserHasTaken, VokiRating[] Ratings);

@@ -1,3 +1,4 @@
+import type { Err } from "$lib/ts/err";
 import type { Language } from "$lib/ts/language";
 import type { VokiType } from "$lib/ts/voki";
 
@@ -20,8 +21,16 @@ export type VokiOverviewInfo = {
     authenticatedOnlyTaking: boolean;
 };
 
-export type VokiRatingData = {
-    value: number;
-    userId: string;
-    dateTime: Date;
-};
+export type RatingsTabDataType =
+    | { state: 'empty' }
+    | { state: 'loading' }
+    | { state: 'error', errs: Err[] }
+    | {
+        state: 'fetched',
+        averageRating: number,
+        allRatings: VokiRatingData[],
+        userHasTaken: boolean
+    };
+
+export type VokiRatingsWithAverage = { averageRating: number, ratings: VokiRatingData[] };
+export type VokiRatingData = { value: number; userId: string; dateTime: Date; };

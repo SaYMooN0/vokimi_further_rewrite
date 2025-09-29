@@ -1,5 +1,4 @@
-﻿using ApiShared;
-using VokiRatingsService.Domain.voki_rating_aggregate;
+﻿using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Api.contracts;
 

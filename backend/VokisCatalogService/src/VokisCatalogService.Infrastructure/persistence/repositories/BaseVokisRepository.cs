@@ -12,7 +12,7 @@ internal class BaseVokisRepository : IBaseVokisRepository
         _db = db;
     }
 
-    public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId) => _db.Database
+    public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId, CancellationToken ct) => _db.Database
         .SqlQuery<Guid>($@"
             SELECT ""Id"" AS ""Value""
             FROM ""BaseVokis""
@@ -21,29 +21,29 @@ internal class BaseVokisRepository : IBaseVokisRepository
             ORDER BY ""PublicationDate"" DESC
         ")
         .Select(id => new VokiId(id))
-        .ToArrayAsync();
+        .ToArrayAsync(cancellationToken: ct);
 
 
-    public Task<BaseVoki?> GetByIdAsNoTracking(VokiId vokiId) =>
+    public Task<BaseVoki?> GetByIdAsNoTracking(VokiId vokiId, CancellationToken ct) =>
         _db.BaseVokis
             .AsNoTracking()
-            .FirstOrDefaultAsync(v => v.Id == vokiId);
+            .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public Task<BaseVoki[]> GetAllSortedAsNoTracking() => _db.BaseVokis
+    public Task<BaseVoki[]> GetAllSortedAsNoTracking(CancellationToken ct) => _db.BaseVokis
         .AsNoTracking()
         .OrderByDescending(v => v.PublicationDate)
-        .ToArrayAsync();
+        .ToArrayAsync(cancellationToken: ct);
 
-    public Task<BaseVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds) =>
+    public Task<BaseVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds, CancellationToken ct) =>
         _db.BaseVokis.AsNoTracking()
             .Where(v => queryVokiIds.Contains(v.Id))
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: ct);
 
     public async Task<BaseVoki?> GetById(VokiId vokiId) =>
         await _db.BaseVokis.FindAsync(vokiId);
 
-    public async Task Update(BaseVoki voki) {
+    public async Task Update(BaseVoki voki, CancellationToken ct) {
         _db.BaseVokis.Update(voki);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
 }

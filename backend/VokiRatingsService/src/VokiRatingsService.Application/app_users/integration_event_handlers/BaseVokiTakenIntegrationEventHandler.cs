@@ -24,7 +24,7 @@ public class BaseVokiTakenIntegrationEventHandler : IConsumer<BaseVokiTakenInteg
             return;
         }
 
-        var changed = appUser.AddTakenVoki(context.Message.VokiId);
+        bool changed = appUser.AddTakenVoki(context.Message.VokiId);
         if (changed) {
             await _appUsersRepository.Update(appUser);
         }

@@ -23,4 +23,8 @@ public class AppUser : AggregateRoot<AppUserId>
     }
 
     public bool HasTaken(VokiId vokiId) => TakenVokiIds.Contains(vokiId);
+
+    public void AddRating(VokiRatingId ratingId) {
+        RatingIds = RatingIds.Add(ratingId);
+    }
 }

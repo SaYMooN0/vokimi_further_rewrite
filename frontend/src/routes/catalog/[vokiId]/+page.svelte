@@ -15,13 +15,13 @@
 	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
 
 	let { data }: PageProps = $props();
+	console.log(data);
 	let pageState = new VokiPageState(
 		data.vokiId,
 		data.currentTab,
 		data.response.isSuccess ? data.response.data.ratingsCount : 0,
 		data.response.isSuccess ? data.response.data.commentsCount : 0
 	);
-
 
 	let refreshTimer: number | undefined;
 	onMount(() => {
@@ -73,7 +73,10 @@
 					{:else if pageState.currentTab === 'comments'}
 						<VokiPageCommentsTab />
 					{:else if pageState.currentTab === 'ratings'}
-						<VokiPageRatingsTab />
+						<VokiPageRatingsTab
+							tabData={pageState.ratingsTabData}
+							fetchTabData={async () => await pageState.fetchRatingsTabData()}
+						/>
 					{:else}
 						<h1>Error</h1>
 					{/if}

@@ -4,10 +4,10 @@ namespace VokisCatalogService.Application.common.repositories;
 
 public interface IBaseVokisRepository
 {
-    Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId);
-    Task<BaseVoki?> GetByIdAsNoTracking(VokiId vokiId);
-    Task<BaseVoki[]> GetAllSortedAsNoTracking();
-    Task<BaseVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds);
+    Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId, CancellationToken ct);
+    Task<BaseVoki?> GetByIdAsNoTracking(VokiId vokiId, CancellationToken ct);
+    Task<BaseVoki[]> GetAllSortedAsNoTracking(CancellationToken ct);
+    Task<BaseVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds, CancellationToken ct);
     Task<BaseVoki?> GetById(VokiId vokiId);
-    Task Update(BaseVoki voki);
+    Task Update(BaseVoki voki, CancellationToken ct = default);
 }

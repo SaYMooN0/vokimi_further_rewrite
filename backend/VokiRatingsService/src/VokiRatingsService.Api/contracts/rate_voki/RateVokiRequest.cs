@@ -1,6 +1,4 @@
-﻿using ApiShared;
-using SharedKernel.errs;
-using VokiRatingsService.Domain.voki_rating_aggregate;
+﻿using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Api.contracts;
 

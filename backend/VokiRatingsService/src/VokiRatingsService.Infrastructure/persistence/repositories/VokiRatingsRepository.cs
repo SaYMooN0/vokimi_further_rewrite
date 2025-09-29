@@ -29,21 +29,4 @@ public class VokiRatingsRepository : IVokiRatingsRepository
         _db.Ratings.Add(rating);
         await _db.SaveChangesAsync(ct);
     }
-
-    public async Task<(uint RatingsSum, uint RatingsCount)> GetRatingsSumAndCountForVoki(
-        VokiId vokiId, CancellationToken ct
-    ) {
-        var baseQuery = _db.Ratings
-            .AsNoTracking()
-            .Where(r => r.VokiId == vokiId);
-
-        var count = await baseQuery.CountAsync(cancellationToken: ct);
-        if (count == 0) {
-            return (0u, 0u);
-        }
-
-        int sum = await baseQuery.SumAsync(r => r.Current.Value, cancellationToken: ct);
-
-        return ((uint)sum, (uint)count);
-    }
 }

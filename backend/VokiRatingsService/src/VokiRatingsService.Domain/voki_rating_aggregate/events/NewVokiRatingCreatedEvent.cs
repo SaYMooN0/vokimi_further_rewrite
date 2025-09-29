@@ -1,7 +1,7 @@
 ﻿namespace VokiRatingsService.Domain.voki_rating_aggregate.events;
 
-public record NewVokiRatingCreated(
+public record NewVokiRatingCreatedEvent(
     VokiRatingId RatingId,
     VokiId VokiId,
     AppUserId UserId
-) : IDomainEvent { }
+) : IDomainEvent;
