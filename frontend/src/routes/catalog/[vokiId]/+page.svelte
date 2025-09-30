@@ -15,7 +15,6 @@
 	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
 
 	let { data }: PageProps = $props();
-	console.log(data);
 	let pageState = new VokiPageState(
 		data.vokiId,
 		data.currentTab,
@@ -76,6 +75,7 @@
 						<VokiPageRatingsTab
 							tabData={pageState.ratingsTabData}
 							fetchTabData={async () => await pageState.fetchRatingsTabData()}
+							saveNewUserRating={async (value) => await pageState.saveNewUserRating(value)}
 						/>
 					{:else}
 						<h1>Error</h1>
@@ -118,5 +118,19 @@
 
 	.current-tab {
 		margin: 0.75rem 0;
+	}
+
+	.current-tab > :global(*) {
+		animation: 0.25s tab-fade-in;
+	}
+
+	@keyframes tab-fade-in {
+		from {
+			opacity: 0.2;
+		}
+
+		to {
+			opacity: 1;
+		}
 	}
 </style>

@@ -18,4 +18,9 @@ internal class VokisRepository : IVokisRepository
         _db.Vokis.Update(voki);
         await _db.SaveChangesAsync(ct);
     }
+
+    public async Task Add(Voki voki) {
+        _db.Vokis.Add(voki);
+        await _db.SaveChangesAsync();
+    }
 }

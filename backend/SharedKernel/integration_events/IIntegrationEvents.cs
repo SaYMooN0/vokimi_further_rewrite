@@ -2,6 +2,7 @@
 using SharedKernel.integration_events.draft_vokis;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
 using SharedKernel.integration_events.voki_publishing;
+using SharedKernel.integration_events.voki_taken;
 
 namespace SharedKernel.integration_events;
 
@@ -18,5 +19,11 @@ namespace SharedKernel.integration_events;
 
 [JsonDerivedType(typeof(BaseVokiPublishedIntegrationEvent),typeDiscriminator: nameof(BaseVokiPublishedIntegrationEvent))]
 [JsonDerivedType(typeof(GeneralVokiPublishedIntegrationEvent),typeDiscriminator: nameof(GeneralVokiPublishedIntegrationEvent))]
+
+
+[JsonDerivedType(typeof(BaseVokiTakenIntegrationEvent),typeDiscriminator: nameof(BaseVokiTakenIntegrationEvent))]
+[JsonDerivedType(typeof(GeneralVokiTakenIntegrationEvent),typeDiscriminator: nameof(GeneralVokiTakenIntegrationEvent))]
+
+[JsonDerivedType(typeof(VokiRatedIntegrationEvent),typeDiscriminator: nameof(VokiRatedIntegrationEvent))]
 // @formatter:on
 public interface IIntegrationEvent { }

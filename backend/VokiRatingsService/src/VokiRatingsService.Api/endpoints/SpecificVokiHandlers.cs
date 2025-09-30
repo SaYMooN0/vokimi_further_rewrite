@@ -1,5 +1,6 @@
 ﻿using ApiShared.extensions;
 using VokiRatingsService.Api.contracts;
+using VokiRatingsService.Api.contracts.rate_voki;
 using VokiRatingsService.Application.voki_ratings.commands;
 using VokiRatingsService.Application.voki_ratings.queries;
 using VokiRatingsService.Domain.voki_rating_aggregate;
@@ -14,7 +15,7 @@ internal static class SpecificVokiHandlers
         group.MapGet("/ratings", GetVokiRatingsData);
         group.MapGet("/all-with-average", GetVokiOtherUsersRatingsWithAverage);
 
-        group.MapPost("/rate", RateVoki)
+        group.MapPatch("/rate", RateVoki)
             .WithAuthenticationRequired()
             .WithRequestValidation<RateVokiRequest>();
     }

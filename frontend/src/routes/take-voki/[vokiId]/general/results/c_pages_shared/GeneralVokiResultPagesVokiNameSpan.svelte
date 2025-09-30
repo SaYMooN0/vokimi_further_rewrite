@@ -35,11 +35,13 @@
 		width: max-content;
 		max-width: 40rem;
 		padding: 0.25rem 0.5rem;
+        border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 0.5rem;
 		background: var(--secondary);
 		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: normal;
+        font-weight: 450;
 		opacity: 0;
 		transition: all 0.2s ease-in-out;
 		transform: translateX(-50%);
@@ -48,9 +50,8 @@
 		visibility: hidden;
 		pointer-events: none;
         text-indent: 0.25em;
-        font-weight: 450;
-        border: 0.125rem solid var(--secondary-foreground);
 	}
+
 	.tooltip::after {
 		position: absolute;
 		bottom: 100%;

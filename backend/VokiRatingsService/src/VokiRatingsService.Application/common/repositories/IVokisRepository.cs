@@ -6,4 +6,5 @@ public interface IVokisRepository
 {
     Task<Voki?> GetById(VokiId vokiId);
     Task Update(Voki voki, CancellationToken ct);
+    Task Add(Voki voki);
 }

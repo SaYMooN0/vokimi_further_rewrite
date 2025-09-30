@@ -55,15 +55,15 @@
 
 	.plus.animate .horizontal {
 		opacity: 0;
-		animation: lineAnimation 0.2s ease-out forwards;
+		animation: line-animation 0.2s ease-out forwards;
 	}
 
 	.plus.animate .vertical {
 		opacity: 0;
-		animation: lineAnimation 0.2s ease-out 0.25s forwards;
+		animation: line-animation 0.2s ease-out 0.25s forwards;
 	}
 
-	@keyframes lineAnimation {
+	@keyframes line-animation {
 		0% {
 			opacity: 0;
 			stroke-dashoffset: 14;

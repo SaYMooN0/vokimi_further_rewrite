@@ -49,27 +49,29 @@
 	.new-album-creation {
 		display: flex;
 		flex-direction: column;
+		width: 100%;
 		height: 100%;
-		width: 100%;
 	}
+
 	.input-label {
-		margin-bottom: 0.125rem;
 		width: 100%;
-		text-align: center;
-		font-weight: 500;
-		letter-spacing: 0.1px;
+		margin-bottom: 0.125rem;
 		color: var(--secondary-foreground);
 		font-size: 1rem;
+		font-weight: 500;
+		text-align: center;
+		letter-spacing: 0.1px;
 	}
+
 	.name-input {
 		width: 100%;
 		box-sizing: border-box;
 		padding: 0.25rem 0.5rem;
+		border: 0.125rem solid var(--secondary-foreground);
 		border-radius: 0.5rem;
 		background-color: var(--secondary);
 		font-size: 1.125rem;
 		font-weight: 500;
-		border: 0.125rem solid var(--secondary-foreground);
 		outline: none;
 	}
 
@@ -80,6 +82,7 @@
 	.name-input:focus {
 		border-color: var(--primary);
 	}
+
 	.color-and-icons {
 		display: grid;
 		grid-template-columns: 1fr 2fr;
@@ -88,31 +91,35 @@
 		justify-items: center;
 		margin-top: 0.75rem;
 	}
+
 	.color-inputs-container {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
+		width: 100%;
 	}
+
 	.color-inputs-body {
 		display: flex;
 		flex-direction: row;
 		width: 100%;
 	}
+
 	.color-input {
 		display: flex;
 		flex-direction: column;
-		width: 100%;
 		align-items: center;
+		width: 100%;
 	}
+
 	.use-two-colors-label {
 		display: flex;
 		align-items: center;
-		width: fit-content;
 		gap: 0.5rem;
+		width: fit-content;
+		color: var(--text);
 		font-size: 1rem;
 		font-weight: 500;
 		letter-spacing: 0.1px;
-		color: var(--text);
 	}
 </style>

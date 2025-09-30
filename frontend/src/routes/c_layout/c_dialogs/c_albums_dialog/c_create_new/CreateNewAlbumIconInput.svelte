@@ -21,7 +21,9 @@
 
 <div
 	class="selected-icon"
-	style="--icon-color-1: {mainColor}; --icon-color-2: {secondColor};"
+	style="
+
+--icon-color-1: {mainColor}; --icon-color-2: {secondColor};"
 	onclick={openInput}
 >
 	<svg><use href="#{icon}"></use></svg>
@@ -29,8 +31,8 @@
 
 <style>
 	.selected-icon svg {
-		height: 4rem;
 		width: 4rem;
+		height: 4rem;
 		cursor: pointer;
 		stroke-width: 2;
 	}
