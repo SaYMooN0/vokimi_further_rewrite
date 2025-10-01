@@ -26,54 +26,47 @@
 	}
 </script>
 
-<div class="ratings-tab-container">
-	{#if tabData.state === 'loading'}
-		<div class="loading-container">
-			<CubesLoader sizeRem={5} />
-			<h1 class="loading-text">Loading Voki ratings</h1>
-		</div>
-	{:else if tabData.state === 'error'}
-		<h1 class="error-text">Ratings data loading error</h1>
-		<DefaultErrBlock errList={tabData.errs} />
-		<ReloadButton onclick={() => fetchTabData()} />
-	{:else if tabData.state === 'empty'}
-		<h1 class="error-text">Something went wrong</h1>
-		<ReloadButton onclick={() => fetchTabData()} />
-	{:else if tabData.state === 'fetched'}
-		<RatingsTabAverageRating
-			averageRating={tabData.averageRating}
-			count={tabData.allRatings.length}
-		/>
+{#if tabData.state === 'loading'}
+	<div class="loading-container">
+		<CubesLoader sizeRem={5} />
+		<h1 class="loading-text">Loading Voki ratings</h1>
+	</div>
+{:else if tabData.state === 'error'}
+	<h1 class="error-text">Ratings data loading error</h1>
+	<DefaultErrBlock errList={tabData.errs} />
+	<ReloadButton onclick={() => fetchTabData()} />
+{:else if tabData.state === 'empty'}
+	<h1 class="error-text">Something went wrong</h1>
+	<ReloadButton onclick={() => fetchTabData()} />
+{:else if tabData.state === 'fetched'}
+	<RatingsTabAverageRating
+		averageRating={tabData.averageRating}
+		count={tabData.allRatings.length}
+		isOutdated={tabData.isAverageOutdated}
+	/>
 
-		<AuthView>
-			{#snippet authenticated(authData)}
-				{#if tabData.userHasTaken}
-					<RatingsTabUserRating
-						{saveNewUserRating}
-						userRating={tabData.allRatings.find((r) => r.userId === authData.userId)}
-					/>
-				{:else}
-					<UserRatingVokiTakingNeeded />
-				{/if}
-			{/snippet}
-			{#snippet unauthenticated()}
-				<UserRatingAuthNeeded />
-			{/snippet}
-		</AuthView>
+	<AuthView>
+		{#snippet authenticated(authData)}
+			{#if tabData.userHasTaken}
+				<RatingsTabUserRating
+					{saveNewUserRating}
+					userRating={tabData.allRatings.find((r) => r.userId === authData.userId)}
+				/>
+			{:else}
+				<UserRatingVokiTakingNeeded />
+			{/if}
+		{/snippet}
+		{#snippet unauthenticated()}
+			<UserRatingAuthNeeded />
+		{/snippet}
+	</AuthView>
 
-		<RatingsTabOtherRatingsList />
-	{:else}
-		<h1>Something is wrong</h1>
-	{/if}
-</div>
+	<RatingsTabOtherRatingsList />
+{:else}
+	<h1>Something is wrong</h1>
+{/if}
 
 <style>
-	.ratings-tab-container {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
 	.loading-container {
 		display: flex;
 		flex-direction: column;

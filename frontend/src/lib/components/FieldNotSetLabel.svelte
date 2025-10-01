@@ -17,7 +17,7 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		gap: 0.25rem;
+		gap: 0.375rem;
 		width: fit-content;
 		padding: 0.25rem 0.75rem;
 		margin-left: 0.5rem;
@@ -30,7 +30,7 @@
 	}
 
 	.not-set > svg {
-		height: 1.25rem;
+		height: 1.125rem;
 		aspect-ratio: 1/1;
 		stroke-width: 1.8;
 	}

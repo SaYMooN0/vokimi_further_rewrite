@@ -11,8 +11,6 @@ public class BaseVokiPublishedIntegrationEventHandler : IConsumer<BaseVokiPublis
     public BaseVokiPublishedIntegrationEventHandler(IVokisRepository vokisRepository) {
         _vokisRepository = vokisRepository;
     }
-
-
     public async Task Consume(ConsumeContext<BaseVokiPublishedIntegrationEvent> context) {
         Voki voki = new Voki(context.Message.VokiId);
         await _vokisRepository.Add(voki);

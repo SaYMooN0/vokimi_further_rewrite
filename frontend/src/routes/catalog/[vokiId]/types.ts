@@ -29,7 +29,8 @@ export type RatingsTabDataType =
         state: 'fetched',
         averageRating: number,
         allRatings: VokiRatingData[],
-        userHasTaken: boolean
+        userHasTaken: boolean,
+        isAverageOutdated: boolean
     };
 
 export type VokiRatingsWithAverage = { averageRating: number, ratings: VokiRatingData[] };

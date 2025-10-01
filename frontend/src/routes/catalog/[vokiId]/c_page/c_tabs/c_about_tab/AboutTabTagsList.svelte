@@ -1,7 +1,7 @@
 <script lang="ts">
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
 	import { toast } from 'svelte-sonner';
-	import AboutPageFieldNameLabel from './AboutTabFieldNameLabel.svelte';
+	import VokiPageTabSectionLabel from '../c_tabs_shared/VokiPageTabSectionLabel.svelte';
 
 	let { tags, vokiId }: { tags: string[]; vokiId: string } = $props<{
 		tags: string[];
@@ -10,7 +10,7 @@
 </script>
 
 <div class="voki-tags-section">
-	<AboutPageFieldNameLabel fieldName="Tags:" />
+	<VokiPageTabSectionLabel fieldName="Tags:" />
 	{#if tags.length === 0}
 		<FieldNotSetLabel text="This voki has no tags" />
 	{:else}

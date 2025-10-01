@@ -1,13 +1,13 @@
 <script lang="ts">
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import AboutPageFieldNameLabel from './AboutTabFieldNameLabel.svelte';
+	import VokiPageTabSectionLabel from '../c_tabs_shared/VokiPageTabSectionLabel.svelte';
 
 	let { description }: { description: string } = $props<{ description: string }>();
 </script>
 
 <p class="description" class:no-value={StringUtils.isNullOrWhiteSpace(description)}>
-	<AboutPageFieldNameLabel fieldName="Description:" />
+	<VokiPageTabSectionLabel fieldName="Description:" />
 	{#if StringUtils.isNullOrWhiteSpace(description)}
 		<FieldNotSetLabel text="No description" />
 	{:else}
@@ -19,6 +19,7 @@
 
 <style>
 	.description {
+		padding-left: 0;
 		padding-right: 0.125rem;
 		margin: 0;
 		text-align: justify;

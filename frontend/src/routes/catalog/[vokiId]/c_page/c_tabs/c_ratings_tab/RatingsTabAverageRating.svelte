@@ -1,35 +1,42 @@
 <script lang="ts">
+	import VokiPageTabSectionLabel from '../c_tabs_shared/VokiPageTabSectionLabel.svelte';
+
 	interface Props {
 		averageRating: number;
 		count: number;
+		isOutdated: boolean;
 	}
-	let { averageRating, count }: Props = $props();
+	let { averageRating, count, isOutdated }: Props = $props();
 </script>
 
 <div class="avg-container">
-	Average rating:
+	<VokiPageTabSectionLabel fieldName="Average rating:" />
 	<div class="value-container">
 		{Math.round(averageRating * 100) / 100}<svg class="star"><use href="#common-star-icon" /></svg
 		>/5
 	</div>
-	<span class="ratings-count">
-		({count} total rating{count === 1 ? '' : 's'})
-	</span>
+	{#if isOutdated}
+		<button>refresh</button>
+	{/if}
+	<VokiPageTabSectionLabel
+		fieldName="({count} total rating{count === 1 ? '' : 's'})"
+		className="ratings-count"
+	/>
 </div>
 
 <style>
 	.avg-container {
 		display: flex;
-		align-items: center;
 		flex-direction: row;
-		font-size: 1.25rem;
-		font-weight: 450;
+		align-items: center;
+		font-size: 1.125rem;
+		font-weight: 500;
 		cursor: default;
 	}
+
 	.value-container {
 		display: flex;
 		align-items: center;
-
 		margin: 0 0.5rem;
 	}
 
@@ -38,14 +45,14 @@
 		height: 1.5rem;
 		stroke-width: 0;
 		fill: var(--primary);
-		margin: 0 0.125rem 0.125rem 0.25rem;
+		margin-left: 0.125rem;
+		margin-bottom: 0.125rem;
 	}
 
-	.ratings-count {
+	.avg-container > :global(.ratings-count) {
+		margin-left: auto;
 		color: var(--secondary-foreground);
 		font-size: 1.125rem;
 		font-weight: 450;
-		margin-left: auto;
-		margin-right: 0.5rem;
 	}
 </style>

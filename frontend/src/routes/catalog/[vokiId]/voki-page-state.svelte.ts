@@ -33,7 +33,8 @@ export class VokiPageState {
                 state: 'fetched',
                 averageRating: response.data.ratingsWithAverage.averageRating,
                 allRatings: response.data.ratingsWithAverage.ratings,
-                userHasTaken: response.data.userHasTaken
+                userHasTaken: response.data.userHasTaken,
+                isAverageOutdated: false
             };
         }
         else {
@@ -41,6 +42,9 @@ export class VokiPageState {
         }
     }
     public saveNewUserRating(newRatingVal: number): Promise<ResponseResult<{ value: number, dateTime: Date }>> {
+        if (this.ratingsTabData.state === 'fetched') {
+            this.ratingsTabData.isAverageOutdated = true;
+        }
         return ApiVokiRatings.fetchJsonResponse<{ value: number, dateTime: Date }>(
             `/vokis/${this.vokiId}/rate`,
             RequestJsonOptions.PATCH({ ratingValue: newRatingVal })
