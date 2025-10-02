@@ -76,3 +76,13 @@ textarea {
     opacity: 1;
   }
 }
+
+@keyframes fade-in-from-zero {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

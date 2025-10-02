@@ -2,6 +2,7 @@
 	import type { ResponseResult } from '$lib/ts/backend-communication/result-types';
 	import type { Err } from '$lib/ts/err';
 	import VokiPageTabSectionLabel from '../c_tabs_shared/VokiPageTabSectionLabel.svelte';
+	import RatingStarsView from './c_ratings_shared/RatingStarsView.svelte';
 	import UserRatingEditingState from './c_user_rating/UserRatingEditingState.svelte';
 	import UserRatingErrsList from './c_user_rating/UserRatingErrsList.svelte';
 
@@ -38,13 +39,7 @@
 {#if !isEditing && userRating}
 	<div class="user-rating">
 		<VokiPageTabSectionLabel fieldName="Your rating:" />
-		<div class="stars-display">
-			{#each Array.from({ length: 5 }, (_, i) => i + 1) as i}
-				<svg class="star" class:filled={userRating.value >= i} viewBox="0 0 24 24">
-					<use href="#common-star-icon" />
-				</svg>
-			{/each}
-		</div>
+		<RatingStarsView value={userRating.value} />
 		<button class="change-rating-btn" onclick={() => (isEditing = true)}>Change rating</button>
 	</div>
 {:else}
@@ -72,29 +67,7 @@
 		font-size: 1.25rem;
 		font-weight: 450;
 	}
-	.stars-display {
-		margin-left: 0.25rem;
-		display: flex;
-		flex-direction: row;
-		gap: 0.125rem;
-		padding-bottom: 0.125rem;
-	}
-	.star {
-		width: 1.5rem;
-		height: 1.5rem;
-		color: var(--secondary-foreground);
-		transition: transform 0.06s ease;
-		fill: none;
-	}
-
-	.star:not(.filled) {
-		stroke-width: 2;
-	}
-
-	.filled {
-		color: var(--primary);
-		fill: var(--primary);
-	}
+	
 	.change-rating-btn {
 		margin-left: auto;
 		color: var(--primary-foreground);

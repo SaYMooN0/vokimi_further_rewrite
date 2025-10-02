@@ -8,15 +8,9 @@
 
 <div class="authors-section">
 	<label class="by-label">by: </label>
-	{#await UsersStore.Get(primaryAuthorId)}
-		loading user...
-	{:then user}
-		{#if user}
-			<AuthorView {user} />
-		{:else}
-			<label>error in loading <a href="/authors/{primaryAuthorId}">user</a></label>
-		{/if}
-	{/await}
+
+	<AuthorView userId={primaryAuthorId} />
+
 	{#if coAuthorIds.length > 0}
 		and
 		<div class="co-authors-container">

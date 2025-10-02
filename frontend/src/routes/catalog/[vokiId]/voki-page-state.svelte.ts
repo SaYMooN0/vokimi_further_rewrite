@@ -2,6 +2,7 @@ import { ApiVokiRatings } from "$lib/ts/backend-communication/backend-services";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
 import { RequestJsonOptions } from "$lib/ts/request-json-options";
+import { toast } from "svelte-sonner";
 import type { VokiPageTab } from "./+page.server";
 import type { RatingsTabDataType, VokiRatingsWithAverage } from "./types";
 
@@ -49,6 +50,22 @@ export class VokiPageState {
             `/vokis/${this.vokiId}/rate`,
             RequestJsonOptions.PATCH({ ratingValue: newRatingVal })
         );
-
+    }
+    public async reloadOutdatedRatings(): Promise<void> {
+        if (this.ratingsTabData.state !== 'fetched') {
+            toast.error('Cannot reload ratings. Please refresh the page');
+            return;
+        }
+        const response = await ApiVokiRatings.fetchJsonResponse<VokiRatingsWithAverage>(
+            `/vokis/${this.vokiId}/all-with-average`, { method: 'GET' }
+        );
+        if (response.isSuccess) {
+            this.ratingsTabData.averageRating = response.data.averageRating;
+            this.ratingsTabData.allRatings = response.data.ratings;
+            this.ratingsTabData.isAverageOutdated = false;
+        }
+        else {
+            toast.error('Something went wrong. Could not reload ratings');
+        }
     }
 }

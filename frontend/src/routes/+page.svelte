@@ -20,17 +20,11 @@
 				link={`/catalog/${voki.id}`}
 				onMoreBtnClick={() => toast.error("Voki more button isn't implemented yet")}
 				flags={{
-					language: 'Spa',
-					hasMatureContent: true,
-					authenticatedOnlyTaking: true
+					language: 'Eng',
+					hasMatureContent: voki.hasMatureContent,
+					authenticatedOnlyTaking: voki.authenticatedOnlyTaking
 				}}
 			/>
 		{/each}
 	</VokiItemsGridContainer>
 {/if}
-<!-- 
-	flags={{
-					language: 'Eng',
-					hasMatureContent: voki.hasMatureContent,
-					authenticatedOnlyTaking: voki.authenticatedOnlyTaking
-				}} -->

@@ -13,6 +13,8 @@
 	import { VokiPageState } from './voki-page-state.svelte';
 	import { VokiCatalogVisitMarkerCookie } from '$lib/ts/cookies/voki-catalog-visit-marker-cookie';
 	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
+	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 
 	let { data }: PageProps = $props();
 	let pageState = new VokiPageState(
@@ -76,9 +78,11 @@
 							tabData={pageState.ratingsTabData}
 							fetchTabData={async () => await pageState.fetchRatingsTabData()}
 							saveNewUserRating={async (value) => await pageState.saveNewUserRating(value)}
+							reloadOutdatedRatings={async () => await pageState.reloadOutdatedRatings()}
 						/>
 					{:else}
-						<h1>Error</h1>
+						<h1>Something went wrong</h1>
+						<button onclick={() => (pageState.currentTab = 'about')}>Go back</button>
 					{/if}
 				</div>
 			</div>

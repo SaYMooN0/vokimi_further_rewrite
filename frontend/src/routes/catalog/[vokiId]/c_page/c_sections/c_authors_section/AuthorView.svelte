@@ -1,14 +1,21 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import type { UserPreviewData } from '$lib/ts/stores/users-store.svelte';
+	import { UsersStore, type UserPreviewData } from '$lib/ts/stores/users-store.svelte';
 
-	let { user }: { user: UserPreviewData } = $props<{ user: UserPreviewData }>();
+	let { userId }: { userId: string } = $props<{ userId: string }>();
+	let user = UsersStore.Get(userId);
 </script>
 
-<a class="author-view" href="/authors/{user.id}">
-	<img src={StorageBucketMain.fileSrc(user.profilePic)} alt="user profile pic" />
-	<label>{user.name}</label>
-</a>
+{#if user.state === 'loading'}
+	<label>loading user...</label>
+{:else if user.state === 'errs'}
+	<label>error in loading <a href="/authors/{userId}">user</a></label>
+{:else if user.state === 'ok'}
+	<a class="author-view" href="/authors/{userId}">
+		<img src={StorageBucketMain.fileSrc(user.data.profilePic)} alt="user profile pic" />
+		<label>{user.data.name}</label>
+	</a>
+{/if}
 
 <style>
 	.author-view {

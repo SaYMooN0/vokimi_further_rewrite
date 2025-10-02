@@ -4,7 +4,6 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import type { ResponseResult } from '$lib/ts/backend-communication/result-types';
-	import type { Err } from '$lib/ts/err';
 	import type { RatingsTabDataType } from '../../types';
 	import UserRatingAuthNeeded from './c_ratings_tab/c_user_rating/UserRatingAuthNeeded.svelte';
 	import UserRatingVokiTakingNeeded from './c_ratings_tab/c_user_rating/UserRatingVokiTakingNeeded.svelte';
@@ -18,8 +17,9 @@
 		saveNewUserRating: (
 			value: number
 		) => Promise<ResponseResult<{ value: number; dateTime: Date }>>;
+		reloadOutdatedRatings: () => Promise<void>;
 	}
-	let { tabData, fetchTabData, saveNewUserRating }: Props = $props();
+	let { tabData, fetchTabData, saveNewUserRating, reloadOutdatedRatings }: Props = $props();
 
 	if (tabData.state == 'empty') {
 		fetchTabData();
@@ -43,6 +43,7 @@
 		averageRating={tabData.averageRating}
 		count={tabData.allRatings.length}
 		isOutdated={tabData.isAverageOutdated}
+		reloadOutdated={reloadOutdatedRatings}
 	/>
 
 	<AuthView>
@@ -61,7 +62,7 @@
 		{/snippet}
 	</AuthView>
 
-	<RatingsTabOtherRatingsList />
+	<RatingsTabOtherRatingsList allRatings ={tabData.allRatings}/>
 {:else}
 	<h1>Something is wrong</h1>
 {/if}
