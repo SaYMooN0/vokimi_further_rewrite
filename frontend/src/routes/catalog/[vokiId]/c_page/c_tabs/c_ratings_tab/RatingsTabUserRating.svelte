@@ -30,7 +30,6 @@
 	}
 	let newStarsValue = $state(userRating ? userRating.value : 0);
 	$effect(() => {
-		console.log('changed');
 		newStarsValue;
 		savingErrs = [];
 	});

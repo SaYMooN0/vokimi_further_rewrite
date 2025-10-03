@@ -13,12 +13,7 @@
 
 	async function filteredRatings() {
 		const storeData = await getAuthStore();
-		console.log('data', storeData);
 		if (storeData.userId) {
-			console.log('true');
-			console.log('ratings', allRatings);
-			console.log(storeData.userId);
-
 			return allRatings.filter((r) => r.userId !== storeData.userId);
 		} else {
 			return allRatings;

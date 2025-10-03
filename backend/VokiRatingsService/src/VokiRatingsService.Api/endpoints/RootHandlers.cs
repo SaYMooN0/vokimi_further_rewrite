@@ -22,4 +22,4 @@ public static class RootHandlers
         return CustomResults.FromErrOrToJson<ImmutableHashSet<VokiRatingId>, UserRatingIdsResponse>(result);
     }
 
-}
+} 

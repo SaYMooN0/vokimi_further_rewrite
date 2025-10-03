@@ -1,28 +1,33 @@
-﻿using UserProfilesService.Api.contracts;
+﻿using SharedKernel.common.app_users;
+using UserProfilesService.Api.contracts;
 using UserProfilesService.Application.app_users.queries;
-using UserProfilesService.Domain.app_user_aggregate;
+using VokimiStorageKeysLib.concrete_keys;
 
 namespace UserProfilesService.Api.endpoints;
 
 public static class UsersHandlers
 {
     internal static void MapUsersHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/users/{userId}");
+        var group = endpoints.MapGroup("/users/");
 
-        group.MapGet("/preview", GetUserPreviewData);
+        group.MapPost("/preview", GetUserPreviewData)
+            .WithRequestValidation<UsersPreviewRequest>();
     }
 
     private static async Task<IResult> GetUserPreviewData(
         HttpContext httpContext, CancellationToken ct,
-        IQueryHandler<GetUserQuery, AppUser> handler
+        IQueryHandler<ListUsersNamesWithProfilePicsQuery,
+            Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>> handler
     ) {
-        AppUserId userId = httpContext.GetAppUserIdFromRoute();
+        var request = httpContext.GetValidatedRequest<UsersPreviewRequest>();
 
-        GetUserQuery query = new(userId);
+        ListUsersNamesWithProfilePicsQuery query = new(request.ParsedUserIds);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (user) => Results.Json(
-            UserPreviewResponse.Create(user)
-        ));
+        return CustomResults
+            .FromErrOrToJson<
+                Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>,
+                MultipleUsersPreviewResponse
+            >(result);
     }
 }

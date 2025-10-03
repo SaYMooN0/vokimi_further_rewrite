@@ -21,10 +21,6 @@
 <style>
 	.sprites {
 		height: 0;
-	}
-
-	.sprites > :global(svg) {
-		width: 0;
-		height: 0;
+		display: none;
 	}
 </style>

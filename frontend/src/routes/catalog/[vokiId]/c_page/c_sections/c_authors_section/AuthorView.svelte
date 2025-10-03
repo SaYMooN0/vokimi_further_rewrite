@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import { UsersStore, type UserPreviewData } from '$lib/ts/stores/users-store.svelte';
+	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
 
 	let { userId }: { userId: string } = $props<{ userId: string }>();
 	let user = UsersStore.Get(userId);

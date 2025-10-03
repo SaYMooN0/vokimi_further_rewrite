@@ -17,7 +17,6 @@ export class BackendService {
                 ...options,
                 credentials: 'include'
             });
-            console.log(response);
             if (response.ok) {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);
@@ -66,14 +65,12 @@ export class BackendService {
                 ...options,
                 credentials: 'include'
             });
-            console.log(response);
             if (response.ok) {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);
                 return { isSuccess: true, data };
 
             }
-            console.log('response', response);
             const contentType = response.headers.get("content-type");
             if (contentType?.includes("application/json")) {
                 const json = await response.json();

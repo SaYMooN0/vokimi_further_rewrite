@@ -96,7 +96,6 @@ export class DefaultGeneralVokiTakingState {
     > {
         const errs = this.checkErrsBeforeFinish();
         if (errs.length > 0) {
-            console.log(errs);
             return { isSuccess: false, errs };
         }
         const response = await ApiVokiTakingGeneral.fetchJsonResponse<{ receivedResultId: string }>(
