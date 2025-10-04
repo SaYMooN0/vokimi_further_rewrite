@@ -10,9 +10,8 @@ public sealed record CreateNewAlbumCommand(
     AlbumName Name,
     AlbumIcon Icon,
     HexColor MainColor,
-    HexColor SecondColor
-) :
-    ICommand<VokiAlbum>;
+    HexColor SecondaryColor
+) : ICommand<VokiAlbum>;
 
 internal sealed class CreateNewAlbumCommandHandler :
     ICommandHandler<CreateNewAlbumCommand, VokiAlbum>
@@ -47,13 +46,16 @@ internal sealed class CreateNewAlbumCommandHandler :
 
         VokiAlbum album = VokiAlbum.CreateNew(
             userId, command.Name, command.Icon,
-            command.MainColor, command.SecondColor, _dateTimeProvider.UtcNow
+            command.MainColor, command.SecondaryColor, _dateTimeProvider.UtcNow
         );
-        user.AddAlbum(album.Id);
-        
+        var addingRes = user.AddAlbum(album.Id);
+        if (addingRes.IsErr(out var err)) {
+            return err;
+        }
+
         await _appUsersRepository.Update(user);
         await _vokiAlbumsRepository.Add(album);
-        
+
         return album;
     }
 }

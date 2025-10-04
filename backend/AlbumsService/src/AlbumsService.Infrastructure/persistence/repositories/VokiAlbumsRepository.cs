@@ -12,18 +12,31 @@ public class VokiAlbumsRepository : IVokiAlbumsRepository
         _db = db;
     }
 
-    public Task<VokiAlbum[]> GetForUserSortedAsNoTracking(AppUserId userId) => _db.VokiAlbums
-        .AsNoTracking()
-        .Where(a => a.OwnerId == userId)
-        .OrderByDescending(a => a.CreationDate)
-        .ToArrayAsync();
+    public Task<VokiAlbum[]> GetForUserSortedAsNoTracking(AppUserId userId) =>
+        _db.VokiAlbums
+            .AsNoTracking()
+            .Where(a => a.OwnerId == userId)
+            .OrderByDescending(a => a.CreationDate)
+            .ToArrayAsync();
+
+    public Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSortedAsNoTracking(AppUserId userId) =>
+        _db.VokiAlbums
+            .AsNoTracking()
+            .Where(a => a.OwnerId == userId)
+            .OrderByDescending(a => a.CreationDate)
+            .Select(a => new VokiAlbumPreviewDto(
+                a.Id, a.Name, a.Icon, a.MainColor, a.SecondaryColor,
+                a.VokiIds.Count, a.CreationDate
+            ))
+            .ToArrayAsync();
 
     public async Task Add(VokiAlbum album) {
         await _db.VokiAlbums.AddAsync(album);
         await _db.SaveChangesAsync();
     }
 
-    public async Task<VokiAlbum?> GetById(VokiAlbumId albumId) => await _db.VokiAlbums.FindAsync(albumId);
+    public async Task<VokiAlbum?> GetById(VokiAlbumId albumId) =>
+        await _db.VokiAlbums.FindAsync(albumId);
 
     public async Task DeleteAlbum(VokiAlbum album) {
         _db.Remove(album);

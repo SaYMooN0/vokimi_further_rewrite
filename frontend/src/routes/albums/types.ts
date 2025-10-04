@@ -1,0 +1,1 @@
+export type AutoAlbumsColorsPair = { mainColor: string, secondaryColor: string };

@@ -6,14 +6,25 @@ public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
     public ImmutableHashSet<VokiAlbumId> AlbumIds { get; private set; }
+    public UserAutoAlbumsAppearance AutoAlbumsAppearance { get; private set; }
 
     public AppUser(AppUserId id) {
         Id = id;
         AlbumIds = [];
+        AutoAlbumsAppearance = UserAutoAlbumsAppearance.Create();
     }
 
-    public void AddAlbum(VokiAlbumId id) {
+    public const int MaxAlbumsForUser = 250;
+
+    public ErrOrNothing AddAlbum(VokiAlbumId id) {
+        if (AlbumIds.Count >= MaxAlbumsForUser) {
+            return ErrFactory.LimitExceeded(
+                $"User cannot have more than {MaxAlbumsForUser} albums. You already have {AlbumIds.Count}"
+            );
+        }
+
         AlbumIds = AlbumIds.Add(id);
+        return ErrOrNothing.Nothing;
     }
 
     public void DeleteAlbum(VokiAlbumId id) {

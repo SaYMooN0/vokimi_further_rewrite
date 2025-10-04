@@ -3,9 +3,9 @@
 	interface Props {
 		icon: string;
 		mainColor: string;
-		secondColor: string;
+		secondaryColor: string;
 	}
-	let { icon = $bindable(), mainColor, secondColor }: Props = $props();
+	let { icon = $bindable(), mainColor, secondaryColor }: Props = $props();
 	const allIconIds = [
 		'albums-bookmark-1-icon',
 		'albums-bookmark-2-icon',
@@ -21,9 +21,7 @@
 
 <div
 	class="selected-icon"
-	style="
-
---icon-color-1: {mainColor}; --icon-color-2: {secondColor};"
+	style="--icon-color-1: {mainColor}; --icon-color-2: {secondaryColor};"
 	onclick={openInput}
 >
 	<svg><use href="#{icon}"></use></svg>

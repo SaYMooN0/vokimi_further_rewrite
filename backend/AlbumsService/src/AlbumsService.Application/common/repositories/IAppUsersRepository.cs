@@ -7,4 +7,5 @@ public interface IAppUsersRepository
     Task Add(AppUser user);
     Task<AppUser?> GetById(AppUserId userId);
     Task Update(AppUser user);
+    public Task<UserAutoAlbumsAppearance?> GetUsersAutoAlbumsAppearance(AppUserId userId, CancellationToken ct);
 }

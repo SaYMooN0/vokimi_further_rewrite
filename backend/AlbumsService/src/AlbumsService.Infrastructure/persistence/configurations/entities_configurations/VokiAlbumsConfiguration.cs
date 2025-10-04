@@ -35,7 +35,7 @@ internal class VokiAlbumsConfiguration : IEntityTypeConfiguration<VokiAlbum>
             .HasConversion<HexColorConverter>();
 
         builder
-            .Property(x => x.SecondColor)
+            .Property(x => x.SecondaryColor)
             .HasConversion<HexColorConverter>();
 
         builder.Property(x => x.CreationDate);

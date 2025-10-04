@@ -1,4 +1,5 @@
 ﻿using AlbumsService.Api.contracts;
+using AlbumsService.Application.common.repositories;
 using AlbumsService.Application.voki_albums.commands;
 using AlbumsService.Application.voki_albums.queries;
 using AlbumsService.Domain.voki_album_aggregate;
@@ -14,7 +15,8 @@ internal static class AlbumsHandlers
         var group = endpoints.MapGroup("/")
             .WithGroupAuthenticationRequired();
 
-        group.MapGet("/user-albums", GetUserAlbumsData);
+        group.MapGet("/user-albums", GetUserAlbumsList);
+        group.MapGet("/all-albums-preview", GetAllUserAlbumsPreview);
 
         group.MapPost("/create-new", CreateNewAlbum)
             .WithRequestValidation<CreateNewVokiAlbumRequest>();
@@ -23,15 +25,24 @@ internal static class AlbumsHandlers
         //     .WithRequestValidation<UpdateVokiEntriesInAlbumsRequest>();
     }
 
-    private static async Task<IResult> GetUserAlbumsData(
+    private static async Task<IResult> GetUserAlbumsList(
         CancellationToken ct, IQueryHandler<ListUserAlbumsSortedQuery, VokiAlbum[]> handler
     ) {
         ListUserAlbumsSortedQuery query = new();
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (albums) => Results.Json(
-            AllUserAlbumsResponse.Create(albums)
+            UserAlbumsListResponse.Create(albums)
         ));
+    }
+
+    private static async Task<IResult> GetAllUserAlbumsPreview(
+        CancellationToken ct, IQueryHandler<GetAllUserAlbumsPreviewQuery, GetAllUserAlbumsPreviewQueryResult> handler
+    ) {
+        GetAllUserAlbumsPreviewQuery query = new();
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOrToJson<GetAllUserAlbumsPreviewQueryResult, AllAlbumsPreviewResponse>(result);
     }
 
     private static async Task<IResult> CreateNewAlbum(
@@ -41,13 +52,10 @@ internal static class AlbumsHandlers
         var request = httpContext.GetValidatedRequest<CreateNewVokiAlbumRequest>();
 
         CreateNewAlbumCommand command = new(
-            request.ParsedName, request.ParsedIcon,
-            request.ParsedMainColor, request.ParsedSecondColor
+            request.ParsedName, request.ParsedIcon, request.ParsedMainColor, request.ParsedSecondaryColor
         );
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (album) => Results.Json(
-            AlbumDataResponse.Create(album)
-        ));
+        return CustomResults.FromErrOrToJson<VokiAlbum, AlbumDataResponse>(result);
     }
 }

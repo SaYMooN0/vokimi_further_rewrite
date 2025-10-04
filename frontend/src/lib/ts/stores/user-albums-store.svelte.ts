@@ -8,7 +8,7 @@ export type VokisAlbumData = {
     name: string;
     icon: string;
     mainColor: string;
-    secondColor: string;
+    secondaryColor: string;
     vokiIds: string[];
 };
 export class AlbumsStore {

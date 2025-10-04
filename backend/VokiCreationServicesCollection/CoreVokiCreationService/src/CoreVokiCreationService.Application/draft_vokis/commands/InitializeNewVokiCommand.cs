@@ -41,8 +41,10 @@ internal sealed class InitializeNewVokiCommandHandler :
         DraftVoki voki = DraftVoki.Create(command.VokiName, command.VokiType, authorId, _dateTimeProvider.UtcNow);
 
         var copyRes = await _mainStorageBucket.CopyDefaultVokiCoverForNewVoki(voki.Cover);
-        if (copyRes.IsErr(out var err)) {
-            return err;
+        if (copyRes.IsErr()) {
+            return ErrFactory.Unspecified(
+                "Cannot initialize new voki due to image copying error. Please try again later"
+            );
         }
 
         await _draftVokiRepository.Add(voki);

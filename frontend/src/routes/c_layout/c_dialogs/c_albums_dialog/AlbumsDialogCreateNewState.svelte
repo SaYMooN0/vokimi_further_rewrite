@@ -6,7 +6,7 @@
 
 	let name = $state('');
 	let mainColor = $state('#fabcbf');
-	let secondColor = $state('#1abcff');
+	let secondaryColor = $state('#1abcff');
 	let icon = $state('albums-bookmark-1-icon');
 	let useTwoColors = $state(false);
 	async function save() {}
@@ -21,7 +21,7 @@
 			<CreateNewAlbumIconInput
 				bind:icon
 				{mainColor}
-				secondColor={useTwoColors ? secondColor : mainColor}
+				secondaryColor={useTwoColors ? secondaryColor : mainColor}
 			/>
 		</div>
 		<div class="color-inputs-container">
@@ -33,7 +33,7 @@
 				{#if useTwoColors}
 					<div class="color-input">
 						<label class="input-label">Second color</label>
-						<CreateNewAlbumColorInput bind:color={secondColor} />
+						<CreateNewAlbumColorInput bind:color={secondaryColor} />
 					</div>
 				{/if}
 			</div>
