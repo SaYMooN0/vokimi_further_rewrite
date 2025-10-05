@@ -27,7 +27,7 @@ public record VokiAlbumPreviewResponse(
     string Name,
     string Icon,
     string MainColor,
-    string SecondColor,
+    string SecondaryColor,
     int VokisCount
 )
 {

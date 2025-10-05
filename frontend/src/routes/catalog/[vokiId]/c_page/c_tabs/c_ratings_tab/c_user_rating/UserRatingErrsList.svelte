@@ -17,14 +17,14 @@
 
 <style>
 	.errs-list {
+		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		position: relative;
 		width: 100%;
 		padding: 0.5rem 0.75rem;
-		background-color: var(--err-back);
 		border-radius: 0.675rem;
+		background-color: var(--err-back);
         box-shadow: var(--err-shadow);
 	}
 
@@ -34,20 +34,22 @@
 		right: 0.25rem;
 		width: fit-content;
 		height: 1.25rem;
-		border-radius: 0.75rem;
-		cursor: pointer;
 		padding: 0.125rem;
+		border-radius: 0.75rem;
 		background-color: var(--back);
 		color: var(--secondary-foreground);
 		transition: all 0.04s ease-in;
+		cursor: pointer;
 		aspect-ratio: 1/1;
 		stroke-width: 2.2;
 	}
+
 	.close-btn:hover {
+		border-radius: 0.5rem;
 		background-color: var(--secondary);
 		color: var(--muted-foreground);
-		border-radius: 0.5rem;
 	}
+
 	.err-item {
 		color: var(--err-foreground);
 		font-size: 1rem;

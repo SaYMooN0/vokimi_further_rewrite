@@ -33,7 +33,10 @@ internal class VokiRatingsConfigurations : IEntityTypeConfiguration<VokiRating>
                 .HasColumnName("Current_DateTime");
         });
         builder
-            .Property(x => x.PreviousValues)
-            .HasRatingValueWithDateArrayConversion();
+            .HasOne(x => x.History)
+            .WithOne()
+            .HasForeignKey<VokiRating>("RatingId")
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

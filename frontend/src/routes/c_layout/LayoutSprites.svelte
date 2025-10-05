@@ -20,7 +20,7 @@
 
 <style>
 	.sprites {
-		height: 0;
 		display: none;
+		height: 0;
 	}
 </style>

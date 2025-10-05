@@ -1,27 +1,26 @@
-<svg id="albums-commented-vokis-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-    <path
-        d="M12 21C7.28595 21 4.92893 21 3.46447 19.5355C2 18.0711 2 15.714 2 11V7.94427C2 6.1278 2 5.21956 2.38032 4.53806C2.65142 4.05227 3.05227 3.65142 3.53806 3.38032C4.21956 3 5.1278 3 6.94427 3C8.10802 3 8.6899 3 9.19926 3.19101C10.3622 3.62712 10.8418 4.68358 11.3666 5.73313L12 7M8 7H16.75C18.8567 7 19.91 7 20.6667 7.50559C20.9943 7.72447 21.2755 8.00572 21.4944 8.33329C22 9.08996 22 10.1433 22 12.25"
-        stroke="currentColor" stroke-linecap="round"/>
-    <path d="M22 15H15M22 18H15M17.5 21H15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+<svg id="albums-commented-vokis-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke-linecap="round" stroke-linejoin="round">
+
+    <path d="M12 19H5a2 2 0 0 1 -2 -2V6a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v3.5" stroke="var(--icon-color-1)" />
+    <path d="M19 22v-6" stroke="var(--icon-color-2)" />
+    <path d="m22 19 -3 -3 -3 3" stroke="var(--icon-color-2)" />
 </svg>
 
-<svg id="albums-rated-vokis-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+<svg id="albums-rated-vokis-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke-linecap="round" stroke-linejoin="round">
+
+    <path d="M10 19H5a2 2 0 0 1 -2 -2V6a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v2.5" stroke="var(--icon-color-1)" />
     <path
-        d="M12.0027 21C7.28739 21 4.92973 21 3.46487 19.5355C2 18.0711 2 15.714 2 11V7.94427C2 6.1278 2 5.21956 2.38042 4.53806C2.6516 4.05227 3.05255 3.65142 3.53848 3.38032C4.22017 3 5.12865 3 6.94562 3C8.10968 3 8.69172 3 9.20122 3.19101C10.3645 3.62712 10.8442 4.68358 11.3691 5.73313L12.0027 7M8.00163 7H16.754C18.8613 7 19.9149 7 20.6718 7.50559C20.9995 7.72447 21.2808 8.00572 21.4997 8.33329C21.8937 8.92282 21.9808 9.69244 22 11"
-        stroke="currentColor" stroke-linecap="round"/>
-    <path
-        d="M20.586 13.331C18.7898 12.3795 17.5 13.7821 17.5 13.7821C17.5 13.7821 16.2102 12.3795 14.4139 13.331C12.2383 14.4834 12.0821 18.9964 17.5 21C22.9179 18.9964 22.7616 14.4834 20.586 13.331Z"
-        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        d="m17.8 20.817 -2.172 1.138a0.392 0.392 0 0 1 -0.568 -0.41l0.415 -2.411 -1.757 -1.707a0.389 0.389 0 0 1 0.217 -0.665l2.428 -0.352 1.086 -2.193a0.392 0.392 0 0 1 0.702 0l1.086 2.193 2.428 0.352a0.39 0.39 0 0 1 0.217 0.665l-1.757 1.707 0.414 2.41a0.39 0.39 0 0 1 -0.567 0.411L17.8 20.817z"
+        stroke="var(--icon-color-2)" />
 </svg>
 
-<svg id="albums-taken-vokis-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-    <path
-        d="M12 21C7.28595 21 4.92893 21 3.46447 19.5355C2 18.0711 2 15.714 2 11V7.94427C2 6.1278 2 5.21956 2.38032 4.53806C2.65142 4.05227 3.05227 3.65142 3.53806 3.38032C4.21956 3 5.1278 3 6.94427 3C8.10802 3 8.6899 3 9.19926 3.19101C10.3622 3.62712 10.8418 4.68358 11.3666 5.73313L12 7M8 7H16.75C18.8567 7 19.91 7 20.6667 7.50559C20.9943 7.72447 21.2755 8.00572 21.4944 8.33329C21.9796 9.05942 21.9992 10.0588 22 12"
-        stroke="currentColor" stroke-linecap="round"/>
-    <path d="M14 19C14 19 15 19 16 21C16 21 19.1765 16 22 15" stroke="currentColor" stroke-linecap="round"
-        stroke-linejoin="round"/>
-</svg>
+<svg id="albums-taken-vokis-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+    stroke-linecap="round" stroke-linejoin="round">
 
+    <path d="M11 19H5a2 2 0 0 1 -2 -2V6a2 2 0 0 1 2 -2h4l3 3h7a2 2 0 0 1 2 2v4" stroke="var(--icon-color-1)"></path>
+    <path d="m15 19 2 2 4 -4" stroke="var(--icon-color-2)"></path>
+</svg>
 <svg id="albums-bookmark-1-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
     <path
         d="M4 17.9808V9.70753C4 6.07416 4 4.25748 5.17157 3.12874C6.34315 2 8.22876 2 12 2C15.7712 2 17.6569 2 18.8284 3.12874C20 4.25748 20 6.07416 20 9.70753V17.9808C20 20.2867 20 21.4396 19.2272 21.8523C17.7305 22.6514 14.9232 19.9852 13.59 19.1824C12.8168 18.7168 12.4302 18.484 12 18.484C11.5698 18.484 11.1832 18.7168 10.41 19.1824C9.0768 19.9852 6.26947 22.6514 4.77285 21.8523C4 21.4396 4 20.2867 4 17.9808Z"

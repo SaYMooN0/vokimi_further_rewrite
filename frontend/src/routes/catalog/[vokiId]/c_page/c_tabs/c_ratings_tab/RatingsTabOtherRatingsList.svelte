@@ -39,7 +39,7 @@
 <style>
 	.other-ratings-label-container {
 		display: flex;
-		align-items: center;
 		justify-content: space-between;
+		align-items: center;
 	}
 </style>

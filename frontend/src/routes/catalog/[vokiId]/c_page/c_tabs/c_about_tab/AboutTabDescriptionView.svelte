@@ -19,8 +19,8 @@
 
 <style>
 	.description {
-		padding-left: 0;
 		padding-right: 0.125rem;
+		padding-left: 0;
 		margin: 0;
 		text-align: justify;
 	}

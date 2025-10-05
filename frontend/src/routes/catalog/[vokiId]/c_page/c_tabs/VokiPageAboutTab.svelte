@@ -28,6 +28,7 @@
 	.publication-date {
 		margin: 0;
 	}
+
 	.publication-date > .value {
 		margin-left: 0.5rem;
 		font-size: 1.125rem;

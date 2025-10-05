@@ -12,12 +12,13 @@
 
 <style>
 	.stars-display {
-		margin-left: 0.25rem;
 		display: flex;
 		flex-direction: row;
 		gap: 0.125rem;
 		padding-bottom: 0.125rem;
+		margin-left: 0.25rem;
 	}
+
 	.star {
 		width: 1.5rem;
 		height: 1.5rem;

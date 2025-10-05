@@ -1,5 +1,6 @@
 ﻿using AlbumsService.Domain.app_user_aggregate;
 using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,12 +21,12 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .HasGuidBasedIdsImmutableHashSetConversion();
 
         builder.ComplexProperty(x => x.AutoAlbumsAppearance, a => {
-            a.Property(d => d.TakenMainColor);
-            a.Property(d => d.TakenSecondaryColor);
-            a.Property(d => d.RatedMainColor);
-            a.Property(d => d.RatedSecondaryColor);
-            a.Property(d => d.CommentedMainColor);
-            a.Property(d => d.CommentedSecondaryColor);
+            a.Property(d => d.TakenMainColor).HasConversion<HexColorConverter>();
+            a.Property(d => d.TakenSecondaryColor).HasConversion<HexColorConverter>();
+            a.Property(d => d.RatedMainColor).HasConversion<HexColorConverter>();
+            a.Property(d => d.RatedSecondaryColor).HasConversion<HexColorConverter>();
+            a.Property(d => d.CommentedMainColor).HasConversion<HexColorConverter>();
+            a.Property(d => d.CommentedSecondaryColor).HasConversion<HexColorConverter>();
         });
     }
 }

@@ -8,14 +8,14 @@ public class VokiRating : AggregateRoot<VokiRatingId>
     public AppUserId UserId { get; }
     public VokiId VokiId { get; }
     public RatingValueWithDate Current { get; set; }
-    public ImmutableArray<RatingValueWithDate> PreviousValues { get; private set; }
+    public RatingHistory History { get; }
 
     private VokiRating(VokiRatingId id, AppUserId userId, VokiId vokiId, RatingValueWithDate value) {
         Id = id;
         UserId = userId;
         VokiId = vokiId;
         Current = value;
-        PreviousValues = [];
+        History = RatingHistory.CreateNew();
     }
 
     public static VokiRating CreateNew(AppUserId userId, VokiId vokiId, RatingValueWithDate value) {
@@ -28,13 +28,16 @@ public class VokiRating : AggregateRoot<VokiRatingId>
         if (newValue.DateTime < Current.DateTime) {
             return ErrFactory.ValueOutOfRange(
                 "New rating date cannot be earlier than the last updated date",
-                $"NewValue.DateTime = {newValue.DateTime:o}, LastUpdated = {Current.DateTime:o}"
+                $"New value datetime:{newValue.DateTime:o}. Last updated: {Current.DateTime:o}"
             );
         }
 
-        PreviousValues = PreviousValues.Add(Current);
-        Current = newValue;
+        ErrOrNothing historyErr = History.Add(Current);
+        if (historyErr.IsErr(out var err)) {
+            return err;
+        }
 
+        Current = newValue;
         return ErrOrNothing.Nothing;
     }
 }

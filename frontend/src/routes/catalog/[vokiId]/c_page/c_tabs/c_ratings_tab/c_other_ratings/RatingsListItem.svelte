@@ -57,21 +57,25 @@
 		height: 3rem;
 		padding-top: 0.25rem;
 	}
+
 	.profile-pic {
-		aspect-ratio: 1/1;
+		display: grid;
 		height: 100%;
 		border-radius: 100vw;
-		object-fit: cover;
-		display: grid;
-		place-items: center;
 		background: var(--muted);
+		aspect-ratio: 1/1;
+		object-fit: cover;
+		place-items: center;
 	}
+
 	img.profile-pic {
 		box-shadow: var(--shadow-xs) inset;
 	}
+
 	.profile-pic.err {
 		background: var(--muted);
 	}
+
 	.profile-pic.err svg {
 		width: 1rem;
 		height: 1rem;
@@ -82,20 +86,22 @@
 		align-self: center;
 		min-width: 0;
 	}
+
 	.username {
-		margin-left: -0.125rem;
 		display: block;
-		font-weight: 600;
+		margin-left: -0.125rem;
 		color: var(--text);
+		font-weight: 600;
+		line-height: 1.1;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		line-height: 1.1;
 	}
+
 	.username.loading {
-		margin-left: 0.125rem;
-		height: 1.125rem;
 		width: 9rem;
+		height: 1.125rem;
+		margin-left: 0.125rem;
 		border-radius: 0.375rem;
 		color: transparent;
 	}
@@ -105,19 +111,21 @@
 	}
 
 	.date {
-		font-size: 1rem;
 		color: var(--secondary-foreground);
+		font-size: 1rem;
 		white-space: nowrap;
 	}
+
 	.skeleton {
 		position: relative;
-		overflow: hidden;
-		background: var(--muted);
 		width: 100%;
+		background: var(--muted);
+		overflow: hidden;
 	}
+
 	.skeleton::before {
-		width: 150%;
 		position: absolute;
+		width: 150%;
 		background: linear-gradient(
 			-65deg,
 			var(--muted) 0%,
@@ -137,6 +145,7 @@
 		0% {
 			transform: translateX(-120%);
 		}
+
 		100% {
 			transform: translateX(120%);
 		}

@@ -68,17 +68,18 @@
 	}
 	
 	.change-rating-btn {
-		margin-left: auto;
-		color: var(--primary-foreground);
-		background-color: var(--primary);
-		border: none;
 		padding: 0.25rem 0.75rem;
+		margin-left: auto;
+		border: none;
 		border-radius: 0.25rem;
+		background-color: var(--primary);
+		color: var(--primary-foreground);
 		font-size: 0.875rem;
 		font-weight: 450;
 		letter-spacing: 0.1px;
 		cursor: pointer;
 	}
+
 	.change-rating-btn:hover {
 		background-color: var(--primary-hov);
 	}

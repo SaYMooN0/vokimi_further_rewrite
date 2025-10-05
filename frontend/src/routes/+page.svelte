@@ -8,7 +8,7 @@
 	let { data }: PageProps = $props();
 </script>
 
-{#if data.errs}
+{#if !data.isSuccess}
 	<PageLoadErrView errs={data.errs} defaultMessage="Could not load vokis catalog" />
 {:else if data.data.vokis.length === 0}
 	<h1>Voki catalog is empty</h1>

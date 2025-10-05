@@ -53,6 +53,7 @@
 		font-weight: 450;
 		cursor: default;
 	}
+
 	.stars-input {
 		display: flex;
 		flex-direction: row;
@@ -92,6 +93,7 @@
 		cursor: pointer;
 		appearance: none;
 	}
+
 	.btn {
 		width: fit-content;
 		height: 1.675rem;

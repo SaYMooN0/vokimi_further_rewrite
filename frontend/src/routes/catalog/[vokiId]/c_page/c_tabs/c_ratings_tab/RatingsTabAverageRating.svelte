@@ -44,14 +44,14 @@
 
 <style>
 	.avg-container {
+		position: relative;
+		z-index: 1;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		font-size: 1.125rem;
 		font-weight: 500;
 		cursor: default;
-		position: relative;
-		z-index: 1;
 	}
 
 	.value-container {
@@ -59,36 +59,39 @@
 		align-items: center;
 		margin: 0 0.5rem;
 	}
+
 	.reload-btn {
+		width: 1.5rem;
+		height: 1.5rem;
+		padding: 0.25rem;
 		margin-left: 1rem;
 		border-radius: 1rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		cursor: pointer;
-		width: 1.5rem;
-		height: 1.5rem;
 		transition: all 0.2s ease-out;
-		stroke-width: 2.23;
 		transform: rotate(60deg);
-		padding: 0.25rem;
+		cursor: pointer;
+		stroke-width: 2.23;
 	}
+
 	.reload-btn:hover {
-		transform: rotate(120deg);
 		background-color: var(--accent);
 		color: var(--accent-foreground);
+		transform: rotate(120deg);
 	}
 
 	.reload-btn:active {
 		transform: scale(0.96);
 		transform: rotate(360deg);
 	}
+
 	.star {
 		width: 1.5rem;
 		height: 1.5rem;
+		margin-bottom: 0.125rem;
+		margin-left: 0.125rem;
 		stroke-width: 0;
 		fill: var(--primary);
-		margin-left: 0.125rem;
-		margin-bottom: 0.125rem;
 	}
 
 	.avg-container > :global(.ratings-count) {
@@ -97,32 +100,37 @@
 		font-size: 1.125rem;
 		font-weight: 450;
 	}
+
 	.loader-backdrop {
 		position: absolute;
-		width: calc(100% + 1rem);
-		height: calc(100% + 0.5rem);
 		top: 50%;
 		left: 50%;
 		z-index: 2;
-		background-color: var(--secondary);
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		box-shadow: var(--shadow-xs);
+		width: calc(100% + 1rem);
+		height: calc(100% + 0.5rem);
 		border-radius: 0.5rem;
+		background-color: var(--secondary);
+		opacity: 0.7;
+		box-shadow: var(--shadow-xs);
 		transform: translate(-50%, -50%);
 		animation: loader-fade-in-from 1s ease;
-		opacity: 0.7;
 	}
+
 	.loader-backdrop > :global(.container) {
 		--loader-color: var(--text);
+
 		opacity: inherit;
 	}
+
 	@keyframes loader-fade-in-from {
 		0%,
 		40% {
 			opacity: 0;
 		}
+
 		100% {
 			opacity: 0.7;
 		}

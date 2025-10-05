@@ -121,10 +121,10 @@
 	}
 
 	.current-tab {
-		margin: 1rem 0.25rem 0.75rem;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		margin: 1rem 0.25rem 0.75rem;
 	}
 
 	.current-tab > :global(*) {

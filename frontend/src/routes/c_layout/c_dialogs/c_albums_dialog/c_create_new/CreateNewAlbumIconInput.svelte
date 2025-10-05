@@ -21,7 +21,9 @@
 
 <div
 	class="selected-icon"
-	style="--icon-color-1: {mainColor}; --icon-color-2: {secondaryColor};"
+	style="
+
+--icon-color-1: {mainColor}; --icon-color-2: {secondaryColor};"
 	onclick={openInput}
 >
 	<svg><use href="#{icon}"></use></svg>
