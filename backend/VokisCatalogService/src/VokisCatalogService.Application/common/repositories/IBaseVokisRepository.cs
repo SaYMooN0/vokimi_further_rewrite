@@ -11,3 +11,4 @@ public interface IBaseVokisRepository
     Task<BaseVoki?> GetById(VokiId vokiId);
     Task Update(BaseVoki voki, CancellationToken ct = default);
 }
+

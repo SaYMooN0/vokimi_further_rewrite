@@ -5,20 +5,18 @@ public class AppUser : AggregateRoot<AppUserId>
     private AppUser() { }
     public ImmutableHashSet<VokiId> InitializedVokiIds { get; private set; }
     public ImmutableHashSet<VokiId> CoAuthoredVokiIds { get; private set; }
-    public ImmutableHashSet<VokiId> TakenVokiIds { get; private set; }
+    public UserTakenVokisList TakenVokis { get; }
 
     public AppUser(AppUserId id) {
         Id = id;
         InitializedVokiIds = [];
         CoAuthoredVokiIds = [];
-        TakenVokiIds = [];
+        TakenVokis = UserTakenVokisList.CreateNew();
     }
 
     public void AddInitializedVoki(VokiId vokiId) =>
         InitializedVokiIds = InitializedVokiIds.Add(vokiId);
 
     public void AddCoAuthoredVoki(VokiId vokiId) =>
-        CoAuthoredVokiIds = CoAuthoredVokiIds.Add(vokiId); 
-    public void AddTakenVoki(VokiId vokiId) =>
-        TakenVokiIds = TakenVokiIds.Add(vokiId);
+        CoAuthoredVokiIds = CoAuthoredVokiIds.Add(vokiId);
 }

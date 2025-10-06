@@ -12,18 +12,18 @@ internal sealed class RateVokiCommandHandler :
     ICommandHandler<RateVokiCommand, RatingValueWithDate>
 {
     private readonly IAppUsersRepository _appUsersRepository;
-    private readonly IVokiRatingsRepository _vokiRatingsRepository;
+    private readonly IRatingsRepository _ratingsRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IUserContext _userContext;
 
     public RateVokiCommandHandler(
         IAppUsersRepository appUsersRepository,
-        IVokiRatingsRepository vokiRatingsRepository,
+        IRatingsRepository ratingsRepository,
         IDateTimeProvider dateTimeProvider,
         IUserContext userContext
     ) {
         _appUsersRepository = appUsersRepository;
-        _vokiRatingsRepository = vokiRatingsRepository;
+        _ratingsRepository = ratingsRepository;
         _dateTimeProvider = dateTimeProvider;
         _userContext = userContext;
     }
@@ -46,16 +46,16 @@ internal sealed class RateVokiCommandHandler :
         }
 
         var ratingValue = creationRes.AsSuccess();
-        VokiRating? rating = await _vokiRatingsRepository.GetByUserForVokiWithHistory(userId, command.VokiId,ct);
+        VokiRating? rating = await _ratingsRepository.GetByUserForVokiWithHistory(userId, command.VokiId,ct);
 
 
         if (rating is null) {
             rating = VokiRating.CreateNew(userId, command.VokiId, ratingValue);
-            await _vokiRatingsRepository.Add(rating,ct);
+            await _ratingsRepository.Add(rating,ct);
         }
         else {
             rating.Update(ratingValue);
-            await _vokiRatingsRepository.Update(rating,ct);
+            await _ratingsRepository.Update(rating,ct);
         }
 
         return ratingValue;

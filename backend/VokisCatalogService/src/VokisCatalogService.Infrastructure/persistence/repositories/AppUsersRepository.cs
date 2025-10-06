@@ -1,4 +1,5 @@
-﻿using VokisCatalogService.Application.common.repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.app_user_aggregate;
 
 namespace VokisCatalogService.Infrastructure.persistence.repositories;
@@ -28,4 +29,13 @@ internal class AppUsersRepository : IAppUsersRepository
         _db.UpdateRange(users);
         await _db.SaveChangesAsync();
     }
+    public Task<AppUser?> GetUserWithTakenVokis(AppUserId userId, CancellationToken ct) =>
+        _db.AppUsers
+            .Include(u => u.TakenVokis)
+            .FirstOrDefaultAsync(u => u.Id == userId, ct);
+    public Task<AppUser?> GetUserWithTakenVokisAsNoTracking(AppUserId userId, CancellationToken ct) =>
+        _db.AppUsers
+            .AsNoTracking()
+            .Include(u => u.TakenVokis)
+            .FirstOrDefaultAsync(u => u.Id == userId, ct);
 }

@@ -25,7 +25,10 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .HasGuidBasedIdsImmutableHashSetConversion();
 
         builder
-            .Property(x => x.TakenVokiIds)
-            .HasGuidBasedIdsImmutableHashSetConversion();
+            .HasOne(x => x.TakenVokis)
+            .WithOne()
+            .HasForeignKey<AppUserId>("UserId")
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

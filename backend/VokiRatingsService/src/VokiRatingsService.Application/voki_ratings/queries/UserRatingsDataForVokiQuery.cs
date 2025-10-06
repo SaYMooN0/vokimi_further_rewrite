@@ -11,16 +11,16 @@ internal sealed class UserRatingsDataForVokiQueryHandler :
     IQueryHandler<UserRatingsDataForVokiQuery, UserRatingsDataForVokiQueryResult>
 {
     private readonly IUserContext _userContext;
-    private readonly IVokiRatingsRepository _vokiRatingsRepository;
+    private readonly IRatingsRepository _ratingsRepository;
     private readonly IAppUsersRepository _appUsersRepository;
 
     public UserRatingsDataForVokiQueryHandler(
         IUserContext userContext,
-        IVokiRatingsRepository vokiRatingsRepository,
+        IRatingsRepository ratingsRepository,
         IAppUsersRepository appUsersRepository
     ) {
         _userContext = userContext;
-        _vokiRatingsRepository = vokiRatingsRepository;
+        _ratingsRepository = ratingsRepository;
         _appUsersRepository = appUsersRepository;
     }
 
@@ -35,7 +35,7 @@ internal sealed class UserRatingsDataForVokiQueryHandler :
     private async Task<ErrOr<UserRatingsDataForVokiQueryResult>> GetRatingsDataForAuthenticatedUser(
         AppUserId userId, VokiId vokiId, CancellationToken ct
     ) {
-        VokiRating[] ratings = (await _vokiRatingsRepository.GetForVokiAsNoTracking(vokiId, ct));
+        VokiRating[] ratings = (await _ratingsRepository.GetForVokiAsNoTracking(vokiId, ct));
         VokiRating? userRating = ratings.SingleOrDefault(r => r.UserId == userId);
         bool hasTaken = false;
 
@@ -55,7 +55,7 @@ internal sealed class UserRatingsDataForVokiQueryHandler :
         VokiId vokiId, CancellationToken ct
     ) => new UserRatingsDataForVokiQueryResult(
         false,
-        await _vokiRatingsRepository.GetForVokiAsNoTracking(vokiId, ct)
+        await _ratingsRepository.GetForVokiAsNoTracking(vokiId, ct)
     );
 }
 

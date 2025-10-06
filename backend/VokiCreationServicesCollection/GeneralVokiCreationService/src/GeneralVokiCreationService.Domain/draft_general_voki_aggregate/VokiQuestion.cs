@@ -66,6 +66,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     public void MoveOrderDown() {
         OrderInVoki++;
     }
+
     public ErrOrNothing UpdateImages(VokiQuestionImagesSet images) {
         if (images.Keys.Any(k => k.QuestionId != Id)) {
             return ErrFactory.Conflict("One or more images does not belong to this question");
@@ -204,6 +205,18 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
                     source: "Question answers",
                     fixRecommendation:
                     $"Decrease the maximum limit or add at least {AnswersCountLimit.MaxAnswers - _answers.Count} answer(s)"
+                )
+            ];
+        }
+
+        if (AnswersCountLimit.MinAnswers == AnswersCountLimit.MaxAnswers &&
+            _answers.Count == AnswersCountLimit.MinAnswers) {
+            return [
+                VokiPublishingIssue.Problem(
+                    message:
+                    $"[\"{preview}\"] question's minimum and maximum answer limits are equal ({AnswersCountLimit.MinAnswers}), and the question has exactly that number of answers, making the question meaningless",
+                    source: "Question answers",
+                    fixRecommendation: "Adjust the minimum and maximum answers count limit or add new another answer"
                 )
             ];
         }

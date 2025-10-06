@@ -7,15 +7,15 @@ public sealed record ListVokiRatingsForVokiQuery(VokiId VokiId) : IQuery<VokiRat
 
 internal sealed class ListVokiRatingsForVokiQueryHandler : IQueryHandler<ListVokiRatingsForVokiQuery, VokiRating[]>
 {
-    private readonly IVokiRatingsRepository _vokiRatingsRepository;
+    private readonly IRatingsRepository _ratingsRepository;
 
-    public ListVokiRatingsForVokiQueryHandler(IVokiRatingsRepository vokiRatingsRepository) {
-        _vokiRatingsRepository = vokiRatingsRepository;
+    public ListVokiRatingsForVokiQueryHandler(IRatingsRepository ratingsRepository) {
+        _ratingsRepository = ratingsRepository;
     }
 
     public async Task<ErrOr<VokiRating[]>> Handle(
         ListVokiRatingsForVokiQuery query, CancellationToken ct
     ) {
-        return await _vokiRatingsRepository.GetForVokiAsNoTracking(query.VokiId, ct);
+        return await _ratingsRepository.GetForVokiAsNoTracking(query.VokiId, ct);
     }
 }

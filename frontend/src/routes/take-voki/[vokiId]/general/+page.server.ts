@@ -7,10 +7,10 @@ import { VokiCatalogVisitMarkerCookie } from "$lib/ts/cookies/voki-catalog-visit
 export const load: ServerLoad = async ({ cookies, params, fetch }) => {
     const vokiId = params.vokiId;
     if (!vokiId) {
-        throw redirect(303, `/`);
+        throw redirect(302, `/`);
     }
     if (!VokiCatalogVisitMarkerCookie.checkIfSeen(cookies, vokiId)) {
-        throw redirect(303, `/catalog/${vokiId}`);
+        throw redirect(302, `/catalog/${vokiId}`);
     }
     return {
         response: await ApiVokiTakingGeneral.serverFetchJsonResponse<GeneralVokiTakingData>(

@@ -4,11 +4,11 @@ using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Infrastructure.persistence.repositories;
 
-public class VokiRatingsRepository : IVokiRatingsRepository
+public class RatingsRepository : IRatingsRepository
 {
     private readonly VokiRatingsDbContext _db;
 
-    public VokiRatingsRepository(VokiRatingsDbContext db) {
+    public RatingsRepository(VokiRatingsDbContext db) {
         _db = db;
     }
 
@@ -31,4 +31,12 @@ public class VokiRatingsRepository : IVokiRatingsRepository
         _db.Ratings.Add(rating);
         await _db.SaveChangesAsync(ct);
     }
+
+    public Task<VokiIdWithRatingDateDto[]> OrderedIdsOfVokiRatedByUser(AppUserId userId, CancellationToken ct) =>
+        _db.Ratings
+            .AsNoTracking()
+            .Where(r => r.UserId == userId)
+            .Select(r => new VokiIdWithRatingDateDto(r.VokiId, r.Current.DateTime))
+            .OrderByDescending(r => r.Date)
+            .ToArrayAsync(ct);
 }

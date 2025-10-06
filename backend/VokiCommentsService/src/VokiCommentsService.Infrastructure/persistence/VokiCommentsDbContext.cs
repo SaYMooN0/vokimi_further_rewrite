@@ -1,5 +1,6 @@
 ﻿using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
+using VokiCommentsService.Domain.app_user_aggregate;
 
 namespace VokiCommentsService.Infrastructure.persistence;
 
@@ -12,7 +13,9 @@ public class VokiCommentsDbContext : DbContext
     ) : base(options) {
         _publisher = publisher;
     }
-
+    public DbSet<AppUser> AppUsers { get; init; } = null!;
+    // public DbSet<Voki> Vokis { get; init; } = null!;
+    // public DbSet<VokiComment> Ratings { get; init; } = null!;
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VokiCommentsDbContext).Assembly);
         base.OnModelCreating(modelBuilder);

@@ -20,9 +20,10 @@ export namespace UsersStore {
     const TTL_MS = 10 * 60 * 1000;
     const SOFT_ERR_TTL_MS = 5_000;
     const MAX_BATCH = 100;
+    const MAX_CACHE_SIZE = 500;
+
 
     const cache = new Map<string, CacheEntry>();
-
     const pendingIds = new Set<string>();
     let timer: ReturnType<typeof setTimeout> | undefined;
 
@@ -103,7 +104,6 @@ export namespace UsersStore {
         }
     }
 
-    // --- Helpers ---
 
     function ensureCacheEntry(id: string): CacheEntry {
         const existing = cache.get(id);
@@ -111,11 +111,26 @@ export namespace UsersStore {
             return existing;
         }
 
+        if (cache.size >= MAX_CACHE_SIZE) {
+            let oldestKey: string | undefined;
+            let oldestExpiresAt = Infinity;
+            for (const [key, entry] of cache.entries()) {
+                if (entry.expiresAt < oldestExpiresAt) {
+                    oldestExpiresAt = entry.expiresAt;
+                    oldestKey = key;
+                }
+            }
+            if (oldestKey !== undefined) {
+                cache.delete(oldestKey);
+            }
+        }
+
         const obj = $state<StateObj>({ state: "loading" });
         const fresh: CacheEntry = { obj, expiresAt: 0 };
         cache.set(id, fresh);
         return fresh;
     }
+
 
     function setLoading(entry: CacheEntry): void {
         entry.obj.state = "loading";

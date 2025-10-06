@@ -16,9 +16,9 @@ internal static class VokiHandlers
     }
 
     private static async Task<IResult> ListUserVokiIds(
-        CancellationToken ct, IQueryHandler<ListUserVokiIdsQuery, VokiId[]> handler
+        CancellationToken ct, IQueryHandler<ListIdsOfVokiAuthoredByUser, VokiId[]> handler
     ) {
-        ListUserVokiIdsQuery query = new();
+        ListIdsOfVokiAuthoredByUser query = new();
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (vokiIds) => Results.Json(

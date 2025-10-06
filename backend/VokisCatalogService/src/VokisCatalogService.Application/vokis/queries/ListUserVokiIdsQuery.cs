@@ -3,19 +3,19 @@ using VokisCatalogService.Application.common.repositories;
 
 namespace VokisCatalogService.Application.vokis.queries;
 
-public sealed record ListUserVokiIdsQuery() : IQuery<VokiId[]>;
+public sealed record ListIdsOfVokiAuthoredByUser() : IQuery<VokiId[]>;
 
-internal sealed class ListUserVokiIdsQueryHandler : IQueryHandler<ListUserVokiIdsQuery, VokiId[]>
+internal sealed class ListIdsOfVokiAuthoredByUserHandler : IQueryHandler<ListIdsOfVokiAuthoredByUser, VokiId[]>
 {
     private readonly IBaseVokisRepository _baseVokisRepository;
     private readonly IUserContext _userContext;
 
-    public ListUserVokiIdsQueryHandler(IBaseVokisRepository baseVokisRepository, IUserContext userContext) {
+    public ListIdsOfVokiAuthoredByUserHandler(IBaseVokisRepository baseVokisRepository, IUserContext userContext) {
         _baseVokisRepository = baseVokisRepository;
         _userContext = userContext;
     }
 
-    public async Task<ErrOr<VokiId[]>> Handle(ListUserVokiIdsQuery query, CancellationToken ct) {
+    public async Task<ErrOr<VokiId[]>> Handle(ListIdsOfVokiAuthoredByUser query, CancellationToken ct) {
         AppUserId userId = _userContext.AuthenticatedUserId;
         return await _baseVokisRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(userId, ct);
     }

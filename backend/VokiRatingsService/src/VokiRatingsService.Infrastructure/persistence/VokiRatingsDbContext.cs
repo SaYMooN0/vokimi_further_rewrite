@@ -40,4 +40,6 @@ public class VokiRatingsDbContext : DbContext
             await _publisher.Publish(domainEvent);
         }
     }
+ 
+
 }
