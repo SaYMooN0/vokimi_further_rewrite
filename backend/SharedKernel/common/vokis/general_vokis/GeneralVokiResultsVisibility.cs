@@ -3,8 +3,8 @@
 public enum GeneralVokiResultsVisibility
 {
     Anyone,
-    AfterTaking,
-    OnlyReceived
+    AfterTaking, //all results can be viewed after 1 taking
+    OnlyReceived //to view result you need to take the voki first
 }
 public static class GeneralVokiResultsVisibilityExtensions
 {

@@ -17,15 +17,16 @@
 
 <style>
 	.msg-container {
-		width: 40rem;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		width: 40rem;
 	}
+
 	.go-back-link {
+		padding: 0.25rem 1rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-		padding: 0.25rem 1rem;
 	}
 </style>

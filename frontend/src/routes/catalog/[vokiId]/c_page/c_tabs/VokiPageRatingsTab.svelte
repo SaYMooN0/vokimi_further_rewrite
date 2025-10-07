@@ -1,29 +1,28 @@
 <script lang="ts">
-	import AuthView from '$lib/components/AuthView.svelte';
 	import ReloadButton from '$lib/components/buttons/ReloadButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import type { ResponseResult } from '$lib/ts/backend-communication/result-types';
-	import type { RatingsTabDataType } from '../../types';
-	import UserRatingAuthNeeded from './c_ratings_tab/c_user_rating/UserRatingAuthNeeded.svelte';
-	import UserRatingVokiTakingNeeded from './c_ratings_tab/c_user_rating/UserRatingVokiTakingNeeded.svelte';
+	import type { RatingsTabDataType, VokiRatingData } from '../../types';
+	import RatingsTabAllRatingsList from './c_ratings_tab/RatingsTabAllRatingsList.svelte';
 	import RatingsTabAverageRating from './c_ratings_tab/RatingsTabAverageRating.svelte';
-	import RatingsTabOtherRatingsList from './c_ratings_tab/RatingsTabOtherRatingsList.svelte';
-	import RatingsTabUserRating from './c_ratings_tab/RatingsTabUserRating.svelte';
+	import { onMount } from 'svelte';
 
 	interface Props {
 		tabData: RatingsTabDataType;
 		fetchTabData: () => Promise<void>;
 		saveNewUserRating: (
 			value: number
-		) => Promise<ResponseResult<{ value: number; dateTime: Date }>>;
+		) => Promise<ResponseResult<VokiRatingData>>;
 		reloadOutdatedRatings: () => Promise<void>;
 	}
 	let { tabData, fetchTabData, saveNewUserRating, reloadOutdatedRatings }: Props = $props();
 
-	if (tabData.state == 'empty') {
-		fetchTabData();
-	}
+	onMount(() => {
+		if (tabData.state == 'empty') {
+			fetchTabData();
+		}
+	});
 </script>
 
 {#if tabData.state === 'loading'}
@@ -46,23 +45,11 @@
 		reloadOutdated={reloadOutdatedRatings}
 	/>
 
-	<AuthView>
-		{#snippet authenticated(authData)}
-			{#if tabData.userHasTaken}
-				<RatingsTabUserRating
-					{saveNewUserRating}
-					userRating={tabData.allRatings.find((r) => r.userId === authData.userId)}
-				/>
-			{:else}
-				<UserRatingVokiTakingNeeded />
-			{/if}
-		{/snippet}
-		{#snippet unauthenticated()}
-			<UserRatingAuthNeeded />
-		{/snippet}
-	</AuthView>
-
-	<RatingsTabOtherRatingsList allRatings ={tabData.allRatings}/>
+	<RatingsTabAllRatingsList
+		allRatings={tabData.allRatings}
+		hasUserTakenVoki={tabData.userHasTaken}
+		saveNewRating={saveNewUserRating}
+	/>
 {:else}
 	<h1>Something is wrong</h1>
 {/if}

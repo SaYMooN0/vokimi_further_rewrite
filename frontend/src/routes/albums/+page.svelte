@@ -28,7 +28,7 @@
 
 <style>
 	.login-required-container {
-		margin: 4rem auto 1rem;
 		width: fit-content;
+		margin: 4rem auto 1rem;
 	}
 </style>

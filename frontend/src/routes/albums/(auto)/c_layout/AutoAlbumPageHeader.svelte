@@ -6,4 +6,13 @@
 	let { albumName, vokiCount }: Props = $props();
 </script>
 
-<h1>Your {albumName} Vokis ({vokiCount})</h1>
+<h1>
+	<a href="/albums" class="back-link">Back</a>
+	Your {albumName} Vokis ({vokiCount})
+</h1>
+
+<style>
+	.back-link{
+
+	}
+</style>

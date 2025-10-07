@@ -28,23 +28,25 @@
 	}
 
 	.right-btn {
-		padding: 0 1rem;
-		width: 12.5rem;
 		display: grid;
-		grid-template-columns: 1.375rem 1fr;
 		align-items: center;
-		background-color: var(--muted);
+		gap: 0.25rem;
+		width: 12.5rem;
+		padding: 0 1rem;
 		border: none;
+		border-radius: 0.75rem;
+		background-color: var(--muted);
 		color: var(--muted-foreground);
 		font-size: 1.125rem;
 		font-weight: 480;
-		gap: 0.25rem;
-		border-radius: 0.75rem;
+		grid-template-columns: 1.375rem 1fr;
 	}
+
 	.right-btn:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.right-btn > :global(svg) {
 		width: 100%;
 		aspect-ratio: 1/1;

@@ -45,7 +45,7 @@ internal static class SpecificVokiHandlers
     }
 
     private static async Task<IResult> RateVoki(
-        HttpContext httpContext, CancellationToken ct, ICommandHandler<RateVokiCommand, RatingValueWithDate> handler
+        HttpContext httpContext, CancellationToken ct, ICommandHandler<RateVokiCommand, VokiRating> handler
     ) {
         var request = httpContext.GetValidatedRequest<RateVokiRequest>();
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
@@ -53,6 +53,6 @@ internal static class SpecificVokiHandlers
         RateVokiCommand command = new(vokiId, request.RatingValue);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrToJson<RatingValueWithDate, VokiRatedResponse>(result);
+        return CustomResults.FromErrOrToJson<VokiRating, VokiRatingDataResponse>(result);
     }
 }

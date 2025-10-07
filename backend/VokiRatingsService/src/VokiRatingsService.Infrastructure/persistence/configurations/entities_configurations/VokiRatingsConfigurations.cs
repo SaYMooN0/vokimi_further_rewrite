@@ -35,7 +35,7 @@ internal class VokiRatingsConfigurations : IEntityTypeConfiguration<VokiRating>
         builder
             .HasOne(x => x.History)
             .WithOne()
-            .HasForeignKey<VokiRating>("RatingId")
+            .HasForeignKey<RatingHistory>("RatingId")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }

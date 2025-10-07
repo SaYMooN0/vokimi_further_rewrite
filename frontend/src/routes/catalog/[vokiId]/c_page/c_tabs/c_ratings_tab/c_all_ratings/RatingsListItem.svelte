@@ -2,14 +2,24 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
 	import { relativeTime } from 'svelte-relative-time';
-	import type { VokiRatingData } from '../../../../types';
-	import RatingStarsView from '../c_ratings_shared/RatingStarsView.svelte';
+	import RatingStarsView from './RatingStarsView.svelte';
+	import type { Snippet } from 'svelte';
 
-	let { rating }: { rating: VokiRatingData } = $props<{ rating: VokiRatingData }>();
-	let user: any = UsersStore.Get(rating.userId);
+	interface Props {
+		userId: string;
+		content: { name: 'default'; ratingValue: number } | { name: 'custom'; children: Snippet };
+		dateTime?: Date;
+		highlight?: { enabled: false } | { enabled: true; text: string };
+	}
+	let { userId, content, dateTime = undefined, highlight = { enabled: false } }: Props = $props();
+
+	let user: any = UsersStore.Get(userId);
 </script>
 
-<div class="rating-item">
+<div class="rating-item" class:highlighted={highlight.enabled}>
+	{#if highlight.enabled}
+		<label class="highlight-label"> {highlight.text}</label>
+	{/if}
 	<div class="profile-pic-container">
 		{#if user.state === 'loading'}
 			<div class="profile-pic skeleton" aria-hidden="true" />
@@ -34,22 +44,49 @@
 		{:else if user.state === 'ok'}
 			<label class="username">{user.data.name}</label>
 		{/if}
-
-		<div class="stars">
-			<RatingStarsView value={rating.value} />
-		</div>
+		{#if content.name === 'default'}
+			<RatingStarsView value={content.ratingValue} />
+		{:else if content.name === 'custom'}
+			{@render content.children()}
+		{:else}
+			<h1>Something went wrong. Content name: {(content as any).name}</h1>
+		{/if}
 	</div>
-	<span class="date" use:relativeTime={{ date: rating.dateTime }} />
+	<div class="date">
+		{#if dateTime}
+			<span use:relativeTime={{ date: dateTime }} />
+		{/if}
+	</div>
 </div>
 
 <style>
 	.rating-item {
+		position: relative;
 		display: grid;
+		align-items: center;
+		padding: 0.25rem 0.5rem;
+		border: 0.125rem solid var(--back);
+		border-radius: 1rem;
+		animation: var(--default-fade-in);
 		grid-template-columns: auto 1fr auto;
 		row-gap: 0.25rem;
-		align-items: center;
-		padding: 0 0.25rem;
-		animation: var(--default-fade-in);
+	}
+
+	.rating-item.highlighted {
+		padding-top: 0.675rem;
+		border-color: var(--primary);
+	}
+
+	.highlight-label {
+		position: absolute;
+		top: -0.125rem;
+		left: 1.25rem;
+		padding: 0 0.125rem;
+		background-color: var(--back);
+		color: var(--primary);
+		font-size: 0.875rem;
+		font-weight: 600;
+		transform: translateY(-50%);
 	}
 
 	.profile-pic-container {

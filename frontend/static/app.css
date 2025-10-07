@@ -86,3 +86,14 @@ textarea {
     opacity: 1;
   }
 }
+
+@keyframes fade-in-from-with-delay {
+		0%,
+		40% {
+			opacity: 0;
+		}
+
+		100% {
+			opacity: 0.7;
+		}
+	}

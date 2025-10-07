@@ -8,4 +8,4 @@ export type VokiAlbumPreviewData = {
     secondaryColor: string;
     vokisCount: number;
 };
-export type VokiIdToDate = Record<string, Date>; 
+export type VokiIdToDateDict = Record<string, Date>; 

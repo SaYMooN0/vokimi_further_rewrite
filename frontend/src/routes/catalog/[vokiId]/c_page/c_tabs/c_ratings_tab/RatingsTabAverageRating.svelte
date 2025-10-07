@@ -116,7 +116,7 @@
 		opacity: 0.7;
 		box-shadow: var(--shadow-xs);
 		transform: translate(-50%, -50%);
-		animation: loader-fade-in-from 1s ease;
+		animation:fade-in-from-with-delay 1s ease;
 	}
 
 	.loader-backdrop > :global(.container) {
@@ -125,14 +125,5 @@
 		opacity: inherit;
 	}
 
-	@keyframes loader-fade-in-from {
-		0%,
-		40% {
-			opacity: 0;
-		}
-
-		100% {
-			opacity: 0.7;
-		}
-	}
+	
 </style>

@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using InfrastructureShared.Base.persistence.extensions;
+﻿using InfrastructureShared.Base.persistence.extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokisCatalogService.Domain.app_user_aggregate;
@@ -27,7 +26,7 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
         builder
             .HasOne(x => x.TakenVokis)
             .WithOne()
-            .HasForeignKey<AppUserId>("UserId")
+            .HasForeignKey<UserTakenVokisList>("UserId")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }
