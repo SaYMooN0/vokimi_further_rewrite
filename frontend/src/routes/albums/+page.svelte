@@ -3,6 +3,7 @@
 	import AutoAlbumsSection from './c_page/AutoAlbumsSection.svelte';
 	import type { PageProps } from './$types';
 	import AuthView from '$lib/components/AuthView.svelte';
+	import UserAlbumsSection from './c_page/UserAlbumsSection.svelte';
 
 	let { data }: PageProps = $props();
 </script>
@@ -17,6 +18,7 @@
 		{#if !data.isSuccess}
 			<PageLoadErrView errs={data.errs} defaultMessage="Could not load your albums" />
 		{:else}
+			<UserAlbumsSection albums={data.data.albums} />
 			<AutoAlbumsSection
 				takenVokisAlbumsColor={data.data.takenVokisAlbums}
 				ratedVokisAlbumsColor={data.data.ratedVokisAlbums}

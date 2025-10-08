@@ -5,39 +5,33 @@
 	import LayoutSprites from './c_layout/LayoutSprites.svelte';
 	import ConfirmActionDialog from './c_layout/c_dialogs/ConfirmActionDialog.svelte';
 	import SignInDialog from './c_layout/c_dialogs/SignInDialog.svelte';
-	import VokiAlbumsDialog from './c_layout/c_dialogs/VokiAlbumsDialog.svelte';
-	import {
-		registerConfirmActionDialogOpenFunction,
-		type ConfirmActionDialogContent
-	} from './c_layout/ts_layout_contexts/confirm-action-dialog-context';
-	import {
-		registerSignInDialogOpenFunction,
-		type SignInDialogState
-	} from './c_layout/ts_layout_contexts/sign-in-dialog-context';
-	import { registerAlbumsDialogOpenFunction } from './c_layout/ts_layout_contexts/user-voki-albums-context';
+	import { registerConfirmActionDialogOpenFunction } from './c_layout/ts_layout_contexts/confirm-action-dialog-context';
+	import { registerSignInDialogOpenFunction } from './c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import VokiItemFlagsInfoDialog from './c_layout/c_dialogs/VokiItemFlagsInfoDialog.svelte';
 	import { registerVokiFlagsInfoDialogOpenFunction } from './c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
+	import CreateNewAlbumDialog from './c_layout/c_dialogs/CreateNewAlbumDialog.svelte';
+	import { registerCreateNewAlbumOpenFunction } from './c_layout/ts_layout_contexts/album-creation-dialog-context';
 
 	let isFullWidthMode = $state(false);
 	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
 
 	let signInDialog = $state<SignInDialog>()!;
 	let confirmActionDialog = $state<ConfirmActionDialog>()!;
-	let vokiAlbumsDialog = $state<VokiAlbumsDialog>()!;
+	let createNewAlbumDialog = $state<CreateNewAlbumDialog>()!;
 	let vokiItemFlagsInfoDialog = $state<VokiItemFlagsInfoDialog>()!;
 
-	registerSignInDialogOpenFunction((state: SignInDialogState) => signInDialog.open(state));
+	registerSignInDialogOpenFunction((state) => signInDialog.open(state));
 	registerConfirmActionDialogOpenFunction({
-		open: (content: ConfirmActionDialogContent) => confirmActionDialog.open(content),
+		open: (content) => confirmActionDialog.open(content),
 		close: () => confirmActionDialog.close()
 	});
-	registerAlbumsDialogOpenFunction((vokiId) => vokiAlbumsDialog.open(vokiId));
 	registerVokiFlagsInfoDialogOpenFunction(() => vokiItemFlagsInfoDialog.open());
+	registerCreateNewAlbumOpenFunction(() => createNewAlbumDialog.open());
 </script>
 
 <SignInDialog bind:this={signInDialog} />
 <ConfirmActionDialog bind:this={confirmActionDialog} />
-<VokiAlbumsDialog bind:this={vokiAlbumsDialog} />
+<CreateNewAlbumDialog bind:this={createNewAlbumDialog} />
 <VokiItemFlagsInfoDialog bind:this={vokiItemFlagsInfoDialog} />
 
 <LayoutSprites />

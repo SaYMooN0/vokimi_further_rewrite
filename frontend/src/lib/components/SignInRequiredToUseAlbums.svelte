@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import { getSignInDialogOpenFunction } from '../../ts_layout_contexts/sign-in-dialog-context';
+	import { getSignInDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/sign-in-dialog-context';
 
 	let { closeDialog }: { closeDialog: () => void } = $props<{ closeDialog: () => void }>();
 	const openSignInDialog = getSignInDialogOpenFunction();
@@ -36,6 +36,7 @@
 		display: flex;
 		flex-direction: column;
 		height: 100%;
+		width: 100%;
 	}
 
 	h1 {
@@ -106,7 +107,6 @@
 		--icon-color-1: #9b5de5;
 
 		transform: rotate(2deg);
-
 	}
 
 	.icon-3 {
@@ -127,7 +127,6 @@
 		--icon-color-2: #ee6c4d;
 
 		transform: rotate(15deg);
-
 	}
 
 	.icon-5 {
@@ -140,7 +139,6 @@
 		--icon-color-2: var(--warn-foreground);
 
 		transform: rotate(-2deg);
-
 	}
 
 	.icon-6 {
@@ -151,6 +149,5 @@
 		--icon-color-1: #48cae4;
 
 		transform: rotate(10deg);
-
 	}
 </style>

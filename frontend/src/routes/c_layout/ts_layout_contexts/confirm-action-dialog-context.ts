@@ -17,12 +17,12 @@ export type ConfirmActionDialogContent = {
 };
 
 const openFunctionKey = Symbol("open-confirm-action-dialog-function");
-type confirmActionDialogFunctions = { open: (val: ConfirmActionDialogContent) => void, close: () => void };
+type openConfirmActionDialogFunction = { open: (val: ConfirmActionDialogContent) => void, close: () => void };
 
-export function registerConfirmActionDialogOpenFunction(openDialog: confirmActionDialogFunctions) {
+export function registerConfirmActionDialogOpenFunction(openDialog: openConfirmActionDialogFunction) {
 	setContext(openFunctionKey, openDialog);
 }
 
 export function getConfirmActionDialogOpenFunction() {
-	return getContext<confirmActionDialogFunctions>(openFunctionKey);
+	return getContext<openConfirmActionDialogFunction>(openFunctionKey);
 }

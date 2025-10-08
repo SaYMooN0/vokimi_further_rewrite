@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { getAlbumsDialogOpenFunction } from '../../../../../c_layout/ts_layout_contexts/user-voki-albums-context';
-
 	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	let isHovered = $state(false);
 	function animateIcon() {
@@ -9,12 +7,11 @@
 			isHovered = false;
 		}, 500);
 	}
-	const openAlbumsDialog = getAlbumsDialogOpenFunction();
 </script>
 
 <button
 	class="add-to-album-btn"
-	onclick={() => openAlbumsDialog(vokiId)}
+	onclick={() => {}}
 	onmouseenter={() => animateIcon()}
 	onfocus={() => animateIcon()}
 >

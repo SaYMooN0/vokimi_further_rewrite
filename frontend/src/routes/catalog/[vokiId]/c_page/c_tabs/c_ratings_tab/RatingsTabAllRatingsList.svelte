@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { ResponseResult } from '$lib/ts/backend-communication/result-types';
-	import { getAuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { getSignInDialogOpenFunction } from '../../../../../c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import type { VokiRatingData } from '../../../types';
 	import RatingsListItem from './c_all_ratings/RatingsListItem.svelte';

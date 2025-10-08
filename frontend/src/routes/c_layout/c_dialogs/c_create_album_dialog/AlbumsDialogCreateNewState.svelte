@@ -1,8 +1,8 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
-	import CreateNewAlbumColorInput from './c_create_new/CreateNewAlbumColorInput.svelte';
-	import CreateNewAlbumIconInput from './c_create_new/CreateNewAlbumIconInput.svelte';
+	import CreateNewAlbumColorInput from '../c_create_album_dialog/CreateNewAlbumColorInput.svelte';
+	import CreateNewAlbumIconInput from '../c_create_album_dialog/CreateNewAlbumIconInput.svelte';
 
 	let name = $state('');
 	let mainColor = $state('#fabcbf');

@@ -12,28 +12,28 @@
 	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	const vokiCreationApi = getVokiCreationPageApiService();
 
-	let pageState = $state<PageState>({ name: 'Message' });
+	let pageState = $state<PageState>({ name: 'message' });
 
 	type PageState =
-		| { name: 'Message' }
-		| { name: 'Loading' }
-		| { name: 'Error'; errs: Err[] }
-		| { name: 'Fetched'; issues: VokiPublishingIssue[] };
+		| { name: 'message' }
+		| { name: 'loading' }
+		| { name: 'error'; errs: Err[] }
+		| { name: 'fetched'; issues: VokiPublishingIssue[] };
 
 	async function loadPublishingIssues() {
-		pageState = { name: 'Loading' };
+		pageState = { name: 'loading' };
 		const response = await vokiCreationApi.checkForPublishingIssues(vokiId);
 		if (response.isSuccess) {
-			pageState = { name: 'Fetched', issues: response.data.issues };
+			pageState = { name: 'fetched', issues: response.data.issues };
 		} else {
-			pageState = { name: 'Error', errs: response.errs };
+			pageState = { name: 'error', errs: response.errs };
 		}
 	}
 	let vokiPublishedDialog = $state<VokiPublishedDialog>()!;
 </script>
 
 <VokiPublishedDialog bind:this={vokiPublishedDialog} />
-{#if pageState.name === 'Message'}
+{#if pageState.name === 'message'}
 	<div class="msg-container">
 		<label class="warning-label">Warning</label>
 		<p class="warning-text">
@@ -45,12 +45,12 @@
 			>Check for issues</PrimaryButton
 		>
 	</div>
-{:else if pageState.name === 'Loading'}
+{:else if pageState.name === 'loading'}
 	<div class="msg-container loading">
 		<CubesLoader sizeRem={5} />
 		<label>Searching for issues</label>
 	</div>
-{:else if pageState.name === 'Error'}
+{:else if pageState.name === 'error'}
 	<div class="msg-container error">
 		<DefaultErrBlock errList={pageState.errs} />
 		<PrimaryButton onclick={() => loadPublishingIssues()} class="refetch">Refetch</PrimaryButton>
@@ -67,7 +67,7 @@
 		{vokiId}
 		onPublishedSuccessfully={(publishedData) => vokiPublishedDialog.open(publishedData)}
 		showNewIssuesOnIssuesFound={(issuesList: VokiPublishingIssue[]) => {
-			pageState = { name: 'Fetched', issues: issuesList };
+			pageState = { name: 'fetched', issues: issuesList };
 		}}
 	/>
 {/if}

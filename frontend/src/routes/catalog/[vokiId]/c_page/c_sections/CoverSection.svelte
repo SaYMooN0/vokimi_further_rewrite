@@ -2,9 +2,9 @@
 	import AuthView from '$lib/components/AuthView.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { VokiType } from '$lib/ts/voki';
-	import CoverSectionAddToAlbumBtn from './c_cover_section_buttons/CoverSectionAddToAlbumBtn.svelte';
-	import CoverSectionManageVokiBtn from './c_cover_section_buttons/CoverSectionManageVokiBtn.svelte';
-	import CoverSectionTakeVokiBtn from './c_cover_section_buttons/CoverSectionTakeVokiBtn.svelte';
+	import CoverSectionAddToAlbumBtn from './c_cover_section/CoverSectionAddToAlbumBtn.svelte';
+	import CoverSectionManageVokiBtn from './c_cover_section/CoverSectionManageVokiBtn.svelte';
+	import CoverSectionTakeVokiBtn from './c_cover_section/CoverSectionTakeVokiBtn.svelte';
 	interface Props {
 		vokiId: string;
 		cover: string;
@@ -14,17 +14,12 @@
 	}
 	let { vokiId, cover, usersWithAccessToManage, vokiType, authenticatedOnlyTaking }: Props =
 		$props();
-
 </script>
 
 <div class="voki-cover-section">
 	<img class="voki-cover" src={StorageBucketMain.fileSrc(cover)} alt="voki cover" />
 	<div class="buttons-container">
-		<CoverSectionTakeVokiBtn
-			{vokiId}
-			{vokiType}
-			{authenticatedOnlyTaking}
-		/>
+		<CoverSectionTakeVokiBtn {vokiId} {vokiType} {authenticatedOnlyTaking} />
 		<CoverSectionAddToAlbumBtn {vokiId} />
 		<AuthView>
 			{#snippet authenticated(authData)}

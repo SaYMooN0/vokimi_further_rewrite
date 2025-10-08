@@ -2,7 +2,8 @@
 	import AuthView from '$lib/components/AuthView.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
-	import AuthNeededToTakeVokiDialog from './c_buttons/AuthNeededToTakeVokiDialog.svelte';
+	import AuthNeededToTakeVokiDialog from './c_dialogs/AuthNeededToTakeVokiDialog.svelte';
+	
 	interface Props {
 		vokiId: string;
 		vokiType: VokiType;

@@ -1,74 +1,81 @@
 import { ApiAuth } from "../backend-communication/backend-services";
-import { StringUtils } from "../utils/string-utils";
+import type { Err } from "$lib/ts/err";
+
+export namespace AuthStore {
+    export type AuthState =
+        | { state: "loading" }
+        | { state: "error"; isAuthenticated: false; errs: Err[] }
+        | { state: "authenticated"; isAuthenticated: true; userId: string }
+        | { state: "unauthenticated"; isAuthenticated: false };
+
+    const TTL_MS = 2 * 60 * 1000;
+
+    const value = $state<AuthState>({ state: "loading" });
+    let expiresAt = 0;
+    let inflight: Promise<void> | null = null;
 
 
-const EMPTY_DATE = new Date(1970, 0, 1);
-class AuthStore {
-    private _userId: string | null = null;
-    private _lastFetched: Date;
-    constructor(userId: string | null, lastFetched: Date) {
-        this._userId = userId;
-        this._lastFetched = lastFetched;
+    export function Get(): AuthState {
+        ensureFresh(false);
+        return value;
     }
 
-    get userId(): string | null {
-        return this._userId;
-    }
-
-    get lastFetched(): Date {
-        return this._lastFetched;
-    }
-    isAuthenticated: boolean = $derived(!StringUtils.isNullOrWhiteSpace(this._userId));
-
-
-    update(userId: string | null): void {
-        this._userId = userId;
-        this._lastFetched = new Date();
-    }
-    setEmpty(): void {
-        this._userId = null;
-        this._lastFetched = EMPTY_DATE;
-    }
-
-}
-async function pingUser(): Promise<{ userId: string } | null> {
-    const response = await ApiAuth.fetchJsonResponse<{ userId: string }>(
-        "/ping", { method: "POST" }
-    );
-    if (response.isSuccess) {
-        return response.data;
-    } else {
-        return null;
-    }
-}
-const authStore = $state(new AuthStore(null, EMPTY_DATE));
-let ongoingRefresh: Promise<AuthStore> | null = null;
-
-export async function getAuthStore(): Promise<AuthStore> {
-    const lastFetched = authStore?.lastFetched ?? EMPTY_DATE;
-
-    const now = new Date();
-    const twoMinutes = 2 * 60 * 1000;
-    const expired = now.getTime() - lastFetched.getTime() > twoMinutes;
-
-    if (expired) {
-        if (ongoingRefresh) {
-            return await ongoingRefresh;
+    export async function GetWithForceRefresh(): Promise<AuthState> {
+        ensureFresh(true);
+        if (inflight) {
+            await inflight;
         }
-        ongoingRefresh = forceGetAuthStore().finally(() => {
-            ongoingRefresh = null;
-        });
-        return await ongoingRefresh;
+        return value;
     }
-    return authStore;
-}
-export async function forceGetAuthStore(): Promise<AuthStore> {
-    const pingedUserData = await pingUser();
-    if (pingedUserData !== null) {
-        authStore.update(pingedUserData.userId);
+
+    function ensureFresh(force: boolean): void {
+        if (inflight) {
+            return;
+        }
+
+        const now = Date.now();
+        const isAuthedAndFresh = value.state === "authenticated" && now < expiresAt;
+
+        if (!force && isAuthedAndFresh) {
+            return;
+        }
+
+        value.state = "loading";
+        inflight = fetchAndApply().finally(() => { inflight = null; });
     }
-    else {
-        authStore.setEmpty();
+
+    async function fetchAndApply(): Promise<void> {
+        try {
+            const response = await ApiAuth.fetchJsonResponse<{ userId: string; isAuthenticated: boolean }>("/ping", { method: "POST" });
+
+            if (response.isSuccess) {
+                const { userId, isAuthenticated } = response.data;
+                if (isAuthenticated && userId?.trim()) {
+                    value.state = "authenticated";
+                    (value as any).isAuthenticated = true;
+                    (value as any).userId = userId.trim();
+                    delete (value as any).errs;
+                    expiresAt = Date.now() + TTL_MS;
+                } else {
+                    value.state = "unauthenticated";
+                    (value as any).isAuthenticated = false;
+                    delete (value as any).userId;
+                    delete (value as any).errs;
+                    expiresAt = 0;
+                }
+            } else {
+                value.state = "error";
+                (value as any).isAuthenticated = false;
+                (value as any).errs = response.errs as Err[];
+                delete (value as any).userId;
+                expiresAt = 0;
+            }
+        } catch {
+            value.state = "error";
+            (value as any).isAuthenticated = false;
+            (value as any).errs = [{ message: "Network error", code: 0 } as Err];
+            delete (value as any).userId;
+            expiresAt = 0;
+        }
     }
-    return authStore;
 }

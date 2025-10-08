@@ -28,18 +28,20 @@
 	}
 
 	.right-btn {
+		height: fit-content;
 		display: grid;
 		align-items: center;
 		gap: 0.25rem;
-		width: 12.5rem;
-		padding: 0 1rem;
+		width: 13.5rem;
+		padding: 0.375rem 1rem;
 		border: none;
 		border-radius: 0.75rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 		font-size: 1.125rem;
-		font-weight: 480;
-		grid-template-columns: 1.375rem 1fr;
+		font-weight: 450;
+		grid-template-columns: auto 1fr;
+
 	}
 
 	.right-btn:hover {
@@ -48,7 +50,7 @@
 	}
 
 	.right-btn > :global(svg) {
-		width: 100%;
+		height: 1.375rem;
 		aspect-ratio: 1/1;
 		color: inherit;
 		stroke-width: 2.2;

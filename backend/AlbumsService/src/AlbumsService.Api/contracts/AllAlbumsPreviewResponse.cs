@@ -10,7 +10,7 @@ public record class AllAlbumsPreviewResponse(
     AutoAlbumsColorsPairResponse TakenVokisAlbums,
     AutoAlbumsColorsPairResponse RatedVokisAlbums,
     AutoAlbumsColorsPairResponse CommentedVokisAlbums,
-    VokiAlbumPreviewResponse[] AlbumPreviews
+    VokiAlbumPreviewResponse[] Albums
 ) : ICreatableResponse<GetAllUserAlbumsPreviewQueryResult>
 {
     public static ICreatableResponse<GetAllUserAlbumsPreviewQueryResult> Create(GetAllUserAlbumsPreviewQueryResult res)
