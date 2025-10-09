@@ -1,22 +1,27 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import ErrView from '$lib/components/errs/ErrView.svelte';
 	import VokiCreationLayoutNavBar from '../../../c_layout/VokiCreationLayoutNavBar.svelte';
 
-	let vokiId: string = page.params.vokiId;
+	let vokiId: string | undefined = page.params.vokiId;
 	function withBasePath(path: string) {
 		return '/voki-creation/general/' + vokiId + '/' + path;
 	}
 </script>
 
-<VokiCreationLayoutNavBar
-	links={[
-		{ icon: authorsIcon, name: 'Authors', href: withBasePath('authors') },
-		{ icon: mainIcon, name: 'Main Info', href: withBasePath('main') },
-		{ icon: questionIcon, name: 'Questions', href: withBasePath('questions') },
-		{ icon: resultsIcon, name: 'Results', href: withBasePath('results') },
-		{ icon: publishingIcon, name: 'Publishing', href: withBasePath('publishing') }
-	]}
-/>
+{#if vokiId}
+	<VokiCreationLayoutNavBar
+		links={[
+			{ icon: authorsIcon, name: 'Authors', href: withBasePath('authors') },
+			{ icon: mainIcon, name: 'Main Info', href: withBasePath('main') },
+			{ icon: questionIcon, name: 'Questions', href: withBasePath('questions') },
+			{ icon: resultsIcon, name: 'Results', href: withBasePath('results') },
+			{ icon: publishingIcon, name: 'Publishing', href: withBasePath('publishing') }
+		]}
+	/>
+{:else}
+	<ErrView err={{ message: 'Incorrect link. Voki id is not specified' }} />
+{/if}
 {#snippet authorsIcon()}
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
 		<path

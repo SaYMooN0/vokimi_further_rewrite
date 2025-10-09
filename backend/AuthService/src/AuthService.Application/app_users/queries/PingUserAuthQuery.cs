@@ -10,12 +10,12 @@ internal sealed class PingUserAuthQueryHandler : IQueryHandler<PingUserAuthQuery
 {
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IUserContext _userContext;
-    private Logger<PingUserAuthQueryHandler> _logger;
+    private readonly ILogger<PingUserAuthQueryHandler> _logger;
 
     public PingUserAuthQueryHandler(
         IAppUsersRepository appUsersRepository,
         IUserContext userContext,
-        Logger<PingUserAuthQueryHandler> logger
+        ILogger<PingUserAuthQueryHandler> logger
     ) {
         _appUsersRepository = appUsersRepository;
         _userContext = userContext;

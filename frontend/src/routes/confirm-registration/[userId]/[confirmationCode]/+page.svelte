@@ -6,12 +6,29 @@
 	import { getSignInDialogOpenFunction } from '../../../c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import { goto } from '$app/navigation';
 	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
+	import type { ServerResponse } from 'http';
+	import type { ResponseVoidResult } from '$lib/ts/backend-communication/result-types';
 
-	let userId: string = page.params.userId;
-	let confirmationCode: string = page.params.confirmationCode;
+	let userId: string | undefined = page.params.userId;
+	let confirmationCode: string | undefined = page.params.confirmationCode;
 	const openSignInDialog = getSignInDialogOpenFunction();
 
-	async function confirmRegistration() {
+	async function confirmRegistration(): Promise<ResponseVoidResult> {
+		if (StringUtils.isNullOrWhiteSpace(userId)) {
+			return {
+				isSuccess: false,
+				errs: [{ message: 'Invalid confirmation link. UserId is missing' }]
+			};
+		}
+
+		if (StringUtils.isNullOrWhiteSpace(confirmationCode)) {
+			return {
+				isSuccess: false,
+				errs: [{ message: 'Invalid confirmation link. Confirmation code is missing' }]
+			};
+		}
+
 		return ApiAuth.fetchVoidResponse(
 			'/confirm-registration',
 			RequestJsonOptions.POST({ userId, confirmationCode })

@@ -14,7 +14,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: var(--side-bar-links-top-padding);
+		height: var(--sidebar-links-top-padding);
 		margin: 0;
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { ResponseResult } from '$lib/ts/backend-communication/result-types';
+	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { getSignInDialogOpenFunction } from '../../../../../c_layout/ts_layout_contexts/sign-in-dialog-context';
 	import type { VokiRatingData } from '../../../types';
 	import RatingsListItem from './c_all_ratings/RatingsListItem.svelte';
@@ -19,30 +20,36 @@
 		| ({ name: 'rated' } & VokiRatingData)
 		| { name: 'not-rated'; userId: string };
 
-	async function processRatings(): Promise<{
+	let ratingsViewState: {
 		userRatingState: UserRatingStateType;
 		otherUserRatings: VokiRatingData[];
-	}> {
-		const storeData = await getAuthStore();
-		if (storeData.isAuthenticated && hasUserTakenVoki) {
-			const userRatingValue = allRatings.find((r) => r.userId === storeData.userId);
+	} = $state(processedRatings());
+
+	function processedRatings(): {
+		userRatingState: UserRatingStateType;
+		otherUserRatings: VokiRatingData[];
+	} {
+		let authStoreData = AuthStore.Get();
+
+		if (authStoreData.isAuthenticated && hasUserTakenVoki) {
+			const userRatingValue = allRatings.find((r) => r.userId === authStoreData.userId);
 			if (userRatingValue) {
 				return {
 					userRatingState: {
 						name: 'rated',
 						...userRatingValue
 					},
-					otherUserRatings: allRatings.filter((r) => r.userId !== storeData.userId)
+					otherUserRatings: allRatings.filter((r) => r.userId !== authStoreData.userId)
 				};
 			}
 			return {
 				userRatingState: {
 					name: 'not-rated',
-					userId: storeData.userId!
+					userId: authStoreData.userId!
 				},
 				otherUserRatings: allRatings
 			};
-		} else if (storeData.isAuthenticated && !hasUserTakenVoki) {
+		} else if (authStoreData.isAuthenticated && !hasUserTakenVoki) {
 			{
 				return {
 					userRatingState: { name: 'not-taken' },
@@ -59,35 +66,31 @@
 	const openSignInDialog = getSignInDialogOpenFunction();
 </script>
 
-{#await processRatings()}
-	<label>Loading...</label>
-{:then ratings}
-	{#if ratings.userRatingState.name === 'unauthenticated'}
-		<UserRatingCannotRateMessage mainText="To rate Vokis you need to be logged in">
-			<div class="auth-needed-to-rate-btns">
-				<button class="login-btn" onclick={() => openSignInDialog('login')}>Login</button>
-				<button class="signup-btn" onclick={() => openSignInDialog('signup')}
-					>I don't have an account yet</button
-				>
-			</div>
-		</UserRatingCannotRateMessage>
-	{:else if ratings.userRatingState.name === 'not-taken'}
-		<UserRatingCannotRateMessage mainText="To rate this Voki you need to take it first" />
-	{:else}
-		<RatingsTabUserRating ratingState={ratings.userRatingState} {saveNewRating} />
-	{/if}
-	{#if ratings.userRatingState.name === 'rated' && ratings.otherUserRatings.length === 0}
-		<div class="no-other-ratings">No one else has rated this Voki</div>
-	{:else if ratings.otherUserRatings.length != 0}
-		{#each ratings.otherUserRatings as rating}
-			<RatingsListItem
-				userId={rating.userId}
-				content={{ name: 'default', ratingValue: rating.value }}
-				dateTime={rating.dateTime}
-			/>
-		{/each}
-	{/if}
-{/await}
+{#if ratingsViewState.userRatingState.name === 'unauthenticated'}
+	<UserRatingCannotRateMessage mainText="To rate Vokis you need to be logged in">
+		<div class="auth-needed-to-rate-btns">
+			<button class="login-btn" onclick={() => openSignInDialog('login')}>Login</button>
+			<button class="signup-btn" onclick={() => openSignInDialog('signup')}
+				>I don't have an account yet</button
+			>
+		</div>
+	</UserRatingCannotRateMessage>
+{:else if ratingsViewState.userRatingState.name === 'not-taken'}
+	<UserRatingCannotRateMessage mainText="To rate this Voki you need to take it first" />
+{:else}
+	<RatingsTabUserRating ratingState={ratingsViewState.userRatingState} {saveNewRating} />
+{/if}
+{#if ratingsViewState.userRatingState.name === 'rated' && ratingsViewState.otherUserRatings.length === 0}
+	<div class="no-other-ratings">No one else has rated this Voki</div>
+{:else if ratingsViewState.otherUserRatings.length != 0}
+	{#each ratingsViewState.otherUserRatings as rating}
+		<RatingsListItem
+			userId={rating.userId}
+			content={{ name: 'default', ratingValue: rating.value }}
+			dateTime={rating.dateTime}
+		/>
+	{/each}
+{/if}
 
 <style>
 	.auth-needed-to-rate-btns {

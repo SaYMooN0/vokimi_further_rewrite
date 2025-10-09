@@ -15,34 +15,20 @@ internal static class AlbumsHandlers
         var group = endpoints.MapGroup("/")
             .WithGroupAuthenticationRequired();
 
-        group.MapGet("/user-albums", GetUserAlbumsList);
         group.MapGet("/all-albums-preview", GetAllUserAlbumsPreview);
 
         group.MapPost("/create-new", CreateNewAlbum)
             .WithRequestValidation<CreateNewVokiAlbumRequest>();
-
-        // group.MapPatch("/update-voki-entries", UpdateVokiEntriesInAlbums)
-        //     .WithRequestValidation<UpdateVokiEntriesInAlbumsRequest>();
     }
 
-    private static async Task<IResult> GetUserAlbumsList(
-        CancellationToken ct, IQueryHandler<ListUserAlbumsSortedQuery, VokiAlbum[]> handler
-    ) {
-        ListUserAlbumsSortedQuery query = new();
-        var result = await handler.Handle(query, ct);
-
-        return CustomResults.FromErrOr(result, (albums) => Results.Json(
-            UserAlbumsListResponse.Create(albums)
-        ));
-    }
 
     private static async Task<IResult> GetAllUserAlbumsPreview(
-        CancellationToken ct, IQueryHandler<GetAllUserAlbumsPreviewQuery, GetAllUserAlbumsPreviewQueryResult> handler
+        CancellationToken ct, IQueryHandler<ListAllUserAlbumsPreviewQuery, ListAllUserAlbumsPreviewQueryResult> handler
     ) {
-        GetAllUserAlbumsPreviewQuery query = new();
+        ListAllUserAlbumsPreviewQuery query = new();
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<GetAllUserAlbumsPreviewQueryResult, AllAlbumsPreviewResponse>(result);
+        return CustomResults.FromErrOrToJson<ListAllUserAlbumsPreviewQueryResult, AllAlbumsPreviewResponse>(result);
     }
 
     private static async Task<IResult> CreateNewAlbum(
@@ -56,6 +42,6 @@ internal static class AlbumsHandlers
         );
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrToJson<VokiAlbum, AlbumDataResponse>(result);
+        return CustomResults.FromErrOrToJson<VokiAlbum, AlbumCreatedResponse>(result);
     }
 }

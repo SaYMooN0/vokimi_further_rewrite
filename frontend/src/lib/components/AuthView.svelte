@@ -1,25 +1,12 @@
 <script lang="ts">
-	import { getAuthStore } from '$lib/ts/stores/auth-store.svelte';
+	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import type { Snippet } from 'svelte';
 
-	type AuthStoreData = { isAuthenticated: () => boolean; userId: string };
-	const {
-		loading = null,
-		authenticated = null,
-		unauthenticated = null
-	} = $props<{
-		loading?: Snippet;
-		authenticated?: Snippet<[AuthStoreData]>;
-		unauthenticated?: Snippet;
-	}>();
+	interface Props {
+		children: Snippet<[AuthStore.AuthState]>;
+	}
+	let { children }: Props = $props();
+	let authState = AuthStore.Get();
 </script>
 
-{#await getAuthStore()}
-	{@render loading?.()}
-{:then authData}
-	{#if authData !== null && authData.isAuthenticated}
-		{@render authenticated?.(authData)}
-	{:else}
-		{@render unauthenticated?.()}
-	{/if}
-{/await}
+{@render children(authState)}

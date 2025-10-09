@@ -7,16 +7,16 @@
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import AuthView from '$lib/components/AuthView.svelte';
 	import MyVokiAuthNeeded from './c_layout/MyVokiAuthNeeded.svelte';
+	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 
 	const { children }: { children: Snippet } = $props();
 	let vokiInitializingDialog = $state<VokiInitializingDialog>()!;
 </script>
 
-<AuthView>
-	{#snippet unauthenticated()}
+{#snippet authStateChildren(authState: AuthStore.AuthState)}
+	{#if !authState.isAuthenticated}
 		<MyVokiAuthNeeded />
-	{/snippet}
-	{#snippet authenticated()}
+	{:else}
 		<div class="my-vokis-page">
 			<div class="links-container">
 				<MyVokisLink
@@ -86,8 +86,10 @@
 			</PrimaryButton>
 			<VokiInitializingDialog bind:this={vokiInitializingDialog} />
 		</div>
-	{/snippet}
-</AuthView>
+	{/if}
+{/snippet}
+
+<AuthView children={authStateChildren} />
 
 <style>
 	.loading {
@@ -123,7 +125,7 @@
 		gap: 1rem;
 		width: 100%;
 		height: 100%;
-		height: var(--side-bar-links-top-padding);
+		height: var(--sidebar-links-top-padding);
 		box-sizing: border-box;
 		padding: 1rem 3.5rem;
 		margin: 0 auto;

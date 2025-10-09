@@ -116,7 +116,7 @@
 		opacity: 0.7;
 		box-shadow: var(--shadow-xs);
 		transform: translate(-50%, -50%);
-		animation:fade-in-from-with-delay 1s ease;
+		animation:fade-in-from-zero-with-delay 1s ease;
 	}
 
 	.loader-backdrop > :global(.container) {

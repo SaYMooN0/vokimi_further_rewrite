@@ -12,12 +12,11 @@ public class VokiAlbumsRepository : IVokiAlbumsRepository
         _db = db;
     }
 
-    public Task<VokiAlbum[]> GetForUserSortedAsNoTracking(AppUserId userId) =>
+    public Task<VokiAlbum[]> ListAlbumsForUserAsNoTracking(AppUserId userId, CancellationToken ct) =>
         _db.VokiAlbums
             .AsNoTracking()
             .Where(a => a.OwnerId == userId)
-            .OrderByDescending(a => a.CreationDate)
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
 
     public Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSortedAsNoTracking(AppUserId userId) =>
         _db.VokiAlbums

@@ -4,26 +4,33 @@
 	import type { PageProps } from './$types';
 	import AuthView from '$lib/components/AuthView.svelte';
 	import UserAlbumsSection from './c_page/UserAlbumsSection.svelte';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 
 	let { data }: PageProps = $props();
 </script>
 
 <AuthView>
-	{#snippet unauthenticated()}
-		<div class="login-required-container">
-			<h1>To create, view and manage your albums you need to be logged in</h1>
-		</div>
-	{/snippet}
-	{#snippet authenticated()}
-		{#if !data.isSuccess}
-			<PageLoadErrView errs={data.errs} defaultMessage="Could not load your albums" />
+	{#snippet children(authState)}
+		{#if authState.name === 'loading'}
+			<div class="loading-container">Loading...</div>
+		{:else if authState.isAuthenticated}
+			{#if !data.isSuccess}
+				<PageLoadErrView errs={data.errs} defaultMessage="Could not load your albums" />
+			{:else}
+				<UserAlbumsSection albums={data.data.albums} />
+				<AutoAlbumsSection
+					takenVokisAlbumsColor={data.data.takenVokisAlbums}
+					ratedVokisAlbumsColor={data.data.ratedVokisAlbums}
+					commentedVokisAlbumsColor={data.data.commentedVokisAlbums}
+				/>
+			{/if}
 		{:else}
-			<UserAlbumsSection albums={data.data.albums} />
-			<AutoAlbumsSection
-				takenVokisAlbumsColor={data.data.takenVokisAlbums}
-				ratedVokisAlbumsColor={data.data.ratedVokisAlbums}
-				commentedVokisAlbumsColor={data.data.commentedVokisAlbums}
-			/>
+			<div class="login-required-container">
+				<h1>To create, view and manage your albums you need to be logged in</h1>
+				{#if authState.name === 'error'}
+					<DefaultErrBlock errList={authState.errs} />
+				{/if}
+			</div>
 		{/if}
 	{/snippet}
 </AuthView>
@@ -32,5 +39,11 @@
 	.login-required-container {
 		width: fit-content;
 		margin: 4rem auto 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.loading-container {
+		animation: fade-in-from-zero-with-delay 1s ease-in !important;
 	}
 </style>

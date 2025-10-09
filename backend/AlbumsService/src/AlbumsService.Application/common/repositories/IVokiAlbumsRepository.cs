@@ -4,7 +4,7 @@ namespace AlbumsService.Application.common.repositories;
 
 public interface IVokiAlbumsRepository
 {
-    Task<VokiAlbum[]> GetForUserSortedAsNoTracking(AppUserId userId);
+    Task<VokiAlbum[]> ListAlbumsForUserAsNoTracking(AppUserId userId, CancellationToken ct);
     Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSortedAsNoTracking(AppUserId userId);
     Task Add(VokiAlbum album);
     Task<VokiAlbum?> GetById(VokiAlbumId albumId);

@@ -84,8 +84,7 @@
 
 	.loader > :global(.container) {
 		--loader-color: var(--secondary-foreground);
-
-		animation: fade-in-from-with-delay 1s ease;
+		animation: fade-in-from-zero-with-delay 1s ease;
 	}
 
 	.not-rated-label {

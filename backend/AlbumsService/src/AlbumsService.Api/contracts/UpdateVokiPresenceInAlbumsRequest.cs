@@ -5,10 +5,10 @@ using SharedKernel.errs.utils;
 
 namespace AlbumsService.Api.contracts;
 
-public class UpdateVokiEntriesInAlbumsRequest : IRequestWithValidationNeeded
+public class UpdateVokiPresenceInAlbumsRequest : IRequestWithValidationNeeded
 {
     private const int MaxCount = 200;
-    public Dictionary<string, bool> AlbumIdToEntry { get; init; }
+    public Dictionary<string, bool>? AlbumIdToEntry { get; init; } = null;
 
     public ErrOrNothing Validate() {
         if (AlbumIdToEntry is null || AlbumIdToEntry.Count == 0) {

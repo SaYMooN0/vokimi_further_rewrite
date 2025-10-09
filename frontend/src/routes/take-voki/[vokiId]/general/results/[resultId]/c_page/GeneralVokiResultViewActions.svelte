@@ -10,24 +10,18 @@
 	let { resultsCount, resultsVisibility, vokiId }: Props = $props();
 </script>
 
-{#if resultsVisibility === 'Anyone'}
-	<a class="see-all-btn" href={`/take-voki/${vokiId}/general/results/all`}
-		>View all ({resultsCount}) results</a
-	>
-{:else}
-	<AuthView>
-		{#snippet authenticated()}
+<AuthView>
+	{#snippet children(authState)}
+		{#if resultsVisibility === 'Anyone' || authState.name === 'authenticated'}
 			<a class="see-all-btn" href={`/take-voki/${vokiId}/general/results/all`}
 				>View all ({resultsCount}) results</a
 			>
-		{/snippet}
-	</AuthView>
-{/if}
-<AuthView>
-	{#snippet authenticated()}
-		<a class="see-received-btn" href={`/take-voki/${vokiId}/general/results/received`}
-			>See my received results</a
-		>
+		{/if}
+		{#if authState.name === 'authenticated'}
+			<a class="see-received-btn" href={`/take-voki/${vokiId}/general/results/received`}
+				>See my received results</a
+			>
+		{/if}
 	{/snippet}
 </AuthView>
 

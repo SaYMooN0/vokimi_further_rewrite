@@ -1,26 +1,27 @@
 <script lang="ts">
-	import type { AlbumViewData } from '../add-voki-to-album-dialog-state';
+	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
+	import type { AlbumViewData } from '../add-voki-to-album-dialog-state.svelte';
 
 	interface Props {
 		albumsViewData: AlbumViewData[];
-		isAlbumChosen: (albumId: string) => boolean;
-		isAlbumChosenChanged: (albumId: string) => void;
-		toggleAlbumChosen: (albumId: string) => void;
+		albumIdToIsChosen: Record<string, boolean>;
+		isAlbumChosenChanged: (albumId: string) => boolean;
 		changeToCreateNewAlbum: () => void;
 	}
-	let {
-		albumsViewData,
-		isAlbumChosenChanged,
-		isAlbumChosen,
-		toggleAlbumChosen,
-		changeToCreateNewAlbum
-	}: Props = $props();
+	let { albumsViewData, isAlbumChosenChanged, albumIdToIsChosen, changeToCreateNewAlbum }: Props =
+		$props();
 </script>
 
 <div class="all-albums-view">
 	<div class="list">
 		{#each albumsViewData as album}
-			<div class="album">{album.name}</div>
+			<div class="album">
+				{album.name}
+				{#if isAlbumChosenChanged(album.id)}
+					*
+				{/if}
+				<DefaultCheckBox bind:checked={albumIdToIsChosen[album.id]} />
+			</div>
 		{/each}
 		<button class="create-new-btn" onclick={() => changeToCreateNewAlbum()}>
 			Create new albums button

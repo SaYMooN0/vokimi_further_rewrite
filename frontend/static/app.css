@@ -34,7 +34,7 @@
   --voki-cover-border-radius: 0.875rem;
 
   /* other */
-  --side-bar-links-top-padding: 4rem;
+  --sidebar-links-top-padding: 4rem;
   --lang-icon-aspect-ratio: 1.4/1;
   --default-fade-in-animation: default-fade-in 0.08s ease-in-out;
 
@@ -67,6 +67,10 @@ textarea {
   user-select: none;
 }
 
+.appear-with-delay {
+  animation: fade-in-from-zero-with-delay 1s ease-in;
+}
+
 @keyframes default-fade-in {
   from {
     opacity: 0.4;
@@ -87,13 +91,14 @@ textarea {
   }
 }
 
-@keyframes fade-in-from-with-delay {
-		0%,
-		40% {
-			opacity: 0;
-		}
+@keyframes fade-in-from-zero-with-delay {
 
-		100% {
-			opacity: 0.7;
-		}
-	}
+  0%,
+  40% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

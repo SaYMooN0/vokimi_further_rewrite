@@ -3,14 +3,14 @@ import type { Err } from "$lib/ts/err";
 
 export namespace AuthStore {
     export type AuthState =
-        | { state: "loading" }
-        | { state: "error"; isAuthenticated: false; errs: Err[] }
-        | { state: "authenticated"; isAuthenticated: true; userId: string }
-        | { state: "unauthenticated"; isAuthenticated: false };
+        | { name: "loading"; isAuthenticated: false; }
+        | { name: "error"; isAuthenticated: false; errs: Err[] }
+        | { name: "authenticated"; isAuthenticated: true; userId: string }
+        | { name: "unauthenticated"; isAuthenticated: false };
 
     const TTL_MS = 2 * 60 * 1000;
 
-    const value = $state<AuthState>({ state: "loading" });
+    const value = $state<AuthState>({ name: "loading", isAuthenticated: false });
     let expiresAt = 0;
     let inflight: Promise<void> | null = null;
 
@@ -34,13 +34,13 @@ export namespace AuthStore {
         }
 
         const now = Date.now();
-        const isAuthedAndFresh = value.state === "authenticated" && now < expiresAt;
+        const isAuthedAndFresh = value.name === "authenticated" && now < expiresAt;
 
         if (!force && isAuthedAndFresh) {
             return;
         }
 
-        value.state = "loading";
+        value.name = "loading";
         inflight = fetchAndApply().finally(() => { inflight = null; });
     }
 
@@ -51,27 +51,27 @@ export namespace AuthStore {
             if (response.isSuccess) {
                 const { userId, isAuthenticated } = response.data;
                 if (isAuthenticated && userId?.trim()) {
-                    value.state = "authenticated";
+                    value.name = "authenticated";
                     (value as any).isAuthenticated = true;
                     (value as any).userId = userId.trim();
                     delete (value as any).errs;
                     expiresAt = Date.now() + TTL_MS;
                 } else {
-                    value.state = "unauthenticated";
+                    value.name = "unauthenticated";
                     (value as any).isAuthenticated = false;
                     delete (value as any).userId;
                     delete (value as any).errs;
                     expiresAt = 0;
                 }
             } else {
-                value.state = "error";
+                value.name = "error";
                 (value as any).isAuthenticated = false;
                 (value as any).errs = response.errs as Err[];
                 delete (value as any).userId;
                 expiresAt = 0;
             }
         } catch {
-            value.state = "error";
+            value.name = "error";
             (value as any).isAuthenticated = false;
             (value as any).errs = [{ message: "Network error", code: 0 } as Err];
             delete (value as any).userId;

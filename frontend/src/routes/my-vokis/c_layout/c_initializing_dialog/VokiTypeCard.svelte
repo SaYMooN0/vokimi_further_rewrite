@@ -24,13 +24,13 @@
 	.card {
 		display: grid;
 		justify-content: center;
-		width: 10rem;
-		height: 10rem;
+		width: 11rem;
+		height: 11rem;
 		padding: 0.5rem 0;
 		border-radius: 0.75rem;
 		background-color: var(--secondary);
-		box-shadow: var(--shadow);
-		transition: all 0.16s ease;
+		box-shadow: var(--shadow-md);
+		transition: all 0.16s ease-in;
 		cursor: pointer;
 		place-items: center center;
 		grid-template-rows: auto 1fr auto;
@@ -59,26 +59,30 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: 1.5rem;
+		height: 1.675rem;
 		border: 0.1875rem solid var(--muted);
 		border-radius: 1.5rem;
 		background-color: var(--muted);
-		transition: box-shadow 0.04s ease-in;
+		transition: inherit;
 		aspect-ratio: 1/1;
+
 	}
 
-	.card:hover .indicator {
-		box-shadow: var(--shadow);
+	.card:hover .indicator:not(.selected) {
+		border-color: var(--accent);
+		background-color: var(--accent);
 	}
 
 	.indicator.selected {
-		border-color: var(--primary);
+		border-color: var(--primary) !important;
 	}
 
 	.indicator span {
 		display: block;
 		height: 70%;
 		aspect-ratio: 1/1;
+		transition: inherit;
+
 	}
 
 	.indicator.selected span {

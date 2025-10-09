@@ -23,16 +23,16 @@
 
 <style>
 	.sidebar {
+		--sidebar-width: 13rem;
+		max-width: var(--sidebar-width);
 		position: sticky;
 		top: 0;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
 		height: 100vh;
-		padding: var(--side-bar-links-top-padding) 0 2rem 0;
+		padding: var(--sidebar-links-top-padding) 0 2rem 0;
 		padding-left: 0.25rem;
-
-		--sidebar-width: 13rem;
 	}
 
 	.links {

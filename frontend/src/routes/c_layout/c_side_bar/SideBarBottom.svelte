@@ -1,25 +1,78 @@
 <script lang="ts">
-	import AuthView from '$lib/components/AuthView.svelte';
+	import ReloadButton from '$lib/components/buttons/ReloadButton.svelte';
+	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { getSignInDialogOpenFunction } from '../ts_layout_contexts/sign-in-dialog-context';
 	const openSignInDialog = getSignInDialogOpenFunction();
+
+	let authState = AuthStore.Get();
+
+	let viewState: 'authenticated' | 'loading' | 'error' | 'unauthenticated' = $state(authState.name);
+
+	const LOADING_DELAY_MS = 500;
+
+	$effect(() => {
+		//don't show loading state immediately so the component doesn't flash
+		if (authState.name === 'loading') {
+			const timer = setTimeout(() => {
+				viewState = 'loading';
+			}, LOADING_DELAY_MS);
+
+			return () => {
+				clearTimeout(timer);
+			};
+		}
+
+		viewState = authState.name;
+	});
+	function onErrorStateReloadBtnClick() {
+		if (viewState !== 'error') {
+			return;
+		}
+		viewState = 'loading';
+		AuthStore.GetWithForceRefresh();
+	}
 </script>
 
-<AuthView {authenticated} {unauthenticated} />
-{#snippet unauthenticated()}
+{#if viewState === 'authenticated'}
+	<button class="logout-btn">Logout</button>
+{:else if viewState === 'loading'}
+	<div class="appear-with-delay">Loading...</div>
+{:else if viewState === 'error'}
+	<div class="error-container">
+		<label>Authentication loading error</label>
+		<ReloadButton onclick={() => onErrorStateReloadBtnClick()} showIcon={false} />
+	</div>
+{:else}
 	<div class="sign-in-btns">
 		<button class="login-btn" onclick={() => openSignInDialog('login')}>Login</button>
 		<button class="signup-btn" onclick={() => openSignInDialog('signup')}>Sign up</button>
 	</div>
-{/snippet}
-{#snippet authenticated()}
-	<button class="logout-btn">Logout</button>
-{/snippet}
+{/if}
 
 <style>
+	.error-container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
+		flex-direction: column;
+	}
+	.error-container > label {
+		background-color: var(--err-back);
+		width: 100%;
+		text-align: center;
+		color: var(--err-foreground);
+		font-size: 1rem;
+		font-weight: 500;
+		padding: 0.25rem 1rem;
+		letter-spacing: 0.25px;
+		border-radius: 1rem;
+	}
 	.sign-in-btns {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		animation: default-fade-in 0.1s ease-in;
 	}
 
 	.sign-in-btns button {

@@ -22,8 +22,8 @@
 		<CoverSectionTakeVokiBtn {vokiId} {vokiType} {authenticatedOnlyTaking} />
 		<CoverSectionAddToAlbumBtn {vokiId} />
 		<AuthView>
-			{#snippet authenticated(authData)}
-				{#if usersWithAccessToManage.includes(authData.userId)}
+			{#snippet children(authState)}
+				{#if authState.name === 'authenticated' && usersWithAccessToManage.includes(authState.userId)}
 					<CoverSectionManageVokiBtn {vokiId} />
 				{/if}
 			{/snippet}

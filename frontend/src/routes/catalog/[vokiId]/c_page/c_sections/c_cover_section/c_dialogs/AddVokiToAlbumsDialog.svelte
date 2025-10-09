@@ -3,7 +3,7 @@
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
-	import { AddVokiToAlbumsDialogState } from './add-voki-to-album-dialog-state';
+	import { AddVokiToAlbumsDialogState } from './add-voki-to-album-dialog-state.svelte';
 	import AlbumsDialogAlbumsChoosing from './c_albums_dialog/AlbumsDialogAlbumsChoosing.svelte';
 	import AlbumsDialogNoAlbumsState from './c_albums_dialog/AlbumsDialogNoAlbumsState.svelte';
 
@@ -40,9 +40,8 @@
 			<AlbumsDialogAlbumsChoosing
 				{changeToCreateNewAlbum}
 				albumsViewData={dialogState.albumsState.albums}
-				isAlbumChosen={dialogState.isAlbumChosen}
+				albumIdToIsChosen={dialogState.albumToIsChosen}
 				isAlbumChosenChanged={dialogState.isAlbumChosenChanged}
-				toggleAlbumChosen={dialogState.toggleAlbumChosen}
 			/>
 		{/if}
 	{:else}
@@ -53,8 +52,8 @@
 
 <style>
 	:global(#user-voki-albums-dialog > .dialog-content) {
-		height: 20rem;
-		width: 20rem;
+		height: 32rem;
+		width: 48rem;
 	}
 	.loading-container {
 		display: flex;

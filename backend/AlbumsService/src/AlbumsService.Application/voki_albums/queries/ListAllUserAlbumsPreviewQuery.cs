@@ -5,16 +5,16 @@ using SharedKernel.auth;
 
 namespace AlbumsService.Application.voki_albums.queries;
 
-public sealed record GetAllUserAlbumsPreviewQuery() : IQuery<GetAllUserAlbumsPreviewQueryResult>;
+public sealed record ListAllUserAlbumsPreviewQuery() : IQuery<ListAllUserAlbumsPreviewQueryResult>;
 
-internal sealed class GetAllUserAlbumsPreviewQueryHandler :
-    IQueryHandler<GetAllUserAlbumsPreviewQuery, GetAllUserAlbumsPreviewQueryResult>
+internal sealed class ListAllUserAlbumsPreviewQueryHandler :
+    IQueryHandler<ListAllUserAlbumsPreviewQuery, ListAllUserAlbumsPreviewQueryResult>
 {
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IUserContext _userContext;
 
-    public GetAllUserAlbumsPreviewQueryHandler(
+    public ListAllUserAlbumsPreviewQueryHandler(
         IVokiAlbumsRepository vokiAlbumsRepository,
         IUserContext userContext,
         IAppUsersRepository appUsersRepository
@@ -24,8 +24,8 @@ internal sealed class GetAllUserAlbumsPreviewQueryHandler :
         _appUsersRepository = appUsersRepository;
     }
 
-    public async Task<ErrOr<GetAllUserAlbumsPreviewQueryResult>> Handle(
-        GetAllUserAlbumsPreviewQuery query, CancellationToken ct
+    public async Task<ErrOr<ListAllUserAlbumsPreviewQueryResult>> Handle(
+        ListAllUserAlbumsPreviewQuery query, CancellationToken ct
     ) {
         var userId = _userContext.AuthenticatedUserId;
         UserAutoAlbumsAppearance? albumsAppearance = await _appUsersRepository.GetUsersAutoAlbumsAppearance(userId, ct);
@@ -34,11 +34,11 @@ internal sealed class GetAllUserAlbumsPreviewQueryHandler :
         }
 
         var albums = await _vokiAlbumsRepository.GetPreviewsForUserSortedAsNoTracking(_userContext.AuthenticatedUserId);
-        return new GetAllUserAlbumsPreviewQueryResult(albumsAppearance, albums);
+        return new ListAllUserAlbumsPreviewQueryResult(albumsAppearance, albums);
     }
 }
 
-public sealed record GetAllUserAlbumsPreviewQueryResult(
+public sealed record ListAllUserAlbumsPreviewQueryResult(
     UserAutoAlbumsAppearance AutoAlbumsAppearance,
     VokiAlbumPreviewDto[] Albums
 );

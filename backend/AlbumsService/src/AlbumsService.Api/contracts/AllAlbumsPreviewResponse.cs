@@ -11,15 +11,16 @@ public record class AllAlbumsPreviewResponse(
     AutoAlbumsColorsPairResponse RatedVokisAlbums,
     AutoAlbumsColorsPairResponse CommentedVokisAlbums,
     VokiAlbumPreviewResponse[] Albums
-) : ICreatableResponse<GetAllUserAlbumsPreviewQueryResult>
+) : ICreatableResponse<ListAllUserAlbumsPreviewQueryResult>
 {
-    public static ICreatableResponse<GetAllUserAlbumsPreviewQueryResult> Create(GetAllUserAlbumsPreviewQueryResult res)
-        => new AllAlbumsPreviewResponse(
-            AutoAlbumsColorsPairResponse.TakenVokisAlbums(res.AutoAlbumsAppearance),
-            AutoAlbumsColorsPairResponse.RatedVokisAlbums(res.AutoAlbumsAppearance),
-            AutoAlbumsColorsPairResponse.CommentedVokisAlbums(res.AutoAlbumsAppearance),
-            res.Albums.Select(VokiAlbumPreviewResponse.FromAlbum).ToArray()
-        );
+    public static ICreatableResponse<ListAllUserAlbumsPreviewQueryResult> Create(
+        ListAllUserAlbumsPreviewQueryResult res
+    ) => new AllAlbumsPreviewResponse(
+        AutoAlbumsColorsPairResponse.TakenVokisAlbums(res.AutoAlbumsAppearance),
+        AutoAlbumsColorsPairResponse.RatedVokisAlbums(res.AutoAlbumsAppearance),
+        AutoAlbumsColorsPairResponse.CommentedVokisAlbums(res.AutoAlbumsAppearance),
+        res.Albums.Select(VokiAlbumPreviewResponse.FromAlbum).ToArray()
+    );
 }
 
 public record VokiAlbumPreviewResponse(

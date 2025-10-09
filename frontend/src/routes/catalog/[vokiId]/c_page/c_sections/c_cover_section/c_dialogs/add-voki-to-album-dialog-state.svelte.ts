@@ -7,32 +7,28 @@ export type AlbumViewData = {
     icon: string;
     mainColor: string;
     secondaryColor: string;
-
+    creationDate: Date;
 };
 
 type AlbumsLoadingState =
     | { name: "loading" }
-    | {
-        name: "ok";
-        albums: AlbumViewData[];
-    }
+    | { name: "ok"; albums: AlbumViewData[] }
     | { name: "errs"; errs: Err[] };
 
 export class AddVokiToAlbumsDialogState {
     readonly vokiId: string;
     albumsState: AlbumsLoadingState = $state({ name: "loading" });
+    albumToIsChosen: Record<string, boolean> = $state({});
 
     private static readonly CACHE_MS = 5 * 60 * 1000;
     private _lastLoadedAt = 0;
     private _inflight: Promise<void> | null = null;
 
-    private _albumToIsChosen: Record<string, boolean> = {};
-    private _albumToInitialChosen: Record<string, boolean> = {};
+    private _initialChosenAlbumIds = new Set<string>();
 
     constructor(vokiId: string) {
         this.vokiId = vokiId;
     }
-
 
     async ensureFresh(): Promise<void> {
         if (this._inflight) return this._inflight;
@@ -48,26 +44,39 @@ export class AddVokiToAlbumsDialogState {
     }
 
     async updateForce(): Promise<void> {
-        if (this._inflight) {
-            return this._inflight;
-        }
+        if (this._inflight) return this._inflight;
 
-        this._albumToIsChosen = {};
-        this._albumToInitialChosen = {};
+        this.albumToIsChosen = {};
+        this._initialChosenAlbumIds.clear();
         this.albumsState = { name: "loading" };
 
         const task = (async () => {
-            type AlbumFetchType = AlbumViewData & { isVokiInAlbum: boolean; };
+            type AlbumFetchType = AlbumViewData & { isVokiInAlbum: boolean };
 
             const response = await ApiAlbums.fetchJsonResponse<{ albums: AlbumFetchType[] }>(
-                `/vokis/${this.vokiId}/albums-data`, { method: "GET" }
+                `/vokis/${this.vokiId}/albums-data`,
+                { method: "GET" }
             );
 
             if (response.isSuccess) {
-                const albums = response.data.albums;
-                for (const a of albums) {
-                    this._albumToIsChosen[a.id] = a.isVokiInAlbum;
-                    this._albumToInitialChosen[a.id] = a.isVokiInAlbum;
+                const albums: AlbumViewData[] = response.data.albums
+                    .map((a) => ({
+                        id: a.id,
+                        name: a.name,
+                        icon: a.icon,
+                        mainColor: a.mainColor,
+                        secondaryColor: a.secondaryColor,
+                        creationDate: a.creationDate instanceof Date
+                            ? a.creationDate
+                            : new Date(a.creationDate as unknown as string),
+                    }))
+                    .sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime());
+
+                for (const a of response.data.albums) {
+                    this.albumToIsChosen[a.id] = a.isVokiInAlbum;
+                    if (a.isVokiInAlbum) {
+                        this._initialChosenAlbumIds.add(a.id);
+                    }
                 }
 
                 this.albumsState = { name: "ok", albums };
@@ -82,18 +91,9 @@ export class AddVokiToAlbumsDialogState {
         return this._inflight;
     }
 
-
-    isAlbumChosen(albumId: string): boolean {
-        return this._albumToIsChosen[albumId] ?? false;
-    }
-
     isAlbumChosenChanged(albumId: string): boolean {
-        const initial = this._albumToInitialChosen[albumId] ?? false;
-        return this._albumToIsChosen[albumId] !== initial;
-    }
-
-    toggleAlbumChosen(albumId: string): void {
-        const current = this._albumToIsChosen[albumId] ?? false;
-        this._albumToIsChosen[albumId] = !current;
+        const initial = this._initialChosenAlbumIds.has(albumId);
+        const now = this.albumToIsChosen[albumId];
+        return now !== initial;
     }
 }

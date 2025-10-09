@@ -9,5 +9,6 @@ public static class WebApplicationExtensions
     internal static void MapEndpoints(this WebApplication app) {
         app.MapAlbumsHandlers();
         app.MapSpecificAlbumHandlers();
+        app.MapSpecificVokiHandlers();
     }
 }
