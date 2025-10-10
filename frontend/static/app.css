@@ -92,7 +92,6 @@ textarea {
 }
 
 @keyframes fade-in-from-zero-with-delay {
-
   0%,
   40% {
     opacity: 0;

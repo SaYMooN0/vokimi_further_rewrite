@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { getCreateNewAlbumOpenFunction } from '../../c_layout/ts_layout_contexts/album-creation-dialog-context';
 	import type { VokiAlbumPreviewData } from '../types';
@@ -9,6 +10,13 @@
 	}
 	let { albums } = $props();
 	const openCreateNewAlbumDialog = getCreateNewAlbumOpenFunction();
+
+	function openNewAlbumDialog(): void {
+		const onAfterCreated = (newAlbumId: string) => {
+			goto(`/albums/${newAlbumId}`);
+		};
+		openCreateNewAlbumDialog(onAfterCreated);
+	}
 </script>
 
 {#snippet headerIcon()}
@@ -19,14 +27,14 @@
 	headerText="User albums"
 	rightButton={{
 		text: 'Create new album',
-		onclick: () => openCreateNewAlbumDialog(),
+		onclick: openNewAlbumDialog,
 		icon: headerIcon
 	}}
 />
 {#if albums.length === 0}
 	<div class="no-albums-message">
 		<p>You have no albums</p>
-		<PrimaryButton onclick={() => openCreateNewAlbumDialog()}>Create first album</PrimaryButton>
+		<PrimaryButton onclick={() => openNewAlbumDialog()}>Create first album</PrimaryButton>
 	</div>
 {:else}
 	<div>

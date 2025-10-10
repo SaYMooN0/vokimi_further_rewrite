@@ -24,12 +24,13 @@
 <style>
 	.sidebar {
 		--sidebar-width: 13rem;
-		max-width: var(--sidebar-width);
+
 		position: sticky;
 		top: 0;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+		max-width: var(--sidebar-width);
 		height: 100vh;
 		padding: var(--sidebar-links-top-padding) 0 2rem 0;
 		padding-left: 0.25rem;

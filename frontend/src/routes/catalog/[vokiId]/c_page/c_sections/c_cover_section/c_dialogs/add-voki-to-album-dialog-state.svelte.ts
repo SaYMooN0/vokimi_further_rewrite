@@ -31,20 +31,26 @@ export class AddVokiToAlbumsDialogState {
     }
 
     async ensureFresh(): Promise<void> {
-        if (this._inflight) return this._inflight;
+        if (this._inflight) {
+            return this._inflight;
+        }
 
         const fresh =
             Date.now() - this._lastLoadedAt <= AddVokiToAlbumsDialogState.CACHE_MS &&
             this.albumsState.name === "ok";
 
-        if (fresh) return;
+        if (fresh) {
+            return;
+        }
 
         this._inflight = this.updateForce().finally(() => (this._inflight = null));
         return this._inflight;
     }
 
     async updateForce(): Promise<void> {
-        if (this._inflight) return this._inflight;
+        if (this._inflight) {
+            return this._inflight;
+        }
 
         this.albumToIsChosen = {};
         this._initialChosenAlbumIds.clear();

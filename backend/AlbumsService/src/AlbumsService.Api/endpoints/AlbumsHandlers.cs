@@ -1,4 +1,5 @@
 ﻿using AlbumsService.Api.contracts;
+using AlbumsService.Api.contracts.create_new_album;
 using AlbumsService.Application.common.repositories;
 using AlbumsService.Application.voki_albums.commands;
 using AlbumsService.Application.voki_albums.queries;
@@ -12,7 +13,7 @@ namespace AlbumsService.Api.endpoints;
 internal static class AlbumsHandlers
 {
     internal static void MapAlbumsHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/")
+        var group = endpoints.MapGroup("/albums")
             .WithGroupAuthenticationRequired();
 
         group.MapGet("/all-albums-preview", GetAllUserAlbumsPreview);

@@ -45,8 +45,8 @@
 	.create-new-btn {
 		padding: 0.25rem 1rem;
 		border: none;
-		text-decoration: underline;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
+		text-decoration: underline;
 	}
 </style>

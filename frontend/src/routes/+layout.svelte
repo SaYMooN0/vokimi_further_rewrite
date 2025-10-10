@@ -26,7 +26,9 @@
 		close: () => confirmActionDialog.close()
 	});
 	registerVokiFlagsInfoDialogOpenFunction(() => vokiItemFlagsInfoDialog.open());
-	registerCreateNewAlbumOpenFunction(() => createNewAlbumDialog.open());
+	registerCreateNewAlbumOpenFunction((onAfterNewAlbumCreated) =>
+		createNewAlbumDialog.open(onAfterNewAlbumCreated)
+	);
 </script>
 
 <SignInDialog bind:this={signInDialog} />

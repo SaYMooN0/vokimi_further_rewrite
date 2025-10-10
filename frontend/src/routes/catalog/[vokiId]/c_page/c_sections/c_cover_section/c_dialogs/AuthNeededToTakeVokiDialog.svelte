@@ -24,30 +24,28 @@
 
 <style>
 	:global(#auth-needed-to-take-voki-dialog > .dialog-content) {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.25rem;
 		padding: 2rem 4rem;
 		color: var(--text);
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1.25rem;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1.25rem;
 	}
+
 	.title {
+		margin: 0;
+		color: var(--primary);
 		font-size: 2rem;
 		font-weight: 600;
-		color: var(--primary);
-		margin: 0;
 	}
 
 	.message {
-		font-size: 1em;
-		color: var(--secondary-foreground);
-		line-height: 1.4;
-		letter-spacing: 0.25px;
 		margin: 0;
+		color: var(--secondary-foreground);
+		font-size: 1em;
+		line-height: 1.4;
+		text-align: center;
+		letter-spacing: 0.25px;
 	}
 
 	.actions {
@@ -60,13 +58,12 @@
 	.secondary-btn {
 		width: 9rem;
 		padding: 0.5rem 0;
+		border: none;
 		border-radius: 0.25rem;
 		font-size: 1rem;
 		font-weight: 500;
-		cursor: pointer;
 		transition: 0.15s ease;
-		border: none;
-
+		cursor: pointer;
 	}
 
 	.primary-btn {

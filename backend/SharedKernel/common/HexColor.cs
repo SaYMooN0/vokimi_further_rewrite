@@ -22,9 +22,17 @@ public class HexColor : ValueObject
         return new HexColor(color);
     }
 
-    public static ErrOrNothing CheckHexColorForErr(string color) => HexColorRegex.IsMatch(color)
-        ? ErrOrNothing.Nothing
-        : ErrFactory.IncorrectFormat($"Invalid hex color format: {color}");
+    public static ErrOrNothing CheckHexColorForErr(string color) {
+        if (string.IsNullOrWhiteSpace(color)) {
+            return ErrFactory.NoValue.Common("No value provided for ");
+        }
+
+        if (!HexColorRegex.IsMatch(color)) {
+            return ErrFactory.IncorrectFormat($"Invalid hex color format: '{color}'");
+        }
+
+        return ErrOrNothing.Nothing;
+    }
 
     public override IEnumerable<object> GetEqualityComponents() => [Value];
     public override string ToString() => Value;

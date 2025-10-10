@@ -37,12 +37,13 @@
 
 <style>
 	.login-required-container {
-		width: fit-content;
-		margin: 4rem auto 1rem;
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+		width: fit-content;
+		margin: 4rem auto 1rem;
 	}
+
 	.loading-container {
 		animation: fade-in-from-zero-with-delay 1s ease-in !important;
 	}

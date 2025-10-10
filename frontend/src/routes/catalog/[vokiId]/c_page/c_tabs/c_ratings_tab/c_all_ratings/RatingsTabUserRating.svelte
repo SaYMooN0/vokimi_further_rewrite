@@ -84,6 +84,7 @@
 
 	.loader > :global(.container) {
 		--loader-color: var(--secondary-foreground);
+
 		animation: fade-in-from-zero-with-delay 1s ease;
 	}
 

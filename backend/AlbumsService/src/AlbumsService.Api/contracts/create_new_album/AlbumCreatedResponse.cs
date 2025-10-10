@@ -1,24 +1,13 @@
 ﻿using AlbumsService.Domain.voki_album_aggregate;
 using ApiShared;
 
-namespace AlbumsService.Api.contracts;
+namespace AlbumsService.Api.contracts.create_new_album;
 
 public record AlbumCreatedResponse(
-    string Id,
-    string Name,
-    string Icon,
-    string MainColor,
-    string SecondColor,
-    DateTime CreationDate
+    string CreateAlbumId
 ) : ICreatableResponse<VokiAlbum>
 {
-
     public static ICreatableResponse<VokiAlbum> Create(VokiAlbum album) => new AlbumCreatedResponse(
-        album.Id.ToString(),
-        album.Name.ToString(),
-        album.Icon.ToString(),
-        album.MainColor.ToString(),
-        album.SecondaryColor.ToString(),
-        album.CreationDate
+        album.Id.ToString()
     );
 }

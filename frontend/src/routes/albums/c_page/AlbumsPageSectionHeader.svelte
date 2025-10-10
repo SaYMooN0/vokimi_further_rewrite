@@ -28,11 +28,11 @@
 	}
 
 	.right-btn {
-		height: fit-content;
 		display: grid;
 		align-items: center;
 		gap: 0.25rem;
 		width: 13.5rem;
+		height: fit-content;
 		padding: 0.375rem 1rem;
 		border: none;
 		border-radius: 0.75rem;

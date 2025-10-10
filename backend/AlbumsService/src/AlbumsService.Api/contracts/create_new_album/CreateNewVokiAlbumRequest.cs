@@ -3,14 +3,14 @@ using ApiShared;
 using SharedKernel.common;
 using SharedKernel.errs;
 
-namespace AlbumsService.Api.contracts;
+namespace AlbumsService.Api.contracts.create_new_album;
 
 public class CreateNewVokiAlbumRequest : IRequestWithValidationNeeded
 {
-    private string Name { get; init; }
-    private string Icon { get; init; }
-    private string MainColor { get; init; }
-    private string SecondaryColor { get; init; }
+    public string Name { get; init; }
+    public string Icon { get; init; }
+    public string MainColor { get; init; }
+    public string SecondaryColor { get; init; }
 
     public ErrOrNothing Validate() =>
         AlbumName.CheckForErr(Name)

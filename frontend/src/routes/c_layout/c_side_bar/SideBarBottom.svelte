@@ -52,22 +52,24 @@
 <style>
 	.error-container {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		gap: 0.5rem;
-		flex-direction: column;
 	}
+
 	.error-container > label {
-		background-color: var(--err-back);
 		width: 100%;
-		text-align: center;
+		padding: 0.25rem 1rem;
+		border-radius: 1rem;
+		background-color: var(--err-back);
 		color: var(--err-foreground);
 		font-size: 1rem;
 		font-weight: 500;
-		padding: 0.25rem 1rem;
+		text-align: center;
 		letter-spacing: 0.25px;
-		border-radius: 1rem;
 	}
+
 	.sign-in-btns {
 		display: flex;
 		flex-direction: column;
