@@ -13,9 +13,11 @@ public class VokiCommentsDbContext : DbContext
     ) : base(options) {
         _publisher = publisher;
     }
+
     public DbSet<AppUser> AppUsers { get; init; } = null!;
+
     // public DbSet<Voki> Vokis { get; init; } = null!;
-    // public DbSet<VokiComment> Ratings { get; init; } = null!;
+    // public DbSet<VokiComment> Comments { get; init; } = null!;
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VokiCommentsDbContext).Assembly);
         base.OnModelCreating(modelBuilder);

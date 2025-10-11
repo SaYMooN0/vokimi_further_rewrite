@@ -1,17 +1,12 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-
-	const {
-		messageText,
-		btnText,
-		onBtnClick,
-		className = ''
-	}: { messageText: string; btnText: string; onBtnClick: () => void; className?: string } = $props<{
+	interface Props {
 		messageText: string;
 		btnText: string;
 		onBtnClick: () => void;
 		className?: string;
-	}>();
+	}
+	let { messageText, btnText, onBtnClick, className = '' }: Props = $props();
 </script>
 
 <div class="message-container {className}">

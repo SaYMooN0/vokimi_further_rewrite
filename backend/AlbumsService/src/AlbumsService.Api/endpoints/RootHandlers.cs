@@ -10,15 +10,15 @@ using ApplicationShared.messaging;
 
 namespace AlbumsService.Api.endpoints;
 
-internal static class AlbumsHandlers
+internal static class RootHandlers
 {
-    internal static void MapAlbumsHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/albums")
+    internal static void MapRootHandlers(this IEndpointRouteBuilder endpoints) {
+        var group = endpoints.MapGroup("/")
             .WithGroupAuthenticationRequired();
 
         group.MapGet("/all-albums-preview", GetAllUserAlbumsPreview);
 
-        group.MapPost("/create-new", CreateNewAlbum)
+        group.MapPost("/albums/create-new", CreateNewAlbum)
             .WithRequestValidation<CreateNewVokiAlbumRequest>();
     }
 

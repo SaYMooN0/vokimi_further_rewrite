@@ -4,11 +4,11 @@ import type { PageServerLoad } from "../../$types";
 import type { VokiIdToDateDict } from "../../types";
 
 export const load: PageServerLoad<{
-    albumName: string;
     response: ResponseResult<{ vokiIdWithRatingDate: VokiIdToDateDict }>;
+    albumName: string;
 }> = async ({ fetch }) => {
     return {
-        albumName: "rated",
+        albumName: "rated Vokis",
         response: await ApiVokiRatings.serverFetchJsonResponse<{ vokiIdWithRatingDate: VokiIdToDateDict }>(
             fetch, `/rated-vokis`, { method: "GET" }
         )

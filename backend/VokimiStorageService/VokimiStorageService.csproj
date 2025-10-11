@@ -7,10 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
-        <PackageReference Include="Serilog.AspNetCore" Version="9.0.0"/>
-        <PackageReference Include="AWSSDK.S3" Version="4.0.4.2" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+        <PackageReference Include="Serilog.AspNetCore" />
+        <PackageReference Include="AWSSDK.S3" />
+        <PackageReference Include="SixLabors.ImageSharp" />
         
     </ItemGroup>
 

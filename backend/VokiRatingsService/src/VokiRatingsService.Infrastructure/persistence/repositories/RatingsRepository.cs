@@ -36,7 +36,7 @@ public class RatingsRepository : IRatingsRepository
         _db.Ratings
             .AsNoTracking()
             .Where(r => r.UserId == userId)
+            .OrderByDescending(r => r.Current.DateTime)
             .Select(r => new VokiIdWithRatingDateDto(r.VokiId, r.Current.DateTime))
-            .OrderByDescending(r => r.Date)
             .ToArrayAsync(ct);
 }

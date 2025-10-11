@@ -13,7 +13,7 @@
 	import { registerCreateNewAlbumOpenFunction } from './c_layout/ts_layout_contexts/album-creation-dialog-context';
 
 	let isFullWidthMode = $state(false);
-	const { children }: { children: Snippet } = $props<{ children: Snippet }>();
+	let { children }: { children: Snippet } = $props<{ children: Snippet }>();
 
 	let signInDialog = $state<SignInDialog>()!;
 	let confirmActionDialog = $state<ConfirmActionDialog>()!;

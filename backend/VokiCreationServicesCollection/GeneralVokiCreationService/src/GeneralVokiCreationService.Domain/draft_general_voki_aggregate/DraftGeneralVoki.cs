@@ -99,11 +99,12 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return questionToUpdate;
     }
 
-    public ErrOr<VokiQuestion>
-        UpdateQuestionImages(GeneralVokiQuestionId questionId, VokiQuestionImagesSet newImageSet) {
+    public ErrOr<VokiQuestion> UpdateQuestionImages(
+        GeneralVokiQuestionId questionId, VokiQuestionImagesSet newImageSet
+    ) {
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
-            return ErrFactory.NotFound.Common(
+            return ErrFactory.NotFound.VokiContent(
                 "Could not find question to update",
                 $"Voki with id {Id} doesn't have a question with id {questionId}"
             );
@@ -137,7 +138,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     ) {
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
-            return ErrFactory.NotFound.Common(
+            return ErrFactory.NotFound.VokiContent(
                 "Could not find question to update",
                 $"Voki with id {Id} doesn't have a question with id {questionId}"
             );
@@ -154,7 +155,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     public ErrOrNothing MoveQuestionUpInOrder(GeneralVokiQuestionId questionId) {
         var question = _questions.FirstOrDefault(q => q.Id == questionId);
         if (question is null) {
-            return ErrFactory.NotFound.Common(
+            return ErrFactory.NotFound.VokiContent(
                 "Could not find question to move up",
                 $"Voki with id {Id} doesn't have a question with id {questionId}"
             );
@@ -181,7 +182,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     public ErrOrNothing MoveQuestionDownInOrder(GeneralVokiQuestionId questionId) {
         var question = _questions.FirstOrDefault(q => q.Id == questionId);
         if (question is null) {
-            return ErrFactory.NotFound.Common(
+            return ErrFactory.NotFound.VokiContent(
                 "Could not find question to move down",
                 $"Voki with id {Id} doesn't have a question with id {questionId}"
             );
@@ -229,7 +230,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     ) {
         VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
         if (question is null) {
-            return ErrFactory.NotFound.Common("Cannot add new answer to question because question not fount");
+            return ErrFactory.NotFound.VokiContent("Cannot add new answer to question because question not fount");
         }
 
         if (
@@ -249,7 +250,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     ) {
         VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
         if (question is null) {
-            return ErrFactory.NotFound.Common("Cannot add update question answer because question doesn't exist");
+            return ErrFactory.NotFound.VokiContent("Cannot add update question answer because question doesn't exist");
         }
 
         if (
@@ -275,7 +276,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     public ErrOr<VokiResult> ResultWithId(GeneralVokiResultId resultId) {
         VokiResult? requestedResult = _results.FirstOrDefault(q => q.Id == resultId);
         if (requestedResult is null) {
-            return ErrFactory.NotFound.Common(
+            return ErrFactory.NotFound.VokiContent(
                 "This voki doesn't have requested result",
                 $"Voki with id {Id} doesn't have a result with id {resultId}"
             );
@@ -309,7 +310,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     ) {
         VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
         if (resultToUpdate is null) {
-            return ErrFactory.NotFound.Common(
+            return ErrFactory.NotFound.VokiContent(
                 "Could not find result to update",
                 $"Voki with id {Id} doesn't have a result with id {resultId}"
             );

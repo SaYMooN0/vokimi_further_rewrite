@@ -1,9 +1,8 @@
 <script lang="ts">
 	interface Props {
 		albumName: string;
-		vokiCount: number;
 	}
-	let { albumName, vokiCount }: Props = $props();
+	let { albumName }: Props = $props();
 </script>
 
 <h1>
@@ -11,7 +10,7 @@
 		<svg><use href="#caret-left-icon" /></svg>
 		Back
 	</a>
-	Your {albumName} Vokis ({vokiCount})
+	Your {albumName} auto album:
 </h1>
 <div class="line" />
 

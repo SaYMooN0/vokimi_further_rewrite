@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -9,9 +9,9 @@
     <ItemGroup>
         <ProjectReference Include="..\..\..\Libs\Infrastructure\Infrastructure.Auth\Infrastructure.Auth.csproj" />
         <ProjectReference Include="..\..\..\Libs\Infrastructure\InfrastructureShared.Base\InfrastructureShared.Base.csproj" />
-        <ProjectReference Include="..\TagsService.Application\TagsService.Application.csproj"/>
+        <ProjectReference Include="..\TagsService.Application\TagsService.Application.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.3"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     </ItemGroup>
 </Project>

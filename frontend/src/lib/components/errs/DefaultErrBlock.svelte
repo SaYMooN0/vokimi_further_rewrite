@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
-	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import ErrView from './ErrView.svelte';
 
 	let { errList, className }: { errList: Err[]; className?: string } = $props<{
