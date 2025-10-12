@@ -1,15 +1,11 @@
-﻿using SharedKernel.common.app_users;
-using UserProfilesService.Application.common.repositories;
-using UserProfilesService.Domain.app_user_aggregate;
-using VokimiStorageKeysLib.concrete_keys;
+﻿using UserProfilesService.Application.common.repositories;
 
 namespace UserProfilesService.Application.app_users.queries;
 
-public sealed record ListUsersNamesWithProfilePicsQuery(ImmutableHashSet<AppUserId> UserIds) :
-    IQuery<Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>>;
+public sealed record ListUsersNamesWithProfilePicsQuery(ImmutableHashSet<AppUserId> UserIds) : IQuery<UserPreviewDto[]>;
 
-internal sealed class ListUsersNamesWithProfilePicsQueryHandler : IQueryHandler<ListUsersNamesWithProfilePicsQuery,
-    Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>>
+internal sealed class ListUsersNamesWithProfilePicsQueryHandler :
+    IQueryHandler<ListUsersNamesWithProfilePicsQuery, UserPreviewDto[]>
 {
     private readonly IAppUsersRepository _appUsersRepository;
 
@@ -18,8 +14,6 @@ internal sealed class ListUsersNamesWithProfilePicsQueryHandler : IQueryHandler<
     }
 
 
-    public async Task<ErrOr<Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>>> Handle(
-        ListUsersNamesWithProfilePicsQuery query, CancellationToken ct
-    ) =>
+    public async Task<ErrOr<UserPreviewDto[]>> Handle(ListUsersNamesWithProfilePicsQuery query, CancellationToken ct) =>
         await _appUsersRepository.GetUserNamesWithProfilePics(query.UserIds, ct);
 }

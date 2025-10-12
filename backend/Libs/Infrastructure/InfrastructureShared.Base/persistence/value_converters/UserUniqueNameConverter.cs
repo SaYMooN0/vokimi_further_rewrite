@@ -3,11 +3,11 @@ using SharedKernel.common.app_users;
 
 namespace InfrastructureShared.Base.persistence.value_converters;
 
-public class AppUserNameConverter : ValueConverter<AppUserName, string>
+public class UserUniqueNameConverter : ValueConverter<UserUniqueName, string>
 {
-    public AppUserNameConverter() : base(
+    public UserUniqueNameConverter() : base(
         id => id.ToString(),
-        value => AppUserName.Create(value).AsSuccess()
+        value => UserUniqueName.Create(value).AsSuccess()
     ) { }
 }
 

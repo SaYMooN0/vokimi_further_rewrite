@@ -4,5 +4,5 @@ namespace UserProfilesService.Domain.app_user_aggregate.events;
 
 public sealed record class AppUserNameChangedEvent(
     AppUserId UserId,
-    AppUserName NewName
+    UserUniqueName NewUniqueName
 ) : IDomainEvent;

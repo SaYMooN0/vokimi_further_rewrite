@@ -2,6 +2,7 @@
 using AuthService.Application.abstractions;
 using AuthService.Application.common.repositories;
 using AuthService.Infrastructure.auth;
+using AuthService.Infrastructure.background_services;
 using AuthService.Infrastructure.email_service;
 using AuthService.Infrastructure.persistence;
 using AuthService.Infrastructure.persistence.repositories;
@@ -32,7 +33,8 @@ public static class DependencyInjection
             .AddEmailService(configuration)
             .AddFrontendConfig(configuration)
             .AddConfiguredMassTransit(configuration)
-            .AddIntegrationEventsPublisher();
+            .AddIntegrationEventsPublisher()
+            .AddBackgroundServices();
     }
 
     private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
@@ -153,14 +155,20 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection
-        AddFrontendConfig(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddFrontendConfig(
+        this IServiceCollection services, IConfiguration configuration
+    ) {
         var frontendConfig = configuration.GetSection("FrontendConfig").Get<FrontendConfig>();
         if (frontendConfig is null) {
             throw new Exception("Email service is not configured");
         }
 
         services.AddSingleton(frontendConfig);
+        return services;
+    }
+
+    private static IServiceCollection AddBackgroundServices(this IServiceCollection services) {
+        services.AddHostedService<UnconfirmedUsersCleanupBackgroundService>();
         return services;
     }
 }

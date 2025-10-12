@@ -52,5 +52,5 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
 
     public TempImageKey[] ParsedTempKeys { get; private set; }
     public GeneralVokiQuestionImageKey[] ParsedSavedKeys { get; private set; }
-    public VokiQuestionImagesAspectRatio ParsedAspectRatio { get; set; }
+    public VokiQuestionImagesAspectRatio ParsedAspectRatio { get; private set; }
 }

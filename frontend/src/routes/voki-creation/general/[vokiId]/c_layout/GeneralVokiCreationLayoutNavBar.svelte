@@ -52,35 +52,31 @@
 {/snippet}
 {#snippet mainIcon()}
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-		<path d="M3 17H19" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-		<path d="M3 21H12" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"></path>
-		<path
-			d="M3 8C3 5.64298 3 4.46447 3.73223 3.73223C4.46447 3 5.64298 3 8 3H16C18.357 3 19.5355 3 20.2678 3.73223C21 4.46447 21 5.64298 21 8C21 10.357 21 11.5355 20.2678 12.2678C19.5355 13 18.357 13 16 13H8C5.64298 13 4.46447 13 3.73223 12.2678C3 11.5355 3 10.357 3 8Z"
-			stroke="currentColor"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		></path>
-	</svg>
+  <path d="M3 4H7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M3 10H7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M3 15.5H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M3 21.5H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="11" y="2.5" width="10" height="8" rx="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
 {/snippet}
 
 {#snippet questionIcon()}
-	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+	>
+		<path d="M1 7h16" stroke="currentColor"></path>
+		<path d="M1 13H12" stroke="currentColor"></path>
+		<path d="M1 19h12" stroke="currentColor"></path>
+		<path d="M18.5 19v0.01" stroke="currentColor"></path>
 		<path
-			d="M2.5 12C2.5 7.52166 2.5 5.28249 3.89124 3.89124C5.28249 2.5 7.52166 2.5 12 2.5C16.4783 2.5 18.7175 2.5 20.1088 3.89124C21.5 5.28249 21.5 7.52166 21.5 12C21.5 16.4783 21.5 18.7175 20.1088 20.1088C18.7175 21.5 16.4783 21.5 12 21.5C7.52166 21.5 5.28249 21.5 3.89124 20.1088C2.5 18.7175 2.5 16.4783 2.5 12Z"
 			stroke="currentColor"
-		></path>
-		<path
-			d="M9.5 9.5C9.5 8.11929 10.6193 7 12 7C13.3807 7 14.5 8.11929 14.5 9.5C14.5 10.3569 14.0689 11.1131 13.4117 11.5636C12.7283 12.0319 12 12.6716 12 13.5"
-			stroke="currentColor"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		></path>
-		<path
-			d="M12.0001 17H12.009"
-			stroke="currentColor"
-			stroke-linecap="round"
-			stroke-linejoin="round"
-		></path>
+			d="M18.5 16a2.003 2.003 0 0 0 0.914 -3.782 1.98 1.98 0 0 0 -2.414 0.483"
+		/>
 	</svg>
 {/snippet}
 

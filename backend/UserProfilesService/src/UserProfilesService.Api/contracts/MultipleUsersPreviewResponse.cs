@@ -1,26 +1,23 @@
-﻿using SharedKernel.common.app_users;
-using VokimiStorageKeysLib.concrete_keys;
+﻿using UserProfilesService.Application.common.repositories;
 
 namespace UserProfilesService.Api.contracts;
 
 public record class MultipleUsersPreviewResponse(
     Dictionary<string, UserNameWithProfilePicResponse> Users
-) : ICreatableResponse<Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>>
+) : ICreatableResponse<UserPreviewDto[]>
 {
-    public static ICreatableResponse<Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>> Create(
-        Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)> users
-    ) => new MultipleUsersPreviewResponse(
-        users.ToDictionary(
-            u => u.Key.ToString(),
-            u => UserNameWithProfilePicResponse.FromTuple(u.Value)
-        )
-    );
+    public static ICreatableResponse<UserPreviewDto[]> Create(UserPreviewDto[] users) =>
+        new MultipleUsersPreviewResponse(
+            users.ToDictionary(
+                u => u.UserId.ToString(),
+                UserNameWithProfilePicResponse.FromDto
+            )
+        );
 }
 
-public record UserNameWithProfilePicResponse(string Name, string ProfilePic)
+public record UserNameWithProfilePicResponse(string UniqueName, string DisplayName, string ProfilePic)
 {
-    public static UserNameWithProfilePicResponse FromTuple((AppUserName Name, UserProfilePicKey PicKey) tuple) => new(
-        tuple.Name.ToString(),
-        tuple.PicKey.ToString()
+    public static UserNameWithProfilePicResponse FromDto(UserPreviewDto dto) => new(
+        dto.UniqueName.ToString(), dto.DisplayName.ToString(), dto.ProfilePicKey.ToString()
     );
 }

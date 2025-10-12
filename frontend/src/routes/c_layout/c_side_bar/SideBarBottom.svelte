@@ -1,7 +1,11 @@
 <script lang="ts">
 	import ReloadButton from '$lib/components/buttons/ReloadButton.svelte';
 	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
+	import { toast } from 'svelte-sonner';
 	import { getSignInDialogOpenFunction } from '../ts_layout_contexts/sign-in-dialog-context';
+	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
+	import { RequestJsonOptions } from '$lib/ts/request-json-options';
+	import LogoutConfirmationDialog from './c_bottom/LogoutConfirmationDialog.svelte';
 	const openSignInDialog = getSignInDialogOpenFunction();
 
 	let authState = AuthStore.Get();
@@ -31,10 +35,19 @@
 		viewState = 'loading';
 		AuthStore.GetWithForceRefresh();
 	}
+	let logoutConfirmationDialog = $state<LogoutConfirmationDialog>();
+	async function logoutBtnPressed() {
+		if (logoutConfirmationDialog) {
+			logoutConfirmationDialog.open();
+		} else {
+			toast.error("Logout dialog couldn't be opened");
+		}
+	}
 </script>
 
 {#if viewState === 'authenticated'}
-	<button class="logout-btn">Logout</button>
+	<LogoutConfirmationDialog bind:this={logoutConfirmationDialog} />
+	<button class="logout-btn" onclick={() => logoutBtnPressed()}>Logout</button>
 {:else if viewState === 'loading'}
 	<div class="appear-with-delay">Loading...</div>
 {:else if viewState === 'error'}

@@ -5,12 +5,20 @@ namespace UserProfilesService.Infrastructure.persistence.configurations.extensio
 
 public static class PropertyBuilderExtensions
 {
-    public static PropertyBuilder<ImmutableHashSet<VokiTagId>> HasTagIdImmutableHashSetHashSetConversion(
+    public static PropertyBuilder<ImmutableHashSet<VokiTagId>> HasTagIdImmutableHashSetConversion(
         this PropertyBuilder<ImmutableHashSet<VokiTagId>> builder
     ) {
         return builder.HasConversion(
-            new TagIdImmutableHashSetHashSetConverter(),
-            new TagIdImmutableHashSetHashSetComparer()
+            new TagIdImmutableHashSetConverter(),
+            new TagIdImmutableHashSetComparer()
+        );
+    }
+    public static PropertyBuilder<ImmutableHashSet<Language>> HasLanguagesImmutableHashSetConversion(
+        this PropertyBuilder<ImmutableHashSet<Language>> builder
+    ) {
+        return builder.HasConversion(
+            new LanguagesImmutableHashSetConverter(),
+            new LanguagesImmutableHashSetComparer()
         );
     }
 }

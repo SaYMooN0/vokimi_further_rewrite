@@ -32,4 +32,10 @@ internal class UnconfirmedUsersRepository : IUnconfirmedUsersRepository
         _db.UnconfirmedUsers.Remove(unconfirmedUser);
         return _db.SaveChangesAsync();
     }
+
+    public async Task<int> DeleteAllExpiredUsers(DateTime utcNow, CancellationToken ct) {
+        return await _db.UnconfirmedUsers
+            .Where(u =>  u.ExpiresAt <= utcNow)
+            .ExecuteDeleteAsync(ct);
+    }
 }

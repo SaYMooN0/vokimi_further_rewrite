@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SharedKernel.common.app_users;
 using UserProfilesService.Application.common.repositories;
 using UserProfilesService.Domain.app_user_aggregate;
-using VokimiStorageKeysLib.concrete_keys;
 
 namespace UserProfilesService.Infrastructure.persistence.repositories;
 
@@ -27,24 +25,24 @@ public class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync();
     }
 
-    public Task<AppUser?> GetByIdAsNoTracking(AppUserId userId) => _db.AppUsers
+    public Task<AppUser?> GetByIdAsNoTracking(AppUserId userId, CancellationToken ct) => _db.AppUsers
         .AsNoTracking()
-        .FirstOrDefaultAsync(x => x.Id == userId);
+        .FirstOrDefaultAsync(x => x.Id == userId, ct);
 
-    public Task<Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>> GetUserNamesWithProfilePics(
+    public Task<UserPreviewDto[]> GetUserNamesWithProfilePics(
         IEnumerable<AppUserId> userIds,
         CancellationToken ct = default
     ) {
         AppUserId[] userIdsArray = userIds as AppUserId[] ?? userIds.ToArray();
 
         if (!userIdsArray.Any()) {
-            return Task.FromResult(new Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>());
+            return Task.FromResult(Array.Empty<UserPreviewDto>());
         }
 
         return _db.AppUsers
             .AsNoTracking()
-            .Where(u => userIdsArray.Contains(u.Id))
-            .Select(u => new { u.Id, u.UserName, u.ProfilePic })
-            .ToDictionaryAsync(x => x.Id, x => (x.UserName, x.ProfilePic), ct);
+            .Select(u => new UserPreviewDto(u.Id, u.UniqueName, u.DisplayName, u.ProfilePic))
+            .Where(u => userIdsArray.Contains(u.UserId))
+            .ToArrayAsync(ct);
     }
 }

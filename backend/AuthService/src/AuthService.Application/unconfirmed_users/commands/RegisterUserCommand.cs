@@ -1,25 +1,29 @@
 ﻿using AuthService.Application.common.repositories;
 using AuthService.Domain.unconfirmed_user_aggregate;
+using SharedKernel;
 using SharedKernel.common.app_users;
 
 namespace AuthService.Application.unconfirmed_users.commands;
 
-public sealed record RegisterUserCommand(AppUserName Username, Email Email, string Password) : ICommand;
+public sealed record RegisterUserCommand(UserUniqueName Username, Email Email, string Password) : ICommand;
 
 internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
 {
     private readonly IUnconfirmedUsersRepository _unconfirmedUsersRepository;
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public RegisterUserCommandHandler(
         IUnconfirmedUsersRepository unconfirmedUsersRepository,
         IAppUsersRepository appUsersRepository,
-        IPasswordHasher passwordHasher
+        IPasswordHasher passwordHasher,
+        IDateTimeProvider dateTimeProvider
     ) {
         _unconfirmedUsersRepository = unconfirmedUsersRepository;
         _appUsersRepository = appUsersRepository;
         _passwordHasher = passwordHasher;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<ErrOrNothing> Handle(RegisterUserCommand command, CancellationToken ct) {
@@ -38,7 +42,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
     private async Task<ErrOrNothing> CreateNewUnconfirmedUser(RegisterUserCommand command) {
         var creationRes = UnconfirmedUser.CreateNew(
-            command.Username, command.Email, command.Password, _passwordHasher
+            command.Username, command.Email, _dateTimeProvider.UtcNow, command.Password, _passwordHasher
         );
         if (creationRes.IsErr(out var err)) {
             return err;
@@ -51,7 +55,9 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
     private async Task<ErrOrNothing> OverrideExistingUnconfirmedUser(
         UnconfirmedUser unconfirmedUser, RegisterUserCommand command
     ) {
-        var res = unconfirmedUser.Override(command.Username, command.Password, _passwordHasher);
+        ErrOrNothing res = unconfirmedUser.Override(
+            command.Username, command.Password, _passwordHasher, _dateTimeProvider.UtcNow
+        );
         if (res.IsErr(out var err)) {
             return err;
         }
@@ -71,5 +77,4 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
         return ErrOrNothing.Nothing;
     }
-
 }

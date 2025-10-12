@@ -24,6 +24,16 @@
 		position: relative;
 		width: 100%;
 		margin: 0.75rem 0 0.5rem;
+		background-color: var(--back);
+		color: var(--text);
+	}
+	input:-webkit-autofill,
+	input:-webkit-autofill:hover,
+	input:-webkit-autofill:focus,
+	input:-webkit-autofill:active {
+		-webkit-box-shadow: 0 0 0px 1000px var(--back) inset !important;
+		-webkit-text-fill-color: var(--text) !important;
+		transition: background-color 5000s ease-in-out 0s;
 	}
 
 	.input-field label {
@@ -45,8 +55,6 @@
 		transform: translateY(-50%);
 		pointer-events: none;
 	}
-
-	
 
 	.input-field input {
 		width: 100%;

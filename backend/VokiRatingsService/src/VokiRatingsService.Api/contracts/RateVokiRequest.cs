@@ -1,6 +1,6 @@
 ﻿using VokiRatingsService.Domain.voki_rating_aggregate;
 
-namespace VokiRatingsService.Api.contracts.rate_voki;
+namespace VokiRatingsService.Api.contracts;
 
 public class RateVokiRequest : IRequestWithValidationNeeded
 {

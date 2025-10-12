@@ -7,53 +7,69 @@ namespace AuthService.Domain.unconfirmed_user_aggregate;
 public class UnconfirmedUser : AggregateRoot<UnconfirmedUserId>
 {
     private UnconfirmedUser() { }
-    public AppUserName UserName { get; private set; }
+    public UserUniqueName UserUniqueName { get; private set; }
     public Email Email { get; }
     public string PasswordHash { get; private set; }
     private string ConfirmationCode { get; }
+    public DateTime ExpiresAt { get; private set; }
 
     private UnconfirmedUser(
         UnconfirmedUserId id,
-        AppUserName userName,
+        UserUniqueName userUniqueName,
         Email email,
         string passwordHash,
-        string confirmationCode
+        string confirmationCode,
+        DateTime expiresAt
     ) {
         Id = id;
-        UserName = userName;
+        UserUniqueName = userUniqueName;
         Email = email;
         PasswordHash = passwordHash;
         ConfirmationCode = confirmationCode;
+        ExpiresAt = expiresAt;
     }
 
+    public static readonly TimeSpan ConfirmationPeriod = TimeSpan.FromMinutes(5);
+
     public static ErrOr<UnconfirmedUser> CreateNew(
-        AppUserName username, Email email, string password, IPasswordHasher passwordHasher
+        UserUniqueName uniqueName, Email email, DateTime now,
+        string password, IPasswordHasher passwordHasher
     ) {
         if (PasswordRules.CheckForErr(password).IsErr(out var err)) {
             return err;
         }
 
-        var user = new UnconfirmedUser(
+        DateTime expiresAt = now + ConfirmationPeriod;
+
+        UnconfirmedUser user = new(
             UnconfirmedUserId.CreateNew(),
-            username,
+            uniqueName,
             email,
             passwordHash: passwordHasher.Hash(password),
-            confirmationCode: Guid.NewGuid().ToString()
+            confirmationCode: Guid.NewGuid().ToString(),
+            expiresAt
         );
         user.AddDomainEvent(new UnconfirmedUserChangedEvent(
-            user.Id, user.UserName, user.Email, user.ConfirmationCode)
-        );
+            user.Id, user.UserUniqueName, user.Email, user.ConfirmationCode, user.ExpiresAt
+        ));
         return user;
     }
 
-    public ErrOrNothing Override(AppUserName userName, string password, IPasswordHasher passwordHasher) {
+    public ErrOrNothing Override(
+        UserUniqueName userUniqueName,
+        string password,
+        IPasswordHasher passwordHasher,
+        DateTime utcNow
+    ) {
         if (PasswordRules.CheckForErr(password).IsErr(out var err)) {
             return err;
         }
 
         this.PasswordHash = passwordHasher.Hash(password);
-        this.UserName = userName;
-        AddDomainEvent(new UnconfirmedUserChangedEvent(Id, UserName, Email, ConfirmationCode));
+        this.UserUniqueName = userUniqueName;
+        this.ExpiresAt = utcNow + ConfirmationPeriod;
+
+        this.AddDomainEvent(new UnconfirmedUserChangedEvent(Id, UserUniqueName, Email, ConfirmationCode, ExpiresAt));
         return ErrOrNothing.Nothing;
     }
 

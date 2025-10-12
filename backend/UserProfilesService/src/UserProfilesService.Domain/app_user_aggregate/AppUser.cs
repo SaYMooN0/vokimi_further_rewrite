@@ -9,12 +9,14 @@ public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
 
-    public AppUserName UserName { get; private set; }
+    public UserUniqueName UniqueName { get; private set; }
+    public UserDisplayName DisplayName { get; private set; }
     public UserProfilePicKey ProfilePic { get; private set; }
     public ImmutableHashSet<VokiTagId> FavouriteTags { get; private set; }
+    public ImmutableHashSet<Language> PreferredLanguages { get; private set; }
     public UserSettings Settings { get; private set; }
 
-    public AppUser(AppUserId userId, AppUserName userName, UserProfilePicKey profilePic) {
+    public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePicKey profilePic) {
         if (!profilePic.IsForUser(userId)) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Conflict(
                 $"Given profile pic key doesn't belong to this user. User id: {userId}, profile pic id: {profilePic.UserId}"
@@ -22,17 +24,12 @@ public class AppUser : AggregateRoot<AppUserId>
         }
 
         Id = userId;
-        UserName = userName;
+        UniqueName = uniqueName;
+        DisplayName = UserDisplayName.Empty;
         ProfilePic = profilePic;
         FavouriteTags = [];
+        PreferredLanguages = [];
         Settings = UserSettings.Default;
-    }
-
-    public void UpdateUserName(AppUserName newUserName) {
-        if (newUserName != UserName) {
-            UserName = newUserName;
-            AddDomainEvent(new AppUserNameChangedEvent(Id, newUserName));
-        }
     }
 
     public ErrOrNothing UpdateProfilePic(UserProfilePicKey newProfilePic) {

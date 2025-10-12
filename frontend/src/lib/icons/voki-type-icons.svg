@@ -27,12 +27,10 @@
     <path d="M16.5 20V4M16.5 20C15.7998 20 14.4915 18.0057 14 17.5M16.5 20C17.2002 20 18.5085 18.0057 19 17.5"
         stroke="currentColor" stroke-width="inherit" stroke-linecap="round" stroke-linejoin="round"></path>
 </svg>
-<svg id="tier-list-voki-type-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" color="currentColor"
-    fill="none">
-    <path d="M9 5L21 5" stroke="currentColor" stroke-width="inherit" stroke-linecap="round"></path>
-    <path d="M3 5L5 5" stroke="currentColor" stroke-width="inherit" stroke-linecap="round"></path>
-    <path d="M9 12L21 12" stroke="currentColor" stroke-width="inherit" stroke-linecap="round"></path>
-    <path d="M3 12L5 12" stroke="currentColor" stroke-width="inherit" stroke-linecap="round"></path>
-    <path d="M9 19L21 19" stroke="currentColor" stroke-width="inherit" stroke-linecap="round"></path>
-    <path d="M3 19L5 19" stroke="currentColor" stroke-width="inherit" stroke-linecap="round"></path>
+
+<svg id="tier-list-voki-type-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+   >
+    <path fill="currentColor"
+        d="M8.75 18.5H20.5v-3.425H8.75V18.5ZM3.5 8.925h3.75V5.5H3.5v3.425Zm0 4.675h3.75v-3.175H3.5v3.175ZM3.5 18.5h3.75v-3.425H3.5V18.5Zm5.25 -4.9H20.5v-3.175H8.75v3.175Zm0 -4.675H20.5V5.5H8.75v3.425ZM3.5 20c-0.4 0 -0.75 -0.15 -1.05 -0.45 -0.3 -0.3 -0.45 -0.65 -0.45 -1.05V5.5c0 -0.4 0.15 -0.75 0.45 -1.05C2.75 4.15 3.1 4 3.5 4h17c0.4 0 0.75 0.15 1.05 0.45 0.3 0.3 0.45 0.65 0.45 1.05v13c0 0.4 -0.15 0.75 -0.45 1.05 -0.3 0.3 -0.65 0.45 -1.05 0.45H3.5Z"
+        ></path>
 </svg>

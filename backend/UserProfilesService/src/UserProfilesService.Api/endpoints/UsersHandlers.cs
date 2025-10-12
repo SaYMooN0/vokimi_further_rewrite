@@ -1,6 +1,7 @@
 ﻿using SharedKernel.common.app_users;
 using UserProfilesService.Api.contracts;
 using UserProfilesService.Application.app_users.queries;
+using UserProfilesService.Application.common.repositories;
 using VokimiStorageKeysLib.concrete_keys;
 
 namespace UserProfilesService.Api.endpoints;
@@ -16,8 +17,7 @@ public static class UsersHandlers
 
     private static async Task<IResult> GetUserPreviewData(
         HttpContext httpContext, CancellationToken ct,
-        IQueryHandler<ListUsersNamesWithProfilePicsQuery,
-            Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>> handler
+        IQueryHandler<ListUsersNamesWithProfilePicsQuery, UserPreviewDto[]> handler
     ) {
         var request = httpContext.GetValidatedRequest<UsersPreviewRequest>();
 
@@ -25,9 +25,6 @@ public static class UsersHandlers
         var result = await handler.Handle(query, ct);
 
         return CustomResults
-            .FromErrOrToJson<
-                Dictionary<AppUserId, (AppUserName Name, UserProfilePicKey PicKey)>,
-                MultipleUsersPreviewResponse
-            >(result);
+            .FromErrOrToJson<UserPreviewDto[], MultipleUsersPreviewResponse>(result);
     }
 }

@@ -10,4 +10,6 @@ public interface IUnconfirmedUsersRepository
     Task Delete(UnconfirmedUser unconfirmedUser);
 
     Task<UnconfirmedUser?> GetById(UnconfirmedUserId unconfirmedUserId);
+    Task<int> DeleteAllExpiredUsers(DateTime utcNow, CancellationToken ct);
+
 }

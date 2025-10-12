@@ -1,4 +1,5 @@
 ﻿using AuthService.Domain.app_user_aggregate.events;
+using AuthService.Domain.unconfirmed_user_aggregate;
 using SharedKernel;
 using SharedKernel.common.app_users;
 
@@ -11,6 +12,7 @@ public class AppUser : AggregateRoot<AppUserId>
     public string PasswordHash { get; }
     public DateTime RegistrationDate { get; }
     public DateTime PasswordUpdateDate { get; private set; }
+    public UnconfirmedUserId ConfirmedFrom { get; }
 
     private AppUser(AppUserId id, Email email, string passwordHash, DateTime registrationDate) {
         Id = id;
@@ -22,11 +24,11 @@ public class AppUser : AggregateRoot<AppUserId>
 
     public static AppUser CreateNew(
         UnconfirmedUserId unconfirmedUserId, Email email, string passwordHash,
-        AppUserName userName, IDateTimeProvider dateTimeProvider
+        UserUniqueName userUniqueName, IDateTimeProvider dateTimeProvider
     ) {
         var userId = new AppUserId(unconfirmedUserId.Value);
         AppUser user = new(userId, email, passwordHash, dateTimeProvider.UtcNow);
-        user.AddDomainEvent(new NewAppUserCreatedEvent(user.Id, userName, user.RegistrationDate));
+        user.AddDomainEvent(new NewAppUserCreatedEvent(user.Id, userUniqueName, user.RegistrationDate));
         return user;
     }
 

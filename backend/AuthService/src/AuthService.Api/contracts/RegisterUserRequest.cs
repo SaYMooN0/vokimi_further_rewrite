@@ -17,9 +17,9 @@ public class RegisterUserRequest : IRequestWithValidationNeeded
 
         return errs
             .WithNextIfErr(PasswordRules.CheckForErr(Password))
-            .WithNextIfErr(AppUserName.CheckForErr(Username));
+            .WithNextIfErr(UserUniqueName.CheckForErr(Username));
     }
 
-    public AppUserName ParsedUsername => AppUserName.Create(Username).AsSuccess();
+    public UserUniqueName ParsedUsername => UserUniqueName.Create(Username).AsSuccess();
     public Email ParsedEmail => Domain.common.Email.Create(Email).AsSuccess();
 }

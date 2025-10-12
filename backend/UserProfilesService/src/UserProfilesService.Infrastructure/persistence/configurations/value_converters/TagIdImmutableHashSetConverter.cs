@@ -3,18 +3,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace UserProfilesService.Infrastructure.persistence.configurations.value_converters;
 
-internal class TagIdImmutableHashSetHashSetConverter : ValueConverter<ImmutableHashSet<VokiTagId>, string[]>
+internal class TagIdImmutableHashSetConverter : ValueConverter<ImmutableHashSet<VokiTagId>, string[]>
 {
-    public TagIdImmutableHashSetHashSetConverter()
+    public TagIdImmutableHashSetConverter()
         : base(
             tags => tags.Select(id => id.ToString()).ToArray(),
             strings => strings.Select(s => new VokiTagId(s)).ToImmutableHashSet()
         ) { }
 }
 
-internal class TagIdImmutableHashSetHashSetComparer : ValueComparer<ImmutableHashSet<VokiTagId>>
+internal class TagIdImmutableHashSetComparer : ValueComparer<ImmutableHashSet<VokiTagId>>
 {
-    public TagIdImmutableHashSetHashSetComparer() : base(
+    public TagIdImmutableHashSetComparer() : base(
         (t1, t2) => t1!.SequenceEqual(t2!),
         t => t.Select(x => x!.GetHashCode()).Aggregate((x, y) => x ^ y),
         t => t.ToImmutableHashSet()

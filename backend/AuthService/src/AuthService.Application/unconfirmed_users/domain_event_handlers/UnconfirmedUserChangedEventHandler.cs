@@ -13,10 +13,10 @@ internal class UnconfirmedUserChangedEventHandler : IDomainEventHandler<Unconfir
     }
 
     public async Task Handle(UnconfirmedUserChangedEvent e, CancellationToken ct) {
-        var sendingErr = await _emailService.SendRegistrationConfirmationLink(
-            e.Email, e.Username, e.UserId, e.ConfirmationCode
+        ErrOrNothing sendingErr = await _emailService.SendRegistrationConfirmationLink(
+            e.Email, e.UniqueName, e.UserId, e.ConfirmationCode, e.ExpirationDate
         );
-        
+
         UnexpectedBehaviourException.ThrowIfErr(
             sendingErr, "Unable to send email confirmation link. Please try again later"
         );

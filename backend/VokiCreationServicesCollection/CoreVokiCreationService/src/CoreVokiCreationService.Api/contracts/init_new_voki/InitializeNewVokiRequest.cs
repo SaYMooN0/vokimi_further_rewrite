@@ -1,6 +1,6 @@
 ﻿using SharedKernel.common.vokis;
 
-namespace CoreVokiCreationService.Api.contracts;
+namespace CoreVokiCreationService.Api.contracts.init_new_voki;
 
 public class InitializeNewVokiRequest : IRequestWithValidationNeeded
 {

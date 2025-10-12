@@ -17,6 +17,6 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
 
     public async Task Handle(NewAppUserCreatedEvent e, CancellationToken ct) =>
         await _integrationEventPublisher.Publish(new NewAppUserCreatedIntegrationEvent(
-            e.CreatedUserId, e.UserName.ToString()
+            e.CreatedUserId, e.UserUniqueName.ToString()
         ), ct);
 }

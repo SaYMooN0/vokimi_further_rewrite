@@ -19,21 +19,31 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .HasGuidBasedIdConversion();
 
         builder
-            .Property(x => x.UserName)
-            .HasConversion<AppUserNameConverter>();
+            .Property(x => x.UniqueName)
+            .HasConversion<UserUniqueNameConverter>();
+        
+        builder
+            .Property(x => x.DisplayName)
+            .HasConversion<UserDisplayNameConverter>();
 
         builder
             .Property(x => x.ProfilePic)
             .HasConversion<AppUserProfilePicKeyConverter>();
-
+        
+        builder
+            .Property(x => x.FavouriteTags)
+            .HasTagIdImmutableHashSetConversion();
+        
+        builder
+            .Property(x => x.PreferredLanguages)
+            .HasLanguagesImmutableHashSetConversion();
+        
         builder.ComplexProperty(x => x.Settings, b => {
             b
                 .Property(d => d.AllowCoAuthorInvites)
                 .HasColumnName("settings_AllowCoAuthorInvites");
         });
 
-        builder
-            .Property(x => x.FavouriteTags)
-            .HasTagIdImmutableHashSetHashSetConversion();
+       
     }
 }

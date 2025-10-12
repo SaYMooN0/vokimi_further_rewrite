@@ -6,7 +6,8 @@ namespace AuthService.Domain.unconfirmed_user_aggregate.events;
 
 public record UnconfirmedUserChangedEvent(
     UnconfirmedUserId UserId,
-    AppUserName Username,
+    UserUniqueName UniqueName,
     Email Email,
-    string ConfirmationCode
+    string ConfirmationCode,
+    DateTime ExpirationDate
 ) : IDomainEvent;

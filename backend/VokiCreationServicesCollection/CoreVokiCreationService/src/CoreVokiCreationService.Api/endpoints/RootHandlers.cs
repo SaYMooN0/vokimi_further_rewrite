@@ -1,10 +1,10 @@
 ﻿using CoreVokiCreationService.Api.contracts;
+using CoreVokiCreationService.Api.contracts.init_new_voki;
 using CoreVokiCreationService.Application.app_users.queries;
 using CoreVokiCreationService.Application.draft_vokis.commands;
 using CoreVokiCreationService.Application.draft_vokis.queries;
 using CoreVokiCreationService.Domain.app_user_aggregate;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
-using SharedKernel.common.vokis;
 
 namespace CoreVokiCreationService.Api.endpoints;
 
@@ -41,13 +41,7 @@ public static class RootHandlers
         InitializeNewVokiCommand command = new(request.VokiType, request.ParseVokiName);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result,
-            (voki) => CustomResults.Created(new {
-                Id = voki.Id.ToString(),
-                Type = voki.Type,
-                Name = voki.Name.ToString()
-            })
-        );
+        return CustomResults.FromErrOrToJson<DraftVoki, NewVokiInitializedResponse>(result);
     }
 
     private static async Task<IResult> ListUserInvites(

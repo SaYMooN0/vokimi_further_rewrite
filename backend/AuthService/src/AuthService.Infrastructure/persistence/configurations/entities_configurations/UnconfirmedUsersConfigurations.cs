@@ -22,8 +22,8 @@ internal class UnconfirmedUsersConfigurations : IEntityTypeConfiguration<Unconfi
             .HasConversion<EmailConverter>();
 
         builder
-            .Property(x => x.UserName)
-            .HasConversion<AppUserNameConverter>();
+            .Property(x => x.UserUniqueName)
+            .HasConversion<UserUniqueNameConverter>();
 
         builder
             .Property<string>("ConfirmationCode");

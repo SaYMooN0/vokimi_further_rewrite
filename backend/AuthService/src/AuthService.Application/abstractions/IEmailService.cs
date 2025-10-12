@@ -6,8 +6,9 @@ public interface IEmailService
 {
     Task<ErrOrNothing> SendRegistrationConfirmationLink(
         Email email,
-        AppUserName username,
+        UserUniqueName userUniqueName,
         UnconfirmedUserId userId,
-        string confirmationCode
+        string confirmationCode,
+        DateTime expirationDate
     );
 }

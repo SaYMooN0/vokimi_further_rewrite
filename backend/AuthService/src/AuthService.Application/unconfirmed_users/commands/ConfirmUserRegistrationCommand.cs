@@ -52,7 +52,7 @@ internal sealed class ConfirmUserRegistrationCommandHandler : ICommandHandler<Co
             unconfirmedUser.Id,
             unconfirmedUser.Email,
             unconfirmedUser.PasswordHash,
-            unconfirmedUser.UserName,
+            unconfirmedUser.UserUniqueName,
             _dateTimeProvider
         );
         await _appUsersRepository.Add(user);
