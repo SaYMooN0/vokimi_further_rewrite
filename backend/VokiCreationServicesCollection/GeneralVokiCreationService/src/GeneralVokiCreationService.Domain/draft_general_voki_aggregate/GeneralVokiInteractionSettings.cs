@@ -6,23 +6,23 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 public class GeneralVokiInteractionSettings : ValueObject, IVokiInteractionSettings
 {
-    public bool AuthenticatedOnlyTaking { get; }
+    public bool SignedInOnlyTaking { get; }
     public GeneralVokiResultsVisibility ResultsVisibility { get; }
     public bool ShowResultsDistribution { get; }
 
 
     public override IEnumerable<object> GetEqualityComponents() =>
-        [AuthenticatedOnlyTaking, ResultsVisibility, ShowResultsDistribution];
+        [SignedInOnlyTaking, ResultsVisibility, ShowResultsDistribution];
 
     private GeneralVokiInteractionSettings(
-        bool authenticatedOnlyTaking,
+        bool signedInOnlyTaking,
         GeneralVokiResultsVisibility resultsVisibility,
         bool showResultsDistribution
     ) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckResultsVisibilityForErr(
-            authenticatedOnlyTaking, resultsVisibility
+            signedInOnlyTaking, resultsVisibility
         ));
-        AuthenticatedOnlyTaking = authenticatedOnlyTaking;
+        SignedInOnlyTaking = signedInOnlyTaking;
         ResultsVisibility = resultsVisibility;
         ShowResultsDistribution = showResultsDistribution;
     }

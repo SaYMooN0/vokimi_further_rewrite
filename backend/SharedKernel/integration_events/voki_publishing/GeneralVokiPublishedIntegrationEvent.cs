@@ -15,7 +15,7 @@ public record class GeneralVokiPublishedIntegrationEvent(
     VokiTagId[] Tags,
     DateTime InitializingDate,
     DateTime PublishingDate,
-    bool AuthenticatedOnlyTaking,
+    bool SignedInOnlyTaking,
     //Voki Type specific 
     GeneralVokiQuestionIntegrationEventDto[] Questions,
     bool ForceSequentialAnswering,
@@ -28,7 +28,7 @@ public record class GeneralVokiPublishedIntegrationEvent(
     Name, Cover, Description,
     HasMatureContent, Language, Tags,
     InitializingDate, PublishingDate,
-    AuthenticatedOnlyTaking
+    SignedInOnlyTaking
 );
 
 public sealed record class GeneralVokiQuestionIntegrationEventDto(

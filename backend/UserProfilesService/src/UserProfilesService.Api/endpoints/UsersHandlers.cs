@@ -1,8 +1,6 @@
-﻿using SharedKernel.common.app_users;
-using UserProfilesService.Api.contracts;
+﻿using UserProfilesService.Api.contracts;
 using UserProfilesService.Application.app_users.queries;
 using UserProfilesService.Application.common.repositories;
-using VokimiStorageKeysLib.concrete_keys;
 
 namespace UserProfilesService.Api.endpoints;
 
@@ -24,7 +22,6 @@ public static class UsersHandlers
         ListUsersNamesWithProfilePicsQuery query = new(request.ParsedUserIds);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults
-            .FromErrOrToJson<UserPreviewDto[], MultipleUsersPreviewResponse>(result);
+        return CustomResults.FromErrOrToJson<UserPreviewDto[], MultipleUsersPreviewResponse>(result);
     }
 }

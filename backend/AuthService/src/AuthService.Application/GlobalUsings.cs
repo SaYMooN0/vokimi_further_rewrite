@@ -6,3 +6,5 @@ global using SharedKernel.domain.ids;
 global using SharedKernel.errs;
 global using SharedKernel.errs.utils;
 global using SharedKernel.exceptions;
+global using SharedKernel;
+global using SharedKernel.auth;

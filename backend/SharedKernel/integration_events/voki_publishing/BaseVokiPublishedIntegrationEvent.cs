@@ -18,5 +18,5 @@ public abstract record class BaseVokiPublishedIntegrationEvent(
     VokiTagId[] Tags,
     DateTime InitializingDate,
     DateTime PublishingDate,
-    bool AuthenticatedOnlyTaking
+    bool SignedInOnlyTaking
 ) : IIntegrationEvent;

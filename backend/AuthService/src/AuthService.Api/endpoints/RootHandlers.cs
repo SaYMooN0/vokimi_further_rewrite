@@ -16,7 +16,7 @@ public static class RootHandlers
             .WithRequestValidation<LoginUserRequest>();
         group.MapPost("/confirm-registration", ConfirmUserRegistration)
             .WithRequestValidation<ConfirmRegistrationRequest>();
-        group.MapPost("/logout", LogOutUser); 
+        group.MapPost("/logout", LogOutUser);
     }
 
     private static async Task<IResult> PingAuth(
@@ -30,7 +30,8 @@ public static class RootHandlers
     }
 
     private static async Task<IResult> RegisterUser(
-        HttpContext httpContext, CancellationToken ct, ICommandHandler<RegisterUserCommand> handler
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<RegisterUserCommand> handler
     ) {
         var request = httpContext.GetValidatedRequest<RegisterUserRequest>();
 

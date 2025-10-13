@@ -31,7 +31,7 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .HasConversion<AppUserProfilePicKeyConverter>();
         
         builder
-            .Property(x => x.FavouriteTags)
+            .Property(x => x.FavoriteTags)
             .HasTagIdImmutableHashSetConversion();
         
         builder

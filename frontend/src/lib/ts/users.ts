@@ -1,5 +1,6 @@
-export type UserViewData = {
+export type UserProfilePreview = {
     userId: string;
-    username: string;
-    profilePicture: string;
+    uniqueName: string;
+    displayName: string;
+    profilePic: string;
 }

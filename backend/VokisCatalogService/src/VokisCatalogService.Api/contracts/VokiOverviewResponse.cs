@@ -17,7 +17,7 @@ public record class VokiOverviewResponse(
     DateTime PublicationDate,
     uint RatingsCount,
     uint CommentsCount,
-    bool AuthenticatedOnlyTaking
+    bool SignedInOnlyTaking
 )
 {
     public static VokiOverviewResponse Create(BaseVoki v) => new(
@@ -34,6 +34,6 @@ public record class VokiOverviewResponse(
         v.PublicationDate,
         v.RatingsCount,
         v.CommentsCount,
-        v.AuthenticatedOnlyTaking
+        v.SignedInOnlyTaking
     );
 }

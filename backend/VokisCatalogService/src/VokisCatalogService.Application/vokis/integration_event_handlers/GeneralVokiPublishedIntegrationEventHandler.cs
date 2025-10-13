@@ -33,7 +33,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
             questionsCount: (ushort)e.Questions.Length,
             resultsCount: (ushort)e.Results.Length,
             anyAudioAnswers: anyAudioAnswers,
-            authenticatedOnlyTaking: e.AuthenticatedOnlyTaking
+            signedInOnlyTaking: e.SignedInOnlyTaking
         );
         await _generalVokisRepository.Add(voki);
     }

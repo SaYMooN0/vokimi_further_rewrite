@@ -12,7 +12,7 @@ public class AppUser : AggregateRoot<AppUserId>
     public UserUniqueName UniqueName { get; private set; }
     public UserDisplayName DisplayName { get; private set; }
     public UserProfilePicKey ProfilePic { get; private set; }
-    public ImmutableHashSet<VokiTagId> FavouriteTags { get; private set; }
+    public ImmutableHashSet<VokiTagId> FavoriteTags { get; private set; }
     public ImmutableHashSet<Language> PreferredLanguages { get; private set; }
     public UserSettings Settings { get; private set; }
 
@@ -27,7 +27,7 @@ public class AppUser : AggregateRoot<AppUserId>
         UniqueName = uniqueName;
         DisplayName = UserDisplayName.Empty;
         ProfilePic = profilePic;
-        FavouriteTags = [];
+        FavoriteTags = [];
         PreferredLanguages = [];
         Settings = UserSettings.Default;
     }

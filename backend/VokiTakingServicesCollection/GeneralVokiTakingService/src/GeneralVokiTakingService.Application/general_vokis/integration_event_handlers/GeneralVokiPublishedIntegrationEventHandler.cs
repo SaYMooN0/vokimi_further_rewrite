@@ -32,7 +32,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
             forceSequentialAnswering: e.ForceSequentialAnswering,
             shuffleQuestions: e.ShuffleQuestions,
             GeneralVokiInteractionSettings.Create(
-                e.AuthenticatedOnlyTaking,
+                e.SignedInOnlyTaking,
                 e.ResultsVisibility,
                 showResultsDistribution: e.ShowResultsDistribution
             ).AsSuccess()

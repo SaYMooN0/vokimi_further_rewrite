@@ -22,5 +22,7 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
         builder
             .Property<ImmutableHashSet<VokiId>>("TakenVokiIds")
             .HasGuidBasedIdsImmutableHashSetConversion();
+
+       
     }
 }

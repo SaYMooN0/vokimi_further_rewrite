@@ -12,7 +12,7 @@ internal sealed record class VokiBriefInfoResponse(
     string[] CoAuthorIds,
     bool HasMatureContent,
     Language Language,
-    bool AuthenticatedOnlyTaking
+    bool SignedInOnlyTaking
 )
 {
     public static VokiBriefInfoResponse Create(BaseVoki v) => new(
@@ -24,6 +24,6 @@ internal sealed record class VokiBriefInfoResponse(
         v.CoAuthorIds.Select(id => id.ToString()).ToArray(),
         v.Details.HasMatureContent,
         v.Details.Language,
-        v.AuthenticatedOnlyTaking
+        v.SignedInOnlyTaking
     );
 }

@@ -15,7 +15,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
 
 
     public ErrOrNothing CheckUserAccessToTake(IUserContext userContext) {
-        if (BaseInteractionSettings.AuthenticatedOnlyTaking && userContext.UserIdFromToken().IsErr()) {
+        if (BaseInteractionSettings.SignedInOnlyTaking && userContext.UserIdFromToken().IsErr()) {
             return ErrFactory.NoAccess("To take this Voki you need to be signed in");
         }
 

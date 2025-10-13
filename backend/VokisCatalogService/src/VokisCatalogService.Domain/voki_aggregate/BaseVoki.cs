@@ -16,13 +16,13 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
     public uint RatingsCount { get; private set; }
     public uint CommentsCount { get; private set; }
     public uint VokiTakingsCount { get; private set; }
-    public bool AuthenticatedOnlyTaking { get; private set; }
+    public bool SignedInOnlyTaking { get; private set; }
 
     protected BaseVoki(
         VokiId id, VokiName name, VokiCoverKey cover,
         AppUserId primaryAuthorId, ImmutableHashSet<AppUserId> coAuthorIds,
         VokiDetails details, ImmutableHashSet<VokiTagId> tags, DateTime publicationDate,
-        bool authenticatedOnlyTaking
+        bool signedInOnlyTaking
     ) {
         Id = id;
         Name = name;
@@ -35,7 +35,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         CommentsCount = 0;
         VokiTakingsCount = 0;
         PublicationDate = publicationDate;
-        AuthenticatedOnlyTaking = authenticatedOnlyTaking;
+        SignedInOnlyTaking = signedInOnlyTaking;
     }
 
     public void UpdateVokiTakingsCount(uint newVokiTakingsCount) {

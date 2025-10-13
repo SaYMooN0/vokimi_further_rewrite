@@ -3,10 +3,10 @@ using SharedKernel;
 
 namespace AuthService.Application.unconfirmed_users.commands;
 
-public sealed record DeleteExpiredUnconfirmedUsersCommand() : ICommand;
+public sealed record DeleteExpiredUnconfirmedUsersCommand() : ICommand<int>;
 
-internal sealed class
-    DeleteExpiredUnconfirmedUsersCommandHandler : ICommandHandler<DeleteExpiredUnconfirmedUsersCommand>
+internal sealed class DeleteExpiredUnconfirmedUsersCommandHandler :
+    ICommandHandler<DeleteExpiredUnconfirmedUsersCommand, int>
 {
     private readonly IUnconfirmedUsersRepository _unconfirmedUsersRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
@@ -19,8 +19,7 @@ internal sealed class
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOrNothing> Handle(DeleteExpiredUnconfirmedUsersCommand command, CancellationToken ct) {
-        await _unconfirmedUsersRepository.DeleteAllExpiredUsers(_dateTimeProvider.UtcNow, ct);
-        return ErrOrNothing.Nothing;
+    public async Task<ErrOr<int>> Handle(DeleteExpiredUnconfirmedUsersCommand command, CancellationToken ct) {
+        return await _unconfirmedUsersRepository.DeleteAllExpiredUsers(_dateTimeProvider.UtcNow, ct);
     }
 }

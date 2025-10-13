@@ -2,14 +2,15 @@
 using AuthService.Application.common.repositories;
 using AuthService.Domain.app_user_aggregate;
 using AuthService.Domain.unconfirmed_user_aggregate;
-using SharedKernel;
-using SharedKernel.auth;
+
 
 namespace AuthService.Application.unconfirmed_users.commands;
 
-public sealed record ConfirmUserRegistrationCommand(UnconfirmedUserId UserId, string ConfirmationCode) : ICommand<JwtTokenString>;
+public sealed record ConfirmUserRegistrationCommand(UnconfirmedUserId UserId, string ConfirmationCode)
+    : ICommand<JwtTokenString>;
 
-internal sealed class ConfirmUserRegistrationCommandHandler : ICommandHandler<ConfirmUserRegistrationCommand, JwtTokenString>
+internal sealed class ConfirmUserRegistrationCommandHandler :
+    ICommandHandler<ConfirmUserRegistrationCommand, JwtTokenString>
 {
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IUnconfirmedUsersRepository _unconfirmedUsersRepository;
@@ -30,7 +31,8 @@ internal sealed class ConfirmUserRegistrationCommandHandler : ICommandHandler<Co
     }
 
     public async Task<ErrOr<JwtTokenString>> Handle(ConfirmUserRegistrationCommand command, CancellationToken ct) {
-        if (await _appUsersRepository.AnyUserWithId(new AppUserId(command.UserId.Value))) {
+        bool anyConfirmed = await _appUsersRepository.AnyUserWithId(new AppUserId(command.UserId.Value));
+        if (anyConfirmed) {
             return ErrFactory.Unspecified(
                 "This user has already been confirmed",
                 "Login into your account using email and password that you used when registering"
@@ -53,7 +55,7 @@ internal sealed class ConfirmUserRegistrationCommandHandler : ICommandHandler<Co
             unconfirmedUser.Email,
             unconfirmedUser.PasswordHash,
             unconfirmedUser.UserUniqueName,
-            _dateTimeProvider
+            _dateTimeProvider.UtcNow
         );
         await _appUsersRepository.Add(user);
         await _unconfirmedUsersRepository.Delete(unconfirmedUser);

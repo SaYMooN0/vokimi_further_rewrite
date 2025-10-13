@@ -2,5 +2,5 @@
 
 public interface IVokiInteractionSettings
 {
-    public bool AuthenticatedOnlyTaking { get; }
+    public bool SignedInOnlyTaking { get; }
 }

@@ -42,7 +42,7 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
             Tags: e.Tags.Value.ToArray(),
             InitializingDate: e.InitializingDate,
             PublishingDate: e.PublishingDate,
-            AuthenticatedOnlyTaking: e.InteractionSettings.AuthenticatedOnlyTaking,
+            SignedInOnlyTaking: e.InteractionSettings.SignedInOnlyTaking,
             VokiPublishedEventMapper.QuestionIntegrationEventDtoArray(e.Questions),
             ForceSequentialAnswering: e.TakingProcessSettings.ForceSequentialAnswering,
             ShuffleQuestions: e.TakingProcessSettings.ShuffleQuestions,

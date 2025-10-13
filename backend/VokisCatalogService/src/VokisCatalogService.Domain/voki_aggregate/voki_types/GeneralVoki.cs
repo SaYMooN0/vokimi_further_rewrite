@@ -16,9 +16,9 @@ public sealed class GeneralVoki : BaseVoki
         AppUserId primaryAuthorId, ImmutableHashSet<AppUserId> coAuthorIds,
         VokiDetails details, ImmutableHashSet<VokiTagId> tags, DateTime publishedDate,
         ushort questionsCount, ushort resultsCount, bool anyAudioAnswers,
-        bool authenticatedOnlyTaking
+        bool signedInOnlyTaking
     ) : base(
-        id, name, cover, primaryAuthorId, coAuthorIds, details, tags, publishedDate, authenticatedOnlyTaking
+        id, name, cover, primaryAuthorId, coAuthorIds, details, tags, publishedDate, signedInOnlyTaking
     ) {
         QuestionsCount = questionsCount;
         ResultsCount = resultsCount;
@@ -30,13 +30,13 @@ public sealed class GeneralVoki : BaseVoki
         AppUserId primaryAuthorId, ImmutableHashSet<AppUserId> coAuthorIds,
         VokiDetails details, ImmutableHashSet<VokiTagId> tags, DateTime publishedDate,
         ushort questionsCount, ushort resultsCount, bool anyAudioAnswers,
-        bool authenticatedOnlyTaking
+        bool signedInOnlyTaking
     ) {
-        var voki = new GeneralVoki(
+        GeneralVoki voki = new GeneralVoki(
             id, name, cover, primaryAuthorId, coAuthorIds,
             details, tags, publishedDate,
             questionsCount, resultsCount, anyAudioAnswers,
-            authenticatedOnlyTaking
+            signedInOnlyTaking
         );
         voki.AddDomainEvent(
             new PublishedVokiCreatedEvent(voki.Id, voki.PrimaryAuthorId, voki.CoAuthorIds, voki.Tags)

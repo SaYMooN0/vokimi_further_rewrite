@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { ApiUserProfiles } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
-	import type { UserViewData } from '$lib/ts/users';
+	import type { UserProfilePreview } from '$lib/ts/users';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { useDebounce } from 'runed';
 
 	let {
 		searchedUsers = $bindable(),
 		setErrs
-	}: { searchedUsers: UserViewData[]; setErrs: (errs: Err[]) => void } = $props<{
-		searchedUsers: UserViewData[];
+	}: { searchedUsers: UserProfilePreview[]; setErrs: (errs: Err[]) => void } = $props<{
+		searchedUsers: UserProfilePreview[];
 		setErrs: (errs: Err[]) => void;
 	}>();
 	let searchInput: string = $state('');
@@ -31,7 +31,7 @@
 			setErrs([]);
 			return;
 		}
-		const response = await ApiUserProfiles.fetchJsonResponse<{ users: UserViewData[] }>(
+		const response = await ApiUserProfiles.fetchJsonResponse<{ users: UserProfilePreview[] }>(
 			`/search?searchValue=${value}`,
 			{ method: 'GET' }
 		);

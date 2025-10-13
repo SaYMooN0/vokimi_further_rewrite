@@ -3,20 +3,18 @@
 namespace UserProfilesService.Api.contracts;
 
 public record UserBasicProfileSetupInfoResponse(
-    string UserId,
     string UserUniqueName,
     string DisplayName,
-    string[] FavouriteTags,
-    string ProfilePicture,
-    Language[] PreferredLanguages
+    Language[] PreferredLanguages,
+    string[] FavoriteTags,
+    string ProfilePicture
 ) : ICreatableResponse<AppUser>
 {
     public static ICreatableResponse<AppUser> Create(AppUser user) => new UserBasicProfileSetupInfoResponse(
-        user.Id.ToString(),
         user.UniqueName.ToString(),
         user.DisplayName.ToString(),
-        user.FavouriteTags.Select(t => t.ToString()).ToArray(),
-        user.ProfilePic.ToString(),
-        user.PreferredLanguages.ToArray()
+        user.PreferredLanguages.ToArray(),
+        user.FavoriteTags.Select(t => t.ToString()).ToArray(),
+        user.ProfilePic.ToString()
     );
 }

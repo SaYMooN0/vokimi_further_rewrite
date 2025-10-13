@@ -3,7 +3,7 @@
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import type { Err } from '$lib/ts/err';
 	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import type { UserViewData } from '$lib/ts/users';
+	import type { UserProfilePreview } from '$lib/ts/users';
 	import CoAuthorInvitedMessage from './c_inviting_dialog/CoAuthorInvitedMessage.svelte';
 	import type { VokiAuthorsInfo } from './types';
 	import UserSearchBar from './c_inviting_dialog/UserSearchBar.svelte';
@@ -13,7 +13,7 @@
 		$props<{ vokiId: string; updateParent: (info: VokiAuthorsInfo) => void }>();
 	let dialog = $state<DialogWithCloseButton>()!;
 	let errs: Err[] = $state([]);
-	let searchedUsers = $state<UserViewData[]>([]);
+	let searchedUsers = $state<UserProfilePreview[]>([]);
 	let isAlreadyInvited = $state(false);
 	let invitedUserId = $state('');
 	export function open() {
