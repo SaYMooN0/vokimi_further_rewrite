@@ -2,9 +2,8 @@
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
-	import { ApiVokiCreationCore } from '$lib/ts/backend-communication/backend-services';
+	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
 	import { MyDraftVokisCacheStore } from '../../draft/my-draft-vokis-cache-store.svelte';
@@ -35,7 +34,7 @@
 			type: VokiType;
 		}>(
 			'/initialize-new-voki',
-			RequestJsonOptions.POST({ newVokiName: vokiName, vokiType: selectedVokiType })
+			RJO.POST({ newVokiName: vokiName, vokiType: selectedVokiType })
 		);
 		if (response.isSuccess) {
 			await MyDraftVokisCacheStore.EnsureExist([response.data.id]);

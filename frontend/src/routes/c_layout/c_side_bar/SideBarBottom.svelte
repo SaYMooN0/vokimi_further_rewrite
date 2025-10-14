@@ -3,8 +3,6 @@
 	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { toast } from 'svelte-sonner';
 	import { getSignInDialogOpenFunction } from '../ts_layout_contexts/sign-in-dialog-context';
-	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import LogoutConfirmationDialog from './c_bottom/LogoutConfirmationDialog.svelte';
 	const openSignInDialog = getSignInDialogOpenFunction();
 

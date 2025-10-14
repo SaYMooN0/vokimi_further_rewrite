@@ -2,9 +2,8 @@
 	import { goto } from '$app/navigation';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
+	import { ApiAuth, RJO } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 
 	export function open() {
@@ -13,7 +12,7 @@
 	}
 	async function logout() {
 		if (AuthStore.Get().isAuthenticated === true) {
-			const response = await ApiAuth.fetchVoidResponse('/logout', RequestJsonOptions.POST({}));
+			const response = await ApiAuth.fetchVoidResponse('/logout', RJO.POST({}));
 			if (response.isSuccess) {
 				AuthStore.GetWithForceRefresh();
 			} else {

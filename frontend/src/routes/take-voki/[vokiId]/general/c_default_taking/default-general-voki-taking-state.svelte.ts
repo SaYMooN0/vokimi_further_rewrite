@@ -1,7 +1,6 @@
-import { ApiVokiTakingGeneral } from "$lib/ts/backend-communication/backend-services";
+import { ApiVokiTakingGeneral, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
-import { RequestJsonOptions } from "$lib/ts/request-json-options";
 import type { GeneralVokiTakingQuestionData, GeneralVokiTakingData } from "../types";
 
 export class DefaultGeneralVokiTakingState {
@@ -100,7 +99,7 @@ export class DefaultGeneralVokiTakingState {
         }
         const response = await ApiVokiTakingGeneral.fetchJsonResponse<{ receivedResultId: string }>(
             `/vokis/${this.vokiId}/free-answering/finish`,
-            RequestJsonOptions.POST(this.createVokiTakenData())
+            RJO.POST(this.createVokiTakenData())
         );
 
         if (response.isSuccess) {

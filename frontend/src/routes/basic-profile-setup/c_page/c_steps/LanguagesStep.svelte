@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { LanguageUtils, type Language } from '$lib/ts/language';
-	import { StringUtils } from '$lib/ts/utils/string-utils';
 
 	interface Props {
 		isLanguageChosen: (language: Language) => boolean;

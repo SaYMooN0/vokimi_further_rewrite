@@ -19,13 +19,27 @@ internal class UnconfirmedUsersConfigurations : IEntityTypeConfiguration<Unconfi
 
         builder
             .Property(x => x.Email)
-            .HasConversion<EmailConverter>();
+            .HasConversion<EmailConverter>()
+            .HasColumnType("citext");
 
         builder
             .Property(x => x.UserUniqueName)
             .HasConversion<UserUniqueNameConverter>();
 
+        builder.Property<string>("ConfirmationCode");
+
+        builder.Property(x => x.ExpiresAt);
+
+        //indexes
         builder
-            .Property<string>("ConfirmationCode");
+            .HasIndex(x => x.Email)
+            .IsUnique();
+
+        builder
+            .HasIndex(x => x.UserUniqueName)
+            .IsUnique();
+
+        builder
+            .HasIndex(x => x.ExpiresAt);
     }
 }

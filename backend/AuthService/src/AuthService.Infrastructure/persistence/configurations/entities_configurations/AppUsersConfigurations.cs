@@ -1,6 +1,7 @@
 ﻿using AuthService.Domain.app_user_aggregate;
 using AuthService.Infrastructure.persistence.configurations.value_converters;
 using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,10 +19,25 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 
         builder
             .Property(x => x.Email)
-            .HasConversion<EmailConverter>();
+            .HasConversion<EmailConverter>()
+            .HasColumnType("citext");
+
+        builder
+            .Property(x => x.UniqueName)
+            .HasConversion<UserUniqueNameConverter>();
 
         builder.Property(x => x.PasswordHash);
         builder.Property(x => x.RegistrationDate);
         builder.Property(x => x.PasswordUpdateDate);
+
+        //indexes
+
+        builder
+            .HasIndex(x => x.UniqueName)
+            .IsUnique();
+
+        builder
+            .HasIndex(x => x.Email)
+            .IsUnique();
     }
 }

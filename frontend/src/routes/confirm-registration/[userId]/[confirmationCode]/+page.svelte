@@ -1,18 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ErrUtils } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
-	import { getSignInDialogOpenFunction } from '../../../c_layout/ts_layout_contexts/sign-in-dialog-context';
-	import { goto } from '$app/navigation';
-	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
+	import { ApiAuth, RJO } from '$lib/ts/backend-communication/backend-services';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { ServerResponse } from 'http';
 	import type { ResponseVoidResult } from '$lib/ts/backend-communication/result-types';
+	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
+	import { goto } from '$app/navigation';
 
 	let userId: string | undefined = page.params.userId;
 	let confirmationCode: string | undefined = page.params.confirmationCode;
-	const openSignInDialog = getSignInDialogOpenFunction();
 
 	async function confirmRegistration(): Promise<ResponseVoidResult> {
 		if (StringUtils.isNullOrWhiteSpace(userId)) {
@@ -29,14 +25,15 @@
 			};
 		}
 
-		return ApiAuth.fetchVoidResponse(
+		const response = await ApiAuth.fetchVoidResponse(
 			'/confirm-registration',
-			RequestJsonOptions.POST({ userId, confirmationCode })
+			RJO.POST({ userId, confirmationCode })
 		);
-	}
-	function openDialogToLogin() {
-		goto('/');
-		openSignInDialog('login');
+		if (response.isSuccess) {
+			await AuthStore.GetWithForceRefresh();
+			goto('/basic-profile-setup');
+		}
+		return response;
 	}
 </script>
 
@@ -45,10 +42,8 @@
 		<h1 class="loading-h">Confirming your email...</h1>
 	{:then response}
 		{#if response.isSuccess}
-			<h1>You have successfully confirmed your email</h1>
-			<PrimaryButton onclick={() => openDialogToLogin()} class="login-btn"
-				>Now you can log into your account</PrimaryButton
-			>
+			<h2>You have successfully confirmed your email</h2>
+			<a href="/">Go to the home page</a>
 		{:else}
 			<h1 class="error-h">An error has occurred during confirmation</h1>
 			<div class="err-view">

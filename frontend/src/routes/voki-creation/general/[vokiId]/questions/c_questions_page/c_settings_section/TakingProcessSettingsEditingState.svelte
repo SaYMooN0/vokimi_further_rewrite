@@ -1,9 +1,9 @@
 <script lang="ts">
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import TwoStateSwitchInput from '$lib/components/inputs/TwoStateSwitchInput.svelte';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import VokiCreationFieldName from '../../../../../c_shared/VokiCreationFieldName.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../c_shared/VokiCreationSaveAndCancelButtons.svelte';
 	import type { GeneralVokiTakingProcessSettings } from '../../types';
@@ -31,7 +31,7 @@
 		const response =
 			await ApiVokiCreationGeneral.fetchJsonResponse<GeneralVokiTakingProcessSettings>(
 				`/vokis/${vokiId}/update-voki-taking-process-settings`,
-				RequestJsonOptions.PATCH(editableSettings)
+				RJO.PATCH(editableSettings)
 			);
 		if (response.isSuccess) {
 			updateParent(response.data);

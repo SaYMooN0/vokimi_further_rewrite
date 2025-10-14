@@ -13,7 +13,9 @@ public class AppUser : AggregateRoot<AppUserId>
     public UserDisplayName DisplayName { get; private set; }
     public UserProfilePicKey ProfilePic { get; private set; }
     public ImmutableHashSet<VokiTagId> FavoriteTags { get; private set; }
-    public ImmutableHashSet<Language> PreferredLanguages { get; private set; }
+
+    //not immutable because ef core doesn't want to work with it for some reason
+    public HashSet<Language> PreferredLanguages { get; }
     public UserSettings Settings { get; private set; }
 
     public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePicKey profilePic) {

@@ -161,3 +161,19 @@ export const ApiVokiRatings = new BackendService('/api/voki-ratings');
 export const ApiAlbums = new BackendService('/api/albums');
 
 export const ApiVokiTakingGeneral = new BackendService('/api/voki-taking/general');
+
+
+export const RJO = {
+    POST: (data: any): RequestInit => formRequestJsonOptions(data, "POST"),
+    PUT:  (data: any): RequestInit => formRequestJsonOptions(data, "PUT"),
+    PATCH: (data: any): RequestInit => formRequestJsonOptions(data, "PATCH"),
+    DELETE: (data: any): RequestInit => formRequestJsonOptions(data, "DELETE"),
+};
+
+function formRequestJsonOptions(data: any, method: string): RequestInit {
+    return {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    };
+}

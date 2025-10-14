@@ -4,12 +4,12 @@
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import QuestionHasNoImages from './c_images_dialog/QuestionHasNoImages.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { GeneralVokiCreationQuestionImageSet } from '../../types';
 	import QuestionImagesAspectRationInput from './c_images_dialog/QuestionImagesAspectRationInput.svelte';
 	import AddedImagesView from './c_images_dialog/QuestionAddedImagesView.svelte';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	let {
 		questionId,
@@ -38,7 +38,7 @@
 			newHeight: number;
 		}>(
 			`/vokis/${vokiId}/questions/${questionId}/update-images`,
-			RequestJsonOptions.PATCH({
+			RJO.PATCH({
 				newImages: images,
 				width: aspectRatio.width,
 				height: aspectRatio.height

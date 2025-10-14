@@ -1,5 +1,4 @@
-import { ApiVokisCatalog } from "$lib/ts/backend-communication/backend-services";
-import { RequestJsonOptions } from "$lib/ts/request-json-options";
+import { ApiVokisCatalog, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { PublishedVokiBriefInfo } from "$lib/ts/voki";
 
 
@@ -41,7 +40,7 @@ export namespace MyPublishedVokisCacheStore {
       
         const response = await ApiVokisCatalog.fetchJsonResponse<{ vokis: PublishedVokiBriefInfo[] }>(
             `/vokis/brief-info`,
-            RequestJsonOptions.POST({ ids: [id] })
+            RJO.POST({ ids: [id] })
         );
         if (response.isSuccess && response.data && response.data.vokis.length > 0) {
             insertOrReplace(response.data.vokis[0]);
@@ -65,7 +64,7 @@ export namespace MyPublishedVokisCacheStore {
 
         const response = await ApiVokisCatalog.fetchJsonResponse<{ vokis: PublishedVokiBriefInfo[] }>(
             `/vokis/brief-info`,
-            RequestJsonOptions.POST({ ids: limitedIds })
+            RJO.POST({ ids: limitedIds })
         );
 
         if (response.isSuccess && response.data) {

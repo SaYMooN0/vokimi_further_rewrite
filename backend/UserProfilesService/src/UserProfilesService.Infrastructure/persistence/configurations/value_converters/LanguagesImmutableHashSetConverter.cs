@@ -3,27 +3,23 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace UserProfilesService.Infrastructure.persistence.configurations.value_converters;
 
-internal class LanguagesImmutableHashSetConverter : ValueConverter<ImmutableHashSet<Language>, string[]>
+internal sealed class LanguagesHashSetConverter : ValueConverter<HashSet<Language>, string[]>
 {
-    public LanguagesImmutableHashSetConverter() : base(
+    public LanguagesHashSetConverter() : base(
         langs => langs.Select(l => l.ToString()).ToArray(),
-        strings => LangsFromStrings(strings)
+        strings => strings
+            .Select(s => (Language)Enum.Parse(typeof(Language), s, true))
+            .ToHashSet()
     ) { }
-
-    private static ImmutableHashSet<Language> LangsFromStrings(string[] strs) =>
-        strs.Select(s =>
-                Enum.TryParse(typeof(Language), s, ignoreCase: true, out var result)
-                    ? (Language)result
-                    : default
-            )
-            .ToImmutableHashSet();
 }
 
-internal class LanguagesImmutableHashSetComparer : ValueComparer<ImmutableHashSet<Language>>
+internal sealed class LanguagesHashSetComparer : ValueComparer<HashSet<Language>>
 {
-    public LanguagesImmutableHashSetComparer() : base(
-        (t1, t2) => t1!.SequenceEqual(t2!),
-        t => t.Select(x => x!.GetHashCode()).Aggregate((x, y) => x ^ y),
-        t => t.ToImmutableHashSet()
+    public LanguagesHashSetComparer() : base(
+        (a, b) => ReferenceEquals(a, b)
+                  || (a == null && b == null)
+                  || (a != null && b != null && a.SequenceEqual(b)),
+        v => v.Aggregate(0, (acc, x) => HashCode.Combine(acc, x.GetHashCode())),
+        v => v.ToHashSet()
     ) { }
 }

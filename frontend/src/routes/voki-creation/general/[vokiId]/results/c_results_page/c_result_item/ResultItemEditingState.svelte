@@ -7,7 +7,7 @@
 	import ResultEditingStateImage from './c_editing_state/ResultEditingStateImage.svelte';
 	import ResultItemButtons from './ResultItemButtons.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	let {
 		vokiId,
@@ -30,7 +30,7 @@
 	async function saveResult() {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<ResultOverViewData>(
 			`/vokis/${vokiId}/results/${result.id}/update`,
-			RequestJsonOptions.PUT({
+			RJO.PUT({
 				newName: resultEditing.name,
 				newText: resultEditing.text,
 				newImage: resultEditing.image

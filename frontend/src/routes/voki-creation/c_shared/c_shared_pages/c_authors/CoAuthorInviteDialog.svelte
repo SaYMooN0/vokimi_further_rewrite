@@ -2,12 +2,11 @@
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import type { UserProfilePreview } from '$lib/ts/users';
 	import CoAuthorInvitedMessage from './c_inviting_dialog/CoAuthorInvitedMessage.svelte';
 	import type { VokiAuthorsInfo } from './types';
 	import UserSearchBar from './c_inviting_dialog/UserSearchBar.svelte';
-	import { ApiVokiCreationCore } from '$lib/ts/backend-communication/backend-services';
+	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
 
 	let { vokiId, updateParent }: { vokiId: string; updateParent: (info: VokiAuthorsInfo) => void } =
 		$props<{ vokiId: string; updateParent: (info: VokiAuthorsInfo) => void }>();
@@ -24,7 +23,7 @@
 	async function inviteUser(userId: string) {
 		const response = await ApiVokiCreationCore.fetchJsonResponse<VokiAuthorsInfo>(
 			`/vokis/${vokiId}/invite-co-author`,
-			RequestJsonOptions.POST({ newCoAuthorId: userId })
+			RJO.POST({ newCoAuthorId: userId })
 		);
 		if (response.isSuccess) {
 			updateParent(response.data);
@@ -45,7 +44,7 @@
 		<div class="users-list">
 			{#each searchedUsers as user}
 				<div class="user">
-					{user.username}
+					{JSON.stringify(user)}
 					<button class="invite-btn" onclick={() => inviteUser(user.userId)}>Invite</button>
 				</div>
 			{/each}

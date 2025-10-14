@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { toast } from 'svelte-sonner';
 	import type { QuestionBriefInfo } from '../types';
 	import GeneralVokiCreationQuestionItem from './GeneralVokiCreationQuestionItem.svelte';
 	import VokiCreationBasicHeader from '../../../../c_shared/VokiCreationBasicHeader.svelte';
 	import { getConfirmActionDialogOpenFunction } from '../../../../../c_layout/ts_layout_contexts/confirm-action-dialog-context';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	let { questionsProps, vokiId }: { questionsProps: QuestionBriefInfo[]; vokiId: string } = $props<{
 		questionsProps: QuestionBriefInfo[];
@@ -15,7 +15,7 @@
 	async function moveQuestionUpInOrder(questionId: string) {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
 			questions: QuestionBriefInfo[];
-		}>(`/vokis/${vokiId}/questions/${questionId}/move-up-in-order`, RequestJsonOptions.PATCH({}));
+		}>(`/vokis/${vokiId}/questions/${questionId}/move-up-in-order`, RJO.PATCH({}));
 		if (response.isSuccess) {
 			questions = response.data.questions;
 		} else {
@@ -25,7 +25,7 @@
 	async function moveQuestionDownInOrder(questionId: string) {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
 			questions: QuestionBriefInfo[];
-		}>(`/vokis/${vokiId}/questions/${questionId}/move-down-in-order`, RequestJsonOptions.PATCH({}));
+		}>(`/vokis/${vokiId}/questions/${questionId}/move-down-in-order`, RJO.PATCH({}));
 		if (response.isSuccess) {
 			questions = response.data.questions;
 		} else {
@@ -39,7 +39,7 @@
 		const deleteQuestion = async (questionId: string) => {
 			const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
 				questions: QuestionBriefInfo[];
-			}>(`/vokis/${vokiId}/questions/${questionId}/delete`, RequestJsonOptions.DELETE({}));
+			}>(`/vokis/${vokiId}/questions/${questionId}/delete`, RJO.DELETE({}));
 			if (response.isSuccess) {
 				questions = response.data.questions;
 				return [];

@@ -7,9 +7,8 @@
 	import SignInDialogConfirmButton from './c_states_shared/SignInDialogConfirmButton.svelte';
 	import type { Err } from '$lib/ts/err';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
+	import { ApiAuth, RJO } from '$lib/ts/backend-communication/backend-services';
 	interface Props {
 		email: string;
 		password: string;
@@ -28,10 +27,7 @@
 			return;
 		}
 		isLoading = true;
-		const response = await ApiAuth.fetchVoidResponse(
-			'/login',
-			RequestJsonOptions.POST({ email, password })
-		);
+		const response = await ApiAuth.fetchVoidResponse('/login', RJO.POST({ email, password }));
 		isLoading = false;
 		if (response.isSuccess) {
 			window.location.reload();

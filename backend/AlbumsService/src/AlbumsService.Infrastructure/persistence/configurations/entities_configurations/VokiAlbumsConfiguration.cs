@@ -43,5 +43,9 @@ internal class VokiAlbumsConfiguration : IEntityTypeConfiguration<VokiAlbum>
         builder
             .Property(x => x.VokiIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
+
+        //indexes
+
+        builder.HasIndex(x => x.OwnerId);
     }
 }

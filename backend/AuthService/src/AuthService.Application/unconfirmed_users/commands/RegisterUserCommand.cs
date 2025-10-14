@@ -5,7 +5,7 @@ using SharedKernel.common.app_users;
 
 namespace AuthService.Application.unconfirmed_users.commands;
 
-public sealed record RegisterUserCommand(UserUniqueName Username, Email Email, string Password) : ICommand;
+public sealed record RegisterUserCommand(UserUniqueName UniqueName, Email Email, string Password) : ICommand;
 
 internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserCommand>
 {
@@ -42,7 +42,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
 
     private async Task<ErrOrNothing> CreateNewUnconfirmedUser(RegisterUserCommand command) {
         var creationRes = UnconfirmedUser.CreateNew(
-            command.Username, command.Email, _dateTimeProvider.UtcNow, command.Password, _passwordHasher
+            command.UniqueName, command.Email, _dateTimeProvider.UtcNow, command.Password, _passwordHasher
         );
         if (creationRes.IsErr(out var err)) {
             return err;
@@ -56,7 +56,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
         UnconfirmedUser unconfirmedUser, RegisterUserCommand command
     ) {
         ErrOrNothing res = unconfirmedUser.Override(
-            command.Username, command.Password, _passwordHasher, _dateTimeProvider.UtcNow
+            command.UniqueName, command.Password, _passwordHasher, _dateTimeProvider.UtcNow
         );
         if (res.IsErr(out var err)) {
             return err;

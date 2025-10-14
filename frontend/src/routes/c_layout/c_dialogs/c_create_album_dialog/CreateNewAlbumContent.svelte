@@ -8,8 +8,7 @@
 	import { watch } from 'runed';
 	import CreateNewAlbumIconInput from './c_content/CreateNewAlbumIconInput.svelte';
 	import CreateNewAlbumColorInput from './c_content/CreateNewAlbumColorInput.svelte';
-	import { ApiAlbums } from '$lib/ts/backend-communication/backend-services';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
+	import { ApiAlbums, RJO } from '$lib/ts/backend-communication/backend-services';
 
 	interface Props {
 		onAfterSave: (newAlbumId: string) => void;
@@ -89,7 +88,7 @@
 		}
 		const response = await ApiAlbums.fetchJsonResponse<{ createAlbumId: string }>(
 			`/albums/create-new`,
-			RequestJsonOptions.POST({
+			RJO.POST({
 				name,
 				icon,
 				mainColor: mainColorVal,

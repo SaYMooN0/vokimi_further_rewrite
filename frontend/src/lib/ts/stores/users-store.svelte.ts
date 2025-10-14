@@ -1,6 +1,5 @@
-import { ApiUserProfiles } from "../backend-communication/backend-services";
+import { ApiUserProfiles, RJO } from "../backend-communication/backend-services";
 import type { Err } from "../err";
-import { RequestJsonOptions } from "../request-json-options";
 
 export type UserPreviewData = {
     id: string;
@@ -81,8 +80,7 @@ export namespace UsersStore {
     async function fetchAndApplyChunk(ids: string[]): Promise<void> {
         try {
             const response = await ApiUserProfiles.fetchJsonResponse<{ users: Record<string, UserPreviewData> }>(
-                "/users/preview",
-                RequestJsonOptions.POST({ userIds: ids })
+                "/users/preview", RJO.POST({ userIds: ids })
             );
 
             if (response.isSuccess) {

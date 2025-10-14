@@ -1,5 +1,4 @@
-import { ApiVokiCreationCore } from "$lib/ts/backend-communication/backend-services";
-import { RequestJsonOptions } from "$lib/ts/request-json-options";
+import { ApiVokiCreationCore, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { VokiType } from "$lib/ts/voki";
 
 type DraftVokiBriefInfo = {
@@ -69,7 +68,7 @@ export namespace MyDraftVokisCacheStore {
 
         const response = await ApiVokiCreationCore.fetchJsonResponse<{ vokis: DraftVokiBriefInfo[] }>(
             `/vokis/brief-info`,
-            RequestJsonOptions.POST({ ids: limitedIds })
+            RJO.POST({ ids: limitedIds })
         );
 
         if (response.isSuccess && response.data) {

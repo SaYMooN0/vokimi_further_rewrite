@@ -35,7 +35,7 @@ public static class RootHandlers
     ) {
         var request = httpContext.GetValidatedRequest<RegisterUserRequest>();
 
-        RegisterUserCommand command = new(request.ParsedUsername, request.ParsedEmail, request.Password);
+        RegisterUserCommand command = new(request.ParsedUniqueName, request.ParsedEmail, request.Password);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrNothing(result, Results.Created);

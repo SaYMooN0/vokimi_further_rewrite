@@ -1,9 +1,9 @@
 <script lang="ts">
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import TwoStateSwitchInput from '$lib/components/inputs/TwoStateSwitchInput.svelte';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import VokiCreationFieldName from '../../../../../../c_shared/VokiCreationFieldName.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../../c_shared/VokiCreationSaveAndCancelButtons.svelte';
 
@@ -47,7 +47,7 @@
 			shuffleAnswers: boolean;
 		}>(
 			`/vokis/${vokiId}/questions/${questionId}/update-answer-settings`,
-			RequestJsonOptions.PATCH({
+			RJO.PATCH({
 				shuffleAnswers: shuffleAnswers,
 				isSingleChoice: !isMultipleChoice,
 				minAnswersCountLimit: minAnswers,

@@ -44,7 +44,7 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
 
         builder.ComplexProperty(x => x.InteractionSettings, b => {
             b.Property(s => s.SignedInOnlyTaking);
-            b.Property(d => d.ResultsVisibility);
+            b.Property(d => d.ResultsVisibility).HasConversion<string>();
             b.Property(d => d.ShowResultsDistribution);
         });
     }

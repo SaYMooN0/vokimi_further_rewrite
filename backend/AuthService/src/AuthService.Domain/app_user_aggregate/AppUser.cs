@@ -1,6 +1,4 @@
 ﻿using AuthService.Domain.app_user_aggregate.events;
-using AuthService.Domain.unconfirmed_user_aggregate;
-using SharedKernel;
 using SharedKernel.common.app_users;
 
 namespace AuthService.Domain.app_user_aggregate;

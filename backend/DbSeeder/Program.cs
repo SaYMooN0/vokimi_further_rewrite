@@ -23,7 +23,7 @@ var actionKeys = string.Join(", ", actions.Keys);
 Console.WriteLine($"Select action: ({actionKeys})");
 var action = Console.ReadLine()!;
 await actions[action].Invoke();
-return 0;
+return 0;   
 
 async Task ClearAllDbs() {
     IConfiguration config = new ConfigurationBuilder()
@@ -40,7 +40,7 @@ async Task ClearAllDbs() {
         GeneralVokiTakingDbContext(config),
         VokiRatingsDbContext(config),
         VokiCommentsDbContext(config),
-        AlbumsDbContext(config)
+        AlbumsDbContext(config),
     ];
     foreach (var db in dbs) {
         await db.Database.EnsureDeletedAsync();

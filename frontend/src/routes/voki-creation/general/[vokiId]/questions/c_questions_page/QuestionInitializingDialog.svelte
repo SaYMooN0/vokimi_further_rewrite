@@ -5,9 +5,9 @@
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
 	import AnswersTypeSelectionCard from './c_initializing_dialog/AnswersTypeSelectionCard.svelte';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	const { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	let dialog = $state<DialogWithCloseButton>()!;
@@ -21,7 +21,7 @@
 	async function submitCreate() {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ id: string }>(
 			`/vokis/${vokiId}/questions/add-new`,
-			RequestJsonOptions.POST({ questionAnswersType: selectedAnswersType })
+			RJO.POST({ questionAnswersType: selectedAnswersType })
 		);
 		if (response.isSuccess) {
 			goto(`/voki-creation/general/${vokiId}/questions/${response.data.id}`);

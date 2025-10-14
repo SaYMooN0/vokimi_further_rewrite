@@ -1,6 +1,5 @@
-import { ApiVokiRatings } from "$lib/ts/backend-communication/backend-services";
+import { ApiVokiRatings, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
-import { RequestJsonOptions } from "$lib/ts/request-json-options";
 import { toast } from "svelte-sonner";
 import type { VokiPageTab } from "./+page.server";
 import type { RatingsTabDataType, VokiRatingData, VokiRatingsWithAverage } from "./types";
@@ -47,7 +46,7 @@ export class VokiPageState {
         }
         return ApiVokiRatings.fetchJsonResponse<VokiRatingData>(
             `/vokis/${this.vokiId}/rate`,
-            RequestJsonOptions.PATCH({ ratingValue: newRatingVal })
+            RJO.PATCH({ ratingValue: newRatingVal })
         );
     }
     public async reloadOutdatedRatings(): Promise<void> {

@@ -1,13 +1,12 @@
 <script lang="ts">
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import SignInDialogConfirmButton from './c_states_shared/SignInDialogConfirmButton.svelte';
 	import SignInDialogHeader from './c_states_shared/SignInDialogHeader.svelte';
 	import SignInDialogInput from './c_states_shared/SignInDialogInput.svelte';
 	import SignInDialogLink from './c_states_shared/SignInDialogLink.svelte';
-	import { ApiAuth } from '$lib/ts/backend-communication/backend-services';
+	import { ApiAuth, RJO } from '$lib/ts/backend-communication/backend-services';
 	import type { SignInDialogState } from '../../ts_layout_contexts/sign-in-dialog-context';
 
 	interface Props {
@@ -16,7 +15,7 @@
 		changeState: (val: SignInDialogState) => void;
 	}
 	let { email = $bindable(), password = $bindable(), changeState }: Props = $props();
-	let userName = $state('');
+	let uniqueName = $state('');
 	let errs: Err[] = $state([]);
 	let isLoading = $state(false);
 
@@ -32,7 +31,7 @@
 		isLoading = true;
 		const response = await ApiAuth.fetchVoidResponse(
 			'/sign-up',
-			RequestJsonOptions.POST({ email, password, userName })
+			RJO.POST({ email, password, uniqueName })
 		);
 		isLoading = false;
 		if (response.isSuccess) {
@@ -51,15 +50,15 @@
 		if (StringUtils.isNullOrWhiteSpace(password)) {
 			errs.push({ message: 'Password is required' });
 		}
-		if (StringUtils.isNullOrWhiteSpace(userName)) {
-			errs.push({ message: 'Username is required', details: 'Fill the username field' });
+		if (StringUtils.isNullOrWhiteSpace(uniqueName)) {
+			errs.push({ message: 'User name is required', details: 'Fill the username field' });
 		}
 		return errs;
 	}
 </script>
 
 <SignInDialogHeader text="Create Vokimi account" />
-<SignInDialogInput type="text" fieldName="Username" bind:value={userName}>
+<SignInDialogInput type="text" fieldName="Unique name" bind:value={uniqueName}>
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
 		<path
 			d="M2 12C2 7.75736 2 5.63604 3.46447 4.31802C4.92893 3 7.28596 3 12 3C16.714 3 19.0711 3 20.5355 4.31802C22 5.63604 22 7.75736 22 12C22 16.2426 22 18.364 20.5355 19.682C19.0711 21 16.714 21 12 21C7.28596 21 4.92893 21 3.46447 19.682C2 18.364 2 16.2426 2 12Z"

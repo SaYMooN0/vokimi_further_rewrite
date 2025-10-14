@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import type { ResultOverViewData } from '../../types';
 	import ResultItemButtons from './ResultItemButtons.svelte';
 	import { getConfirmActionDialogOpenFunction } from '../../../../../../c_layout/ts_layout_contexts/confirm-action-dialog-context';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	let {
 		result,
@@ -30,7 +30,7 @@
 		const deleteResult = async () => {
 			const response = await ApiVokiCreationGeneral.fetchVoidResponse(
 				`/vokis/${vokiId}/results/${result.id}/delete`,
-				RequestJsonOptions.DELETE({})
+				RJO.DELETE({})
 			);
 			if (response.isSuccess) {
 				updateParentOnDelete(result.id);

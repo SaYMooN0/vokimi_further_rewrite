@@ -3,7 +3,7 @@ import { SvelteSet } from "svelte/reactivity";
 
 type Tag = string;
 
-export class ProfileSetupState {
+export class ProfileSetupProcessState {
     readonly #suggestedForAllLangs = ['music', 'literature', 'valorant', 'youtube', 'programming'];
 
     readonly #allSuggestedTagsByLang: Record<Language, Tag[]> = {
@@ -19,7 +19,6 @@ export class ProfileSetupState {
 
     readonly #chosenLanguages = new SvelteSet<Language>();
     readonly #chosenFavoriteTags = new SvelteSet<Tag>();
-    // eslint-disable-next-line no-unused-private-class-members
     readonly #chosenProfilePic = $state<string>('');
 
     readonly suggestedTags = $derived<() => Set<Tag>>(() => {
@@ -33,6 +32,7 @@ export class ProfileSetupState {
     });
 
     constructor(initialLangs: Language[], initialTags: Tag[], initialProfilePic: string) {
+      
         initialLangs.forEach((l) => this.#chosenLanguages.add(l));
         initialTags.forEach((t) => this.#chosenFavoriteTags.add(t));
         this.#chosenProfilePic = initialProfilePic ?? '';

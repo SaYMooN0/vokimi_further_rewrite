@@ -1,6 +1,5 @@
 import type { Language } from "../language";
-import { RequestJsonOptions } from "../request-json-options";
-import { BackendService } from "./backend-services";
+import { BackendService, RJO } from "./backend-services";
 import type { ResponseResult } from "./result-types";
 
 export type VokiMainInfo = {
@@ -56,28 +55,29 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
 
     public async updateVokiCover(vokiId: string, newCover: string): Promise<ResponseResult<{ newCover: string; }>> {
         return await this.fetchJsonResponse<{ newCover: string; }>(
-            `/vokis/${vokiId}/update-cover`, RequestJsonOptions.PATCH({ newCover: newCover })
+            `/vokis/${vokiId}/update-cover`,
+            RJO.PATCH({ newCover: newCover })
         );
     }
 
     public async updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newName: string; }>> {
         return await this.fetchJsonResponse<{ newName: string; }>(
             `/vokis/${vokiId}/update-name`,
-            RequestJsonOptions.PATCH({ newName })
+            RJO.PATCH({ newName })
         );
     }
 
     public async updateVokiTags(vokiId: string, newTags: string[]): Promise<ResponseResult<{ newTags: string[]; }>> {
         return await this.fetchJsonResponse<{ newTags: string[]; }>(
             `/vokis/${vokiId}/update-tags`,
-            RequestJsonOptions.PATCH({ newTags })
+            RJO.PATCH({ newTags })
         );
     }
 
     public async updateVokiDetails(vokiId: string, details: VokiDetails): Promise<ResponseResult<VokiDetails>> {
         return await this.fetchJsonResponse<VokiDetails>(
             `/vokis/${vokiId}/update-details`,
-            RequestJsonOptions.PATCH({
+            RJO.PATCH({
                 newDescription: details.description,
                 newLanguage: details.language,
                 newHasMatureContent: details.hasMatureContent
@@ -91,12 +91,12 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
     }
     public async publish(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData | VokiPublishingIssuesList>> {
         return await this.fetchJsonResponse<VokiSuccessfullyPublishedData | VokiPublishingIssuesList>(
-            `/vokis/${vokiId}/publish`, RequestJsonOptions.POST({})
+            `/vokis/${vokiId}/publish`, RJO.POST({})
         );
     }
     public async publishWithWarningsIgnored(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>> {
         return await this.fetchJsonResponse<VokiSuccessfullyPublishedData>(
-            `/vokis/${vokiId}/publish-with-warnings-ignored`, RequestJsonOptions.POST({})
+            `/vokis/${vokiId}/publish-with-warnings-ignored`, RJO.POST({})
         );
     }
 }

@@ -7,7 +7,7 @@
 	import VokiCreationSaveAndCancelButtons from '../../../../../c_shared/VokiCreationSaveAndCancelButtons.svelte';
 	import VokiCreationDefaultButton from '../../../../../c_shared/VokiCreationDefaultButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	let {
 		text,
@@ -38,7 +38,7 @@
 	async function saveChanges() {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ newText: string }>(
 			`/vokis/${vokiId}/questions/${questionId}/update-text`,
-			RequestJsonOptions.PATCH({ newText: newText })
+			RJO.PATCH({ newText: newText })
 		);
 		if (response.isSuccess) {
 			text = response.data.newText;

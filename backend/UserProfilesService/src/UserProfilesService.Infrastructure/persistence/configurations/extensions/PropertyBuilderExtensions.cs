@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using UserProfilesService.Infrastructure.persistence.configurations.value_converters;
 
 namespace UserProfilesService.Infrastructure.persistence.configurations.extensions;
@@ -13,12 +15,12 @@ public static class PropertyBuilderExtensions
             new TagIdImmutableHashSetComparer()
         );
     }
-    public static PropertyBuilder<ImmutableHashSet<Language>> HasLanguagesImmutableHashSetConversion(
-        this PropertyBuilder<ImmutableHashSet<Language>> builder
+    public static PropertyBuilder<HashSet<Language>> HasLanguagesImmutableHashSetConversion(
+        this PropertyBuilder<HashSet<Language>> builder
     ) {
         return builder.HasConversion(
-            new LanguagesImmutableHashSetConverter(),
-            new LanguagesImmutableHashSetComparer()
-        );
+            new LanguagesHashSetConverter(),
+            new LanguagesHashSetComparer()
+        ).HasColumnType("text[]");
     }
 }

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import { toast } from 'svelte-sonner';
 	import type { QuestionAnswerData } from '../../../../types';
 	import AnswerDisplayContentWrapper from '../AnswerDisplayContentWrapper.svelte';
@@ -8,6 +7,7 @@
 	import AnswerRelatedResultsViewState from '../c_answer_display_contents/c_view/AnswerRelatedResultsViewState.svelte';
 	import AnswerDisplayVerticalSep from '../c_answer_display_contents/c_shared/AnswerDisplayVerticalSep.svelte';
 	import { getConfirmActionDialogOpenFunction } from '../../../../../../../../../c_layout/ts_layout_contexts/confirm-action-dialog-context';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	interface Props {
 		answer: QuestionAnswerData;
@@ -31,7 +31,7 @@
 		const deleteAnswer = async () => {
 			const response = await ApiVokiCreationGeneral.fetchVoidResponse(
 				`/vokis/${vokiId}/questions/${questionId}/answers/${answer.id}/delete`,
-				RequestJsonOptions.DELETE({})
+				RJO.DELETE({})
 			);
 			if (response.isSuccess) {
 				updateParentOnDelete(answer.id);

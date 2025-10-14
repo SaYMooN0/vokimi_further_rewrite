@@ -1,12 +1,11 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import type { ResultOverViewData } from '../types';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	const {
 		vokiId,
@@ -27,7 +26,7 @@
 	async function submitCreate() {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
 			results: ResultOverViewData[];
-		}>(`/vokis/${vokiId}/results/add-new`, RequestJsonOptions.POST({ resultName: name }));
+		}>(`/vokis/${vokiId}/results/add-new`, RJO.POST({ resultName: name }));
 		if (response.isSuccess) {
 			updateParentResults(response.data.results);
 			dialog.close();

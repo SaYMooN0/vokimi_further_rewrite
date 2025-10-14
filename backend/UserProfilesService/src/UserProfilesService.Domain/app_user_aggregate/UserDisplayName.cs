@@ -1,10 +1,7 @@
-﻿using SharedKernel.exceptions;
+﻿using System.Text.RegularExpressions;
+using SharedKernel.exceptions;
 
 namespace UserProfilesService.Domain.app_user_aggregate;
-
-using System.Text.RegularExpressions;
-using SharedKernel.errs;
-using SharedKernel.errs.utils;
 
 public class UserDisplayName : ValueObject
 {

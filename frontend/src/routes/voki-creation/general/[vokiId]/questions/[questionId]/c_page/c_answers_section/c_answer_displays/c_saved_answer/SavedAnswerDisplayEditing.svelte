@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import { RequestJsonOptions } from '$lib/ts/request-json-options';
 	import type { GeneralVokiCreationAnswerData, QuestionAnswerData } from '../../../../types';
 	import AnswerDisplayContentWrapper from '../AnswerDisplayContentWrapper.svelte';
 	import AnswerContentEditingState from '../c_answer_display_contents/c_editing/AnswerContentEditingState.svelte';
@@ -36,7 +36,7 @@
 		savingErrs = [];
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<QuestionAnswerData>(
 			`/vokis/${vokiId}/questions/${questionId}/answers/${answer.id}/update`,
-			RequestJsonOptions.PUT({
+			RJO.PUT({
 				relateResultIds: answerResults,
 				answerData: answerData
 			})
