@@ -18,8 +18,9 @@ export class ProfileSetupProcessState {
     };
 
     readonly #chosenLanguages = new SvelteSet<Language>();
-    readonly #chosenFavoriteTags = new SvelteSet<Tag>();
-    readonly #chosenProfilePic = $state<string>('');
+    readonly chosenFavoriteTags = new SvelteSet<Tag>();
+    readonly profilePicInputValue = $state<string>('');
+    readonly displayNameInputValue = $state<string>('');
 
     readonly suggestedTags = $derived<() => Set<Tag>>(() => {
         const tags = new Set<string>();
@@ -31,11 +32,12 @@ export class ProfileSetupProcessState {
         return tags;
     });
 
-    constructor(initialLangs: Language[], initialTags: Tag[], initialProfilePic: string) {
-      
+    constructor(initialLangs: Language[], initialTags: Tag[], initialProfilePic: string, initialDisplayName: string) {
+
         initialLangs.forEach((l) => this.#chosenLanguages.add(l));
-        initialTags.forEach((t) => this.#chosenFavoriteTags.add(t));
-        this.#chosenProfilePic = initialProfilePic ?? '';
+        initialTags.forEach((t) => this.chosenFavoriteTags.add(t));
+        this.profilePicInputValue = initialProfilePic;
+        this.displayNameInputValue = initialDisplayName;
     }
 
     isLanguageChosen(language: Language): boolean {

@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { Language } from '$lib/ts/language';
+	import type { SvelteSet } from 'svelte/reactivity';
 
 	interface Props {
-		chosenTags: string[];
-		suggestions: string[];
+		chosenTags: SvelteSet<string>;
+		suggestions: Set<string>;
 	}
 
 	let { chosenTags, suggestions }: Props = $props();
@@ -20,7 +20,7 @@
 <h1 class="option-heder">Choose from suggestions</h1>
 <div class="suggestion-list">
 	{#each suggestions as tag}
-		{#if !chosenTags.includes(tag)}
+		{#if !chosenTags.has(tag)}
 			<div class="chosen">
 				{tag}
 				<svg> <use href="#common-cross-icon" /> </svg>

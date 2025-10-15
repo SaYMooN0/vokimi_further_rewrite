@@ -35,25 +35,26 @@
 		justify-content: center;
 		padding: 0.5rem 1rem;
 		border-radius: var(--radius);
-		background: var(--muted);
+		background-color: var(--muted);
 		color: var(--muted-foreground);
 		cursor: pointer;
-		transition: background 0.15s;
+		transition: background-color 0.15s;
 		user-select: none;
 	}
 
 	.language:not(.active):hover {
-		background: var(--accent);
+		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
 
 	.language.active {
-		background: var(--primary);
+		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
-
-	svg {
-		width: 1.5rem;
-		aspect-ratio: 1;
+	.language > svg {
+		height: 1.5rem;
+		aspect-ratio: var(--lang-icon-aspect-ratio);
+		border-radius: 0.375rem;
+		stroke-width: 1.9;
 	}
 </style>
