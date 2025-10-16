@@ -16,16 +16,27 @@
 
 {#if !data.isSuccess}
 	<PageLoadErrView errs={data.errs} defaultMessage="Could not load vokis catalog" />
-{:else if setupState === 'process'}
-	<ProfileSetupProcess
-		initialLangs={data.data.preferredLanguages}
-		initialTags={data.data.favoriteTags}
-		initialProfilePic={data.data.profilePicture}
-		initialDisplayName={data.data.displayName}
-		saveSetup={saveChanges}
-	/>
-{:else if setupState === 'complete'}
-	<SetupSavedMessage />
 {:else}
-	<h1>Something went wrong. Reload the page</h1>
+	<div class="page-content-container">
+		{#if setupState === 'process'}
+			<ProfileSetupProcess
+				initialLangs={data.data.preferredLanguages}
+				initialTags={data.data.favoriteTags}
+				initialProfilePic={data.data.profilePicture}
+				initialDisplayName={data.data.displayName}
+				saveSetup={saveChanges}
+			/>
+		{:else if setupState === 'complete'}
+			<SetupSavedMessage />
+		{:else}
+			<h1>Something went wrong. Reload the page</h1>
+		{/if}
+	</div>
 {/if}
+
+<style>
+	.page-content-container {
+		margin: 4vh auto 2rem;
+		width: 60rem;
+	}
+</style>

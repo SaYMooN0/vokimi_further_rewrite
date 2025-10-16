@@ -102,19 +102,17 @@
 	}
 
 	.author-view.error {
-		border: 0.12rem solid var(--err-foreground);
-		background-color: var(--err-back);
-		color: var(--err-foreground);
-		box-shadow: none;
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+		box-shadow: var(--shadow-xs);
 	}
 
 	.author-view.error label {
 		font-size: 1.125rem;
 		font-weight: 500;
 	}
-
-	.author-view:active {
-		transform: translateY(0.05rem);
+	.author-view.error svg{
+		padding: 0.25rem;
 	}
 
 	@keyframes shimmer {

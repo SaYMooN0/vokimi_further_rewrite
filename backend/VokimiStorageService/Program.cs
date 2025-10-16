@@ -1,4 +1,5 @@
 using ApiShared;
+using Infrastructure.Auth;
 using VokimiStorageService.extensions;
 
 namespace VokimiStorageService;

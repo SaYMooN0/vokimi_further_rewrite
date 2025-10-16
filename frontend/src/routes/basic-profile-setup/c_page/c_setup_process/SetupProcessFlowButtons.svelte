@@ -1,33 +1,35 @@
 <script lang="ts">
 	interface Props {
 		prevButton: {
-			appearance: 'primary' | 'secondary' | 'hidden';
+			appearance: () => 'primary' | 'secondary' | 'hidden';
 			onClick: () => void;
 		};
 		nextButton: {
-			appearance: 'primary' | 'secondary' | 'hidden';
+			appearance: () => 'primary' | 'secondary' | 'hidden';
 			onClick: () => void;
 		};
 	}
 	let { nextButton, prevButton }: Props = $props();
+	let prevBtnAppearance = $derived(prevButton.appearance());
+	let nextBtnAppearance = $derived(nextButton.appearance());
 </script>
 
 <div class="buttons-container">
 	<button
 		onclick={prevButton.onClick}
 		class="btn prev-btn unselectable"
-		class:primary={prevButton.appearance === 'primary'}
-		class:secondary={prevButton.appearance === 'secondary'}
-		class:hidden={prevButton.appearance === 'hidden'}
+		class:primary={prevBtnAppearance === 'primary'}
+		class:secondary={prevBtnAppearance === 'secondary'}
+		class:hidden={prevBtnAppearance === 'hidden'}
 		type="button">Previous step</button
 	>
 
 	<button
 		onclick={nextButton.onClick}
 		class="btn next-btn unselectable"
-		class:primary={nextButton.appearance === 'primary'}
-		class:secondary={nextButton.appearance === 'secondary'}
-		class:hidden={nextButton.appearance === 'hidden'}
+		class:primary={nextBtnAppearance === 'primary'}
+		class:secondary={nextBtnAppearance === 'secondary'}
+		class:hidden={nextBtnAppearance === 'hidden'}
 		type="button">Next step</button
 	>
 </div>
@@ -48,11 +50,10 @@
 		font-weight: 550;
 		font-size: 1.125rem;
 		padding: 0.5rem 0;
-        width: 12rem;
+		width: 12rem;
 		border-radius: var(--radius);
 		border: none;
 		cursor: pointer;
-		transition: all 0.1s ease-in;
 	}
 
 	.btn.primary {

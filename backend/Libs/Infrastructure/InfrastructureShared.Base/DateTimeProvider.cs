@@ -1,4 +1,6 @@
-﻿namespace TagsService.Infrastructure;
+﻿using SharedKernel;
+
+namespace InfrastructureShared.Base;
 
 internal sealed class DateTimeProvider : IDateTimeProvider
 {

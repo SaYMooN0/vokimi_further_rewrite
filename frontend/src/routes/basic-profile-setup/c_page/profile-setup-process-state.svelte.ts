@@ -51,4 +51,14 @@ export class ProfileSetupProcessState {
             this.#chosenLanguages.add(language);
         }
     }
+    anyLanguagesChosen() {
+        return this.#chosenLanguages.size > 0
+    }
+    chooseTag(tag: Tag): void {
+        this.chosenFavoriteTags.add(tag);
+
+    }
+    removeChosenTag(tag: Tag): void {
+        this.chosenFavoriteTags.delete(tag);
+    }
 }

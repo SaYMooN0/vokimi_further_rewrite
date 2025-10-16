@@ -5,7 +5,7 @@ using SharedKernel.exceptions;
 
 namespace InfrastructureShared.Base.domain_events_publisher;
 
-public sealed class DomainEventsPublisher(IServiceProvider serviceProvider) : IDomainEventsPublisher
+internal sealed class DomainEventsPublisher(IServiceProvider serviceProvider) : IDomainEventsPublisher
 {
     private static readonly ConcurrentDictionary<Type, Type> HandlerTypeDictionary = new();
     private static readonly ConcurrentDictionary<Type, Type> WrapperTypeDictionary = new();

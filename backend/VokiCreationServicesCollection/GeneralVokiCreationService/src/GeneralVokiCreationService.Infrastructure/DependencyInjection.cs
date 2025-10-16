@@ -1,23 +1,19 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
 using ApplicationShared;
-using GeneralVokiCreationService.Application;
 using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Infrastructure.persistence;
 using GeneralVokiCreationService.Infrastructure.persistence.repositories;
 using GeneralVokiCreationService.Infrastructure.storage;
 using Infrastructure.Auth;
+using InfrastructureShared.Base;
 using InfrastructureShared.Base.domain_events_publisher;
 using InfrastructureShared.Storage;
-using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using SharedKernel.auth;
 using VokiCreationServicesLib.Application.repositories;
 
 namespace GeneralVokiCreationService.Infrastructure;
@@ -34,72 +30,15 @@ public static class DependencyInjection
             .AddPersistence(configuration, env)
             .AddS3(configuration)
             .AddAuth(configuration)
-            .AddConfiguredMassTransit(configuration);
+            .AddMassTransitWithIntegrationEventHandlers(configuration, typeof(Application.DependencyInjection).Assembly);
     }
 
     private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
-        .AddSingleton<IDateTimeProvider, DateTimeProvider>()
-        .AddTransient<IDomainEventsPublisher, DomainEventsPublisher>()
+        .AddDateTimeProvider()
+        .AddDomainEventsPublisher()
         .AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
-    private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration) {
-        var jwtTokenConfig = configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
-        if (jwtTokenConfig is null) {
-            throw new Exception("JWT token config not configured");
-        }
 
-        services.AddSingleton(jwtTokenConfig);
-        services.AddScoped<ITokenParser, TokenParser>();
-        return services;
-    }
-
-    private static IServiceCollection AddConfiguredMassTransit(
-        this IServiceCollection services,
-        IConfiguration configuration
-    ) {
-        var rabbitConfig = configuration.GetSection("MessageBroker");
-
-        var host = rabbitConfig["Host"] ?? throw new ArgumentException("MessageBroker:Host is not configured");
-        var username = rabbitConfig["Username"] ??
-                       throw new ArgumentException("MessageBroker:Username is not configured");
-        var password = rabbitConfig["Password"] ??
-                       throw new ArgumentException("MessageBroker:Password is not configured");
-        var retryCountStr = rabbitConfig["RetryCount"] ??
-                            throw new ArgumentException("MessageBroker:RetryCount is not configured");
-
-        var retryIntervalStr = rabbitConfig["RetryIntervalSeconds"] ??
-                               throw new ArgumentException("MessageBroker:RetryIntervalSeconds is not configured");
-
-        if (!int.TryParse(retryCountStr, out var retryCount)) {
-            throw new ArgumentException("MessageBroker:RetryCount must be an integer");
-        }
-
-        if (!int.TryParse(retryIntervalStr, out var retryIntervalSeconds)) {
-            throw new ArgumentException("MessageBroker:RetryIntervalSeconds must be an integer");
-        }
-
-        services.AddMassTransit(x => {
-            //consumers are in application layer
-            x.AddConsumers(typeof(GeneralVokiCreationService.Application.DependencyInjection).Assembly);
-
-            x.UsingRabbitMq((context, cfg) => {
-                cfg.Host(host, h => {
-                    h.Username(username);
-                    h.Password(password);
-                });
-
-                var serviceName = configuration["ServiceName"] ??
-                                  throw new ArgumentNullException("ServiceName is not provided");
-                cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName + ":"));
-
-                cfg.UseMessageRetry(
-                    r => { r.Interval(retryCount, TimeSpan.FromSeconds(retryIntervalSeconds)); }
-                );
-            });
-        });
-
-        return services;
-    }
 
     private static IServiceCollection AddPersistence(
         this IServiceCollection services,
@@ -110,16 +49,7 @@ public static class DependencyInjection
                                     ?? throw new Exception("Database connection string is not provided.");
         services.AddDbContext<GeneralVokiCreationDbContext>(options => {
                 options.UseNpgsql(dbConnectionString);
-                if (env.IsDevelopment()) {
-                    options.EnableDetailedErrors();
-                    options.EnableSensitiveDataLogging();
-                    options.ConfigureWarnings(warning => {
-                        warning.Log(
-                            CoreEventId.FirstWithoutOrderByAndFilterWarning,
-                            CoreEventId.RowLimitingOperationWithoutOrderByWarning
-                        );
-                    });
-                }
+                options.ConfigureDevelopmentExclusive(env);
             }
         );
 

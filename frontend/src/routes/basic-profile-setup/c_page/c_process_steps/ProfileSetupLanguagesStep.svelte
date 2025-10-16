@@ -15,7 +15,7 @@
 			class:active={isLanguageChosen(lang)}
 			onclick={() => toggleLanguage(lang)}
 		>
-			<svg><use href={LanguageUtils.icon(lang)} /></svg>
+			<svg><use href={LanguageUtils.icon(lang)} /></svg>			
 			{LanguageUtils.name(lang)}
 		</div>
 	{/each}
@@ -23,14 +23,22 @@
 
 <style>
 	.languages-container {
-		display: grid;
-		gap: 0.75rem;
+		justify-self: center;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		width: 50rem;
+		gap: 4rem;
+		row-gap: 1.5rem;
 		grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
 		justify-items: center;
 	}
 
 	.language {
-		display: flex;
+		width: 11rem;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.5rem;
 		align-items: center;
 		justify-content: center;
 		padding: 0.5rem 1rem;
@@ -40,6 +48,8 @@
 		cursor: pointer;
 		transition: background-color 0.15s;
 		user-select: none;
+		font-weight: 500;
+		font-size: 1.125rem;
 	}
 
 	.language:not(.active):hover {

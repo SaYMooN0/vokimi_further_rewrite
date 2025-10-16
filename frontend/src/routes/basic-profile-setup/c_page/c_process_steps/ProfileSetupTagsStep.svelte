@@ -1,37 +1,83 @@
 <script lang="ts">
-	import type { SvelteSet } from 'svelte/reactivity';
+	import TagsStepChosenList from './c_tags_step/TagsStepChosenList.svelte';
+	import TagsStepPartHeader from './c_tags_step/TagsStepPartHeader.svelte';
+	import TagsStepSearchingColumn from './c_tags_step/TagsStepSearchingColumn.svelte';
+	import TagsStepSuggestionsColumn from './c_tags_step/TagsStepSuggestionsColumn.svelte';
 
 	interface Props {
-		chosenTags: SvelteSet<string>;
+		chosenTags: Set<string>;
 		suggestions: Set<string>;
+		chooseTag: (tag: string) => void;
+		removeTag: (tag: string) => void;
 	}
 
-	let { chosenTags, suggestions }: Props = $props();
+	let { chosenTags, suggestions, chooseTag, removeTag }: Props = $props();
 </script>
 
-<div class="chosen-tags-list">
-	{#each chosenTags as tag}
-		<div class="tag">
-			{tag}
-			<svg> <use href="#common-cross-icon" /> </svg>
-		</div>
-	{/each}
-</div>
-<h1 class="option-heder">Choose from suggestions</h1>
-<div class="suggestion-list">
-	{#each suggestions as tag}
-		{#if !chosenTags.has(tag)}
-			<div class="chosen">
-				{tag}
-				<svg> <use href="#common-cross-icon" /> </svg>
-			</div>
+<div class="tags-step-container">
+	<div class="choosing-section-headers">
+		<TagsStepPartHeader text="Choose from suggestions" />
+		<p class="or-label">Or</p>
+		<TagsStepPartHeader text="Find exactly the tags you want" />
+	</div>
+	<div class="choosing-section-contents">
+		<TagsStepSuggestionsColumn
+			{suggestions}
+			{chooseTag}
+			{removeTag}
+			isTagChosen={(tag) => chosenTags.has(tag)}
+		/>
+
+		<TagsStepSearchingColumn isTagChosen={(tag) => chosenTags.has(tag)} />
+	</div>
+	<div class="chosen-tags-part">
+		{#if chosenTags.size === 0}
+			<div class="no-tags-msg">Chosen tags will appear here</div>
 		{:else}
-			<div class="tag">
-				{tag}
-				<svg> <use href="#common-plus-icon" /> </svg>
-			</div>
+			<TagsStepPartHeader text="You have chosen {chosenTags.size} tags" />
+			<TagsStepChosenList {chosenTags} {removeTag} />
 		{/if}
-	{/each}
+	</div>
 </div>
-<p class="or-label">Or</p>
-<h1 class="option-heder">Find exactly what you want</h1>
+
+<style>
+	.tags-step-container {
+		display: grid;
+		grid-template-rows: auto minmax(20rem, 1fr) auto;
+	}
+	.choosing-section-headers {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr;
+		justify-content: center;
+		align-items: center;
+	}
+	.or-label {
+		font-size: 1rem;
+		color: var(--secondary-foreground);
+		font-weight: 600;
+	}
+
+	.choosing-section-contents {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
+	}
+
+	.chosen-tags-part {
+		display: grid;
+		grid-template-rows: auto 1fr;
+		min-height: 4.75rem;
+	}
+	.no-tags-msg {
+		margin: 2rem auto 0;
+		width: fit-content;
+		height: 100%;
+		place-content: center;
+		padding: 0 6rem;
+		background-color: var(--secondary);
+		font-size: 1.125rem;
+		color: var(--secondary-foreground);
+		border-radius: 0.5rem;
+		font-weight: 450;
+	}
+</style>

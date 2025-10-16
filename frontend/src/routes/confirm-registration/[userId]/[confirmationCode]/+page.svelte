@@ -31,7 +31,6 @@
 		);
 		if (response.isSuccess) {
 			await AuthStore.GetWithForceRefresh();
-			goto('/basic-profile-setup');
 		}
 		return response;
 	}
@@ -42,8 +41,8 @@
 		<h1 class="loading-h">Confirming your email...</h1>
 	{:then response}
 		{#if response.isSuccess}
-			<h2>You have successfully confirmed your email</h2>
-			<a href="/">Go to the home page</a>
+			<h1>You have successfully confirmed your email</h1>
+			<a href="/basic-profile-setup" class="setup-link">Set up my profile</a>
 		{:else}
 			<h1 class="error-h">An error has occurred during confirmation</h1>
 			<div class="err-view">
@@ -73,6 +72,9 @@
 		font-weight: 500;
 		text-align: center;
 		letter-spacing: 0.5px;
+	}
+	.setup-link {
+		margin-top: 2rem;
 	}
 
 	.error-h {

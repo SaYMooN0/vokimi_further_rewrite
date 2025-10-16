@@ -27,16 +27,70 @@
 	type Step = 'languages' | 'tags' | 'display-name' | 'profile-pic' | 'confirmation';
 	let currentStep = $state<Step>('languages');
 	type ProcessButton = {
-		appearance: 'primary' | 'secondary' | 'hidden';
+		appearance: () => 'primary' | 'secondary' | 'hidden';
 		onClick: () => void;
 	};
 	let nextButton: ProcessButton = $derived({
-		appearance: 'primary',
-		onClick: () => {}
+		appearance: () => {
+			if (currentStep === 'confirmation') {
+				return 'hidden';
+			}
+			if (currentStep === 'languages') {
+				if (setupProcessState.anyLanguagesChosen()) {
+					return 'primary';
+				} else {
+					return 'secondary';
+				}
+			}
+			if (currentStep === 'tags') {
+				if (setupProcessState.chosenFavoriteTags.size > 0) {
+					return 'primary';
+				} else {
+					return 'secondary';
+				}
+			}
+			if (currentStep === 'display-name') {
+				if (setupProcessState.displayNameInputValue.length > 0) {
+					return 'primary';
+				} else {
+					return 'secondary';
+				}
+			}
+			if (currentStep === 'profile-pic') {
+				return 'primary';
+			}
+			return 'secondary';
+		},
+		onClick: () => {
+			if (currentStep === 'languages') {
+				currentStep = 'tags';
+			} else if (currentStep === 'tags') {
+				currentStep = 'display-name';
+			} else if (currentStep === 'display-name') {
+				currentStep = 'profile-pic';
+			} else if (currentStep === 'profile-pic') {
+				currentStep = 'confirmation';
+			}
+		}
 	});
 	let prevButton: ProcessButton = $derived({
-		appearance: 'secondary',
-		onClick: () => {}
+		appearance: () => {
+			if (currentStep === 'languages') {
+				return 'hidden';
+			}
+			return 'secondary';
+		},
+		onClick: () => {
+			if (currentStep === 'confirmation') {
+				currentStep = 'profile-pic';
+			} else if (currentStep === 'profile-pic') {
+				currentStep = 'display-name';
+			} else if (currentStep === 'display-name') {
+				currentStep = 'tags';
+			} else if (currentStep === 'tags') {
+				currentStep = 'languages';
+			}
+		}
 	});
 </script>
 
@@ -53,6 +107,8 @@
 			<ProfileSetupTagsStep
 				chosenTags={setupProcessState.chosenFavoriteTags}
 				suggestions={setupProcessState.suggestedTags()}
+				chooseTag={(tag) => setupProcessState.chooseTag(tag)}
+				removeTag={(tag) => setupProcessState.removeChosenTag(tag)}
 			/>
 		{:else if currentStep === 'display-name'}
 			<SetupProcessStepHeader text="Input name that you want to be known by" />
@@ -82,7 +138,7 @@
 	}
 
 	.step-content {
-		height: 32rem;
+		min-height: 20rem;
 		display: grid;
 		align-items: start;
 		animation: fade-in 220ms ease-out both;

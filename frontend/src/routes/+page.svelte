@@ -20,7 +20,7 @@
 				link={`/catalog/${voki.id}`}
 				onMoreBtnClick={() => toast.error("Voki more button isn't implemented yet")}
 				flags={{
-					language: 'Eng',
+					language: voki.language,
 					hasMatureContent: voki.hasMatureContent,
 					authenticatedOnlyTaking: voki.authenticatedOnlyTaking
 				}}

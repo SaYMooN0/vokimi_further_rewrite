@@ -1,4 +1,5 @@
-﻿using CoreVokiCreationService.Application.pipeline_behaviors;
+﻿using ApplicationShared;
+using CoreVokiCreationService.Application.pipeline_behaviors;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace CoreVokiCreationService.Application;
@@ -6,28 +7,7 @@ namespace CoreVokiCreationService.Application;
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services) {
-        services.Scan(scan => scan.FromAssembliesOf(typeof(DependencyInjection))
-            // queries
-            .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)), publicOnly: false)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
-
-            // commands with ErrOrNothing
-            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>)), publicOnly: false)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
-
-            // commands with ErrOr<T>
-            .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
-
-            // domain events
-            .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
-            .AsImplementedInterfaces()
-            .WithScopedLifetime()
-        );
-        
+        services.AddApplicationMessaging(typeof(DependencyInjection));
         services.AddStepHandlers();
 
         return services;
