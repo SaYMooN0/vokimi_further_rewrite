@@ -14,4 +14,5 @@ type  BasicSetupInfo = {
     preferredLanguages: Language[]
     favoriteTags: string[],
     profilePicture: string,
+    maxDisplayNameLength:number
 }

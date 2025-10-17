@@ -2,7 +2,7 @@
 
 namespace TagsService.Application.voki_tags.queries;
 
-public sealed record SearchTagsQuery(string SearchValue) :
+public sealed record SearchTagsQuery(string SearchValue, int Count) :
     IQuery<ImmutableArray<VokiTagId>>;
 
 internal sealed class SearchTagsQueryHandler : IQueryHandler<SearchTagsQuery, ImmutableArray<VokiTagId>>

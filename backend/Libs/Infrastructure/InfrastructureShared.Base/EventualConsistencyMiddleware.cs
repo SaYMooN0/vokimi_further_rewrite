@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-
 namespace InfrastructureShared.Base;
 
 public class EventualConsistencyMiddleware<T> where T : DbContext

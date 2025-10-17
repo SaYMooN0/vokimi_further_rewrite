@@ -56,6 +56,7 @@
 		box-sizing: border-box;
 
 		--width-limit: 90vw;
+		--sidebar-width: 13rem;
 	}
 
 	.width-limit {

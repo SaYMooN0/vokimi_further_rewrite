@@ -15,7 +15,7 @@
 </script>
 
 {#if !data.isSuccess}
-	<PageLoadErrView errs={data.errs} defaultMessage="Could not load vokis catalog" />
+	<PageLoadErrView errs={data.errs} defaultMessage="Could not load profile setup page" />
 {:else}
 	<div class="page-content-container">
 		{#if setupState === 'process'}
@@ -24,6 +24,7 @@
 				initialTags={data.data.favoriteTags}
 				initialProfilePic={data.data.profilePicture}
 				initialDisplayName={data.data.displayName}
+				maxDisplayNameLength={data.data.maxDisplayNameLength}
 				saveSetup={saveChanges}
 			/>
 		{:else if setupState === 'complete'}

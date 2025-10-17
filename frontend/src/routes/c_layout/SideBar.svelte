@@ -23,7 +23,6 @@
 
 <style>
 	.sidebar {
-		--sidebar-width: 13rem;
 
 		position: sticky;
 		top: 0;

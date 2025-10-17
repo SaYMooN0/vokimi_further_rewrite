@@ -14,10 +14,18 @@
 		initialTags: string[];
 		initialProfilePic: string;
 		initialDisplayName: string;
+		maxDisplayNameLength: number;
 		saveSetup: () => Promise<ResponseVoidResult>;
 	}
-	let { initialLangs, initialTags, initialProfilePic, initialDisplayName, saveSetup }: Props =
-		$props();
+	let {
+		initialLangs,
+		initialTags,
+		initialProfilePic,
+		initialDisplayName,
+		maxDisplayNameLength,
+		saveSetup
+	}: Props = $props();
+
 	let setupProcessState = new ProfileSetupProcessState(
 		initialLangs,
 		initialTags,
@@ -112,7 +120,10 @@
 			/>
 		{:else if currentStep === 'display-name'}
 			<SetupProcessStepHeader text="Input name that you want to be known by" />
-			<ProfileSetupDisplayNameStep bind:displayName={setupProcessState.displayNameInputValue} />
+			<ProfileSetupDisplayNameStep
+				bind:displayName={setupProcessState.displayNameInputValue}
+				maxLength={maxDisplayNameLength}
+			/>
 		{:else if currentStep === 'profile-pic'}
 			<SetupProcessStepHeader text="Choose your profile picture" />
 			<ProfileSetupProfilePictureStep bind:profilePic={setupProcessState.profilePicInputValue} />

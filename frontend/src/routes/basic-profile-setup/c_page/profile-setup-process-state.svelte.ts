@@ -1,34 +1,27 @@
+import { ApiTags } from "$lib/ts/backend-communication/backend-services";
+import type { Err } from "$lib/ts/err";
 import type { Language } from "$lib/ts/language";
 import { SvelteSet } from "svelte/reactivity";
 
-type Tag = string;
 
 export class ProfileSetupProcessState {
-    readonly #suggestedForAllLangs = ['music', 'literature', 'valorant', 'youtube', 'programming'];
 
-    readonly #allSuggestedTagsByLang: Record<Language, Tag[]> = {
-        Rus: ['мор_утопия', 'валорант', 'Жан_Поль_Сартр'],
-        Eng: ['booktok', 'dune', 'elden_ring'],
-        Spa: ['don_quijote', 'la_casa_de_papel', 'real_madrid'],
-        Ger: ['die_zauberflote', 'schachnovelle', 'heidegger'],
-        Fra: ['le_petit_prince', 'les_miserables', 'asterix'],
-        Ukr: ['гоголь', 'taras_shevchenko'],
-        Por: ['cidade_de_deus', 'os_lusiadas', 'capoeira'],
-        Other: ['anime', 'kpop', 'manga']
-    };
+    #tagsSuggestionsState: TagSuggestionsState = $state(
+        { name: 'loading', ...ProfileSetupProcessState.#tagsStateEmptySuggestions() },
+    );
 
     readonly #chosenLanguages = new SvelteSet<Language>();
     readonly chosenFavoriteTags = new SvelteSet<Tag>();
-    readonly profilePicInputValue = $state<string>('');
-    readonly displayNameInputValue = $state<string>('');
+    readonly profilePicInputValue = $state<string>("");
+    readonly displayNameInputValue = $state<string>("");
 
     readonly suggestedTags = $derived<() => Set<Tag>>(() => {
         const tags = new Set<string>();
         for (const lang of this.#chosenLanguages) {
-            const arr = this.#allSuggestedTagsByLang[lang];
+            const arr = this.#tagsSuggestionsState.suggestionsByLangs[lang];
             if (arr) arr.forEach((t) => tags.add(t));
         }
-        this.#suggestedForAllLangs.forEach((t) => tags.add(t));
+        this.#tagsSuggestionsState.defaultSuggestions.forEach((t) => tags.add(t));
         return tags;
     });
 
@@ -38,6 +31,7 @@ export class ProfileSetupProcessState {
         initialTags.forEach((t) => this.chosenFavoriteTags.add(t));
         this.profilePicInputValue = initialProfilePic;
         this.displayNameInputValue = initialDisplayName;
+        this.#loadTagsSuggestion();
     }
 
     isLanguageChosen(language: Language): boolean {
@@ -61,4 +55,23 @@ export class ProfileSetupProcessState {
     removeChosenTag(tag: Tag): void {
         this.chosenFavoriteTags.delete(tag);
     }
+    static #tagsStateEmptySuggestions(): TagSuggestionsResponse {
+        return {
+            defaultSuggestions: [], suggestionsByLangs: {
+                'Eng': [], 'Rus': [], 'Spa': [], 'Ger': [],
+                'Fra': [], 'Ukr': [], 'Por': [], 'Other': []
+            }
+        }
+    };
+    async #loadTagsSuggestion(): Promise<void> {
+        const response = await ApiTags.fetchJsonResponse<TagSuggestionsResponse>
+    }
 }
+
+type Tag = string;
+type TagSuggestionsResponse = { defaultSuggestions: Tag[], suggestionsByLangs: Record<Language, Tag[]> };
+type TagSuggestionsState = TagSuggestionsResponse & (
+    | { name: 'loading' }
+    | { name: 'ok' }
+    | { name: 'errs', errs: Err[] }
+);
