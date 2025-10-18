@@ -3,9 +3,12 @@
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { Err } from '$lib/ts/err';
-	let { onImageUploaded }: { onImageUploaded: (tempKey: string) => void } = $props<{
+
+	interface Props {
 		onImageUploaded: (tempKey: string) => void;
-	}>();
+	}
+	let { onImageUploaded }: Props = $props();
+	
 	let isLoading = $state(false);
 	let errs = $state<Err[]>([]);
 
@@ -52,7 +55,7 @@
 	let isDragging = $state(false);
 </script>
 
-<div 
+<div
 	class="img-input-container"
 	class:loading={isLoading}
 	class:dragging={isDragging}
@@ -144,22 +147,21 @@
 		transform: scale(1.06);
 	}
 
-    h1 {
+	h1 {
 		margin-bottom: 0.5rem;
 		color: var(--text);
 		font-size: 1.375rem;
 		font-weight: 700;
-        letter-spacing: 0.5px;
+		letter-spacing: 0.5px;
 		transition: inherit;
-        cursor: default;
+		cursor: default;
 	}
 
 	p {
 		margin-bottom: 1rem;
 		color: var(--secondary-foreground);
 		font-weight: 440;
-        cursor: default;
-
+		cursor: default;
 	}
 
 	:global(.img-input-errs-block) {

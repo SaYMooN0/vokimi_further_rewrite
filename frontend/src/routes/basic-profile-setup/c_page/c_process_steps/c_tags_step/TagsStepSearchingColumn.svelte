@@ -6,8 +6,10 @@
 	import { useDebounce } from 'runed';
 	interface Props {
 		isTagChosen: (tag: string) => boolean;
+		chooseTag: (tag: string) => void;
+		maxTagLength: number;
 	}
-	let { isTagChosen }: Props = $props();
+	let { isTagChosen, chooseTag, maxTagLength }: Props = $props();
 
 	let searchedTags: string[] = $state([]);
 	let errs: Err[] = $state([]);
@@ -20,6 +22,7 @@
 		});
 		searchInput = '';
 		event.stopPropagation();
+		errs = [];
 	}
 
 	const performSearch = useDebounce(async () => {
@@ -31,7 +34,7 @@
 			return;
 		}
 		const response = await ApiTags.fetchJsonResponse<{ tags: string[] }>(
-			`/search?searchValue=${value}`,
+			`/search?count=8&searchValue=${value}`,
 			{ method: 'GET' }
 		);
 
@@ -65,6 +68,7 @@
 			bind:this={inputEl}
 			oninput={() => performSearch()}
 			name={'tag-search-' + StringUtils.rndStr(12)}
+			maxlength={maxTagLength}
 		/>
 		<svg class="reset-button" fill="none" viewBox="0 0 24 24" onclick={onResetClick}>
 			<use href="#common-cross-icon" />
@@ -75,25 +79,16 @@
 			<div class="tag">
 				#{tag}
 				{#if isTagChosen(tag)}
-					<svg><use href="#common-check-icon" /></svg>
+					<svg class="added-icon"><use href="#common-check-icon" /></svg>
 				{:else}
-					added
+					<svg class="add-icon" onclick={() => chooseTag(tag)}><use href="#common-plus-icon" /></svg
+					>
 				{/if}
 			</div>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
-			<p>tag</p>
 		{/each}
+		<label class="continue-typing-label">
+			If you don't find the tag you need continue entering the name of the tag
+		</label>
 	</div>
 	<DefaultErrBlock errList={errs} />
 </div>
@@ -103,11 +98,12 @@
 		width: 100%;
 		display: grid;
 		grid-template-rows: auto 1fr auto;
-        gap: 0.5rem;
+		gap: 0.5rem;
 	}
 	.search-bar {
 		display: grid;
 		align-items: center;
+		justify-self: center;
 		width: calc(100% - 2rem);
 		height: 2.25rem;
 		box-sizing: border-box;
@@ -181,5 +177,41 @@
 		scrollbar-gutter: stable;
 		display: flex;
 		flex-direction: column;
+		gap: 0.25rem;
+	}
+	.tag {
+		width: 100%;
+		background-color: var(--secondary);
+		display: grid;
+		grid-template-columns: 1fr auto;
+		box-shadow: var(--shadow-xs) inset;
+		align-items: center;
+		padding: 0.25rem 0.5rem;
+		border-radius: 0.375rem;
+		font-size: 1.125rem;
+		color: var(--secondary-foreground);
+	}
+	.tag svg {
+		height: 1.375rem;
+		width: 1.375rem;
+		stroke-width: 2.5;
+		color: var(--secondary-foreground);
+		border-radius: 0.25rem;
+	}
+	.tag .add-icon:hover,
+	.tag .add-icon:focus,
+	.tag .add-icon:active {
+		color: var(--primary);
+		background-color: var(--muted);
+	}
+	.tag .added-icon {
+		color: var(--primary);
+		stroke-width: 2.875;
+	}
+	.continue-typing-label {
+		font-size: 0.875rem;
+		color: var(--secondary-foreground);
+		text-align: center;
+		text-wrap: balance;
 	}
 </style>

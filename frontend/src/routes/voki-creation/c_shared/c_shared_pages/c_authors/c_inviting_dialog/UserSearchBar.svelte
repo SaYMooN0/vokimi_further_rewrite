@@ -4,7 +4,6 @@
 	import type { UserProfilePreview } from '$lib/ts/users';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { useDebounce } from 'runed';
-
 	let {
 		searchedUsers = $bindable(),
 		setErrs

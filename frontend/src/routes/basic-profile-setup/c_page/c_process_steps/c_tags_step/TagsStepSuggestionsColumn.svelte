@@ -1,25 +1,58 @@
 <script lang="ts">
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
+	import type { Err } from '$lib/ts/err';
+
 	interface Props {
-		suggestions: Set<string>;
+		tagsSuggestionsState:
+			| { name: 'loading' }
+			| { name: 'ok'; tags: Iterable<string> }
+			| { name: 'errs'; errs: Err[] };
 		isTagChosen: (tag: string) => boolean;
 		chooseTag: (tag: string) => void;
 		removeTag: (tag: string) => void;
 	}
 
-	let { suggestions, isTagChosen, chooseTag, removeTag }: Props = $props();
+	let { tagsSuggestionsState, isTagChosen, chooseTag, removeTag }: Props = $props();
 </script>
 
-<div class="suggestion-list">
-	{#each suggestions as tag}
-		{#if isTagChosen(tag)}
-			<div class="tag chosen" onclick={() => removeTag(tag)}>#{tag}</div>
-		{:else}
-			<div class="tag" onclick={() => chooseTag(tag)}>#{tag}</div>
-		{/if}
-	{/each}
-</div>
+{#if tagsSuggestionsState.name === 'loading'}
+	<div class="suggestions-not-loaded">
+		<CubesLoader sizeRem={2} />
+		<h1>Loading suggestions</h1>
+	</div>
+{:else if tagsSuggestionsState.name === 'errs'}
+	<div class="suggestions-not-loaded">
+		<h1>Couldn't load tag suggestions</h1>
+		<DefaultErrBlock errList={tagsSuggestionsState.errs} />
+	</div>
+{:else if tagsSuggestionsState.name === 'ok'}
+	<div class="suggestion-list">
+		{#each tagsSuggestionsState.tags as tag}
+			{#if isTagChosen(tag)}
+				<div class="tag chosen" onclick={() => removeTag(tag)}>#{tag}</div>
+			{:else}
+				<div class="tag" onclick={() => chooseTag(tag)}>#{tag}</div>
+			{/if}
+		{/each}
+	</div>
+{:else}{/if}
 
 <style>
+	.suggestions-not-loaded {
+		display: flex;
+		justify-content: start;
+		padding-top: 2rem;
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+	}
+	.suggestions-not-loaded h1 {
+		font-size: 1.25rem;
+		font-weight: 500;
+		color: var(--secondary-foreground);
+	}
+	
 	.suggestion-list {
 		display: flex;
 		justify-content: center;
@@ -51,5 +84,4 @@
 		color: var(--primary-foreground);
 		box-shadow: none;
 	}
-
 </style>

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { Err } from '$lib/ts/err';
 	import TagsStepChosenList from './c_tags_step/TagsStepChosenList.svelte';
 	import TagsStepPartHeader from './c_tags_step/TagsStepPartHeader.svelte';
 	import TagsStepSearchingColumn from './c_tags_step/TagsStepSearchingColumn.svelte';
@@ -6,12 +7,16 @@
 
 	interface Props {
 		chosenTags: Set<string>;
-		suggestions: Set<string>;
+		tagsSuggestionsState:
+			| { name: 'loading' }
+			| { name: 'ok'; tags: Iterable<string> }
+			| { name: 'errs'; errs: Err[] };
 		chooseTag: (tag: string) => void;
 		removeTag: (tag: string) => void;
+		maxTagLength: number;
 	}
 
-	let { chosenTags, suggestions, chooseTag, removeTag }: Props = $props();
+	let { chosenTags, tagsSuggestionsState, chooseTag, removeTag, maxTagLength }: Props = $props();
 </script>
 
 <div class="tags-step-container">
@@ -22,13 +27,17 @@
 	</div>
 	<div class="choosing-section-contents">
 		<TagsStepSuggestionsColumn
-			{suggestions}
+			{tagsSuggestionsState}
 			{chooseTag}
 			{removeTag}
 			isTagChosen={(tag) => chosenTags.has(tag)}
 		/>
 
-		<TagsStepSearchingColumn isTagChosen={(tag) => chosenTags.has(tag)} />
+		<TagsStepSearchingColumn
+			isTagChosen={(tag) => chosenTags.has(tag)}
+			{chooseTag}
+			{maxTagLength}
+		/>
 	</div>
 	<div class="chosen-tags-part">
 		{#if chosenTags.size === 0}

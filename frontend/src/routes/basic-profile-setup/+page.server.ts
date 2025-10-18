@@ -8,11 +8,12 @@ export const load: ServerLoad = async ({ fetch }) => {
     );
 };
 
-type  BasicSetupInfo = {
+type BasicSetupInfo = {
     userUniqueName: string,
     displayName: string,
     preferredLanguages: Language[]
     favoriteTags: string[],
     profilePicture: string,
-    maxDisplayNameLength:number
+    maxDisplayNameLength: number,
+    maxTagLength: number
 }

@@ -25,6 +25,7 @@
 				initialProfilePic={data.data.profilePicture}
 				initialDisplayName={data.data.displayName}
 				maxDisplayNameLength={data.data.maxDisplayNameLength}
+				maxTagLength={data.data.maxTagLength}
 				saveSetup={saveChanges}
 			/>
 		{:else if setupState === 'complete'}

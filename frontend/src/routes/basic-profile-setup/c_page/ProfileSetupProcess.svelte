@@ -15,6 +15,7 @@
 		initialProfilePic: string;
 		initialDisplayName: string;
 		maxDisplayNameLength: number;
+		maxTagLength: number;
 		saveSetup: () => Promise<ResponseVoidResult>;
 	}
 	let {
@@ -23,6 +24,7 @@
 		initialProfilePic,
 		initialDisplayName,
 		maxDisplayNameLength,
+		maxTagLength,
 		saveSetup
 	}: Props = $props();
 
@@ -114,9 +116,10 @@
 			<SetupProcessStepHeader text="Choose tags you are interested in" />
 			<ProfileSetupTagsStep
 				chosenTags={setupProcessState.chosenFavoriteTags}
-				suggestions={setupProcessState.suggestedTags()}
+				tagsSuggestionsState={setupProcessState.suggestedTagsState()}
 				chooseTag={(tag) => setupProcessState.chooseTag(tag)}
 				removeTag={(tag) => setupProcessState.removeChosenTag(tag)}
+				{maxTagLength}
 			/>
 		{:else if currentStep === 'display-name'}
 			<SetupProcessStepHeader text="Input name that you want to be known by" />

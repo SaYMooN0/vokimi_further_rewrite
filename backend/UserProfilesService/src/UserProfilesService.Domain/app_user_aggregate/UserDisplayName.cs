@@ -8,7 +8,7 @@ public class UserDisplayName : ValueObject
     private readonly string _value;
 
     private const int MinLength = 4;
-    private const int MaxLength = 30;
+    public const int MaxLength = 30;
 
     private static readonly Regex AllowedCharsRegex = new(
         @"^[\p{L}\p{M}\p{N}\p{Zs}\-._'’()!¡\?¿]+$",

@@ -7,7 +7,9 @@ public record UserBasicProfileSetupInfoResponse(
     string DisplayName,
     Language[] PreferredLanguages,
     string[] FavoriteTags,
-    string ProfilePicture
+    string ProfilePicture,
+    int MaxDisplayNameLength,
+    int MaxTagLength
 ) : ICreatableResponse<AppUser>
 {
     public static ICreatableResponse<AppUser> Create(AppUser user) => new UserBasicProfileSetupInfoResponse(
@@ -15,6 +17,8 @@ public record UserBasicProfileSetupInfoResponse(
         user.DisplayName.ToString(),
         user.PreferredLanguages.ToArray(),
         user.FavoriteTags.Select(t => t.ToString()).ToArray(),
-        user.ProfilePic.ToString()
+        user.ProfilePic.ToString(),
+        UserDisplayName.MaxLength,
+        VokiTagId.MaxTagLength
     );
 }

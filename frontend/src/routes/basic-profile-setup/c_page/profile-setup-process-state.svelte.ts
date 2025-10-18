@@ -6,23 +6,34 @@ import { SvelteSet } from "svelte/reactivity";
 
 export class ProfileSetupProcessState {
 
-    #tagsSuggestionsState: TagSuggestionsState = $state(
-        { name: 'loading', ...ProfileSetupProcessState.#tagsStateEmptySuggestions() },
-    );
+    #tagsSuggestionsState: TagsSuggestionLoadingState = $state({ name: 'loading' });
 
     readonly #chosenLanguages = new SvelteSet<Language>();
     readonly chosenFavoriteTags = new SvelteSet<Tag>();
     readonly profilePicInputValue = $state<string>("");
     readonly displayNameInputValue = $state<string>("");
 
-    readonly suggestedTags = $derived<() => Set<Tag>>(() => {
+    readonly suggestedTagsState: () => (
+        | { name: "loading" }
+        | { name: "ok", tags: Iterable<Tag> }
+        | { name: "errs", errs: Err[] }
+    ) = $derived(() => {
+        if (this.#tagsSuggestionsState.name === 'errs') {
+            return { name: 'errs', errs: this.#tagsSuggestionsState.errs }
+        }
+        if (this.#tagsSuggestionsState.name === 'loading') {
+            return { name: 'loading' }
+        }
         const tags = new Set<string>();
         for (const lang of this.#chosenLanguages) {
             const arr = this.#tagsSuggestionsState.suggestionsByLangs[lang];
             if (arr) arr.forEach((t) => tags.add(t));
         }
         this.#tagsSuggestionsState.defaultSuggestions.forEach((t) => tags.add(t));
-        return tags;
+        return {
+            name: 'ok',
+            tags
+        };
     });
 
     constructor(initialLangs: Language[], initialTags: Tag[], initialProfilePic: string, initialDisplayName: string) {
@@ -55,23 +66,21 @@ export class ProfileSetupProcessState {
     removeChosenTag(tag: Tag): void {
         this.chosenFavoriteTags.delete(tag);
     }
-    static #tagsStateEmptySuggestions(): TagSuggestionsResponse {
-        return {
-            defaultSuggestions: [], suggestionsByLangs: {
-                'Eng': [], 'Rus': [], 'Spa': [], 'Ger': [],
-                'Fra': [], 'Ukr': [], 'Por': [], 'Other': []
-            }
-        }
-    };
+
     async #loadTagsSuggestion(): Promise<void> {
-        const response = await ApiTags.fetchJsonResponse<TagSuggestionsResponse>
+        this.#tagsSuggestionsState = { name: 'loading' };
+        const response = await ApiTags.fetchJsonResponse<TagSuggestionsSuccessResponse>("/tags-popular-for-languages", { method: "GET" });
+        if (response.isSuccess) {
+            this.#tagsSuggestionsState = { name: 'ok', ...response.data };
+        } else {
+            this.#tagsSuggestionsState = { name: 'errs', errs: response.errs };
+        }
     }
 }
 
 type Tag = string;
-type TagSuggestionsResponse = { defaultSuggestions: Tag[], suggestionsByLangs: Record<Language, Tag[]> };
-type TagSuggestionsState = TagSuggestionsResponse & (
+type TagSuggestionsSuccessResponse = { defaultSuggestions: Tag[], suggestionsByLangs: Record<Language, Tag[]> };
+type TagsSuggestionLoadingState =
     | { name: 'loading' }
-    | { name: 'ok' }
-    | { name: 'errs', errs: Err[] }
-);
+    | { name: 'ok' } & TagSuggestionsSuccessResponse
+    | { name: 'errs', errs: Err[] };
