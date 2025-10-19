@@ -57,11 +57,11 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
             return ErrOr<GeneralVokiResultImageKey?>.Success(null);
         }
 
-        if (resultImageKey.StartsWith(KeyConsts.TempFolder)) {
+        if (ITempKey.IsStringWithTempPrefix(resultImageKey)) {
             return await HandleTempKey(resultImageKey, vokiId, resultId);
         }
 
-        var creationRes = GeneralVokiResultImageKey.FromString(resultImageKey);
+        ErrOr<GeneralVokiResultImageKey> creationRes = GeneralVokiResultImageKey.FromString(resultImageKey);
         if (creationRes.IsErr(out var err)) {
             return err;
         }

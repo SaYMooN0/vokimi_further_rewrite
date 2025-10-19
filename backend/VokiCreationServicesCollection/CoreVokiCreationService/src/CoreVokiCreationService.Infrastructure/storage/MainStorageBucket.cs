@@ -1,5 +1,4 @@
 ﻿using Amazon.S3;
-using CoreVokiCreationService.Application;
 using CoreVokiCreationService.Application.common;
 using InfrastructureShared.Storage;
 using Microsoft.Extensions.Logging;
@@ -16,8 +15,11 @@ internal class MainStorageBucket : BaseMainS3Bucket, IMainStorageBucket
     ) : base(s3Client, s3MainBucketConf, logger) { }
 
 
-    public Task<ErrOrNothing> CopyDefaultVokiCoverForNewVoki(VokiCoverKey destination) => CopyStandardToStandard(
+    public Task<ErrOrNothing> CopyDefaultVokiCoverForNewVoki(
+        VokiCoverKey destination, CancellationToken ct
+    ) => CopyStandardToStandard(
         source: CommonStorageItemKey.DefaultVokiCover,
-        destination: destination
+        destination: destination,
+        ct
     );
 }

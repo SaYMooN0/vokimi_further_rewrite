@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PicsStepPredefinedRow from './c_profile_pic_step/PicsStepPredefinedRow.svelte';
+	import PicsStepPresetsRow from './c_profile_pic_step/PicsStepPresetsRow.svelte';
 	import PicsStepPreviewWithInput from './c_profile_pic_step/PicsStepPreviewWithInput.svelte';
 
 	interface Props {
@@ -26,28 +26,28 @@
 
 	let picPresets: Record<string, string[]> = $state({
 		['previous']: [
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp'
+			'preset-profile-pics/basic-black.webp',
+			'preset-profile-pics/basic-black.webp',
+			'preset-profile-pics/basic-black.webp',
+			'preset-profile-pics/basic-black.webp'
 		],
 		['meme']: [
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp'
+			'preset-profile-pics/meme-masyunya.webp',
+			'preset-profile-pics/meme-ya-cat.webp',
+			'preset-profile-pics/meme-roblox-m.webp',
+			'preset-profile-pics/meme-roblox-f.webp'
 		],
 		['boykisser']: [
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp'
+			'preset-profile-pics/boykisser-1.webp',
+			'preset-profile-pics/boykisser-2.webp',
+			'preset-profile-pics/boykisser-3.webp',
+			'preset-profile-pics/boykisser-4.webp'
 		],
 		['dasha']: [
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp',
-			'default-profile-pics/black.webp'
+			'preset-profile-pics/dasha-1.webp',
+			'preset-profile-pics/dasha-2.webp',
+			'preset-profile-pics/dasha-3.webp',
+			'preset-profile-pics/dasha-4.webp'
 		]
 	});
 </script>
@@ -55,22 +55,18 @@
 <div class="profile-pic-step">
 	<PicsStepPreviewWithInput setCurrent={updateCurrentPic} currentPic={profilePic} />
 	<div class="rows">
-		<PicsStepPredefinedRow
+		<PicsStepPresetsRow
 			rowName="Previous"
 			onPicClick={updateCurrentPic}
 			picsArr={picPresets['previous']}
 		/>
-		<PicsStepPredefinedRow
-			rowName="Meme"
-			onPicClick={updateCurrentPic}
-			picsArr={picPresets['meme']}
-		/>
-		<PicsStepPredefinedRow
+		<PicsStepPresetsRow rowName="Meme" onPicClick={updateCurrentPic} picsArr={picPresets['meme']} />
+		<PicsStepPresetsRow
 			rowName="Boykisser"
 			onPicClick={updateCurrentPic}
 			picsArr={picPresets['boykisser']}
 		/>
-		<PicsStepPredefinedRow
+		<PicsStepPresetsRow
 			rowName="Dasha"
 			onPicClick={updateCurrentPic}
 			picsArr={picPresets['dasha']}

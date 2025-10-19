@@ -9,7 +9,7 @@ public class CommonStorageItemKey : BaseStorageImageKey
     public string Name { get; }
     public override ImageFileExtension ImageExtension { get; }
 
-    public CommonStorageItemKey(string value) {
+    private CommonStorageItemKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(
             this,
             Scheme.IsKeyValid(value, out var name, out var ext)
@@ -21,7 +21,6 @@ public class CommonStorageItemKey : BaseStorageImageKey
     }
 
     public static readonly CommonStorageItemKey DefaultVokiCover = new(KeyConsts.DefaultVokiCover);
-    public static readonly CommonStorageItemKey DefaultProfilePic = new(KeyConsts.DefaultUserProfilePic);
 
     private static class Scheme
     {

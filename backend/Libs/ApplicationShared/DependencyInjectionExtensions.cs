@@ -1,4 +1,5 @@
 ﻿using ApplicationShared.messaging;
+using ApplicationShared.messaging.pipeline_behaviors;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.domain.events;
 
@@ -29,6 +30,15 @@ public static class DependencyInjectionExtensions
             .WithScopedLifetime()
         );
 
+        services.AddStepHandlers();
+        
+        return services;
+    }
+
+    private static IServiceCollection AddStepHandlers(this IServiceCollection services) {
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(BasicValidationStepHandler.QueryHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>), typeof(BasicValidationStepHandler.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(BasicValidationStepHandler.CommandBaseHandler<>));
 
         return services;
     }

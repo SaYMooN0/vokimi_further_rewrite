@@ -17,46 +17,61 @@ internal class MainStorageBucket : BaseMainS3Bucket, IMainStorageBucket
         ILogger<MainStorageBucket> logger
     ) : base(s3Client, s3MainBucketConf, logger) { }
 
-    public Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(VokiCoverKey destination) => CopyStandardToStandard(
+    public Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(
+        VokiCoverKey destination, CancellationToken ct
+    ) => CopyStandardToStandard(
         source: CommonStorageItemKey.DefaultVokiCover,
-        destination: destination
+        destination: destination,
+        ct: ct
     );
 
-    public Task<ErrOrNothing> CopyVokiCoverFromTempToStandard(TempImageKey temp, VokiCoverKey destination) =>
-        CopyTempToStandard(
-            source: temp,
-            destination: destination
-        );
-
-    public Task<ErrOrNothing> CopyVokiResultImageFromTempToStandard(
-        TempImageKey temp, GeneralVokiResultImageKey destination
-    ) => CopyTempToStandard(
-        source: temp,
-        destination: destination
-    );
-
-    public Task<ErrOrNothing> CopyVokiQuestionImageFromTempToStandard(
+    public Task<ErrOrNothing> CopyVokiCoverFromTempToStandard(
         TempImageKey temp,
-        GeneralVokiQuestionImageKey destination
-    ) => CopyTempToStandard(
-        source: temp,
-        destination: destination
-    );
-
-    public Task<ErrOrNothing> CopyVokiAnswerImageFromTempToStandard(
-        TempImageKey temp,
-        GeneralVokiAnswerImageKey destination
-    ) => CopyTempToStandard(
-        source: temp,
-        destination: destination
-    );
-
-    public Task<ErrOrNothing> CopyVokiAnswerAudioFromTempToStandard(
-        TempAudioKey temp,
-        GeneralVokiAnswerAudioKey destination
+        VokiCoverKey destination,
+        CancellationToken ct
     ) =>
         CopyTempToStandard(
             source: temp,
-            destination: destination
+            destination: destination,
+            ct: ct
+        );
+
+    public Task<ErrOrNothing> CopyVokiQuestionImagesFromTempToStandard(
+        Dictionary<TempImageKey, GeneralVokiQuestionImageKey> tempToDestination, CancellationToken ct
+    ) =>
+        CopyMultipleTempToStandard(sourcesToDestinations: tempToDestination, ct);
+
+    public Task<ErrOrNothing> CopyVokiResultImageFromTempToStandard(
+        TempImageKey temp,
+        GeneralVokiResultImageKey destination,
+        CancellationToken ct
+    ) =>
+        CopyTempToStandard(
+            source: temp,
+            destination: destination,
+            ct
+        );
+
+
+    public Task<ErrOrNothing> CopyVokiAnswerImageFromTempToStandard(
+        TempImageKey temp,
+        GeneralVokiAnswerImageKey destination,
+        CancellationToken ct
+    ) =>
+        CopyTempToStandard(
+            source: temp,
+            destination: destination,
+            ct
+        );
+
+    public Task<ErrOrNothing> CopyVokiAnswerAudioFromTempToStandard(
+        TempAudioKey temp,
+        GeneralVokiAnswerAudioKey destination,
+        CancellationToken ct
+    ) =>
+        CopyTempToStandard(
+            source: temp,
+            destination: destination,
+            ct
         );
 }

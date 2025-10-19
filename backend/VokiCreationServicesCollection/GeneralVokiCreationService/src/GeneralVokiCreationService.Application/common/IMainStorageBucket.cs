@@ -6,12 +6,29 @@ namespace GeneralVokiCreationService.Application.common;
 
 public interface IMainStorageBucket
 {
-    Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(VokiCoverKey defaultVokiCover);
-    Task<ErrOrNothing> CopyVokiCoverFromTempToStandard(TempImageKey temp, VokiCoverKey destination);
-    Task<ErrOrNothing> CopyVokiResultImageFromTempToStandard(TempImageKey temp, GeneralVokiResultImageKey destination);
+    Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(VokiCoverKey defaultVokiCover, CancellationToken ct);
+    Task<ErrOrNothing> CopyVokiCoverFromTempToStandard(TempImageKey temp, VokiCoverKey destination, CancellationToken ct);
 
-    Task<ErrOrNothing> CopyVokiQuestionImageFromTempToStandard(TempImageKey temp, GeneralVokiQuestionImageKey destination);
+    Task<ErrOrNothing> CopyVokiResultImageFromTempToStandard(
+        TempImageKey temp,
+        GeneralVokiResultImageKey destination,
+        CancellationToken ct
+    );
 
-    Task<ErrOrNothing> CopyVokiAnswerImageFromTempToStandard(TempImageKey temp, GeneralVokiAnswerImageKey destination);
-    Task<ErrOrNothing> CopyVokiAnswerAudioFromTempToStandard(TempAudioKey temp, GeneralVokiAnswerAudioKey destination);
+    Task<ErrOrNothing> CopyVokiQuestionImagesFromTempToStandard(
+        Dictionary<TempImageKey, GeneralVokiQuestionImageKey> tempToDestination,
+        CancellationToken ct
+    );
+
+    Task<ErrOrNothing> CopyVokiAnswerImageFromTempToStandard(
+        TempImageKey temp,
+        GeneralVokiAnswerImageKey destination,
+        CancellationToken ct
+    );
+
+    Task<ErrOrNothing> CopyVokiAnswerAudioFromTempToStandard(
+        TempAudioKey temp,
+        GeneralVokiAnswerAudioKey destination,
+        CancellationToken ct
+    );
 }

@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using UserProfilesService.Application;
 using UserProfilesService.Application.common;
 using VokimiStorageKeysLib.concrete_keys;
+using VokimiStorageKeysLib.concrete_keys.profile_pics;
+using VokimiStorageKeysLib.temp_keys;
 
 namespace UserProfilesService.Infrastructure.storage;
 
@@ -16,12 +18,28 @@ internal class MainStorageBucket : BaseMainS3Bucket, IMainStorageBucket
     ) : base(s3Client, s3MainBucketConf, logger) { }
 
 
-    public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromDefaults(AppUserId userId) {
-        var newKey = UserProfilePicKey.CreateNewForUser(userId, CommonStorageItemKey.DefaultProfilePic.ImageExtension)
-            .AsSuccess();
+    public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromPresets(
+        PresetProfilePicKey presetKey,
+        AppUserId userId
+    ) {
+        UserProfilePicKey newKey = UserProfilePicKey.CreateNewForUser(userId, presetKey.ImageExtension).AsSuccess();
 
         ErrOrNothing res = await CopyStandardToStandard(
-            source: CommonStorageItemKey.DefaultProfilePic,
+            source: presetKey,
+            destination: newKey
+        );
+        if (res.IsErr(out var err)) {
+            return err;
+        }
+
+        return newKey;
+    }
+
+    public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromTemp(TempImageKey temp, AppUserId userId) {
+        UserProfilePicKey newKey = UserProfilePicKey.CreateNewForUser(userId, temp.Extension).AsSuccess();
+
+        ErrOrNothing res = await CopyTempToStandard(
+            source: temp,
             destination: newKey
         );
         if (res.IsErr(out var err)) {

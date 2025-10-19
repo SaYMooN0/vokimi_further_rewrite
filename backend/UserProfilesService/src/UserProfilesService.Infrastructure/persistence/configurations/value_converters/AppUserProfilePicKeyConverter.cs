@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VokimiStorageKeysLib.concrete_keys;
+using VokimiStorageKeysLib.concrete_keys.profile_pics;
 
 namespace UserProfilesService.Infrastructure.persistence.configurations.value_converters;
 

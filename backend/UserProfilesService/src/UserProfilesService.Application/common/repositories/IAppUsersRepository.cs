@@ -1,6 +1,7 @@
 ﻿using SharedKernel.common.app_users;
 using UserProfilesService.Domain.app_user_aggregate;
 using VokimiStorageKeysLib.concrete_keys;
+using VokimiStorageKeysLib.concrete_keys.profile_pics;
 
 namespace UserProfilesService.Application.common.repositories;
 

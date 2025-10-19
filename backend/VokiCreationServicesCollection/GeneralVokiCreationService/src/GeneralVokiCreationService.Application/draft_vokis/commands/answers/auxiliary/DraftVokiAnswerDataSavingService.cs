@@ -13,6 +13,7 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands.answers.au
 public class DraftVokiAnswerDataSavingService
 {
     private readonly IMainStorageBucket _mainStorageBucket;
+
     public DraftVokiAnswerDataSavingService(IMainStorageBucket mainStorageBucket) {
         _mainStorageBucket = mainStorageBucket;
     }
@@ -74,7 +75,7 @@ public class DraftVokiAnswerDataSavingService
             return ErrFactory.NoValue.Common("Image value is not provided");
         }
 
-        if (!image.StartsWith(KeyConsts.TempFolder)) {
+        if (ITempKey.IsStringWithTempPrefix(image)) {
             return GeneralVokiAnswerImageKey.FromString(image);
         }
 
@@ -130,7 +131,8 @@ public class DraftVokiAnswerDataSavingService
             return ErrFactory.NoValue.Common("Audio value is not provided");
         }
 
-        if (!audio.StartsWith(KeyConsts.TempFolder)) {
+
+        if (ITempKey.IsStringWithTempPrefix(audio)) {
             return GeneralVokiAnswerAudioKey.FromString(audio);
         }
 

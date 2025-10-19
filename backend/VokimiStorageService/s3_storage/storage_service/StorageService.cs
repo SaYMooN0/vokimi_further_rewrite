@@ -48,7 +48,7 @@ internal sealed class StorageService : IStorageService
                 compressed.Extension, compressed.ContentType
             );
 
-            var tempKey = TempImageKey.CreateWithExtension(compressed.Extension);
+            TempImageKey tempKey = TempImageKey.CreateWithExtension(compressed.Extension);
 
             if (compressed.Stream.CanSeek) {
                 compressed.Stream.Position = 0;

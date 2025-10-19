@@ -4,5 +4,5 @@ namespace CoreVokiCreationService.Application.common;
 
 public interface IMainStorageBucket
 {
-    public Task<ErrOrNothing> CopyDefaultVokiCoverForNewVoki(VokiCoverKey destination);
+    public Task<ErrOrNothing> CopyDefaultVokiCoverForNewVoki(VokiCoverKey destination, CancellationToken ct);
 }

@@ -1,7 +1,7 @@
 ﻿using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.extension;
 
-namespace VokimiStorageKeysLib.concrete_keys;
+namespace VokimiStorageKeysLib.concrete_keys.profile_pics;
 
 public class UserProfilePicKey : BaseStorageImageKey
 {
@@ -31,14 +31,9 @@ public class UserProfilePicKey : BaseStorageImageKey
         return new UserProfilePicKey(key);
     }
 
-    public static ErrOr<UserProfilePicKey> CreateNewForUser(AppUserId userId, string extension) {
-        var extOrErr = ImageFileExtension.Create(extension);
-        if (extOrErr.IsErr(out var err)) {
-            return err;
-        }
-
-        return CreateNewForUser(userId, extOrErr.AsSuccess());
-    }
+    public static bool IsStringWithPicsPrefix(string? value) =>
+        !string.IsNullOrWhiteSpace(value)
+        && value.StartsWith(KeyConsts.UserProfilePicsFolder);
 
     public bool IsForUser(AppUserId userId) => UserId == userId;
 

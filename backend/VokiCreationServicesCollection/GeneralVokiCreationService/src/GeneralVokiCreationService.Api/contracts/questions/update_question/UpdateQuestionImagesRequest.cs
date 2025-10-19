@@ -1,5 +1,4 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
-using VokimiStorageKeysLib;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 using VokimiStorageKeysLib.temp_keys;
 
@@ -22,11 +21,11 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
         }
 
         ParsedAspectRatio = aspectRatioCreationRes.AsSuccess();
-        
+
         ErrOrNothing parsingErrs = ErrOrNothing.Nothing;
 
-        var possibleTemp = NewImages
-            .Where(k => k.StartsWith(KeyConsts.TempFolder))
+        ErrOr<TempImageKey>[] possibleTemp = NewImages
+            .Where(ITempKey.IsStringWithTempPrefix)
             .Select(TempImageKey.FromString)
             .ToArray();
         foreach (var possibleErr in possibleTemp) {
@@ -34,7 +33,7 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
         }
 
         var possibleSaved = NewImages
-            .Where(k => !k.StartsWith(KeyConsts.TempFolder))
+            .Where(k => !ITempKey.IsStringWithTempPrefix(k))
             .Select(GeneralVokiQuestionImageKey.FromString)
             .ToArray();
         foreach (var possibleErr in possibleSaved) {
@@ -45,12 +44,12 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
             return err;
         }
 
-        ParsedTempKeys = possibleTemp.Select(t => t.AsSuccess()).ToArray();
-        ParsedSavedKeys = possibleSaved.Select(t => t.AsSuccess()).ToArray();
+        ParsedTempKeys = possibleTemp.Select(t => t.AsSuccess()).ToHashSet();
+        ParsedSavedKeys = possibleSaved.Select(t => t.AsSuccess()).ToHashSet();
         return parsingErrs;
     }
 
-    public TempImageKey[] ParsedTempKeys { get; private set; }
-    public GeneralVokiQuestionImageKey[] ParsedSavedKeys { get; private set; }
+    public HashSet<TempImageKey> ParsedTempKeys { get; private set; }
+    public HashSet<GeneralVokiQuestionImageKey> ParsedSavedKeys { get; private set; }
     public VokiQuestionImagesAspectRatio ParsedAspectRatio { get; private set; }
 }
