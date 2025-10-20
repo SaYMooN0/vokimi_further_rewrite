@@ -22,12 +22,10 @@ internal sealed class StorageService : IStorageService
         _logger = logger;
     }
 
-    public async Task<ErrOr<TempImageKey>> PutTempImageFile(
-        FileData data, CancellationToken ct = default
-    ) {
+    public async Task<ErrOr<TempImageKey>> PutTempImageFile(FileData data, CancellationToken ct) {
         try {
-            var seekableData = await EnsureSeekableAsync(data, ct);
-            var sizeBytes = seekableData.Stream.Length;
+            FileData seekableData = await EnsureSeekableAsync(data, ct);
+            long sizeBytes = seekableData.Stream.Length;
 
             if (sizeBytes > MaxUploadBytes) {
                 _logger.LogWarning("PutTempImageFile: file too large ({Size} bytes)", sizeBytes);
@@ -54,7 +52,7 @@ internal sealed class StorageService : IStorageService
                 compressed.Stream.Position = 0;
             }
 
-            var putErr = await _s3.PutFile(
+            ErrOrNothing putErr = await _s3.PutFile(
                 tempKey,
                 new FileData(compressed.Stream, compressed.ContentType),
                 ct

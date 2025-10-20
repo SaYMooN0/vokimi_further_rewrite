@@ -8,7 +8,7 @@ namespace VokimiStorageService.s3_storage.images_compression;
 internal sealed class ImageFileCompressor : IImageFileCompressor
 {
     public async Task<ErrOr<ImageFileAfterCompression>> CompressAsync(
-        FileData file, CancellationToken ct = default
+        FileData file, CancellationToken ct
     ) {
         try {
             var extOrErr = GetExtensionFromContentType(file.ContentType);

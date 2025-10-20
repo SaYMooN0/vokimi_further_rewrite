@@ -15,6 +15,6 @@ public class NewAppUserCreatedIntegrationEventHandler : IConsumer<NewAppUserCrea
 
     public async Task Consume(ConsumeContext<NewAppUserCreatedIntegrationEvent> context) {
         AppUser user = new AppUser(context.Message.CreatedUserId);
-        await _appUsersRepository.Add(user);
+        await _appUsersRepository.Add(user, context.CancellationToken);
     }
 }

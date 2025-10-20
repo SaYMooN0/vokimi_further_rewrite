@@ -4,6 +4,6 @@ namespace ApplicationShared;
 
 public interface IIntegrationEventPublisher
 {
-    Task Publish<T>(T integrationEvent, CancellationToken ct = default) where T : class, IIntegrationEvent;
+    Task Publish<T>(T integrationEvent, CancellationToken ct) where T : class, IIntegrationEvent;
 }
 

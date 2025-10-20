@@ -21,43 +21,46 @@ public class DraftVokiAnswerDataSavingService
     public Task<ErrOr<BaseVokiAnswerTypeData>> SaveAnswerData(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        VokiAnswerTypeDataDto d
+        VokiAnswerTypeDataDto d,
+        CancellationToken ct
     ) => d.Type.Match(
         textOnly: () => Task.FromResult(
             d.GetText().Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.TextOnly(text))
         ),
-        imageOnly: () => CreateImageOnlyAnswerData(vokiId, questionId, d),
-        imageAndText: () => CreateImageAndTextAnswerData(vokiId, questionId, d),
+        imageOnly: () => CreateImageOnlyAnswerData(vokiId, questionId, d, ct),
+        imageAndText: () => CreateImageAndTextAnswerData(vokiId, questionId, d, ct),
         colorOnly: () => Task.FromResult(
             d.GetColor().Bind<BaseVokiAnswerTypeData>(color => new BaseVokiAnswerTypeData.ColorOnly(color))),
         colorAndText: () => Task.FromResult(
             d.GetText().Bind<BaseVokiAnswerTypeData>(text =>
                 d.GetColor().Bind<BaseVokiAnswerTypeData>(color => new BaseVokiAnswerTypeData.ColorAndText(text, color))
             )),
-        audioOnly: () => CreateAudioOnlyAnswerData(vokiId, questionId, d),
-        audioAndText: () => CreateAudioAndTextAnswerData(vokiId, questionId, d)
+        audioOnly: () => CreateAudioOnlyAnswerData(vokiId, questionId, d, ct),
+        audioAndText: () => CreateAudioAndTextAnswerData(vokiId, questionId, d, ct)
     );
 
 
     private async Task<ErrOr<BaseVokiAnswerTypeData>> CreateImageOnlyAnswerData(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        VokiAnswerTypeDataDto answer
+        VokiAnswerTypeDataDto answer,
+        CancellationToken ct
     ) => (
-        await HandleAnswerImageKey(vokiId, questionId, answer.Image)
+        await HandleAnswerImageKey(vokiId, questionId, answer.Image, ct)
     ).Bind<BaseVokiAnswerTypeData>(savedKey => new BaseVokiAnswerTypeData.ImageOnly(savedKey));
 
     private async Task<ErrOr<BaseVokiAnswerTypeData>> CreateImageAndTextAnswerData(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        VokiAnswerTypeDataDto answer
+        VokiAnswerTypeDataDto answer,
+        CancellationToken ct
     ) {
         ErrOr<GeneralVokiAnswerText> textRes = answer.GetText();
         if (textRes.IsErr(out var err)) {
             return err;
         }
 
-        ErrOr<GeneralVokiAnswerImageKey> keyRes = await HandleAnswerImageKey(vokiId, questionId, answer.Image);
+        ErrOr<GeneralVokiAnswerImageKey> keyRes = await HandleAnswerImageKey(vokiId, questionId, answer.Image, ct);
         if (keyRes.IsErr(out err)) {
             return err;
         }
@@ -69,7 +72,8 @@ public class DraftVokiAnswerDataSavingService
     private async Task<ErrOr<GeneralVokiAnswerImageKey>> HandleAnswerImageKey(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        string? image
+        string? image,
+        CancellationToken ct
     ) {
         if (image is null) {
             return ErrFactory.NoValue.Common("Image value is not provided");
@@ -87,7 +91,7 @@ public class DraftVokiAnswerDataSavingService
         TempImageKey tempKey = tempKeyCreationRes.AsSuccess();
         ImageFileExtension ext = tempKey.Extension;
         var destination = GeneralVokiAnswerImageKey.CreateForAnswer(vokiId, questionId, ext);
-        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiAnswerImageFromTempToStandard(tempKey, destination);
+        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiAnswerImageFromTempToStandard(tempKey, destination, ct);
         if (copyingRes.IsErr(out err)) {
             return ErrFactory.Unspecified("Couldn't save answer image", details: err.Message);
         }
@@ -99,22 +103,24 @@ public class DraftVokiAnswerDataSavingService
     private async Task<ErrOr<BaseVokiAnswerTypeData>> CreateAudioOnlyAnswerData(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        VokiAnswerTypeDataDto answer
+        VokiAnswerTypeDataDto answer,
+        CancellationToken ct
     ) => (
-        await HandleAnswerAudioKey(vokiId, questionId, answer.Audio)
+        await HandleAnswerAudioKey(vokiId, questionId, answer.Audio, ct)
     ).Bind<BaseVokiAnswerTypeData>(savedKey => new BaseVokiAnswerTypeData.AudioOnly(savedKey));
 
     private async Task<ErrOr<BaseVokiAnswerTypeData>> CreateAudioAndTextAnswerData(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        VokiAnswerTypeDataDto answer
+        VokiAnswerTypeDataDto answer,
+        CancellationToken ct
     ) {
         ErrOr<GeneralVokiAnswerText> textRes = answer.GetText();
         if (textRes.IsErr(out var err)) {
             return err;
         }
 
-        ErrOr<GeneralVokiAnswerAudioKey> keyRes = await HandleAnswerAudioKey(vokiId, questionId, answer.Audio);
+        ErrOr<GeneralVokiAnswerAudioKey> keyRes = await HandleAnswerAudioKey(vokiId, questionId, answer.Audio, ct);
         if (keyRes.IsErr(out err)) {
             return err;
         }
@@ -125,7 +131,8 @@ public class DraftVokiAnswerDataSavingService
     private async Task<ErrOr<GeneralVokiAnswerAudioKey>> HandleAnswerAudioKey(
         VokiId vokiId,
         GeneralVokiQuestionId questionId,
-        string? audio
+        string? audio,
+        CancellationToken ct
     ) {
         if (audio is null) {
             return ErrFactory.NoValue.Common("Audio value is not provided");
@@ -144,7 +151,7 @@ public class DraftVokiAnswerDataSavingService
         TempAudioKey tempKey = tempKeyCreationRes.AsSuccess();
         AudioFileExtension ext = tempKey.Extension;
         var destination = GeneralVokiAnswerAudioKey.CreateForAnswer(vokiId, questionId, ext);
-        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiAnswerAudioFromTempToStandard(tempKey, destination);
+        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiAnswerAudioFromTempToStandard(tempKey, destination, ct);
         if (copyingRes.IsErr(out err)) {
             return ErrFactory.Unspecified("Couldn't save answer audio", details: err.Message);
         }

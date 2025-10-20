@@ -21,7 +21,7 @@ internal class S3MainBucketClient : IS3MainBucketClient
     }
 
 
-    public async Task<ErrOrNothing> PutFile(ITempKey key, FileData file, CancellationToken ct = default) {
+    public async Task<ErrOrNothing> PutFile(ITempKey key, FileData file, CancellationToken ct) {
         try {
             PutObjectRequest req = new() {
                 BucketName = _s3MainBucketConf.Name,
@@ -46,7 +46,7 @@ internal class S3MainBucketClient : IS3MainBucketClient
         }
     }
 
-    public async Task<ErrOr<FileData>> GetFile(string key, CancellationToken ct = default) {
+    public async Task<ErrOr<FileData>> GetFile(string key, CancellationToken ct) {
         try {
             GetObjectRequest req = new() {
                 BucketName = _s3MainBucketConf.Name,

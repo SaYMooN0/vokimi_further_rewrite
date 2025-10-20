@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { toast } from 'svelte-sonner';
-	import { load } from '../../../proxy+page.server';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 
 	interface Props {

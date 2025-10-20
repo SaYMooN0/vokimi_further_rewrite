@@ -28,7 +28,7 @@ internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVoki
         DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetById(command.VokiId))!;
         VokiCoverKey destination = VokiCoverKey.CreateWithId(command.VokiId, command.CoverKey.Extension);
         ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiCoverFromTempToStandard(
-            command.CoverKey, destination
+            command.CoverKey, destination, ct
         );
         if (copyingRes.IsErr(out var err)) {
             return err;

@@ -9,6 +9,5 @@ public interface IBaseVokisRepository
     Task<BaseVoki[]> GetAllSortedAsNoTracking(CancellationToken ct);
     Task<BaseVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds, CancellationToken ct);
     Task<BaseVoki?> GetById(VokiId vokiId);
-    Task Update(BaseVoki voki, CancellationToken ct = default);
+    Task Update(BaseVoki voki, CancellationToken ct);
 }
-

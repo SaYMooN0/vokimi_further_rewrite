@@ -4,8 +4,8 @@ namespace VokiRatingsService.Application.common.repositories;
 
 public interface IAppUsersRepository
 {
-    Task Add(AppUser user, CancellationToken ct = default);
+    Task Add(AppUser user, CancellationToken ct);
     Task<AppUser?> GetById(AppUserId userId);
     Task<AppUser?> GetByIdAsNoTracking(AppUserId userId, CancellationToken ct);
-    Task Update(AppUser appUser, CancellationToken ct = default);
+    Task Update(AppUser appUser, CancellationToken ct);
 }

@@ -31,7 +31,7 @@ internal sealed class AddNewAnswerToVokiQuestionCommandHandler :
         AddNewAnswerToVokiQuestionCommand command, CancellationToken ct
     ) {
         ErrOr<BaseVokiAnswerTypeData> answerDataRes = await _draftVokiAnswerDataSavingService.SaveAnswerData(
-            command.VokiId, command.QuestionId, command.AnswerDataDto
+            command.VokiId, command.QuestionId, command.AnswerDataDto, ct
         );
 
         if (answerDataRes.IsErr(out var err)) {

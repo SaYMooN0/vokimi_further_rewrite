@@ -34,7 +34,12 @@ internal static class RootHandlers
     ) {
         var request = httpContext.GetValidatedRequest<SaveBasicProfileSetupRequest>();
 
-        SaveBasicProfileSetupCommand command = new();
+        SaveBasicProfileSetupCommand command = new(
+            request.ProfilePic,
+            request.ParsedDisplayName,
+            request.PreferredLanguages.ToHashSet(),
+            request.ParsedTags
+        );
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());

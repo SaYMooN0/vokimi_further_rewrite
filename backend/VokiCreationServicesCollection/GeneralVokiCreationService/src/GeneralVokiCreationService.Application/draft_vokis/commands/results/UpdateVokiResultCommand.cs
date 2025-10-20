@@ -34,7 +34,7 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
 
     public async Task<ErrOr<VokiResult>> Handle(UpdateVokiResultCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId))!;
-        var imageRes = await HandleImage(command.NewImage, command.VokiId, command.ResultId);
+        var imageRes = await HandleImage(command.NewImage, command.VokiId, command.ResultId, ct);
         if (imageRes.IsErr(out var err)) {
             return err;
         }
@@ -51,14 +51,15 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
     private async Task<ErrOr<GeneralVokiResultImageKey?>> HandleImage(
         string? resultImageKey,
         VokiId vokiId,
-        GeneralVokiResultId resultId
+        GeneralVokiResultId resultId,
+        CancellationToken ct
     ) {
         if (resultImageKey is null) {
             return ErrOr<GeneralVokiResultImageKey?>.Success(null);
         }
 
         if (ITempKey.IsStringWithTempPrefix(resultImageKey)) {
-            return await HandleTempKey(resultImageKey, vokiId, resultId);
+            return await HandleTempKey(resultImageKey, vokiId, resultId, ct);
         }
 
         ErrOr<GeneralVokiResultImageKey> creationRes = GeneralVokiResultImageKey.FromString(resultImageKey);
@@ -75,7 +76,7 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
     }
 
     private async Task<ErrOr<GeneralVokiResultImageKey?>> HandleTempKey(
-        string stringTempKey, VokiId vokiId, GeneralVokiResultId resultId
+        string stringTempKey, VokiId vokiId, GeneralVokiResultId resultId, CancellationToken ct
     ) {
         var creationRes = TempImageKey.FromString(stringTempKey);
         if (creationRes.IsErr(out var creationErr)) {
@@ -84,8 +85,8 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
 
         var tempKey = creationRes.AsSuccess();
         var savedImageKey = GeneralVokiResultImageKey.CreateForResult(vokiId, resultId, tempKey.Extension);
-        var copyingRes = await _mainStorageBucket.CopyVokiResultImageFromTempToStandard(
-            tempKey, savedImageKey
+        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiResultImageFromTempToStandard(
+            tempKey, savedImageKey, ct
         );
         if (copyingRes.IsErr(out var err)) {
             return err;

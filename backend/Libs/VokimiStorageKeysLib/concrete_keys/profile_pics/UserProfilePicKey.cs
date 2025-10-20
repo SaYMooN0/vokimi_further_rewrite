@@ -31,6 +31,11 @@ public class UserProfilePicKey : BaseStorageImageKey
         return new UserProfilePicKey(key);
     }
 
+    public static ErrOr<UserProfilePicKey> CreateFromString(string stringKey) =>
+        Scheme.IsKeyValid(stringKey, out _, out _).IsErr(out var err)
+            ? err
+            : new UserProfilePicKey(stringKey);
+
     public static bool IsStringWithPicsPrefix(string? value) =>
         !string.IsNullOrWhiteSpace(value)
         && value.StartsWith(KeyConsts.UserProfilePicsFolder);

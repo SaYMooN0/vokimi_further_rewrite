@@ -11,6 +11,6 @@ public class IntegrationEventPublisher : IIntegrationEventPublisher
         _publish = publish;
     }
 
-    public Task Publish<T>(T integrationEvent, CancellationToken ct = default) where T : class, IIntegrationEvent =>
+    public Task Publish<T>(T integrationEvent, CancellationToken ct) where T : class, IIntegrationEvent =>
         _publish.Publish(integrationEvent, ct);
 }

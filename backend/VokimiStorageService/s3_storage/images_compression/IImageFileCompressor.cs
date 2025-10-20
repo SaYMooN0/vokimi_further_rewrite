@@ -2,5 +2,5 @@
 
 internal interface IImageFileCompressor
 {
-    Task<ErrOr<ImageFileAfterCompression>> CompressAsync(FileData file, CancellationToken ct = default);
+    Task<ErrOr<ImageFileAfterCompression>> CompressAsync(FileData file, CancellationToken ct);
 }

@@ -13,7 +13,7 @@
 			const newHistory = [
 				profilePic,
 				...picsHistory.filter((p) => p !== profilePic && p !== newPic),
-				'default-profile-pics/black.webp'
+			'preset-profile-pics/basic-black.webp'
 			];
 
 			picPresets['previous'] = newHistory.slice(0, 5);

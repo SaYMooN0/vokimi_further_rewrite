@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using ApplicationShared;
+﻿using ApplicationShared;
+using Microsoft.Extensions.DependencyInjection;
 namespace AlbumsService.Application;
 
 public static class DependencyInjection

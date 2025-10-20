@@ -26,7 +26,7 @@ public class BaseVokiTakenIntegrationEventHandler : IConsumer<BaseVokiTakenInteg
 
         bool changed = appUser.AddTakenVoki(context.Message.VokiId);
         if (changed) {
-            await _appUsersRepository.Update(appUser);
+            await _appUsersRepository.Update(appUser, context.CancellationToken);
         }
     }
 }

@@ -31,13 +31,16 @@ public class BaseVokiTakenIntegrationEventHandler : IConsumer<BaseVokiTakenInteg
         }
 
         voki.UpdateVokiTakingsCount(context.Message.NewVokiTakingsCount);
-        await _baseVokisRepository.Update(voki);
+        await _baseVokisRepository.Update(voki, context.CancellationToken);
 
         if (context.Message.VokiTakerId is null) {
             return;
         }
 
-        AppUser? vokiTaker = await _appUsersRepository.GetUserWithTakenVokis(context.Message.VokiTakerId);
+        AppUser? vokiTaker = await _appUsersRepository.GetUserWithTakenVokis(
+            context.Message.VokiTakerId,
+            context.CancellationToken
+        );
         if (vokiTaker is null) {
             return;
         }

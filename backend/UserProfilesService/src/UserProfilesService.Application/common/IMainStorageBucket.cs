@@ -5,6 +5,15 @@ namespace UserProfilesService.Application.common;
 
 public interface IMainStorageBucket
 {
-    Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromPresets(PresetProfilePicKey presetKey, AppUserId userId);
-    Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromTemp(TempImageKey temp, AppUserId userId);
+    Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromPresets(
+        PresetProfilePicKey presetKey,
+        AppUserId userId,
+        CancellationToken ct
+    );
+
+    Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromTemp(
+        TempImageKey temp,
+        AppUserId userId,
+        CancellationToken ct
+    );
 }

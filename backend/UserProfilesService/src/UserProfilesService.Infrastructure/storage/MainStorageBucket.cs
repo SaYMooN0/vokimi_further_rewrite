@@ -20,13 +20,15 @@ internal class MainStorageBucket : BaseMainS3Bucket, IMainStorageBucket
 
     public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromPresets(
         PresetProfilePicKey presetKey,
-        AppUserId userId
+        AppUserId userId,
+        CancellationToken ct
     ) {
         UserProfilePicKey newKey = UserProfilePicKey.CreateNewForUser(userId, presetKey.ImageExtension).AsSuccess();
 
         ErrOrNothing res = await CopyStandardToStandard(
             source: presetKey,
-            destination: newKey
+            destination: newKey,
+            ct
         );
         if (res.IsErr(out var err)) {
             return err;
@@ -35,12 +37,17 @@ internal class MainStorageBucket : BaseMainS3Bucket, IMainStorageBucket
         return newKey;
     }
 
-    public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromTemp(TempImageKey temp, AppUserId userId) {
+    public async Task<ErrOr<UserProfilePicKey>> CopyUserProfilePicFromTemp(
+        TempImageKey temp,
+        AppUserId userId,
+        CancellationToken ct
+    ) {
         UserProfilePicKey newKey = UserProfilePicKey.CreateNewForUser(userId, temp.Extension).AsSuccess();
 
         ErrOrNothing res = await CopyTempToStandard(
             source: temp,
-            destination: newKey
+            destination: newKey,
+            ct
         );
         if (res.IsErr(out var err)) {
             return err;

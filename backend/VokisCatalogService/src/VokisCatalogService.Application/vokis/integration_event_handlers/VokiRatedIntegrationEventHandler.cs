@@ -20,6 +20,6 @@ public class VokiRatedIntegrationEventHandler : IConsumer<VokiRatedIntegrationEv
         }
 
         voki.UpdateRatingsCount(context.Message.NewRatingsCount);
-        await _baseVokisRepository.Update(voki);
+        await _baseVokisRepository.Update(voki, context.CancellationToken);
     }
 }

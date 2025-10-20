@@ -37,7 +37,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
                 showResultsDistribution: e.ShowResultsDistribution
             ).AsSuccess()
         );
-        await _generalVokisRepository.Add(voki);
+        await _generalVokisRepository.Add(voki, context.CancellationToken);
     }
 
     private static VokiResult ResultFromEventDto(GeneralVokiResultIntegrationEventDto r) => new(

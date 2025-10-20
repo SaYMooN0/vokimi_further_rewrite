@@ -32,7 +32,7 @@ internal sealed class UpdateVokiQuestionAnswerCommandHandler :
 
     public async Task<ErrOr<VokiQuestionAnswer>> Handle(UpdateVokiQuestionAnswerCommand command, CancellationToken ct) {
         ErrOr<BaseVokiAnswerTypeData> answerDataRes = await _draftVokiAnswerDataSavingService.SaveAnswerData(
-            command.VokiId, command.QuestionId, command.AnswerDataDto
+            command.VokiId, command.QuestionId, command.AnswerDataDto, ct
         );
 
         if (answerDataRes.IsErr(out var err)) {

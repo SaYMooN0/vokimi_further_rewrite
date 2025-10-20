@@ -8,7 +8,7 @@ export class ProfileSetupProcessState {
 
     #tagsSuggestionsState: TagsSuggestionLoadingState = $state({ name: 'loading' });
 
-    readonly #chosenLanguages = new SvelteSet<Language>();
+    readonly chosenLanguages = new SvelteSet<Language>();
     readonly chosenFavoriteTags = new SvelteSet<Tag>();
     readonly profilePicInputValue = $state<string>("");
     readonly displayNameInputValue = $state<string>("");
@@ -25,7 +25,7 @@ export class ProfileSetupProcessState {
             return { name: 'loading' }
         }
         const tags = new Set<string>();
-        for (const lang of this.#chosenLanguages) {
+        for (const lang of this.chosenLanguages) {
             const arr = this.#tagsSuggestionsState.suggestionsByLangs[lang];
             if (arr) arr.forEach((t) => tags.add(t));
         }
@@ -38,7 +38,7 @@ export class ProfileSetupProcessState {
 
     constructor(initialLangs: Language[], initialTags: Tag[], initialProfilePic: string, initialDisplayName: string) {
 
-        initialLangs.forEach((l) => this.#chosenLanguages.add(l));
+        initialLangs.forEach((l) => this.chosenLanguages.add(l));
         initialTags.forEach((t) => this.chosenFavoriteTags.add(t));
         this.profilePicInputValue = initialProfilePic;
         this.displayNameInputValue = initialDisplayName;
@@ -46,18 +46,18 @@ export class ProfileSetupProcessState {
     }
 
     isLanguageChosen(language: Language): boolean {
-        return this.#chosenLanguages.has(language);
+        return this.chosenLanguages.has(language);
     }
 
     toggleLanguage(language: Language): void {
-        if (this.#chosenLanguages.has(language)) {
-            this.#chosenLanguages.delete(language);
+        if (this.chosenLanguages.has(language)) {
+            this.chosenLanguages.delete(language);
         } else {
-            this.#chosenLanguages.add(language);
+            this.chosenLanguages.add(language);
         }
     }
     anyLanguagesChosen() {
-        return this.#chosenLanguages.size > 0
+        return this.chosenLanguages.size > 0
     }
     chooseTag(tag: Tag): void {
         this.chosenFavoriteTags.add(tag);

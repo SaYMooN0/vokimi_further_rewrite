@@ -2,7 +2,5 @@
 
 public interface IStorageService
 {
-    public Task<ErrOr<TempImageKey>> PutTempImageFile(FileData data, CancellationToken ct = default);
-
-    // public Task<ErrOrNothing> Delete(BaseStorageKey storageKey);
+    public Task<ErrOr<TempImageKey>> PutTempImageFile(FileData data, CancellationToken ct);
 }

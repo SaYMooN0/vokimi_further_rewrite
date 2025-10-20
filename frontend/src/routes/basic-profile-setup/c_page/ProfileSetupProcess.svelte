@@ -16,7 +16,7 @@
 		initialDisplayName: string;
 		maxDisplayNameLength: number;
 		maxTagLength: number;
-		saveSetup: () => Promise<ResponseVoidResult>;
+		changeStateToSaved: () => void;
 	}
 	let {
 		initialLangs,
@@ -25,7 +25,7 @@
 		initialDisplayName,
 		maxDisplayNameLength,
 		maxTagLength,
-		saveSetup
+		changeStateToSaved
 	}: Props = $props();
 
 	let setupProcessState = new ProfileSetupProcessState(
@@ -132,7 +132,17 @@
 			<ProfileSetupProfilePictureStep bind:profilePic={setupProcessState.profilePicInputValue} />
 		{:else if currentStep === 'confirmation'}
 			<SetupProcessStepHeader text="Save chosen settings" />
-			<ProfileSetupConfirmationStep />
+			<ProfileSetupConfirmationStep
+				languages={setupProcessState.chosenLanguages}
+				goToLanguagesStep={() => (currentStep = 'languages')}
+				chosenTags={setupProcessState.chosenFavoriteTags}
+				goToTagsStep={() => (currentStep = 'tags')}
+				profilePic={setupProcessState.profilePicInputValue}
+				goToPicStep={() => (currentStep = 'profile-pic')}
+				displayName={setupProcessState.displayNameInputValue}
+				goToNameStep={() => (currentStep = 'display-name')}
+				{changeStateToSaved}
+			/>
 		{:else}
 			<h1>Something went wrong, reload the page</h1>
 		{/if}

@@ -8,10 +8,6 @@
 
 	let { data }: PageProps = $props();
 	let setupState: 'process' | 'complete' = $state('process');
-	async function saveChanges(): Promise<ResponseVoidResult> {
-		toast.error("Sorry, this feature isn't implemented yet");
-		return { isSuccess: false, errs: [] };
-	}
 </script>
 
 {#if !data.isSuccess}
@@ -26,7 +22,7 @@
 				initialDisplayName={data.data.displayName}
 				maxDisplayNameLength={data.data.maxDisplayNameLength}
 				maxTagLength={data.data.maxTagLength}
-				saveSetup={saveChanges}
+				changeStateToSaved={() => (setupState = 'complete')}
 			/>
 		{:else if setupState === 'complete'}
 			<SetupSavedMessage />

@@ -24,7 +24,8 @@ public class NewAppUserCreatedIntegrationEventHandler : IConsumer<NewAppUserCrea
     public async Task Consume(ConsumeContext<NewAppUserCreatedIntegrationEvent> context) {
         ErrOr<UserProfilePicKey> picRes = await _mainStorageBucket.CopyUserProfilePicFromPresets(
             presetKey: PresetProfilePicKey.DefaultProfilePic,
-            context.Message.CreatedUserId
+            context.Message.CreatedUserId,
+            context.CancellationToken
         );
         if (picRes.IsErr(out var err)) {
             return;
@@ -35,6 +36,6 @@ public class NewAppUserCreatedIntegrationEventHandler : IConsumer<NewAppUserCrea
             new UserUniqueName(context.Message.UserName),
             picRes.AsSuccess()
         );
-        await _appUsersRepository.Add(user);
+        await _appUsersRepository.Add(user, context.CancellationToken);
     }
 }
