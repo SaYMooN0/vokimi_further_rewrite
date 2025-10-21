@@ -31,11 +31,11 @@
 			'preset-profile-pics/basic-black.webp',
 			'preset-profile-pics/basic-black.webp'
 		],
-		['meme']: [
-			'preset-profile-pics/meme-masyunya.webp',
-			'preset-profile-pics/meme-ya-cat.webp',
-			'preset-profile-pics/meme-roblox-m.webp',
-			'preset-profile-pics/meme-roblox-f.webp'
+		['pets']: [
+			'preset-profile-pics/pets-marsita.webp',
+			'preset-profile-pics/pets-ya-cat.webp',
+			'preset-profile-pics/pets-monika.webp',
+			'preset-profile-pics/pets-zara.webp'
 		],
 		['boykisser']: [
 			'preset-profile-pics/boykisser-1.webp',
@@ -60,7 +60,7 @@
 			onPicClick={updateCurrentPic}
 			picsArr={picPresets['previous']}
 		/>
-		<PicsStepPresetsRow rowName="Meme" onPicClick={updateCurrentPic} picsArr={picPresets['meme']} />
+		<PicsStepPresetsRow rowName="Pets" onPicClick={updateCurrentPic} picsArr={picPresets['pets']} />
 		<PicsStepPresetsRow
 			rowName="Boykisser"
 			onPicClick={updateCurrentPic}

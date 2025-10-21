@@ -68,6 +68,8 @@
 	.btn.secondary {
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
+		box-shadow: var(--shadow-xs), var(--shadow-md);
+
 	}
 
 	.btn.secondary:hover {

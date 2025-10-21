@@ -22,6 +22,9 @@
 		errs = [];
 	}
 	async function confirmLogin() {
+		if (isLoading) {
+			return;
+		}
 		validateForm();
 		if (errs.length > 0) {
 			return;

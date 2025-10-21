@@ -27,7 +27,7 @@ public class PresetProfilePicKey : BaseStorageImageKey
         Scheme.IsKeyValid(key).IsNothing();
 
     public static  PresetProfilePicKey DefaultProfilePic =>
-        new($"{KeyConsts.PresetProfilePicsFolder}/meme-masyunya.webp");
+        new($"{KeyConsts.PresetProfilePicsFolder}/pets-ya-cat.webp");
 
     private static class Scheme
     {
@@ -38,10 +38,10 @@ public class PresetProfilePicKey : BaseStorageImageKey
         private static readonly HashSet<string> AllowedNames = new(StringComparer.Ordinal) {
             "basic-black",
             //
-            "meme-masyunya",
-            "meme-ya-cat",
-            "meme-roblox-m",
-            "meme-roblox-f",
+            "pets-marsita",
+            "pets-ya-cat",
+            "pets-zara",
+            "pets-monikaf",
             //
             "boykisser-1",
             "boykisser-2",

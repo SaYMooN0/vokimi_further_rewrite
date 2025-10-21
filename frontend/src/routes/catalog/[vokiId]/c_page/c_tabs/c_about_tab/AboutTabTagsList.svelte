@@ -2,6 +2,7 @@
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
 	import { toast } from 'svelte-sonner';
 	import VokiPageTabSectionLabel from '../c_tabs_shared/VokiPageTabSectionLabel.svelte';
+	import TagItemChip from '$lib/components/TagItemChip.svelte';
 
 	let { tags, vokiId }: { tags: string[]; vokiId: string } = $props<{
 		tags: string[];
@@ -15,7 +16,7 @@
 		<FieldNotSetLabel text="This voki has no tags" />
 	{:else}
 		{#each tags as tag}
-			<label class="tag-box tag">#{tag}</label>
+			<TagItemChip {tag} className="tag-box" />
 		{/each}
 	{/if}
 	<button
@@ -34,17 +35,10 @@
 		row-gap: 0.375rem;
 	}
 
-	.tag-box {
+	.voki-tags-section :global(.tag-box) {
 		margin-left: 0.375rem;
 		border-radius: 0.25rem;
 		font-size: 1rem;
-	}
-
-	.tag {
-		padding: 0.125rem 0.375rem;
-		background-color: var(--secondary);
-		color: var(--secondary-foreground);
-		box-shadow: var(--shadow-xs);
 	}
 
 	.suggest-tag-btn {

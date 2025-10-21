@@ -11,7 +11,7 @@
 <div class="languages-container">
 	{#each LanguageUtils.values() as lang}
 		<div
-			class="language"
+			class="language unselectable"
 			class:active={isLanguageChosen(lang)}
 			onclick={() => toggleLanguage(lang)}
 		>
@@ -42,12 +42,11 @@
 		align-items: center;
 		justify-content: center;
 		padding: 0.5rem 1rem;
-		border-radius: var(--radius);
+		border-radius: 0.375rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 		cursor: pointer;
 		transition: background-color 0.15s;
-		user-select: none;
 		font-weight: 500;
 		font-size: 1.125rem;
 	}

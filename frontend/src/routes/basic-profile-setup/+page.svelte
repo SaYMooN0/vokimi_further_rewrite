@@ -1,10 +1,8 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import { toast } from 'svelte-sonner';
 	import type { PageProps } from './$types';
 	import ProfileSetupProcess from './c_page/ProfileSetupProcess.svelte';
 	import SetupSavedMessage from './c_page/SetupSavedMessage.svelte';
-	import type { ResponseVoidResult } from '$lib/ts/backend-communication/result-types';
 
 	let { data }: PageProps = $props();
 	let setupState: 'process' | 'complete' = $state('process');
@@ -16,6 +14,7 @@
 	<div class="page-content-container">
 		{#if setupState === 'process'}
 			<ProfileSetupProcess
+				uniqueName={data.data.userUniqueName}
 				initialLangs={data.data.preferredLanguages}
 				initialTags={data.data.favoriteTags}
 				initialProfilePic={data.data.profilePicture}

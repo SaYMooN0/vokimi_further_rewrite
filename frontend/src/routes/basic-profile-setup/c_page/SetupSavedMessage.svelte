@@ -1,8 +1,86 @@
 <script lang="ts"></script>
 
 <div class="setup-saved-container">
+	<svg
+		xmlns="http://www.w3.org/2000/svg"
+		viewBox="0 0 24 24"
+		fill="none"
+		stroke="currentColor"
+		stroke-linecap="round"
+		stroke-linejoin="round"
+		class="user-round-check-icon"
+	>
+		<path d="M2 21a8 8 0 0 1 13.292-6" />
+		<circle cx="10" cy="8" r="5" />
+		<path d="m16 19 2 2 4-4" class="check-path" />
+	</svg>
+
 	<h1>You profile changes have been successfully saved</h1>
 	<p>You can customize your profile even more here</p>
 	<a class="profile-link" href="/profile">My profile</a>
-    <a class="vokis-link" href="/">Go to Vokis catalog</a>
 </div>
+.
+
+<style>
+	.setup-saved-container {
+		display: flex;
+		flex-direction: column;
+		margin: 10vh auto 2rem;
+		align-items: center;
+	}
+	.setup-saved-container h1 {
+		color: var(--muted-foreground);
+		font-size: 1.75rem;
+		font-weight: 650;
+		letter-spacing: 0.1px;
+	}
+	.setup-saved-container p {
+		margin-top: 2rem;
+		color: var(--secondary-foreground);
+		font-size: 1.25rem;
+		font-weight: 500;
+	}
+	.profile-link {
+		color: var(--primary-foreground);
+		background-color: var(--primary);
+		margin-top: 0.375rem;
+		padding: 0.25rem 1rem;
+		border-radius: 0.5rem;
+		font-weight: 450;
+		letter-spacing: 0.2px;
+	}
+	.profile-link:hover,
+	.profile-link:active {
+		background-color: var(--primary-hov);
+	}
+	.user-round-check-icon {
+		color: var(--primary);
+		height: 10rem;
+		width: 10rem;
+		stroke-width: 2;
+	}
+
+	.check-path {
+		stroke-dasharray: 9;
+		stroke-dashoffset: 0;
+		transition:
+			stroke-dashoffset 0.125s ease-out,
+			opacity 0.125s ease-out;
+		animation-delay: 0.5s;
+		animation: checkAnimation 1s ease-out backwards;
+	}
+	@keyframes checkAnimation {
+		0% {
+			stroke-dashoffset: 9;
+			opacity: 0;
+		}
+		33% {
+			stroke-dashoffset: 9;
+			opacity: 0;
+		}
+		100% {
+			stroke-dashoffset: 0;
+			opacity: 1;
+		}
+	}
+</style>

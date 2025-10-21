@@ -9,8 +9,7 @@
 		font-size: 1.25rem;
 		color: var(--text);
 		font-weight: 500;
-		margin: 0;
+		margin: 0 0 0.5rem 0;
 		text-align: center;
-		margin: 1rem 0 0.5rem;
 	}
 </style>

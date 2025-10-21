@@ -14,7 +14,7 @@
 	<div class="pics-container">
 		{#each picsArr.slice(0, 4) as pic}
 			<img
-				class="img"
+				class="img unselectable"
 				onclick={() => onPicClick(pic)}
 				src={StorageBucketMain.fileSrc(pic)}
 				alt="Current profile pic"

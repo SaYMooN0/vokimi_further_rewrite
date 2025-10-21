@@ -19,7 +19,6 @@
 	<div class="separator"></div>
 	<div class="value-container language-value">
 		<label class="value-name">Language:</label>
-	
 		<svg><use href={LanguageUtils.icon(language)} /></svg>	
 		<label class="value-label">{LanguageUtils.name(language)}</label>
 	</div>

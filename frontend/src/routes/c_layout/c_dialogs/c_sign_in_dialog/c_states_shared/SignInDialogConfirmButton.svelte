@@ -44,17 +44,18 @@
 		cursor: pointer;
 	}
 
-	.confirm-btn:hover {
+	.confirm-btn:not(.loading):hover {
 		background-color: var(--primary-hov);
 	}
 
-	.confirm-btn:active {
+	.confirm-btn:not(.loading):active {
 		width: 90%;
 	}
 
 	.confirm-btn.loading {
-		pointer-events: none;
-		opacity: 0.9;
+		opacity: 0.85;
+		cursor: not-allowed !important;
+
 	}
 
 	.confirm-btn > :global(.container) {

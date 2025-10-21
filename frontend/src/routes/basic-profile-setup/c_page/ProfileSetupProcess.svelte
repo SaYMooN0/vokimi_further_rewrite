@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { Language } from '$lib/ts/language';
 	import { ProfileSetupProcessState } from './profile-setup-process-state.svelte';
-	import type { ResponseVoidResult } from '$lib/ts/backend-communication/result-types';
 	import ProfileSetupLanguagesStep from './c_process_steps/ProfileSetupLanguagesStep.svelte';
 	import ProfileSetupTagsStep from './c_process_steps/ProfileSetupTagsStep.svelte';
 	import ProfileSetupDisplayNameStep from './c_process_steps/ProfileSetupDisplayNameStep.svelte';
@@ -10,6 +9,7 @@
 	import SetupProcessFlowButtons from './c_setup_process/SetupProcessFlowButtons.svelte';
 	import ProfileSetupConfirmationStep from './c_process_steps/ProfileSetupConfirmationStep.svelte';
 	interface Props {
+		uniqueName: string;
 		initialLangs: Language[];
 		initialTags: string[];
 		initialProfilePic: string;
@@ -19,6 +19,7 @@
 		changeStateToSaved: () => void;
 	}
 	let {
+		uniqueName,
 		initialLangs,
 		initialTags,
 		initialProfilePic,
@@ -133,6 +134,7 @@
 		{:else if currentStep === 'confirmation'}
 			<SetupProcessStepHeader text="Save chosen settings" />
 			<ProfileSetupConfirmationStep
+				{uniqueName}
 				languages={setupProcessState.chosenLanguages}
 				goToLanguagesStep={() => (currentStep = 'languages')}
 				chosenTags={setupProcessState.chosenFavoriteTags}
@@ -166,6 +168,8 @@
 		display: grid;
 		align-items: start;
 		animation: fade-in 220ms ease-out both;
+		gap: 1rem;
+		min-height: 34rem;
 	}
 
 	.footer {

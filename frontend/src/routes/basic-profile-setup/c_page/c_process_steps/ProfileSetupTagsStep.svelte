@@ -59,6 +59,7 @@
 		grid-template-columns: 1fr auto 1fr;
 		justify-content: center;
 		align-items: center;
+		margin-bottom: 0.5rem;
 	}
 	.or-label {
 		font-size: 1rem;
@@ -73,8 +74,8 @@
 	}
 
 	.chosen-tags-part {
-		display: grid;
-		grid-template-rows: auto 1fr;
+		display: flex;
+		flex-direction: column;
 		min-height: 4.75rem;
 	}
 	.no-tags-msg {
