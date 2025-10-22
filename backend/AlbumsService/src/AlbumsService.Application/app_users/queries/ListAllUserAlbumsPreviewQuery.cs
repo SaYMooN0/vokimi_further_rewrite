@@ -1,9 +1,8 @@
 ﻿using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.app_user_aggregate;
-using AlbumsService.Domain.voki_album_aggregate;
 using SharedKernel.auth;
 
-namespace AlbumsService.Application.voki_albums.queries;
+namespace AlbumsService.Application.app_users.queries;
 
 public sealed record ListAllUserAlbumsPreviewQuery() : IQuery<ListAllUserAlbumsPreviewQueryResult>;
 

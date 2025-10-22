@@ -27,6 +27,7 @@ const config = {
 		},
 	},
 	vitePlugin: {
+		inspector: true
 	},
 };
 

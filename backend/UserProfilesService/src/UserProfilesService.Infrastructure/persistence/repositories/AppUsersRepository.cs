@@ -41,8 +41,8 @@ public class AppUsersRepository : IAppUsersRepository
 
         return _db.AppUsers
             .AsNoTracking()
+            .Where(u => userIdsArray.Contains(u.Id))
             .Select(u => new UserPreviewDto(u.Id, u.UniqueName, u.DisplayName, u.ProfilePic))
-            .Where(u => userIdsArray.Contains(u.UserId))
             .ToArrayAsync(ct);
     }
 }

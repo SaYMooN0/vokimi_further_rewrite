@@ -8,7 +8,8 @@ public record class ViewAllVokiResultsResponse(
     VokiResultPreviewWithPercentageResponse[] Results,
     bool ShowResultsDistribution,
     GeneralVokiResultsVisibility ResultsVisibility,
-    string VokiName
+    string VokiName,
+    bool HasUserTakenThisVoki
 ) : ICreatableResponse<ViewAllVokiResultsQueryResult>
 {
     public static ICreatableResponse<ViewAllVokiResultsQueryResult> Create(
@@ -17,7 +18,8 @@ public record class ViewAllVokiResultsResponse(
         queryResult.Results.Select(VokiResultPreviewWithPercentageResponse.Create).ToArray(),
         queryResult.ShowResultsDistribution,
         queryResult.ResultsVisibility,
-        queryResult.VokiName.ToString()
+        queryResult.VokiName.ToString(),
+        queryResult.HasUserTaken
     );
 }
 

@@ -61,6 +61,7 @@
 						albumsViewData={dialogState.albumsState.albums}
 						albumIdToIsChosen={dialogState.albumToIsChosen}
 						isAlbumChosenChanged={(id) => dialogState.isAlbumChosenChanged(id)}
+						updateVokiPresenceInAlbums={() => dialogState.updateVokiPresenceInAlbums()}
 					/>
 				{/if}
 			{:else}

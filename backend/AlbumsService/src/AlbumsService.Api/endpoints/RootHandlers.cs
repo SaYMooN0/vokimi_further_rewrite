@@ -1,5 +1,6 @@
 ﻿using AlbumsService.Api.contracts;
 using AlbumsService.Api.contracts.create_new_album;
+using AlbumsService.Application.app_users.queries;
 using AlbumsService.Application.common.repositories;
 using AlbumsService.Application.voki_albums.commands;
 using AlbumsService.Application.voki_albums.queries;

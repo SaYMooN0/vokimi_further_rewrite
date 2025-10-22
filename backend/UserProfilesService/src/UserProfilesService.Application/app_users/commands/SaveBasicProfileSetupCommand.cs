@@ -14,8 +14,7 @@ public sealed record SaveBasicProfileSetupCommand(
     ImmutableHashSet<VokiTagId> Tags
 ) : ICommand;
 
-internal sealed class SaveBasicProfileSetupCommandHandler :
-    ICommandHandler<SaveBasicProfileSetupCommand>
+internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<SaveBasicProfileSetupCommand>
 {
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IUserContext _userContext;
@@ -54,10 +53,10 @@ internal sealed class SaveBasicProfileSetupCommandHandler :
         }
 
         ErrOrNothing setupRes = user.ProcessBasicSetup(
-            profilePicKey, 
+            profilePicKey,
             command.DisplayName,
             command.PreferredLanguages, command.Tags
-            );
+        );
         if (savedKeyRes.IsErr(out err)) {
             return err;
         }

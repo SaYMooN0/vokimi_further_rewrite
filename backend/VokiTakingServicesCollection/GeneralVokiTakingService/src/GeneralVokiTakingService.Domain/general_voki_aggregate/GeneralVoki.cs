@@ -267,7 +267,7 @@ public sealed class GeneralVoki : BaseVoki
     }
 
 
-    private bool UserHasTakenThisVoki(ISet<GeneralVokiResultId> userReceivedResultIds) =>
+    public bool UserHasTakenThisVoki(ISet<GeneralVokiResultId> userReceivedResultIds) =>
         userReceivedResultIds.Overlaps(_results.Select(r => r.Id));
 
     private bool UserHasReceivedAllResults(ISet<GeneralVokiResultId> userReceivedResultIds) =>

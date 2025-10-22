@@ -18,6 +18,11 @@ public class VokiAlbumsRepository : IVokiAlbumsRepository
             .Where(a => a.OwnerId == userId)
             .ToArrayAsync(ct);
 
+    public Task<VokiAlbum[]> ListAlbumsForUser(AppUserId userId, CancellationToken ct) =>
+        _db.VokiAlbums
+            .Where(a => a.OwnerId == userId)
+            .ToArrayAsync(ct);
+
     public Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSortedAsNoTracking(AppUserId userId) =>
         _db.VokiAlbums
             .AsNoTracking()
@@ -38,7 +43,12 @@ public class VokiAlbumsRepository : IVokiAlbumsRepository
         await _db.VokiAlbums.FindAsync(albumId);
 
     public async Task DeleteAlbum(VokiAlbum album) {
-        _db.Remove(album);
+        _db.VokiAlbums.Remove(album);
         await _db.SaveChangesAsync();
+    }
+
+    public async Task UpdateRange(IEnumerable<VokiAlbum> albums, CancellationToken ct) {
+        _db.VokiAlbums.UpdateRange(albums);
+        await _db.SaveChangesAsync(ct);
     }
 }

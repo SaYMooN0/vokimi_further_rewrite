@@ -35,16 +35,16 @@ public record AlbumWithVokiPresenceDto(
     HexColor MainColor,
     HexColor SecondaryColor,
     DateTime CreationDate,
-    bool HasSpecifiedVoki
+    bool IsVokiInAlbum
 )
 {
-    public static AlbumWithVokiPresenceDto FromAlbum(VokiAlbum albumId, VokiId vokiId) => new(
-        albumId.Id,
-        albumId.Name,
-        albumId.Icon,
-        albumId.MainColor,
-        albumId.SecondaryColor,
-        albumId.CreationDate,
-        albumId.HasVoki(vokiId)
+    public static AlbumWithVokiPresenceDto FromAlbum(VokiAlbum album, VokiId vokiId) => new(
+        album.Id,
+        album.Name,
+        album.Icon,
+        album.MainColor,
+        album.SecondaryColor,
+        album.CreationDate,
+        album.HasVoki(vokiId)
     );
 }

@@ -3,7 +3,8 @@ import type { Err } from "../err";
 
 export type UserPreviewData = {
     id: string;
-    name: string;
+    uniqueName: string;
+    displayName: string;
     profilePic: string;
 };
 

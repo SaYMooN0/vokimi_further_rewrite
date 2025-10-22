@@ -7,8 +7,10 @@ using VokimiStorageKeysLib.temp_keys;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 
-public sealed record UpdateVokiCoverCommand(VokiId VokiId, TempImageKey CoverKey) :
-    ICommand<VokiCoverKey>,
+public sealed record UpdateVokiCoverCommand(
+    VokiId VokiId,
+    TempImageKey CoverKey
+) : ICommand<VokiCoverKey>,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVokiCoverCommand, VokiCoverKey>

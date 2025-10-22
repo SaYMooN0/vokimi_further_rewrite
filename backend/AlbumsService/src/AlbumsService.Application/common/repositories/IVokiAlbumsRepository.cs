@@ -5,10 +5,12 @@ namespace AlbumsService.Application.common.repositories;
 public interface IVokiAlbumsRepository
 {
     Task<VokiAlbum[]> ListAlbumsForUserAsNoTracking(AppUserId userId, CancellationToken ct);
+    Task<VokiAlbum[]> ListAlbumsForUser(AppUserId userId, CancellationToken ct);
     Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSortedAsNoTracking(AppUserId userId);
     Task Add(VokiAlbum album);
     Task<VokiAlbum?> GetById(VokiAlbumId albumId);
     Task DeleteAlbum(VokiAlbum album);
+    Task UpdateRange(IEnumerable<VokiAlbum> albums, CancellationToken ct);
 }
 
 public record VokiAlbumPreviewDto(

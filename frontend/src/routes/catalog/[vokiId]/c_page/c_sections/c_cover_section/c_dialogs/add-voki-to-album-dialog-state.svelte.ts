@@ -1,5 +1,7 @@
-import { ApiAlbums } from "$lib/ts/backend-communication/backend-services";
+import { ApiAlbums, RJO } from "$lib/ts/backend-communication/backend-services";
+import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
+import { SvelteSet } from "svelte/reactivity";
 
 export type AlbumViewData = {
     id: string;
@@ -24,12 +26,16 @@ export class AddVokiToAlbumsDialogState {
     private _lastLoadedAt = 0;
     private _inflight: Promise<void> | null = null;
 
-    private _initialChosenAlbumIds = new Set<string>();
+    private _initialChosenAlbumIds = new SvelteSet<string>();
 
     constructor(vokiId: string) {
         this.vokiId = vokiId;
     }
-
+    isAlbumChosenChanged(albumId: string): boolean {
+        const initial = this._initialChosenAlbumIds.has(albumId);
+        const now = this.albumToIsChosen[albumId];
+        return now !== initial;
+    }
     async ensureFresh(): Promise<void> {
         if (this._inflight) {
             return this._inflight;
@@ -52,54 +58,63 @@ export class AddVokiToAlbumsDialogState {
             return this._inflight;
         }
 
-        this.albumToIsChosen = {};
-        this._initialChosenAlbumIds.clear();
-        this.albumsState = { name: "loading" };
 
         const task = (async () => {
-            type AlbumFetchType = AlbumViewData & { isVokiInAlbum: boolean };
+            this.albumsState = { name: "loading" };
 
-            const response = await ApiAlbums.fetchJsonResponse<{ albums: AlbumFetchType[] }>(
+            const response = await ApiAlbums.fetchJsonResponse<{ albums: AlbumDataWithVokiPresence[] }>(
                 `/vokis/${this.vokiId}/albums-data`,
                 { method: "GET" }
             );
 
-            if (response.isSuccess) {
-                const albums: AlbumViewData[] = response.data.albums
-                    .map((a) => ({
-                        id: a.id,
-                        name: a.name,
-                        icon: a.icon,
-                        mainColor: a.mainColor,
-                        secondaryColor: a.secondaryColor,
-                        creationDate: a.creationDate instanceof Date
-                            ? a.creationDate
-                            : new Date(a.creationDate as unknown as string),
-                    }))
-                    .sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime());
-
-                for (const a of response.data.albums) {
-                    this.albumToIsChosen[a.id] = a.isVokiInAlbum;
-                    if (a.isVokiInAlbum) {
-                        this._initialChosenAlbumIds.add(a.id);
-                    }
-                }
-
-                this.albumsState = { name: "ok", albums };
-                this._lastLoadedAt = Date.now();
-            } else {
-                this.albumsState = { name: "errs", errs: response.errs };
-                this._lastLoadedAt = 0;
-            }
+            this.handleFetchAlbumsWithVokiPresence(response);
         })();
 
         this._inflight = task.finally(() => (this._inflight = null));
         return this._inflight;
     }
 
-    isAlbumChosenChanged(albumId: string): boolean {
-        const initial = this._initialChosenAlbumIds.has(albumId);
-        const now = this.albumToIsChosen[albumId];
-        return now !== initial;
+    async updateVokiPresenceInAlbums() {
+        this.albumsState = { name: "loading" };
+        const response = await ApiAlbums.fetchJsonResponse<{ albums: AlbumDataWithVokiPresence[] }>(
+            `/vokis/${this.vokiId}/update-presence-in-albums`,
+            RJO.PATCH({ albumIdToIsChosen: this.albumToIsChosen })
+        );
+        this.handleFetchAlbumsWithVokiPresence(response);
+
     }
+
+    handleFetchAlbumsWithVokiPresence(response: ResponseResult<{ albums: AlbumDataWithVokiPresence[]; }>) {
+        this.albumToIsChosen = {};
+        this._initialChosenAlbumIds.clear();
+        if (response.isSuccess) {
+            const albums: AlbumViewData[] = response.data.albums
+                .map((a) => ({
+                    id: a.id,
+                    name: a.name,
+                    icon: a.icon,
+                    mainColor: a.mainColor,
+                    secondaryColor: a.secondaryColor,
+                    creationDate: a.creationDate instanceof Date
+                        ? a.creationDate
+                        : new Date(a.creationDate as unknown as string),
+                }))
+                .sort((a, b) => b.creationDate.getTime() - a.creationDate.getTime());
+
+            for (const a of response.data.albums) {
+                this.albumToIsChosen[a.id] = a.isVokiInAlbum;
+                if (a.isVokiInAlbum) {
+                    this._initialChosenAlbumIds.add(a.id);
+                }
+            }
+
+            this.albumsState = { name: "ok", albums };
+            this._lastLoadedAt = Date.now();
+        } else {
+            this.albumsState = { name: "errs", errs: response.errs };
+            this._lastLoadedAt = 0;
+        }
+    }
+
 }
+type AlbumDataWithVokiPresence = AlbumViewData & { isVokiInAlbum: boolean };

@@ -21,7 +21,8 @@ public record AlbumDataForVokiResponse(
     string Icon,
     string MainColor,
     string SecondaryColor,
-    DateTime CreationDate
+    DateTime CreationDate,
+    bool IsVokiInAlbum
 )
 {
     public static AlbumDataForVokiResponse Create(AlbumWithVokiPresenceDto dto) => new(
@@ -30,6 +31,7 @@ public record AlbumDataForVokiResponse(
         dto.Icon.ToString(),
         dto.MainColor.ToString(),
         dto.SecondaryColor.ToString(),
-        dto.CreationDate
+        dto.CreationDate,
+        dto.IsVokiInAlbum
     );
 }

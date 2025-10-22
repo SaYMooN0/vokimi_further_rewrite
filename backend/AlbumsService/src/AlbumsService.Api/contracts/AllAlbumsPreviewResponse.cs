@@ -1,4 +1,5 @@
-﻿using AlbumsService.Application.common.repositories;
+﻿using AlbumsService.Application.app_users.queries;
+using AlbumsService.Application.common.repositories;
 using AlbumsService.Application.voki_albums.queries;
 using AlbumsService.Domain.app_user_aggregate;
 using AlbumsService.Domain.voki_album_aggregate;

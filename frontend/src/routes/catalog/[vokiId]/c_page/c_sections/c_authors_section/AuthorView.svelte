@@ -4,7 +4,7 @@
 
 	let { userId }: { userId: string } = $props<{ userId: string }>();
 	let user = UsersStore.Get(userId);
-	// user = { state: 'errs', errs: [] };
+	$inspect(user);
 </script>
 
 <a
@@ -28,7 +28,10 @@
 			src={StorageBucketMain.fileSrc(user.data.profilePic)}
 			alt="user profile pic"
 		/>
-		<label>{user.data.name}</label>
+		<div class="names">
+			<label class="display-name">{user.data.displayName}</label>
+			<label class="unique-name">{user.data.uniqueName}</label>
+		</div>
 	{/if}
 </a>
 
@@ -52,7 +55,6 @@
 
 	.author-view:hover {
 		background-color: var(--secondary);
-		box-shadow: var(--shadow-md), var(--shadow-xs);
 	}
 
 	.author-view .profile-pic {
@@ -94,11 +96,23 @@
 		object-fit: cover;
 		box-shadow: var(--shadow);
 	}
-
-	.author-view.ok label {
+	.author-view.ok .names {
+		display: flex;
+		flex-direction: column;
+		align-content: center;
+	}
+	.author-view.ok .display-name {
 		color: var(--text);
-		font-size: 1.125rem;
+		font-size: 1rem;
 		font-weight: 450;
+	}
+	.author-view.ok .unique-name {
+		color: var(--muted-foreground);
+		font-size: 0.875rem;
+		font-weight: 440;
+	}
+	.author-view.ok:hover .unique-name {
+		color: var(--primary);
 	}
 
 	.author-view.error {
@@ -111,7 +125,7 @@
 		font-size: 1.125rem;
 		font-weight: 500;
 	}
-	.author-view.error svg{
+	.author-view.error svg {
 		padding: 0.25rem;
 	}
 

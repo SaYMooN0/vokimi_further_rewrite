@@ -29,10 +29,22 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
         AppUserId ownerId, AlbumName name, AlbumIcon icon,
         HexColor mainColor, HexColor secondaryColor, DateTime creationDate
     ) {
-        VokiAlbum album = new(VokiAlbumId.CreateNew(), ownerId, name, icon, mainColor, secondaryColor, creationDate,
-            []);
+        VokiAlbum album = new(
+            VokiAlbumId.CreateNew(), ownerId,
+            name, icon, mainColor, secondaryColor, creationDate,
+            vokiIds: []
+        );
         return album;
     }
 
     public bool HasVoki(VokiId vokiId) => VokiIds.Contains(vokiId);
+
+    public void SetVokiPresenceTo(bool presence, VokiId voki) {
+        if (presence) {
+            VokiIds = VokiIds.Add(voki);
+        }
+        else {
+            VokiIds = VokiIds.Remove(voki);
+        }
+    }
 }
