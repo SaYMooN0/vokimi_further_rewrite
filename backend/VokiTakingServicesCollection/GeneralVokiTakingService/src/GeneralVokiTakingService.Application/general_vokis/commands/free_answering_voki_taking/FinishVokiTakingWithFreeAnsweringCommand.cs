@@ -7,7 +7,7 @@ using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
 using SharedKernel.auth;
 
-namespace GeneralVokiTakingService.Application.general_vokis.commands.finish_voki_taking;
+namespace GeneralVokiTakingService.Application.general_vokis.commands.free_answering_voki_taking;
 
 public sealed record FinishVokiTakingWithFreeAnsweringCommand(
     VokiId VokiId,
@@ -41,16 +41,13 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
     }
 
-    public async Task<ErrOr<GeneralVokiResultId>> Handle(
-        FinishVokiTakingWithFreeAnsweringCommand command,
-        CancellationToken ct
-    ) {
+    public async Task<ErrOr<GeneralVokiResultId>> Handle(FinishVokiTakingWithFreeAnsweringCommand command, CancellationToken ct) {
         GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
         }
 
-        SessionWithFreeAnswering? session = await _sessionsWithFreeAnsweringRepository.GetById(command.SessionId);
+        SessionWithFreeAnswering? session = await _sessionsWithFreeAnsweringRepository.GetById(command.SessionId, ct);
         if (session is null) {
             return ErrFactory.NotFound.Common("Could not finish voki taking because taking session was not started");
         }
@@ -86,8 +83,8 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             session.IsWithForceSequentialAnswering, resultId,
             session.GatherQuestionDetails(command.ChosenAnswers)
         );
-        await _generalVokiTakenRecordsRepository.Add(vokiTakenRecord);
-        await _sessionsWithFreeAnsweringRepository.Delete(session);
+        await _generalVokiTakenRecordsRepository.Add(vokiTakenRecord, ct);
+        await _sessionsWithFreeAnsweringRepository.Delete(session, ct);
 
         return resultId;
     }

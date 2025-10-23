@@ -4,6 +4,6 @@ public record SequentialTakingAnsweredQuestion(
     GeneralVokiQuestionId QuestionId,
     ushort OrderInVokiTaking,
     ImmutableHashSet<GeneralVokiAnswerId> ChosenAnswerIds,
-    DateTime ShownAt,
-    DateTime SubmittedAt
+    DateTime ClientShownAt,
+    DateTime ClientSubmittedAt
 );

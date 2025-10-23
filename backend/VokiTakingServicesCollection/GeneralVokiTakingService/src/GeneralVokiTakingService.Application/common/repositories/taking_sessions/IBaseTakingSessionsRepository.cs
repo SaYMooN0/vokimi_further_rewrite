@@ -4,5 +4,5 @@ namespace GeneralVokiTakingService.Application.common.repositories.taking_sessio
 
 public interface IBaseTakingSessionsRepository
 {
-    public Task Add(BaseVokiTakingSession session);
+    public Task Add(BaseVokiTakingSession session, CancellationToken ct);
 }

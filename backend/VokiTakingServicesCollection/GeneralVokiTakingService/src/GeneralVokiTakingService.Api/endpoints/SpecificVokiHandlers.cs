@@ -1,7 +1,8 @@
 ﻿using GeneralVokiTakingService.Api.contracts;
 using GeneralVokiTakingService.Api.contracts.finish_voki_taking;
 using GeneralVokiTakingService.Application.general_vokis.commands;
-using GeneralVokiTakingService.Application.general_vokis.commands.finish_voki_taking;
+using GeneralVokiTakingService.Application.general_vokis.commands.free_answering_voki_taking;
+using GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
 
 namespace GeneralVokiTakingService.Api.endpoints;
 
@@ -18,9 +19,8 @@ internal static class SpecificVokiHandlers
         group.MapPost("/sequential-answering/finish", FinishVokiTakingWithSequentialAnswering)
             .WithRequestValidation<FinishVokiTakingWithSequentialAnsweringRequest>();
 
-        // group.MapPost("/sequential-answering/answer-question", AnswerQuestionForSequentialAnsweringSession)
-        //     .WithRequestValidation<FinishVokiTakingWithSequentialAnsweringRequest>();
-
+        group.MapPost("/sequential-answering/answer-question", AnswerQuestionForSequentialAnsweringSession)
+            .WithRequestValidation<AnswerQuestionForSequentialAnsweringSessionRequest>();
     }
 
     private static async Task<IResult> StartVokiTaking(
@@ -71,12 +71,16 @@ internal static class SpecificVokiHandlers
         ));
     }
 
-    // private static async Task<IResult> AnswerQuestionForSequentialAnsweringSession(
-    //     CancellationToken ct, HttpContext httpContext
-    // ) {
-    //     VokiId id = httpContext.GetVokiIdFromRoute();
-    //     var request = httpContext.GetValidatedRequest<FinishVokiTakingWithSequentialAnsweringRequest>();
-    //
-    // }
-    
+    private static async Task<IResult> AnswerQuestionForSequentialAnsweringSession(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<AnswerQuestionInSequentialAnsweringVokiTakingCommand, VokiTakingQuestionData> handler
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+        var request = httpContext.GetValidatedRequest<AnswerQuestionForSequentialAnsweringSessionRequest>();
+        
+        AnswerQuestionInSequentialAnsweringVokiTakingCommand command = new(vokiId);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrToJson<VokiTakingQuestionData, GeneralVokiTakingResponseQuestionData>(result);
+    }
 }

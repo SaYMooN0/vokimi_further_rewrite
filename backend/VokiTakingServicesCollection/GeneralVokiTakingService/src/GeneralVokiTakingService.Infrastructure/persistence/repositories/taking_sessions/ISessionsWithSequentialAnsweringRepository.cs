@@ -12,11 +12,16 @@ public class SessionsWithSequentialAnsweringRepository : ISessionsWithSequential
         _db = db;
     }
 
-    public async Task<SessionWithSequentialAnswering?> GetById(VokiTakingSessionId sessionId) =>
-        await _db.VokiTakingSessionsWithSequentialAnswering.FindAsync(sessionId);
+    public async Task<SessionWithSequentialAnswering?> GetById(VokiTakingSessionId sessionId, CancellationToken ct) =>
+        await _db.VokiTakingSessionsWithSequentialAnswering.FindAsync([sessionId], cancellationToken: ct);
 
-    public async Task Delete(SessionWithSequentialAnswering question) {
+    public async Task Delete(SessionWithSequentialAnswering question, CancellationToken ct) {
         _db.VokiTakingSessionsWithSequentialAnswering.Remove(question);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task Update(SessionWithSequentialAnswering session, CancellationToken ct) {
+        _db.VokiTakingSessionsWithSequentialAnswering.Update(session);
+        await _db.SaveChangesAsync(ct);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace GeneralVokiTakingService.Application.general_vokis.commands.finish_voki_taking;
+﻿namespace GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
 
 public sealed record FinishVokiTakingWithSequentialAnsweringCommand(
     VokiId VokiId

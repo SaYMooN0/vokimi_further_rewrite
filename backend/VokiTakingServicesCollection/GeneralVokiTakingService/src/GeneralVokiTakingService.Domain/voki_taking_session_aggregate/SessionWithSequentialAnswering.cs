@@ -2,7 +2,6 @@
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
-using SharedKernel.exceptions;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -10,16 +9,12 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 {
     private SessionWithSequentialAnswering() { }
     public override bool IsWithForceSequentialAnswering => true;
-    public ushort CurrentQuestionOrder { get; private set; }
     private ImmutableArray<SequentialTakingAnsweredQuestion> _answered { get; set; }
 
     private SessionWithSequentialAnswering(
         VokiTakingSessionId id, VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
-        ImmutableArray<TakingSessionExpectedQuestion> questions,
-        ushort currentQuestionOrder
-    ) : base(id, vokiId, vokiTaker, startTime, questions) {
-        CurrentQuestionOrder = currentQuestionOrder;
-    }
+        ImmutableArray<TakingSessionExpectedQuestion> questions
+    ) : base(id, vokiId, vokiTaker, startTime, questions) { }
 
     public static SessionWithSequentialAnswering Create(
         VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
@@ -45,22 +40,10 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 
         return new SessionWithSequentialAnswering(
             VokiTakingSessionId.CreateNew(), vokiId, vokiTaker, startTime,
-            questions: sessionQuestion.ToImmutableArray(),
-            currentQuestionOrder: 0
+            questions: sessionQuestion.ToImmutableArray()
         );
     }
 
-    public TakingSessionExpectedQuestion GetCurrentQuestion() {
-        TakingSessionExpectedQuestion? current = Questions.FirstOrDefault(
-            q => q.OrderInVokiTaking == CurrentQuestionOrder
-        );
-
-        if (current is null) {
-            UnexpectedBehaviourException.ThrowErr(ErrFactory.ValueOutOfRange("No unanswered questions left"));
-        }
-
-        return current!;
-    }
 
     public ImmutableArray<VokiTakenQuestionDetails> GatherQuestionDetails() {
         //check that all questions are answered
@@ -74,98 +57,201 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         //     .ToImmutableArray();
     }
 
-    public ErrOrNothing MarkQuestionAsAnswered(SequentialTakingAnsweredQuestion data) {
-        var expected = Questions.FirstOrDefault(q => q.QuestionId == data.QuestionId);
+
+    public ErrOr<(GeneralVokiQuestionId NextQuestionId, ushort OrderInVokiTaking)> AnswerQuestionAndGetNext(
+        VokiId vokiId,
+        DateTime serverQuestionShownAt,
+        DateTime clientQuestionShownAt,
+        DateTime clientQuestionAnsweredAt,
+        GeneralVokiQuestionId questionId,
+        ushort questionOrderInVokiTaking,
+        ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
+    ) {
+        if (this.VokiId != vokiId) {
+            return ErrFactory.Conflict("Provided VokiId does not match with the session VokiId");
+        }
+
+        TakingSessionExpectedQuestion? expected = Questions
+            .FirstOrDefault(q => q.QuestionId == questionId);
         if (expected is null) {
             return ErrFactory.NotFound.Common(
-                "This question is not expected or has already been answered",
-                details: "Refresh the page. If the issue persists, restart the attempt"
+                "This question is not expected in this Voki taking session",
+                "Try reloading the page"
             );
         }
 
-        if (_answered.Any(a => a.QuestionId == expected.QuestionId)) {
+        SequentialTakingAnsweredQuestion? already = _answered
+            .FirstOrDefault(a => a.QuestionId == questionId);
+
+        if (already is not null) {
+            return HandleAlreadyAnswered(
+                already,
+                questionOrderInVokiTaking,
+                clientQuestionShownAt,
+                clientQuestionAnsweredAt,
+                chosenAnswers
+            );
+        }
+
+        return HandleNotYetAnswered(
+            expected,
+            serverQuestionShownAt,
+            clientQuestionShownAt,
+            clientQuestionAnsweredAt,
+            questionOrderInVokiTaking,
+            chosenAnswers
+        );
+    }
+
+    private ErrOr<(GeneralVokiQuestionId NextQuestionId, ushort OrderInVokiTaking)> HandleAlreadyAnswered(
+        SequentialTakingAnsweredQuestion already,
+        ushort questionOrderInVokiTaking,
+        DateTime clientQuestionShownAt,
+        DateTime clientQuestionAnsweredAt,
+        ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
+    ) {
+        var same =
+            already.OrderInVokiTaking == questionOrderInVokiTaking &&
+            already.ClientShownAt == clientQuestionShownAt &&
+            already.ClientSubmittedAt == clientQuestionAnsweredAt &&
+            already.ChosenAnswerIds.SetEquals(chosenAnswers);
+
+        if (!same) {
             return ErrFactory.Conflict(
-                "This question has already been answered",
-                "Please reload the page. If needed, contact support about changing answers."
+                "This question has already been answered with different data",
+                "Try reloading the page"
             );
         }
 
-        if (expected.OrderInVokiTaking != data.OrderInVokiTaking) {
+        var firstUnanswered = GetFirstUnanswered();
+        if (firstUnanswered is null) {
             return ErrFactory.Conflict(
-                "Question order mismatch",
-                $"Expected order {expected.OrderInVokiTaking}, got {data.OrderInVokiTaking}. Please reload the page and continue with the current question"
+                "There are no questions left to answer",
+                "Use the finish-taking action to complete the attempt"
             );
         }
 
-        var current = Questions
-            .Where(q => !_answered.Any(a => a.QuestionId == q.QuestionId))
-            .OrderBy(q => q.OrderInVokiTaking)
-            .FirstOrDefault();
+        return (firstUnanswered.QuestionId, firstUnanswered.OrderInVokiTaking);
+    }
 
+    private ErrOr<(GeneralVokiQuestionId NextQuestionId, ushort OrderInVokiTaking)> HandleNotYetAnswered(
+        TakingSessionExpectedQuestion expected,
+        DateTime serverQuestionShownAt,
+        DateTime clientQuestionShownAt,
+        DateTime clientQuestionAnsweredAt,
+        ushort questionOrderInVokiTaking,
+        ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
+    ) {
+        var current = GetFirstUnanswered();
         if (current is null) {
             return ErrFactory.Conflict(
                 "There are no questions left to answer",
-                "Please reload the page to finalize the attempt"
+                "Use the finish-taking action to complete the attempt"
             );
         }
 
-        if (current.QuestionId != data.QuestionId) {
+        if (current.QuestionId != expected.QuestionId) {
             return ErrFactory.Conflict(
                 "You cannot answer this question yet",
                 $"Sequential mode is enabled. Please answer the current question (order {current.OrderInVokiTaking}) first"
             );
         }
 
-        if (data.ShownAt < StartTime) {
+        if (expected.OrderInVokiTaking != questionOrderInVokiTaking) {
             return ErrFactory.Conflict(
-                "Time sync error: question shown before the voki taking started.",
+                $"Question order mismatch. Expected order {expected.OrderInVokiTaking}, got {questionOrderInVokiTaking}",
+                "Reload the page and continue with the current question"
+            );
+        }
+
+        if (clientQuestionShownAt < StartTime) {
+            return ErrFactory.Conflict(
+                "Time sync error: question shown before the voki taking session started",
+                "Please reload the page and try again."
+            );
+        }
+
+        if (clientQuestionAnsweredAt < clientQuestionShownAt) {
+            return ErrFactory.Conflict(
+                "Time sync error: question submitted earlier than shown",
                 "Please reload the page and try again"
             );
         }
 
-        if (data.SubmittedAt < data.ShownAt) {
+        var clockSkew = (serverQuestionShownAt - clientQuestionShownAt).Duration();
+        if (clockSkew > TimeSpan.FromMinutes(30)) {
             return ErrFactory.Conflict(
-                "Time sync error: submitted earlier than shown.",
-                "Please reload the page and try again"
+                "Time sync error: large difference between server and client clocks",
+                "Please check your device time or reload the page and try again"
             );
         }
 
-        var chosenCount = data.ChosenAnswerIds.Count;
-
+        var chosenCount = chosenAnswers.Count;
         if (chosenCount < expected.MinAnswersCount) {
             return ErrFactory.Conflict(
-                "Too few answers selected",
-                $"Please select more option(s) to meet the required range from {expected.MinAnswersCount} to {expected.MaxAnswersCount}"
+                $"Too few answers selected. Answers chosen: {chosenCount}",
+                $"Choose more option(s) to meet the required range from {expected.MinAnswersCount} to {expected.MaxAnswersCount}."
             );
         }
 
         if (chosenCount > expected.MaxAnswersCount) {
             return ErrFactory.Conflict(
-                "Too many answers selected",
-                $"Please remove extra option(s) to meet the required range {expected.MinAnswersCount} to {expected.MaxAnswersCount}"
+                $"Too many answers selected. Answers chosen: {chosenCount}",
+                $"Remove extra option(s) to meet the required range {expected.MinAnswersCount} to {expected.MaxAnswersCount}."
             );
         }
 
         var allowed = expected.AnswerIds.ToImmutableHashSet();
-        var invalidChosen = data.ChosenAnswerIds.Where(a => !allowed.Contains(a)).ToArray();
+        var invalidChosen = chosenAnswers.Where(a => !allowed.Contains(a)).ToArray();
         if (invalidChosen.Length > 0) {
             return ErrFactory.Conflict(
                 "Some selected options are not allowed for this question",
-                "Please clear your selection and choose again from the provided list"
+                "Clear your selection and choose again from the provided list."
             );
         }
 
-        _answered = _answered.Add(data);
+        if (IsLastRemaining(expected.QuestionId)) {
+            return ErrFactory.Conflict(
+                "Cannot answer and go to next: this is the last question.",
+                "Use the finish-taking action to submit and complete the taking session."
+            );
+        }
 
-        var next = Questions
+        var answeredRecord = new SequentialTakingAnsweredQuestion(
+            expected.QuestionId,
+            questionOrderInVokiTaking,
+            chosenAnswers,
+            clientQuestionShownAt,
+            clientQuestionAnsweredAt
+        );
+
+        var next = GetFirstUnanswered();
+        if (next is null) {
+            return ErrFactory.Conflict(
+                "There are no questions left to answer",
+                "Use the finish-taking action to complete the attempt."
+            );
+        }
+
+        _answered = _answered.Add(answeredRecord);
+
+        return (next.QuestionId, next.OrderInVokiTaking);
+    }
+
+
+    private TakingSessionExpectedQuestion? GetFirstUnanswered()
+        => Questions
             .Where(q => !_answered.Any(a => a.QuestionId == q.QuestionId))
             .OrderBy(q => q.OrderInVokiTaking)
             .FirstOrDefault();
 
-        if (next is not null) {
-            CurrentQuestionOrder = next.OrderInVokiTaking;
+    private bool IsLastRemaining(GeneralVokiQuestionId questionId) {
+        var unansweredCount = Questions.Count(q => !_answered.Any(a => a.QuestionId == q.QuestionId));
+        if (unansweredCount == 1) {
+            var only = Questions.First(q => !_answered.Any(a => a.QuestionId == q.QuestionId));
+            return only.QuestionId == questionId;
         }
 
-        return ErrOrNothing.Nothing;
+        return false;
     }
 }

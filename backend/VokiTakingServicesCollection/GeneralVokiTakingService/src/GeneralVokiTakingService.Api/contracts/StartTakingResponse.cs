@@ -16,7 +16,7 @@ public record StartTakingResponse(
         dto.Id.ToString(),
         dto.Name.ToString(),
         dto.ForceSequentialAnswering,
-        dto.Questions.Select(GeneralVokiTakingResponseQuestionData.Create).ToArray(),
+        dto.Questions.Select(GeneralVokiTakingResponseQuestionData.FromQuestion).ToArray(),
         dto.SessionId.ToString(),
         dto.StartedAt,
         dto.TotalQuestionsCount

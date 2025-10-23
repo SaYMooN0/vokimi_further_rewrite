@@ -16,9 +16,9 @@ public record GeneralVokiTakingResponseQuestionData(
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
     GeneralVokiTakingResponseAnswerData[] Answers
-)
+) : ICreatableResponse<VokiTakingQuestionData>
 {
-    public static GeneralVokiTakingResponseQuestionData Create(StartVokiTakingCommandResponseQuestionData question) => new(
+    public static GeneralVokiTakingResponseQuestionData FromQuestion(VokiTakingQuestionData question) => new(
         question.Id.ToString(),
         question.Text,
         question.ImagesSet.Keys.Select(k => k.ToString()).ToArray(),
@@ -29,6 +29,8 @@ public record GeneralVokiTakingResponseQuestionData(
         question.MaxAnswersCount,
         question.Answers.Select(GeneralVokiTakingResponseAnswerData.Create).ToArray()
     );
+
+    public static ICreatableResponse<VokiTakingQuestionData> Create(VokiTakingQuestionData question) => FromQuestion(question);
 }
 
 public record GeneralVokiTakingResponseAnswerData(
@@ -50,5 +52,4 @@ public record GeneralVokiTakingResponseAnswerData(
         audioOnly: d => new() { ["audio"] = d.Audio.ToString() },
         audioAndText: d => new() { ["text"] = d.Text.ToString(), ["audio"] = d.Audio.ToString() }
     );
-
 }

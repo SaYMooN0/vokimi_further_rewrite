@@ -1,4 +1,5 @@
 <script lang="ts">
+	import LinesLoader from '$lib/components/loaders/LinesLoader.svelte';
 	import type { Err } from '$lib/ts/err';
 	import type { DefaultGeneralVokiTakingState } from './default-general-voki-taking-state.svelte';
 	interface Props {
@@ -12,8 +13,11 @@
 	let isPrevBtnInactive = $derived(vokiTakingState.isCurrentQuestionFirst());
 
 	let showFinishBtn = $derived(vokiTakingState.isCurrentQuestionLast());
+	let isFinishBtnLoading = $state(false);
 	async function finishBtnPressed() {
+		isFinishBtnLoading = true;
 		const response = await vokiTakingState.finishTakingAndReceiveResult();
+		isFinishBtnLoading = false;
 		if (response.isSuccess) {
 			onResultReceived(response.data.receivedResultId);
 		} else if (response.errs.length > 0) {
@@ -47,7 +51,13 @@
 		class="finish-btn"
 		class:hidden={!showFinishBtn}
 		disabled={!showFinishBtn}
-		onclick={() => finishBtnPressed()}>Finish</button
+		class:loading={isFinishBtnLoading}
+		onclick={() => finishBtnPressed()}
+		>{#if isFinishBtnLoading}
+			Loading <LinesLoader sizeRem={1.3} strokePx={2} />
+		{:else}
+			Save
+		{/if}</button
 	>
 	<button
 		class="next-prev-btns"
@@ -109,8 +119,19 @@
 		transform: scale(1);
 		cursor: pointer;
 		justify-self: center;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
 	}
-
+	.finish-btn.loading {
+		opacity: 0.8;
+		pointer-events: none;
+	}
+	.finish-btn > :global(.container) {
+		--loader-color: var(--primary-foreground);
+	}
 	.finish-btn.hidden {
 		opacity: 0;
 		transform: scale(0);

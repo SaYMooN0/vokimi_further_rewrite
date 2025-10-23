@@ -12,11 +12,11 @@ public class SessionsWithFreeAnsweringRepository : ISessionsWithFreeAnsweringRep
         _db = db;
     }
 
-    public async Task<SessionWithFreeAnswering?> GetById(VokiTakingSessionId sessionId) =>
-        await _db.VokiTakingSessionsWithFreeAnswering.FindAsync(sessionId);
+    public async Task<SessionWithFreeAnswering?> GetById(VokiTakingSessionId sessionId, CancellationToken ct) =>
+        await _db.VokiTakingSessionsWithFreeAnswering.FindAsync([sessionId], cancellationToken: ct);
 
-    public async Task Delete(SessionWithFreeAnswering question) {
+    public async Task Delete(SessionWithFreeAnswering question , CancellationToken ct) {
         _db.BaseVokiTakingSessions.Remove(question);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
 }

@@ -37,8 +37,9 @@ internal sealed class StartVokiTakingCommandHandler :
     }
 
 
-    public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(StartVokiTakingCommand command,
-        CancellationToken ct) {
+    public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(
+        StartVokiTakingCommand command, CancellationToken ct
+    ) {
         var voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki(
@@ -60,7 +61,7 @@ internal sealed class StartVokiTakingCommandHandler :
             );
         }
 
-        await _baseTakingSessionsRepository.Add(takingSession);
+        await _baseTakingSessionsRepository.Add(takingSession, ct);
         return StartVokiTakingCommandResponse.Create(voki, takingSession);
     }
 }
@@ -69,7 +70,7 @@ public record StartVokiTakingCommandResponse(
     VokiId Id,
     VokiName Name,
     bool ForceSequentialAnswering,
-    StartVokiTakingCommandResponseQuestionData[] Questions,
+    VokiTakingQuestionData[] Questions,
     VokiTakingSessionId SessionId,
     DateTime StartedAt,
     ushort TotalQuestionsCount
@@ -78,16 +79,16 @@ public record StartVokiTakingCommandResponse(
     public static StartVokiTakingCommandResponse Create(
         GeneralVoki voki, BaseVokiTakingSession takingSession
     ) {
-        StartVokiTakingCommandResponseQuestionData[] questions;
+        VokiTakingQuestionData[] questions;
         var idToOrder = takingSession.QuestionIdToOrder();
         if (takingSession.IsWithForceSequentialAnswering) {
             var firstQuestionInTaking = idToOrder.MinBy(idToOrder => idToOrder.Value);
             var question = voki.Questions.FirstOrDefault(q => q.Id == firstQuestionInTaking.Key)!;
-            questions = [StartVokiTakingCommandResponseQuestionData.Create(question, firstQuestionInTaking.Value)];
+            questions = [VokiTakingQuestionData.Create(question, firstQuestionInTaking.Value)];
         }
         else {
             questions = voki.Questions
-                .Select(q => StartVokiTakingCommandResponseQuestionData.Create(q, idToOrder[q.Id]))
+                .Select(q => VokiTakingQuestionData.Create(q, idToOrder[q.Id]))
                 .ToArray();
         }
 
@@ -98,7 +99,7 @@ public record StartVokiTakingCommandResponse(
     }
 }
 
-public record StartVokiTakingCommandResponseQuestionData(
+public record VokiTakingQuestionData(
     GeneralVokiQuestionId Id,
     string Text,
     VokiQuestionImagesSet ImagesSet,
@@ -109,7 +110,7 @@ public record StartVokiTakingCommandResponseQuestionData(
     VokiQuestionAnswer[] Answers
 )
 {
-    public static StartVokiTakingCommandResponseQuestionData Create(
+    public static VokiTakingQuestionData Create(
         VokiQuestion question, ushort orderInVokiTaking
     ) => new(
         question.Id,

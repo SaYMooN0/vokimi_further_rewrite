@@ -12,9 +12,9 @@ internal class GeneralVokiTakenRecordsRepository : IGeneralVokiTakenRecordsRepos
         _db = db;
     }
 
-    public async Task Add(GeneralVokiTakenRecord vokiTakenRecord) {
-        await _db.VokiTakenRecords.AddAsync(vokiTakenRecord);
-        await _db.SaveChangesAsync();
+    public async Task Add(GeneralVokiTakenRecord vokiTakenRecord, CancellationToken ct) {
+        await _db.VokiTakenRecords.AddAsync(vokiTakenRecord, ct);
+        await _db.SaveChangesAsync(ct);
     }
 
     public Task<GeneralVokiTakenRecord[]> ForVokiByUserAsNoTracking(

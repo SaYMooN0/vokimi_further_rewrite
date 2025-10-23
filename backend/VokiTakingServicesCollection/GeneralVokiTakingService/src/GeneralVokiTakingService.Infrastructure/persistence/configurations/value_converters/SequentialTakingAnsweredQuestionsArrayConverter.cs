@@ -18,7 +18,7 @@ internal class SequentialTakingAnsweredQuestionsArrayConverter :
         questions.Select(QuestionToString).ToArray();
 
     private static string QuestionToString(SequentialTakingAnsweredQuestion q) =>
-        $"{q.QuestionId}{Sep}{q.OrderInVokiTaking}{Sep}{QuestionAnswersToString(q.ChosenAnswerIds)}{Sep}{q.ShownAt}{Sep}{q.SubmittedAt}";
+        $"{q.QuestionId}{Sep}{q.OrderInVokiTaking}{Sep}{QuestionAnswersToString(q.ChosenAnswerIds)}{Sep}{q.ClientShownAt}{Sep}{q.ClientSubmittedAt}";
 
     private static string QuestionAnswersToString(ImmutableHashSet<GeneralVokiAnswerId> answers) =>
         string.Join(',', answers.Select(a => a.ToString()));

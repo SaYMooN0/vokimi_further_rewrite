@@ -42,7 +42,7 @@ public class FinishVokiTakingWithFreeAnsweringRequest : IRequestWithValidationNe
             return ErrFactory.ValueOutOfRange();
         }
 
-        ParsedChosenAnswers = new(ChosenAnswers.Count);
+        ParsedChosenAnswers = new Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>(ChosenAnswers.Count);
 
         foreach (var (questionIdStr, answersArray) in ChosenAnswers) {
             if (string.IsNullOrWhiteSpace(questionIdStr) || !Guid.TryParse(questionIdStr, out var questionGuid)) {

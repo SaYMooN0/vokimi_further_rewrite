@@ -36,7 +36,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
 
         List<TakingSessionExpectedQuestion> sessionQuestion = new(ordered.Length);
         for (ushort i = 0; i < ordered.Length; i++) {
-            var question = ordered[i];
+            VokiQuestion question = ordered[i];
             sessionQuestion.Add(new TakingSessionExpectedQuestion(
                 question.Id,
                 OrderInVokiTaking: i,
