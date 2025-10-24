@@ -6,29 +6,27 @@ import type { GeneralVokiTakingQuestionData, GeneralVokiTakingData } from "../ty
 export class DefaultGeneralVokiTakingState {
     readonly vokiId: string;
     readonly #sessionId: string;
-    readonly #serverStartedAt: Date;
-    readonly #clientStartedAt: Date;
+    readonly #serverSessionStartTime: Date;
+    readonly #clientSessionStartTime: Date;
     readonly #questions: GeneralVokiTakingQuestionData[];
-
+    readonly totalQuestionsCount: number;
     readonly #clearVokiSeenUpdateTimer: () => void;
 
-    readonly totalQuestionsCount: number;
-
     readonly chosenAnswers = $state<Record<string, Record<string, boolean>>>({});
+
     currentQuestionOrder = $state(0);
     currentQuestion: GeneralVokiTakingQuestionData | undefined;
 
     constructor(data: GeneralVokiTakingData, clearVokiSeenUpdateTimer: () => void) {
         if (data.forceSequentialAnswering) {
-            throw new Error(
-                "Cannot create GeneralVokiTakingState, because voki force sequential answering"
-            );
+            throw new Error("Cannot create voki taking state, because voki is with sequential answering");
+
         }
 
         this.vokiId = data.id;
         this.#sessionId = data.sessionId;
-        this.#serverStartedAt = data.startedAt;
-        this.#clientStartedAt = new Date();
+        this.#serverSessionStartTime = data.startedAt;
+        this.#clientSessionStartTime = new Date();
         this.#questions = data.questions;
         this.totalQuestionsCount = data.totalQuestionsCount;
 
@@ -118,9 +116,9 @@ export class DefaultGeneralVokiTakingState {
                         .map(([answerId]) => answerId)
                 ])
             ),
-            serverStartTime: this.#serverStartedAt,
-            clientStartTime: this.#clientStartedAt,
-            clientFinishTime: new Date(),
+            serverSessionStartTime: this.#serverSessionStartTime,
+            clientSessionStartTime: this.#clientSessionStartTime,
+            clientSessionFinishTime: new Date(),
             sessionId: this.#sessionId
         };
     }

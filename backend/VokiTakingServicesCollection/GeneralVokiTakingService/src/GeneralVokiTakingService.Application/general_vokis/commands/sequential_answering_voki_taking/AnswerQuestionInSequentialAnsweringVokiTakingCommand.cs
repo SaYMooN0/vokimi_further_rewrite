@@ -1,6 +1,7 @@
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
@@ -11,10 +12,9 @@ namespace GeneralVokiTakingService.Application.general_vokis.commands.sequential
 public sealed record AnswerQuestionInSequentialAnsweringVokiTakingCommand(
     VokiId VokiId,
     VokiTakingSessionId SessionId,
-    DateTime ServerQuestionShownAt,
-    DateTime ClientQuestionShownAt,
-    DateTime ClientQuestionAnsweredAt,
     GeneralVokiQuestionId QuestionId,
+    ClientServerTimePairDto ShownAt,
+    DateTime ClientQuestionAnsweredAt,
     ushort QuestionOrderInVokiTaking,
     ImmutableHashSet<GeneralVokiAnswerId> ChosenAnswers
 ) : ICommand<VokiTakingQuestionData>;
@@ -54,8 +54,8 @@ internal sealed class AnswerQuestionInSequentialAnsweringVokiTakingCommandHandle
 
         var answeringResult = session.AnswerQuestionAndGetNext(
             command.VokiId,
-            serverQuestionShownAt: command.ServerQuestionShownAt,
-            clientQuestionShownAt: command.ClientQuestionShownAt,
+            shownAt: command.ShownAt,
+            currentTime: _dateTimeProvider.UtcNow,
             clientQuestionAnsweredAt: command.ClientQuestionAnsweredAt,
             questionId: command.QuestionId,
             questionOrderInVokiTaking: command.QuestionOrderInVokiTaking,

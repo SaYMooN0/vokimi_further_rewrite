@@ -1,4 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.common.dtos;
 using SharedKernel.auth;
 using SharedKernel.exceptions;
 
@@ -40,22 +41,20 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
         q => q.OrderInVokiTaking
     );
 
-
-    public ErrOrNothing ValidateTime(
+    protected ErrOrNothing ValidateStartAndFinishTime(
         DateTime currentTime,
-        DateTime clientStartTime,
-        DateTime providedServerStartTime,
+        ClientServerTimePairDto sessionStartTime,
         DateTime clientFinishTime
     ) {
         if (StartTime > currentTime) {
             return ErrFactory.Conflict("Server session start time cannot be in the future");
         }
 
-        if (providedServerStartTime > currentTime) {
+        if (sessionStartTime.Server > currentTime) {
             return ErrFactory.Conflict("Provided server start time cannot be in the future");
         }
 
-        if (clientStartTime > currentTime) {
+        if (sessionStartTime.Client > currentTime) {
             return ErrFactory.Conflict("Client start time cannot be in the future");
         }
 
@@ -63,12 +62,12 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
             return ErrFactory.Conflict("Client finish time cannot be in the future");
         }
 
-        var serverStartTimeDelta = (providedServerStartTime - StartTime).Duration();
+        var serverStartTimeDelta = (sessionStartTime.Server - StartTime).Duration();
         if (serverStartTimeDelta > TimeSpan.FromMilliseconds(1)) {
             return ErrFactory.Conflict("Provided server start time does not match the session start time");
         }
 
-        if (TimeSpan.FromTicks(Math.Abs((clientStartTime - StartTime).Ticks)) > ServerStartTolerance) {
+        if (TimeSpan.FromTicks(Math.Abs((sessionStartTime.Client - StartTime).Ticks)) > ServerStartTolerance) {
             return ErrFactory.Conflict(
                 $"Client start time differs from server start time by more than {ServerStartTolerance.Minutes} minutes");
         }
@@ -78,7 +77,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
                 $"Client finish time differs from current time by more than {ClientFinishTolerance.Minutes} minutes");
         }
 
-        if (clientStartTime > clientFinishTime) {
+        if (sessionStartTime.Client > clientFinishTime) {
             return ErrFactory.Conflict("Start time must be earlier than or equal to client finish time");
         }
 
@@ -118,7 +117,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
         return errs;
     }
 
-    public ErrOrNothing ValidateVokiTaker(IUserContext userContext, out AppUserId? resolvedVokiTaker) {
+    protected ErrOrNothing ValidateVokiTaker(IUserContext userContext, out AppUserId? resolvedVokiTaker) {
         AppUserId? contextId = userContext.UserIdFromToken().IsSuccess(out var id) ? id : null;
         if (
             this.VokiTaker is not null

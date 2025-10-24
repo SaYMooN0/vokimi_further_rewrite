@@ -1,42 +1,132 @@
+import { ApiVokiTakingGeneral, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
-import type { GeneralVokiTakenResult, GeneralVokiTakingData, GeneralVokiTakingQuestionData } from "../types";
+import type { GeneralVokiTakingData, GeneralVokiTakingQuestionData } from "../types";
 
 export class SequentialAnsweringGeneralVokiTakingState {
     readonly vokiId: string;
-    currentQuestion: GeneralVokiTakingQuestionData | undefined;
+    readonly #sessionId: string;
+    readonly #serverSessionStartTime: Date;
+    readonly #clientSessionStartTime: Date;
+    readonly totalQuestionsCount: number;
     readonly #clearVokiSeenUpdateTimer: () => void;
 
-    isCurrentQuestionLast() { return true; }
+    readonly currentQuestionChosenAnswers: Record<string, boolean> = $state();
+    currentQuestion = $state<GeneralVokiTakingQuestionData>();
+    isLoadingNextQuestion = $state(false);
+
+    isCurrentQuestionLast() {
+        if (this.currentQuestion) {
+            return this.currentQuestion.orderInVokiTaking === this.totalQuestionsCount - 1
+        }
+        return false;
+    }
 
 
     constructor(data: GeneralVokiTakingData, clearVokiSeenUpdateTimer: () => void) {
-        this.vokiId = data.id;
-
         if (!data.forceSequentialAnswering) {
-            throw new Error("Cannot create GeneralVokiTakingState, because voki force sequential answering");
+            throw new Error("Cannot create voki taking state, because voki is with free answering");
         }
 
-        this.#clearVokiSeenUpdateTimer = clearVokiSeenUpdateTimer;
+        this.vokiId = data.id;
+        this.#sessionId = data.sessionId;
+        this.#serverSessionStartTime = data.startedAt;
+        this.#clientSessionStartTime = new Date();
+        this.totalQuestionsCount = data.totalQuestionsCount;
+        this.currentQuestionChosenAnswers =;
 
+        if (data.questions.length != 1) {
+            throw new Error("Cannot create voki taking state, because data contains incorrect questions count");
+        }
+
+        this.currentQuestion = data.questions[0];
+        this.#clearVokiSeenUpdateTimer = clearVokiSeenUpdateTimer;
     }
     async goToNextQuestion(): Promise<Err[]> {
-        //validate current chosen
-        // if (this.currentQuestionOrder >= this.totalQuestionsCount - 1) {
-        //     return; 
-        // }
-        //fetch current
-        //     this.currentQuestionOrder += 1;
-        return [];
+        if (this.currentQuestion === undefined) {
+            return [{ message: "No current question" }];
+        }
+        if (this.isCurrentQuestionLast()) {
+            return [{ message: "Cannot go to next question, because current question is last" }];
+        }
+        const err = this.checkErrsForCurrentQuestion();
+        if (err) {
+            return [err];
+        }
+        this.isLoadingNextQuestion = true;
+        const response = await ApiVokiTakingGeneral.fetchJsonResponse<GeneralVokiTakingQuestionData>(
+            `/vokis/${this.vokiId}/sequential-answering/answer-question`,
+            RJO.POST({
+                SessionId: this.#sessionId,
+                questionId: this.currentQuestion.id,
+                questionOrderInVokiTaking: this.currentQuestion.orderInVokiTaking,
+                chosenAnswers: this.currentQuestionChosenAnswers,
+                serverQuestionShownAt: this.#serverSessionStartTime,
+                clientQuestionShownAt: this.#clientSessionStartTime,
+                clientQuestionAnsweredAt: new Date()
+            })
+        );
+        this.isLoadingNextQuestion = false;
+        if (response.isSuccess) {
+            this.currentQuestion = response.data;
+            this.currentQuestionChosenAnswers =;
+
+            return [];
+        }
+        return response.errs;
     }
     async finishTakingAndReceiveResult(): Promise<
-        | { isSuccess: false, errs: ErrMessageWithQuestionOrder[] }
-        | ResponseResult<GeneralVokiTakenResult>
+        | { isSuccess: false, errs: Err[] }
+        | ResponseResult<{ receivedResultId: string }>
     > {
-        //validate current chosen
-        // check if last
-        // command finish voki taking
-        return { isSuccess: false, errs: [] };
+        if (this.currentQuestion === undefined) {
+            return { isSuccess: false, errs: [{ message: "No current question" }] };
+        }
+        if (!this.isCurrentQuestionLast()) {
+            return { isSuccess: false, errs: [{ message: "Cannot finish taking and receive result, because current question is not last" }] };
+        }
+        const err = this.checkErrsForCurrentQuestion();
+        if (err) {
+            return { isSuccess: false, errs: [err] };
+        }
+        this.isLoadingNextQuestion = true;
+        const response = await ApiVokiTakingGeneral.fetchJsonResponse<GeneralVokiTakingQuestionData>(
+            `/vokis/${this.vokiId}/sequential-answering/answer-question`,
+            RJO.POST({
+                SessionId: this.#sessionId,
+                questionId: this.currentQuestion.id,
+                questionOrderInVokiTaking: this.currentQuestion.orderInVokiTaking,
+                chosenAnswers: this.currentQuestionChosenAnswers,
+                serverQuestionShownAt: this.#serverSessionStartTime,
+                clientQuestionShownAt: this.#clientSessionStartTime,
+                clientQuestionAnsweredAt: new Date()
+            })
+        );
+        this.isLoadingNextQuestion = false;
+        if (response.isSuccess) {
+            this.#clearVokiSeenUpdateTimer();
+            return response;
+        }
+        return response;
     }
+    checkErrsForCurrentQuestion(): Err | null {
+        const min = this.currentQuestion?.minAnswersCount ?? 0;
+        const max = this.currentQuestion?.maxAnswersCount ?? Number.POSITIVE_INFINITY;
+        const chosenCount = Object.values(this.currentQuestionChosenAnswers).filter(Boolean).length;
+
+        if (chosenCount === 0 && min > 0) {
+            return { message: `You haven’t answered this question yet. Please select at least ${min} ${min === 1 ? 'answer' : 'answers'}.` };
+        }
+
+        if (chosenCount < min) {
+            return { message: `Please choose at least ${min} ${min === 1 ? 'answer' : 'answers'} to continue.` };
+        }
+
+        if (chosenCount > max) {
+            return { message: `You selected ${chosenCount} answers, but only up to ${max} ${max === 1 ? 'answer' : 'answers'} ${max === 1 ? 'is' : 'are'} allowed.` };
+        }
+
+        return null;
+    }
+
 }
-type ErrMessageWithQuestionOrder = { message: string, questionOrder: number };

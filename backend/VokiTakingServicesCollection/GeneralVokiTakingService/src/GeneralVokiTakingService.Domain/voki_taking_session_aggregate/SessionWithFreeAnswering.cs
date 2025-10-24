@@ -1,6 +1,8 @@
 ﻿using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
+using SharedKernel.auth;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -10,12 +12,68 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
 
     public override bool IsWithForceSequentialAnswering => false;
 
+    public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
+        DateTime currentTime,
+        ClientServerTimePairDto sessionStartTime,
+        DateTime clientFinishedTime,
+        IUserContext userContext,
+        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers,
+        Func<Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>,
+            ErrOr<GeneralVokiResultId>> getResultAccordingToAnswers
+    ) {
+        if (
+            ValidateStartAndFinishTime(
+                currentTime: currentTime,
+                sessionStartTime: sessionStartTime,
+                clientFinishTime: clientFinishedTime
+            ).IsErr(out var err)
+        ) {
+            return err;
+        }
+
+
+        if (ValidateVokiTaker(userContext, out var vokiTakerId).IsErr(out err)) {
+            return err;
+        }
+
+        if (ValidateChosenAnswers(chosenAnswers).IsErr(out err)) {
+            return err;
+        }
+
+        ErrOr<GeneralVokiResultId> resOrErr = getResultAccordingToAnswers(chosenAnswers);
+        if (resOrErr.IsErr(out err)) {
+            return err;
+        }
+
+        ImmutableDictionary<GeneralVokiQuestionId, ushort> questionIdToOrder = Questions
+            .ToImmutableDictionary(q => q.QuestionId, q => q.OrderInVokiTaking);
+
+        ImmutableArray<VokiTakenQuestionDetails> questionDetails = chosenAnswers
+            .Select(qToAnswers => new VokiTakenQuestionDetails(
+                qToAnswers.Key,
+                qToAnswers.Value,
+                questionIdToOrder[qToAnswers.Key]
+            ))
+            .ToImmutableArray();
+
+        return new VokiTakingSessionFinishedDto(
+            VokiId,
+            vokiTakerId,
+            sessionStartTime.Client,
+            clientFinishedTime,
+            WasSessionWithForcedSequentialOrder: false,
+            ReceivedResultId: resOrErr.AsSuccess(),
+            questionDetails
+        );
+    }
+
     public ImmutableArray<SessionWithFreeAnsweringAnsweredQuestion> AnsweredQuestions { get; private set; }
 
     public ErrOrNothing SaveAnswers( /*new list*/) {
         if (VokiTaker is null) {
             return ErrFactory.AuthRequired();
         }
+
         throw new NotImplementedException();
     }
 
@@ -52,10 +110,10 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         );
     }
 
-    public ErrOrNothing ValidateChosenAnswers(
-        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
+    private ErrOrNothing ValidateChosenAnswers(
+        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>? chosenAnswers
     ) {
-        var errs = ErrOrNothing.Nothing;
+        ErrOrNothing errs = ErrOrNothing.Nothing;
 
         if (chosenAnswers is null) {
             errs.AddNext(ErrFactory.NoValue.Common("Chosen answers are missing"));
@@ -81,21 +139,6 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         }
 
         return errs;
-    }
-
-    public ImmutableArray<VokiTakenQuestionDetails> GatherQuestionDetails(
-        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
-    ) {
-        ImmutableDictionary<GeneralVokiQuestionId, ushort> questionIdToOrder = Questions
-            .ToImmutableDictionary(q => q.QuestionId, q => q.OrderInVokiTaking);
-
-        return chosenAnswers
-            .Select(qToAnswers => new VokiTakenQuestionDetails(
-                qToAnswers.Key,
-                qToAnswers.Value,
-                questionIdToOrder[qToAnswers.Key]
-            ))
-            .ToImmutableArray();
     }
 }
 

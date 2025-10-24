@@ -84,7 +84,6 @@ public sealed class GeneralVoki : BaseVoki
         VokiTakenRecordIds = VokiTakenRecordIds.Add(newRecordId);
         AddDomainEvent(new VokiGotNewVokiTakenRecordEvent(Id, vokiTakerId, (uint)VokiTakenRecordIds.Count));
     }
-
     public ErrOr<GeneralVokiResultId> GetResultIdByChosenAnswers(
         Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
     ) {

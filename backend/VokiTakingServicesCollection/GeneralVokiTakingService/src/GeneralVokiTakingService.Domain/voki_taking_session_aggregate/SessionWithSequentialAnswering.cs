@@ -1,7 +1,9 @@
 ﻿using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
+using SharedKernel.auth;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -45,23 +47,120 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     }
 
 
-    public ImmutableArray<VokiTakenQuestionDetails> GatherQuestionDetails() {
-        //check that all questions are answered
-        throw new NotImplementedException();
-        // return _answered
-        //     .Select(q => new VokiTakenQuestionDetails(
-        //         q.QuestionId,
-        //         q.ChosenAnswerIds,
-        //         q.OrderInVokiTaking
-        //     ))
-        //     .ToImmutableArray();
-    }
+    public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
+        DateTime currentTime,
+        ClientServerTimePairDto sessionStartTime,
+        DateTime clientSessionFinishedTime,
+        IUserContext userContext,
+        GeneralVokiQuestionId lastQuestionId,
+        ushort lastQuestionOrderInVokiTaking,
+        ClientServerTimePairDto lastQuestionShownAt,
+        DateTime clientLastAnsweredAt,
+        ImmutableHashSet<GeneralVokiAnswerId> lastChosenAnswers,
+        Func<Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>, ErrOr<GeneralVokiResultId>>
+            getResultAccordingToAnswers
+    ) {
+        if (ValidateStartAndFinishTime(
+                currentTime: currentTime,
+                sessionStartTime: sessionStartTime,
+                clientFinishTime: clientSessionFinishedTime
+            ).IsErr(out var err)) {
+            return err;
+        }
 
+        if (ValidateVokiTaker(userContext, out var vokiTakerId).IsErr(out err)) {
+            return err;
+        }
+
+        var expected = Questions.FirstOrDefault(q => q.QuestionId == lastQuestionId);
+        if (expected is null) {
+            return ErrFactory.NotFound.Common(
+                "This question is not expected in this Voki taking session",
+                "Try reloading the page"
+            );
+        }
+
+        TakingSessionExpectedQuestion? current = GetFirstUnanswered();
+        if (current is null) {
+            return ErrFactory.Conflict(
+                "There are no questions left to answer",
+                "Use the finish-taking action to complete the attempt"
+            );
+        }
+
+        if (current.QuestionId != lastQuestionId) {
+            return ErrFactory.Conflict(
+                "You cannot finish the session with this question",
+                $"Sequential mode is enabled. Please answer the current question (order {current.OrderInVokiTaking}) first"
+            );
+        }
+
+        if (!IsLastRemaining(lastQuestionId)) {
+            return ErrFactory.Conflict(
+                "You cannot finish the session yet",
+                "There are unanswered questions left. Answer them first or continue sequentially."
+            );
+        }
+
+        ErrOrNothing answerValidationRes = ValidateAnswerForQuestion(
+            expected, lastQuestionOrderInVokiTaking,
+            lastQuestionShownAt.Server, lastQuestionShownAt.Client,
+            currentTime, clientLastAnsweredAt,
+            lastChosenAnswers
+        );
+
+        var answeredRecord = new SequentialTakingAnsweredQuestion(
+            expected.QuestionId,
+            lastQuestionOrderInVokiTaking,
+            lastChosenAnswers,
+            lastQuestionShownAt.Client,
+            clientLastAnsweredAt
+        );
+        Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> answeredWithNew = _answered
+            .Add(answeredRecord)
+            .ToDictionary(
+                a => a.QuestionId,
+                a => a.ChosenAnswerIds
+            );
+
+        bool notAnsweredLeft = Questions.Any(q => !answeredWithNew.ContainsKey(q.QuestionId));
+        if (notAnsweredLeft) {
+            return ErrFactory.Conflict(
+                "There are unanswered questions left",
+                "Please answer remaining questions before finishing."
+            );
+        }
+
+
+        var resOrErr = getResultAccordingToAnswers(answeredWithNew);
+        if (resOrErr.IsErr(out err)) {
+            return err;
+        }
+
+        _answered = _answered.Add(answeredRecord);
+        ImmutableArray<VokiTakenQuestionDetails> details = _answered
+            .Select(q => new VokiTakenQuestionDetails(
+                q.QuestionId,
+                q.ChosenAnswerIds,
+                q.OrderInVokiTaking
+            ))
+            .ToImmutableArray();
+
+        return new VokiTakingSessionFinishedDto(
+            VokiId,
+            vokiTakerId,
+            sessionStartTime.Client,
+            clientSessionFinishedTime,
+            WasSessionWithForcedSequentialOrder: true,
+            ReceivedResultId: resOrErr.AsSuccess(),
+            details
+        );
+    }
 
     public ErrOr<(GeneralVokiQuestionId NextQuestionId, ushort OrderInVokiTaking)> AnswerQuestionAndGetNext(
         VokiId vokiId,
-        DateTime serverQuestionShownAt,
-        DateTime clientQuestionShownAt,
+        ClientServerTimePairDto shownAt,
+        DateTime currentTime,
         DateTime clientQuestionAnsweredAt,
         GeneralVokiQuestionId questionId,
         ushort questionOrderInVokiTaking,
@@ -71,8 +170,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             return ErrFactory.Conflict("Provided VokiId does not match with the session VokiId");
         }
 
-        TakingSessionExpectedQuestion? expected = Questions
-            .FirstOrDefault(q => q.QuestionId == questionId);
+        TakingSessionExpectedQuestion? expected = Questions.FirstOrDefault(q => q.QuestionId == questionId);
         if (expected is null) {
             return ErrFactory.NotFound.Common(
                 "This question is not expected in this Voki taking session",
@@ -80,14 +178,12 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        SequentialTakingAnsweredQuestion? already = _answered
-            .FirstOrDefault(a => a.QuestionId == questionId);
-
+        SequentialTakingAnsweredQuestion? already = _answered.FirstOrDefault(a => a.QuestionId == questionId);
         if (already is not null) {
             return HandleAlreadyAnswered(
                 already,
                 questionOrderInVokiTaking,
-                clientQuestionShownAt,
+                shownAt.Client,
                 clientQuestionAnsweredAt,
                 chosenAnswers
             );
@@ -95,8 +191,9 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 
         return HandleNotYetAnswered(
             expected,
-            serverQuestionShownAt,
-            clientQuestionShownAt,
+            shownAt.Server,
+            shownAt.Client,
+            currentTime,
             clientQuestionAnsweredAt,
             questionOrderInVokiTaking,
             chosenAnswers
@@ -138,11 +235,12 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         TakingSessionExpectedQuestion expected,
         DateTime serverQuestionShownAt,
         DateTime clientQuestionShownAt,
+        DateTime currentTime,
         DateTime clientQuestionAnsweredAt,
         ushort questionOrderInVokiTaking,
         ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
     ) {
-        var current = GetFirstUnanswered();
+        TakingSessionExpectedQuestion? current = GetFirstUnanswered();
         if (current is null) {
             return ErrFactory.Conflict(
                 "There are no questions left to answer",
@@ -157,9 +255,55 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        if (expected.OrderInVokiTaking != questionOrderInVokiTaking) {
+        ErrOrNothing answerValidationRes = ValidateAnswerForQuestion(
+            expected, questionOrderInVokiTaking,
+            serverQuestionShownAt, clientQuestionShownAt,
+            currentTime, clientQuestionAnsweredAt,
+            chosenAnswers
+        );
+        if (answerValidationRes.IsErr(out var err)) {
+            return err;
+        }
+
+        if (IsLastRemaining(expected.QuestionId)) {
             return ErrFactory.Conflict(
-                $"Question order mismatch. Expected order {expected.OrderInVokiTaking}, got {questionOrderInVokiTaking}",
+                "Cannot answer and go to next: this is the last question.",
+                "Use the finish-taking action to submit and complete the taking session."
+            );
+        }
+
+        SequentialTakingAnsweredQuestion answeredRecord = new SequentialTakingAnsweredQuestion(
+            expected.QuestionId,
+            questionOrderInVokiTaking,
+            chosenAnswers,
+            clientQuestionShownAt,
+            clientQuestionAnsweredAt
+        );
+
+        TakingSessionExpectedQuestion? next = GetFirstUnanswered();
+        if (next is null) {
+            return ErrFactory.Conflict(
+                "There are no questions left to answer",
+                "Use the finish-taking action to complete the attempt."
+            );
+        }
+
+        _answered = _answered.Add(answeredRecord);
+        return (next.QuestionId, next.OrderInVokiTaking);
+    }
+
+    private ErrOrNothing ValidateAnswerForQuestion(
+        TakingSessionExpectedQuestion expected,
+        ushort receivedOrderInVokiTaking,
+        DateTime serverQuestionShownAt,
+        DateTime clientQuestionShownAt,
+        DateTime currentTime,
+        DateTime clientQuestionAnsweredAt,
+        ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
+    ) {
+        if (expected.OrderInVokiTaking != receivedOrderInVokiTaking) {
+            return ErrFactory.Conflict(
+                $"Question order mismatch. Expected order {expected.OrderInVokiTaking}, got {receivedOrderInVokiTaking}",
                 "Reload the page and continue with the current question"
             );
         }
@@ -178,15 +322,23 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        var clockSkew = (serverQuestionShownAt - clientQuestionShownAt).Duration();
-        if (clockSkew > TimeSpan.FromMinutes(30)) {
+        TimeSpan answeredAtSkew = (clientQuestionAnsweredAt - currentTime).Duration();
+        if (answeredAtSkew > MaxClockSkew) {
             return ErrFactory.Conflict(
-                "Time sync error: large difference between server and client clocks",
+                "Time sync error: the answer is too delayed relative to current time",
+                "Please reload the page and try again"
+            );
+        }
+
+        TimeSpan shownAtSkew = (serverQuestionShownAt - clientQuestionShownAt).Duration();
+        if (shownAtSkew > MaxClockSkew) {
+            return ErrFactory.Conflict(
+                "Time sync error: large difference between server and client time",
                 "Please check your device time or reload the page and try again"
             );
         }
 
-        var chosenCount = chosenAnswers.Count;
+        int chosenCount = chosenAnswers.Count;
         if (chosenCount < expected.MinAnswersCount) {
             return ErrFactory.Conflict(
                 $"Too few answers selected. Answers chosen: {chosenCount}",
@@ -210,34 +362,10 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        if (IsLastRemaining(expected.QuestionId)) {
-            return ErrFactory.Conflict(
-                "Cannot answer and go to next: this is the last question.",
-                "Use the finish-taking action to submit and complete the taking session."
-            );
-        }
-
-        var answeredRecord = new SequentialTakingAnsweredQuestion(
-            expected.QuestionId,
-            questionOrderInVokiTaking,
-            chosenAnswers,
-            clientQuestionShownAt,
-            clientQuestionAnsweredAt
-        );
-
-        var next = GetFirstUnanswered();
-        if (next is null) {
-            return ErrFactory.Conflict(
-                "There are no questions left to answer",
-                "Use the finish-taking action to complete the attempt."
-            );
-        }
-
-        _answered = _answered.Add(answeredRecord);
-
-        return (next.QuestionId, next.OrderInVokiTaking);
+        return ErrOrNothing.Nothing;
     }
 
+    private static readonly TimeSpan MaxClockSkew = TimeSpan.FromMinutes(30);
 
     private TakingSessionExpectedQuestion? GetFirstUnanswered()
         => Questions

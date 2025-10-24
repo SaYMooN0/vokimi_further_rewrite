@@ -1,6 +1,7 @@
 ﻿using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
@@ -13,8 +14,7 @@ public sealed record FinishVokiTakingWithFreeAnsweringCommand(
     VokiId VokiId,
     VokiTakingSessionId SessionId,
     Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> ChosenAnswers,
-    DateTime ClientStartTime,
-    DateTime ServerStartTime,
+    ClientServerTimePairDto SessionStartTime,
     DateTime ClientFinishTime
 ) : ICommand<GeneralVokiResultId>;
 
@@ -52,40 +52,23 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             return ErrFactory.NotFound.Common("Could not finish voki taking because taking session was not started");
         }
 
-
-        if (
-            session.ValidateTime(
-                currentTime: _dateTimeProvider.UtcNow, clientStartTime: command.ClientStartTime,
-                providedServerStartTime: command.ServerStartTime, clientFinishTime: command.ClientFinishTime
-            ).IsErr(out var err)
-        ) {
-            return err;
-        }
-
-
-        if (session.ValidateVokiTaker(_userContext, out var vokiTakerId).IsErr(out err)) {
-            return err;
-        }
-
-        if (session.ValidateChosenAnswers(command.ChosenAnswers).IsErr(out err)) {
-            return err;
-        }
-
-        ErrOr<GeneralVokiResultId> resOrErr = voki.GetResultIdByChosenAnswers(command.ChosenAnswers);
-        if (resOrErr.IsErr(out err)) {
-            return err;
-        }
-
-        GeneralVokiResultId resultId = resOrErr.AsSuccess();
-        GeneralVokiTakenRecord vokiTakenRecord = GeneralVokiTakenRecord.CreateNew(
-            command.VokiId, vokiTakerId,
-            command.ClientStartTime, command.ClientFinishTime,
-            session.IsWithForceSequentialAnswering, resultId,
-            session.GatherQuestionDetails(command.ChosenAnswers)
+        ErrOr<VokiTakingSessionFinishedDto> sessionFinishRes = session.FinishAndReceiveResult(
+            _dateTimeProvider.UtcNow,
+            command.SessionStartTime,
+            command.ClientFinishTime,
+            _userContext,
+            command.ChosenAnswers,
+            (answ) => voki.GetResultIdByChosenAnswers(answ)
         );
+        if (sessionFinishRes.IsErr(out var err)) {
+            return err;
+        }
+
+        VokiTakingSessionFinishedDto sessionFinishedResult = sessionFinishRes.AsSuccess();
+        GeneralVokiTakenRecord vokiTakenRecord = GeneralVokiTakenRecord.CreateNew(sessionFinishedResult);
         await _generalVokiTakenRecordsRepository.Add(vokiTakenRecord, ct);
         await _sessionsWithFreeAnsweringRepository.Delete(session, ct);
 
-        return resultId;
+        return sessionFinishedResult.ReceivedResultId;
     }
 }

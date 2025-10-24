@@ -1,13 +1,14 @@
 ﻿using GeneralVokiTakingService.Domain.common;
+using GeneralVokiTakingService.Domain.common.dtos;
 
-namespace GeneralVokiTakingService.Api.contracts.finish_voki_taking;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
 
 public class FinishVokiTakingWithFreeAnsweringRequest : IRequestWithValidationNeeded
 {
     public Dictionary<string, string[]> ChosenAnswers { get; init; }
-    public DateTime ClientStartTime { get; init; }
-    public DateTime ServerStartTime { get; init; }
-    public DateTime ClientFinishTime { get; init; }
+    public DateTime ClientSessionStartTime { get; init; }
+    public DateTime ServerSessionStartTime { get; init; }
+    public DateTime ClientSessionFinishTime { get; init; }
     public string SessionId { get; init; }
 
     private const int
@@ -21,21 +22,8 @@ public class FinishVokiTakingWithFreeAnsweringRequest : IRequestWithValidationNe
 
         ParsedSessionId = new VokiTakingSessionId(sessionGuid);
 
-        var nowUtc = DateTime.UtcNow;
-        if (ClientFinishTime < ClientStartTime) {
+        if (ClientSessionFinishTime < ClientSessionStartTime) {
             return ErrFactory.Conflict("Client finish time cannot be earlier than client start time");
-        }
-
-        if (ClientStartTime > nowUtc) {
-            return ErrFactory.Conflict("Client start time cannot be in the future");
-        }
-
-        if (ClientFinishTime > nowUtc) {
-            return ErrFactory.Conflict("Client finish time cannot be in the future");
-        }
-
-        if (ServerStartTime > nowUtc) {
-            return ErrFactory.Conflict("Server start time cannot be in the future");
         }
 
         if (ChosenAnswers.Count > MaxQuestionsCount) {
@@ -71,4 +59,6 @@ public class FinishVokiTakingWithFreeAnsweringRequest : IRequestWithValidationNe
 
     public VokiTakingSessionId ParsedSessionId { get; private set; }
     public Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> ParsedChosenAnswers { get; private set; }
+    public ClientServerTimePairDto ParsedSessionStartTime =>
+        new(Client: ServerSessionStartTime, Server: ServerSessionStartTime);
 }

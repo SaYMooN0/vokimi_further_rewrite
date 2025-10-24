@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.voki_taken_record_aggregate.events;
+﻿using GeneralVokiTakingService.Domain.common.dtos;
+using GeneralVokiTakingService.Domain.voki_taken_record_aggregate.events;
 using VokiTakingServicesLib.Domain.common;
 using VokiTakingServicesLib.Domain.voki_taken_record_aggregate;
 
@@ -27,19 +28,11 @@ public sealed class GeneralVokiTakenRecord : BaseVokiTakenRecord
         WasWithSequentialAnswering = wasWithSequentialAnswering;
     }
 
-    public static GeneralVokiTakenRecord CreateNew(
-        VokiId takenVokiId, AppUserId? vokiTakerId,
-        DateTime testTakingStart, DateTime finishTime,
-        bool wasVokiWithForcedSequentialOrder,
-        GeneralVokiResultId receivedResultId,
-        ImmutableArray<VokiTakenQuestionDetails> questionDetails
-    ) {
+    public static GeneralVokiTakenRecord CreateNew(VokiTakingSessionFinishedDto dto) {
         GeneralVokiTakenRecord newRecord = new(
-            VokiTakenRecordId.CreateNew(),
-            takenVokiId, vokiTakerId,
-            testTakingStart, finishTime,
-            receivedResultId, questionDetails,
-            wasVokiWithForcedSequentialOrder
+            VokiTakenRecordId.CreateNew(), dto.TakenVokiId, dto.VokiTakerId,
+            dto.SessionStartTime, dto.SessionFinishTime,
+            dto.ReceivedResultId, dto.QuestionDetails, dto.WasSessionWithForcedSequentialOrder
         );
         newRecord.AddDomainEvent(new VokiTakenRecordCreatedEvent(
             newRecord.Id,
