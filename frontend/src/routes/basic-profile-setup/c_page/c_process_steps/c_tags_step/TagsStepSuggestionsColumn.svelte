@@ -41,44 +41,47 @@
 <style>
 	.suggestions-not-loaded {
 		display: flex;
-		justify-content: start;
-		padding-top: 2rem;
 		flex-direction: column;
+		justify-content: start;
 		align-items: center;
 		gap: 1rem;
+		padding-top: 2rem;
 	}
+
 	.suggestions-not-loaded h1 {
+		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 500;
-		color: var(--secondary-foreground);
 	}
 	
 	.suggestion-list {
 		display: flex;
-		justify-content: center;
-		column-gap: 1rem;
-		row-gap: 0.75rem;
 		flex-wrap: wrap;
+		justify-content: center;
 		align-items: center;
 		height: fit-content;
+		gap: 0.75rem 1rem;
 	}
+
 	.tag {
-		background-color: var(--secondary);
-		color: var(--secondary-foreground);
 		display: grid;
-		grid-template-columns: 1fr auto;
+		gap: 0.125rem;
 		padding: 0.125rem 0.675rem;
 		border-radius: 1rem;
-		font-weight: 450;
-		gap: 0.125rem;
-		cursor: pointer;
-		letter-spacing: 0.1px;
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
 		font-size: 1rem;
+		font-weight: 450;
+		letter-spacing: 0.1px;
 		box-shadow: var(--shadow-xs);
+		cursor: pointer;
+		grid-template-columns: 1fr auto;
 	}
+
 	.tag:not(.chosen):hover {
 		box-shadow: var(--shadow-xs), var(--shadow-md);
 	}
+
 	.tag.chosen {
 		background-color: var(--primary);
 		color: var(--primary-foreground);

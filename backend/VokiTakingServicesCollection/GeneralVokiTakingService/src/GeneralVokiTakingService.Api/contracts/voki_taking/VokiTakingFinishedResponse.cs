@@ -1,4 +1,4 @@
-﻿namespace GeneralVokiTakingService.Api.contracts.finish_voki_taking;
+﻿namespace GeneralVokiTakingService.Api.contracts.voki_taking;
 
 public record class VokiTakingFinishedResponse(
     string ReceivedResultId

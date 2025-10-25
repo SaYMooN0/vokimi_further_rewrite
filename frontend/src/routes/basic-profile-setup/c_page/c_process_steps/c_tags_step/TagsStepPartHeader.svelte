@@ -6,10 +6,10 @@
 
 <style>
 	.part-header {
-		font-size: 1.25rem;
+		margin: 0 0 0.5rem;
 		color: var(--text);
+		font-size: 1.25rem;
 		font-weight: 500;
-		margin: 0 0 0.5rem 0;
 		text-align: center;
 	}
 </style>

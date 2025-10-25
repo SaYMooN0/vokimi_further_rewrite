@@ -26,7 +26,9 @@
 			<label class="album unselectable">
 				<svg
 					class="album-icon"
-					style="--icon-color-1: {album.mainColor}; --icon-color-2: {album.secondaryColor};"
+					style="
+
+--icon-color-1: {album.mainColor}; --icon-color-2: {album.secondaryColor};"
 					><use href="#{album.icon}" /></svg
 				>
 				{album.name}
@@ -53,52 +55,59 @@
 	.list {
 		display: flex;
 		flex-direction: column;
-		height: 100%;
 		gap: 0.125rem;
 		width: 100%;
+		height: 100%;
 	}
+
 	.album {
 		display: grid;
-		grid-template-columns: auto 1fr auto auto;
-		gap: 0.5rem;
 		align-items: center;
-		font-size: 1.125rem;
-		font-weight: 450;
+		gap: 0.5rem;
 		padding: 0.25rem 1rem;
 		border-radius: 0.375rem;
+		font-size: 1.125rem;
+		font-weight: 450;
+		grid-template-columns: auto 1fr auto auto;
 	}
+
 	.album:hover {
 		background-color: var(--secondary);
 	}
+
 	.album-icon {
-		height: 1.675rem;
 		width: 1.675rem;
+		height: 1.675rem;
 		stroke-width: 1.9;
 	}
+
 	.changed-indicator {
-		height: 0.375rem;
 		width: 0.375rem;
+		height: 0.375rem;
 		border-radius: 50%;
-		transform: scale(0);
 		transition: all 0.15s ease-out;
+		transform: scale(0);
 	}
+
 	.changed-indicator.active {
 		background-color: var(--primary);
 		transform: scale(1);
 	}
+
 	.create-new-btn {
-		margin-top: 1rem;
-		align-self: center;
 		width: fit-content;
 		padding: 0.25rem 1rem;
+		margin-top: 1rem;
 		border: none;
+		border-radius: 0.5rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		border-radius: 0.5rem;
 		font-weight: 500;
 		letter-spacing: 0.1px;
 		transition: all 0.1s ease-out;
+		align-self: center;
 	}
+
 	.create-new-btn:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);

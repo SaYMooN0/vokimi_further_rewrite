@@ -49,42 +49,48 @@
 		width: 40rem;
 		min-height: 20rem;
 	}
+
 	.title {
 		margin: 0;
 		color: var(--muted-foreground);
 		font-size: 2rem;
 		font-weight: 600;
 	}
+
 	.unsaved-changes-msg {
 		margin: 1rem 0 0;
 		color: var(--secondary-foreground);
 		font-size: 1.125em;
+		font-weight: 450;
 		line-height: 1.2;
 		text-align: center;
 		letter-spacing: 0.25px;
-		font-weight: 450;
 		text-wrap: balance;
 	}
+
 	.errs-container {
-		margin-top: auto;
-		min-height: 5rem;
-		margin-bottom: 2rem;
 		display: block;
 		width: 100%;
+		min-height: 5rem;
+		margin-top: auto;
+		margin-bottom: 2rem;
 	}
+
 	.main-err-msg {
+		margin-bottom: 0.25rem;
 		color: var(--err-foreground);
 		font-size: 1.25rem;
 		font-weight: 500;
-		margin-bottom: 0.25rem;
 	}
+
 	.actions {
-		width: 100%;
 		display: grid;
-		grid-template-columns: 1fr 1fr;
 		gap: 2rem;
+		width: 100%;
 		padding: 0 2rem;
+		grid-template-columns: 1fr 1fr;
 	}
+
 	.logout-btn,
 	.cancel-btn {
 		padding: 0.5rem 0;

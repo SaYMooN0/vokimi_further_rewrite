@@ -25,38 +25,41 @@
 
 <style>
 	.display-name-container {
+		position: relative;
 		display: grid;
 		width: fit-content;
 		margin-inline: auto;
-		position: relative;
 	}
+
 	.input-icon {
 		position: absolute;
 		top: 50%;
-		transform: translateY(-50%);
 		left: 0.375rem;
+		width: 1.675rem;
+		height: 1.675rem;
+		color: var(--secondary-foreground);
 		font-size: 1.5rem;
 		font-weight: 600;
-		color: var(--secondary-foreground);
+		transform: translateY(-50%);
 		pointer-events: none;
-		height: 1.675rem;
-		width: 1.675rem;
 		stroke-width: 2.2;
 	}
 
 	.name-input {
 		--border-color: var(--secondary-foreground);
+
 		max-width: calc(var(--width-limit) - var(--sidebar-width) - 8rem);
-		font-size: 1.25rem;
-		font-weight: 450;
 		padding: 0.675rem 1rem 0.675rem 1.75rem;
-		border-radius: 0.5rem;
 		border: 0.125rem solid var(--border-color);
+		border-radius: 0.5rem;
 		background-color: var(--back);
 		color: var(--text);
-		outline: none;
+		font-size: 1.25rem;
+		font-weight: 450;
 		letter-spacing: 1px;
+		outline: none;
 	}
+
 	.name-input:hover,
 	.name-input:focus {
 		--border-color: var(--primary);
@@ -66,27 +69,31 @@
 		color: var(--primary);
 		font-weight: 700;
 	}
+
 	.len-count {
 		position: absolute;
-		font-size: 0.875rem;
-		right: 1rem;
 		top: calc(100%);
-		transform: translateY(-50%);
-		background-color: var(--back);
+		right: 1rem;
 		display: grid;
 		padding: 0 0.125rem;
-		grid-template-columns: auto auto;
+		background-color: var(--back);
+		font-size: 0.875rem;
 		font-weight: 450;
+		transform: translateY(-50%);
+		grid-template-columns: auto auto;
 		pointer-events: none;
 		font-variant-numeric: tabular-nums;
 	}
+
 	.len-count .current {
 		text-align: right;
 	}
+
 	.len-count .current.err {
 		color: var(--err-foreground);
 		font-weight: 500;
 	}
+
 	.len-count .max {
 		text-align: left;
 	}

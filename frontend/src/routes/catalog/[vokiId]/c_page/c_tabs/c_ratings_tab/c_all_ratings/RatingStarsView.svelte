@@ -15,7 +15,6 @@
 		display: flex;
 		flex-direction: row;
 		gap: 0.125rem;
-		padding-bottom: 0.125rem;
 		margin-left: 0.25rem;
 	}
 

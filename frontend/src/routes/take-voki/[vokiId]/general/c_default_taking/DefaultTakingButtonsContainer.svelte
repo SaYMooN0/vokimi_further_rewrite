@@ -9,15 +9,16 @@
 	}
 	let { vokiTakingState, vokiTakingErrs = $bindable(), onResultReceived }: Props = $props();
 
-	let isNextBtnInactive = $derived(vokiTakingState.isCurrentQuestionLast());
-	let isPrevBtnInactive = $derived(vokiTakingState.isCurrentQuestionFirst());
+	let isNextBtnInactive = $derived(vokiTakingState.isCurrentQuestionLast);
+	let isPrevBtnInactive = $derived(vokiTakingState.isCurrentQuestionFirst);
 
-	let showFinishBtn = $derived(vokiTakingState.isCurrentQuestionLast());
+	let showFinishBtn = $derived(vokiTakingState.isCurrentQuestionLast);
 	let isFinishBtnLoading = $state(false);
 	async function finishBtnPressed() {
 		isFinishBtnLoading = true;
 		const response = await vokiTakingState.finishTakingAndReceiveResult();
 		isFinishBtnLoading = false;
+		console.log(response);
 		if (response.isSuccess) {
 			onResultReceived(response.data.receivedResultId);
 		} else if (response.errs.length > 0) {
@@ -40,7 +41,7 @@
 	}
 </script>
 
-<div class="btns-container">
+<div class="btns-container unselectable">
 	<button
 		class="next-prev-btns"
 		class:reduced={showFinishBtn}
@@ -54,7 +55,7 @@
 		class:loading={isFinishBtnLoading}
 		onclick={() => finishBtnPressed()}
 		>{#if isFinishBtnLoading}
-			Loading <LinesLoader sizeRem={1.3} strokePx={2} />
+			<LinesLoader sizeRem={1.75} strokePx={2.5} />
 		{:else}
 			Save
 		{/if}</button
@@ -106,7 +107,12 @@
 	}
 
 	.finish-btn {
-		width: 10rem;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
+		width: 12rem;
 		height: 2.5rem;
 		border: none;
 		border-radius: 0.25rem;
@@ -119,19 +125,17 @@
 		transform: scale(1);
 		cursor: pointer;
 		justify-self: center;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		gap: 0.5rem;
 	}
+
 	.finish-btn.loading {
 		opacity: 0.8;
 		pointer-events: none;
 	}
+
 	.finish-btn > :global(.container) {
 		--loader-color: var(--primary-foreground);
 	}
+
 	.finish-btn.hidden {
 		opacity: 0;
 		transform: scale(0);

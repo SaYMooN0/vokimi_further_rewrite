@@ -24,4 +24,4 @@ public static class UsersHandlers
 
         return CustomResults.FromErrOrToJson<UserPreviewDto[], MultipleUsersPreviewResponse>(result);
     }
-}
+}   

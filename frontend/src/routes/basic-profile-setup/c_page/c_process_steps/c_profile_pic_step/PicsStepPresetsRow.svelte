@@ -26,28 +26,31 @@
 <style>
 	.predefined-row {
 		display: grid;
-		grid-template-rows: auto 1fr;
+		gap: 0.25rem;
 		width: fit-content;
 		height: fit-content;
-		gap: 0.25rem;
+		grid-template-rows: auto 1fr;
 	}
+
 	.row-name {
 		margin-left: 2rem;
+		color: var(--secondary-foreground);
 		font-size: 1.125rem;
 		font-weight: 450;
-		color: var(--secondary-foreground);
 	}
+
 	.pics-container {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
 		gap: 0.5rem;
 	}
+
 	.img {
-		width: 100%;
-		aspect-ratio: 1/1;
-		border-radius: 99rem;
-		object-fit: cover;
 		display: grid;
+		width: 100%;
+		border-radius: 99rem;
+		aspect-ratio: 1/1;
+		object-fit: cover;
 		place-content: center;
 	}
 </style>

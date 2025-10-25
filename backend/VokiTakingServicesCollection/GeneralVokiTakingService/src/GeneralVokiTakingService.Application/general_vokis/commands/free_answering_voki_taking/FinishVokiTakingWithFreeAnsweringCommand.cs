@@ -49,7 +49,10 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
 
         SessionWithFreeAnswering? session = await _sessionsWithFreeAnsweringRepository.GetById(command.SessionId, ct);
         if (session is null) {
-            return ErrFactory.NotFound.Common("Could not finish voki taking because taking session was not started");
+            return ErrFactory.NotFound.Common(
+                "Could not finish voki taking because taking session was not started",
+                "Most likely if you see this message you have already finished your taking session"
+                );
         }
 
         ErrOr<VokiTakingSessionFinishedDto> sessionFinishRes = session.FinishAndReceiveResult(

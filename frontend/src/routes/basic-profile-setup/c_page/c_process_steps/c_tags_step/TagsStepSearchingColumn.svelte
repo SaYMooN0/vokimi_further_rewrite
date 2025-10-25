@@ -95,15 +95,15 @@
 
 <style>
 	.tags-searching {
-		width: 100%;
 		display: grid;
-		grid-template-rows: auto 1fr auto;
 		gap: 0.5rem;
+		width: 100%;
+		grid-template-rows: auto 1fr auto;
 	}
+
 	.search-bar {
 		display: grid;
 		align-items: center;
-		justify-self: center;
 		width: calc(100% - 2rem);
 		height: 2.25rem;
 		box-sizing: border-box;
@@ -111,19 +111,20 @@
 		border: 0.125rem solid var(--secondary);
 		border-radius: 2rem;
 		background-color: var(--secondary);
-		transition: border-color 0.05s ease-out;
-		grid-template-columns: auto 1fr auto;
 		box-shadow: var(--shadow-xs), var(--shadow-md);
+		transition: border-color 0.05s ease-out;
+		justify-self: center;
+		grid-template-columns: auto 1fr auto;
 	}
 
 	.search-bar:hover {
-		box-shadow: var(--shadow-md);
 		border-color: var(--secondary-foreground);
+		box-shadow: var(--shadow-md);
 	}
-	.search-bar:focus-within {
-		box-shadow: none;
 
+	.search-bar:focus-within {
 		border-color: var(--primary);
+		box-shadow: none;
 	}
 
 	.search-bar > input {
@@ -171,46 +172,52 @@
 		opacity: 1;
 		visibility: visible;
 	}
+
 	.searched-tags-list {
-		max-height: 20rem;
-		overflow-y: auto;
-		scrollbar-gutter: stable;
 		display: flex;
 		flex-direction: column;
 		gap: 0.25rem;
+		max-height: 20rem;
+		overflow-y: auto;
+		scrollbar-gutter: stable;
 	}
+
 	.tag {
-		width: 100%;
-		background-color: var(--secondary);
 		display: grid;
-		grid-template-columns: 1fr auto;
-		box-shadow: var(--shadow-xs) inset;
 		align-items: center;
+		width: 100%;
 		padding: 0.25rem 0.5rem;
 		border-radius: 0.375rem;
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
 		font-size: 1.125rem;
-		color: var(--secondary-foreground);
+		box-shadow: var(--shadow-xs) inset;
+		grid-template-columns: 1fr auto;
 	}
+
 	.tag svg {
-		height: 1.375rem;
 		width: 1.375rem;
-		stroke-width: 2.5;
-		color: var(--secondary-foreground);
+		height: 1.375rem;
 		border-radius: 0.25rem;
+		color: var(--secondary-foreground);
+		stroke-width: 2.5;
 	}
+
 	.tag .add-icon:hover,
 	.tag .add-icon:focus,
 	.tag .add-icon:active {
-		color: var(--primary);
 		background-color: var(--muted);
+		color: var(--primary);
 	}
+
 	.tag .added-icon {
 		color: var(--primary);
 		stroke-width: 2.875;
 	}
+
 	.continue-typing-label {
-		font-size: 0.875rem;
 		color: var(--secondary-foreground);
+		font-size: 0.875rem;
 		text-align: center;
 		text-wrap: balance;
 	}

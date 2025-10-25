@@ -4,6 +4,7 @@
 	import { relativeTime } from 'svelte-relative-time';
 	import RatingStarsView from './RatingStarsView.svelte';
 	import type { Snippet } from 'svelte';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		userId: string;
@@ -13,14 +14,15 @@
 	}
 	let { userId, content, dateTime = undefined, highlight = { enabled: false } }: Props = $props();
 
-	let user: any = UsersStore.Get(userId);
+	let user = UsersStore.Get(userId);
 </script>
 
 <div class="rating-item" class:highlighted={highlight.enabled}>
 	{#if highlight.enabled}
 		<label class="highlight-label"> {highlight.text}</label>
 	{/if}
-	<div class="profile-pic-container">
+
+	<a href="/auhtors/{userId}" class="profile-pic-part profile-link-el">
 		{#if user.state === 'loading'}
 			<div class="profile-pic skeleton" aria-hidden="true" />
 		{:else if user.state === 'errs'}
@@ -34,28 +36,45 @@
 				alt="user profile pic"
 			/>
 		{/if}
-	</div>
+	</a>
+	<div class="content-part">
+		<div class="name-with-date-content">
+			{#if user.state === 'loading'}
+				<div class="display-name loading skeleton" aria-hidden="true"></div>
+			{:else if user.state === 'errs'}
+				<a class="display-name profile-link-el error" href="/auhtors/{userId}">
+					Could not load user name</a
+				>
+			{:else if user.state === 'ok'}
+				<a class="display-name profile-link-el" href="/auhtors/{userId}">
+					{user.data.displayName}</a
+				>
+			{/if}
 
-	<div class="content">
-		{#if user.state === 'loading'}
-			<div class="username loading skeleton" aria-hidden="true"></div>
-		{:else if user.state === 'errs'}
-			<label class="username error">Could not load user name</label>
-		{:else if user.state === 'ok'}
-			<label class="username">{user.data.name}</label>
-		{/if}
-		{#if content.name === 'default'}
-			<RatingStarsView value={content.ratingValue} />
-		{:else if content.name === 'custom'}
-			{@render content.children()}
-		{:else}
-			<h1>Something went wrong. Content name: {(content as any).name}</h1>
-		{/if}
-	</div>
-	<div class="date">
-		{#if dateTime}
-			<span use:relativeTime={{ date: dateTime }} />
-		{/if}
+			{#if dateTime}
+				<span class="date" use:relativeTime={{ date: dateTime }} />
+			{/if}
+		</div>
+		<a
+			class="unique-name-content profile-link-el"
+			href="/auhtors/{userId}"
+			class:not-loaded={user.state !== 'ok'}
+		>
+			{#if user.state === 'ok'}
+				@{user.data.uniqueName}
+			{:else}
+				go to user profile
+			{/if}
+		</a>
+		<div class="main-content">
+			{#if content.name === 'default'}
+				<RatingStarsView value={content.ratingValue} />
+			{:else if content.name === 'custom'}
+				{@render content.children()}
+			{:else}
+				<h1>Something went wrong. Content name: {(content as any).name}</h1>
+			{/if}
+		</div>
 	</div>
 </div>
 
@@ -63,17 +82,18 @@
 	.rating-item {
 		position: relative;
 		display: grid;
-		align-items: center;
-		padding: 0.25rem 0.5rem;
+		min-height: 4rem;
+		padding: 0 0.5rem;
 		border: 0.125rem solid var(--back);
 		border-radius: 1rem;
 		animation: var(--default-fade-in);
+		grid-template-columns: auto 1fr;
 		grid-template-columns: auto 1fr auto;
-		row-gap: 0.25rem;
 	}
 
 	.rating-item.highlighted {
-		padding-top: 0.675rem;
+		padding-top: 0.375rem;
+		padding-bottom: 0.25rem;
 		border-color: var(--primary);
 	}
 
@@ -89,15 +109,20 @@
 		transform: translateY(-50%);
 	}
 
-	.profile-pic-container {
-		width: 3rem;
-		height: 3rem;
-		padding-top: 0.25rem;
+	.profile-link-el {
+		cursor: default;
+	}
+
+	.profile-pic-part {
+		padding: 0.125rem 0;
+		align-self: flex-start;
+		margin-top: 0.125rem;
 	}
 
 	.profile-pic {
 		display: grid;
-		height: 100%;
+		width: 3rem;
+		height: 3rem;
 		border-radius: 100vw;
 		background: var(--muted);
 		aspect-ratio: 1/1;
@@ -114,43 +139,76 @@
 	}
 
 	.profile-pic.err svg {
-		width: 1rem;
-		height: 1rem;
+		width: 2rem;
+		height: 2rem;
 		color: var(--muted-foreground);
 	}
 
-	.content {
-		align-self: center;
-		min-width: 0;
+	.content-part {
+		display: flex;
+		flex-direction: column;
 	}
 
-	.username {
-		display: block;
-		margin-left: -0.125rem;
+	.name-with-date-content {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		align-items: center;
+	}
+
+	.display-name {
+		width: fit-content;
+		height: 1.125rem;
 		color: var(--text);
-		font-weight: 600;
-		line-height: 1.1;
+		font-size: 1.125rem;
+		font-weight: 550;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
 
-	.username.loading {
-		width: 9rem;
-		height: 1.125rem;
-		margin-left: 0.125rem;
-		border-radius: 0.375rem;
+	.display-name.loading {
+		width: 12rem;
+		margin-left: 0.25rem;
+		border-radius: 0.5rem;
 		color: transparent;
 	}
 
-	.username.error {
+	.display-name.error {
 		color: var(--muted-foreground);
+		font-size: 1rem;
+		font-weight: 450;
 	}
 
 	.date {
+		height: fit-content;
+		padding-right: 0.25rem;
 		color: var(--secondary-foreground);
-		font-size: 1rem;
+		font-size: 0.875rem;
+		font-weight: 500;
 		white-space: nowrap;
+	}
+
+	.unique-name-content {
+		min-height: 0.25rem;
+		margin-left: 0.25rem;
+		color: var(--muted-foreground);
+		font-size: 0.875rem;
+		font-weight: 480;
+	}
+
+	.rating-item:has(.profile-link-el:hover) .unique-name-content {
+		color: var(--primary);
+	}
+
+	.unique-name-content.not-loaded {
+		margin-top: -0.125rem;
+		font-size: 0.75rem;
+		opacity: 0;
+		transition: opacity 0.06s ease-in;
+	}
+
+	.rating-item:has(.profile-link-el:hover) .unique-name-content.not-loaded {
+		opacity: 1;
 	}
 
 	.skeleton {

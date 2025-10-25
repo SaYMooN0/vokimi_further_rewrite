@@ -255,9 +255,8 @@
 	}
 
 	.name-input::placeholder {
-		font-weight: 320;
-
 		color: var(--secondary-foreground);
+		font-weight: 320;
 	}
 
 	.surprise-btn {

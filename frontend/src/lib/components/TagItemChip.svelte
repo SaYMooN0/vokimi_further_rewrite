@@ -16,11 +16,11 @@
 <style>
 	.tag-chip {
 		padding: 0.125rem 0.375rem;
+		border-radius: 0.25rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		box-shadow: var(--shadow-xs);
-		border-radius: 0.25rem;
         	font-size: 1rem;
+		box-shadow: var(--shadow-xs);
 
 	}
 </style>

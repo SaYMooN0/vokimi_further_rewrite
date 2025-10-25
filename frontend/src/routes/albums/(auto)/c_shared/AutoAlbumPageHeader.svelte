@@ -8,7 +8,7 @@
 <h1>
 	<a href="/albums" class="back-link">
 		<svg><use href="#caret-left-icon" /></svg>
-		Back
+		back
 	</a>
 	Your {albumName} auto album:
 </h1>
@@ -20,28 +20,40 @@
 		align-items: center;
 		margin: 2rem 0 0;
 		color: var(--text);
+		font-weight: 575;
+		font-size: 2rem;
 	}
 
 	.back-link {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		gap: 0.25rem;
-		padding: 0.25rem 0.5rem;
+		padding: 0.125rem 0.5rem;
 		margin: 0 0.5rem;
 		border-radius: 0.25rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 		text-decoration: none;
+		font-size: 1.125rem;
+		font-weight: 500;
+		border-radius: 2rem;
 	}
 
 	.back-link > svg {
-		width: 1rem;
-		height: 1rem;
-		background-color: none;
+		width: 1.25rem;
+		height: 1.25rem;
 		color: inherit;
+		stroke-width: 2;
+		transition: transform 0.15s ease-out;
+	}
+	.back-link:hover {
+		background-color: var(--accent);
+		color: var(--accent-foreground);
 	}
 
+	.back-link:hover > svg {
+		transform: scale(1.08) translateX(-2px);
+	}
 	.line {
 		width: 100%;
 		height: 0.125rem;

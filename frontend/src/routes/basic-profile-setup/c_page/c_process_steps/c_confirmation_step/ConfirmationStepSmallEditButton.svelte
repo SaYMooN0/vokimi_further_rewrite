@@ -12,14 +12,15 @@
 
 <style>
 	.edit-btn {
+		width: 1.375rem;
+		height: 1.375rem;
 		padding: 0.25rem;
 		border-radius: 0.375rem;
-		height: 1.375rem;
-		width: 1.375rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 		stroke-width: 2;
 	}
+
 	.edit-btn:hover {
 		background-color: var(--primary-hov);
 	}

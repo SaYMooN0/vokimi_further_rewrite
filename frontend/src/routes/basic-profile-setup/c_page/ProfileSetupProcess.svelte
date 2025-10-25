@@ -157,23 +157,22 @@
 
 <style>
 	.setup-process-container {
-		width: 100%;
-		max-width: 66rem;
 		display: grid;
 		gap: 1rem;
+		width: 100%;
+		max-width: 66rem;
 	}
 
 	.step-content {
-		min-height: 20rem;
 		display: grid;
 		align-items: start;
-		animation: fade-in 220ms ease-out both;
 		gap: 1rem;
 		min-height: 34rem;
+		animation: fade-in 220ms ease-out both;
 	}
 
 	.footer {
-		margin-top: 0.25rem;
 		padding-top: 0.75rem;
+		margin-top: 0.25rem;
 	}
 </style>

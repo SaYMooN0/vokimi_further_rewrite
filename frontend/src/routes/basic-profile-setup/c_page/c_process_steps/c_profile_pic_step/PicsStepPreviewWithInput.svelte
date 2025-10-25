@@ -89,17 +89,18 @@
 <style>
 	.preview-container {
 		display: grid;
-		justify-items: center;
+		place-items: center center;
 		gap: 1rem;
 		border: 0.125rem solid transparent;
-		align-items: center;
 		border-radius: 1rem;
 		grid-template-rows: 9rem 2.5rem;
 	}
+
 	.preview-container.dragging {
-		opacity: 0.8;
 		border: 0.125rem dashed var(--secondary-foreground);
+		opacity: 0.8;
 	}
+
 	.preview-container.dragging * {
 		pointer-events: none;
 	}
@@ -109,6 +110,7 @@
 		aspect-ratio: 1/1;
 		stroke-width: 0.25;
 	}
+
 	.preview-container.dragging label {
 		font-size: 1rem;
 		font-weight: 500;
@@ -116,14 +118,14 @@
 	}
 
 	.preview {
-		height: 100%;
-		aspect-ratio: 1/1;
-		border-radius: 999rem;
-		overflow: hidden;
-		background: var(--back);
 		display: grid;
-		place-items: center;
+		height: 100%;
+		border-radius: 999rem;
+		background: var(--back);
 		box-shadow: var(--shadow-xs), var(--shadow-md);
+		aspect-ratio: 1/1;
+		overflow: hidden;
+		place-items: center;
 	}
 
 	.preview img {
@@ -136,18 +138,18 @@
 	}
 
 	.upload-btn {
-		height: 100%;
 		display: inline-flex;
-		align-items: center;
 		justify-content: center;
-		font-weight: 600;
-		font-size: 1.125rem;
+		align-items: center;
+		height: 100%;
 		padding: 0 1.5rem;
 		border-radius: var(--radius);
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-		cursor: pointer;
+		font-size: 1.125rem;
+		font-weight: 600;
 		letter-spacing: 0.25px;
+		cursor: pointer;
 	}
 
 	.upload-btn:hover {

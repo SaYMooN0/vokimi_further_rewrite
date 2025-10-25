@@ -1,5 +1,5 @@
 ﻿using GeneralVokiTakingService.Api.contracts;
-using GeneralVokiTakingService.Api.contracts.finish_voki_taking;
+using GeneralVokiTakingService.Api.contracts.voki_taking;
 using GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
 using GeneralVokiTakingService.Api.contracts.voki_taking.sequential_answering;
 using GeneralVokiTakingService.Application.general_vokis.commands;
@@ -81,7 +81,7 @@ internal static class SpecificVokiHandlers
 
     private static async Task<IResult> AnswerQuestionForSequentialAnsweringSession(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<AnswerQuestionInSequentialAnsweringVokiTakingCommand, VokiTakingQuestionData> handler
+        ICommandHandler<AnswerQuestionInSequentialAnsweringVokiTakingCommand, AnswerQuestionInSequentialAnsweringVokiTakingCommandResult> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<AnswerQuestionForSequentialAnsweringSessionRequest>();
@@ -95,6 +95,6 @@ internal static class SpecificVokiHandlers
         );
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrToJson<VokiTakingQuestionData, GeneralVokiTakingResponseQuestionData>(result);
+        return CustomResults.FromErrOrToJson<AnswerQuestionInSequentialAnsweringVokiTakingCommandResult, SequentialAnswerSessionNextQuestionResponse>(result);
     }
 }

@@ -103,7 +103,7 @@
 	<DefaultErrBlock errList={savingErrs} />
 	<button class="save-btn unselectable" class:loading={isLoading} onclick={() => saveSetup()}
 		>{#if isLoading}
-			Loading <LinesLoader sizeRem={1.3} strokePx={2} />
+			<LinesLoader sizeRem={1.3} strokePx={2} /> Loading 
 		{:else}
 			Save
 		{/if}
@@ -112,15 +112,14 @@
 
 <style>
 	.confirmation-step-container {
-		margin: 1rem auto 0;
-		padding: 2rem;
-		box-shadow: var(--shadow-xs), var(--shadow-md);
-
-		border-radius: 1rem;
 		display: grid;
 		gap: 1.75rem;
 		min-width: 40rem;
 		max-width: min(58rem, 100%);
+		padding: 2rem;
+		margin: 1rem auto 0;
+		border-radius: 1rem;
+		box-shadow: var(--shadow-xs), var(--shadow-md);
 	}
 
 	.user-name-pic-container {
@@ -131,27 +130,27 @@
 	}
 
 	.profile-pic-container {
+		position: relative;
 		width: 8rem;
 		height: 8rem;
-		position: relative;
 	}
 
 	.profile-pic-container img {
 		width: 100%;
 		height: 100%;
-		object-fit: cover;
+		border: 0.125rem solid var(--muted);
 		border-radius: 50%;
 		background-color: var(--muted);
-		border: 0.125rem solid var(--muted);
+		object-fit: cover;
 	}
+
 	.profile-pic-container > :global(.edit-profile-pic-btn) {
 		position: absolute;
 		right: 0.25rem;
 		bottom: 0.25rem;
-		height: 1.75rem !important;
 		width: 1.75rem !important;
+		height: 1.75rem !important;
 		border-radius: 0.5rem !important;
-
 		transition: opacity 0.2s ease-in;
 	}
 
@@ -166,82 +165,86 @@
 	}
 
 	.display-name {
+		display: flex;
+		flex-flow: row nowrap;
+		align-items: center;
+		gap: 0.5rem;
 		font-size: 1.5rem;
 		font-weight: 600;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 0.5rem;
-		flex-wrap: nowrap;
 	}
+
 	.unique-name {
+		color: var(--muted-foreground);
 		font-size: 1rem;
 		font-weight: 400;
-		color: var(--muted-foreground);
 	}
+
 	.languages-list {
 		display: flex;
-		flex-flow: row wrap;
 		align-items: center;
-		width: 100%;
 		gap: 0.5rem;
+		width: 100%;
+		flex-flow: row wrap;
 	}
+
 	.language {
-		width: auto;
 		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 0.375rem;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		gap: 0.375rem;
+		width: auto;
 		padding: 0.25rem 0.5rem;
+		border-radius: 0.375rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		border-radius: 0.375rem;
-		box-shadow: var(--shadow-xs);
-		font-weight: 500;
 		font-size: 1.125rem;
+		font-weight: 500;
+		box-shadow: var(--shadow-xs);
+		grid-template-columns: auto 1fr;
 	}
+
 	.language > svg {
 		height: 1.25rem;
 		aspect-ratio: var(--lang-icon-aspect-ratio);
 		border-radius: 0.25rem;
 		stroke-width: 1.9;
 	}
+
 	.tags-list {
 		display: flex;
 		flex-flow: row wrap;
 		align-items: center;
 		width: 100%;
-		column-gap: 0.75rem;
-		row-gap: 0.5rem;
+		gap: 0.5rem 0.75rem;
 	}
 
 	.save-btn {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
 		width: min(100%, 28rem);
+		padding: 0.5rem 1.5rem;
 		margin: 0 auto;
 		margin-top: 1rem;
-		padding: 0.5rem 1.5rem;
+		border: none;
+		border-radius: 0.5rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 		font-size: 1.25rem;
-		border: none;
-		border-radius: 0.5rem;
 		font-weight: 500;
 		letter-spacing: 1px;
-		cursor: pointer;
 		box-shadow: var(--shadow-md);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
+		cursor: pointer;
 	}
 
 	.save-btn:not(.loading):hover {
 		background-color: var(--primary-hov);
 	}
+
 	.save-btn.loading {
-		opacity: 0.85;
 		font-weight: 450;
+		opacity: 0.85;
 		cursor: not-allowed !important;
 	}
 

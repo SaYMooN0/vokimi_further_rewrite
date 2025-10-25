@@ -25,38 +25,43 @@
 	.setup-saved-container {
 		display: flex;
 		flex-direction: column;
-		margin: 10vh auto 2rem;
 		align-items: center;
+		margin: 10vh auto 2rem;
 	}
+
 	.setup-saved-container h1 {
 		color: var(--muted-foreground);
 		font-size: 1.75rem;
 		font-weight: 650;
 		letter-spacing: 0.1px;
 	}
+
 	.setup-saved-container p {
 		margin-top: 2rem;
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 500;
 	}
+
 	.profile-link {
-		color: var(--primary-foreground);
-		background-color: var(--primary);
-		margin-top: 0.375rem;
 		padding: 0.25rem 1rem;
+		margin-top: 0.375rem;
 		border-radius: 0.5rem;
+		background-color: var(--primary);
+		color: var(--primary-foreground);
 		font-weight: 450;
 		letter-spacing: 0.2px;
 	}
+
 	.profile-link:hover,
 	.profile-link:active {
 		background-color: var(--primary-hov);
 	}
+
 	.user-round-check-icon {
-		color: var(--primary);
-		height: 10rem;
 		width: 10rem;
+		height: 10rem;
+		color: var(--primary);
 		stroke-width: 2;
 	}
 
@@ -69,15 +74,18 @@
 		animation-delay: 0.5s;
 		animation: checkAnimation 1s ease-out backwards;
 	}
+
 	@keyframes checkAnimation {
 		0% {
 			stroke-dashoffset: 9;
 			opacity: 0;
 		}
+
 		33% {
 			stroke-dashoffset: 9;
 			opacity: 0;
 		}
+
 		100% {
 			stroke-dashoffset: 0;
 			opacity: 1;

@@ -24,10 +24,9 @@
 	.album-link {
 		display: grid;
 		justify-content: center;
-		gap: 0.25rem;
 		width: 100%;
 		min-height: 6rem;
-		padding: 0.5rem 0;
+		padding: 0 0 0.5rem;
 		border: 0.25rem solid var(--icon-color-1);
 		border-radius: 1.25rem;
 		transition: all 0.12s ease-in;
@@ -41,6 +40,7 @@
 	}
 
 	.album-link label {
+		cursor: inherit;
 		color: var(--text);
 		font-size: 1.5rem;
 		font-weight: 500;
@@ -52,6 +52,7 @@
 	}
 
 	.album-link:hover label {
-		letter-spacing: 1px;
+		letter-spacing: 0.5px;
+		color: var(--icon-color-1);
 	}
 </style>

@@ -33,7 +33,7 @@
 
 <style>
 	.page-content-container {
-		margin: 4vh auto 2rem;
 		width: 60rem;
+		margin: 4vh auto 2rem;
 	}
 </style>

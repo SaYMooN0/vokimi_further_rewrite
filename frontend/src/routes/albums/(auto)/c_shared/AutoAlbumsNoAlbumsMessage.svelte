@@ -47,20 +47,21 @@
 
 <style>
 	.container {
-		margin: 8vh auto 0;
-		padding: 2rem 1.5rem;
 		display: flex;
 		flex-direction: column;
-		place-items: center;
+		padding: 2rem 1.5rem;
+		margin: 8vh auto 0;
 		text-align: center;
+		place-items: center;
 	}
 
 	.ghost-icon {
-		margin-bottom: -1.5rem;
 		height: 10rem;
-		stroke-width: 2;
+		margin-bottom: -1.5rem;
 		color: var(--primary);
+		stroke-width: 2;
 	}
+
 	.folder-icon {
 		stroke-width: 2;
 		height: 12rem;
@@ -68,46 +69,49 @@
 	}
 
 	h1 {
+		margin: 0.5rem 0;
 		color: var(--text);
 		font-size: 2rem;
-		line-height: 1;
-		margin: 0.5rem 0;
 		font-weight: 650;
+		line-height: 1;
 	}
 
 	.how-to-add {
+		margin: 0 auto;
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 450;
-		margin: 0 auto;
 	}
 
 	.back-link {
-		margin-top: 1rem;
 		display: inline-flex;
 		align-items: center;
-		color: var(--primary-foreground);
-		text-decoration: none;
-		font-weight: 450;
-		border-radius: 0.6rem;
 		padding: 0.375rem 0.75rem;
+		margin-top: 1rem;
+		border-radius: 0.6rem;
 		background-color: var(--primary);
-		letter-spacing: 0.25px;
+		color: var(--primary-foreground);
 		font-size: 1.25rem;
+		font-weight: 450;
+		text-decoration: none;
+		letter-spacing: 0.25px;
+
 		--icon-shift: 0;
 	}
 
 	.back-link svg {
 		width: 1.5rem;
 		height: 1.5rem;
-		stroke-width: 2.5;
-		transform: translateX(var(--icon-shift));
 		transition: transform 0.12s ease-in-out;
+		transform: translateX(var(--icon-shift));
+		stroke-width: 2.5;
 	}
+
 	.back-link:hover,
 	.back-link:active,
 	.back-link:focus {
 		background-color: var(--primary-hov);
+
 		--icon-shift: -0.25rem;
 	}
 
@@ -121,19 +125,22 @@
 		@keyframes ghost-appear {
 			0%,
 			10% {
-				transform: translate(0, 7rem) scale(0.4);
-				opacity: 0;
 				color: var(--secondary-foreground);
+				opacity: 0;
+				transform: translate(0, 7rem) scale(0.4);
 			}
+
 			30% {
 				opacity: 0.1;
 			}
+
 			60% {
 				opacity: 1;
 			}
+
 			100% {
-				opacity: 1;
 				color: var(--primary);
+				opacity: 1;
 				transform: translate(0, 0) scale(1);
 			}
 		}
@@ -143,6 +150,7 @@
 			100% {
 				transform: translateY(0) scale(1);
 			}
+
 			50% {
 				transform: translateY(-0.5rem) scale(0.96);
 			}

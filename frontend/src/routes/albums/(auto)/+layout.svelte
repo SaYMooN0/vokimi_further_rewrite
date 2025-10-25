@@ -24,31 +24,35 @@
 		align-items: center;
 		margin: 6rem auto 4rem;
 	}
+
 	.msg-container > h1 {
 		color: var(--muted-foreground);
 		font-size: 2.25rem;
 		font-weight: 600;
-		letter-spacing: 0.5px;
 		text-align: center;
+		letter-spacing: 0.5px;
 		text-wrap: pretty;
 	}
+
 	.go-back-link {
-		margin: 1.5rem 0 3rem;
 		padding: 0.25rem 1.5rem;
+		margin: 1.5rem 0 3rem;
+		border-radius: 5rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 		font-size: 1.25rem;
-		border-radius: 5rem;
 		letter-spacing: 0.125px;
 		transition: all 0.06s ease-in;
 	}
+
 	.go-back-link:hover,
 	.go-back-link:focus,
 	.go-back-link:active {
-		background-color: var(--primary-hov);
 		padding: 0.25rem 1.675rem;
+		background-color: var(--primary-hov);
 		letter-spacing: 0.4px;
 	}
+
 	.msg-container > :global(.err-block) {
 		max-width: 60vw;
 	}

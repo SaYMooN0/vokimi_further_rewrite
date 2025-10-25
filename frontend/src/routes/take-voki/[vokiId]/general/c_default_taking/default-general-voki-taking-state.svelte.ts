@@ -79,11 +79,11 @@ export class DefaultGeneralVokiTakingState {
     }
 
 
-    isCurrentQuestionLast() {
+    get isCurrentQuestionLast() {
         return this.currentQuestionOrder === this.totalQuestionsCount - 1;
     }
 
-    isCurrentQuestionFirst() {
+    get isCurrentQuestionFirst() {
         return this.currentQuestionOrder === 0;
     }
 

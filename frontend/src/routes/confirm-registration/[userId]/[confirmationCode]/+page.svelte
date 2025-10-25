@@ -73,6 +73,7 @@
 		text-align: center;
 		letter-spacing: 0.5px;
 	}
+
 	.setup-link {
 		margin-top: 2rem;
 	}

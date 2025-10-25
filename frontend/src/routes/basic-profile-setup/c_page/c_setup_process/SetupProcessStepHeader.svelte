@@ -15,25 +15,25 @@
 <style>
 	.header {
 		display: grid;
-		height: 4.5rem;
-		gap: 0.5rem;
+		place-content: center center;
 		align-items: center;
-		justify-content: center;
-		align-content: center;
+		gap: 0.5rem;
+		height: 4.5rem;
 	}
 
 	.title {
-		font-size: 1.75rem;
-		line-height: 1.35;
-		font-weight: 700;
-		letter-spacing: 0.25px;
 		color: var(--text);
+		font-size: 1.75rem;
+		font-weight: 700;
+		line-height: 1.35;
+		letter-spacing: 0.25px;
 	}
+
 	.note {
-		text-align: center;
-		font-size: 1.125rem;
 		color: var(--secondary-foreground);
+		font-size: 1.125rem;
 		font-weight: 450;
+		text-align: center;
 	}
 
 	.note span {

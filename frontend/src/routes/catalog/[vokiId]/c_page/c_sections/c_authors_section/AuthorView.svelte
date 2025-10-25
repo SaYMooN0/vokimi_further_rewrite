@@ -30,7 +30,7 @@
 		/>
 		<div class="names">
 			<label class="display-name">{user.data.displayName}</label>
-			<label class="unique-name">{user.data.uniqueName}</label>
+			<label class="unique-name">@{user.data.uniqueName}</label>
 		</div>
 	{/if}
 </a>
@@ -96,21 +96,25 @@
 		object-fit: cover;
 		box-shadow: var(--shadow);
 	}
+
 	.author-view.ok .names {
 		display: flex;
 		flex-direction: column;
 		align-content: center;
 	}
+
 	.author-view.ok .display-name {
 		color: var(--text);
 		font-size: 1rem;
 		font-weight: 450;
 	}
+
 	.author-view.ok .unique-name {
 		color: var(--muted-foreground);
 		font-size: 0.875rem;
 		font-weight: 440;
 	}
+
 	.author-view.ok:hover .unique-name {
 		color: var(--primary);
 	}
@@ -125,6 +129,7 @@
 		font-size: 1.125rem;
 		font-weight: 500;
 	}
+
 	.author-view.error svg {
 		padding: 0.25rem;
 	}

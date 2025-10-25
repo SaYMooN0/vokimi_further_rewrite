@@ -79,12 +79,12 @@
 		display: grid;
 		gap: 1.25rem;
 	}
+
 	.rows {
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		grid-template-rows: 1fr 1fr;
-		column-gap: 3rem;
-		row-gap: 1.5rem;
+		gap: 1.5rem 3rem;
 		padding: 0 2rem;
 		justify-items: center;
 	}

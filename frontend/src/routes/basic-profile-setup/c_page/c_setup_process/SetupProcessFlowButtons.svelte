@@ -45,14 +45,14 @@
 
 	.btn {
 		display: inline-flex;
-		align-items: center;
 		justify-content: center;
-		font-weight: 550;
-		font-size: 1.125rem;
-		padding: 0.5rem 0;
+		align-items: center;
 		width: 12rem;
-		border-radius: var(--radius);
+		padding: 0.5rem 0;
 		border: none;
+		border-radius: var(--radius);
+		font-size: 1.125rem;
+		font-weight: 550;
 		cursor: pointer;
 	}
 

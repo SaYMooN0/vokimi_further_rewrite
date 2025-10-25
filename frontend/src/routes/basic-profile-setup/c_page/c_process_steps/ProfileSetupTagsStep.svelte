@@ -54,6 +54,7 @@
 		display: grid;
 		grid-template-rows: auto minmax(20rem, 1fr) auto;
 	}
+
 	.choosing-section-headers {
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
@@ -61,9 +62,10 @@
 		align-items: center;
 		margin-bottom: 0.5rem;
 	}
+
 	.or-label {
-		font-size: 1rem;
 		color: var(--secondary-foreground);
+		font-size: 1rem;
 		font-weight: 600;
 	}
 
@@ -78,16 +80,17 @@
 		flex-direction: column;
 		min-height: 4.75rem;
 	}
+
 	.no-tags-msg {
-		margin: 2rem auto 0;
 		width: fit-content;
 		height: 100%;
-		place-content: center;
 		padding: 0 6rem;
-		background-color: var(--secondary);
-		font-size: 1.125rem;
-		color: var(--secondary-foreground);
+		margin: 2rem auto 0;
 		border-radius: 0.5rem;
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+		font-size: 1.125rem;
 		font-weight: 450;
+		place-content: center;
 	}
 </style>
