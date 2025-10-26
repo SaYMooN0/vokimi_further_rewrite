@@ -19,10 +19,9 @@
 		if (isMultipleChoice) {
 			chosenAnswers[answerId] = !chosenAnswers[answerId];
 		} else {
-			const currChosenAnswerId = Object.keys(chosenAnswers).find((k) => chosenAnswers[k]);
-			if (currChosenAnswerId) {
-				chosenAnswers[currChosenAnswerId] = false;
-			}
+			Object.keys(chosenAnswers).forEach((key, index) => {
+				chosenAnswers[key] = false;
+			});
 			chosenAnswers[answerId] = true;
 		}
 	}

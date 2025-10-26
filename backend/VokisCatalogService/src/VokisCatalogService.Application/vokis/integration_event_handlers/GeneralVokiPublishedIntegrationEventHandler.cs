@@ -35,6 +35,6 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
             anyAudioAnswers: anyAudioAnswers,
             signedInOnlyTaking: e.SignedInOnlyTaking
         );
-        await _generalVokisRepository.Add(voki);
+        await _generalVokisRepository.Add(voki, context.CancellationToken);
     }
 }

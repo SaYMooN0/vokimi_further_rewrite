@@ -55,6 +55,7 @@
 		<SequentialAnsweringGeneralVokiTaking
 			takingData={data.response.data}
 			clearVokiSeenUpdateTimer={clearMarkerCookie}
+			{onResultReceived}
 		/>
 	{/if}
 {:else}

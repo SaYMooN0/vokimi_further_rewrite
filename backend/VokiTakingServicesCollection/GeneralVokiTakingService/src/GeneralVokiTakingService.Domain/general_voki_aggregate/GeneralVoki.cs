@@ -1,5 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.dtos;
+﻿using GeneralVokiTakingService.Domain.common.dtos;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.exceptions;

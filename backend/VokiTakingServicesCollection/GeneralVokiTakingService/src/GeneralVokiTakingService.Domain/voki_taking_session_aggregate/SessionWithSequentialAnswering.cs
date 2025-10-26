@@ -11,12 +11,14 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 {
     private SessionWithSequentialAnswering() { }
     public override bool IsWithForceSequentialAnswering => true;
-    private ImmutableArray<SequentialTakingAnsweredQuestion> _answered { get; set; }
+    private ImmutableArray<SequentialTakingAnsweredQuestion> _answered;
 
     private SessionWithSequentialAnswering(
         VokiTakingSessionId id, VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
         ImmutableArray<TakingSessionExpectedQuestion> questions
-    ) : base(id, vokiId, vokiTaker, startTime, questions) { }
+    ) : base(id, vokiId, vokiTaker, startTime, questions) {
+        _answered = [];
+    }
 
     public static SessionWithSequentialAnswering Create(
         VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
@@ -280,6 +282,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             clientQuestionAnsweredAt
         );
 
+        _answered = _answered.Add(answeredRecord);
         TakingSessionExpectedQuestion? next = GetFirstUnanswered();
         if (next is null) {
             return ErrFactory.Conflict(
@@ -288,7 +291,6 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        _answered = _answered.Add(answeredRecord);
         return (next.QuestionId, next.OrderInVokiTaking);
     }
 

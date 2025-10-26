@@ -23,8 +23,8 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
-		height: fit-content;
 		gap: 1rem 0.5rem;
+		height: fit-content;
 	}
 
 	.tag {

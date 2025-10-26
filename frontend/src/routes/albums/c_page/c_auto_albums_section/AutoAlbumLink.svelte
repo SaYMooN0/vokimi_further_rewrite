@@ -40,11 +40,11 @@
 	}
 
 	.album-link label {
-		cursor: inherit;
 		color: var(--text);
 		font-size: 1.5rem;
 		font-weight: 500;
 		transition: inherit;
+		cursor: inherit;
 	}
 
 	.album-link:hover {
@@ -52,7 +52,7 @@
 	}
 
 	.album-link:hover label {
-		letter-spacing: 0.5px;
 		color: var(--icon-color-1);
+		letter-spacing: 0.5px;
 	}
 </style>

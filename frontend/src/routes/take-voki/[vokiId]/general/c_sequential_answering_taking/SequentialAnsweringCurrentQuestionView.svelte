@@ -8,13 +8,8 @@
 		chosenAnswers: Record<string, boolean>;
 		totalQuestionsCount: number;
 	}
-	let {
-		question,
-		chosenAnswers = $bindable(),
-		totalQuestionsCount,
-	}: Props = $props();
+	let { question, chosenAnswers = $bindable(), totalQuestionsCount }: Props = $props();
 	let isMultipleChoice = $derived(question.minAnswersCount != 1 || question.maxAnswersCount != 1);
-
 </script>
 
 <GeneralVokiTakingQuestionDisplay

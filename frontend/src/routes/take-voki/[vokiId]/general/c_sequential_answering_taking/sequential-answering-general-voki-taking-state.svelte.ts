@@ -56,13 +56,15 @@ export class SequentialAnsweringGeneralVokiTakingState {
             return [err];
         }
         this.isLoadingNextQuestion = true;
+
         const response = await ApiVokiTakingGeneral.fetchJsonResponse<GeneralVokiTakingQuestionData & { serverShownAt: Date }>(
             `/vokis/${this.vokiId}/sequential-answering/answer-question`,
+
             RJO.POST({
-                SessionId: this.#sessionId,
+                sessionId: this.#sessionId,
                 questionId: this.currentQuestion.id,
                 questionOrderInVokiTaking: this.currentQuestion.orderInVokiTaking,
-                chosenAnswers: this.currentQuestionChosenAnswers,
+                answersWithIsChosen: this.currentQuestionChosenAnswers,
                 serverQuestionShownAt: this.currentQuestion.serverShownAt,
                 clientQuestionShownAt: this.currentQuestion.clientShownAt,
                 clientQuestionAnsweredAt: new Date()
@@ -71,7 +73,7 @@ export class SequentialAnsweringGeneralVokiTakingState {
         this.isLoadingNextQuestion = false;
         if (response.isSuccess) {
             this.currentQuestion = { ...response.data, clientShownAt: new Date() };
-            this.resetCurrentAnswers();
+            console.log(this.currentQuestion);
 
             return [];
         }
@@ -95,16 +97,16 @@ export class SequentialAnsweringGeneralVokiTakingState {
         const response = await ApiVokiTakingGeneral.fetchJsonResponse<{ receivedResultId: string }>(
             `/vokis/${this.vokiId}/sequential-answering/finish`,
             RJO.POST({
-                SessionId: this.#sessionId,
-                LastQuestionId: this.currentQuestion.id,
-                LastQuestionOrderInVokiTaking: this.currentQuestion.orderInVokiTaking,
-                LastQuestionChosenAnswers: this.currentQuestionChosenAnswers,
-                ServerLastQuestionShownAt: this.currentQuestion.serverShownAt,
-                ClientLastQuestionShownAt: this.currentQuestion.clientShownAt,
-                ClientLastQuestionAnsweredAt: new Date(),
-                ServerSessionStartTime: this.#serverSessionStartTime,
-                ClientSessionStartTime: this.#clientSessionStartTime,
-                ClientSessionFinishTime: new Date()
+                sessionId: this.#sessionId,
+                lastQuestionId: this.currentQuestion.id,
+                lastQuestionOrderInVokiTaking: this.currentQuestion.orderInVokiTaking,
+                lastQuestionAnswersWithIsChosen: this.currentQuestionChosenAnswers,
+                serverLastQuestionShownAt: this.currentQuestion.serverShownAt,
+                clientLastQuestionShownAt: this.currentQuestion.clientShownAt,
+                clientLastQuestionAnsweredAt: new Date(),
+                serverSessionStartTime: this.#serverSessionStartTime,
+                clientSessionStartTime: this.#clientSessionStartTime,
+                clientSessionFinishTime: new Date()
             })
         );
         this.isLoadingNextQuestion = false;
@@ -117,8 +119,8 @@ export class SequentialAnsweringGeneralVokiTakingState {
     checkErrsForCurrentQuestion(): Err | null {
         const min = this.currentQuestion?.minAnswersCount ?? 0;
         const max = this.currentQuestion?.maxAnswersCount ?? Number.POSITIVE_INFINITY;
-        const chosenCount = Object.values(this.currentQuestionChosenAnswers).filter(Boolean).length;
-
+        const chosenCount = Object.values(this.currentQuestionChosenAnswers).filter(x => x).length;
+        console.log(this.currentQuestionChosenAnswers, min, max, chosenCount);
         if (chosenCount === 0 && min > 0) {
             return { message: `You haven't answered this question yet. Please select at least ${min} ${min === 1 ? 'answer' : 'answers'} to continue.` };
         }

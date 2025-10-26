@@ -12,22 +12,22 @@ internal class AppUsersRepository : IAppUsersRepository
         _db = db;
     }
 
-    public async Task Add(AppUser user) {
-        await _db.AppUsers.AddAsync(user);
-        await _db.SaveChangesAsync();
+    public async Task Add(AppUser user, CancellationToken ct) {
+        await _db.AppUsers.AddAsync(user, ct);
+        await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<AppUser?> GetById(AppUserId id) =>
-        await _db.AppUsers.FindAsync(id);
+    public async Task<AppUser?> GetById(AppUserId id, CancellationToken ct) =>
+        await _db.AppUsers.FindAsync([id], cancellationToken:ct);
 
-    public async Task Update(AppUser user) {
+    public async Task Update(AppUser user, CancellationToken ct) {
         _db.Update(user);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
 
-    public async Task UpdateRange(IEnumerable<AppUser> users) {
+    public async Task UpdateRange(IEnumerable<AppUser> users, CancellationToken ct) {
         _db.UpdateRange(users);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
     public Task<AppUser?> GetUserWithTakenVokis(AppUserId userId, CancellationToken ct) =>
         _db.AppUsers

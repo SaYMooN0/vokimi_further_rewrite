@@ -15,7 +15,7 @@ internal class SequentialTakingAnsweredQuestionsArrayConverter :
     private const char Sep = '|';
 
     private static string[] ToStringArray(ImmutableArray<SequentialTakingAnsweredQuestion> questions) =>
-        questions.Select(QuestionToString).ToArray();
+        questions.IsDefaultOrEmpty ? [] : questions.Select(QuestionToString).ToArray();
 
     private static string QuestionToString(SequentialTakingAnsweredQuestion q) =>
         $"{q.QuestionId}{Sep}{q.OrderInVokiTaking}{Sep}{QuestionAnswersToString(q.ChosenAnswerIds)}{Sep}{q.ClientShownAt}{Sep}{q.ClientSubmittedAt}";
@@ -52,9 +52,44 @@ internal class SequentialTakingAnsweredQuestionsArrayConverter :
 
 internal class SequentialTakingAnsweredQuestionsArrayComparer : ValueComparer<ImmutableArray<SequentialTakingAnsweredQuestion>>
 {
-    public SequentialTakingAnsweredQuestionsArrayComparer() : base(
-        (t1, t2) => t1.SequenceEqual(t2!, EqualityComparer<SequentialTakingAnsweredQuestion>.Default),
-        t => t.Select(x => x!.GetHashCode()).Aggregate((x, y) => x ^ y),
-        t => t.ToImmutableArray()
-    ) { }
+    public SequentialTakingAnsweredQuestionsArrayComparer()
+        : base(
+            (a, b) => AreEqual(a, b),
+            (a) => GetHashCodeSafe(a),
+            (a) => SnapshotArray(a)
+        ) { }
+
+    private static bool AreEqual(
+        ImmutableArray<SequentialTakingAnsweredQuestion> t1, ImmutableArray<SequentialTakingAnsweredQuestion> t2
+    ) {
+        if (t1.IsDefault && t2.IsDefault) {
+            return true;
+        }
+
+        if (t1.IsDefault || t2.IsDefault) {
+            return false;
+        }
+
+        return t1.SequenceEqual(t2, EqualityComparer<SequentialTakingAnsweredQuestion>.Default);
+    }
+
+    private static int GetHashCodeSafe(ImmutableArray<SequentialTakingAnsweredQuestion> t) {
+        if (t.IsDefaultOrEmpty)
+            return 0;
+
+        unchecked {
+            int hash = 17;
+            foreach (var x in t) {
+                hash = hash * 31 + (x is null ? 0 : x.GetHashCode());
+            }
+
+            return hash;
+        }
+    }
+
+    private static ImmutableArray<SequentialTakingAnsweredQuestion> SnapshotArray(
+        ImmutableArray<SequentialTakingAnsweredQuestion> t
+    ) => t.IsDefault
+        ? ImmutableArray<SequentialTakingAnsweredQuestion>.Empty
+        : [..t];
 }

@@ -1,5 +1,5 @@
 ﻿using GeneralVokiTakingService.Application.general_vokis.queries;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.dtos;
+using GeneralVokiTakingService.Domain.common.dtos;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Api.contracts.view_results;

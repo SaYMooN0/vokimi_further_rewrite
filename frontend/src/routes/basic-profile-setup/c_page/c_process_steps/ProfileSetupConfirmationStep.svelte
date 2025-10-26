@@ -212,10 +212,10 @@
 
 	.tags-list {
 		display: flex;
-		flex-flow: row wrap;
 		align-items: center;
-		width: 100%;
 		gap: 0.5rem 0.75rem;
+		width: 100%;
+		flex-flow: row wrap;
 	}
 
 	.save-btn {

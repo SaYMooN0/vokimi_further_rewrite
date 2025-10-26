@@ -28,10 +28,11 @@
 	}
 </script>
 
+<div class="errs">
+	<DefaultErrBlock errList={answeringErrs} />
+</div>
+
 <div class="navigation-container">
-	{#if answeringErrs.length > 0}
-		<DefaultErrBlock errList={answeringErrs} />
-	{/if}
 	<button
 		class="next-btn"
 		class:loading={vokiTakingState.isLoadingNextQuestion}
@@ -55,6 +56,14 @@
 </div>
 
 <style>
+	.errs {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		width: 100%;
+		margin: 1rem 2rem;
+	}
+
 	.next-btn {
 		display: flex;
 		justify-content: center;

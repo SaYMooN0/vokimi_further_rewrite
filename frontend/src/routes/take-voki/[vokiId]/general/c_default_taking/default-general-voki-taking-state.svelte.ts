@@ -127,7 +127,7 @@ export class DefaultGeneralVokiTakingState {
 
         for (const q of this.#questions) {
             const chosenMap = this.chosenAnswers[q.id] ?? {};
-            const chosenCount = Object.values(chosenMap).filter(Boolean).length;
+            const chosenCount = Object.values(chosenMap).filter(x => x).length;
 
             const min = q.minAnswersCount ?? 0;
             const max = q.maxAnswersCount ?? Number.POSITIVE_INFINITY;

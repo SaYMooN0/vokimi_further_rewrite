@@ -41,7 +41,7 @@ public class PresetProfilePicKey : BaseStorageImageKey
             "pets-marsita",
             "pets-ya-cat",
             "pets-zara",
-            "pets-monikaf",
+            "pets-monika",
             //
             "boykisser-1",
             "boykisser-2",

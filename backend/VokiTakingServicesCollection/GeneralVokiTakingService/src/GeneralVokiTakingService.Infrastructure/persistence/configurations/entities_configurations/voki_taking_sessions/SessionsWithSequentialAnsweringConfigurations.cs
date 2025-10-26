@@ -13,7 +13,9 @@ public class SessionsWithSequentialAnsweringConfigurations : IEntityTypeConfigur
         builder.HasBaseType<BaseVokiTakingSession>();
 
         builder
-            .Property<ImmutableArray<SequentialTakingAnsweredQuestion>>(" _answered")
+            .Property<ImmutableArray<SequentialTakingAnsweredQuestion>>("_answered")
+            .HasField("_answered")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
             .HasSequentialTakingAnsweredQuestionsConversion()
             .HasColumnName("AnsweredQuestions");
     }

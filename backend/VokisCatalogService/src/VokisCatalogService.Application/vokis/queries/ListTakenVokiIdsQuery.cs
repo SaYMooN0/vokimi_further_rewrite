@@ -19,7 +19,7 @@ internal sealed class ListTakenVokiIdsQueryHandler :
 
     public async Task<ErrOr<VokiIdWithLastTakenDateDto[]>> Handle(ListTakenVokiIdsQuery query, CancellationToken ct) {
         var userIdOrErr = _userContext.UserIdFromToken();
-        if (userIdOrErr.IsErr(out var err)) {
+        if (userIdOrErr.IsErr()) {
             return ErrFactory.AuthRequired("To see your taken Vokis you need to log into your account");
         }
 

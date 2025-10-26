@@ -14,7 +14,7 @@ public class VokiRatedIntegrationEventHandler : IConsumer<VokiRatedIntegrationEv
     }
 
     public async Task Consume(ConsumeContext<VokiRatedIntegrationEvent> context) {
-        BaseVoki? voki = await _baseVokisRepository.GetById(context.Message.VokiId);
+        BaseVoki? voki = await _baseVokisRepository.GetById(context.Message.VokiId, context.CancellationToken);
         if (voki is null) {
             return;
         }

@@ -20,8 +20,8 @@
 		align-items: center;
 		margin: 2rem 0 0;
 		color: var(--text);
-		font-weight: 575;
 		font-size: 2rem;
+		font-weight: 575;
 	}
 
 	.back-link {
@@ -30,13 +30,12 @@
 		align-items: center;
 		padding: 0.125rem 0.5rem;
 		margin: 0 0.5rem;
-		border-radius: 0.25rem;
+		border-radius: 2rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		text-decoration: none;
 		font-size: 1.125rem;
 		font-weight: 500;
-		border-radius: 2rem;
+		text-decoration: none;
 	}
 
 	.back-link > svg {
@@ -46,6 +45,7 @@
 		stroke-width: 2;
 		transition: transform 0.15s ease-out;
 	}
+
 	.back-link:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
@@ -54,6 +54,7 @@
 	.back-link:hover > svg {
 		transform: scale(1.08) translateX(-2px);
 	}
+
 	.line {
 		width: 100%;
 		height: 0.125rem;

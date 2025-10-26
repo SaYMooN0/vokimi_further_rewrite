@@ -8,7 +8,7 @@ public class AnswerQuestionForSequentialAnsweringSessionRequest : IRequestWithVa
     public string SessionId { get; init; }
     public string QuestionId { get; init; }
     public ushort QuestionOrderInVokiTaking { get; init; }
-    public string[] ChosenAnswers { get; init; }
+    public Dictionary<string, bool> AnswersWithIsChosen { get; init; } //answer id to is chosen
     public DateTime ServerQuestionShownAt { get; init; }
     public DateTime ClientQuestionShownAt { get; init; }
     public DateTime ClientQuestionAnsweredAt { get; init; }
@@ -27,30 +27,36 @@ public class AnswerQuestionForSequentialAnsweringSessionRequest : IRequestWithVa
 
         ParsedQuestionId = new GeneralVokiQuestionId(questionGuid);
 
-        if (ChosenAnswers is null) {
+        if (AnswersWithIsChosen is null) {
             return ErrFactory.NoValue.Common("Chosen answers are missing");
         }
 
 
-        if (ChosenAnswers is null) {
+        if (AnswersWithIsChosen is null) {
             return ErrFactory.NoValue.Common("Answers array is null");
         }
 
-        if (ChosenAnswers.Length > MaxAnswersInQuestionCount) {
+        if (AnswersWithIsChosen.Count > MaxAnswersInQuestionCount) {
             return ErrFactory.ValueOutOfRange(
                 "Too many answers provided for the question",
                 $"Maximum allowed is {MaxAnswersInQuestionCount}"
             );
         }
 
-        ImmutableHashSet<GeneralVokiAnswerId> parsedAnswers = ChosenAnswers
+
+        string[] chosenAnswers = AnswersWithIsChosen
+            .Where(kvp => kvp.Value)
+            .Select(kvp => kvp.Key)
+            .ToArray();
+
+        ImmutableHashSet<GeneralVokiAnswerId> parsedAnswers = chosenAnswers
             .Where(id => Guid.TryParse(id, out _))
             .Select(id => new GeneralVokiAnswerId(new Guid(id)))
             .ToImmutableHashSet();
 
-        if (parsedAnswers.Count < ChosenAnswers.Length) {
+        if (parsedAnswers.Count < chosenAnswers.Length) {
             return ErrFactory.IncorrectFormat(
-                $"Couldn't parse some of the chosen answers. Chosen: {ChosenAnswers.Length}. Parsed: {parsedAnswers.Count}",
+                $"Couldn't parse some of the chosen answers. Chosen: {chosenAnswers.Length}. Parsed: {parsedAnswers.Count}",
                 "Try reloading the page"
             );
         }

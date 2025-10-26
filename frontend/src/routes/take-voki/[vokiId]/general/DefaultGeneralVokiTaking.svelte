@@ -17,13 +17,7 @@
 
 	type ErrWithOrder = Err & { questionOrder?: number };
 	let vokiTakingErrs = $state<ErrWithOrder[]>([]);
-
-	function isCurrentQuestionWithMultipleChoice() {
-		const isSingle =
-			vokiTakingState.currentQuestion!.minAnswersCount === 1 &&
-			vokiTakingState.currentQuestion!.maxAnswersCount === 1;
-		return !isSingle;
-	}
+	
 	function jumpToSpecificQuestionFromErrsList(questionOrder: number): Err[] {
 		vokiTakingErrs = [];
 		return vokiTakingState.jumpToSpecificQuestion(questionOrder);
@@ -35,10 +29,10 @@
 		question={vokiTakingState.currentQuestion}
 		bind:chosenAnswers={vokiTakingState.chosenAnswers[vokiTakingState.currentQuestion.id]}
 		totalQuestionsCount={vokiTakingState.totalQuestionsCount}
-		isMultipleChoice={isCurrentQuestionWithMultipleChoice()}
 	/>
 {:else}
 	<h1>Question error</h1>
+	<button onclick="{()=>vokiTakingState.jumpToSpecificQuestion(1)}">Go to first question</button>
 {/if}
 <DefaultGeneralVokiTakingErrsList
 	errs={vokiTakingErrs}

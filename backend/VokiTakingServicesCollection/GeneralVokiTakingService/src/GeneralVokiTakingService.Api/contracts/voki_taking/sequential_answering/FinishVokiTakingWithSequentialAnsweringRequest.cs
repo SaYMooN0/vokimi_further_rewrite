@@ -8,7 +8,7 @@ public class FinishVokiTakingWithSequentialAnsweringRequest : IRequestWithValida
     public string SessionId { get; init; }
     public string LastQuestionId { get; init; }
     public ushort LastQuestionOrderInVokiTaking { get; init; }
-    public string[] LastQuestionChosenAnswers { get; init; }
+    public Dictionary<string, bool> LastQuestionAnswersWithIsChosen { get; init; }
 
 
     public DateTime ClientLastQuestionShownAt { get; init; }
@@ -34,27 +34,32 @@ public class FinishVokiTakingWithSequentialAnsweringRequest : IRequestWithValida
 
         ParsedLastQuestionId = new GeneralVokiQuestionId(questionGuid);
 
-        if (LastQuestionChosenAnswers is null) {
+        if (LastQuestionAnswersWithIsChosen is null) {
             return ErrFactory.NoValue.Common("Chosen answers are missing");
         }
 
 
-        if (LastQuestionChosenAnswers is null) {
+        if (LastQuestionAnswersWithIsChosen is null) {
             return ErrFactory.NoValue.Common();
         }
 
-        if (LastQuestionChosenAnswers.Length > MaxAnswersInQuestionCount) {
+        string[] chosenAnswers = LastQuestionAnswersWithIsChosen
+            .Where(kvp => kvp.Value)
+            .Select(kvp => kvp.Key)
+            .ToArray();
+        
+        if (chosenAnswers.Length > MaxAnswersInQuestionCount) {
             return ErrFactory.ValueOutOfRange();
         }
 
-        ImmutableHashSet<GeneralVokiAnswerId> parsedAnswers = LastQuestionChosenAnswers
+        ImmutableHashSet<GeneralVokiAnswerId> parsedAnswers = chosenAnswers
             .Where(id => Guid.TryParse(id, out _))
             .Select(id => new GeneralVokiAnswerId(new Guid(id)))
             .ToImmutableHashSet();
 
-        if (parsedAnswers.Count < LastQuestionChosenAnswers.Length) {
+        if (parsedAnswers.Count < chosenAnswers.Length) {
             return ErrFactory.IncorrectFormat(
-                $"Couldn't parse some of the chosen answers. Chosen: {LastQuestionChosenAnswers.Length}. Parsed: {parsedAnswers.Count}",
+                $"Couldn't parse some of the chosen answers. Chosen: {chosenAnswers.Length}. Parsed: {parsedAnswers.Count}",
                 "Try reloading the page"
             );
         }

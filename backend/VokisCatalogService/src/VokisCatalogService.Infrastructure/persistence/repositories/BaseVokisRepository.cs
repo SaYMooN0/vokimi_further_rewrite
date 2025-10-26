@@ -39,8 +39,8 @@ internal class BaseVokisRepository : IBaseVokisRepository
             .Where(v => queryVokiIds.Contains(v.Id))
             .ToArrayAsync(cancellationToken: ct);
 
-    public async Task<BaseVoki?> GetById(VokiId vokiId) =>
-        await _db.BaseVokis.FindAsync(vokiId);
+    public async Task<BaseVoki?> GetById(VokiId vokiId, CancellationToken ct) =>
+        await _db.BaseVokis.FindAsync([vokiId], cancellationToken: ct);
 
     public async Task Update(BaseVoki voki, CancellationToken ct) {
         _db.BaseVokis.Update(voki);

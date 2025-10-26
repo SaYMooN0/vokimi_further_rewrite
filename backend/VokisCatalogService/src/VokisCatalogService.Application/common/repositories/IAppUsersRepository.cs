@@ -4,10 +4,10 @@ namespace VokisCatalogService.Application.common.repositories;
 
 public interface IAppUsersRepository
 {
-    Task Add(AppUser user);
-    Task<AppUser?> GetById(AppUserId id);
-    Task Update(AppUser user);
-    Task UpdateRange(IEnumerable<AppUser> users);
+    Task Add(AppUser user, CancellationToken ct);
+    Task<AppUser?> GetById(AppUserId id, CancellationToken ct);
+    Task Update(AppUser user, CancellationToken ct);
+    Task UpdateRange(IEnumerable<AppUser> users, CancellationToken ct);
     Task<AppUser?> GetUserWithTakenVokis(AppUserId userId, CancellationToken ct);
     Task<AppUser?> GetUserWithTakenVokisAsNoTracking(AppUserId userId, CancellationToken ct);
 }

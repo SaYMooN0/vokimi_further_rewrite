@@ -4,5 +4,5 @@ namespace VokisCatalogService.Application.common.repositories;
 
 public interface IGeneralVokisRepository
 {
-    Task Add(GeneralVoki voki);
+    Task Add(GeneralVoki voki, CancellationToken ct);
 }

@@ -16,10 +16,15 @@ internal class UserIdToTakenVokiDataDictionaryConverter :
 
     public UserIdToTakenVokiDataDictionaryConverter()
         : base(
-            dic => JsonSerializer.Serialize(dic, JsonOpts),
+            dic => JsonSerializer.Serialize(
+                dic.ToDictionary(kvp => kvp.Key.ToString(), kvp => kvp.Value), JsonOpts
+            ),
             json => JsonSerializer
-                .Deserialize<Dictionary<VokiId, UserTakenVokiData>>(json, JsonOpts)!
-                .ToImmutableDictionary()
+                .Deserialize<Dictionary<string, UserTakenVokiData>>(json, JsonOpts)!
+                .ToImmutableDictionary(
+                    kvp => new VokiId(new(kvp.Key)),
+                    kvp => kvp.Value
+                )
         ) { }
 }
 

@@ -59,8 +59,8 @@
 		flex-wrap: wrap;
 		justify-content: center;
 		align-items: center;
-		height: fit-content;
 		gap: 0.75rem 1rem;
+		height: fit-content;
 	}
 
 	.tag {

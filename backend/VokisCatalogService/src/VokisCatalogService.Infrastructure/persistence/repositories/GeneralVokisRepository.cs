@@ -11,8 +11,8 @@ public class GeneralVokisRepository : IGeneralVokisRepository
         _db = db;
     }
 
-    public async Task Add(GeneralVoki voki) {
-        await _db.GeneralVokis.AddAsync(voki);
-        await _db.SaveChangesAsync();
+    public async Task Add(GeneralVoki voki, CancellationToken ct) {
+        await _db.GeneralVokis.AddAsync(voki, ct);
+        await _db.SaveChangesAsync(ct);
     }
 }
