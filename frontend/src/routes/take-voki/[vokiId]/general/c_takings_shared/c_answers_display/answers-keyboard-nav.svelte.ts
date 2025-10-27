@@ -23,26 +23,29 @@ export function answersKeyboardNav(node: HTMLElement, init: Params) {
         items = Array.from(node.querySelectorAll<HTMLElement>(params.selector!));
     };
 
-    const mo = new MutationObserver(() => refresh());
-    mo.observe(node, { childList: true, subtree: true });
-    refresh();
-
     function focusCard(i: number) {
-        if (!items.length) return;
-        if (i < 0) i = items.length - 1;
-        if (i >= items.length) i = 0;
+        if (!items.length) { return };
+        if (i < 0) { i = items.length - 1; }
+        if (i >= items.length) { i = 0; }
         items[i]?.focus();
     }
 
-    function onKeyDown(e: KeyboardEvent) {
 
-        if (e.altKey) {
-            e.preventDefault();
-            return;
-        }
+    const mo = new MutationObserver(async () => {
+        refresh();
+        await tick();
+        focusCard(0);
+    });
+    mo.observe(node, { childList: true, subtree: true });
+    refresh();
+
+    function onKeyDown(e: KeyboardEvent) {
         const active = document.activeElement as HTMLElement | null;
         const idx = active ? items.indexOf(active) : -1;
 
+        if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
+            return;
+        }
         switch (e.key) {
             case 'Enter': {
                 if (idx >= 0) {
@@ -68,15 +71,15 @@ export function answersKeyboardNav(node: HTMLElement, init: Params) {
                 e.preventDefault();
                 focusCard((idx >= 0 ? idx : items.length) - 1);
                 break;
+
         }
     }
 
     node.addEventListener('keydown', onKeyDown);
 
     if (params.focusOnMount) {
-        tick().then(() => node.focus());
+        tick().then(() => focusCard(0));
     }
-
     return {
         update(next: Params) {
             params = {
@@ -90,6 +93,9 @@ export function answersKeyboardNav(node: HTMLElement, init: Params) {
         destroy() {
             mo.disconnect();
             node.removeEventListener('keydown', onKeyDown);
+        },
+        focusFirstAnswer() {
+            focusCard(0);
         }
     };
 }

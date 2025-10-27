@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { ColorUtils } from '$lib/ts/utils/color-utils';
+	import { onDestroy, onMount } from 'svelte';
 	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerColorOnly } from '../../types';
 	import { type AnswerRef, answersKeyboardNav } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './c_shared/GeneralTakingAnswerChosenIndicator.svelte';
@@ -21,18 +22,26 @@
 		chooseAnswer: (answerId: string) => void;
 	}>();
 
-	let container: HTMLDivElement = $state<HTMLDivElement>()!;
+	let navAction: ReturnType<typeof answersKeyboardNav> =
+		$state<ReturnType<typeof answersKeyboardNav>>()!;
+	let answersContainer: HTMLDivElement = $state<HTMLDivElement>()!;
+	export function focusFirstAnswerCard() {
+		navAction?.focusFirstAnswer();
+	}
+	onMount(() => {
+		navAction = answersKeyboardNav(answersContainer, {
+			answers: answers as AnswerRef[],
+			chooseAnswer,
+			focusOnMount: true,
+			useSpacebarToChoose: true
+		});
+	});
+	onDestroy(() => navAction?.destroy?.());
 </script>
 
 <div
 	class="answers-container"
-	bind:this={container}
-	use:answersKeyboardNav={{
-		answers: answers as AnswerRef[],
-		chooseAnswer,
-		focusOnMount: true,
-		useSpacebarToChoose: true
-	}}
+	bind:this={answersContainer}
 	tabindex="-1"
 	role={isMultipleChoice ? 'group' : 'radiogroup'}
 	aria-label="Answer choices"
@@ -91,9 +100,9 @@
 
 	.indicator-container {
 		position: absolute;
-		bottom: -1rem;
+		bottom: -0.75rem;
 		left: 50%;
-		padding: 0.5rem;
+		padding: 0.5rem 0.5rem 0.25rem;
 		border-radius: var(--color-div-border-radius);
 		background-color: var(--back);
 		transform: translateX(-50%);

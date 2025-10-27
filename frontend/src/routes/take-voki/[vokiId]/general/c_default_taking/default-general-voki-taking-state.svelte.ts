@@ -52,16 +52,20 @@ export class DefaultGeneralVokiTakingState {
         this.#clearVokiSeenUpdateTimer = clearVokiSeenUpdateTimer;
     }
 
-    goToPreviousQuestion(): void {
+    goToPreviousQuestion(): boolean {
         if (this.currentQuestionOrder > 0) {
             this.currentQuestionOrder -= 1;
+            return true;
         }
+        return false;
     }
 
-    goToNextQuestion(): void {
+    goToNextQuestion(): boolean {
         if (this.currentQuestionOrder < this.totalQuestionsCount - 1) {
             this.currentQuestionOrder += 1;
+            return true;
         }
+        return false;
     }
 
     jumpToSpecificQuestion(orderInVokiTaking: number): Err[] {

@@ -8,13 +8,17 @@
 		chosenAnswers: Record<string, boolean>;
 		totalQuestionsCount: number;
 	}
-	let {
-		question,
-		chosenAnswers = $bindable(),
-		totalQuestionsCount,
-	}: Props = $props();
+	let { question, chosenAnswers = $bindable(), totalQuestionsCount }: Props = $props();
+
 	let isMultipleChoice = $derived(question.minAnswersCount != 1 || question.maxAnswersCount != 1);
 
+	let answersContainer: { focusFirstAnswerCard: () => void } = $state<{
+		focusFirstAnswerCard: () => void;
+	}>()!;
+	export function focusFirstAnswerCard() {
+		console.log('question level');
+		answersContainer.focusFirstAnswerCard();
+	}
 </script>
 
 <GeneralVokiTakingQuestionDisplay
@@ -27,6 +31,7 @@
 	questionNumber={question.orderInVokiTaking + 1}
 />
 <GeneralVokiTakingAnswersDisplay
+	bind:this={answersContainer}
 	answerType={question.answerType}
 	answers={question.answers}
 	bind:chosenAnswers

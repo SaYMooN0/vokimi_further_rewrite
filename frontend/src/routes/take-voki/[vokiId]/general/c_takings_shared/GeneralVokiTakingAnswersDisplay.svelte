@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
+	import type { SvelteComponent } from 'svelte';
 	import type { GeneralVokiAnswerTypeData } from '../types';
 	import GeneralVokiTakingAudioAndTextAnswer from './c_answers_display/GeneralVokiTakingAudioAndTextAnswer.svelte';
 	import GeneralVokiTakingAudioOnlyAnswer from './c_answers_display/GeneralVokiTakingAudioOnlyAnswer.svelte';
@@ -29,16 +30,20 @@
 		return chosenAnswers[answerId];
 	}
 	let { answerType, answers, chosenAnswers = $bindable(), isMultipleChoice }: Props = $props();
+
+	export function focusFirstAnswerCard() {
+		console.log('shared level');
+		answersContainer.focusFirstAnswerCard();
+	}
+	let answersContainer: { focusFirstAnswerCard: () => void } = $state<{
+		focusFirstAnswerCard: () => void;
+	}>()!;
 </script>
 
 {#if answerType === 'TextOnly'}
 	<GeneralVokiTakingTextOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
 {:else if answerType === 'ImageOnly'}
 	<GeneralVokiTakingImageOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
-{:else if answerType === 'AudioOnly'}
-	<GeneralVokiTakingAudioOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
-{:else if answerType === 'ColorOnly'}
-	<GeneralVokiTakingColorOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
 {:else if answerType === 'ImageAndText'}
 	<GeneralVokiTakingImageAndTextAnswer
 		{answers}
@@ -46,8 +51,9 @@
 		{isAnswerChosen}
 		{chooseAnswer}
 	/>
-{:else if answerType === 'AudioAndText'}
-	<GeneralVokiTakingAudioAndTextAnswer
+{:else if answerType === 'ColorOnly'}
+	<GeneralVokiTakingColorOnlyAnswer
+		bind:this={answersContainer}
 		{answers}
 		{isMultipleChoice}
 		{isAnswerChosen}
@@ -55,6 +61,15 @@
 	/>
 {:else if answerType === 'ColorAndText'}
 	<GeneralVokiTakingColorAndTextAnswer
+		{answers}
+		{isMultipleChoice}
+		{isAnswerChosen}
+		{chooseAnswer}
+	/>
+{:else if answerType === 'AudioOnly'}
+	<GeneralVokiTakingAudioOnlyAnswer {answers} {isMultipleChoice} {isAnswerChosen} {chooseAnswer} />
+{:else if answerType === 'AudioAndText'}
+	<GeneralVokiTakingAudioAndTextAnswer
 		{answers}
 		{isMultipleChoice}
 		{isAnswerChosen}

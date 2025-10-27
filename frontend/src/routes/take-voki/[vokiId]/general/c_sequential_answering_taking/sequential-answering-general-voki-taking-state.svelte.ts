@@ -42,7 +42,7 @@ export class SequentialAnsweringGeneralVokiTakingState {
         }
         const firstQuestion = data.questions[0];
         this.currentQuestion = { ...firstQuestion, clientShownAt: new Date(), serverShownAt: data.startedAt };
-        this.resetCurrentAnswers();
+        this.#resetCurrentAnswers();
     }
     async goToNextQuestion(): Promise<Err[]> {
         if (this.currentQuestion === undefined) {
@@ -73,6 +73,7 @@ export class SequentialAnsweringGeneralVokiTakingState {
         this.isLoadingNextQuestion = false;
         if (response.isSuccess) {
             this.currentQuestion = { ...response.data, clientShownAt: new Date() };
+            this.#resetCurrentAnswers();
             console.log(this.currentQuestion);
 
             return [];
@@ -94,20 +95,21 @@ export class SequentialAnsweringGeneralVokiTakingState {
             return { isSuccess: false, errs: [err] };
         }
         this.isLoadingNextQuestion = true;
+        const bodyContentObj = {
+            sessionId: this.#sessionId,
+            lastQuestionId: this.currentQuestion.id,
+            lastQuestionOrderInVokiTaking: this.currentQuestion.orderInVokiTaking,
+            lastQuestionAnswersWithIsChosen: this.currentQuestionChosenAnswers,
+            serverLastQuestionShownAt: this.currentQuestion.serverShownAt,
+            clientLastQuestionShownAt: this.currentQuestion.clientShownAt,
+            clientLastQuestionAnsweredAt: new Date(),
+            serverSessionStartTime: this.#serverSessionStartTime,
+            clientSessionStartTime: this.#clientSessionStartTime,
+            clientSessionFinishTime: new Date()
+        };
+        console.log(bodyContentObj);
         const response = await ApiVokiTakingGeneral.fetchJsonResponse<{ receivedResultId: string }>(
-            `/vokis/${this.vokiId}/sequential-answering/finish`,
-            RJO.POST({
-                sessionId: this.#sessionId,
-                lastQuestionId: this.currentQuestion.id,
-                lastQuestionOrderInVokiTaking: this.currentQuestion.orderInVokiTaking,
-                lastQuestionAnswersWithIsChosen: this.currentQuestionChosenAnswers,
-                serverLastQuestionShownAt: this.currentQuestion.serverShownAt,
-                clientLastQuestionShownAt: this.currentQuestion.clientShownAt,
-                clientLastQuestionAnsweredAt: new Date(),
-                serverSessionStartTime: this.#serverSessionStartTime,
-                clientSessionStartTime: this.#clientSessionStartTime,
-                clientSessionFinishTime: new Date()
-            })
+            `/vokis/${this.vokiId}/sequential-answering/finish`, RJO.POST(bodyContentObj)
         );
         this.isLoadingNextQuestion = false;
         if (response.isSuccess) {
@@ -135,7 +137,7 @@ export class SequentialAnsweringGeneralVokiTakingState {
 
         return null;
     }
-    resetCurrentAnswers() {
+    #resetCurrentAnswers() {
         this.currentQuestionChosenAnswers = Object.fromEntries(
             this.currentQuestion!.answers.map(a => [a.id, false])
         );
