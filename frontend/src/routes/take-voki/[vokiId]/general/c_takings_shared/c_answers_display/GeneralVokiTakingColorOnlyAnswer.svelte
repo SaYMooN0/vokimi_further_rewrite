@@ -22,8 +22,7 @@
 		chooseAnswer: (answerId: string) => void;
 	}>();
 
-	let navAction: ReturnType<typeof answersKeyboardNav> =
-		$state<ReturnType<typeof answersKeyboardNav>>()!;
+	let navAction = $state<ReturnType<typeof answersKeyboardNav>>()!;
 	let answersContainer: HTMLDivElement = $state<HTMLDivElement>()!;
 	export function focusFirstAnswerCard() {
 		navAction?.focusFirstAnswer();

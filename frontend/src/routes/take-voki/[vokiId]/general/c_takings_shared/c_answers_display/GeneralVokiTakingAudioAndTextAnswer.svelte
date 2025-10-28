@@ -18,6 +18,8 @@
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
 	}>();
+
+	
 </script>
 
 <div class="answers-container">

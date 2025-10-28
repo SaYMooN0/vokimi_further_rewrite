@@ -4,41 +4,52 @@
 	import { toast } from 'svelte-sonner';
 	import { MyDraftVokisCacheStore } from './my-draft-vokis-cache-store.svelte';
 	import type { PageProps } from './$types';
-	import VokiSkeletonItem from './c_page/VokiSkeletonItem.svelte';
-	import VokiUnableToLoad from './c_page/VokiUnableToLoad.svelte';
-	import VokiItemView from '$lib/components/VokiItemView.svelte';
-	import VokiItemsGridContainer from '$lib/components/VokiItemsGridContainer.svelte';
+	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
+	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
+	import type {
+		VokiItemViewErrStateProps,
+		VokiItemViewOkStateProps
+	} from '$lib/components/voki_item/c_voki_item/types';
 	let { data }: PageProps = $props();
+
+	function getVokiViewItemState(
+		vokiId: string
+	):
+		| { name: 'ok'; data: VokiItemViewOkStateProps }
+		| { name: 'loading' }
+		| { name: 'err'; data: VokiItemViewErrStateProps } {
+		const voki = MyDraftVokisCacheStore.Get(vokiId);
+		if (voki.state.name === 'loading') {
+			return { name: 'loading' };
+		} else if (voki.state.name === 'err') {
+			return { name: 'err', data: { vokiId, errs: voki.state.errs } };
+		} else {
+			return {
+				name: 'ok',
+				data: {
+					vokiId,
+					voki: {
+						name: voki.state.data.name,
+						cover: voki.state.data.cover,
+						primaryAuthorId: voki.state.data.primaryAuthorId,
+						coAuthorIds: voki.state.data.coAuthorIds
+					},
+					onMoreBtnClick: () => toast.error("Voki more button isn't implemented yet"),
+					link: `/voki-creation/${StringUtils.pascalToKebab(voki.state.data.type)}/${vokiId}`
+				}
+			};
+		}
+	}
 </script>
 
 {#if !data.response.isSuccess}
 	<DefaultErrBlock errList={data.response.errs} />
+{:else if data.response.data.vokiIds.length === 0}
+	<h1>You don't have any draft vokis</h1>
 {:else}
 	<VokiItemsGridContainer>
-		{#await MyDraftVokisCacheStore.EnsureExist(data.response.data.vokiIds)}
-			{#each data.response.data.vokiIds as _}
-				<VokiSkeletonItem />
-			{/each}
-		{:then _}
-			{#if data.response.data.vokiIds.length === 0}
-				<h1>You don't have any draft vokis</h1>
-			{:else}
-				{#each data.response.data.vokiIds as vokiId}
-					{#await MyDraftVokisCacheStore.Get(vokiId)}
-						<VokiSkeletonItem />
-					{:then voki}
-						{#if voki}
-							<VokiItemView
-								{voki}
-								link={`/voki-creation/${StringUtils.pascalToKebab(voki.type)}/${vokiId}`}
-								onMoreBtnClick={() => toast.error("Voki more button isn't implemented yet")}
-							/>
-						{:else}
-							<VokiUnableToLoad {vokiId} />
-						{/if}
-					{/await}
-				{/each}
-			{/if}
-		{/await}
+		{#each data.response.data.vokiIds as vokiId}
+			<VokiItemView state={getVokiViewItemState(vokiId)} />
+		{/each}
 	</VokiItemsGridContainer>
 {/if}

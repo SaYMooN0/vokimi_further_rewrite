@@ -18,7 +18,6 @@
 		isFinishBtnLoading = true;
 		const response = await vokiTakingState.finishTakingAndReceiveResult();
 		isFinishBtnLoading = false;
-		console.log(response);
 		if (response.isSuccess) {
 			onResultReceived(response.data.receivedResultId);
 		} else if (response.errs.length > 0) {

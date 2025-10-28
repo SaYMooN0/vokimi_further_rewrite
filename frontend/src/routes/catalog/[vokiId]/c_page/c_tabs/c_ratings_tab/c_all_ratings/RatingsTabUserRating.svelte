@@ -24,7 +24,6 @@
 			return;
 		}
 		updatingRatingValue = true;
-		console.log('send');
 		const response = await saveNewRating(newValue);
 		if (response.isSuccess) {
 			ratingState = { name: 'rated', ...response.data };

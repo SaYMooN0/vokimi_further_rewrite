@@ -1,27 +1,14 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import type { Language } from '$lib/ts/language';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { toast } from 'svelte-sonner';
-	import { getVokiFlagsInfoDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
+	import { getVokiFlagsInfoDialogOpenFunction } from '../../../../routes/c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
+	import type { VokiItemViewOkStateProps } from './types';
 
-	interface Props {
-		voki: {
-			name: string;
-			cover: string;
-			primaryAuthorId: string;
-			coAuthorIds: string[];
-		};
-		link: string;
-		onMoreBtnClick: () => void;
-		flags?: {
-			language: Language;
-			hasMatureContent: boolean;
-			authenticatedOnlyTaking: boolean;
-		};
-	}
-	let { voki, link, onMoreBtnClick, flags }: Props = $props();
+	let { voki, link, onMoreBtnClick, flags }: VokiItemViewOkStateProps = $props();
+
+
 	const openVokiFlagsInfoDialog = getVokiFlagsInfoDialogOpenFunction();
 	function onFlagClick(e: MouseEvent) {
 		e.preventDefault();
@@ -59,7 +46,7 @@
 				class="voki-more-btn interactable"
 				onclick={(e) => {
 					e.preventDefault();
-					onMoreBtnClick();
+					onMoreBtnClick(e);
 				}}
 			>
 				<use href="#common-more-icon" />

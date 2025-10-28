@@ -6,7 +6,6 @@
 	import type { Err } from '$lib/ts/err';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { VokiType } from '$lib/ts/voki';
-	import { MyDraftVokisCacheStore } from '../../draft/my-draft-vokis-cache-store.svelte';
 	import VokiTypeCard from './VokiTypeCard.svelte';
 	interface Props {
 		onVokiInitializedSuccessfully: (newVokiData: {
@@ -37,7 +36,6 @@
 			RJO.POST({ newVokiName: vokiName, vokiType: selectedVokiType })
 		);
 		if (response.isSuccess) {
-			await MyDraftVokisCacheStore.EnsureExist([response.data.id]);
 			onVokiInitializedSuccessfully(response.data);
 		} else {
 			isLoading = false;

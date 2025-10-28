@@ -32,7 +32,6 @@
 	let { answerType, answers, chosenAnswers = $bindable(), isMultipleChoice }: Props = $props();
 
 	export function focusFirstAnswerCard() {
-		console.log('shared level');
 		answersContainer.focusFirstAnswerCard();
 	}
 	let answersContainer: { focusFirstAnswerCard: () => void } = $state<{

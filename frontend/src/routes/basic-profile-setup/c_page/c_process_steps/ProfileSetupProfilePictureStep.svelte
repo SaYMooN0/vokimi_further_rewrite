@@ -17,8 +17,6 @@
 			];
 
 			picPresets['previous'] = newHistory.slice(0, 5);
-
-			console.log(picPresets);
 		}
 
 		profilePic = newPic;

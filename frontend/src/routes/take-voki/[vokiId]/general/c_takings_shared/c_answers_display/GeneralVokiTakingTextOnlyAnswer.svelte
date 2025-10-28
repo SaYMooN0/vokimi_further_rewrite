@@ -1,6 +1,7 @@
 <script lang="ts">
-	import type { GeneralVokiAnswerTextOnly, GeneralVokiAnswerTypeData } from '../../types';
-	import { type AnswerRef, answersKeyboardNav } from './answers-keyboard-nav.svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerTextOnly } from '../../types';
+	import { answersKeyboardNav, type AnswerRef } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './c_shared/GeneralTakingAnswerChosenIndicator.svelte';
 	import GeneralTakingAnswerText from './c_shared/GeneralTakingAnswerText.svelte';
 
@@ -20,19 +21,26 @@
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
 	}>();
-
-	let container: HTMLDivElement = $state<HTMLDivElement>()!;
+	
+	let navAction = $state<ReturnType<typeof answersKeyboardNav>>()!;
+	let answersContainer: HTMLDivElement = $state<HTMLDivElement>()!;
+	export function focusFirstAnswerCard() {
+		navAction?.focusFirstAnswer();
+	}
+	onMount(() => {
+		navAction = answersKeyboardNav(answersContainer, {
+			answers: answers as AnswerRef[],
+			chooseAnswer,
+			focusOnMount: true,
+			useSpacebarToChoose: true
+		});
+	});
+	onDestroy(() => navAction?.destroy?.());
 </script>
 
 <div
 	class="answers-container"
-	bind:this={container}
-	use:answersKeyboardNav={{
-		answers: answers as AnswerRef[],
-		chooseAnswer,
-		focusOnMount: true,
-		useSpacebarToChoose: true
-	}}
+	bind:this={answersContainer}
 	tabindex="-1"
 	role={isMultipleChoice ? 'group' : 'radiogroup'}
 	aria-label="Answer choices"

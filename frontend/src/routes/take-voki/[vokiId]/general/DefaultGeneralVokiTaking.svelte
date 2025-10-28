@@ -33,10 +33,7 @@
 		const handler = createQuestionsKeyHandler({
 			goToNextQuestion: () => vokiTakingState.goToNextQuestion(),
 			goToPreviousQuestion: () => vokiTakingState.goToPreviousQuestion(),
-			focusFirstAnswerCardInContainer: () => {
-				console.log("aaaaaaaaaa",answersContainer);
-				answersContainer.focusFirstAnswerCard();
-			}
+			focusFirstAnswerCardInContainer: () => answersContainer.focusFirstAnswerCard()
 		});
 
 		window.addEventListener('keydown', handler);

@@ -1,11 +1,33 @@
 <script lang="ts">
-	import VokiItemView from '$lib/components/VokiItemView.svelte';
 	import { toast } from 'svelte-sonner';
 	import type { PageProps } from './$types';
-	import VokiItemsGridContainer from '$lib/components/VokiItemsGridContainer.svelte';
+	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
+	import VokiItemContextMenu from '$lib/components/voki_item/VokiItemContextMenu.svelte';
+	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
+	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
+	import type { VokiItemViewOkStateProps } from '$lib/components/voki_item/c_voki_item/types';
 
 	let { data }: PageProps = $props();
+	let vokiItemContextMenu: VokiItemContextMenu = $state<VokiItemContextMenu>()!;
+	function assembleVokiItemStateData(voki: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
+		return {
+			vokiId: voki.id,
+			voki: {
+				name: voki.name,
+				cover: voki.cover,
+				primaryAuthorId: voki.primaryAuthorId,
+				coAuthorIds: voki.coAuthorIds
+			},
+			onMoreBtnClick: (mEvent: MouseEvent) => vokiItemContextMenu.open(mEvent.x, mEvent.y, voki.id),
+			link: `/catalog/${voki.id}`,
+			flags: {
+				language: voki.language,
+				hasMatureContent: voki.hasMatureContent,
+				authenticatedOnlyTaking: voki.signedInOnlyTaking
+			}
+		};
+	}
 </script>
 
 {#if !data.isSuccess}
@@ -13,16 +35,13 @@
 {:else if data.data.vokis.length === 0}
 	<h1>Voki catalog is empty</h1>
 {:else}
+	<VokiItemContextMenu bind:this={vokiItemContextMenu} />
 	<VokiItemsGridContainer>
 		{#each data.data.vokis as voki}
 			<VokiItemView
-				{voki}
-				link={`/catalog/${voki.id}`}
-				onMoreBtnClick={() => toast.error("Voki more button isn't implemented yet")}
-				flags={{
-					language: voki.language,
-					hasMatureContent: voki.hasMatureContent,
-					authenticatedOnlyTaking: voki.authenticatedOnlyTaking
+				state={{
+					name: 'ok',
+					data: assembleVokiItemStateData(voki)
 				}}
 			/>
 		{/each}

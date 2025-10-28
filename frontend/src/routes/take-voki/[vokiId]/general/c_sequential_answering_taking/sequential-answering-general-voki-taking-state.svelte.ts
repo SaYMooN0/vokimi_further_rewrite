@@ -74,7 +74,6 @@ export class SequentialAnsweringGeneralVokiTakingState {
         if (response.isSuccess) {
             this.currentQuestion = { ...response.data, clientShownAt: new Date() };
             this.#resetCurrentAnswers();
-            console.log(this.currentQuestion);
 
             return [];
         }
@@ -107,7 +106,6 @@ export class SequentialAnsweringGeneralVokiTakingState {
             clientSessionStartTime: this.#clientSessionStartTime,
             clientSessionFinishTime: new Date()
         };
-        console.log(bodyContentObj);
         const response = await ApiVokiTakingGeneral.fetchJsonResponse<{ receivedResultId: string }>(
             `/vokis/${this.vokiId}/sequential-answering/finish`, RJO.POST(bodyContentObj)
         );
@@ -122,7 +120,6 @@ export class SequentialAnsweringGeneralVokiTakingState {
         const min = this.currentQuestion?.minAnswersCount ?? 0;
         const max = this.currentQuestion?.maxAnswersCount ?? Number.POSITIVE_INFINITY;
         const chosenCount = Object.values(this.currentQuestionChosenAnswers).filter(x => x).length;
-        console.log(this.currentQuestionChosenAnswers, min, max, chosenCount);
         if (chosenCount === 0 && min > 0) {
             return { message: `You haven't answered this question yet. Please select at least ${min} ${min === 1 ? 'answer' : 'answers'} to continue.` };
         }

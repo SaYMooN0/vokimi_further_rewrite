@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { ColorUtils } from '$lib/ts/utils/color-utils';
+	import { onMount, onDestroy } from 'svelte';
 	import type { GeneralVokiAnswerColorAndText, GeneralVokiAnswerTypeData } from '../../types';
 	import { answersKeyboardNav, type AnswerRef } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './c_shared/GeneralTakingAnswerChosenIndicator.svelte';
@@ -21,19 +22,25 @@
 		chooseAnswer: (answerId: string) => void;
 	}>();
 
-	let container: HTMLDivElement = $state<HTMLDivElement>()!;
+	let navAction = $state<ReturnType<typeof answersKeyboardNav>>()!;
+	let answersContainer: HTMLDivElement = $state<HTMLDivElement>()!;
+	export function focusFirstAnswerCard() {
+		navAction?.focusFirstAnswer();
+	}
+	onMount(() => {
+		navAction = answersKeyboardNav(answersContainer, {
+			answers: answers as AnswerRef[],
+			chooseAnswer,
+			focusOnMount: true,
+			useSpacebarToChoose: true
+		});
+	});
+	onDestroy(() => navAction?.destroy?.());
 </script>
 
 <div
 	class="answers-container"
-	bind:this={container}
-	use:answersKeyboardNav={{
-		answers: answers as AnswerRef[],
-		chooseAnswer,
-		focusOnMount: true,
-		selector: '.answer',
-		useSpacebarToChoose: true
-	}}
+	bind:this={answersContainer}
 	tabindex="-1"
 	role={isMultipleChoice ? 'group' : 'radiogroup'}
 	aria-label="Answer choices"

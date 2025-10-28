@@ -16,7 +16,6 @@
 		focusFirstAnswerCard: () => void;
 	}>()!;
 	export function focusFirstAnswerCard() {
-		console.log('question level');
 		answersContainer.focusFirstAnswerCard();
 	}
 </script>

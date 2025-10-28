@@ -34,7 +34,6 @@
 		dialog.close();
 	}
 	async function onConfirm() {
-		console.log(isDialogButtons(buttons), '121');
 		if (isDialogButtons(buttons)) {
 			let res = await buttons.confirmBtnOnclick();
 			if (res && res.length > 0) {

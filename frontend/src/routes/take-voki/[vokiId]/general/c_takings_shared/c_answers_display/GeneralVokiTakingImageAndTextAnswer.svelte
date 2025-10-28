@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import { onMount, onDestroy } from 'svelte';
 	import type { GeneralVokiAnswerImageAndText, GeneralVokiAnswerTypeData } from '../../types';
 	import { type AnswerRef, answersKeyboardNav } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './c_shared/GeneralTakingAnswerChosenIndicator.svelte';
@@ -22,18 +23,25 @@
 		chooseAnswer: (answerId: string) => void;
 	}>();
 
-	let container: HTMLDivElement = $state<HTMLDivElement>()!;
+	let navAction = $state<ReturnType<typeof answersKeyboardNav>>()!;
+	let answersContainer: HTMLDivElement = $state<HTMLDivElement>()!;
+	export function focusFirstAnswerCard() {
+		navAction?.focusFirstAnswer();
+	}
+	onMount(() => {
+		navAction = answersKeyboardNav(answersContainer, {
+			answers: answers as AnswerRef[],
+			chooseAnswer,
+			focusOnMount: true,
+			useSpacebarToChoose: true
+		});
+	});
+	onDestroy(() => navAction?.destroy?.());
 </script>
 
 <div
 	class="answers-container"
-	bind:this={container}
-	use:answersKeyboardNav={{
-		answers: answers as AnswerRef[],
-		chooseAnswer,
-		focusOnMount: true,
-		useSpacebarToChoose: true
-	}}
+	bind:this={answersContainer}
 	tabindex="-1"
 	role={isMultipleChoice ? 'group' : 'radiogroup'}
 	aria-label="Answer choices"
@@ -96,6 +104,6 @@
 		border-radius: 0.75rem;
 		object-fit: contain;
 		-webkit-user-drag: none;
-        box-shadow: var(--shadow-xs);
+		box-shadow: var(--shadow-xs);
 	}
 </style>
