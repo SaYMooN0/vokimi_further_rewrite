@@ -19,7 +19,6 @@
 	<p>You can customize your profile even more here</p>
 	<a class="profile-link" href="/profile">My profile</a>
 </div>
-.
 
 <style>
 	.setup-saved-container {

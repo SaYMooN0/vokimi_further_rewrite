@@ -17,22 +17,22 @@
 	):
 		| { name: 'ok'; data: VokiItemViewOkStateProps }
 		| { name: 'loading' }
-		| { name: 'err'; data: VokiItemViewErrStateProps } {
+		| { name: 'errs'; data: VokiItemViewErrStateProps } {
 		const voki = MyPublishedVokisCacheStore.Get(vokiId);
-		if (voki.state.name === 'loading') {
+		if (voki.state === 'loading') {
 			return { name: 'loading' };
-		} else if (voki.state.name === 'err') {
-			return { name: 'err', data: { vokiId, errs: voki.state.errs } };
+		} else if (voki.state === 'errs') {
+			return { name: 'errs', data: { vokiId, errs: voki.errs } };
 		} else {
 			return {
 				name: 'ok',
 				data: {
 					vokiId,
 					voki: {
-						name: voki.state.data.name,
-						cover: voki.state.data.cover,
-						primaryAuthorId: voki.state.data.primaryAuthorId,
-						coAuthorIds: voki.state.data.coAuthorIds
+						name: voki.data.name,
+						cover: voki.data.cover,
+						primaryAuthorId: voki.data.primaryAuthorId,
+						coAuthorIds: voki.data.coAuthorIds
 					},
 					onMoreBtnClick: () => toast.error("Voki more button isn't implemented yet"),
 					link: `/catalog/${vokiId}`

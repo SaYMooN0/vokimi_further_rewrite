@@ -16,7 +16,12 @@
 			{ icon: mainIcon, name: 'Main Info', href: withBasePath('main') },
 			{ icon: questionIcon, name: 'Questions', href: withBasePath('questions') },
 			{ icon: resultsIcon, name: 'Results', href: withBasePath('results') },
-			{ icon: publishingIcon, name: 'Publishing', href: withBasePath('publishing') }
+			{ icon: publishingIcon, name: 'Publishing', href: withBasePath('publishing') },
+			{
+				icon: publishingIcon,
+				name: 'Interactions',
+				href: withBasePath('interactions')
+			}
 		]}
 	/>
 {:else}
@@ -52,13 +57,21 @@
 {/snippet}
 {#snippet mainIcon()}
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-  <path d="M3 4H7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M3 10H7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M3 15.5H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M3 21.5H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-  <rect x="11" y="2.5" width="10" height="8" rx="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-
+		<path d="M3 4H7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+		<path d="M3 10H7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+		<path d="M3 15.5H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+		<path d="M3 21.5H21" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+		<rect
+			x="11"
+			y="2.5"
+			width="10"
+			height="8"
+			rx="2"
+			stroke="currentColor"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		/>
+	</svg>
 {/snippet}
 
 {#snippet questionIcon()}

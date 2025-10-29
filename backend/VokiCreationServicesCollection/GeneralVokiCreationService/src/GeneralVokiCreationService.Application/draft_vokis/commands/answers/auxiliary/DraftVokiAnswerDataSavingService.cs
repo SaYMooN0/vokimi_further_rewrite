@@ -79,8 +79,8 @@ public class DraftVokiAnswerDataSavingService
             return ErrFactory.NoValue.Common("Image value is not provided");
         }
 
-        if (ITempKey.IsStringWithTempPrefix(image)) {
-            return GeneralVokiAnswerImageKey.FromString(image);
+        if (GeneralVokiAnswerImageKey.FromString(image).IsSuccess(out var savedKey)) {
+            return savedKey;
         }
 
         ErrOr<TempImageKey> tempKeyCreationRes = TempImageKey.FromString(image);
@@ -91,7 +91,8 @@ public class DraftVokiAnswerDataSavingService
         TempImageKey tempKey = tempKeyCreationRes.AsSuccess();
         ImageFileExtension ext = tempKey.Extension;
         var destination = GeneralVokiAnswerImageKey.CreateForAnswer(vokiId, questionId, ext);
-        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiAnswerImageFromTempToStandard(tempKey, destination, ct);
+        ErrOrNothing copyingRes =
+            await _mainStorageBucket.CopyVokiAnswerImageFromTempToStandard(tempKey, destination, ct);
         if (copyingRes.IsErr(out err)) {
             return ErrFactory.Unspecified("Couldn't save answer image", details: err.Message);
         }
@@ -139,8 +140,8 @@ public class DraftVokiAnswerDataSavingService
         }
 
 
-        if (ITempKey.IsStringWithTempPrefix(audio)) {
-            return GeneralVokiAnswerAudioKey.FromString(audio);
+        if (GeneralVokiAnswerAudioKey.FromString(audio).IsSuccess(out var savedKey)) {
+            return savedKey;
         }
 
         ErrOr<TempAudioKey> tempKeyCreationRes = TempAudioKey.FromString(audio);
@@ -150,8 +151,9 @@ public class DraftVokiAnswerDataSavingService
 
         TempAudioKey tempKey = tempKeyCreationRes.AsSuccess();
         AudioFileExtension ext = tempKey.Extension;
-        var destination = GeneralVokiAnswerAudioKey.CreateForAnswer(vokiId, questionId, ext);
-        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiAnswerAudioFromTempToStandard(tempKey, destination, ct);
+        GeneralVokiAnswerAudioKey destination = GeneralVokiAnswerAudioKey.CreateForAnswer(vokiId, questionId, ext);
+        ErrOrNothing copyingRes =
+            await _mainStorageBucket.CopyVokiAnswerAudioFromTempToStandard(tempKey, destination, ct);
         if (copyingRes.IsErr(out err)) {
             return ErrFactory.Unspecified("Couldn't save answer audio", details: err.Message);
         }

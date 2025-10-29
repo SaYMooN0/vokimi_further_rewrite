@@ -8,7 +8,7 @@
 		state:
 			| { name: 'ok'; data: VokiItemViewOkStateProps }
 			| { name: 'loading' }
-			| { name: 'err'; data: VokiItemViewErrStateProps };
+			| { name: 'errs'; data: VokiItemViewErrStateProps };
 	}
 
 	let { state }: Props = $props();
@@ -18,7 +18,7 @@
 	<VokiItemViewOkState {...state.data} />
 {:else if state.name === 'loading'}
 	<VokiItemViewLoadingState />
-{:else if state.name === 'err'}
+{:else if state.name === 'errs'}
 	<VokiItemViewErrState {...state.data} />
 {/if}
 
