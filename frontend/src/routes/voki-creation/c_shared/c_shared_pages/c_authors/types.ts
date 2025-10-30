@@ -1,5 +1,7 @@
-export type VokiAuthorsInfo = {
+export type VokiCreationAuthorsInfo = {
     primaryAuthorId: string;
     coAuthorIds: string[];
-    invitedCoAuthorIds: string[];
+    invitedForCoAuthorUserIds: string[];
+    vokiCreationDate: Date;
+    maxVokiCoAuthors: number;
 }

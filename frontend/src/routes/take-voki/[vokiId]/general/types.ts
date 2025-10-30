@@ -41,8 +41,3 @@ export type GeneralVokiAnswerTypeData =
     | GeneralVokiAnswerColorAndText
     | GeneralVokiAnswerAudioOnly
     | GeneralVokiAnswerAudioAndText;
-
-export type GeneralVokiResultsVisibility =
-    | "Anyone"
-    | "AfterTaking"
-    | "OnlyReceived";

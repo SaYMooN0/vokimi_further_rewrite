@@ -4,12 +4,16 @@
 	import type { Err } from '$lib/ts/err';
 	import type { UserProfilePreview } from '$lib/ts/users';
 	import CoAuthorInvitedMessage from './c_inviting_dialog/CoAuthorInvitedMessage.svelte';
-	import type { VokiAuthorsInfo } from './types';
 	import UserSearchBar from './c_inviting_dialog/UserSearchBar.svelte';
 	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
+	import type { VokiCreationAuthorsInfo } from '../types';
+	interface Props {
+		vokiId: string;
+		updateParentCoAuthors: (coAuthorIds: string[], invitedForCoAuthorUserIds: string[]) => void;
+	}
 
-	let { vokiId, updateParent }: { vokiId: string; updateParent: (info: VokiAuthorsInfo) => void } =
-		$props<{ vokiId: string; updateParent: (info: VokiAuthorsInfo) => void }>();
+	let { vokiId, updateParentCoAuthors: updateParentCoAuthors }: Props = $props();
+
 	let dialog = $state<DialogWithCloseButton>()!;
 	let errs: Err[] = $state([]);
 	let searchedUsers = $state<UserProfilePreview[]>([]);
@@ -21,17 +25,17 @@
 		dialog.open();
 	}
 	async function inviteUser(userId: string) {
-		const response = await ApiVokiCreationCore.fetchJsonResponse<VokiAuthorsInfo>(
-			`/vokis/${vokiId}/invite-co-author`,
-			RJO.POST({ newCoAuthorId: userId })
-		);
-		if (response.isSuccess) {
-			updateParent(response.data);
-			isAlreadyInvited = true;
-			invitedUserId = userId;
-		} else {
-			errs = response.errs;
-		}
+		// const response = await ApiVokiCreationCore.fetchJsonResponse<VokiCreationAuthorsInfo>(
+		// 	`/vokis/${vokiId}/invite-co-author`,
+		// 	RJO.POST({ newCoAuthorId: userId })
+		// );
+		// if (response.isSuccess) {
+		// 	updateParent(response.data);
+		// 	isAlreadyInvited = true;
+		// 	invitedUserId = userId;
+		// } else {
+		// 	errs = response.errs;
+		// }
 	}
 </script>
 

@@ -23,7 +23,7 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
-		gap: 3rem;
+		gap: 2.5rem;
 		width: 100%;
 		margin-bottom: 1rem;
 	}

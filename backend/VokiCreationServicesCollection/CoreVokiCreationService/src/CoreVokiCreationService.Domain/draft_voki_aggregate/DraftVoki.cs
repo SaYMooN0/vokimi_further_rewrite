@@ -125,4 +125,8 @@ public class DraftVoki : AggregateRoot<VokiId>
 
         AddDomainEvent(new VokiPublishedEvent(Id, PrimaryAuthorId, CoAuthorIds));
     }
+
+    public void DropCoAuthor(AppUserId coAuthorId) {
+        CoAuthorIds = CoAuthorIds.Remove(coAuthorId);
+    }
 }

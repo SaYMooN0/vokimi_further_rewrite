@@ -1,5 +1,4 @@
 ﻿using CoreVokiCreationService.Api.contracts;
-using CoreVokiCreationService.Api.contracts.invites;
 using CoreVokiCreationService.Api.contracts.vokis_brief_info;
 using CoreVokiCreationService.Application.draft_vokis.commands.invites;
 using CoreVokiCreationService.Application.draft_vokis.queries;
@@ -16,10 +15,14 @@ public static class SpecificVokiHandlers
 
         group.MapGet("/brief-info", GetVokiBriefInfo);
         group.MapGet("/authors-info", GetVokiAuthorsInfo);
+
+        group.MapDelete("/drop-co-author", DropCoAuthor)
+            .WithRequestValidation<VokiCoAuthorActionRequest>();
         group.MapPost("/invite-co-author", InviteCoAuthor)
-            .WithRequestValidation<InviteCoAuthorRequest>();
+            .WithRequestValidation<VokiCoAuthorActionRequest>();
         group.MapDelete("/cancel-co-author-invite", CancelCoAuthorInvite)
-            .WithRequestValidation<CancelCoAuthorInviteRequest>();
+            .WithRequestValidation<VokiCoAuthorActionRequest>();
+
         group.MapPatch("/accept-co-author-invite", AcceptCoAuthorInvite);
         group.MapPatch("/decline-co-author-invite", DeclineCoAuthorInvite);
         // group.MapGet("/view-data-for-co-author-invited", GetVokiViewDataForCoAuthorInvitedUser); 
@@ -57,30 +60,39 @@ public static class SpecificVokiHandlers
         HttpContext httpContext, CancellationToken ct,
         ICommandHandler<InviteCoAuthorCommand, DraftVoki> handler
     ) {
-        var request = httpContext.GetValidatedRequest<InviteCoAuthorRequest>();
+        var request = httpContext.GetValidatedRequest<VokiCoAuthorActionRequest>();
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        InviteCoAuthorCommand command = new(vokiId, request.ParsedNewCoAuthorId);
+        InviteCoAuthorCommand command = new(vokiId, request.ParsedUserId);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (voki) => Results.Json(
-            VokiAuthorsInfoResponse.Create(voki)
-        ));
+        return CustomResults.FromErrOrToJson<DraftVoki, VokiCoAuthorsWithInvitedResponse>(result);
+    }
+    private static async Task<IResult> DropCoAuthor(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<DropCoAuthorCommand, DraftVoki> handler
+    ) {
+        var request = httpContext.GetValidatedRequest<VokiCoAuthorActionRequest>();
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+
+        DropCoAuthorCommand command = new(vokiId, request.ParsedUserId);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrToJson<DraftVoki, VokiCoAuthorsWithInvitedResponse>(result);
     }
 
     private static async Task<IResult> CancelCoAuthorInvite(
         HttpContext httpContext, CancellationToken ct,
         ICommandHandler<CancelCoAuthorInviteCommand, DraftVoki> handler
     ) {
-        var request = httpContext.GetValidatedRequest<CancelCoAuthorInviteRequest>();
+        var request = httpContext.GetValidatedRequest<VokiCoAuthorActionRequest>();
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        CancelCoAuthorInviteCommand command = new(vokiId, request.ParsedCoAuthorId);
+        CancelCoAuthorInviteCommand command = new(vokiId, request.ParsedUserId);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (voki) => Results.Json(
-            VokiAuthorsInfoResponse.Create(voki)
-        ));
+        return CustomResults.FromErrOrToJson<DraftVoki, VokiCoAuthorsWithInvitedResponse>(result);
+
     }
 
     private static async Task<IResult> AcceptCoAuthorInvite(

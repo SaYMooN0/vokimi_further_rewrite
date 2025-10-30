@@ -9,5 +9,5 @@
 {#if !data.isSuccess}
 	<UnableToLoad errs={data.errs} />
 {:else}
-	<AuthorsPageComponent vokiId={data.vokiId!} authorsInfo={data.data} />
+	<AuthorsPageComponent vokiId={data.vokiId!} {...data.data} />
 {/if}

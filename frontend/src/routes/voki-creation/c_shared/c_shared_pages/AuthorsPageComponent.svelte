@@ -1,62 +1,63 @@
 <script lang="ts">
-	import AuthorInviteDisplay from './c_authors/AuthorInviteDisplay.svelte';
-	import type { VokiAuthorsInfo } from './c_authors/types';
-	import CoAuthorInviteDialog from './c_authors/CoAuthorInviteDialog.svelte';
-	import NoCoAuthorsMessage from './c_authors/NoCoAuthorsMessage.svelte';
-	import CoAuthorUserDisplay from './c_authors/CoAuthorUserDisplay.svelte';
-	import AuthorsEmptySlotsDisplay from './c_authors/AuthorsEmptySlotsDisplay.svelte';
-	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-
-	let { authorsInfo, vokiId }: { authorsInfo: VokiAuthorsInfo; vokiId: string } = $props<{
-		authorsInfo: VokiAuthorsInfo;
+	import PrimaryAuthorDisplay from './c_authors/PrimaryAuthorDisplay.svelte';
+	import CoAuthorsList from './c_authors/CoAuthorsList.svelte';
+	import InviteCoAuthorsMessage from './c_authors/InviteCoAuthorsMessage.svelte';
+	import AuthView from '$lib/components/AuthView.svelte';
+	interface Props {
+		primaryAuthorId: string;
+		coAuthorIds: string[];
+		invitedForCoAuthorUserIds: string[];
+		vokiCreationDate: Date;
+		maxVokiCoAuthors: number;
 		vokiId: string;
-	}>();
-
-	let dialog = $state<CoAuthorInviteDialog>()!;
+	}
+	let {
+		primaryAuthorId,
+		coAuthorIds,
+		invitedForCoAuthorUserIds,
+		vokiCreationDate,
+		maxVokiCoAuthors,
+		vokiId
+	}: Props = $props();
 </script>
 
-<CoAuthorInviteDialog bind:this={dialog} {vokiId} updateParent={(info) => (authorsInfo = info)} />
-<div class="authors-tab-container">
-	<h1 class="authors-h">Primary author</h1>
-	<div class="primary-author-user">
-		<img
-			class="profile-picture"
-			src={StorageBucketMain.fileSrc(`/profile-pictures/${authorsInfo.primaryAuthorId}`)}
-		/>
-		<a href={`/users/${authorsInfo.primaryAuthorId}`} class="username"
-			>{authorsInfo.primaryAuthorId}</a
-		>
-	</div>
-	{#if authorsInfo.coAuthorIds.length === 0}
-		<NoCoAuthorsMessage openAuthorsInviteDialog={() => dialog.open()} />
-	{:else}
-		<h1 class="authors-h">Co-authors ({authorsInfo.coAuthorIds.length})/5</h1>
-		{#each authorsInfo.coAuthorIds as coauthorId}
-			<CoAuthorUserDisplay userId={coauthorId} />
-		{/each}
-		{#if authorsInfo.invitedCoAuthorIds.length != 0}
-			<h1 class="authors-h">Co-authors invites</h1>
-			{#each authorsInfo.invitedCoAuthorIds as invitedCoAuthorIds}
-				<AuthorInviteDisplay userId={invitedCoAuthorIds} />
-			{/each}
+<AuthView>
+	{#snippet children(authState)}
+		{#if authState.name === 'authenticated'}
+			<div class="authors-tab-container">
+				<PrimaryAuthorDisplay
+					viewerId={authState.userId}
+					{primaryAuthorId}
+					creationDate={vokiCreationDate}
+				/>
+				<CoAuthorsList
+					viewerId={authState.userId}
+					{coAuthorIds}
+					{invitedForCoAuthorUserIds}
+					{primaryAuthorId}
+				/>
+				<InviteCoAuthorsMessage
+					{vokiId}
+					maxCoAuthors={maxVokiCoAuthors}
+					coAuthorsWithInvitedIds={[...coAuthorIds, ...invitedForCoAuthorUserIds]}
+					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
+					updateCoAuthorsInfo={(newCoAuthorIds: string[], newInvitedIds: string[]) => {
+						coAuthorIds = newCoAuthorIds;
+						invitedForCoAuthorUserIds = newInvitedIds;
+					}}
+				/>
+			</div>
+		{:else if authState.name === 'loading'}
+			<div>Loading...</div>
+		{:else}
+			<h3>Something went wrong please reload the page</h3>
 		{/if}
-		<AuthorsEmptySlotsDisplay
-			coAuthorsCount={authorsInfo.coAuthorIds.length}
-			invitedCoAuthorsCount={authorsInfo.invitedCoAuthorIds.length}
-			openAuthorsInviteDialog={() => dialog.open()}
-		/>
-	{/if}
-</div>
+	{/snippet}
+</AuthView>
 
 <style>
 	.authors-tab-container {
 		display: flex;
 		flex-direction: column;
-	}
-
-	.authors-h {
-		color: var(--muted-foreground);
-		font-size: 2rem;
-		font-weight: 450;
 	}
 </style>

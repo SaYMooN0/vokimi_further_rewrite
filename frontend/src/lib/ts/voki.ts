@@ -11,7 +11,11 @@ export type GeneralVokiAnswerType =
     | "AudioOnly"
     | "AudioAndText";
 
-
+export type GeneralVokiResultsVisibility =
+    | "Anyone"
+    | "AfterTaking"
+    | "OnlyReceived";
+    
 export type PublishedVokiBriefInfo = {
     id: string;
     type: VokiType;
