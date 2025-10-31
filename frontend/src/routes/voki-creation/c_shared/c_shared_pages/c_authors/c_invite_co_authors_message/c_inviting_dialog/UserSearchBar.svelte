@@ -4,13 +4,9 @@
 	import type { UserProfilePreview } from '$lib/ts/users';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { useDebounce } from 'runed';
-	let {
-		searchedUsers = $bindable(),
-		setErrs
-	}: { searchedUsers: UserProfilePreview[]; setErrs: (errs: Err[]) => void } = $props<{
-		searchedUsers: UserProfilePreview[];
-		setErrs: (errs: Err[]) => void;
-	}>();
+
+	let errs = $state<Err[]>([]);
+	let searchedUsers = $state<UserProfilePreview[]>([]);
 	let searchInput: string = $state('');
 	let inputEl: HTMLInputElement;
 
@@ -27,7 +23,7 @@
 
 		if (value === '') {
 			searchedUsers = [];
-			setErrs([]);
+			errs = [];
 			return;
 		}
 		const response = await ApiUserProfiles.fetchJsonResponse<{ users: UserProfilePreview[] }>(
@@ -37,11 +33,21 @@
 
 		if (response.isSuccess) {
 			searchedUsers = response.data.users;
-			setErrs([]);
+			errs = [];
 		} else {
-			setErrs(response.errs);
+			searchedUsers = [];
+			errs = response.errs;
 		}
 	}, 260);
+	export function IsInputEmpty() {
+		return searchInput.trim() === '';
+	}
+	export function SearchingErrs() {
+		return errs;
+	}
+	export function SearchedUsers() {
+		return searchedUsers;
+	}
 </script>
 
 <div class="search-bar">
@@ -110,7 +116,7 @@
 		height: 1.125rem;
 		stroke-width: 2.5;
 		color: var(--secondary-foreground);
-		transition: 0.2s ease;
+		transition: inherit;
 	}
 
 	.search-bar:hover .search-icon,

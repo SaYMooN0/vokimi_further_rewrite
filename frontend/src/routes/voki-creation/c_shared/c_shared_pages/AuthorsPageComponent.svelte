@@ -30,16 +30,17 @@
 					{primaryAuthorId}
 					creationDate={vokiCreationDate}
 				/>
-				<CoAuthorsList
+				<!-- <CoAuthorsList
 					viewerId={authState.userId}
 					{coAuthorIds}
 					{invitedForCoAuthorUserIds}
 					{primaryAuthorId}
-				/>
+				/>-->
 				<InviteCoAuthorsMessage
 					{vokiId}
 					maxCoAuthors={maxVokiCoAuthors}
-					coAuthorsWithInvitedIds={[...coAuthorIds, ...invitedForCoAuthorUserIds]}
+					{coAuthorIds}
+					{invitedForCoAuthorUserIds}
 					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
 					updateCoAuthorsInfo={(newCoAuthorIds: string[], newInvitedIds: string[]) => {
 						coAuthorIds = newCoAuthorIds;
@@ -59,5 +60,7 @@
 	.authors-tab-container {
 		display: flex;
 		flex-direction: column;
+		padding-top: 1rem;
+		gap: 0.5rem;
 	}
 </style>
