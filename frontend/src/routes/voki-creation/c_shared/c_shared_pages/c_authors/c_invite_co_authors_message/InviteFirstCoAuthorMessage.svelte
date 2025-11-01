@@ -53,71 +53,60 @@
 
 <style>
 	.invite-coauthor-card {
-		margin-top: 1rem;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
-		text-align: center;
+		align-items: center;
+		width: 100%;
+		margin-top: 1rem;
 		border-radius: 1rem;
 		background-color: var(--back);
-		width: 100%;
-		animation: var(--appear-animation) 11s ease-in;
+		text-align: center;
 	}
 
 	.group-icon {
-		height: 4rem;
 		width: 4rem;
+		height: 4rem;
 		line-height: 1;
 		stroke-width: 1.5;
 	}
 
 	.title {
+		margin: -0.25rem 0 0.25rem;
+		color: var(--text);
 		font-size: 1.375rem;
 		font-weight: 600;
-		color: var(--text);
-		margin: -0.25rem 0 0.25rem;
 	}
 
 	.subtitle {
-		font-size: 0.9375rem;
-		color: var(--muted-foreground);
 		max-width: 26rem;
+		color: var(--muted-foreground);
+		font-size: 0.9375rem;
 		line-height: 1.5;
 	}
 
 	.invite-btn {
-		margin-top: 1rem;
-		font-size: 1rem;
-		font-weight: 500;
-		color: var(--primary-foreground);
-		background-color: var(--primary);
-		border: none;
-		border-radius: 10rem;
-		padding: 0.5rem 1.5rem;
-		letter-spacing: 0.4px;
-		outline: none;
-		cursor: pointer;
-		transition: background-color 0.15s ease;
 		display: flex;
 		align-items: center;
 		gap: 0.375rem;
+		padding: 0.5rem 1.5rem;
+		margin-top: 1rem;
+		border: none;
+		border-radius: 10rem;
+		background-color: var(--primary);
+		color: var(--primary-foreground);
+		font-size: 1rem;
+		font-weight: 500;
+		letter-spacing: 0.4px;
+		transition: background-color 0.15s ease;
 		transition: padding 0.15s ease;
+		cursor: pointer;
+		outline: none;
 	}
+
 	.invite-btn:hover {
-		background-color: var(--primary-hov);
 		padding: 0.5rem 1.75rem;
+		background-color: var(--primary-hov);
 	}
 
-	@keyframes --appear-animation {
-		from {
-			opacity: 0;
-			transform: scale(0.6);
-		}
-
-		to {
-			opacity: 1;
-			transform: scale(1);
-		}
-	}
 </style>

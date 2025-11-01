@@ -26,21 +26,24 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		width: 100%;
 		padding: 2rem 1rem;
 		border-radius: 0.5rem;
 		background-color: var(--err-back);
 		color: var(--err-foreground);
 		place-self: center center;
 		aspect-ratio: var(--voki-cover-aspect-ratio);
-		width: 100%;
 	}
+
 	.unable-to-load  * {
 		cursor: default;
 	}
+
 	.unable-to-load-msg {
 		font-size: 1.125rem;
 		font-weight: 450;
 	}
+
 	.voki-not-found  {
 		font-size: 2rem;
 		font-weight: 500;

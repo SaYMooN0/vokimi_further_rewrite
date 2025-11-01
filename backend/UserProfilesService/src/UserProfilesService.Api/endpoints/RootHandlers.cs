@@ -10,6 +10,7 @@ internal static class RootHandlers
     internal static void MapRootHandlers(this IEndpointRouteBuilder endpoints) {
         var group = endpoints.MapGroup("/");
 
+
         group.MapGet("/basic-setup-info", GetUserBasicSetupInfo)
             .WithAuthenticationRequired();
 
@@ -44,4 +45,6 @@ internal static class RootHandlers
 
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
+
+   
 }

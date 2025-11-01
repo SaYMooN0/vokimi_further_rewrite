@@ -69,9 +69,9 @@
 <style>
 	.context-menu {
 		position: absolute;
-		background: var(--secondary);
-		border-radius: var(--radius);
-		box-shadow: var(--shadow-md);
 		padding: 0.5rem;
+		border-radius: var(--radius);
+		background: var(--secondary);
+		box-shadow: var(--shadow-md);
 	}
 </style>

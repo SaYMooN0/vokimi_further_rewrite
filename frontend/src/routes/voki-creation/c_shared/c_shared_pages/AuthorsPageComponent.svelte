@@ -60,7 +60,7 @@
 	.authors-tab-container {
 		display: flex;
 		flex-direction: column;
-		padding-top: 1rem;
 		gap: 0.5rem;
+		padding-top: 1rem;
 	}
 </style>

@@ -5,49 +5,46 @@
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { useDebounce } from 'runed';
 
+	interface Props {
+		searchedUsers: UserProfilePreview[];
+		searchBarInputVal: string;
+	}
+
+	let { searchedUsers = $bindable(), searchBarInputVal = $bindable() }: Props = $props();
+
 	let errs = $state<Err[]>([]);
-	let searchedUsers = $state<UserProfilePreview[]>([]);
-	let searchInput: string = $state('');
 	let inputEl: HTMLInputElement;
 
 	function onResetClick(event: MouseEvent) {
 		setTimeout(() => {
 			inputEl.focus();
 		});
-		searchInput = '';
+		searchBarInputVal = '';
+		searchedUsers = [];
 		event.stopPropagation();
 	}
 
 	const performSearch = useDebounce(async () => {
-		const value = searchInput.trim();
+		const value = searchBarInputVal.trim();
 
 		if (value === '') {
 			searchedUsers = [];
 			errs = [];
 			return;
 		}
-		const response = await ApiUserProfiles.fetchJsonResponse<{ users: UserProfilePreview[] }>(
-			`/search?searchValue=${value}`,
+		const response = await ApiUserProfiles.fetchJsonResponse<{  users: Record<string, UserProfilePreview> }>(
+			`/users/search?searchValue=${value}&limit=20`,
 			{ method: 'GET' }
 		);
 
 		if (response.isSuccess) {
-			searchedUsers = response.data.users;
+			searchedUsers = Object.values(response.data.users);
 			errs = [];
 		} else {
 			searchedUsers = [];
 			errs = response.errs;
 		}
-	}, 260);
-	export function IsInputEmpty() {
-		return searchInput.trim() === '';
-	}
-	export function SearchingErrs() {
-		return errs;
-	}
-	export function SearchedUsers() {
-		return searchedUsers;
-	}
+	}, 300);
 </script>
 
 <div class="search-bar">
@@ -66,7 +63,7 @@
 	</svg>
 	<input
 		placeholder="Search for users..."
-		bind:value={searchInput}
+		bind:value={searchBarInputVal}
 		bind:this={inputEl}
 		oninput={() => performSearch()}
 		name={'users-search-' + StringUtils.rndStr(12)}

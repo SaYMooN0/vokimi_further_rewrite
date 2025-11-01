@@ -45,4 +45,44 @@ public class AppUsersRepository : IAppUsersRepository
             .Select(u => new UserPreviewDto(u.Id, u.UniqueName, u.DisplayName, u.ProfilePic))
             .ToArrayAsync(ct);
     }
+
+    public async Task<UserPreviewDto[]> SearchByNameQuery(
+        string searchValue, int limit, CancellationToken ct) {
+        int queryLimit = Math.Min(limit, 100);
+        if (string.IsNullOrWhiteSpace(searchValue)) {
+            return [];
+        }
+
+        string normalized = searchValue.Trim().ToLowerInvariant();
+        bool startsWithAt = normalized.StartsWith('@');
+        string searchWithoutAt = startsWithAt ? normalized[1..] : normalized;
+
+        string pattern = $"%{searchWithoutAt}%";
+
+        string exactDisplayLike = $"{normalized} %"; // display_name + space
+        string exactUniqueLike = $"% {searchWithoutAt}"; // space + unique_name
+
+        var query = _db.AppUsers
+            .AsNoTracking()
+            .Where(u =>
+                EF.Functions.ILike(EF.Property<string>(u, "SearchableName"), pattern)
+            )
+            .Select(u => new {
+                User = u,
+                ExactMatch =
+                    EF.Functions.ILike(EF.Property<string>(u, "SearchableName"), exactDisplayLike) ||
+                    EF.Functions.ILike(EF.Property<string>(u, "SearchableName"), exactUniqueLike)
+            })
+            .OrderByDescending(x => x.ExactMatch)
+            .ThenBy(x => x.User.DisplayName)
+            .Take(queryLimit)
+            .Select(x => new UserPreviewDto(
+                x.User.Id,
+                x.User.UniqueName,
+                x.User.DisplayName,
+                x.User.ProfilePic
+            ));
+
+        return await query.ToArrayAsync(ct);
+    }
 }

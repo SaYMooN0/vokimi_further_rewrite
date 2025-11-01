@@ -1,13 +1,14 @@
 ﻿using InfrastructureShared.Base.persistence.extensions;
 using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedKernel.common.app_users;
 using UserProfilesService.Domain.app_user_aggregate;
 using UserProfilesService.Infrastructure.persistence.configurations.extensions;
 using UserProfilesService.Infrastructure.persistence.configurations.value_converters;
 
 namespace UserProfilesService.Infrastructure.persistence.configurations.entities_configurations;
-
 
 internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 {
@@ -21,11 +22,25 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 
         builder
             .Property(x => x.UniqueName)
-            .HasConversion<UserUniqueNameConverter>();
+            .HasConversion<UserUniqueNameConverter>()
+            .HasColumnName("UniqueName")
+            .HasColumnType($"varchar({UserUniqueName.MaxLength + 10})")
+            .IsRequired();
 
         builder
             .Property(x => x.DisplayName)
-            .HasConversion<UserDisplayNameConverter>();
+            .HasConversion<UserDisplayNameConverter>()
+            .HasColumnName("DisplayName")
+            .HasColumnType($"varchar({UserDisplayName.MaxLength + 10})")
+            .IsRequired();
+
+        builder.Property<string>("SearchableName")
+            .HasColumnName("searchable_name")
+            .HasColumnType("text")
+            .HasComputedColumnSql("lower(\"UniqueName\" || ' ' || \"DisplayName\")", stored: true)
+            .ValueGeneratedOnAddOrUpdate()
+            .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
+
 
         builder
             .Property(x => x.ProfilePic)
@@ -44,5 +59,7 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
                 .Property(d => d.AllowCoAuthorInvites)
                 .HasColumnName("settings_AllowCoAuthorInvites");
         });
+        
+       
     }
 }

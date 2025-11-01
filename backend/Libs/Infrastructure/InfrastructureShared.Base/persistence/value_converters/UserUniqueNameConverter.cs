@@ -6,7 +6,7 @@ namespace InfrastructureShared.Base.persistence.value_converters;
 public class UserUniqueNameConverter : ValueConverter<UserUniqueName, string>
 {
     public UserUniqueNameConverter() : base(
-        id => id.ToString(),
+        id => id.Value,
         value => UserUniqueName.Create(value).AsSuccess()
     ) { }
 }

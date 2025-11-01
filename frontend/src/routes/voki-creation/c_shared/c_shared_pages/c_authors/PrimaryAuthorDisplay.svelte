@@ -63,19 +63,19 @@
 	.primary-author-container {
 		position: relative;
 		display: grid;
-		grid-template-columns: auto 1fr;
 		align-items: center;
+		gap: 0.5rem;
 		width: 100%;
+		height: calc(5rem + 5vh);
 		min-height: calc(4rem + 5vh);
-		padding: 0.75rem 1rem 0.75rem;
+		padding: 0.75rem 1rem;
+		border: 0.125rem solid transparent;
+		border: 0.125rem solid var(--back);
 		border-radius: 1rem;
 		background: var(--back);
-		border: 0.125rem solid transparent;
 		box-shadow: var(--shadow-xs), var(--shadow-md);
 		animation: var(--default-fade-in);
-		height: calc(5rem + 5vh);
-		border: 0.125rem solid var(--back);
-		gap: 0.5rem;
+		grid-template-columns: auto 1fr;
 	}
 
 	.primary-author-container.viewer-is-primary-author {
@@ -86,18 +86,20 @@
 	.prim-author-label {
 		position: absolute;
 		top: 0%;
-		transform: translateY(calc(-50% - 0.125rem));
 		left: 2rem;
-		padding: 0rem 0.25rem;
+		padding: 0 0.25rem;
+		border-radius: 10rem;
+		background: var(--back);
+		color: var(--text);
 		font-size: 1rem;
 		font-weight: 450;
-		background: var(--back);
-		border-radius: 10rem;
-		color: var(--text);
+		transform: translateY(calc(-50% - 0.125rem));
 	}
+
 	.viewer-is-primary-author > .prim-author-label {
 		color: var(--primary);
 	}
+
 	.profile-pic {
 		aspect-ratio: 1;
 		height: 100%;
@@ -113,29 +115,30 @@
 	}
 
 	.display-name {
+		color: var(--text);
 		font-size: calc(1.25rem + 0.5vh);
 		font-weight: 600;
-		color: var(--text);
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
 
 	.unique-name {
-		font-size: 1.125rem;
 		color: var(--muted-foreground);
+		font-size: 1.125rem;
+		font-weight: 425;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		font-weight: 425;
 	}
+
 	.unique-name:hover {
 		color: var(--primary);
 	}
 
 	.created-voki-date {
 		margin-top: calc(0.125rem + 0.5vh);
-		font-size: 1rem;
 		color: var(--secondary-foreground);
+		font-size: 1rem;
 	}
 
 	.loading {
@@ -148,10 +151,11 @@
 		background: var(--secondary);
 		box-shadow: var(--shadow-xs);
 	}
+
 	.loading > .main-content {
-		margin-left: 0.5rem;
-		height: 80%;
 		width: 90%;
+		height: 80%;
+		margin-left: 0.5rem;
 		border-radius: 1.5rem;
 	}
 
@@ -159,6 +163,7 @@
 		0% {
 			transform: translateX(-70%);
 		}
+
 		100% {
 			transform: translateX(70%);
 		}
@@ -181,20 +186,16 @@
 	}
 
 	.primary-author-container.err {
+		border: 0.125rem solid transparent;
 		background:
 			linear-gradient(var(--err-back), var(--err-back)) padding-box,
 			linear-gradient(135deg, var(--err-foreground), var(--accent)) border-box;
-		border: 0.125rem solid transparent;
 		box-shadow: var(--err-shadow);
 	}
 
 	.err-view {
+		padding: 0.5rem 0.75rem;
 		background: var(--err-back);
 		color: var(--err-foreground);
-		padding: 0.5rem 0.75rem;
-		border-radius: var(--radius);
-		border: 0.09375rem solid var(--muted);
-		box-shadow: var(--shadow-xs);
-		font-size: 0.9375rem;
 	}
 </style>

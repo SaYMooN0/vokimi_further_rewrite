@@ -4,10 +4,10 @@ namespace SharedKernel.common.app_users;
 
 public class UserUniqueName : ValueObject
 {
-    private readonly string _value;
+    public readonly string Value;
 
     private const int MinLength = 6;
-    private const int MaxLength = 24;
+    public const int MaxLength = 24;
 
     private static readonly Regex AllowedCharsRegex = new(
         "^[A-Za-z0-9._~-]+$", RegexOptions.Compiled
@@ -22,12 +22,12 @@ public class UserUniqueName : ValueObject
 
     public UserUniqueName(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(value));
-        _value = value;
+        Value = value;
     }
 
-    public override string ToString() => _value;
+    public override string ToString() => Value;
 
-    public override IEnumerable<object> GetEqualityComponents() => [_value];
+    public override IEnumerable<object> GetEqualityComponents() => [Value];
 
     public static ErrOr<UserUniqueName> Create(string value) =>
         CheckForErr(value).IsErr(out var err) ? err : new UserUniqueName(value);

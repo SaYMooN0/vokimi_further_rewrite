@@ -1,5 +1,5 @@
 export type UserProfilePreview = {
-    userId: string;
+   id: string;
     uniqueName: string;
     displayName: string;
     profilePic: string;

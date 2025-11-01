@@ -15,6 +15,8 @@ public interface IAppUsersRepository
     public Task<UserPreviewDto[]> GetUserNamesWithProfilePics(
         IEnumerable<AppUserId> userIds, CancellationToken ct
     );
+
+    Task<UserPreviewDto[]> SearchByNameQuery(string searchValue, int limit, CancellationToken ct);
 }
 
 public record UserPreviewDto(

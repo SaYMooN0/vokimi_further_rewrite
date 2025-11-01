@@ -1,20 +1,15 @@
 import { ApiUserProfiles, RJO } from "../backend-communication/backend-services";
 import type { Err } from "../err";
+import type { UserProfilePreview } from "../users";
 
-export type UserPreviewData = {
-    id: string;
-    uniqueName: string;
-    displayName: string;
-    profilePic: string;
-};
 
 export namespace UsersStore {
-    export type UserPreviewDataWithState =
+    export type UserProfilePreviewWithState =
         | { state: "loading" }
-        | { state: "ok"; data: UserPreviewData }
+        | { state: "ok"; data: UserProfilePreview }
         | { state: "errs"; errs: Err[] };
 
-    type StateObj = { state: "loading" | "ok" | "errs"; data?: UserPreviewData; errs?: Err[] };
+    type StateObj = { state: "loading" | "ok" | "errs"; data?: UserProfilePreview; errs?: Err[] };
     type CacheEntry = { obj: StateObj; expiresAt: number };
 
     const TTL_MS = 10 * 60 * 1000;
@@ -28,22 +23,22 @@ export namespace UsersStore {
     let timer: ReturnType<typeof setTimeout> | undefined;
 
 
-    export function Get(id: string): UserPreviewDataWithState {
+    export function Get(id: string): UserProfilePreviewWithState {
         const now = Date.now();
         const cached = cache.get(id);
 
         if (cached && cached.expiresAt > now) {
-            return cached.obj as UserPreviewDataWithState;
+            return cached.obj as UserProfilePreviewWithState;
         }
 
         return GetWithForceRefresh(id);
     }
 
-    export function GetWithForceRefresh(id: string): UserPreviewDataWithState {
+    export function GetWithForceRefresh(id: string): UserProfilePreviewWithState {
         const entry = ensureCacheEntry(id);
         setLoading(entry);
         enqueue(id);
-        return entry.obj as UserPreviewDataWithState;
+        return entry.obj as UserProfilePreviewWithState;
     }
 
     export function Invalidate(id: string): void {
@@ -80,7 +75,7 @@ export namespace UsersStore {
 
     async function fetchAndApplyChunk(ids: string[]): Promise<void> {
         try {
-            const response = await ApiUserProfiles.fetchJsonResponse<{ users: Record<string, UserPreviewData> }>(
+            const response = await ApiUserProfiles.fetchJsonResponse<{ users: Record<string, UserProfilePreview> }>(
                 "/users/preview", RJO.POST({ userIds: ids })
             );
 
@@ -137,7 +132,7 @@ export namespace UsersStore {
         delete entry.obj.errs;
     }
 
-    function updateOk(entry: CacheEntry, data: UserPreviewData): void {
+    function updateOk(entry: CacheEntry, data: UserProfilePreview): void {
         entry.obj.state = "ok";
         entry.obj.data = data;
         delete entry.obj.errs;
