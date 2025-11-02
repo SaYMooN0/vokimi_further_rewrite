@@ -17,6 +17,6 @@ internal sealed class GetCurrentUserQueryHandler : IQueryHandler<GetCurrentUserQ
     }
 
     public async Task<ErrOr<AppUser>> Handle(GetCurrentUserQuery query, CancellationToken ct) {
-        return (await _appUsersRepository.GetByIdAsNoTracking(_userContext.AuthenticatedUserId))!;
+        return (await _appUsersRepository.GetByIdAsNoTracking(_userContext.AuthenticatedUserId, ct))!;
     }
 }

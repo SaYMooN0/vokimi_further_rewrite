@@ -20,9 +20,9 @@ internal sealed class DeclineCoAuthorInviteCommandHandler :
 
 
     public async Task<ErrOr<ImmutableArray<VokiId>>> Handle(DeclineCoAuthorInviteCommand command, CancellationToken ct) {
-        AppUser user = (await _appUsersRepository.GetById(_userContext.AuthenticatedUserId))!;
+        AppUser user = (await _appUsersRepository.GetById(_userContext.AuthenticatedUserId, ct))!;
         user.DeclineCoAuthorInvite(command.VokiId);
-        await _appUsersRepository.Update(user);
+        await _appUsersRepository.Update(user, ct);
         return user.InvitedToCoAuthorVokiIds.ToImmutableArray();
     }
 }

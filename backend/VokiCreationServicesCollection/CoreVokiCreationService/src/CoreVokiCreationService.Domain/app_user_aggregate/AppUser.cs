@@ -23,7 +23,7 @@ public class AppUser : AggregateRoot<AppUserId>
         InitializedVokiIds = InitializedVokiIds.Add(vokiId);
     }
 
-    public ErrOrNothing InviteToCoAuthor(VokiId vokiId) {
+    public ErrOrNothing InviteForCoAuthor(VokiId vokiId) {
         if (InitializedVokiIds.Contains(vokiId)) {
             return ErrFactory.Conflict("User cannot be invite to co-author in voki that they have initialized");
         }

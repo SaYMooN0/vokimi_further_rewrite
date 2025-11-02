@@ -1,19 +1,19 @@
 <script lang="ts">
-	import type { UserProfilePreview } from '$lib/ts/users';
+	import type { UserPreviewWithInvitesSettings } from '../../types';
 
 	interface Props {
 		isInputEmpty: boolean;
-		searchedUsers: UserProfilePreview[];
-		isUserAlreadyCoAuthor: (userId: string) => boolean;
-		isUserInvitedForCoAuthor: (userId: string) => boolean;
-		inviteUser: (userId: string) => Promise<void>;
+		isUserCoAuthor: (userId: string) => boolean;
+		isUserAlreadyInvited: (userId: string) => boolean;
+		isUserInListToInvite: (userId: string) => boolean;
+		userOptions: UserPreviewWithInvitesSettings[];
 	}
 	let {
 		isInputEmpty,
-		searchedUsers,
-		isUserAlreadyCoAuthor,
-		isUserInvitedForCoAuthor,
-		inviteUser
+		isUserCoAuthor,
+		isUserAlreadyInvited,
+		isUserInListToInvite,
+		userOptions
 	}: Props = $props();
 </script>
 
@@ -36,7 +36,7 @@
 		<p class="empty-state-title">Use input above to search for users</p>
 		<p class="empty-state-subtitle">Search by display name or @uniqueName</p>
 	</div>
-{:else if searchedUsers.length === 0}
+{:else if userOptions.length === 0}
 	<div class="empty-state">
 		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
 			<path
@@ -64,10 +64,20 @@
 	</div>
 {:else}
 	<div class="users-list">
-		{#each searchedUsers as user}
+		{#each userOptions as user}
 			<div class="user">
-				{JSON.stringify(user)}
-				<button class="invite-btn" onclick={() => inviteUser(user.id)}>Invite</button>
+				<div class="user-diplay">
+					{JSON.stringify(user)}
+				</div>
+				<div class="badge">
+					{#if isUserCoAuthor(user.id)}
+						<span>Co-author</span>
+					{:else if isUserAlreadyInvited(user.id)}
+						<span>Already invited</span>
+					{:else}
+						checkbox
+					{/if}
+				</div>
 			</div>
 		{/each}
 	</div>
@@ -102,9 +112,9 @@
 		font-size: 0.9375rem;
 		line-height: 1.5;
 	}
-    .user{
-        background-color: darkblue;
-        height: 3rem;
-        width: 2rem;
-    }
+	.user {
+		background-color: darkblue;
+		height: 3rem;
+		width: 2rem;
+	}
 </style>

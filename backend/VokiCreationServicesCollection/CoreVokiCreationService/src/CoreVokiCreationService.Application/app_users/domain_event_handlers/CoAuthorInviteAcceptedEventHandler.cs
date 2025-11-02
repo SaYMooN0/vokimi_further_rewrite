@@ -13,9 +13,9 @@ internal class CoAuthorInviteAcceptedEventHandler : IDomainEventHandler<CoAuthor
     }
 
     public async Task Handle(CoAuthorInviteAcceptedEvent e, CancellationToken ct) {
-        AppUser user = (await _appUsersRepository.GetById(e.AppUserId))!;
+        AppUser user = (await _appUsersRepository.GetById(e.AppUserId, ct))!;
         var res = user.AcceptCoAuthorInvite(e.VokiId);
         UnexpectedBehaviourException.ThrowIfErr(res);
-       await _appUsersRepository.Update(user);
+       await _appUsersRepository.Update(user, ct);
     }
 }

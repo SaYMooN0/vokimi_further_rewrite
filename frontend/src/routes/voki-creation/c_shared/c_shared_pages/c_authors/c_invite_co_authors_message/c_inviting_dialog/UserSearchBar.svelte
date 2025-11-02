@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { ApiUserProfiles } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
-	import type { UserProfilePreview } from '$lib/ts/users';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { useDebounce } from 'runed';
+	import type { UserPreviewWithInvitesSettings } from '../../types';
 
 	interface Props {
-		searchedUsers: UserProfilePreview[];
+		searchedUsers: UserPreviewWithInvitesSettings[];
 		searchBarInputVal: string;
 	}
 
@@ -32,13 +32,12 @@
 			errs = [];
 			return;
 		}
-		const response = await ApiUserProfiles.fetchJsonResponse<{  users: Record<string, UserProfilePreview> }>(
-			`/users/search?searchValue=${value}&limit=20`,
-			{ method: 'GET' }
-		);
+		const response = await ApiUserProfiles.fetchJsonResponse<{
+			users: UserPreviewWithInvitesSettings[];
+		}>(`/users/search?searchValue=${value}&limit=20`, { method: 'GET' });
 
 		if (response.isSuccess) {
-			searchedUsers = Object.values(response.data.users);
+			searchedUsers = response.data.users;
 			errs = [];
 		} else {
 			searchedUsers = [];

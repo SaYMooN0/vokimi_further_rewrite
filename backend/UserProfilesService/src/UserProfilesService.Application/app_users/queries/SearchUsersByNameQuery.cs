@@ -7,7 +7,7 @@ public sealed record SearchUsersByNameQuery(
     string SearchValue,
     int Limit
 ) :
-    IQuery<UserPreviewDto[]>,
+    IQuery<UserPreviewWithAllowInvitesSettingDto[]>,
     IWithBasicValidationStep
 {
     public ErrOrNothing Validate() {
@@ -20,7 +20,7 @@ public sealed record SearchUsersByNameQuery(
 }
 
 internal sealed class SearchUsersByNameQueryHandler :
-    IQueryHandler<SearchUsersByNameQuery, UserPreviewDto[]>
+    IQueryHandler<SearchUsersByNameQuery, UserPreviewWithAllowInvitesSettingDto[]>
 {
     private readonly IAppUsersRepository _appUsersRepository;
 
@@ -29,6 +29,6 @@ internal sealed class SearchUsersByNameQueryHandler :
     }
 
 
-    public async Task<ErrOr<UserPreviewDto[]>> Handle(SearchUsersByNameQuery query, CancellationToken ct) =>
-        await _appUsersRepository.SearchByNameQuery(query.SearchValue, query.Limit, ct);
+    public async Task<ErrOr<UserPreviewWithAllowInvitesSettingDto[]>> Handle(SearchUsersByNameQuery query, CancellationToken ct) =>
+        await _appUsersRepository.SearchToInviteByNameQuery(query.SearchValue, query.Limit, ct);
 }

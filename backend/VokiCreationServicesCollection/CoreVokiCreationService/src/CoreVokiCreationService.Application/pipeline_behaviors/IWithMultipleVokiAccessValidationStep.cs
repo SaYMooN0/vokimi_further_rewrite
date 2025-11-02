@@ -32,7 +32,7 @@ internal static class WithMultipleVokiAccessValidationStepHandler
 
         public async Task<ErrOr<TResponse>> Handle(TCommand command, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            AppUser user = (await _appUsersRepository.GetByIdAsNoTracking(userId))!;
+            AppUser user = (await _appUsersRepository.GetByIdAsNoTracking(userId, ct))!;
 
             var allAccessibleVokiIds = user.InitializedVokiIds
                 .Concat(user.CoAuthoredVokiIds)
@@ -66,7 +66,7 @@ internal static class WithMultipleVokiAccessValidationStepHandler
 
         public async Task<ErrOrNothing> Handle(TCommand command, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            AppUser user = (await _appUsersRepository.GetByIdAsNoTracking(userId))!;
+            AppUser user = (await _appUsersRepository.GetByIdAsNoTracking(userId, ct))!;
 
             var allAccessibleVokiIds = user.InitializedVokiIds
                 .Concat(user.CoAuthoredVokiIds)
@@ -100,7 +100,7 @@ internal static class WithMultipleVokiAccessValidationStepHandler
 
         public async Task<ErrOr<TResponse>> Handle(TQuery query, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            AppUser user = (await _appUsersRepository.GetByIdAsNoTracking(userId))!;
+            AppUser user = (await _appUsersRepository.GetByIdAsNoTracking(userId, ct))!;
 
             var allAccessibleVokiIds = user.InitializedVokiIds
                 .Concat(user.CoAuthoredVokiIds)

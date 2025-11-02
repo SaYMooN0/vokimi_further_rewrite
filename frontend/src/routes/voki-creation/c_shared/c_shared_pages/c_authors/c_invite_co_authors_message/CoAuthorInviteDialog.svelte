@@ -4,6 +4,8 @@
 	import UserSearchBar from './c_inviting_dialog/UserSearchBar.svelte';
 	import SearchedUsersListDisplay from './c_inviting_dialog/SearchedUsersListDisplay.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
+	import type { UserPreviewWithInvitesSettings } from '../types';
+	import { SvelteSet } from 'svelte/reactivity';
 	interface Props {
 		maxCoAuthorsCount: number;
 		coAuthorIds: string[];
@@ -21,23 +23,14 @@
 	}: Props = $props();
 
 	let dialog = $state<DialogWithCloseButton>()!;
-	let searchedUsers = $state<UserProfilePreview[]>([]);
+	let searchedUsers = $state<UserPreviewWithInvitesSettings[]>([]);
 	let searchBarInputVal = $state('');
 	export function open() {
 		dialog.open();
 	}
-	async function inviteUser(userId: string) {
-		// const response = await ApiVokiCreationCore.fetchJsonResponse<VokiCreationAuthorsInfo>(
-		// 	`/vokis/${vokiId}/invite-co-author`,
-		// 	RJO.POST({ newCoAuthorId: userId })
-		// );
-		// if (response.isSuccess) {
-		// 	updateParent(response.data);
-		// 	isAlreadyInvited = true;
-		// 	invitedUserId = userId;
-		// } else {
-		// 	errs = response.errs;
-		// }
+	let usersChosenToInvite = new SvelteSet<UserPreviewWithInvitesSettings>([]);
+	function isUserInListToInvite(userId: string) {
+		return [...usersChosenToInvite].some((u) => u.id === userId);
 	}
 </script>
 
@@ -50,12 +43,23 @@
 	>
 	<SearchedUsersListDisplay
 		isInputEmpty={StringUtils.isNullOrWhiteSpace(searchBarInputVal)}
-		{searchedUsers}
-		isUserAlreadyCoAuthor={coAuthorIds.includes}
-		isUserInvitedForCoAuthor={invitedForCoAuthorUserIds.includes}
-		{inviteUser}
+		userOptions={searchedUsers}
+		isUserCoAuthor={coAuthorIds.includes}
+		isUserAlreadyInvited={invitedForCoAuthorUserIds.includes}
+		{isUserInListToInvite}
 	/>
-
+	<div class="confirm-btn-container">
+		{#if usersChosenToInvite.size > 0}
+			<label>Choose users to invite</label>
+		{:else}
+			<button>Invite {usersChosenToInvite.size} users for co-author</button>
+			<label
+				>{Array.from(usersChosenToInvite)
+					.map((u) => `@${u.uniqueName}`)
+					.join(', ')} will be invited</label
+			>
+		{/if}
+	</div>
 	<label class="note"
 		>Note: invited user will see the type, name, cover and other main details of this Voki</label
 	>

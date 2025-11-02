@@ -13,8 +13,8 @@ internal class CoAuthorInviteCanceledEventHandler : IDomainEventHandler<CoAuthor
     }
 
     public async Task Handle(CoAuthorInviteCanceledEvent e, CancellationToken ct) {
-        AppUser user = (await _appUsersRepository.GetById(e.AppUserId))!;
+        AppUser user = (await _appUsersRepository.GetById(e.AppUserId, ct))!;
         user.RemoveInvitedToCoAuthorVoki(e.VokiId);
-        await _appUsersRepository.Update(user);
+        await _appUsersRepository.Update(user, ct);
     }
 }

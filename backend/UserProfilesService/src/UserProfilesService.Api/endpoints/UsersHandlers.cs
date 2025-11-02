@@ -12,7 +12,7 @@ public static class UsersHandlers
         group.MapPost("/preview", GetUserPreviewData)
             .WithRequestValidation<UsersPreviewRequest>();
         
-        group.MapGet("/search", SearchUsersByName);
+        group.MapGet("/search-to-invite", SearchUsersToInviteByName);
 
     }
 
@@ -27,14 +27,14 @@ public static class UsersHandlers
 
         return CustomResults.FromErrOrToJson<UserPreviewDto[], MultipleUsersPreviewResponse>(result);
     }
-    private static async Task<IResult> SearchUsersByName(
+    private static async Task<IResult> SearchUsersToInviteByName(
         string searchValue, int limit,
         HttpContext httpContext, CancellationToken ct,
-        IQueryHandler<SearchUsersByNameQuery, UserPreviewDto[]> handler
+        IQueryHandler<SearchUsersByNameQuery, UserPreviewWithAllowInvitesSettingDto[]> handler
     ) {
         SearchUsersByNameQuery query = new(searchValue, limit);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<UserPreviewDto[], MultipleUsersPreviewResponse>(result);
+        return CustomResults.FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
     }
 }   

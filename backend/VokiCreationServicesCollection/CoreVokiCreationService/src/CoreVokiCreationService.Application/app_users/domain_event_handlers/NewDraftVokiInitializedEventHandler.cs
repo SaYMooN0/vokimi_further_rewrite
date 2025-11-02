@@ -13,8 +13,8 @@ internal class NewDraftVokiInitializedEventHandler : IDomainEventHandler<NewDraf
     }
 
     public async Task Handle(NewDraftVokiInitializedEvent e, CancellationToken ct) {
-        AppUser initiator = (await _appUsersRepository.GetById(e.PrimaryAuthorId))!;
+        AppUser initiator = (await _appUsersRepository.GetById(e.PrimaryAuthorId, ct))!;
         initiator.AddInitializedVoki(e.VokiId);
-        await _appUsersRepository.Update(initiator);
+        await _appUsersRepository.Update(initiator, ct);
     }
 }

@@ -64,24 +64,39 @@ public class DraftVoki : AggregateRoot<VokiId>
         Name = newName;
     }
 
-    public ErrOrNothing InviteNewCoAuthor(AppUserId invitedUserId) {
-        if (PrimaryAuthorId == invitedUserId) {
-            return ErrFactory.Conflict("You cannot invite primary author of voki to be a co-author");
-        }
-
-        if (InvitedForCoAuthorUserIds.Contains(invitedUserId)) {
+    public ErrOrNothing InviteCoAuthors(ImmutableHashSet<AppUserId> userIdsToInvite) {
+        if (userIdsToInvite.Count == 0) {
             return ErrOrNothing.Nothing;
         }
 
-        int totalCoAuthors = CoAuthorIds.Count + InvitedForCoAuthorUserIds.Count;
-        if (totalCoAuthors >= VokiRules.MaxCoAuthors) {
-            return ErrFactory.LimitExceeded($"Voki cannot have more than {VokiRules.MaxCoAuthors} co-authors");
+        if (userIdsToInvite.Contains(PrimaryAuthorId)) {
+            return ErrFactory.Conflict("You cannot invite the primary author of this Voki to be a co-author");
         }
 
-        InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Add(invitedUserId);
-        AddDomainEvent(new CoAuthorInviteCreatedEvent(invitedUserId, this.Id));
+        ImmutableHashSet<AppUserId> newInvitedNotAlreadyCoAuthors = userIdsToInvite.Except(CoAuthorIds);
+
+        if (newInvitedNotAlreadyCoAuthors.Count == 0) {
+            return ErrFactory.Conflict("All selected users are already co-authors");
+        }
+
+        ImmutableHashSet<AppUserId> uniqueNewInvites = newInvitedNotAlreadyCoAuthors.Except(InvitedForCoAuthorUserIds);
+
+        if (uniqueNewInvites.Count == 0) {
+            return ErrOrNothing.Nothing;
+        }
+
+        int totalAfterInvites = CoAuthorIds.Count + InvitedForCoAuthorUserIds.Count + uniqueNewInvites.Count;
+        if (totalAfterInvites > VokiRules.MaxCoAuthors) {
+            return ErrFactory.LimitExceeded(
+                $"Voki cannot have more than {VokiRules.MaxCoAuthors} co-authors (including invited)"
+            );
+        }
+
+        InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Union(uniqueNewInvites);
+        AddDomainEvent(new NewUsersInvitedForCoAuthorEvent(uniqueNewInvites, this.Id));
         return ErrOrNothing.Nothing;
     }
+
 
     public ErrOrNothing AcceptInviteBy(AppUserId userId) {
         if (CoAuthorIds.Contains(userId)) {

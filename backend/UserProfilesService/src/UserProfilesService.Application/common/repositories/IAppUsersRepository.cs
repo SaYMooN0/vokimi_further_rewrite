@@ -16,7 +16,7 @@ public interface IAppUsersRepository
         IEnumerable<AppUserId> userIds, CancellationToken ct
     );
 
-    Task<UserPreviewDto[]> SearchByNameQuery(string searchValue, int limit, CancellationToken ct);
+    Task<UserPreviewWithAllowInvitesSettingDto[]> SearchToInviteByNameQuery(string searchValue, int limit, CancellationToken ct);
 }
 
 public record UserPreviewDto(
@@ -24,4 +24,12 @@ public record UserPreviewDto(
     UserUniqueName UniqueName,
     UserDisplayName DisplayName,
     UserProfilePicKey ProfilePicKey
+);
+
+public record UserPreviewWithAllowInvitesSettingDto(
+    AppUserId UserId,
+    UserUniqueName UniqueName,
+    UserDisplayName DisplayName,
+    UserProfilePicKey ProfilePicKey,
+    AllowCoAuthorInvitesSettingValue AllowCoAuthorInvites
 );

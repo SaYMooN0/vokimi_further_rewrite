@@ -4,7 +4,10 @@ using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
 namespace CoreVokiCreationService.Application.draft_vokis.commands.invites;
 
-public sealed record InviteCoAuthorCommand(VokiId VokiId, AppUserId NewCoAuthorId) :
+public sealed record InviteCoAuthorCommand(
+    VokiId VokiId,
+    ImmutableHashSet<AppUserId> UserIdsToInvite
+) :
     ICommand<DraftVoki>,
     IWithVokiPrimaryAuthorValidationStep;
 
@@ -20,9 +23,8 @@ internal sealed class InviteCoAuthorCommandHandler :
 
     public async Task<ErrOr<DraftVoki>> Handle(InviteCoAuthorCommand command, CancellationToken ct) {
         DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId))!;
-        ErrOrNothing result = voki.InviteNewCoAuthor(command.NewCoAuthorId);
-        if (result.IsErr(out var err))
-        {
+        ErrOrNothing result = voki.InviteCoAuthors(command.UserIdsToInvite);
+        if (result.IsErr(out var err)) {
             return err;
         }
 

@@ -18,8 +18,8 @@ public static class SpecificVokiHandlers
 
         group.MapDelete("/drop-co-author", DropCoAuthor)
             .WithRequestValidation<VokiCoAuthorActionRequest>();
-        group.MapPost("/invite-co-author", InviteCoAuthor)
-            .WithRequestValidation<VokiCoAuthorActionRequest>();
+        group.MapPost("/invite-co-authors", InviteCoAuthors)
+            .WithRequestValidation<InviteCoAuthorsRequest>();
         group.MapDelete("/cancel-co-author-invite", CancelCoAuthorInvite)
             .WithRequestValidation<VokiCoAuthorActionRequest>();
 
@@ -56,14 +56,14 @@ public static class SpecificVokiHandlers
         ));
     }
 
-    private static async Task<IResult> InviteCoAuthor(
+    private static async Task<IResult> InviteCoAuthors(
         HttpContext httpContext, CancellationToken ct,
         ICommandHandler<InviteCoAuthorCommand, DraftVoki> handler
     ) {
-        var request = httpContext.GetValidatedRequest<VokiCoAuthorActionRequest>();
+        var request = httpContext.GetValidatedRequest<InviteCoAuthorsRequest>();
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        InviteCoAuthorCommand command = new(vokiId, request.ParsedUserId);
+        InviteCoAuthorCommand command = new(vokiId, request.ParsedUserIds);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrToJson<DraftVoki, VokiCoAuthorsWithInvitedResponse>(result);
