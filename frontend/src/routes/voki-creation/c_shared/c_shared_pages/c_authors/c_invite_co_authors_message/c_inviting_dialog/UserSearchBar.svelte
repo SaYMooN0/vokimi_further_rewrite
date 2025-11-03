@@ -34,7 +34,7 @@
 		}
 		const response = await ApiUserProfiles.fetchJsonResponse<{
 			users: UserPreviewWithInvitesSettings[];
-		}>(`/users/search?searchValue=${value}&limit=20`, { method: 'GET' });
+		}>(`/users/search-to-invite?searchValue=${value}&limit=20`, { method: 'GET' });
 
 		if (response.isSuccess) {
 			searchedUsers = response.data.users;
@@ -76,22 +76,26 @@
 	.search-bar {
 		display: grid;
 		align-items: center;
-		width: 100%;
+		width: calc(100% - 2rem);
 		height: 2.25rem;
 		box-sizing: border-box;
 		padding: 0 0.5rem 0 0.75rem;
 		border: 0.125rem solid var(--secondary);
 		border-radius: 2rem;
 		background-color: var(--secondary);
-		transition: border-radius 0.15s ease-out;
+		transition:
+			border-radius 0.15s ease-out,
+			width 0.15s ease-out;
 		grid-template-columns: auto 1fr auto;
+		align-self: center;
+		place-self: center;
+		justify-self: center;
 	}
 
 	.search-bar:hover,
 	.search-bar:focus-within {
 		border-color: var(--primary);
 	}
-
 	.search-bar > input {
 		z-index: 2;
 		width: 100%;

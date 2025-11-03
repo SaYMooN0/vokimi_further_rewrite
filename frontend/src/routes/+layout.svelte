@@ -96,7 +96,7 @@
 
 	@media (1366px <= width <= 1535px) {
 		.page {
-			--width-limit: 80rem;
+			--width-limit: calc(78rem + 8vw);
 		}
 	}
 

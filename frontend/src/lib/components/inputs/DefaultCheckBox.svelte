@@ -1,16 +1,22 @@
 <script lang="ts">
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-
-	let {
-		checked = $bindable(),
-		id = StringUtils.rndStrWithPref('checkbox-')
-	}: { checked: boolean; id: string } = $props<{
+	interface Props {
 		checked: boolean;
 		id?: string;
-	}>();
+		parentOnlyControl?: boolean;
+	}
+	let {
+		checked = $bindable(),
+		id = StringUtils.rndStrWithPref('checkbox-'),
+		parentOnlyControl = false
+	}: Props = $props();
 </script>
 
-<input type="checkbox" {id} class="input" bind:checked />
+{#if parentOnlyControl}
+	<input type="checkbox" {id} class="input" {checked} />
+{:else}
+	<input type="checkbox" {id} class="input" bind:checked />
+{/if}
 <label for={id} class="cbx unselectable">
 	<span><svg viewBox="0 0 12 10"> <polyline points="1.5 6 4.5 9 10.5 1" /></svg></span>
 </label>

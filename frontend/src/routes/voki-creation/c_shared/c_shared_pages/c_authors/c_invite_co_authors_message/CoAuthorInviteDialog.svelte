@@ -1,13 +1,14 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
-	import type { UserProfilePreview } from '$lib/ts/users';
 	import UserSearchBar from './c_inviting_dialog/UserSearchBar.svelte';
 	import SearchedUsersListDisplay from './c_inviting_dialog/SearchedUsersListDisplay.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { UserPreviewWithInvitesSettings } from '../types';
 	import { SvelteSet } from 'svelte/reactivity';
+	import ConfirmInviteBtnContainer from './c_inviting_dialog/ConfirmInviteBtnContainer.svelte';
 	interface Props {
 		maxCoAuthorsCount: number;
+		primaryAuthorId: string;
 		coAuthorIds: string[];
 		invitedForCoAuthorUserIds: string[];
 		vokiId: string;
@@ -16,6 +17,7 @@
 
 	let {
 		maxCoAuthorsCount,
+		primaryAuthorId,
 		coAuthorIds,
 		invitedForCoAuthorUserIds,
 		vokiId,
@@ -28,38 +30,51 @@
 	export function open() {
 		dialog.open();
 	}
-	let usersChosenToInvite = new SvelteSet<UserPreviewWithInvitesSettings>([]);
+	let usersChosenToInvite: UserPreviewWithInvitesSettings[] = $state([]);
+
+	function addUserToInvite(user: UserPreviewWithInvitesSettings) {
+		if (!usersChosenToInvite.some((u) => u.id === user.id)) {
+			usersChosenToInvite = [...usersChosenToInvite, user];
+		}
+	}
+
+	function removeUserFromToInvite(user: UserPreviewWithInvitesSettings) {
+		usersChosenToInvite = usersChosenToInvite.filter((u) => u.id !== user.id);
+	}
+
 	function isUserInListToInvite(userId: string) {
-		return [...usersChosenToInvite].some((u) => u.id === userId);
+		return usersChosenToInvite.some((u) => u.id === userId);
+	}
+	function getUserInviteStateForVoki(
+		userId: string
+	): 'PrimaryAuthor' | 'CoAuthor' | 'AlreadyInvited' | 'CandidateToInvite' {
+		if (userId === primaryAuthorId) {
+			return 'PrimaryAuthor';
+		} else if (coAuthorIds.includes(userId)) {
+			return 'CoAuthor';
+		} else if (invitedForCoAuthorUserIds.includes(userId)) {
+			return 'AlreadyInvited';
+		} else {
+			return 'CandidateToInvite';
+		}
 	}
 </script>
 
 <DialogWithCloseButton dialogId="co-author-inviting-dialog" bind:this={dialog}>
 	<UserSearchBar bind:searchBarInputVal bind:searchedUsers />
 	<p1 class="co-authors-count"
-		>Co-authors (with invited) count: {coAuthorIds.length +
-			invitedForCoAuthorUserIds.length}/{maxCoAuthorsCount}
-		{searchedUsers.length}</p1
+		>Co-authors (including invited) count: {coAuthorIds.length +
+			invitedForCoAuthorUserIds.length}/{maxCoAuthorsCount}</p1
 	>
 	<SearchedUsersListDisplay
 		isInputEmpty={StringUtils.isNullOrWhiteSpace(searchBarInputVal)}
 		userOptions={searchedUsers}
-		isUserCoAuthor={coAuthorIds.includes}
-		isUserAlreadyInvited={invitedForCoAuthorUserIds.includes}
 		{isUserInListToInvite}
+		addToListToInvite={(u) => addUserToInvite(u)}
+		removeFromListToInvite={(u) => removeUserFromToInvite(u)}
+		getUserInviteStateForVoki={(userId) => getUserInviteStateForVoki(userId)}
 	/>
-	<div class="confirm-btn-container">
-		{#if usersChosenToInvite.size > 0}
-			<label>Choose users to invite</label>
-		{:else}
-			<button>Invite {usersChosenToInvite.size} users for co-author</button>
-			<label
-				>{Array.from(usersChosenToInvite)
-					.map((u) => `@${u.uniqueName}`)
-					.join(', ')} will be invited</label
-			>
-		{/if}
-	</div>
+	<ConfirmInviteBtnContainer {usersChosenToInvite} />
 	<label class="note"
 		>Note: invited user will see the type, name, cover and other main details of this Voki</label
 	>
@@ -68,9 +83,9 @@
 <style>
 	:global(#co-author-inviting-dialog > .dialog-content) {
 		display: grid;
-		width: 42rem;
-		padding: 1.5rem 3rem;
-		grid-template-rows: auto auto 32rem auto;
+		width: 44rem;
+		padding: 2rem 2rem;
+		grid-template-rows: auto auto 32rem auto auto;
 	}
 
 	.co-authors-count {

@@ -1,20 +1,44 @@
 <script lang="ts">
 	import type { UserPreviewWithInvitesSettings } from '../../types';
+	import SearchedUserInListItem from './c_users_list/SearchedUserInListItem.svelte';
 
 	interface Props {
 		isInputEmpty: boolean;
-		isUserCoAuthor: (userId: string) => boolean;
-		isUserAlreadyInvited: (userId: string) => boolean;
-		isUserInListToInvite: (userId: string) => boolean;
+
+		getUserInviteStateForVoki: (
+			userId: string
+		) => 'PrimaryAuthor' | 'CoAuthor' | 'AlreadyInvited' | 'CandidateToInvite';
 		userOptions: UserPreviewWithInvitesSettings[];
+		isUserInListToInvite: (userId: string) => boolean;
+		addToListToInvite: (user: UserPreviewWithInvitesSettings) => void;
+		removeFromListToInvite: (user: UserPreviewWithInvitesSettings) => void;
 	}
 	let {
 		isInputEmpty,
-		isUserCoAuthor,
-		isUserAlreadyInvited,
+		getUserInviteStateForVoki,
+		userOptions,
 		isUserInListToInvite,
-		userOptions
+		addToListToInvite,
+		removeFromListToInvite
 	}: Props = $props();
+
+	function getUserInviteState(user: UserPreviewWithInvitesSettings): UserItemInListState {
+		const currentState = getUserInviteStateForVoki(user.id);
+		if (currentState === 'PrimaryAuthor') {
+			return { state: 'PrimaryAuthor' };
+		} else if (currentState === 'CoAuthor') {
+			return { state: 'CoAuthor' };
+		} else if (currentState === 'AlreadyInvited') {
+			return { state: 'AlreadyInvited' };
+		} else {
+			return {
+				state: 'CandidateToInvite',
+				isUserInListToInvite: isUserInListToInvite(user.id),
+				addToListToInvite: () => addToListToInvite(user),
+				removeFromListToInvite: () => removeFromListToInvite(user)
+			};
+		}
+	}
 </script>
 
 {#if isInputEmpty}
@@ -63,23 +87,21 @@
 		<p class="empty-state-subtitle">Try to search with other part of the name</p>
 	</div>
 {:else}
-	<div class="users-list">
-		{#each userOptions as user}
-			<div class="user">
-				<div class="user-diplay">
-					{JSON.stringify(user)}
-				</div>
-				<div class="badge">
-					{#if isUserCoAuthor(user.id)}
-						<span>Co-author</span>
-					{:else if isUserAlreadyInvited(user.id)}
-						<span>Already invited</span>
-					{:else}
-						checkbox
-					{/if}
-				</div>
-			</div>
-		{/each}
+	<div class="users-list-wrapper">
+		<div class="fade-top"></div>
+
+		<div class="users-list">
+			{#each userOptions as user}
+				<SearchedUserInListItem
+					uniqueName={user.uniqueName}
+					displayName={user.displayName}
+					profilePic={user.profilePic}
+					badge={getUserInviteState(user)}
+				/>
+			{/each}
+		</div>
+
+		<div class="fade-bottom"></div>
 	</div>
 {/if}
 
@@ -112,9 +134,40 @@
 		font-size: 0.9375rem;
 		line-height: 1.5;
 	}
-	.user {
-		background-color: darkblue;
-		height: 3rem;
-		width: 2rem;
+	.users-list-wrapper {
+		position: relative;
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.users-list {
+		height: 100%;
+		overflow-y: auto;
+		scrollbar-gutter: stable;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		padding: 0.375rem 0;
+	}
+
+	.fade-top,
+	.fade-bottom {
+		position: absolute;
+		left: 0;
+		right: 0;
+		height: 1rem;
+		z-index: 2;
+		pointer-events: none;
+	}
+
+	.fade-top {
+		top: -1px;
+		background: linear-gradient(var(--back), transparent);
+	}
+
+	.fade-bottom {
+		bottom: -1px;
+		background: linear-gradient(transparent, var(--back));
 	}
 </style>

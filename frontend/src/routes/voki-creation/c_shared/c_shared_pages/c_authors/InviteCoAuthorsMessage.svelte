@@ -5,6 +5,7 @@
 	interface Props {
 		vokiId: string;
 		maxCoAuthors: number;
+		primaryAuthorId: string;
 		coAuthorIds: string[];
 		invitedForCoAuthorUserIds: string[];
 		isViewerPrimaryAuthor: boolean;
@@ -13,6 +14,7 @@
 	let {
 		vokiId,
 		maxCoAuthors,
+		primaryAuthorId,
 		coAuthorIds,
 		invitedForCoAuthorUserIds,
 		isViewerPrimaryAuthor,
@@ -25,6 +27,7 @@
 <CoAuthorInviteDialog
 	bind:this={dialog}
 	maxCoAuthorsCount={maxCoAuthors}
+	{primaryAuthorId}
 	{coAuthorIds}
 	{invitedForCoAuthorUserIds}
 	{vokiId}

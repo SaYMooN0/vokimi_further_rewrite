@@ -39,6 +39,7 @@
 				<InviteCoAuthorsMessage
 					{vokiId}
 					maxCoAuthors={maxVokiCoAuthors}
+					{primaryAuthorId}
 					{coAuthorIds}
 					{invitedForCoAuthorUserIds}
 					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
