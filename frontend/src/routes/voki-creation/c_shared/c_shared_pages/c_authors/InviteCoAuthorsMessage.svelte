@@ -1,6 +1,7 @@
 <script lang="ts">
 	import CoAuthorInviteDialog from './c_invite_co_authors_message/CoAuthorInviteDialog.svelte';
 	import InviteFirstCoAuthorMessage from './c_invite_co_authors_message/InviteFirstCoAuthorMessage.svelte';
+	import InviteMoreCoAuthorsMessage from './c_invite_co_authors_message/InviteMoreCoAuthorsMessage.svelte';
 
 	interface Props {
 		vokiId: string;
@@ -33,37 +34,58 @@
 	{vokiId}
 	updateParentCoAuthors={updateCoAuthorsInfo}
 />
+
 {#if coAuthorsWithInvitedCount === 0 && isViewerPrimaryAuthor}
 	<InviteFirstCoAuthorMessage openInviteDialog={() => dialog.open()} />
 {:else if coAuthorsWithInvitedCount >= maxCoAuthors}
-	<h1 class="limit-reached">
-		Co-authors limit reached.Voki cannot have more than {maxCoAuthors} co-authors
-	</h1>
+	<div class="co-authors-limit">
+		<h2>Co-authors limit reached</h2>
+		<p>Voki cannot have more than {maxCoAuthors} co-authors.</p>
+	</div>
+{:else if isViewerPrimaryAuthor}
+	<InviteMoreCoAuthorsMessage
+		openInviteDialog={() => dialog.open()}
+		{maxCoAuthors}
+		{coAuthorsWithInvitedCount}
+	/>
 {:else}
-	<p class="places-left"></p>
-	{#if isViewerPrimaryAuthor}
-		<button class="invite-btn" onclick={() => dialog.open()}>Invite new co-authors</button>
-	{:else}
-		<button class="invite-btn" onclick={() => dialog.open()}>
-			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-				<path
-					d="M4.26781 18.8447C4.49269 20.515 5.87613 21.8235 7.55966 21.9009C8.97627 21.966 10.4153 22 12 22C13.5847 22 15.0237 21.966 16.4403 21.9009C18.1239 21.8235 19.5073 20.515 19.7322 18.8447C19.879 17.7547 20 16.6376 20 15.5C20 14.3624 19.879 13.2453 19.7322 12.1553C19.5073 10.485 18.1239 9.17649 16.4403 9.09909C15.0237 9.03397 13.5847 9 12 9C10.4153 9 8.97627 9.03397 7.55966 9.09909C5.87613 9.17649 4.49269 10.485 4.26781 12.1553C4.12104 13.2453 4 14.3624 4 15.5C4 16.6376 4.12104 17.7547 4.26781 18.8447Z"
-					stroke="currentColor"
-				/>
-				<path
-					d="M7.5 9V6.5C7.5 4.01472 9.51472 2 12 2C14.4853 2 16.5 4.01472 16.5 6.5V9"
-					stroke="currentColor"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				/>
-				<path
-					d="M11.9961 15.5H12.0051"
-					stroke="currentColor"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				/>
-			</svg>
-			To invite co-authors you need to be the primary author</button
-		>
-	{/if}
+	<div class="locked-info">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+			<path
+				d="M4.27 18.84C4.49 20.52 5.88 21.82 7.56 21.9C8.98 21.97 10.42 22 12 22C13.58 22 15.02 21.97 16.44 21.9C18.12 21.82 19.51 20.52 19.73 18.84C19.88 17.75 20 16.64 20 15.5C20 14.36 19.88 13.25 19.73 12.15C19.51 10.49 18.12 9.18 16.44 9.1C15.02 9.03 13.58 9 12 9C10.42 9 8.98 9.03 7.56 9.1C5.88 9.18 4.49 10.49 4.27 12.15C4.12 13.25 4 14.36 4 15.5C4 16.64 4.12 17.75 4.27 18.84Z"
+				stroke="currentColor"
+			/>
+			<path
+				d="M7.5 9V6.5C7.5 4.01 9.51 2 12 2C14.49 2 16.5 4.01 16.5 6.5V9"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			/>
+			<path
+				d="M12 15.5H12.01"
+				stroke="currentColor"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			/>
+		</svg>
+		<p>Only the primary author can invite co-authors</p>
+	</div>
 {/if}
+
+<style>
+
+	.locked-info {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		color: var(--muted-foreground);
+	}
+
+	.locked-info svg {
+		height: 1.25rem;
+		width: 1.25rem;
+		stroke-width: 1.5;
+		color: var(--muted-foreground);
+	}
+</style>

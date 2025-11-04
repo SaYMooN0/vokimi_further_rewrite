@@ -4,8 +4,11 @@
 	import SearchedUsersListDisplay from './c_inviting_dialog/SearchedUsersListDisplay.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { UserPreviewWithInvitesSettings } from '../types';
-	import { SvelteSet } from 'svelte/reactivity';
 	import ConfirmInviteBtnContainer from './c_inviting_dialog/ConfirmInviteBtnContainer.svelte';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import type { Err } from '$lib/ts/err';
+	import { watch } from 'runed';
+	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
 	interface Props {
 		maxCoAuthorsCount: number;
 		primaryAuthorId: string;
@@ -28,6 +31,10 @@
 	let searchedUsers = $state<UserPreviewWithInvitesSettings[]>([]);
 	let searchBarInputVal = $state('');
 	export function open() {
+		searchBarInputVal = '';
+		searchedUsers = [];
+		savingErrs = [];
+		isLoadingSave = false;
 		dialog.open();
 	}
 	let usersChosenToInvite: UserPreviewWithInvitesSettings[] = $state([]);
@@ -58,6 +65,36 @@
 			return 'CandidateToInvite';
 		}
 	}
+	async function confirmUsersInvite() {
+		savingErrs = [];
+		isLoadingSave = true;
+		const response = await ApiVokiCreationCore.fetchJsonResponse<{
+			coAuthorIds: string[];
+			invitedForCoAuthorUserIds: string[];
+		}>(
+			`/vokis/${vokiId}/invite-co-authors`,
+			RJO.POST({
+				userIds: usersChosenToInvite.map((u) => u.id)
+			})
+		);
+		isLoadingSave = false;
+		if (response.isSuccess) {
+			console.log(response.data);
+			updateParentCoAuthors(response.data.coAuthorIds, response.data.invitedForCoAuthorUserIds);
+			dialog.close();
+			savingErrs = [];
+		} else {
+			savingErrs = response.errs;
+		}
+	}
+	let savingErrs: Err[] = $state([]);
+	let isLoadingSave = $state(false);
+	watch(
+		() => [searchBarInputVal, usersChosenToInvite],
+		() => {
+			savingErrs = [];
+		}
+	);
 </script>
 
 <DialogWithCloseButton dialogId="co-author-inviting-dialog" bind:this={dialog}>
@@ -74,7 +111,14 @@
 		removeFromListToInvite={(u) => removeUserFromToInvite(u)}
 		getUserInviteStateForVoki={(userId) => getUserInviteStateForVoki(userId)}
 	/>
-	<ConfirmInviteBtnContainer {usersChosenToInvite} />
+	<ConfirmInviteBtnContainer
+		{usersChosenToInvite}
+		isLoading={isLoadingSave}
+		onInviteButtonClick={confirmUsersInvite}
+	/>
+	<div class="errs-container">
+		<DefaultErrBlock errList={savingErrs} />
+	</div>
 	<label class="note"
 		>Note: invited user will see the type, name, cover and other main details of this Voki</label
 	>
@@ -85,7 +129,7 @@
 		display: grid;
 		width: 44rem;
 		padding: 2rem 2rem;
-		grid-template-rows: auto auto 32rem auto auto;
+		grid-template-rows: auto auto 32rem auto auto auto;
 	}
 
 	.co-authors-count {
@@ -95,7 +139,10 @@
 		font-weight: 500;
 		text-align: center;
 	}
-
+	.errs-container {
+		min-height: 1.5rem;
+		margin: 0.25rem 0;
+	}
 	.note {
 		margin-top: auto;
 		color: var(--secondary-foreground);

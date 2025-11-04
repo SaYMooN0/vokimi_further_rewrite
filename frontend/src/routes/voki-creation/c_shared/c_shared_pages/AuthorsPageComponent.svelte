@@ -5,20 +5,28 @@
 	import AuthView from '$lib/components/AuthView.svelte';
 	interface Props {
 		primaryAuthorId: string;
-		coAuthorIds: string[];
-		invitedForCoAuthorUserIds: string[];
+		initCoAuthorIds: string[];
+		initInvitedForCoAuthorUserIds: string[];
 		vokiCreationDate: Date;
 		maxVokiCoAuthors: number;
 		vokiId: string;
 	}
 	let {
 		primaryAuthorId,
-		coAuthorIds,
-		invitedForCoAuthorUserIds,
+		initCoAuthorIds,
+		initInvitedForCoAuthorUserIds,
 		vokiCreationDate,
 		maxVokiCoAuthors,
 		vokiId
 	}: Props = $props();
+	let coAuthorIds = $state<string[]>(initCoAuthorIds);
+	let invitedForCoAuthorUserIds = $state<string[]>(initInvitedForCoAuthorUserIds);
+	function updateCoAuthorsInfo(newCoAuthorIds: string[], newInvitedIds: string[]) {
+		console.log(newCoAuthorIds, newInvitedIds);
+		coAuthorIds = newCoAuthorIds;
+		invitedForCoAuthorUserIds = newInvitedIds;
+		console.log(coAuthorIds, invitedForCoAuthorUserIds);
+	}
 </script>
 
 <AuthView>
@@ -30,12 +38,11 @@
 					{primaryAuthorId}
 					creationDate={vokiCreationDate}
 				/>
-				<!-- <CoAuthorsList
+				<CoAuthorsList
 					viewerId={authState.userId}
 					{coAuthorIds}
 					{invitedForCoAuthorUserIds}
-					{primaryAuthorId}
-				/>-->
+				/>
 				<InviteCoAuthorsMessage
 					{vokiId}
 					maxCoAuthors={maxVokiCoAuthors}
@@ -43,10 +50,7 @@
 					{coAuthorIds}
 					{invitedForCoAuthorUserIds}
 					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
-					updateCoAuthorsInfo={(newCoAuthorIds: string[], newInvitedIds: string[]) => {
-						coAuthorIds = newCoAuthorIds;
-						invitedForCoAuthorUserIds = newInvitedIds;
-					}}
+					{updateCoAuthorsInfo}
 				/>
 			</div>
 		{:else if authState.name === 'loading'}

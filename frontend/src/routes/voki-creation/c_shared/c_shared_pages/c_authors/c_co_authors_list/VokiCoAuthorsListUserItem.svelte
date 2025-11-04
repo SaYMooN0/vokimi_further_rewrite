@@ -1,56 +1,59 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
-	import { DateUtils } from '$lib/ts/utils/date-utils';
+	import type { Snippet } from 'svelte';
 
 	interface Props {
-		viewerId: string;
-		primaryAuthorId: string;
-		creationDate: Date;
+		userId: string;
+		userCoAuthorState: 'viewerIsAuthor' | 'invitedUser' | 'coAuthor';
+		actionButton: Snippet<[userId: string]> | null;
 	}
-	let { viewerId, primaryAuthorId, creationDate }: Props = $props();
-	let primaryAuthor = UsersStore.Get(primaryAuthorId);
-	let viewerIsPrimaryAuthor = $derived(viewerId === primaryAuthorId);
+	let { userId, userCoAuthorState, actionButton }: Props = $props();
+	let user = UsersStore.Get(userId);
 </script>
 
 <div
-	class="primary-author-container"
-	class:viewer-is-primary-author={primaryAuthor.state === 'ok' && viewerIsPrimaryAuthor}
-	class:loading={primaryAuthor.state === 'loading'}
-	class:err={primaryAuthor.state === 'errs'}
+	class="user-item"
+	class:loading={user.state === 'loading'}
+	class:err={user.state === 'errs'}
+	class:viewer-is-user={userCoAuthorState === 'viewerIsAuthor'}
+	class:invited={userCoAuthorState === 'invitedUser'}
 >
-	{#if primaryAuthor.state === 'ok'}
-		<label class="prim-author-label">
-			{#if viewerIsPrimaryAuthor}
-				You are the primary author
-			{:else}
-				Voki primary author
+	{#if user.state === 'ok'}
+		<label class="badge-label">
+			{#if userCoAuthorState === 'viewerIsAuthor'}
+				You
+			{:else if userCoAuthorState === 'invitedUser'}
+				Invited for co-author
+			{:else if userCoAuthorState === 'coAuthor'}
+				Co-author
 			{/if}
 		</label>
 	{/if}
-	{#if primaryAuthor.state === 'ok'}
+	{#if user.state === 'ok'}
 		<img
 			class="profile-pic"
-			src={StorageBucketMain.fileSrc(primaryAuthor.data.profilePic)}
-			alt={`Profile picture of ${primaryAuthor.data.displayName}`}
-			loading="lazy"
+			src={StorageBucketMain.fileSrc(user.data.profilePic)}
+			alt={`Profile picture of ${user.data.displayName}`}
 			decoding="async"
 		/>
 		<div class="main-content">
-			<label class="display-name">{primaryAuthor.data.displayName}</label>
-			<a href="/authors/{primaryAuthorId}" class="unique-name">@{primaryAuthor.data.uniqueName}</a>
-			<label class="created-voki-date"
-				>Created voki on {DateUtils.toLocaleDateOnly(creationDate)}</label
-			>
+			<div class="names-container">
+				<label class="display-name">{user.data.displayName}</label>
+				<a href="/authors/{userId}" class="unique-name">@{user.data.uniqueName}</a>
+			</div>
 		</div>
-	{:else if primaryAuthor.state === 'loading'}
+		{#if actionButton}
+			{@render actionButton(userId)}
+		{/if}
+	{:else if user.state === 'loading'}
 		<div class="profile-pic"></div>
 		<div class="main-content"></div>
 	{:else}
 		<div class="profile-pic"></div>
 		<div class="main-content">
-			{#if primaryAuthor.state === 'errs' && primaryAuthor.errs.length > 0}
-				{#each primaryAuthor.errs as err}
+			{#if user.state === 'errs' && user.errs.length > 0}
+				{#each user.errs as err}
 					<p class="err-view">{err}</p>
 				{/each}
 			{:else}
@@ -61,43 +64,49 @@
 </div>
 
 <style>
-	.primary-author-container {
+	.user-item {
 		position: relative;
 		display: grid;
 		align-items: center;
 		gap: 0.5rem;
 		width: 100%;
-		height: 8rem;
-		padding: 0.75rem 1rem;
+		height: 6.25rem;
+		padding: 0.675rem 1rem 0.375rem;
 		border: 0.125rem solid var(--back);
 		border-radius: 1.25rem;
 		background: var(--back);
-		box-shadow: var(--shadow-xs), var(--shadow-md);
-		grid-template-columns: auto 1fr;
+		box-shadow: var(--shadow-xs);
+		animation: var(--default-fade-in);
+		grid-template-columns: auto 1fr auto;
 	}
-
-	.primary-author-container.viewer-is-primary-author {
+	.user-item.viewer-is-user {
 		border-color: var(--primary);
 		box-shadow: none;
 	}
+	.user-item.invited {
+		border-color: var(--accent-foreground);
+		box-shadow: none;
+	}
 
-	.prim-author-label {
+	.badge-label {
 		position: absolute;
 		top: 0%;
 		left: 2rem;
 		padding: 0 0.25rem;
 		border-radius: 10rem;
-		background: var(--back);
 		color: var(--text);
 		font-size: 1rem;
 		font-weight: 450;
 		transform: translateY(calc(-50% - 0.125rem));
+		background-color: var(--back);
+		color: var(--secondary-foreground);
 	}
-
-	.viewer-is-primary-author > .prim-author-label {
+	.user-item.viewer-is-user .badge-label {
 		color: var(--primary);
 	}
-
+	.user-item.invited .badge-label {
+		color: var(--accent-foreground);
+	}
 	.profile-pic {
 		aspect-ratio: 1;
 		height: 100%;
@@ -111,34 +120,6 @@
 		display: grid;
 		align-content: center;
 	}
-
-	.display-name {
-		color: var(--text);
-		font-size: 1.5rem;
-		font-weight: 600;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
-	.unique-name {
-		color: var(--muted-foreground);
-		font-size: 1.125rem;
-		font-weight: 425;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.unique-name:hover {
-		color: var(--primary);
-	}
-
-	.created-voki-date {
-		margin-top: calc(0.125rem + 0.5vh);
-		color: var(--secondary-foreground);
-		font-size: 1rem;
-	}
-
 	.loading {
 		pointer-events: none;
 		opacity: 0.95;
@@ -183,15 +164,42 @@
 		inset: 0;
 	}
 
-	.primary-author-container.err {
+	.user-item.err {
 		border: 0.125rem solid var(--err-foreground);
 		background-color: var(--secondary);
 		box-shadow: var(--err-shadow);
-
 	}
 
 	.err-view {
 		padding: 0.5rem 0.75rem;
 		color: var(--muted-foreground);
+	}
+	.names-container {
+		display: grid;
+		grid-template-rows: auto auto;
+		justify-content: start;
+		width: 100%;
+		gap: 0.125rem;
+		padding-bottom: 1rem;
+	}
+	.display-name {
+		color: var(--text);
+		font-size: 1.375rem;
+		font-weight: 600;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.unique-name {
+		color: var(--muted-foreground);
+		font-size: 1rem;
+		font-weight: 425;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.unique-name:hover {
+		color: var(--primary);
 	}
 </style>

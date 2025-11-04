@@ -3,20 +3,31 @@
 
 	interface Props {
 		usersChosenToInvite: UserPreviewWithInvitesSettings[];
+		isLoading: boolean;
+		onInviteButtonClick: () => void;
 	}
-	let { usersChosenToInvite }: Props = $props();
+	let { usersChosenToInvite, isLoading, onInviteButtonClick }: Props = $props();
 </script>
 
 <div class="confirm-btn-container">
 	{#if usersChosenToInvite.length === 0}
 		<label>Choose users to invite</label>
 	{:else}
-		<button>Invite {usersChosenToInvite.length} users for co-author</button>
-		<label
-			>{Array.from(usersChosenToInvite)
-				.map((u) => `@${u.uniqueName}`)
-				.join(', ')} will be invited</label
-		>
+		<button onclick={() => onInviteButtonClick()} class:loading={isLoading}>
+			{#if isLoading}
+				Loading...
+			{:else}
+				Invite {usersChosenToInvite.length} users for co-author
+			{/if}
+		</button>
+		<label class="users-list-label">
+			{#if isLoading}
+				Inviting {usersChosenToInvite.length} users for co-author ...{:else}
+				{Array.from(usersChosenToInvite)
+					.map((u) => `@${u.uniqueName}`)
+					.join(', ')} will be invited
+			{/if}
+		</label>
 	{/if}
 </div>
 
@@ -26,13 +37,14 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 0.25rem;
+		gap: 0.375rem;
 		height: 4rem;
 		text-align: center;
 	}
 
 	.confirm-btn-container button {
 		padding: 0.375rem 1.25rem;
+		width: 18rem;
 		border: none;
 		border-radius: 0.5rem;
 		background-color: var(--primary);
@@ -43,18 +55,24 @@
 		box-shadow: var(--shadow-xs);
 		transition: background-color 0.12s ease-in;
 	}
-
-	.confirm-btn-container button:hover:not(:disabled) {
+	.confirm-btn-container button:hover:not(.loading) {
 		background-color: var(--primary-hov);
 	}
+	button.loading {
+		opacity: 0.8;
+		pointer-events: none;
+	}
 
-	.confirm-btn-container label {
+	.confirm-btn-container .users-list-label {
 		color: var(--muted-foreground);
 		font-size: 0.875rem;
-		line-height: 1.5;
+		line-height: 1;
 		max-width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
+	}
+	.confirm-btn-container > * {
+		animation: fade-in-from-zero 0.2s ease-in;
 	}
 </style>

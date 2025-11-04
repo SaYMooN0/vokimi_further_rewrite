@@ -9,5 +9,12 @@
 {#if !data.isSuccess}
 	<UnableToLoad errs={data.errs} />
 {:else}
-	<AuthorsPageComponent vokiId={data.vokiId!} {...data.data} />
+	<AuthorsPageComponent
+		vokiId={data.vokiId!}
+		primaryAuthorId={data.data.primaryAuthorId}
+		initCoAuthorIds={data.data.coAuthorIds}
+		initInvitedForCoAuthorUserIds={data.data.invitedForCoAuthorUserIds}
+		vokiCreationDate={data.data.vokiCreationDate}
+		maxVokiCoAuthors={data.data.maxVokiCoAuthors}
+	/>
 {/if}
