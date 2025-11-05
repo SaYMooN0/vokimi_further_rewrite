@@ -34,6 +34,7 @@ export namespace MyDraftVokisCacheStore {
         const cached = cache.get(id);
 
         if (cached && cached.expiresAt > now) {
+            console.log("cache hit");
             return cached.entry;
         }
 
@@ -45,10 +46,12 @@ export namespace MyDraftVokisCacheStore {
         return { state: "loading" };
     }
 
-    export function Invalidate(id: string): void {
-        cache.delete(id);
-    }
 
+    export function Clear(): void {
+        cache.clear();
+        pendingIds.clear();
+        timer = undefined;
+    }
 
     function enqueue(id: string): void {
         pendingIds.add(id);

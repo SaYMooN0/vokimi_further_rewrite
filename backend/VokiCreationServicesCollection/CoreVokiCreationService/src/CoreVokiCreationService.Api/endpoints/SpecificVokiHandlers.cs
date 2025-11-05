@@ -25,7 +25,8 @@ public static class SpecificVokiHandlers
 
         group.MapPatch("/accept-co-author-invite", AcceptCoAuthorInvite);
         group.MapPatch("/decline-co-author-invite", DeclineCoAuthorInvite);
-        // group.MapGet("/view-data-for-co-author-invited", GetVokiViewDataForCoAuthorInvitedUser); 
+
+        group.MapGet("/view-as-invited-for-co-author-", ViewVokiAsInvitedForCoAuthor);
     }
 
     private static async Task<IResult> GetVokiBriefInfo(
@@ -37,9 +38,7 @@ public static class SpecificVokiHandlers
         GetVokiQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (voki) => Results.Json(
-            VokiBriefInfoResponse.Create(voki)
-        ));
+        return CustomResults.FromErrOrToJson<DraftVoki, VokiBriefInfoResponse>(result);
     }
 
     private static async Task<IResult> GetVokiAuthorsInfo(
@@ -51,9 +50,7 @@ public static class SpecificVokiHandlers
         GetVokiQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (voki) => Results.Json(
-            VokiAuthorsInfoResponse.Create(voki)
-        ));
+        return CustomResults.FromErrOrToJson<DraftVoki, VokiAuthorsInfoResponse>(result);
     }
 
     private static async Task<IResult> InviteCoAuthors(
@@ -68,6 +65,7 @@ public static class SpecificVokiHandlers
 
         return CustomResults.FromErrOrToJson<DraftVoki, VokiCoAuthorsWithInvitedResponse>(result);
     }
+
     private static async Task<IResult> DropCoAuthor(
         HttpContext httpContext, CancellationToken ct,
         ICommandHandler<DropCoAuthorCommand, DraftVoki> handler
@@ -92,7 +90,6 @@ public static class SpecificVokiHandlers
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrToJson<DraftVoki, VokiCoAuthorsWithInvitedResponse>(result);
-
     }
 
     private static async Task<IResult> AcceptCoAuthorInvite(
@@ -119,5 +116,16 @@ public static class SpecificVokiHandlers
         return CustomResults.FromErrOr(result, (vokiIds) => Results.Json(
             new { VokiIds = vokiIds.Select(id => id.ToString()).ToArray() })
         );
+    }
+    private static async Task<IResult> ViewVokiAsInvitedForCoAuthor(
+        HttpContext httpContext, CancellationToken ct,
+        IQueryHandler<GetVokiQuery, DraftVoki> handler
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+
+        GetVokiQuery query = new(vokiId);
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOrToJson<DraftVoki, VokiBriefInfoResponse>(result);
     }
 }

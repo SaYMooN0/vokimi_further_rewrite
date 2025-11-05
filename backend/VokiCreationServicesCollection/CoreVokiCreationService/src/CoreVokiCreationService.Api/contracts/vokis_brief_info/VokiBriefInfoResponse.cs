@@ -10,9 +10,11 @@ internal sealed record class VokiBriefInfoResponse(
     string Cover,
     string PrimaryAuthorId,
     string[] CoAuthorIds
-)
+) : ICreatableResponse<DraftVoki>
 {
-    public static VokiBriefInfoResponse Create(DraftVoki v) => new(
+    public static ICreatableResponse<DraftVoki> Create(DraftVoki v) => FromVoki(v);
+
+    public static VokiBriefInfoResponse FromVoki(DraftVoki v) => new(
         v.Id.ToString(),
         v.Type,
         v.Name.ToString(),

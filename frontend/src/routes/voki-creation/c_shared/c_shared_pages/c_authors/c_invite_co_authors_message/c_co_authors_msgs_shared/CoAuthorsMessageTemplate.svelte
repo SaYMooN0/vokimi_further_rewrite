@@ -6,15 +6,8 @@
 		title: string | null;
 		subtitle: Snippet;
 		actionItem:
-			| {
-					type: 'button';
-					text: string;
-					onClick: () => void;
-			  }
-			| {
-					type: 'custom';
-					actionItem: Snippet;
-			  };
+			| { type: 'button'; text: string; onClick: () => void }
+			| { type: 'custom'; actionItem: Snippet };
 	}
 	let { icon = undefined, title, subtitle, actionItem }: Props = $props();
 </script>

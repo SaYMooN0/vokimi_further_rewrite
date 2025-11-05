@@ -1,0 +1,36 @@
+using CoreVokiCreationService.Domain.draft_voki_aggregate;
+using SharedKernel.common.vokis;
+
+namespace CoreVokiCreationService.Api.contracts;
+
+public record ListUserInvitesForCoAuthor(
+    InviteForCoAuthorVokiPreview[] Vokis
+) : ICreatableResponse<DraftVoki[]>
+{
+    public static ICreatableResponse<DraftVoki[]> Create(DraftVoki[] vokis) => new ListUserInvitesForCoAuthor(
+        vokis.Select(InviteForCoAuthorVokiPreview.Create).ToArray()
+    );
+}
+
+public record InviteForCoAuthorVokiPreview(
+    string VokiId,
+    string VokiName,
+    string VokiCover,
+    VokiType VokiType,
+    string PrimaryAuthorId,
+    string[] CoAuthorsIds,
+    string[] InvitedForCoAuthorUserIds,
+    DateTime CreationDate
+)
+{
+    public static InviteForCoAuthorVokiPreview Create(DraftVoki v) => new(
+        v.Id.ToString(),
+        v.Name.ToString(),
+        v.Cover.ToString(),
+        v.Type,
+        v.PrimaryAuthorId.ToString(),
+        v.CoAuthorIds.Select(a => a.ToString()).ToArray(),
+        v.InvitedForCoAuthorUserIds.Select(a => a.ToString()).ToArray(),
+        v.CreationDate
+    );
+}

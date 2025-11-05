@@ -1,16 +1,32 @@
 <script lang="ts">
 	import MyVokisLink from './c_layout/MyVokisLink.svelte';
 	import VokiInitializingDialog from './c_layout/VokiInitializingDialog.svelte';
-	import type { Snippet } from 'svelte';
+	import { setContext, tick, type Snippet } from 'svelte';
 	import { navigating, page } from '$app/state';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import AuthView from '$lib/components/AuthView.svelte';
 	import MyVokiAuthNeeded from './c_layout/MyVokiAuthNeeded.svelte';
 	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
+	import { toast } from 'svelte-sonner';
+	import { setCurrentPage, type MyVokiPageApi } from './my-vokis-page-context';
 
 	const { children }: { children: Snippet } = $props();
 	let vokiInitializingDialog = $state<VokiInitializingDialog>()!;
+
+	let currentPage: MyVokiPageApi = $state()!;
+	setCurrentPage((page) => {
+		currentPage = page;
+	});
+
+	async function handleRefreshClick() {
+		if (!currentPage.forceRefetch) {
+			toast.error('Something went wrong. Could not refresh the page');
+			return;
+		}
+		await currentPage.forceRefetch();
+	}
+	let isCurrentPageLoading = $derived(currentPage ? currentPage.isLoading : true);
 </script>
 
 {#snippet authStateChildren(authState: AuthStore.AuthState)}
@@ -18,7 +34,14 @@
 		<MyVokiAuthNeeded />
 	{:else}
 		<div class="my-vokis-page">
-			<div class="links-container">
+			<div class="top-actions">
+				<button
+					onclick={() => handleRefreshClick()}
+					class="force-reload-btn"
+					class:is-already-loading={isCurrentPageLoading}
+				>
+					{isCurrentPageLoading ? 'Refreshing...' : 'Refresh'}</button
+				>
 				<MyVokisLink
 					content={{ text: 'Draft Vokis', isIcon: false }}
 					href="/my-vokis/draft"
@@ -29,26 +52,7 @@
 					href="/my-vokis/published"
 					isCurrent={page.data.currentTab === 'published'}
 				/>
-				{#snippet inviteIcon()}
-					<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-						<path
-							d="M12 7.5C12 9.433 10.433 11 8.5 11C6.567 11 5 9.433 5 7.5C5 5.567 6.567 4 8.5 4C10.433 4 12 5.567 12 7.5Z"
-							stroke="currentColor"
-						/>
-						<path
-							d="M13.5 11C15.433 11 17 9.433 17 7.5C17 5.567 15.433 4 13.5 4"
-							stroke="currentColor"
-							stroke-linecap="round"
-						/>
-						<path
-							d="M13.1429 20H3.85714C2.83147 20 2 19.2325 2 18.2857C2 15.9188 4.07868 14 6.64286 14H10.3571C11.4023 14 12.3669 14.3188 13.1429 14.8568"
-							stroke="currentColor"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-						/>
-						<path d="M19 14V20M22 17L16 17" stroke="currentColor" stroke-linecap="round" />
-					</svg>
-				{/snippet}
+
 				<MyVokisLink
 					content={{ isIcon: true, icon: inviteIcon }}
 					href="/my-vokis/invites"
@@ -90,6 +94,19 @@
 {/snippet}
 
 <AuthView children={authStateChildren} />
+{#snippet inviteIcon()}
+	<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<path
+			d="M2 12C2 8.22876 2 6.34315 3.17157 5.17157C4.34315 4 6.22876 4 10 4H14C17.7712 4 19.6569 4 20.8284 5.17157C22 6.34315 22 8.22876 22 12C22 15.7712 22 17.6569 20.8284 18.8284C19.6569 20 17.7712 20 14 20H10C6.22876 20 4.34315 20 3.17157 18.8284C2 17.6569 2 15.7712 2 12Z"
+			stroke="currentColor"
+		/>
+		<path
+			d="M6 8L8.1589 9.79908C9.99553 11.3296 10.9139 12.0949 12 12.0949C13.0861 12.0949 14.0045 11.3296 15.8411 9.79908L18 8"
+			stroke="currentColor"
+			stroke-linecap="round"
+		/>
+	</svg>
+{/snippet}
 
 <style>
 	.loading {
@@ -118,7 +135,7 @@
 		animation: loading-fade-in 0.1s ease-in-out;
 	}
 
-	.links-container {
+	.top-actions {
 		display: flex;
 		flex-direction: row;
 		justify-content: center;
@@ -136,7 +153,14 @@
 	.my-vokis-page-content {
 		overflow-y: auto;
 	}
-
+	.force-reload-btn {
+		width: 2rem;
+		height: 2rem;
+	}
+	.force-reload-btn.is-already-loading {
+		pointer-events: none;
+		opacity: 0.9;
+	}
 	:global(.my-vokis-page > .create-new-voki-btn) {
 		position: absolute;
 		bottom: 1rem;
@@ -149,12 +173,12 @@
 		border-radius: 0.375rem;
 		box-shadow: var(--shadow-xl);
 		transform: translateX(-50%);
+		outline: none;
 	}
 
 	:global(.my-vokis-page > .create-new-voki-btn:active) {
-		transform: translateX(-50%) scale(0.96);
+		transform: translateX(-50%) scaleX(0.96);
 	}
-
 	:global(.my-vokis-page > .create-new-voki-btn > svg) {
 		height: 1.75rem;
 	}

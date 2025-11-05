@@ -3,14 +3,18 @@
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { toast } from 'svelte-sonner';
 	import { MyDraftVokisCacheStore } from './my-draft-vokis-cache-store.svelte';
-	import type { PageProps } from './$types';
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import type {
 		VokiItemViewErrStateProps,
 		VokiItemViewOkStateProps
 	} from '$lib/components/voki_item/c_voki_item/types';
-	let { data }: PageProps = $props();
+	import { ApiVokiCreationCore } from '$lib/ts/backend-communication/backend-services';
+	import type { Err } from '$lib/ts/err';
+	import MyVokisPageUnexpectedStateAfterLoading from '../c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
+	import { getContext, onMount } from 'svelte';
+	import MyVokisPageInitialLoading from '../c_shared/MyVokisPageInitialLoading.svelte';
+	import { registerCurrentPageApi } from '../my-vokis-page-context';
 
 	function getVokiViewItemState(
 		vokiId: string
@@ -40,16 +44,52 @@
 			};
 		}
 	}
+	let draftVokiIds:
+		| { state: 'errs'; errs: Err[] }
+		| { state: 'loaded'; vokiIds: string[] }
+		| { state: 'loading' } = $state({ state: 'loading' });
+
+	async function loadDraftVokis() {
+		draftVokiIds = { state: 'loading' };
+		const response = await ApiVokiCreationCore.fetchJsonResponse<{ vokiIds: string[] }>(
+			'/list-user-voki-ids',
+			{ method: 'GET' }
+		);
+		if (response.isSuccess) {
+			draftVokiIds = { state: 'loaded', vokiIds: response.data.vokiIds };
+		} else {
+			draftVokiIds = { state: 'errs', errs: response.errs };
+		}
+	}
+	const registerPageApi = registerCurrentPageApi();
+	
+
+	async function forceRefetch() {
+		MyDraftVokisCacheStore.Clear();
+		await loadDraftVokis();
+	}
+
+	onMount(() => {
+		registerPageApi({
+			forceRefetch,
+			get isLoading() {
+				return draftVokiIds.state === 'loading';
+			}
+		});
+		loadDraftVokis();
+	});
 </script>
 
-{#if !data.response.isSuccess}
-	<DefaultErrBlock errList={data.response.errs} />
-{:else if data.response.data.vokiIds.length === 0}
-	<h1>You don't have any draft vokis</h1>
-{:else}
+{#if draftVokiIds.state === 'loading'}
+	<MyVokisPageInitialLoading loadingText="loading your draft vokis" />
+{:else if draftVokiIds.state === 'errs'}
+	<DefaultErrBlock errList={draftVokiIds.errs} />
+{:else if draftVokiIds.state === 'loaded'}
 	<VokiItemsGridContainer>
-		{#each data.response.data.vokiIds as vokiId}
+		{#each draftVokiIds.vokiIds as vokiId}
 			<VokiItemView state={getVokiViewItemState(vokiId)} />
 		{/each}
 	</VokiItemsGridContainer>
+{:else}
+	<MyVokisPageUnexpectedStateAfterLoading reloadPage={forceRefetch} />
 {/if}

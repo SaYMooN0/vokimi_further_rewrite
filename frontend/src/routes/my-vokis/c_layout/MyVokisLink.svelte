@@ -72,7 +72,7 @@
 	}
 
 	a.current.icon > :global(svg) {
-		stroke-width: 1.7;
+		stroke-width: 1.875;
 		
 	}
 </style>

@@ -11,7 +11,7 @@ public static class VokisHandlers
 
         group.WithGroupAuthenticationRequired();
 
-        group.MapPost("/brief-info", ListVokisBriefInfo) 
+        group.MapPost("/brief-info", ListVokisBriefInfo)
             .WithRequestValidation<ListVokisBriefInfoRequest>();
     }
 
@@ -24,8 +24,6 @@ public static class VokisHandlers
         ListVokisQuery query = new(request.ParsedVokiIds);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (vokis) => Results.Json(new {
-            Vokis = vokis.Select(VokiBriefInfoResponse.Create).ToArray()
-        }));
+        return CustomResults.FromErrOrToJson<DraftVoki[], MultipleVokisBriefInfoResponse>(result);
     }
 }

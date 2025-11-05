@@ -1,6 +1,6 @@
 ﻿namespace CoreVokiCreationService.Api.contracts.vokis_brief_info;
 
-public class ListVokisBriefInfoRequest : IRequestWithValidationNeeded
+internal class ListVokisBriefInfoRequest : IRequestWithValidationNeeded
 {
     public string[] Ids { get; init; } = [];
     private const int MaxAllowedIds = 200;
