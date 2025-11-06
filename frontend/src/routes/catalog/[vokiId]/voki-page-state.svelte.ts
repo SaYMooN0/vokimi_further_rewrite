@@ -5,7 +5,6 @@ import type { VokiPageTab } from "./+page.server";
 import type { RatingsTabDataType, VokiRatingData, VokiRatingsWithAverage } from "./types";
 
 export class VokiPageState {
-
     readonly vokiId: string;
     currentTab: VokiPageTab = $state('about');
     ratingsCount: number = $state(0);

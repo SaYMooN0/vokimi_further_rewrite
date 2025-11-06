@@ -38,7 +38,11 @@ export namespace MyPublishedVokisCacheStore {
     export function Invalidate(id: string): void {
         cache.delete(id);
     }
-
+    export function Clear(): void {
+        cache.clear();
+        pendingIds.clear();
+        timer = undefined;
+    }
     function enqueue(id: string): void {
         pendingIds.add(id);
         if (!timer) {

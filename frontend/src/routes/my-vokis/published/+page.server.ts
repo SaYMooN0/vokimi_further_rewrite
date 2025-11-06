@@ -9,10 +9,7 @@ export const load: ServerLoad = async ({ cookies, fetch }) => {
 
 
     return {
-        currentTab: 'published',
-        response: await ApiVokisCatalog.serverFetchJsonResponse<{ vokiIds: string[] }>(
-            fetch, '/vokis/list-user-voki-ids', { method: 'GET' }
-        )
+        currentTab: 'published'
     };
 };
 
