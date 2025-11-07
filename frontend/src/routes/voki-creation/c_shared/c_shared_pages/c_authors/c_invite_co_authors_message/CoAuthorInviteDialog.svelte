@@ -79,7 +79,6 @@
 		);
 		isLoadingSave = false;
 		if (response.isSuccess) {
-			console.log(response.data);
 			updateParentCoAuthors(response.data.coAuthorIds, response.data.invitedForCoAuthorUserIds);
 			dialog.close();
 			savingErrs = [];

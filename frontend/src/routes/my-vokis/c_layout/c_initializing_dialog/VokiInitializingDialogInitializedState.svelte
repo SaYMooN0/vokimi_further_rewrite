@@ -2,13 +2,15 @@
 	import { goto } from '$app/navigation';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { VokiType } from '$lib/ts/voki';
+	import type { VokiType } from '$lib/ts/voki-type';
 
-	let { id, type, name }: { id: string; type: VokiType; name: string } = $props<{
+	interface Props {
 		id: string;
 		type: VokiType;
 		name: string;
-	}>();
+	}
+
+	let { id, type, name }: Props = $props();
 	function goToVokiPage() {
 		goto(`/voki-creation/${StringUtils.pascalToKebab(type)}/${id}`);
 	}

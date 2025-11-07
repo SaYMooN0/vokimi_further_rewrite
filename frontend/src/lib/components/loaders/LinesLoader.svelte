@@ -1,13 +1,27 @@
 <script lang="ts">
-	let { sizeRem = 3, strokePx = 3, speedSec = 1.5 }: { sizeRem?: number; strokePx?: number; speedSec?: number } = $props<{
+	interface Props {
 		sizeRem?: number;
-        strokePx?: number;
+		strokePx?: number;
 		speedSec?: number;
-	}>();
+		color?: string;
+	}
+	let {
+		sizeRem = 3,
+		strokePx = 3,
+		speedSec = 1.5,
+		color="var(--primary)"
+	}: Props = $props();
 </script>
-<div class="container" style="
 
---size: {sizeRem}rem; --speed: {speedSec}s; --line-stroke: {strokePx}px">
+<div
+	class="container"
+	style="
+--size: {sizeRem}rem; 
+--speed: {speedSec}s; 
+--line-stroke: {strokePx}px;
+--loader-color: {color};
+"
+>
 	<div class="line"></div>
 	<div class="line"></div>
 	<div class="line"></div>
@@ -24,8 +38,6 @@
 
 <style>
 	.container {
-		--loader-color: var(--primary);
-
 		position: relative;
 		display: flex;
 		justify-content: flex-start;

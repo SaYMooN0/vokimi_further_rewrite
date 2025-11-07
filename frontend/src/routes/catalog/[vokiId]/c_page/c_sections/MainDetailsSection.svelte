@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { LanguageUtils, type Language } from '$lib/ts/language';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { VokiType } from '$lib/ts/voki';
+	import type { VokiType } from '$lib/ts/voki-type';
+
 	interface Props {
 		type: VokiType;
 		language: Language;

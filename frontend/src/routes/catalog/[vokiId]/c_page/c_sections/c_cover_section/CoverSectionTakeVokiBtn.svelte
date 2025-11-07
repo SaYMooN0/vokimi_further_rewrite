@@ -1,7 +1,7 @@
 <script lang="ts">
 	import AuthView from '$lib/components/AuthView.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { VokiType } from '$lib/ts/voki';
+	import type { VokiType } from '$lib/ts/voki-type';
 	import AuthNeededToTakeVokiDialog from './c_dialogs/AuthNeededToTakeVokiDialog.svelte';
 
 	interface Props {

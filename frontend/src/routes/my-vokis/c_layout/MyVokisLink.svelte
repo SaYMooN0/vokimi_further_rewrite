@@ -34,7 +34,8 @@
 		font-weight: 430;
 		text-decoration: none;
 		letter-spacing: 0.2px;
-		box-shadow: var(--shadow-2xl);
+			box-shadow: var(--shadow-md), var(--shadow);
+
 		transition: transform 0.12s ease;
 		cursor: pointer;
 	}
@@ -61,7 +62,7 @@
 	}
 
 	a.icon:active > :global(svg) {
-		transform: scale(0.9);
+		transform: scale(0.92);
 	}
 
 	a.current {

@@ -22,10 +22,8 @@
 	let coAuthorIds = $state<string[]>(initCoAuthorIds);
 	let invitedForCoAuthorUserIds = $state<string[]>(initInvitedForCoAuthorUserIds);
 	function updateCoAuthorsInfo(newCoAuthorIds: string[], newInvitedIds: string[]) {
-		console.log(newCoAuthorIds, newInvitedIds);
 		coAuthorIds = newCoAuthorIds;
 		invitedForCoAuthorUserIds = newInvitedIds;
-		console.log(coAuthorIds, invitedForCoAuthorUserIds);
 	}
 </script>
 

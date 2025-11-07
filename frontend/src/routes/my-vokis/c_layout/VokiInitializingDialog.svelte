@@ -1,8 +1,8 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
-	import type { VokiType } from '$lib/ts/voki';
 	import VokiInitializingDialogInputState from './c_initializing_dialog/VokiInitializingDialogInputState.svelte';
 	import VokiInitializingDialogInitializedState from './c_initializing_dialog/VokiInitializingDialogInitializedState.svelte';
+	import type { VokiType } from '$lib/ts/voki-type';
 
 	let dialog = $state<DialogWithCloseButton>()!;
 	export function open() {

@@ -1,6 +1,6 @@
 import type { Language } from "./language";
+import type { VokiType } from "./voki-type";
 
-export type VokiType = 'General' | 'Scoring' | 'TierList';
 
 export type GeneralVokiAnswerType =
     | "TextOnly"

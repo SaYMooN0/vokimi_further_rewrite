@@ -1,10 +1,11 @@
 <script lang="ts">
 	import AuthView from '$lib/components/AuthView.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import type { VokiType } from '$lib/ts/voki';
+	import type { VokiType } from '$lib/ts/voki-type';
 	import CoverSectionAddToAlbumBtn from './c_cover_section/CoverSectionAddToAlbumBtn.svelte';
 	import CoverSectionManageVokiBtn from './c_cover_section/CoverSectionManageVokiBtn.svelte';
 	import CoverSectionTakeVokiBtn from './c_cover_section/CoverSectionTakeVokiBtn.svelte';
+
 	interface Props {
 		vokiId: string;
 		cover: string;

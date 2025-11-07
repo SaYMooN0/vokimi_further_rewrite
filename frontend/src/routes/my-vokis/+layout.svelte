@@ -1,7 +1,7 @@
 <script lang="ts">
 	import MyVokisLink from './c_layout/MyVokisLink.svelte';
 	import VokiInitializingDialog from './c_layout/VokiInitializingDialog.svelte';
-	import { setContext, tick, type Snippet } from 'svelte';
+	import { type Snippet } from 'svelte';
 	import { navigating, page } from '$app/state';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
@@ -10,13 +10,14 @@
 	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { toast } from 'svelte-sonner';
 	import { setCurrentPage, type MyVokiPageApi } from './my-vokis-page-context';
+	import LinesLoader from '$lib/components/loaders/LinesLoader.svelte';
 
 	const { children }: { children: Snippet } = $props();
 	let vokiInitializingDialog = $state<VokiInitializingDialog>()!;
 
 	let currentPage: MyVokiPageApi = $state()!;
-	setCurrentPage((page) => {
-		currentPage = page;
+	setCurrentPage((curPage) => {
+		currentPage = curPage;
 	});
 
 	async function handleRefreshClick() {
@@ -35,13 +36,12 @@
 	{:else}
 		<div class="my-vokis-page">
 			<div class="top-actions">
-				<button
-					onclick={() => handleRefreshClick()}
-					class="force-reload-btn"
-					class:is-already-loading={isCurrentPageLoading}
-				>
-					{isCurrentPageLoading ? 'Refreshing...' : 'Refresh'}</button
-				>
+				<MyVokisLink
+					content={{ isIcon: true, icon: inviteIcon }}
+					href="/my-vokis/invites"
+					isCurrent={page.data.currentTab === 'invites'}
+				></MyVokisLink>
+
 				<MyVokisLink
 					content={{ text: 'Draft Vokis', isIcon: false }}
 					href="/my-vokis/draft"
@@ -53,11 +53,21 @@
 					isCurrent={page.data.currentTab === 'published'}
 				/>
 
-				<MyVokisLink
-					content={{ isIcon: true, icon: inviteIcon }}
-					href="/my-vokis/invites"
-					isCurrent={page.data.currentTab === 'invites'}
-				></MyVokisLink>
+				<button
+					onclick={() => handleRefreshClick()}
+					class="force-reload-btn"
+					class:btn-loading={isCurrentPageLoading}
+					>{#if isCurrentPageLoading}
+						<LinesLoader
+							speedSec={2}
+							sizeRem={1.25}
+							strokePx={1.7}
+							color="var(--secondary-foreground)"
+						/>
+					{:else}
+						<svg><use href="#common-reload-icon" /></svg>
+					{/if}</button
+				>
 			</div>
 			{#if navigating.type}
 				<div class="loading">
@@ -131,22 +141,21 @@
 		display: grid;
 		height: 100vh;
 		padding-bottom: 2rem;
-		grid-template-rows: auto 1fr;
+		grid-template-rows: var(--sidebar-links-top-padding) 1fr;
 		animation: loading-fade-in 0.1s ease-in-out;
 	}
 
 	.top-actions {
-		display: flex;
-		flex-direction: row;
+		display: grid;
+		grid-template-columns: 2rem 1fr 1fr 2rem;
 		justify-content: center;
+		align-items: center;
 		gap: 1rem;
-		width: 100%;
-		height: 100%;
-		height: var(--sidebar-links-top-padding);
+		width: fit-content;
 		box-sizing: border-box;
-		padding: 1rem 3.5rem;
+		padding: 1rem 0;
 		margin: 0 auto;
-		border-radius: 2rem;
+		height: var(--sidebar-links-top-padding);
 		background-color: var(--back);
 	}
 
@@ -154,13 +163,44 @@
 		overflow-y: auto;
 	}
 	.force-reload-btn {
-		width: 2rem;
-		height: 2rem;
+		margin: 0;
+		width: 1.675rem;
+		height: 1.675rem;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+		border-radius: 100vw;
+		display: grid;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		cursor: pointer;
+		box-shadow: var(--shadow-md), var(--shadow);
 	}
-	.force-reload-btn.is-already-loading {
+	.force-reload-btn:hover {
+		background-color: var(--accent);
+		color: var(--accent-foreground);
+	}
+	.force-reload-btn svg {
+		height: 1.125rem;
+		width: 1.125rem;
+		stroke-width: 2;
+		transition: transform 0.17s ease-out;
+	}
+	.force-reload-btn:hover svg {
+		transform: rotate(55deg);
+	}
+	.force-reload-btn:active svg {
+		transform: scale(0.92) rotate(100deg);
+		stroke-width: 2.2;
+	}
+	.force-reload-btn.btn-loading {
 		pointer-events: none;
 		opacity: 0.9;
 	}
+	.force-reload-btn.btn-loading > :global(*) {
+		animation: fade-in-from-zero-with-delay 1s ease-in;
+	}
+
 	:global(.my-vokis-page > .create-new-voki-btn) {
 		position: absolute;
 		bottom: 1rem;

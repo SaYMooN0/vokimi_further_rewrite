@@ -26,11 +26,15 @@
 {:else if pageState.draftVokiIds.state === 'errs'}
 	<DefaultErrBlock errList={pageState.draftVokiIds.errs} />
 {:else if pageState.draftVokiIds.state === 'loaded'}
-	<VokiItemsGridContainer>
-		{#each pageState.draftVokiIds.vokiIds as vokiId}
-			<VokiItemView state={pageState.getVokiViewItemState(vokiId)} />
-		{/each}
-	</VokiItemsGridContainer>
+	{#if pageState.draftVokiIds.vokiIds.length === 0}
+		<h1>You don't have any draft vokis</h1>
+	{:else}
+		<VokiItemsGridContainer>
+			{#each pageState.draftVokiIds.vokiIds as vokiId}
+				<VokiItemView state={pageState.getVokiViewItemState(vokiId)} />
+			{/each}
+		</VokiItemsGridContainer>
+	{/if}
 {:else}
 	<MyVokisPageUnexpectedStateAfterLoading reloadPage={pageState.forceRefetch} />
 {/if}

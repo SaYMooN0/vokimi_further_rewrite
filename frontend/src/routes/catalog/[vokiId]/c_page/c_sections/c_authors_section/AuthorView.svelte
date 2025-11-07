@@ -4,7 +4,6 @@
 
 	let { userId }: { userId: string } = $props<{ userId: string }>();
 	let user = UsersStore.Get(userId);
-	$inspect(user);
 </script>
 
 <a

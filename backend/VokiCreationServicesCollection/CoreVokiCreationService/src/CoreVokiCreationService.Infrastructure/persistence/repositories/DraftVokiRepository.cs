@@ -34,10 +34,16 @@ internal class DraftVokiRepository : IDraftVokiRepository
         .AsNoTracking()
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 
-    public Task<DraftVoki[]> ListByIdWhereUserIsInvitedForCoAuthorAsNoTracking(AppUserId userId) => _db.Vokis
-        .AsNoTracking()
-        .Where(v => v.InvitedForCoAuthorUserIds.Contains(userId))
-        .ToArrayAsync();
+    public Task<DraftVoki[]> ListByIdWhereUserIsInvitedForCoAuthorAsNoTracking(AppUserId userId) =>
+        _db.Vokis
+            .FromSqlInterpolated($@"
+                SELECT *
+                FROM ""Vokis""
+                WHERE {userId.Value} = ANY(""InvitedForCoAuthorUserIds"")
+            ")
+            .AsNoTracking()
+            .ToArrayAsync();
+
 
     public Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds) =>
         _db.Vokis.AsNoTracking()

@@ -26,7 +26,6 @@ export namespace UsersStore {
     export function Get(id: string): UserProfilePreviewWithState {
         const now = Date.now();
         const cached = cache.get(id);
-
         if (cached && cached.expiresAt > now) {
             return cached.obj as UserProfilePreviewWithState;
         }
@@ -74,10 +73,12 @@ export namespace UsersStore {
     }
 
     async function fetchAndApplyChunk(ids: string[]): Promise<void> {
+
         try {
             const response = await ApiUserProfiles.fetchJsonResponse<{ users: Record<string, UserProfilePreview> }>(
                 "/users/preview", RJO.POST({ userIds: ids })
             );
+
 
             if (response.isSuccess) {
                 for (const id of ids) {

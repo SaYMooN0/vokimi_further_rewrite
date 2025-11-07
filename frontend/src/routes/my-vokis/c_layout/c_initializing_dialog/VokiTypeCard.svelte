@@ -1,20 +1,18 @@
 <script lang="ts">
-	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { VokiType } from '$lib/ts/voki';
+	import { VokiTypeUtils, type VokiType } from '$lib/ts/voki-type';
 	interface Props {
 		type: VokiType;
-		name: string;
 		isSelected: boolean;
 		onclick: () => void;
 	}
-	let { type, name, isSelected, onclick }: Props = $props();
+	let { type, isSelected, onclick }: Props = $props();
 </script>
 
 <div class="card" class:selected={isSelected} {onclick}>
 	<svg>
-		<use href="#{StringUtils.pascalToKebab(type)}-voki-type-icon" />
+		<use href={VokiTypeUtils.icon(type)} />
 	</svg>
-	<p>{name}</p>
+	<p>{VokiTypeUtils.name(type)}</p>
 	<div class="indicator" class:selected={isSelected}>
 		<span />
 	</div>
@@ -65,7 +63,6 @@
 		background-color: var(--muted);
 		transition: inherit;
 		aspect-ratio: 1/1;
-
 	}
 
 	.card:hover .indicator:not(.selected) {
@@ -82,7 +79,6 @@
 		height: 70%;
 		aspect-ratio: 1/1;
 		transition: inherit;
-
 	}
 
 	.indicator.selected span {

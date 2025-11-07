@@ -1,5 +1,5 @@
 import { ApiVokiCreationGeneral, type IVokiCreationBackendService } from '$lib/ts/backend-communication/voki-creation-backend-service';
-import type { VokiType } from '$lib/ts/voki';
+import type { VokiType } from '$lib/ts/voki-type';
 import { getContext, setContext } from 'svelte';
 
 

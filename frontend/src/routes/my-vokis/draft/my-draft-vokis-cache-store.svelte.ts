@@ -1,6 +1,6 @@
 import { ApiVokiCreationCore, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
-import type { VokiType } from "$lib/ts/voki";
+import type { VokiType } from "$lib/ts/voki-type";
 import { SvelteMap } from "svelte/reactivity";
 
 type DraftVokiBriefInfo = {
@@ -32,9 +32,7 @@ export namespace MyDraftVokisCacheStore {
     export function Get(id: string): VokiViewState {
         const now = Date.now();
         const cached = cache.get(id);
-
         if (cached && cached.expiresAt > now) {
-            console.log("cache hit");
             return cached.entry;
         }
 
@@ -79,7 +77,6 @@ export namespace MyDraftVokisCacheStore {
             const response = await ApiVokiCreationCore.fetchJsonResponse<{
                 vokis: DraftVokiBriefInfo[];
             }>("/vokis/brief-info", RJO.POST({ ids }));
-
             if (response.isSuccess) {
                 const vokisDict: Record<string, DraftVokiBriefInfo> = Object.fromEntries(
                     response.data.vokis.map(v => [v.id, v])

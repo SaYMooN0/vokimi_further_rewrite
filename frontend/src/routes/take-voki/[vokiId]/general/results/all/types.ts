@@ -1,4 +1,4 @@
-import type { GeneralVokiResultsVisibility } from "../../types"
+import type { GeneralVokiResultsVisibility } from "$lib/ts/voki";
 
 export type ViewAllVokiResultsResponse = {
     vokiName: string;

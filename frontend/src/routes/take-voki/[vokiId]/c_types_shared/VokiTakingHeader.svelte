@@ -1,10 +1,11 @@
 <script lang="ts">
-	import type { VokiType } from '$lib/ts/voki';
+	import type { VokiType } from '$lib/ts/voki-type';
 
-	let { vokiName, vokiType }: { vokiName: string; vokiType: VokiType } = $props<{
+	interface Props {
 		vokiName: string;
 		vokiType: VokiType;
-	}>();
+	}
+	let { vokiName, vokiType }: Props = $props();
 </script>
 
 <h1>Taking {vokiType}<label>{vokiName}</label>voki</h1>

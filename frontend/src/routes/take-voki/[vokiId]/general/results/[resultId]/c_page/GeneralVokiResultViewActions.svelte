@@ -1,6 +1,6 @@
 <script lang="ts">
 	import AuthView from '$lib/components/AuthView.svelte';
-	import type { GeneralVokiResultsVisibility } from '../../../types';
+	import type { GeneralVokiResultsVisibility } from '$lib/ts/voki';
 
 	interface Props {
 		resultsCount: number;

@@ -5,8 +5,9 @@
 	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { VokiType } from '$lib/ts/voki';
+	import type { VokiType } from '$lib/ts/voki-type';
 	import VokiTypeCard from './VokiTypeCard.svelte';
+
 	interface Props {
 		onVokiInitializedSuccessfully: (newVokiData: {
 			id: string;
@@ -31,10 +32,7 @@
 			id: string;
 			name: string;
 			type: VokiType;
-		}>(
-			'/initialize-new-voki',
-			RJO.POST({ newVokiName: vokiName, vokiType: selectedVokiType })
-		);
+		}>('/initialize-new-voki', RJO.POST({ newVokiName: vokiName, vokiType: selectedVokiType }));
 		if (response.isSuccess) {
 			onVokiInitializedSuccessfully(response.data);
 		} else {
@@ -63,19 +61,16 @@
 	<p class="subheading">Choose voki type</p>
 	<div class="voki-type-container">
 		<VokiTypeCard
-			name="General"
 			type="General"
 			isSelected={selectedVokiType === 'General'}
 			onclick={() => (selectedVokiType = 'General')}
 		/>
 		<VokiTypeCard
-			name="Tier List"
 			type="TierList"
 			isSelected={selectedVokiType === 'TierList'}
 			onclick={() => (selectedVokiType = 'TierList')}
 		/>
 		<VokiTypeCard
-			name="Scoring"
 			type="Scoring"
 			isSelected={selectedVokiType === 'Scoring'}
 			onclick={() => (selectedVokiType = 'Scoring')}
@@ -90,7 +85,6 @@
 {/if}
 
 <style>
-	
 	.loading-container {
 		display: flex;
 		flex-direction: column;
@@ -105,7 +99,7 @@
 		color: var(--secondary-foreground);
 		font-size: 2.5rem;
 		font-weight: 600;
-        letter-spacing: 0.25px;
+		letter-spacing: 0.25px;
 	}
 
 	.subheading {

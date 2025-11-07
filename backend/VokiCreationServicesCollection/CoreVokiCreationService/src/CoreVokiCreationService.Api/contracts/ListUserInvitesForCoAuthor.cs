@@ -4,7 +4,7 @@ using SharedKernel.common.vokis;
 namespace CoreVokiCreationService.Api.contracts;
 
 public record ListUserInvitesForCoAuthor(
-    InviteForCoAuthorVokiPreview[] Vokis
+    InviteForCoAuthorVokiPreview[] Invites
 ) : ICreatableResponse<DraftVoki[]>
 {
     public static ICreatableResponse<DraftVoki[]> Create(DraftVoki[] vokis) => new ListUserInvitesForCoAuthor(
@@ -18,7 +18,7 @@ public record InviteForCoAuthorVokiPreview(
     string VokiCover,
     VokiType VokiType,
     string PrimaryAuthorId,
-    string[] CoAuthorsIds,
+    string[] CoAuthorIds,
     string[] InvitedForCoAuthorUserIds,
     DateTime CreationDate
 )
