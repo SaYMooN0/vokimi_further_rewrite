@@ -20,7 +20,7 @@
 		<svg class="profile-pic">
 			<use href="#common-crossed-circle-icon" />
 		</svg>
-		<label class="">Error in loading</label>
+		<label>Error in loading</label>
 	{:else if user.state === 'ok'}
 		<img
 			class="profile-pic"

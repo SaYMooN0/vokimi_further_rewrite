@@ -11,31 +11,38 @@
 	import { registerVokiFlagsInfoDialogOpenFunction } from './c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
 	import CreateNewAlbumDialog from './c_layout/c_dialogs/CreateNewAlbumDialog.svelte';
 	import { registerCreateNewAlbumOpenFunction } from './c_layout/ts_layout_contexts/album-creation-dialog-context';
+	import ErrsViewDialog from './c_layout/c_dialogs/ErrsViewDialog.svelte';
+	import { registerErrsViewDialogOpenFunction } from './c_layout/ts_layout_contexts/errs-view-dialog-context';
 
 	let isFullWidthMode = $state(false);
 	let { children }: { children: Snippet } = $props<{ children: Snippet }>();
 
 	let signInDialog = $state<SignInDialog>()!;
-	let confirmActionDialog = $state<ConfirmActionDialog>()!;
-	let createNewAlbumDialog = $state<CreateNewAlbumDialog>()!;
-	let vokiItemFlagsInfoDialog = $state<VokiItemFlagsInfoDialog>()!;
-
 	registerSignInDialogOpenFunction((state) => signInDialog.open(state));
+
+	let confirmActionDialog = $state<ConfirmActionDialog>()!;
 	registerConfirmActionDialogOpenFunction({
 		open: (content) => confirmActionDialog.open(content),
 		close: () => confirmActionDialog.close()
 	});
-	registerVokiFlagsInfoDialogOpenFunction(() => vokiItemFlagsInfoDialog.open());
+
+	let createNewAlbumDialog = $state<CreateNewAlbumDialog>()!;
 	registerCreateNewAlbumOpenFunction((onAfterNewAlbumCreated) =>
 		createNewAlbumDialog.open(onAfterNewAlbumCreated)
 	);
+
+	let vokiItemFlagsInfoDialog = $state<VokiItemFlagsInfoDialog>()!;
+	registerVokiFlagsInfoDialogOpenFunction(() => vokiItemFlagsInfoDialog.open());
+
+	let errsViewDialog = $state<ErrsViewDialog>()!;
+	registerErrsViewDialogOpenFunction((errs) => errsViewDialog.open(errs));
 </script>
 
 <SignInDialog bind:this={signInDialog} />
 <ConfirmActionDialog bind:this={confirmActionDialog} />
 <CreateNewAlbumDialog bind:this={createNewAlbumDialog} />
 <VokiItemFlagsInfoDialog bind:this={vokiItemFlagsInfoDialog} />
-
+<ErrsViewDialog bind:this={errsViewDialog} />
 <LayoutSprites />
 <AppToaster />
 

@@ -101,3 +101,10 @@
     <path d="M12 21H18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
     <path d="M14.5 5.5L18.5 9.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
 </svg>
+
+<svg id="common-information-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" color="currentColor"
+    fill="none">
+    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M12 16V11.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M12 8.01172V8.00172" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

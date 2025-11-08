@@ -1,6 +1,6 @@
 import { setContext, getContext } from "svelte";
 
-const openFunctionKey = Symbol("open-voki-flags-info-function");
+const openFunctionKey = Symbol("open-voki-flags-info-dialog-function");
 type openVokiFlagsInfoDialogFunction = () => void;
 
 export function registerVokiFlagsInfoDialogOpenFunction(openDialog: openVokiFlagsInfoDialogFunction) {
