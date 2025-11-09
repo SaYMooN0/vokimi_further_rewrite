@@ -55,23 +55,23 @@
 <style>
 	.only-primary-author-can-invite {
 		display: flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		gap: 0.5rem;
-		color: var(--secondary-foreground);
-		background-color: var(--secondary);
-		font-size: 1.25rem;
-		margin-top: 0.5rem;
 		padding: 0.25rem 0.75rem;
+		margin-top: 0.5rem;
 		border-radius: 0.5rem;
-		box-shadow: var(--shadow-xs);
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+		font-size: 1.25rem;
 		font-weight: 425;
+		box-shadow: var(--shadow-xs);
 	}
 
 	.only-primary-author-can-invite svg {
-		height: 1.5rem;
 		width: 1.5rem;
-		stroke-width: 1.875;
+		height: 1.5rem;
 		color: inherit;
+		stroke-width: 1.875;
 	}
 </style>

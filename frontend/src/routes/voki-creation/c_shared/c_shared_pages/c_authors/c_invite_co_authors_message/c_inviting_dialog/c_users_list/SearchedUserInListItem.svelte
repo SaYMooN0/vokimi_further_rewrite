@@ -42,14 +42,15 @@
 <style>
 	.user {
 		display: grid;
-		grid-template-columns: auto 1fr 9rem;
+		place-items: center center;
 		gap: 0.375rem;
-		align-items: center;
-		justify-items: center;
+		grid-template-columns: auto 1fr 9rem;
 	}
+
     .user *{
         cursor: default ;
     }
+
 	.profile-pic {
 		display: grid;
 		width: 3rem;
@@ -60,18 +61,20 @@
 		object-fit: cover;
 		place-items: center;
 	}
+
 	.names-container {
 		display: grid;
 		grid-template-rows: auto auto;
 		justify-content: start;
 		width: 100%;
 	}
+
 	.display-name {
+		display: block;
 		width: 100%;
 		color: var(--text);
 		font-size: 1.25rem;
 		font-weight: 550;
-		display: block;
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
@@ -82,18 +85,21 @@
 		font-size: 0.875rem;
 		font-weight: 480;
 	}
+
 	.badge {
-		border-radius: 100vw;
 		padding: 0.125rem 0.5rem;
+		border-radius: 100vw;
+		font-size: 0.875rem;
 		font-weight: 450;
 		letter-spacing: 0;
-		font-size: 0.875rem;
 	}
+
 	.co-author,
 	.primary-author {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
+
 	.already-invited {
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);

@@ -78,17 +78,17 @@
 	}
 
 	.idx {
-		font-weight: 520;
 		font-size: 1rem;
+		font-weight: 520;
 		opacity: 0.9;
 	}
 
 	.msg {
 		margin: 0;
+		color: inherit;
 		font-size: 1rem;
 		font-weight: 500;
 		line-height: 1.25rem;
-		color: inherit;
 		overflow-wrap: anywhere;
 	}
 

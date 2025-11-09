@@ -7,6 +7,8 @@
 	import { MyVokiInvitesPageState } from './my-voki-invites-page-state.svelte';
 	import InviteForCoAuthorDisplay from './c_page/InviteForCoAuthorDisplay.svelte';
 	import { toast } from 'svelte-sonner';
+	import DeclineInviteConfirmationDialog from './c_page/DeclineInviteConfirmationDialog.svelte';
+	import AcceptInviteConfirmationDialog from './c_page/AcceptInviteConfirmationDialog.svelte';
 
 	const pageState = new MyVokiInvitesPageState();
 	onMount(() => {
@@ -19,6 +21,9 @@
 			}
 		});
 	});
+	let acceptInviteDialog = $state<AcceptInviteConfirmationDialog>()!;
+	let declineInviteDialog = $state<DeclineInviteConfirmationDialog>()!;
+	
 </script>
 
 {#if pageState.loadingState.state === 'loading'}
@@ -29,12 +34,14 @@
 	{#if pageState.loadingState.invites.length === 0}
 		<h1>You don't have any invites</h1>
 	{:else}
+		<AcceptInviteConfirmationDialog bind:this={acceptInviteDialog} />
+		<DeclineInviteConfirmationDialog bind:this={declineInviteDialog} />
 		<div class="invites-container">
 			{#each pageState.loadingState.invites as inv}
 				<InviteForCoAuthorDisplay
 					invite={inv}
-					onAccept={() => toast.error('not implemented yet')}
-					onDecline={() => toast.error('not implemented yet')}
+					onAccept={() => acceptInviteDialog.open(inv)}
+					onDecline={() => declineInviteDialog.open(inv)}
 				/>
 			{/each}
 		</div>

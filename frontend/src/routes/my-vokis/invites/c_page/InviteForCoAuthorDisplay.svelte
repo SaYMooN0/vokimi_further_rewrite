@@ -1,7 +1,6 @@
 <script lang="ts">
-	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
+	import { DateUtils } from '$lib/ts/utils/date-utils';
 	import { VokiTypeUtils } from '$lib/ts/voki-type';
 	import type { InviteForVokiCoAuthorData } from '../my-voki-invites-page-state.svelte';
 	import InviteDisplayInviter from './c_invite_display/InviteDisplayInviter.svelte';
@@ -13,11 +12,6 @@
 	}
 
 	let { invite, onAccept, onDecline }: Props = $props();
-
-	const createdOn =
-		invite.creationDate instanceof Date
-			? invite.creationDate
-			: new Date(invite.creationDate as unknown as string);
 
 	const invitedCount = invite.invitedForCoAuthorUserIds?.length ?? 0;
 	function handleAccept() {
@@ -53,8 +47,8 @@
 					</span>
 				{/if}
 
-				<span class="date" title={createdOn.toISOString()}>
-					{createdOn.toLocaleDateString()}
+				<span class="date">
+					{DateUtils.toLocale(invite.creationDate)}
 				</span>
 			</div>
 		</div>
@@ -77,13 +71,13 @@
 <style>
 	.invite-item {
 		display: grid;
-		grid-template-columns: 1fr 16rem;
-		gap: 1.5rem;
 		align-items: stretch;
+		gap: 1.5rem;
 		padding: 1rem 1.5rem;
 		border-radius: 1rem;
 		background: var(--back);
 		box-shadow: var(--shadow-xs) inset;
+		grid-template-columns: 1fr 16rem;
 	}
 
 	.left {
@@ -99,23 +93,23 @@
 	}
 
 	.invite-text {
+		color: var(--muted-foreground);
 		font-size: 1.25rem;
 		font-weight: 500;
-		color: var(--muted-foreground);
 	}
 
 	.invite-text .voki-name {
-		font-weight: 600;
 		color: var(--text);
+		font-weight: 600;
 	}
 
 	.meta {
 		display: inline-flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 0.5rem;
 		color: var(--muted-foreground);
 		font-size: 0.9rem;
-		flex-wrap: wrap;
 	}
 
 	.badge.type {
@@ -155,30 +149,31 @@
 
 	.actions {
 		display: flex;
-		gap: 0.5rem;
 		align-items: center;
+		gap: 0.5rem;
 	}
 
 	.btn {
 		padding: 0.5rem 1rem;
+		border: none;
 		border-radius: var(--radius);
-		cursor: pointer;
 		font-weight: 500;
 		letter-spacing: 0.125px;
-		border: none;
+		cursor: pointer;
 	}
 
 	.btn.primary {
+		border-color: var(--primary);
 		background: var(--primary);
 		color: var(--primary-foreground);
-		border-color: var(--primary);
 	}
+
 	.btn.primary:hover:where(:not([disabled])) {
 		background: var(--primary-hov);
 	}
 
 	.btn.ghost {
-		color: var(--text);
 		border-color: var(--secondary);
+		color: var(--text);
 	}
 </style>

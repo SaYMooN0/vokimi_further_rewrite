@@ -35,43 +35,46 @@
 	.confirm-btn-container {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		gap: 0.375rem;
 		height: 4rem;
 		text-align: center;
 	}
 
 	.confirm-btn-container button {
-		padding: 0.375rem 1.25rem;
 		width: 18rem;
+		padding: 0.375rem 1.25rem;
 		border: none;
 		border-radius: 0.5rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 		font-size: 1rem;
 		font-weight: 500;
-		cursor: pointer;
 		box-shadow: var(--shadow-xs);
 		transition: background-color 0.12s ease-in;
+		cursor: pointer;
 	}
+
 	.confirm-btn-container button:hover:not(.loading) {
 		background-color: var(--primary-hov);
 	}
+
 	button.loading {
 		opacity: 0.8;
 		pointer-events: none;
 	}
 
 	.confirm-btn-container .users-list-label {
+		max-width: 100%;
 		color: var(--muted-foreground);
 		font-size: 0.875rem;
 		line-height: 1;
-		max-width: 100%;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		white-space: nowrap;
 	}
+
 	.confirm-btn-container > * {
 		animation: fade-in-from-zero 0.2s ease-in;
 	}

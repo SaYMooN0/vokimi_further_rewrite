@@ -147,56 +147,63 @@
 
 	.top-actions {
 		display: grid;
-		grid-template-columns: 2rem 1fr 1fr 2rem;
 		justify-content: center;
 		align-items: center;
 		gap: 1rem;
 		width: fit-content;
+		height: var(--sidebar-links-top-padding);
 		box-sizing: border-box;
 		padding: 1rem 0;
 		margin: 0 auto;
-		height: var(--sidebar-links-top-padding);
 		background-color: var(--back);
+		grid-template-columns: 2rem 1fr 1fr 2rem;
 	}
 
 	.my-vokis-page-content {
 		overflow-y: auto;
 	}
+
 	.force-reload-btn {
-		margin: 0;
+		display: grid;
+		justify-content: center;
+		align-items: center;
 		width: 1.675rem;
 		height: 1.675rem;
+		margin: 0;
+		border: none;
+		border-radius: 100vw;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		border-radius: 100vw;
-		display: grid;
-		align-items: center;
-		justify-content: center;
-		border: none;
-		cursor: pointer;
 		box-shadow: var(--shadow-md), var(--shadow);
+		cursor: pointer;
 	}
+
 	.force-reload-btn:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.force-reload-btn svg {
-		height: 1.125rem;
 		width: 1.125rem;
-		stroke-width: 2;
+		height: 1.125rem;
 		transition: transform 0.17s ease-out;
+		stroke-width: 2;
 	}
+
 	.force-reload-btn:hover svg {
 		transform: rotate(55deg);
 	}
+
 	.force-reload-btn:active svg {
 		transform: scale(0.92) rotate(100deg);
 		stroke-width: 2.2;
 	}
+
 	.force-reload-btn.btn-loading {
 		pointer-events: none;
 		opacity: 0.9;
 	}
+
 	.force-reload-btn.btn-loading > :global(*) {
 		animation: fade-in-from-zero-with-delay 1s ease-in;
 	}
@@ -219,6 +226,7 @@
 	:global(.my-vokis-page > .create-new-voki-btn:active) {
 		transform: translateX(-50%) scaleX(0.96);
 	}
+
 	:global(.my-vokis-page > .create-new-voki-btn > svg) {
 		height: 1.75rem;
 	}

@@ -127,7 +127,7 @@
 	:global(#co-author-inviting-dialog > .dialog-content) {
 		display: grid;
 		width: 44rem;
-		padding: 2rem 2rem;
+		padding: 2rem;
 		grid-template-rows: auto auto 32rem auto auto auto;
 	}
 
@@ -138,10 +138,12 @@
 		font-weight: 500;
 		text-align: center;
 	}
+
 	.errs-container {
 		min-height: 1.5rem;
 		margin: 0.25rem 0;
 	}
+
 	.note {
 		margin-top: auto;
 		color: var(--secondary-foreground);

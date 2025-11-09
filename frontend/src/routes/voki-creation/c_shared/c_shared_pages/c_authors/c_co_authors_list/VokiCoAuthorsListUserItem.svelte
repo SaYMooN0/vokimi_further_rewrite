@@ -79,10 +79,12 @@
 		animation: var(--default-fade-in);
 		grid-template-columns: auto 1fr auto;
 	}
+
 	.user-item.viewer-is-user {
 		border-color: var(--primary);
 		box-shadow: none;
 	}
+
 	.user-item.invited {
 		border-color: var(--accent-foreground);
 		box-shadow: none;
@@ -94,19 +96,21 @@
 		left: 2rem;
 		padding: 0 0.25rem;
 		border-radius: 10rem;
-		color: var(--text);
+		background-color: var(--back);
+		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: 450;
 		transform: translateY(calc(-50% - 0.125rem));
-		background-color: var(--back);
-		color: var(--secondary-foreground);
 	}
+
 	.user-item.viewer-is-user .badge-label {
 		color: var(--primary);
 	}
+
 	.user-item.invited .badge-label {
 		color: var(--accent-foreground);
 	}
+
 	.profile-pic {
 		aspect-ratio: 1;
 		height: 100%;
@@ -120,6 +124,7 @@
 		display: grid;
 		align-content: center;
 	}
+
 	.loading {
 		pointer-events: none;
 		opacity: 0.95;
@@ -174,14 +179,16 @@
 		padding: 0.5rem 0.75rem;
 		color: var(--muted-foreground);
 	}
+
 	.names-container {
 		display: grid;
-		grid-template-rows: auto auto;
 		justify-content: start;
-		width: 100%;
 		gap: 0.125rem;
+		width: 100%;
 		padding-bottom: 1rem;
+		grid-template-rows: auto auto;
 	}
+
 	.display-name {
 		color: var(--text);
 		font-size: 1.375rem;

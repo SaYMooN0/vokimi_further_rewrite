@@ -115,17 +115,19 @@
 		text-align: center;
 		animation: fade-in-from-zero 0.15s ease-in;
 	}
+
 	.empty-state > svg {
-		height: 4rem;
 		width: 4rem;
-		stroke-width: 1.5;
+		height: 4rem;
 		color: var(--primary);
+		stroke-width: 1.5;
 	}
+
 	.empty-state-title {
+		margin: -0.25rem 0 0.25rem;
 		color: var(--text);
 		font-size: 1.375rem;
 		font-weight: 600;
-		margin: -0.25rem 0 0.25rem;
 	}
 
 	.empty-state-subtitle {
@@ -134,30 +136,31 @@
 		font-size: 0.9375rem;
 		line-height: 1.5;
 	}
+
 	.users-list-wrapper {
 		position: relative;
-		height: 100%;
 		display: flex;
 		flex-direction: column;
+		height: 100%;
 	}
 
 	.users-list {
-		height: 100%;
-		overflow-y: auto;
-		scrollbar-gutter: stable;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		height: 100%;
 		padding: 0.375rem 0;
+		overflow-y: auto;
+		scrollbar-gutter: stable;
 	}
 
 	.fade-top,
 	.fade-bottom {
 		position: absolute;
-		left: 0;
 		right: 0;
-		height: 1rem;
+		left: 0;
 		z-index: 2;
+		height: 1rem;
 		pointer-events: none;
 	}
 

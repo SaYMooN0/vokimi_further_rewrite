@@ -35,7 +35,6 @@
 		text-decoration: none;
 		letter-spacing: 0.2px;
 			box-shadow: var(--shadow-md), var(--shadow);
-
 		transition: transform 0.12s ease;
 		cursor: pointer;
 	}

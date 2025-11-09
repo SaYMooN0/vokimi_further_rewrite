@@ -1,0 +1,203 @@
+<script lang="ts">
+	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
+	import type { UserProfilePreview } from '$lib/ts/users';
+	import { getErrsViewDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/errs-view-dialog-context';
+
+	interface Props {
+		userId: string;
+		class?: string;
+		isLink?: boolean;
+	}
+	let { userId, class: className = undefined, isLink = false }: Props = $props();
+	let user = UsersStore.Get(userId);
+	const openErrsViewDialog = getErrsViewDialogOpenFunction();
+</script>
+
+{#if user.state === 'ok'}
+	{#if isLink}
+		<a class="user-display ok {className}" href="/authors/{userId}">
+			{@render okStateContent(user.data)}
+		</a>
+	{:else}
+		<div class="user-display ok">
+			{@render okStateContent(user.data)}
+		</div>
+	{/if}
+{:else if user.state === 'errs'}
+	<div class="user-display error {className}" onclick={() => openErrsViewDialog(user.errs)}>
+		<svg class="profile-pic">
+			<use href="#common-crossed-circle-icon" />
+		</svg>
+		<label class="error-label"
+			>Error in loading<svg><use href="#common-information-icon" /></svg></label
+		>
+	</div>
+{:else if user.state === 'loading'}
+	<div class="user-display loading">
+		<div class="profile-pic skeleton-anim"></div>
+		<div class="names-container-loading">
+			<label class="skeleton-anim" />
+			<label class="skeleton-anim" />
+		</div>
+	</div>
+{/if}
+
+{#snippet okStateContent(data: UserProfilePreview)}
+	<img
+		class="profile-pic"
+		src={StorageBucketMain.fileSrc(data.profilePic)}
+		alt="user profile pic"
+	/>
+	<div class="names">
+		<label class="display-name">{data.displayName}</label>
+		<label class="unique-name">@{data.uniqueName}</label>
+	</div>
+{/snippet}
+
+<style>
+	.user-display {
+		--profile-pic-width: 2.75rem;
+		display: inline-grid;
+		grid-template-columns: var(--profile-pic-width) 1fr;
+		align-items: center;
+		gap: 0.25rem;
+		width: fit-content;
+
+		border-radius: 100vw;
+		background-color: var(--back);
+		text-decoration: none;
+		line-height: default;
+	}
+
+	.user-display .profile-pic {
+		display: block;
+		width: 100%;
+		aspect-ratio: 1/1;
+		border-radius: 50%;
+		cursor: inherit;
+		object-fit: cover;
+	}
+	.user-display * {
+		cursor: inherit;
+	}
+	.user-display.ok {
+		cursor: pointer;
+	}
+	.user-display.ok .names {
+		display: flex;
+		flex-direction: column;
+		align-content: center;
+		padding-top: 0.125rem;
+				line-height: 1;
+		text-indent: 0;
+		
+	}
+
+	.user-display.ok .display-name {
+		color: var(--text);
+		font-size: 1rem;
+		font-weight: 450;	
+
+	}
+
+	.user-display.ok .unique-name {
+		color: var(--muted-foreground);
+		font-size: 0.875rem;
+		font-weight: 440;
+		
+	}
+
+	.user-display.ok:hover .unique-name {
+		color: var(--primary);
+	}
+
+	.user-display.ok:active .unique-name {
+		color: var(--primary-hov);
+	}
+	.names-container-loading {
+		display: grid;
+		gap: 0.5rem;
+		width: 8rem;
+	}
+
+	.names-container-loading > label {
+		border-radius: 0.375rem;
+	}
+	.names-container-loading > label:nth-child(1) {
+		width: 100%;
+		height: 1rem;
+	}
+	.names-container-loading > label:nth-child(2) {
+		height: 0.875rem;
+		width: 75%;
+	}
+	.skeleton-anim {
+		background: var(--secondary);
+		position: relative;
+		overflow: hidden;
+		box-shadow: var(--shadow-xs);
+		cursor: default;
+	}
+	.skeleton-anim::after {
+		position: absolute;
+		background: linear-gradient(
+			120deg,
+			transparent 0%,
+			transparent 20%,
+			color-mix(in srgb, var(--secondary-foreground) 10%, var(--secondary) 10%) 50%,
+			transparent 80%,
+			transparent 100%
+		);
+		opacity: 0.9;
+		animation: shimmer 1.5s ease infinite;
+		content: '';
+		inset: 0;
+		background-size: 200% 100%;
+		height: 100%;
+	}
+
+	.user-display.error {
+		color: var(--secondary-foreground);
+		cursor: pointer;
+	}
+	.error .profile-pic {
+		padding: 0.5rem;
+		background-color: var(--secondary);
+		box-shadow: var(--shadow-xs);
+		stroke-width: 1.25;
+	}
+	.error .error-label {
+		font-size: 1rem;
+		font-weight: 450;
+		padding: 0.125rem 0.5rem;
+		width: max-content;
+		border-radius: 0.375rem;
+		cursor: inherit;
+	}
+	.error-label > svg {
+		color: inherit;
+		height: 1.25rem;
+		width: 1.25rem;
+		stroke-width: 2;
+		padding: 0;
+		vertical-align: middle;
+		padding-bottom: 0.125rem;
+		margin-left: 0.125rem;
+	}
+	.user-display.error:hover .error-label {
+		background-color: var(--secondary);
+		color: var(--muted-foreground);
+		text-decoration: underline;
+	}
+
+	@keyframes shimmer {
+		from {
+			background-position: 200% 0;
+		}
+
+		to {
+			background-position: -200% 0;
+		}
+	}
+</style>

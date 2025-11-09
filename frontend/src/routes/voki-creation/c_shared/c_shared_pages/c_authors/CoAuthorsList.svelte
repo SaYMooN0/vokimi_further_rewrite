@@ -46,10 +46,10 @@
 
 <style>
 	.all-co-authors-list {
-		margin-top: 1rem;
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
+		width: 100%;
+		margin-top: 1rem;
 	}
 </style>
