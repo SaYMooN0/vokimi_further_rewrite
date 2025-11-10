@@ -6,10 +6,10 @@ using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Api.endpoints;
 
-internal static class SpecificVokiHandlers
+internal class SpecificVokiHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.MapGet("/ratings", GetVokiRatingsData);
         group.MapGet("/all-with-average", GetVokiOtherUsersRatingsWithAverage);

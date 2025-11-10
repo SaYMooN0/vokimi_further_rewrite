@@ -1,5 +1,5 @@
+using System.Reflection;
 using InfrastructureShared.Base;
-using TagsService.Api.extensions;
 using TagsService.Application;
 using TagsService.Infrastructure;
 
@@ -16,9 +16,10 @@ public class Program
         builder.ConfigureLogging();
         
         builder.Services
-            .AddPresentation(builder.Configuration)
             .AddApplication()
-            .AddInfrastructure(builder.Configuration, builder.Environment);
+            .AddInfrastructure(builder.Configuration, builder.Environment)
+            .AddPresentation(builder.Configuration)
+            .AddEndpoints(Assembly.GetExecutingAssembly())
             ;
 
         var app = builder.Build();
@@ -33,7 +34,7 @@ public class Program
 
         app.AddExceptionHandlingMiddleware();
 
-        app.MapEndpoints();
+        app.MapEndpointGroups();
         
         app.AllowFrontendCors();
         app.Run();

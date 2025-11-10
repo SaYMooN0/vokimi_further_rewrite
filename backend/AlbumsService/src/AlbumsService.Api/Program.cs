@@ -1,7 +1,8 @@
-using AlbumsService.Api.extensions;
+using System.Reflection;
 using AlbumsService.Application;
 using AlbumsService.Infrastructure;
 using ApiShared;
+using ApiShared.extensions;
 using InfrastructureShared.Base;
 
 namespace AlbumsService.Api;
@@ -10,7 +11,8 @@ namespace AlbumsService.Api;
 public class Program
 {
     public static void Main(string[] args) {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+        
         builder.Host.UseDefaultServiceProvider((_, options) => {
             options.ValidateScopes = false;
             options.ValidateOnBuild = true;
@@ -18,10 +20,11 @@ public class Program
         builder.ConfigureLogging();
 
         builder.Services
-            .AddPresentation(builder.Configuration)
             .AddApplication()
-            .AddInfrastructure(builder.Configuration, builder.Environment);
-        ;
+            .AddInfrastructure(builder.Configuration, builder.Environment)
+            .AddPresentation(builder.Configuration)
+            .AddEndpoints(Assembly.GetExecutingAssembly())
+            ;
 
         var app = builder.Build();
         app.AddInfrastructureMiddleware();
@@ -34,10 +37,9 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
-
-        app.MapEndpoints();
-        
+        app.MapEndpointGroups();
         app.AllowFrontendCors();
+
         app.Run();
     }
 }

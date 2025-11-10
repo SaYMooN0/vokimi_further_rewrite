@@ -1,9 +1,7 @@
 ﻿using AlbumsService.Api.contracts;
 using AlbumsService.Api.contracts.create_new_album;
 using AlbumsService.Application.app_users.queries;
-using AlbumsService.Application.common.repositories;
 using AlbumsService.Application.voki_albums.commands;
-using AlbumsService.Application.voki_albums.queries;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApiShared;
 using ApiShared.extensions;
@@ -11,10 +9,10 @@ using ApplicationShared.messaging;
 
 namespace AlbumsService.Api.endpoints;
 
-internal static class RootHandlers
+internal class RootHandlers : IEndpointGroup
 {
-    internal static void MapRootHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/")
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/")
             .WithGroupAuthenticationRequired();
 
         group.MapGet("/all-albums-preview", GetAllUserAlbumsPreview);
@@ -22,7 +20,6 @@ internal static class RootHandlers
         group.MapPost("/albums/create-new", CreateNewAlbum)
             .WithRequestValidation<CreateNewVokiAlbumRequest>();
     }
-
 
     private static async Task<IResult> GetAllUserAlbumsPreview(
         CancellationToken ct, IQueryHandler<ListAllUserAlbumsPreviewQuery, ListAllUserAlbumsPreviewQueryResult> handler
@@ -46,4 +43,6 @@ internal static class RootHandlers
 
         return CustomResults.FromErrOrToJson<VokiAlbum, AlbumCreatedResponse>(result);
     }
+
+  
 }

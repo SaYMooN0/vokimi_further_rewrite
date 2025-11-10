@@ -4,12 +4,12 @@ using VokisCatalogService.Domain.voki_aggregate;
 
 namespace VokisCatalogService.Api.endpoints;
 
-internal static class SpecificVokiHandlers
+internal class SpecificVokiHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/");
-        group.MapGet("/overview", GetVokiOverviewInfo);
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
+        group.MapGet("/overview", GetVokiOverviewInfo);
     }
 
     private static async Task<IResult> GetVokiOverviewInfo(

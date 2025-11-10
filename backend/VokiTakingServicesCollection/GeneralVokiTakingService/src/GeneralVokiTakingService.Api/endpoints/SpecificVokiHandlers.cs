@@ -8,10 +8,10 @@ using GeneralVokiTakingService.Application.general_vokis.commands.sequential_ans
 
 namespace GeneralVokiTakingService.Api.endpoints;
 
-internal static class SpecificVokiHandlers
+internal class SpecificVokiHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.MapPost("/start-taking", StartVokiTaking);
 
@@ -81,7 +81,8 @@ internal static class SpecificVokiHandlers
 
     private static async Task<IResult> AnswerQuestionForSequentialAnsweringSession(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<AnswerQuestionInSequentialAnsweringVokiTakingCommand, AnswerQuestionInSequentialAnsweringVokiTakingCommandResult> handler
+        ICommandHandler<AnswerQuestionInSequentialAnsweringVokiTakingCommand,
+            AnswerQuestionInSequentialAnsweringVokiTakingCommandResult> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<AnswerQuestionForSequentialAnsweringSessionRequest>();
@@ -95,6 +96,8 @@ internal static class SpecificVokiHandlers
         );
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrToJson<AnswerQuestionInSequentialAnsweringVokiTakingCommandResult, SequentialAnswerSessionNextQuestionResponse>(result);
+        return CustomResults
+            .FromErrOrToJson<AnswerQuestionInSequentialAnsweringVokiTakingCommandResult,
+                SequentialAnswerSessionNextQuestionResponse>(result);
     }
 }

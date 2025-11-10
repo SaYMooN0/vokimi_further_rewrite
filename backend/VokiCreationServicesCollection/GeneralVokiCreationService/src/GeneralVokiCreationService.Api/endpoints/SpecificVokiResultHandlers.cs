@@ -6,10 +6,10 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
-internal static class SpecificVokiResultsHandlers
+internal class SpecificVokiResultsHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiResultsHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/results/{resultId}/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/results/{resultId}/");
 
         group.WithGroupAuthenticationRequired();
 
@@ -19,7 +19,6 @@ internal static class SpecificVokiResultsHandlers
 
         group.MapDelete("/delete", DeleteVokiResult);
     }
-
     private static async Task<IResult> GetVokiResult(
         CancellationToken ct, HttpContext httpContext,
         IQueryHandler<GetVokiResultQuery, VokiResult> handler
@@ -65,4 +64,6 @@ internal static class SpecificVokiResultsHandlers
 
         return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
     }
+
+   
 }

@@ -1,4 +1,4 @@
-using ApiShared;
+using ApiShared.extensions;
 using Infrastructure.Auth;
 using VokimiStorageService.extensions;
 
@@ -16,8 +16,8 @@ public class Program
 
         builder.Services
             .AddAuth(builder.Configuration)
-            .AddWeb(builder.Configuration)
-            .AddS3Storage(builder.Configuration);
+            .AddS3Storage(builder.Configuration)
+            .AddPresentation(builder.Configuration);
 
         var app = builder.Build();
 
@@ -29,8 +29,7 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
-
-        app.MapEndpointHandlers();
+        app.MapEndpointGroups();
 
         app.Run();
     }

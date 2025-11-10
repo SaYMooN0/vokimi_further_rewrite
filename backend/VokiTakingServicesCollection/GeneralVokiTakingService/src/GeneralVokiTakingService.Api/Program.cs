@@ -1,4 +1,4 @@
-using GeneralVokiTakingService.Api.extensions;
+using System.Reflection;
 using GeneralVokiTakingService.Application;
 using GeneralVokiTakingService.Infrastructure;
 using InfrastructureShared.Base;
@@ -17,9 +17,10 @@ public class Program
         builder.ConfigureLogging();
 
         builder.Services
-            .AddPresentation(builder.Configuration)
             .AddApplication()
-            .AddInfrastructure(builder.Configuration, builder.Environment);
+            .AddInfrastructure(builder.Configuration, builder.Environment)
+            .AddPresentation(builder.Configuration)
+            .AddEndpoints(Assembly.GetExecutingAssembly())
         ;
 
         var app = builder.Build();
@@ -33,10 +34,9 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
-
-        app.MapEndpoints();
-
         app.AllowFrontendCors();
+        app.MapEndpointGroups();
+        
         app.Run();
     }
 }

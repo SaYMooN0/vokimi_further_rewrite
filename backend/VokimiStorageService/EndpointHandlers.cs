@@ -6,10 +6,11 @@ using VokimiStorageService.s3_storage.storage_service;
 
 namespace VokimiStorageService;
 
-internal static class EndpointHandlers
+internal class EndpointHandlers
 {
-    internal static void MapEndpointHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/main");
+   
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/main");
 
         group.MapGet("/{*fileKey}", GetFileFromStorage)
             .DisableAntiforgery();
@@ -44,4 +45,6 @@ internal static class EndpointHandlers
             new { TempKey = key.ToString() }
         ));
     }
+
+    
 }

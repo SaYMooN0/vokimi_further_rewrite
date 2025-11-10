@@ -3,15 +3,14 @@ using TagsService.Application.voki_tags.queries;
 
 namespace TagsService.Api.endpoints;
 
-public static class RootHandlers
+internal  class RootHandlers : IEndpointGroup
 {
-    internal static void MapRootHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/search", SearchTags);
         group.MapGet("/tags-popular-for-languages", ListTagsPopularForLanguages);
     }
-
     private static async Task<IResult> SearchTags(
         CancellationToken ct,
         IQueryHandler<SearchTagsQuery, ImmutableArray<VokiTagId>> handler,

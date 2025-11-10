@@ -4,10 +4,10 @@ using GeneralVokiTakingService.Application.general_vokis.queries;
 
 namespace GeneralVokiTakingService.Api.endpoints;
 
-internal static class SpecificVokiResultsHandlers
+internal class SpecificVokiResultsHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiResultsHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/results");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/results");
 
         group.MapGet("/{resultId}", ViewSpecificResult);
 

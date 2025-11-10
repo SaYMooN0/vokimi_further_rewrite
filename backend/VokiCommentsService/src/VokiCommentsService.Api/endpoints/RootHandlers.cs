@@ -7,14 +7,15 @@ using VokiCommentsService.Application.common.repositories;
 
 namespace VokiCommentsService.Api.endpoints;
 
-public static class RootHandlers
+internal class RootHandlers : IEndpointGroup
 {
-    internal static void MapRootHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/");
         
         group.MapGet("/commented-vokis", GetUserCommentedVokis)
             .WithAuthenticationRequired();
     }
+    
     private static async Task<IResult> GetUserCommentedVokis(
         CancellationToken ct, HttpContext httpContext,
         IQueryHandler<ListUserCommentedVokiIdsQuery, VokiIdWithLastCommentedDateDto[]> handler
@@ -24,5 +25,4 @@ public static class RootHandlers
 
         return CustomResults.FromErrOrToJson<VokiIdWithLastCommentedDateDto[], UserCommentedVokiIdsResponse>(result);
     }
-
 } 

@@ -1,15 +1,18 @@
-﻿using System.Text.Json.Serialization;
-using ApiShared;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.auth;
 
-namespace AlbumsService.Api;
+namespace ApiShared.extensions;
 
-public static class DependencyInjection
+public static class ServiceCollectionExtensions
 {
+    public const string FrontendCorsPolicy = "FrontendCorsPolicy";
+
     public static IServiceCollection AddPresentation(this IServiceCollection services, IConfiguration configuration) {
-        services.AddFrontend(configuration);
-        services.AddOpenApi();
+        services.AddFrontendCors(configuration);
         services.AddHttpContextAccessor();
+        services.AddOpenApi();
         services.AddScoped<IUserContext, UserContextProvider>();
         services.ConfigureHttpJsonOptions(options => {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -17,11 +20,11 @@ public static class DependencyInjection
         return services;
     }
 
-    private static IServiceCollection AddFrontend(this IServiceCollection services, IConfiguration configuration) {
+    private static IServiceCollection AddFrontendCors(this IServiceCollection services, IConfiguration configuration) {
         var frontendUrl = configuration["FrontendUrl"] ?? throw new Exception("FrontendUrl is not configured");
 
         services.AddCors(options => {
-            options.AddPolicy("AllowFrontend", policy => {
+            options.AddPolicy(FrontendCorsPolicy, policy => {
                 policy
                     .WithOrigins(frontendUrl)
                     .AllowAnyHeader()
@@ -29,6 +32,7 @@ public static class DependencyInjection
                     .AllowCredentials();
             });
         });
+
         return services;
     }
 }

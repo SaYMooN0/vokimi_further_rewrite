@@ -4,10 +4,10 @@ using SharedKernel.auth;
 
 namespace AuthService.Api.endpoints;
 
-public static class RootHandlers
+public class RootHandlers : IEndpointGroup
 {
-    internal static void MapRootHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/");
 
         group.MapPost("/ping", PingAuth);
         group.MapPost("/sign-up", RegisterUser)

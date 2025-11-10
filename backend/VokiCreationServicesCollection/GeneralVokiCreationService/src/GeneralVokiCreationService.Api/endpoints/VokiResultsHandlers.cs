@@ -5,10 +5,10 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
-internal static class VokiResultsHandlers
+internal class VokiResultsHandlers : IEndpointGroup
 {
-    internal static void MapVokiResultsHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/results/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/results/");
 
         group.WithGroupAuthenticationRequired();
 

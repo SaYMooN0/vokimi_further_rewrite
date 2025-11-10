@@ -6,10 +6,10 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
-internal static class QuestionAnswersHandlers
+internal class QuestionAnswersHandlers : IEndpointGroup
 {
-    internal static void MapQuestionAnswersHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/questions/{questionId}/answers/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/questions/{questionId}/answers/");
 
         group.WithGroupAuthenticationRequired();
 
@@ -21,7 +21,6 @@ internal static class QuestionAnswersHandlers
 
         group.MapDelete("/{answerId}/delete", DeleteVokiQuestionAnswer);
     }
-
     private static async Task<IResult> AddNewAnswerToVokiQuestion(
         CancellationToken ct, HttpContext httpContext,
         ICommandHandler<AddNewAnswerToVokiQuestionCommand, VokiQuestionAnswer> handler
@@ -64,4 +63,6 @@ internal static class QuestionAnswersHandlers
 
         return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
     }
+
+   
 }

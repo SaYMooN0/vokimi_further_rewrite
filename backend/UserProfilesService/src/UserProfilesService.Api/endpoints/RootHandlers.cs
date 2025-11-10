@@ -5,11 +5,10 @@ using UserProfilesService.Domain.app_user_aggregate;
 
 namespace UserProfilesService.Api.endpoints;
 
-internal static class RootHandlers
+internal  class RootHandlers : IEndpointGroup
 {
-    internal static void MapRootHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/");
-
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/basic-setup-info", GetUserBasicSetupInfo)
             .WithAuthenticationRequired();
@@ -46,5 +45,6 @@ internal static class RootHandlers
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
 
-   
+
+    
 }

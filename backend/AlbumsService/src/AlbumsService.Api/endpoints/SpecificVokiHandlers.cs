@@ -8,10 +8,10 @@ using SharedKernel.domain.ids;
 
 namespace AlbumsService.Api.endpoints;
 
-internal static class SpecificVokiHandlers
+internal class SpecificVokiHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.MapGet("/albums-data", GetAlbumsDataForVoki);
         group.MapPatch("/update-presence-in-albums", UpdateVokiPresenceInAlbums)

@@ -6,10 +6,10 @@ using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
 namespace CoreVokiCreationService.Api.endpoints;
 
-public static class SpecificVokiHandlers
+internal class SpecificVokiHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.WithGroupAuthenticationRequired();
 
@@ -117,6 +117,7 @@ public static class SpecificVokiHandlers
             new { VokiIds = vokiIds.Select(id => id.ToString()).ToArray() })
         );
     }
+
     private static async Task<IResult> ViewVokiAsInvitedForCoAuthor(
         HttpContext httpContext, CancellationToken ct,
         IQueryHandler<GetVokiQuery, DraftVoki> handler

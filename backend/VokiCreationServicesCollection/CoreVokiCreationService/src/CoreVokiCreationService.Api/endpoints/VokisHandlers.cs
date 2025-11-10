@@ -4,10 +4,10 @@ using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
 namespace CoreVokiCreationService.Api.endpoints;
 
-public static class VokisHandlers
+internal class VokisHandlers : IEndpointGroup
 {
-    internal static void MapVokisHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/");
 
         group.WithGroupAuthenticationRequired();
 

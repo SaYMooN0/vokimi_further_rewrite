@@ -45,5 +45,7 @@
 </script>
 
 <DialogWithCloseButton bind:this={dialog} dialogId="decline-invite-dialog">
-	content
+	{#if inviteToDecline}
+    {:else}
+    {/if}
 </DialogWithCloseButton>

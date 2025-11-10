@@ -5,10 +5,10 @@ using VokiRatingsService.Application.common.repositories;
 
 namespace VokiRatingsService.Api.endpoints;
 
-public static class RootHandlers
+internal class RootHandlers : IEndpointGroup
 {
-    internal static void MapRootHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/rated-vokis", GetUserRatedVokis)
             .WithAuthenticationRequired();

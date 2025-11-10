@@ -8,10 +8,10 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
-internal static class SpecificVokiQuestionsHandlers
+internal class SpecificVokiQuestionsHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiQuestionsHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/questions/{questionId}/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/questions/{questionId}/");
 
         group.WithGroupAuthenticationRequired();
 

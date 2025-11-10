@@ -13,10 +13,10 @@ using VokimiStorageKeysLib.concrete_keys;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
-internal static class SpecificVokiHandlers
+internal class SpecificVokiHandlers : IEndpointGroup
 {
-    internal static void MapSpecificVokiHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/vokis/{vokiId}/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.WithGroupAuthenticationRequired();
 
@@ -40,7 +40,6 @@ internal static class SpecificVokiHandlers
         group.MapPost("/publish", PublishVoki);
         group.MapPost("/publish-with-warnings-ignored", PublishVokiWithWarningsIgnored);
     }
-
     private static async Task<IResult> GetVokiMainInfo(
         CancellationToken ct, HttpContext httpContext,
         IQueryHandler<GetVokiQuery, DraftGeneralVoki> handler

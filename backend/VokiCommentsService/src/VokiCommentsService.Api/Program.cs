@@ -1,6 +1,6 @@
-using ApiShared;
+using System.Reflection;
+using ApiShared.extensions;
 using InfrastructureShared.Base;
-using VokiCommentsService.Api.extensions;
 using VokiCommentsService.Application;
 using VokiCommentsService.Infrastructure;
 
@@ -18,9 +18,10 @@ public class Program
         builder.ConfigureLogging();
 
         builder.Services
-            .AddPresentation(builder.Configuration)
             .AddApplication()
-            .AddInfrastructure(builder.Configuration, builder.Environment);
+            .AddInfrastructure(builder.Configuration, builder.Environment)
+            .AddPresentation(builder.Configuration)
+            .AddEndpoints(Assembly.GetExecutingAssembly())
         ;
 
         var app = builder.Build();
@@ -33,11 +34,11 @@ public class Program
             app.UseHttpsRedirection();
         }
 
-        app.AddExceptionHandlingMiddleware();
 
-        app.MapEndpoints();
-        
+        app.AddExceptionHandlingMiddleware();
         app.AllowFrontendCors();
+        app.MapEndpointGroups();
+
         app.Run();
     }
 }

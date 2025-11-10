@@ -1,13 +1,14 @@
-﻿using ApiShared.extensions;
+﻿using ApiShared;
+using ApiShared.extensions;
 
 namespace AlbumsService.Api.endpoints;
 
-internal static class SpecificAlbumHandlers
+internal  class SpecificAlbumHandlers : IEndpointGroup
 {
-    internal static void MapSpecificAlbumHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/albums/{albumId}")
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/albums/{albumId}")
             .WithGroupAuthenticationRequired();
-
+        
         // group.MapPatch("/update", UpdateAlbum);
         // group.MapDelete("/delete", DeleteAlbum);
     }

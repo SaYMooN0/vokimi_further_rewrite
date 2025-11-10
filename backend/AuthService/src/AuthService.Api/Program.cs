@@ -1,4 +1,4 @@
-using AuthService.Api.extensions;
+using System.Reflection;
 using AuthService.Application;
 using AuthService.Infrastructure;
 using InfrastructureShared.Base;
@@ -13,13 +13,14 @@ public class Program
             options.ValidateScopes = false;
             options.ValidateOnBuild = true;
         });
-        
-        builder.ConfigureLogging();
 
+        builder.ConfigureLogging();
+        builder.Services.AddFrontendConfig(builder.Configuration);
         builder.Services
-            .AddPresentation(builder.Configuration)
             .AddApplication()
             .AddInfrastructure(builder.Configuration, builder.Environment)
+            .AddPresentation(builder.Configuration)
+            .AddEndpoints(Assembly.GetExecutingAssembly())
             ;
 
         var app = builder.Build();
@@ -34,8 +35,8 @@ public class Program
 
         app.AddExceptionHandlingMiddleware();
 
-        app.MapEndpoints();
-        
+        app.MapEndpointGroups();
+
         app.AllowFrontendCors();
         app.Run();
     }

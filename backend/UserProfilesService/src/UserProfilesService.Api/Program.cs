@@ -1,5 +1,5 @@
+using System.Reflection;
 using InfrastructureShared.Base;
-using UserProfilesService.Api.extensions;
 using UserProfilesService.Application;
 using UserProfilesService.Infrastructure;
 
@@ -16,9 +16,10 @@ public class Program
         builder.ConfigureLogging();
 
         builder.Services
-            .AddPresentation(builder.Configuration)
             .AddApplication()
             .AddInfrastructure(builder.Configuration, builder.Environment)
+            .AddPresentation(builder.Configuration)
+            .AddEndpoints(Assembly.GetExecutingAssembly())
             ;
 
         var app = builder.Build();
@@ -32,10 +33,9 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
-
-        app.MapEndpoints();
-
         app.AllowFrontendCors();
+        app.MapEndpointGroups();
+        
         app.Run();
     }
 }

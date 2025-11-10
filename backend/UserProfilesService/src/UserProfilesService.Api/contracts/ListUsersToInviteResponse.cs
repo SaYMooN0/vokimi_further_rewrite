@@ -1,7 +1,7 @@
 using SharedKernel.common.app_users;
 using UserProfilesService.Application.common.repositories;
 
-namespace UserProfilesService.Api;
+namespace UserProfilesService.Api.contracts;
 
 public record class ListUsersToInviteResponse(
     SingleUserToInviteResponse[] Users

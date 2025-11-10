@@ -6,6 +6,8 @@
 	import type { Err } from '$lib/ts/err';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { InviteForVokiCoAuthorData } from '../my-voki-invites-page-state.svelte';
+	import AcceptInviteDialogConfirmationState from './c_accept_invite_dialog/AcceptInviteDialogConfirmationState.svelte';
+	import AcceptInviteDialogConfirmedState from './c_accept_invite_dialog/AcceptInviteDialogConfirmedState.svelte';
 
 	type DialogState =
 		| { name: 'NoInviteSelected' }
@@ -53,35 +55,11 @@
 		isLoading = false;
 		dialogState = { name: 'NoInviteSelected' };
 	}
-
-	function vokiCreationLink(data: { vokiId: string; vokiType: string }) {
-		return `/voki-creation/${StringUtils.pascalToKebab(data.vokiType)}/${data.vokiId}`;
-	}
 </script>
 
 <DialogWithCloseButton bind:this={dialog} dialogId="accept-invite-dialog">
 	{#if dialogState.name === 'ConfirmMessage'}
-		<p class="main-text">
-			Are you sure you want to join
-			<BasicUserDisplay userId={dialogState.invite.primaryAuthorId} />
-			in the creation of <span class="voki-name">{dialogState.invite.vokiName}</span> Voki as a co-author?
-		</p>
-
-		<DefaultErrBlock errList={errs} />
-
-		<div class="buttons">
-			<button class="btn secondary" disabled={isLoading} onclick={() => closeDialog()}>
-				Cancel
-			</button>
-			<button
-				class="btn primary"
-				disabled={isLoading}
-				aria-busy={isLoading}
-				onclick={() => acceptInvite()}
-			>
-				Confirm
-			</button>
-		</div>
+		<AcceptInviteDialogConfirmationState />
 
 		{#if isLoading}
 			<div class="loading-backdrop" aria-hidden="true">
@@ -96,28 +74,7 @@
 			</div>
 		</div>
 	{:else if dialogState.name === 'Confirmed'}
-		<p class="main-text">
-			You now a co-author of <span class="voki-name">{dialogState.vokiName}</span> Voki
-		</p>
-		<div class="buttons">
-			<a
-				class="link-to-voki"
-				href={vokiCreationLink(dialogState)}
-				aria-label="Open Voki creation page"
-			>
-				Open Voki creation page
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
-					<path
-						d="M9 6.65032C9 6.65032 15.9383 6.10759 16.9154 7.08463C17.8924 8.06167 17.3496 15 17.3496 15M16.5 7.5L6.5 17.5"
-						stroke="currentColor"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					/>
-				</svg>
-			</a>
-
-			<button class="" onclick={() => closeDialog()}>Close</button>
-		</div>
+		<AcceptInviteDialogConfirmedState />
 	{/if}
 </DialogWithCloseButton>
 
