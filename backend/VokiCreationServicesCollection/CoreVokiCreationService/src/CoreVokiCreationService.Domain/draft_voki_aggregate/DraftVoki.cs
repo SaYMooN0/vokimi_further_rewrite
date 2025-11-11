@@ -103,6 +103,10 @@ public class DraftVoki : AggregateRoot<VokiId>
             return ErrOrNothing.Nothing;
         }
 
+        if (PrimaryAuthorId == userId) {
+            return ErrFactory.Conflict("Primary author cannot become a co-author");
+        }
+
         if (!InvitedForCoAuthorUserIds.Contains(userId)) {
             return ErrFactory.Unspecified("You are not listed as invited in this voki");
         }
@@ -115,7 +119,7 @@ public class DraftVoki : AggregateRoot<VokiId>
 
         CoAuthorIds = CoAuthorIds.Add(userId);
         InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
-        AddDomainEvent(new CoAuthorInviteAcceptedEvent(Id, userId));
+        AddDomainEvent(new CoAuthorInviteAcceptedEvent(Id, userId, Type));
         return ErrOrNothing.Nothing;
     }
 
@@ -132,7 +136,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
     }
 
-    // public ErrOrNothing RemoveCoAuthor() { }
+    // public ErrOrNothing DropCoAuthor() { }
     public void MarkAsPublished() {
         foreach (var invitedUserIds in InvitedForCoAuthorUserIds) {
             AddDomainEvent(new CoAuthorInviteCanceledEvent(Id, invitedUserIds));

@@ -1,3 +1,4 @@
+using System.Reflection;
 using ApiShared.extensions;
 using Infrastructure.Auth;
 using VokimiStorageService.extensions;
@@ -17,7 +18,8 @@ public class Program
         builder.Services
             .AddAuth(builder.Configuration)
             .AddS3Storage(builder.Configuration)
-            .AddPresentation(builder.Configuration);
+            .AddPresentation(builder.Configuration)
+            .AddEndpoints(Assembly.GetExecutingAssembly());
 
         var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using SharedKernel.common.vokis;
+﻿using SharedKernel.common.rules;
+using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.concrete_keys;
@@ -34,15 +35,33 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         CreationDate = creationDate;
     }
 
-    public ErrOrNothing UpdateCoAuthorsIds(VokiCoAuthorIdsSet newCoAuthorsSet) {
-        if (newCoAuthorsSet.Contains(this.PrimaryAuthorId)) {
-            return ErrFactory.Conflict("Primary author cannot be specified as co-author");
+    public ErrOrNothing AddCoAuthor(AppUserId newCoAuthorId) {
+        if (newCoAuthorId == PrimaryAuthorId) {
+            return ErrFactory.Conflict("Primary author cannot be a co-author of the Voki");
         }
 
-        CoAuthors = newCoAuthorsSet;
+        ErrOr<VokiCoAuthorIdsSet> newSetRes = CoAuthors.Add(newCoAuthorId);
+        if (newSetRes.IsErr(out var err)) {
+            return err;
+        }
+
+        CoAuthors = newSetRes.AsSuccess();
         return ErrOrNothing.Nothing;
     }
+    public ErrOrNothing RemoveCoAuthor(AppUserId coAuthorId)
+    {
+        if (coAuthorId == PrimaryAuthorId) {
+            return ErrFactory.Conflict("Primary author cannot be removed from co-authors");
+        }
 
+        ErrOr<VokiCoAuthorIdsSet> newSetRes = CoAuthors.Remove(coAuthorId);
+        if (newSetRes.IsErr(out var err)) {
+            return err;
+        }
+
+        CoAuthors = newSetRes.AsSuccess();
+        return ErrOrNothing.Nothing;
+    }
     public bool HasAccessToEdit(AppUserId userId) =>
         userId == PrimaryAuthorId || CoAuthors.Contains(userId);
 

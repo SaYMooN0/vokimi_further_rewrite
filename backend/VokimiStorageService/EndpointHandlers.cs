@@ -6,9 +6,8 @@ using VokimiStorageService.s3_storage.storage_service;
 
 namespace VokimiStorageService;
 
-internal class EndpointHandlers
+internal class EndpointHandlers : IEndpointGroup
 {
-   
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/main");
 
@@ -45,6 +44,4 @@ internal class EndpointHandlers
             new { TempKey = key.ToString() }
         ));
     }
-
-    
 }

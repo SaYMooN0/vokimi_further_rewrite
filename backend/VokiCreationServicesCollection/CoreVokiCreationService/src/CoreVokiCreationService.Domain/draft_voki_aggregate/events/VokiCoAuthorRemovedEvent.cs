@@ -1,8 +1,8 @@
-﻿using SharedKernel.common.vokis;
+using SharedKernel.common.vokis;
 
 namespace CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 
-public record class CoAuthorInviteAcceptedEvent(
+public record class VokiCoAuthorRemovedEvent(
     VokiId VokiId,
     AppUserId AppUserId,
     VokiType VokiType

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.Contracts;
 using SharedKernel.common.rules;
 using SharedKernel.exceptions;
 
@@ -27,7 +28,36 @@ public class VokiCoAuthorIdsSet : ValueObject
         return new VokiCoAuthorIdsSet(ids);
     }
 
-    public static ErrOrNothing CheckForErr(ImmutableHashSet<AppUserId> ids) =>
+    [Pure]
+    public ErrOr<VokiCoAuthorIdsSet> Add(AppUserId id) {
+        if (_ids.Contains(id)) {
+            return this;
+        }
+
+        ImmutableHashSet<AppUserId> newIds = _ids.Add(id);
+
+        if (CheckForErr(newIds).IsErr(out var err)) {
+            return err;
+        }
+
+        return new VokiCoAuthorIdsSet(newIds);
+    }
+    [Pure]
+    public ErrOr<VokiCoAuthorIdsSet> Remove(AppUserId id)
+    {
+        if (!_ids.Contains(id)) {
+            return this;
+        }
+
+        ImmutableHashSet<AppUserId> newIds = _ids.Remove(id);
+
+        if (CheckForErr(newIds).IsErr(out var err)) {
+            return err;
+        }
+
+        return new VokiCoAuthorIdsSet(newIds);
+    }
+    private static ErrOrNothing CheckForErr(ImmutableHashSet<AppUserId>? ids) =>
         ids is null ? ErrFactory.NoValue.Common("Co-author list is null")
         : ids.Count > VokiRules.MaxCoAuthors ? ErrFactory.LimitExceeded(
             $"A Voki can have at most {VokiRules.MaxCoAuthors} co-authors",

@@ -32,3 +32,15 @@
 
 	<button class="" onclick={() => closeDialog()}>Close</button>
 </div>
+
+<style>
+	.link-to-voki {
+		display: inline-block;
+		width: max-content;
+		padding: 0.5rem 0.75rem;
+		border-radius: calc(var(--radius) - 0.125rem);
+		background: var(--back);
+		color: var(--accent-foreground);
+		box-shadow: var(--shadow-xs);
+	}
+</style>

@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using SharedKernel.integration_events.draft_vokis;
+using SharedKernel.integration_events.draft_vokis.co_authors;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
 using SharedKernel.integration_events.voki_publishing;
 using SharedKernel.integration_events.voki_taken;
@@ -25,5 +26,8 @@ namespace SharedKernel.integration_events;
 [JsonDerivedType(typeof(GeneralVokiTakenIntegrationEvent),typeDiscriminator: nameof(GeneralVokiTakenIntegrationEvent))]
 
 [JsonDerivedType(typeof(VokiRatedIntegrationEvent),typeDiscriminator: nameof(VokiRatedIntegrationEvent))]
+
+[JsonDerivedType(typeof(DraftVokiNewCoAuthorAddedIntegrationEvent),typeDiscriminator: nameof(DraftVokiNewCoAuthorAddedIntegrationEvent))]
+[JsonDerivedType(typeof(DraftVokiCoAuthorRemovedIntegrationEvent),typeDiscriminator: nameof(DraftVokiCoAuthorRemovedIntegrationEvent))]
 // @formatter:on
 public interface IIntegrationEvent { }
