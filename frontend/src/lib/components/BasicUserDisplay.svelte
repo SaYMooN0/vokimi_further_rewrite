@@ -2,26 +2,47 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
 	import type { UserProfilePreview } from '$lib/ts/users';
+	import { devNull } from 'os';
 	import { getErrsViewDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/errs-view-dialog-context';
+	import { goto } from '$app/navigation';
 
+	type ComponentInteraction = 'WholeComponentLink' | 'UniqueNameGotoOnClick' | 'JustDisplay';
 	interface Props {
 		userId: string;
 		class?: string;
-		isLink?: boolean;
+		interactionLevel: ComponentInteraction;
 	}
-	let { userId, class: className = undefined, isLink = false }: Props = $props();
+	let { userId, class: className = undefined, interactionLevel }: Props = $props();
 	let user = UsersStore.Get(userId);
 	const openErrsViewDialog = getErrsViewDialogOpenFunction();
+
+	function handleUniqueNameClick(e: MouseEvent) {
+		if (interactionLevel !== 'UniqueNameGotoOnClick') {
+			return;
+		}
+
+		if (e.button === 1) {
+			window.open(`/authors/${userId}`, '_blank');
+			return;
+		}
+
+		if (e.ctrlKey || e.metaKey) {
+			window.open(`/authors/${userId}`, '_blank');
+			return;
+		}
+
+		goto(`/authors/${userId}`);
+	}
 </script>
 
 {#if user.state === 'ok'}
-	{#if isLink}
+	{#if interactionLevel === 'WholeComponentLink'}
 		<a class="user-display ok {className}" href="/authors/{userId}">
-			{@render okStateContent(user.data)}
+			{@render okStateContent(user.data, true)}
 		</a>
 	{:else}
 		<div class="user-display ok">
-			{@render okStateContent(user.data)}
+			{@render okStateContent(user.data, interactionLevel === 'UniqueNameGotoOnClick')}
 		</div>
 	{/if}
 {:else if user.state === 'errs'}
@@ -43,7 +64,7 @@
 	</div>
 {/if}
 
-{#snippet okStateContent(data: UserProfilePreview)}
+{#snippet okStateContent(data: UserProfilePreview, isUniqueNameLink: boolean)}
 	<img
 		class="profile-pic"
 		src={StorageBucketMain.fileSrc(data.profilePic)}
@@ -51,7 +72,9 @@
 	/>
 	<div class="names">
 		<label class="display-name">{data.displayName}</label>
-		<label class="unique-name">@{data.uniqueName}</label>
+		<label class="unique-name" class:interactive={isUniqueNameLink} onclick={handleUniqueNameClick}
+			>@{data.uniqueName}</label
+		>
 	</div>
 {/snippet}
 
@@ -89,30 +112,27 @@
 		flex-direction: column;
 		align-content: center;
 		padding-top: 0.125rem;
-				line-height: 1;
+		line-height: 1;
 		text-indent: 0;
-		
 	}
 
 	.user-display.ok .display-name {
 		color: var(--text);
 		font-size: 1rem;
-		font-weight: 450;	
-
+		font-weight: 450;
 	}
 
 	.user-display.ok .unique-name {
 		color: var(--muted-foreground);
 		font-size: 0.875rem;
 		font-weight: 440;
-		
 	}
 
-	.user-display.ok:hover .unique-name {
+	.user-display.ok:hover .unique-name.interactive {
 		color: var(--primary);
 	}
 
-	.user-display.ok:active .unique-name {
+	.user-display.ok:active .unique-name.interactive {
 		color: var(--primary-hov);
 	}
 	.names-container-loading {

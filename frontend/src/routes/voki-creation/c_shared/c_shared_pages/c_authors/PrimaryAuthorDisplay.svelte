@@ -2,6 +2,7 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
 	import { DateUtils } from '$lib/ts/utils/date-utils';
+	import { getErrsViewDialogOpenFunction } from '../../../../c_layout/ts_layout_contexts/errs-view-dialog-context';
 
 	interface Props {
 		viewerId: string;
@@ -11,6 +12,8 @@
 	let { viewerId, primaryAuthorId, creationDate }: Props = $props();
 	let primaryAuthor = UsersStore.Get(primaryAuthorId);
 	let viewerIsPrimaryAuthor = $derived(viewerId === primaryAuthorId);
+
+	const openErrsViewDialog = getErrsViewDialogOpenFunction();
 </script>
 
 <div
@@ -18,6 +21,11 @@
 	class:viewer-is-primary-author={primaryAuthor.state === 'ok' && viewerIsPrimaryAuthor}
 	class:loading={primaryAuthor.state === 'loading'}
 	class:err={primaryAuthor.state === 'errs'}
+	onclick={() => {
+		if (primaryAuthor.state === 'errs') {
+			openErrsViewDialog(primaryAuthor.errs);
+		}
+	}}
 >
 	{#if primaryAuthor.state === 'ok'}
 		<label class="prim-author-label">
@@ -49,13 +57,9 @@
 	{:else}
 		<div class="profile-pic"></div>
 		<div class="main-content">
-			{#if primaryAuthor.state === 'errs' && primaryAuthor.errs.length > 0}
-				{#each primaryAuthor.errs as err}
-					<p class="err-view">{err}</p>
-				{/each}
-			{:else}
-				<p class="err-view">Something went wrong. Could not load user data</p>
-			{/if}
+			Something went wrong. Could not load user data <svg>
+				<use href="#common-information-icon" /></svg
+			>
 		</div>
 	{/if}
 </div>
@@ -187,11 +191,26 @@
 		border: 0.125rem solid var(--err-foreground);
 		background-color: var(--secondary);
 		box-shadow: var(--err-shadow);
-
+		cursor: pointer;
 	}
 
-	.err-view {
+	.err .main-content {
 		padding: 0.5rem 0.75rem;
 		color: var(--muted-foreground);
+		font-size: 1.25rem;
+		font-weight: 450;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.125rem;
+	}
+	.err:hover .main-content {
+		text-decoration: underline;
+	}
+	.err .main-content > svg {
+		height: 1.375rem;
+		width: 1.375rem;
+		padding-top: 0.125rem;
+		stroke-width: 2;
 	}
 </style>

@@ -63,7 +63,7 @@
 	/>
 </p>
 {#if errs.length > 0}
-	<DefaultErrBlock errList={errs} className="voki-taking-process-settings-err-block" />
+	<DefaultErrBlock errList={errs} class="voki-taking-process-settings-err-block" />
 {/if}
 <VokiCreationSaveAndCancelButtons onSave={() => saveChanges()} onCancel={cancelEditing} />
 

@@ -60,7 +60,7 @@
 		name={StringUtils.rndStr()}
 	/>
 	{#if savingErrs.length > 0}
-		<DefaultErrBlock errList={savingErrs} className="question-text-err-block" />
+		<DefaultErrBlock errList={savingErrs} class="question-text-err-block" />
 	{/if}
 	<VokiCreationSaveAndCancelButtons
 		onCancel={() => (isEditing = false)}

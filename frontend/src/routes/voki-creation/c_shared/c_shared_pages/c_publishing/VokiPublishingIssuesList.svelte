@@ -68,7 +68,7 @@
 		</div>
 	{/each}
 </div>
-<DefaultErrBlock className="publishing-err-block" errList={errs} />
+<DefaultErrBlock class="publishing-err-block" errList={errs} />
 {#if problems.length > 0}
 	<p class="fix-msg">Please fix all problems before publishing</p>
 {:else if warnings.length > 0}

@@ -4,16 +4,15 @@ using UserProfilesService.Application.common.repositories;
 
 namespace UserProfilesService.Api.endpoints;
 
-public static class UsersHandlers
+internal class UsersHandlers : IEndpointGroup
 {
-    internal static void MapUsersHandlers(this IEndpointRouteBuilder endpoints) {
-        var group = endpoints.MapGroup("/users/");
+    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+        var group = routeBuilder.MapGroup("/users/");
 
         group.MapPost("/preview", GetUserPreviewData)
             .WithRequestValidation<UsersPreviewRequest>();
-        
-        group.MapGet("/search-to-invite", SearchUsersToInviteByName);
 
+        group.MapGet("/search-to-invite", SearchUsersToInviteByName);
     }
 
     private static async Task<IResult> GetUserPreviewData(
@@ -27,6 +26,7 @@ public static class UsersHandlers
 
         return CustomResults.FromErrOrToJson<UserPreviewDto[], MultipleUsersPreviewResponse>(result);
     }
+
     private static async Task<IResult> SearchUsersToInviteByName(
         string searchValue, int limit,
         HttpContext httpContext, CancellationToken ct,
@@ -35,6 +35,7 @@ public static class UsersHandlers
         SearchUsersByNameQuery query = new(searchValue, limit);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
+        return CustomResults
+            .FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
     }
-}   
+}

@@ -52,6 +52,8 @@ public class DraftVokiNewCoAuthorAddedIntegrationEventHandler : IConsumer<DraftV
             UnexpectedBehaviourException.ThrowErr(err);
         }
 
+        await _draftGeneralVokisRepository.Update(voki);
+        
         _logger.LogInformation(
             "Processed {EventName}: co-author {AppUserId} added to Voki {VokiId}",
             eventName, msg.AppUserId, msg.VokiId

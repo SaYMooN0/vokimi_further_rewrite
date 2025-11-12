@@ -54,8 +54,8 @@
 		</div>
 
 		<div class="actions">
-			<button class="btn primary" onclick={handleAccept}>Accept</button>
-			<button class="btn ghost" onclick={handleDecline}>Decline</button>
+			<button class="btn cancel" onclick={handleDecline}>Decline</button>
+			<button class="btn accept" onclick={handleAccept}>Accept</button>
 		</div>
 	</div>
 
@@ -77,7 +77,7 @@
 		border-radius: 1rem;
 		background: var(--back);
 		box-shadow: var(--shadow-xs) inset;
-		grid-template-columns: 1fr 16rem;
+		grid-template-columns: 1fr 17rem;
 	}
 
 	.left {
@@ -140,7 +140,6 @@
 
 	.cover {
 		width: 100%;
-		height: 100%;
 		object-fit: fill;
 		border-radius: var(--voki-cover-border-radius);
 		aspect-ratio: var(--voki-cover-aspect-ratio);
@@ -150,30 +149,36 @@
 	.actions {
 		display: flex;
 		align-items: center;
+		justify-content: flex-end;
+		width: 100%;
 		gap: 0.5rem;
 	}
 
 	.btn {
-		padding: 0.5rem 1rem;
+		padding: 0.5rem 2rem;
 		border: none;
-		border-radius: var(--radius);
+		border-radius: 0.25rem;
 		font-weight: 500;
-		letter-spacing: 0.125px;
+		letter-spacing: 0.25px;
 		cursor: pointer;
 	}
 
-	.btn.primary {
-		border-color: var(--primary);
-		background: var(--primary);
+	.btn.accept {
+		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
 
-	.btn.primary:hover:where(:not([disabled])) {
-		background: var(--primary-hov);
+	.btn.accept:hover:where(:not([disabled])) {
+		background-color: var(--primary-hov);
 	}
 
-	.btn.ghost {
-		border-color: var(--secondary);
-		color: var(--text);
+	.btn.cancel {
+		border-color: var(--muted);
+		color: var(--muted-foreground);
+	}
+
+	.btn.cancel:hover:where(:not([disabled])) {
+		background-color: var(--accent);
+		color: var(--accent-foreground);
 	}
 </style>

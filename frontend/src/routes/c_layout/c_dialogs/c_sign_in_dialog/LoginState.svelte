@@ -122,7 +122,7 @@
 	}}
 />
 <SignInDialogLink text="I don't have an account yet" onClick={() => changeState('signup')} />
-<DefaultErrBlock errList={errs} className="login-err-block" />
+<DefaultErrBlock errList={errs} class="login-err-block" />
 <SignInDialogConfirmButton text="Log in" onclick={() => confirmLogin()} {isLoading} />
 
 <style>

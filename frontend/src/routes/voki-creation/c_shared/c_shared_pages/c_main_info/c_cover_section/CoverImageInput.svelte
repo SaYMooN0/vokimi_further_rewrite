@@ -78,7 +78,7 @@
 		</label>
 	{/if}
 </div>
-<DefaultErrBlock errList={errs} className="img-input-errs-block" />
+<DefaultErrBlock errList={errs} class="img-input-errs-block" />
 
 <style>
 	.img-input-container {

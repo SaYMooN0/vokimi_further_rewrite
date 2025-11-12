@@ -195,7 +195,7 @@
 			<label class="name">{name || 'Untitled album'}</label>
 		</div>
 	</section>
-	<DefaultErrBlock errList={savingErrs} className="saving-err-block" />
+	<DefaultErrBlock errList={savingErrs} class="saving-err-block" />
 	<PrimaryButton onclick={saveNewAlbum} type="button">Create</PrimaryButton>
 </div>
 

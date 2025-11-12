@@ -99,7 +99,7 @@
 		<input id="max-answers-count" type="number" bind:value={maxAnswers} />
 	</div>
 </div>
-<DefaultErrBlock errList={savingErrs} className="question-answers-settings-err-block" />
+<DefaultErrBlock errList={savingErrs} class="question-answers-settings-err-block" />
 <VokiCreationSaveAndCancelButtons onCancel={() => cancelEditing()} onSave={() => saveChanges()} />
 
 <style>

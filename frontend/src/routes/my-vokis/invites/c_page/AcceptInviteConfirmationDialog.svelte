@@ -1,7 +1,5 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
-	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
-	import type { Err } from '$lib/ts/err';
 	import type { InviteForVokiCoAuthorData } from '../my-voki-invites-page-state.svelte';
 	import AcceptInviteDialogConfirmationState from './c_accept_invite_dialog/AcceptInviteDialogConfirmationState.svelte';
 	import AcceptInviteDialogConfirmedState from './c_accept_invite_dialog/AcceptInviteDialogConfirmedState.svelte';
@@ -13,9 +11,13 @@
 
 	let dialogState: DialogState = $state<DialogState>({ name: 'NoInviteSelected' });
 	let dialog = $state<DialogWithCloseButton>()!;
+	let confirmationState = $state<AcceptInviteDialogConfirmationState>();
 
 	export function open(invite: InviteForVokiCoAuthorData) {
 		dialogState = { name: 'ConfirmMessage', invite };
+		if (confirmationState) {
+			confirmationState.reset();
+		}
 		dialog.open();
 	}
 
@@ -28,6 +30,7 @@
 <DialogWithCloseButton bind:this={dialog} dialogId="accept-invite-dialog">
 	{#if dialogState.name === 'ConfirmMessage'}
 		<AcceptInviteDialogConfirmationState
+			bind:this={confirmationState}
 			invite={dialogState.invite}
 			changeStateToConfirmed={(inv) => {
 				dialogState = {
@@ -59,10 +62,11 @@
 <style>
 	:global(#accept-invite-dialog > .dialog-content) {
 		position: relative;
-		height: 32rem;
+		min-height: 32rem;
 		width: 48rem;
+		padding-top: 2.5rem;
+		padding-bottom: 2.5rem;
 	}
-
 
 	.empty {
 		display: grid;
@@ -72,6 +76,4 @@
 	.invite-not-selected {
 		color: var(--muted-foreground);
 	}
-
-	
 </style>

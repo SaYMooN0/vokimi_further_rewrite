@@ -156,7 +156,7 @@
 <div class="gap" />
 
 <SignInDialogLink text="I already have an account" onClick={() => changeState('login')} />
-<DefaultErrBlock errList={errs} className="sign-up-err-block" />
+<DefaultErrBlock errList={errs} class="sign-up-err-block" />
 <SignInDialogConfirmButton text="Sign Up" onclick={() => confirmSignUp()} {isLoading} />
 
 <style>

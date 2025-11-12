@@ -1,6 +1,7 @@
 <script lang="ts">
 	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
 	import type { InviteForVokiCoAuthorData } from '../../my-voki-invites-page-state.svelte';
@@ -30,11 +31,18 @@
 			errs = response.errs;
 		}
 	}
+	export function reset() {
+		isLoading = false;
+		errs = [];
+	}
 </script>
 
 {#if isLoading}
 	<div class="loading-backdrop" aria-hidden="true">
-		<span class="loading-text">Processing...</span>
+		<div class="loading-content">
+			<CubesLoader sizeRem={4} speedSec={1.75} />
+			<p class="loading-text">We are adding you to Voki co-authors<br /> Please wait a bit</p>
+		</div>
 	</div>
 {/if}
 <p class="main-text">
@@ -43,7 +51,7 @@
 	in the creation of <span class="voki-name">{invite.vokiName}</span> Voki as a co-author?
 </p>
 
-<DefaultErrBlock errList={errs} />
+<DefaultErrBlock errList={errs} class="confirm-invite-errs-block" />
 
 <div class="buttons">
 	<button class="btn secondary" disabled={isLoading} onclick={() => closeDialog()}> Cancel </button>
@@ -59,31 +67,36 @@
 
 <style>
 	.main-text {
-		line-height: 1.5;
+		line-height: 1.375;
 		color: var(--text);
 		text-indent: 1em;
-		font-size: 1.25rem;
+		font-size: 1.125rem;
 		text-wrap: pretty;
-		font-weight: 450;
+		font-weight: 475;
+		text-align: justify;
+		margin: auto 0;
 	}
 	.main-text > :global(.user-display) {
 		display: inline-grid;
 		vertical-align: middle;
-		margin: 0 0.25rem;
-		--profile-pic-width: 2.5rem;
+		--profile-pic-width: 2.375rem;
+		margin: 0.125rem 0.25rem;
 	}
 	.main-text > .voki-name {
 		color: var(--muted-foreground);
 		font-weight: 500;
-		background-color: var(--muted);
-		padding: 0.125rem 0.5rem;
 		border-radius: 0.5rem;
+		font-size: 1.25rem;
+		text-indent: 0;
+	}
+	:global(.confirm-invite-errs-block) {
+		margin: 0.5rem 0;
 	}
 	.buttons {
+		margin-top: auto;
 		display: flex;
 		gap: 0.75rem;
 		justify-content: flex-end;
-		margin-top: 2rem;
 		width: 100%;
 	}
 
@@ -120,18 +133,40 @@
 	}
 	.loading-backdrop {
 		position: absolute;
-		inset: 0;
 		display: grid;
 		place-items: center;
-		background: rgba(0, 0, 0, 0.04);
-		backdrop-filter: blur(0.125rem);
+		align-items: center;
+		align-content: center;
+		justify-items: center;
+		justify-content: center;
+		height: 100%;
+		width: 100%;
+		inset: 0;
+		border-radius: inherit;
+		background: rgba(40, 40, 40, 0.06);
+		backdrop-filter: blur(1px);
+
 		animation: var(--default-fade-in);
 	}
+	.loading-content {
+		background-color: var(--back);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		width: fit-content;
+		margin-bottom: 1rem;
+		gap: 1.5rem;
 
+		border-radius: 1rem;
+		padding: 2rem 2rem;
+	}
 	.loading-text {
-		margin-top: 0.5rem;
-		font-size: 2rem;
+		font-size: 1.375rem;
 		letter-spacing: 0.5px;
 		color: var(--muted-foreground);
+		text-align: center;
+		font-weight: 475;
+		line-height: 1.125;
 	}
 </style>

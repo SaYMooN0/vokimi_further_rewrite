@@ -7,7 +7,7 @@
 
 <div class="authors-section">
 	<label class="by-label">by: </label>
-	<BasicUserDisplay userId={primaryAuthorId} isLink={true} />
+	<BasicUserDisplay userId={primaryAuthorId} isWholeLink={true} />
 	{#if coAuthorIds.length > 0}
 		and
 		<div class="co-authors-container">

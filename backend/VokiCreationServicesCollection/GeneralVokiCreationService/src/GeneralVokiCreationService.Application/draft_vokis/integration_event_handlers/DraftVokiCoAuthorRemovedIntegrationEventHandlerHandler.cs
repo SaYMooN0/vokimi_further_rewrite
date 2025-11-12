@@ -51,7 +51,9 @@ public class DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler : IConsumer<
 
             UnexpectedBehaviourException.ThrowErr(err);
         }
-
+        
+        await _draftGeneralVokisRepository.Update(voki);
+        
         _logger.LogInformation(
             "Processed {EventName}: co-author {AppUserId} removed from Voki {VokiId}",
             eventName, msg.AppUserId, msg.VokiId
