@@ -17,7 +17,7 @@
 {:else}
 	<input type="checkbox" {id} class="input" bind:checked />
 {/if}
-<label for={id} class="cbx unselectable">
+<label class="cbx unselectable">
 	<span><svg viewBox="0 0 12 10"> <polyline points="1.5 6 4.5 9 10.5 1" /></svg></span>
 </label>
 

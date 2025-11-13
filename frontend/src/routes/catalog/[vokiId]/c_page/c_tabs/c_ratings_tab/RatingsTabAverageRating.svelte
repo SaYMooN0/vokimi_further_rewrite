@@ -37,7 +37,7 @@
 	/>
 	{#if loading}
 		<div class="loader-backdrop">
-			<LinesLoader sizeRem={1.6} strokePx={2} />
+			<LinesLoader sizeRem={1.6} strokePx={2} color="var(--text)" />
 		</div>
 	{/if}
 </div>
@@ -120,8 +120,6 @@
 	}
 
 	.loader-backdrop > :global(.container) {
-		--loader-color: var(--text);
-
 		opacity: inherit;
 	}
 

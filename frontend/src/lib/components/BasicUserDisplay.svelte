@@ -2,7 +2,6 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
 	import type { UserProfilePreview } from '$lib/ts/users';
-	import { devNull } from 'os';
 	import { getErrsViewDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/errs-view-dialog-context';
 	import { goto } from '$app/navigation';
 
@@ -21,6 +20,7 @@
 			return;
 		}
 
+		//middle click
 		if (e.button === 1) {
 			window.open(`/authors/${userId}`, '_blank');
 			return;
@@ -37,7 +37,7 @@
 
 {#if user.state === 'ok'}
 	{#if interactionLevel === 'WholeComponentLink'}
-		<a class="user-display ok {className}" href="/authors/{userId}">
+		<a class="user-display ok interactive-all {className}" href="/authors/{userId}">
 			{@render okStateContent(user.data, true)}
 		</a>
 	{:else}
@@ -46,7 +46,7 @@
 		</div>
 	{/if}
 {:else if user.state === 'errs'}
-	<div class="user-display error {className}" onclick={() => openErrsViewDialog(user.errs)}>
+	<div class="user-display error interactive-all {className}" onclick={() => openErrsViewDialog(user.errs)}>
 		<svg class="profile-pic">
 			<use href="#common-crossed-circle-icon" />
 		</svg>
@@ -72,7 +72,7 @@
 	/>
 	<div class="names">
 		<label class="display-name">{data.displayName}</label>
-		<label class="unique-name" class:interactive={isUniqueNameLink} onclick={handleUniqueNameClick}
+		<label class="unique-name" onclick={handleUniqueNameClick} class:interactive={isUniqueNameLink}
 			>@{data.uniqueName}</label
 		>
 	</div>
@@ -92,21 +92,24 @@
 		text-decoration: none;
 		line-height: default;
 	}
-
+	.user-display:not(.interactive-all) {
+		cursor: default;
+	}
+	.user-display.interactive-all {
+		cursor: pointer;
+	}
+	.user-display * {
+		cursor: inherit;
+	}
 	.user-display .profile-pic {
 		display: block;
 		width: 100%;
 		aspect-ratio: 1/1;
 		border-radius: 50%;
-		cursor: inherit;
 		object-fit: cover;
 	}
-	.user-display * {
-		cursor: inherit;
-	}
-	.user-display.ok {
-		cursor: pointer;
-	}
+	
+
 	.user-display.ok .names {
 		display: flex;
 		flex-direction: column;
@@ -127,13 +130,13 @@
 		font-size: 0.875rem;
 		font-weight: 440;
 	}
-
-	.user-display.ok:hover .unique-name.interactive {
+	.user-display.ok .unique-name.interactive:hover {
 		color: var(--primary);
+		cursor: pointer !important;
 	}
 
-	.user-display.ok:active .unique-name.interactive {
-		color: var(--primary-hov);
+	.user-display.ok.interactive-all:hover .unique-name {
+		color: var(--primary);
 	}
 	.names-container-loading {
 		display: grid;
@@ -179,7 +182,6 @@
 
 	.user-display.error {
 		color: var(--secondary-foreground);
-		cursor: pointer;
 	}
 	.error .profile-pic {
 		padding: 0.5rem;
@@ -193,7 +195,6 @@
 		padding: 0.125rem 0.5rem;
 		width: max-content;
 		border-radius: 0.375rem;
-		cursor: inherit;
 	}
 	.error-label > svg {
 		color: inherit;

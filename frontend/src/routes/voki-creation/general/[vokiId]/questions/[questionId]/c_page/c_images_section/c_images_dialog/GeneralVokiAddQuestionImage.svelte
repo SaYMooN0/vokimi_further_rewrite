@@ -26,7 +26,7 @@
 
 {#if isLoading}
 	<div class="loading-container" style="aspect-ratio: {widthRatio} / {heightRatio};">
-		<CubesLoader sizeRem={4} />
+		<CubesLoader sizeRem={4}  color= 'var(--primary)'/>
 		<h1>Uploading image...</h1>
 	</div>
 {/if}

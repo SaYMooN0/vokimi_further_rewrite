@@ -52,7 +52,7 @@
 >
 	{#if isLoading}
 		<div class="loading-container">
-			<CubesLoader sizeRem={5} />
+			<CubesLoader sizeRem={5} color="var(--primary)" />
 		</div>
 	{:else}
 		<h1>This question has no images yet</h1>

@@ -37,7 +37,7 @@
 		{#snippet children(authState)}
 			{#if authState.name === 'loading' || dialogState.albumsState.name === 'loading'}
 				<div class="loading-container">
-					<CubesLoader sizeRem={6} />
+					<CubesLoader sizeRem={6} color= 'var(--primary)' />
 					<h1>Loading your albums</h1>
 				</div>
 			{:else if authState.name === 'error'}

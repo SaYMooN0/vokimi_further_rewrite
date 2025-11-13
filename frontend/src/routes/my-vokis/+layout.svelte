@@ -72,7 +72,7 @@
 			{#if navigating.type}
 				<div class="loading">
 					<h1>Loading your vokis</h1>
-					<CubesLoader sizeRem={5} />
+					<CubesLoader sizeRem={5} color="var(--primary)" />
 				</div>
 			{:else}
 				<div class="my-vokis-page-content">

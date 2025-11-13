@@ -53,7 +53,7 @@
 >
 	{#if isLoading}
 		<div class="loader">
-			<CubesLoader sizeRem={5} />
+			<CubesLoader sizeRem={5} color= 'var(--primary)' />
 			<p>Loading...</p>
 		</div>
 	{:else if errs.length > 0}

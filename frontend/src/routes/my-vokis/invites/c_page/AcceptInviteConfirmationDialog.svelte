@@ -1,5 +1,6 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
+	import type { VokiType } from '$lib/ts/voki-type';
 	import type { InviteForVokiCoAuthorData } from '../my-voki-invites-page-state.svelte';
 	import AcceptInviteDialogConfirmationState from './c_accept_invite_dialog/AcceptInviteDialogConfirmationState.svelte';
 	import AcceptInviteDialogConfirmedState from './c_accept_invite_dialog/AcceptInviteDialogConfirmedState.svelte';
@@ -7,7 +8,13 @@
 	type DialogState =
 		| { name: 'NoInviteSelected' }
 		| { name: 'ConfirmMessage'; invite: InviteForVokiCoAuthorData }
-		| { name: 'Confirmed'; vokiName: string; vokiId: string; vokiType: string };
+		| {
+				name: 'Confirmed';
+				vokiName: string;
+				vokiCover: string;
+				vokiId: string;
+				vokiType: VokiType;
+		  };
 
 	let dialogState: DialogState = $state<DialogState>({ name: 'NoInviteSelected' });
 	let dialog = $state<DialogWithCloseButton>()!;
@@ -36,6 +43,7 @@
 				dialogState = {
 					name: 'Confirmed',
 					vokiName: inv.vokiName,
+					vokiCover: inv.vokiCover,
 					vokiId: inv.vokiId,
 					vokiType: inv.vokiType
 				};
@@ -47,6 +55,7 @@
 			vokiType={dialogState.vokiType}
 			vokiId={dialogState.vokiId}
 			vokiName={dialogState.vokiName}
+			vokiCover={dialogState.vokiCover}
 			{closeDialog}
 		/>
 	{:else if dialogState.name === 'NoInviteSelected'}

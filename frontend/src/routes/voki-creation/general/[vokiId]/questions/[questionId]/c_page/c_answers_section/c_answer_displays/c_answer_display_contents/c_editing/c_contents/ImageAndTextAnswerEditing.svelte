@@ -44,7 +44,7 @@
 		<AnswerEditingTextArea bind:text={answer.text} />
 		<div class="image-part">
 			{#if isLoading}
-				<CubesLoader sizeRem={4} />
+				<CubesLoader sizeRem={4}  color= 'var(--primary)'/>
 			{:else if answer.image}
 				<GeneralVokiCreationAnswerDisplayImage src={answer.image} maxWidth={20} />
 				<label class="img-button unselectable">

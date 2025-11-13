@@ -12,6 +12,7 @@
 	let { uniqueName, displayName, profilePic, badge }: Props = $props();
 	let isInInvitedList = $derived(badge.state === 'CandidateToInvite' && badge.isUserInListToInvite);
 	function onUserItemClick() {
+		console.log('onUserItemClick', isInInvitedList);
 		if (badge.state === 'CandidateToInvite') {
 			if (isInInvitedList) {
 				badge.removeFromListToInvite();
@@ -47,9 +48,9 @@
 		grid-template-columns: auto 1fr 9rem;
 	}
 
-    .user *{
-        cursor: default ;
-    }
+	.user * {
+		cursor: default;
+	}
 
 	.profile-pic {
 		display: grid;

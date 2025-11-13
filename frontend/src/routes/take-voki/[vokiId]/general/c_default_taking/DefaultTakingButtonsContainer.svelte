@@ -54,7 +54,7 @@
 		class:loading={isFinishBtnLoading}
 		onclick={() => finishBtnPressed()}
 		>{#if isFinishBtnLoading}
-			<LinesLoader sizeRem={1.75} strokePx={2.5} />
+			<LinesLoader sizeRem={1.75} strokePx={2.5} color="var(--primary-foreground)" />
 		{:else}
 			Save
 		{/if}</button
@@ -130,11 +130,6 @@
 		opacity: 0.8;
 		pointer-events: none;
 	}
-
-	.finish-btn > :global(.container) {
-		--loader-color: var(--primary-foreground);
-	}
-
 	.finish-btn.hidden {
 		opacity: 0;
 		transform: scale(0);

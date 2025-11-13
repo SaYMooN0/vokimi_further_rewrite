@@ -40,6 +40,8 @@
 					viewerId={authState.userId}
 					{coAuthorIds}
 					{invitedForCoAuthorUserIds}
+					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
+					{vokiId}
 				/>
 				<InviteCoAuthorsMessage
 					{vokiId}

@@ -3,14 +3,9 @@
 		sizeRem?: number;
 		strokePx?: number;
 		speedSec?: number;
-		color?: string;
+		color: string;
 	}
-	let {
-		sizeRem = 3,
-		strokePx = 3,
-		speedSec = 1.5,
-		color="var(--primary)"
-	}: Props = $props();
+	let { sizeRem = 3, strokePx = 3, speedSec = 1.5, color }: Props = $props();
 </script>
 
 <div

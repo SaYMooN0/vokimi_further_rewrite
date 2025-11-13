@@ -46,6 +46,8 @@
 
 <DialogWithCloseButton bind:this={dialog} dialogId="decline-invite-dialog">
 	{#if inviteToDecline}
-    {:else}
-    {/if}
+		decline
+	{:else}
+		<h1>No invite selected</h1>
+	{/if}
 </DialogWithCloseButton>

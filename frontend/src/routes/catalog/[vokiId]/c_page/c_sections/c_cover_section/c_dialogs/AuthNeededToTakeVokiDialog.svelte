@@ -17,8 +17,8 @@
 	</p>
 
 	<div class="actions">
-		<button class="primary-btn" onclick={() => openSignInDialog('login')}> Login </button>
-		<button class="secondary-btn" onclick={() => openSignInDialog('signup')}> Sign up </button>
+		<button class="primary-btn" onclick={() => openSignInDialog('login')}>Login</button>
+		<button class="secondary-btn" onclick={() => openSignInDialog('signup')}>Sign up</button>
 	</div>
 </DialogWithCloseButton>
 

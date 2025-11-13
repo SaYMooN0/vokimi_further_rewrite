@@ -1,12 +1,13 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import UnableToLoad from '../../../../c_shared/UnableToLoad.svelte';
+	import UnableToLoad from '../../../../c_shared/VokiCreationPageLoadingErr.svelte';
 	import QuestionTextSection from './c_page/QuestionTextSection.svelte';
 	import VokiCreationBasicHeader from '../../../../c_shared/VokiCreationBasicHeader.svelte';
 	import QuestionImagesSection from './c_page/QuestionImagesSection.svelte';
 	import QuestionAnswerSettingsSection from './c_page/QuestionAnswerSettingsSection.svelte';
 	import QuestionAnswersSection from './c_page/QuestionAnswersSection.svelte';
 	import { setQuestionPageContext } from './question-page-context.svelte';
+	import VokiCreationPageLoadingErr from '../../../../c_shared/VokiCreationPageLoadingErr.svelte';
 
 	let { data }: PageProps = $props();
 	let questionAnswers = $state(data.data?.answers.sort((a, b) => a.order - b.order) ?? []);
@@ -14,7 +15,7 @@
 </script>
 
 {#if !data.isSuccess}
-	<UnableToLoad errs={data.errs} />
+	<VokiCreationPageLoadingErr vokiId={data.vokiId!} errs={data.errs} />
 {:else}
 	<div class="question-page">
 		<VokiCreationBasicHeader header="Voki question editing" />

@@ -1,12 +1,13 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import ListEmptyMessage from '../../../c_shared/ListEmptyMessage.svelte';
-	import UnableToLoad from '../../../c_shared/UnableToLoad.svelte';
+	import UnableToLoad from '../../../c_shared/VokiCreationPageLoadingErr.svelte';
 	import VokiCreationBasicHeader from '../../../c_shared/VokiCreationBasicHeader.svelte';
 	import type { PageProps } from './$types';
 	import GeneralVokiCreationResultItem from './c_results_page/GeneralVokiCreationResultItem.svelte';
 	import ResultInitializingDialog from './c_results_page/ResultInitializingDialog.svelte';
 	import type { ResultOverViewData } from './types';
+	import VokiCreationPageLoadingErr from '../../../c_shared/VokiCreationPageLoadingErr.svelte';
 
 	let { data }: PageProps = $props();
 	let resultCreationDialog = $state<ResultInitializingDialog>()!;
@@ -22,7 +23,7 @@
 </script>
 
 {#if !data.isSuccess}
-	<UnableToLoad errs={data.errs} />
+	<VokiCreationPageLoadingErr vokiId={data.vokiId!} errs={data.errs} />
 {:else}
 	<ResultInitializingDialog
 		bind:this={resultCreationDialog}

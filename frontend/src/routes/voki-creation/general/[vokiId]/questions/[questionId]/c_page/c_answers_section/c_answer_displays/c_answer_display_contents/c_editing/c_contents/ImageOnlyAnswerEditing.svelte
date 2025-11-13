@@ -61,7 +61,7 @@
 <div class="answer-content">
 	{#if isLoading}
 		<div class="loading">
-			<CubesLoader sizeRem={4} />
+			<CubesLoader sizeRem={4}  color= 'var(--primary)'/>
 		</div>
 	{:else if answer.image}
 		<div class="img-selected">

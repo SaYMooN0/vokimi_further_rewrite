@@ -1,11 +1,11 @@
 <script lang="ts">
-	import UnableToLoad from '../../../c_shared/UnableToLoad.svelte';
 	import type { PageProps } from './$types';
 	import QuestionInitializingDialog from './c_questions_page/QuestionInitializingDialog.svelte';
 	import VokiTakingProcessSettingsSection from './c_questions_page/VokiTakingProcessSettingsSection.svelte';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import ListEmptyMessage from '../../../c_shared/ListEmptyMessage.svelte';
 	import GeneralVokiCreationQuestionsList from './c_questions_page/GeneralVokiCreationQuestionsList.svelte';
+	import VokiCreationPageLoadingErr from '../../../c_shared/VokiCreationPageLoadingErr.svelte';
 
 	let { data }: PageProps = $props();
 	let questionInitializingDialog = $state<QuestionInitializingDialog>()!;
@@ -13,7 +13,7 @@
 </script>
 
 {#if !data.isSuccess}
-	<UnableToLoad errs={data.errs} />
+	<VokiCreationPageLoadingErr vokiId={data.vokiId!} errs={data.errs} />
 {:else}
 	<QuestionInitializingDialog bind:this={questionInitializingDialog} vokiId={data.vokiId!} />
 	{#if data.data.questions.length === 0}

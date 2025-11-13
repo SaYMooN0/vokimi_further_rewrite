@@ -27,7 +27,7 @@
 
 {#if tabData.state === 'loading'}
 	<div class="loading-container">
-		<CubesLoader sizeRem={5} />
+		<CubesLoader sizeRem={5} color= 'var(--primary)' />
 		<h1 class="loading-text">Loading Voki ratings</h1>
 	</div>
 {:else if tabData.state === 'error'}

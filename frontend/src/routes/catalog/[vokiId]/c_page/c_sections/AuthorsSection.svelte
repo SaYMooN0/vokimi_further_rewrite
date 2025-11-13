@@ -7,14 +7,12 @@
 
 <div class="authors-section">
 	<label class="by-label">by: </label>
-	<BasicUserDisplay userId={primaryAuthorId} isWholeLink={true} />
+	<BasicUserDisplay userId={primaryAuthorId} interactionLevel="WholeComponentLink" />
 	{#if coAuthorIds.length > 0}
-		and
+		<label class="plus-label">+</label>
 		<div class="co-authors-container">
 			{#each coAuthorIds as coAuthorId}
-				<div class="co-author">
-					<a href="/authors/{coAuthorId}">{coAuthorId}</a>
-				</div>
+				<BasicUserDisplay userId={coAuthorId} interactionLevel="WholeComponentLink" />
 			{/each}
 		</div>
 	{/if}
@@ -25,11 +23,20 @@
 		margin-right: 0.5rem;
 		font-size: 1rem;
 		font-weight: 450;
+		color: var(--secondary-foreground);
+
 	}
 
 	.authors-section {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+	}
+
+	.plus-label {
+		margin: 0 0.25rem;
+		font-size: 1rem;
+		font-weight: 450;
+		color: var(--secondary-foreground);
 	}
 </style>

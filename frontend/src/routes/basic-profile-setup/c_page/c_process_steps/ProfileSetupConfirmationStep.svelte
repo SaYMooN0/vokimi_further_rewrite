@@ -103,7 +103,7 @@
 	<DefaultErrBlock errList={savingErrs} />
 	<button class="save-btn unselectable" class:loading={isLoading} onclick={() => saveSetup()}
 		>{#if isLoading}
-			<LinesLoader sizeRem={1.3} strokePx={2} /> Loading 
+			<LinesLoader sizeRem={1.3} strokePx={2} color="var(--primary-foreground)" />Loading
 		{:else}
 			Save
 		{/if}
@@ -246,9 +246,5 @@
 		font-weight: 450;
 		opacity: 0.85;
 		cursor: not-allowed !important;
-	}
-
-	.save-btn > :global(.container) {
-		--loader-color: var(--primary-foreground);
 	}
 </style>

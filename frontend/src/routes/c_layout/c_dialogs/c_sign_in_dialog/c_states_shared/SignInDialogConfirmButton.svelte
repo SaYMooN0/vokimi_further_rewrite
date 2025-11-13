@@ -1,12 +1,11 @@
 <script lang="ts">
 	import LinesLoader from '$lib/components/loaders/LinesLoader.svelte';
-
-	let { onclick, text, isLoading }: { onclick: () => void; text: string; isLoading: boolean } =
-		$props<{
-			onclick: () => void;
-			text: string;
-			isLoading: boolean;
-		}>();
+	interface Props {
+		onclick: () => void;
+		text: string;
+		isLoading: boolean;
+	}
+	let { onclick, text, isLoading }: Props = $props();
 </script>
 
 <button
@@ -17,7 +16,7 @@
 	class:loading={isLoading}
 >
 	{#if isLoading}
-		<LinesLoader sizeRem={1.3} strokePx={2} />
+		<LinesLoader sizeRem={1.3} strokePx={2} color="var(--primary-foreground)" />
 	{:else}
 		{text}
 	{/if}
@@ -55,10 +54,5 @@
 	.confirm-btn.loading {
 		opacity: 0.85;
 		cursor: not-allowed !important;
-
-	}
-
-	.confirm-btn > :global(.container) {
-		--loader-color: var(--primary-foreground);
 	}
 </style>

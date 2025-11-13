@@ -18,7 +18,7 @@
 
 {#if tagsSuggestionsState.name === 'loading'}
 	<div class="suggestions-not-loaded">
-		<CubesLoader sizeRem={2} />
+		<CubesLoader sizeRem={2} color= 'var(--primary)'/>
 		<h1>Loading suggestions</h1>
 	</div>
 {:else if tagsSuggestionsState.name === 'errs'}

@@ -38,7 +38,7 @@
 
 {#if isLoadingImage}
 	<div class="loading-container img-not-set">
-		<CubesLoader sizeRem={3} />
+		<CubesLoader sizeRem={3} color="var(--primary)" />
 	</div>
 {:else if image}
 	<div class="image-set">

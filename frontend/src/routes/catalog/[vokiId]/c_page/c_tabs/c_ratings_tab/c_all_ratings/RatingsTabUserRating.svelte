@@ -49,7 +49,7 @@
 		<UserRatingStarsInput current={ratingView} onClick={(newVal) => onRatingInputClick(newVal)} />
 		{#if updatingRatingValue}
 			<div class="loader">
-				<LinesLoader sizeRem={1.4} strokePx={2} />
+				<LinesLoader sizeRem={1.4} strokePx={2} color="var(--secondary-foreground)" />
 			</div>
 		{:else if ratingState.name === 'not-rated'}
 			<label class="not-rated-label">{'< Rate this Voki'}</label>
@@ -82,8 +82,6 @@
 	}
 
 	.loader > :global(.container) {
-		--loader-color: var(--secondary-foreground);
-
 		animation: fade-in-from-zero-with-delay 1s ease;
 	}
 

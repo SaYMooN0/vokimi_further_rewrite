@@ -39,7 +39,7 @@
 		onclick={() => onButtonClicked()}
 	>
 		{#if vokiTakingState.isLoadingNextQuestion}
-			<LinesLoader sizeRem={1.3} strokePx={2} /> Loading
+			<LinesLoader sizeRem={1.3} strokePx={2} color="var(--primary-foreground)" /> Loading
 		{:else if vokiTakingState.isCurrentQuestionLast}
 			Finish
 		{:else}
@@ -92,9 +92,5 @@
 		font-weight: 450;
 		opacity: 0.85;
 		pointer-events: none;
-	}
-
-	.next-btn > :global(.container) {
-		--loader-color: var(--primary-foreground);
 	}
 </style>

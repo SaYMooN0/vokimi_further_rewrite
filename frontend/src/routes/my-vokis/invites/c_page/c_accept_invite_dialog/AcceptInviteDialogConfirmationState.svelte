@@ -40,14 +40,14 @@
 {#if isLoading}
 	<div class="loading-backdrop" aria-hidden="true">
 		<div class="loading-content">
-			<CubesLoader sizeRem={4} speedSec={1.75} />
+			<CubesLoader sizeRem={4} speedSec={1.75}  color= 'var(--primary)'/>
 			<p class="loading-text">We are adding you to Voki co-authors<br /> Please wait a bit</p>
 		</div>
 	</div>
 {/if}
 <p class="main-text">
 	Are you sure you want to join
-	<BasicUserDisplay userId={invite.primaryAuthorId} />
+	<BasicUserDisplay userId={invite.primaryAuthorId} interactionLevel="WholeComponentLink" />
 	in the creation of <span class="voki-name">{invite.vokiName}</span> Voki as a co-author?
 </p>
 
@@ -70,11 +70,12 @@
 		line-height: 1.375;
 		color: var(--text);
 		text-indent: 1em;
-		font-size: 1.125rem;
+		font-size: 1.25rem;
 		text-wrap: pretty;
 		font-weight: 475;
 		text-align: justify;
 		margin: auto 0;
+
 	}
 	.main-text > :global(.user-display) {
 		display: inline-grid;
@@ -86,8 +87,9 @@
 		color: var(--muted-foreground);
 		font-weight: 500;
 		border-radius: 0.5rem;
-		font-size: 1.25rem;
+		font-size: 1.375rem;
 		text-indent: 0;
+		text-decoration: underline;
 	}
 	:global(.confirm-invite-errs-block) {
 		margin: 0.5rem 0;

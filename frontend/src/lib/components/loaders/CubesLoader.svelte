@@ -1,13 +1,20 @@
 <script lang="ts">
-	let { sizeRem = 3, speedSec = 1.5 }: { sizeRem?: number; speedSec?: number } = $props<{
+	interface Props {
 		sizeRem?: number;
 		speedSec?: number;
-	}>();
+		color: string;
+	}
+	let { sizeRem = 3, speedSec = 1.5, color }: Props = $props();
 </script>
 
-<div class="container" style="
-
---size: {sizeRem}rem; --speed: {speedSec}s">
+<div
+	class="container"
+	style="
+		--size: {sizeRem}rem;
+		--speed: {speedSec}s;
+		--loader-color: {color};
+	"
+>
 	<div class="cube"><div class="cube-inner"></div></div>
 	<div class="cube"><div class="cube-inner"></div></div>
 	<div class="cube"><div class="cube-inner"></div></div>
@@ -15,8 +22,6 @@
 
 <style>
 	.container {
-		--loader-color: var(--primary);
-
 		display: flex;
 		justify-content: space-between;
 		align-items: flex-end;

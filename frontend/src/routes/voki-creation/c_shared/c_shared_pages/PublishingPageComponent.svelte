@@ -47,7 +47,7 @@
 	</div>
 {:else if pageState.name === 'loading'}
 	<div class="msg-container loading">
-		<CubesLoader sizeRem={5} />
+		<CubesLoader sizeRem={5}  color= 'var(--primary)'/>
 		<label>Searching for issues</label>
 	</div>
 {:else if pageState.name === 'error'}
