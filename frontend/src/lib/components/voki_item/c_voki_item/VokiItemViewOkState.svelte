@@ -5,9 +5,9 @@
 	import { toast } from 'svelte-sonner';
 	import { getVokiFlagsInfoDialogOpenFunction } from '../../../../routes/c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
 	import type { VokiItemViewOkStateProps } from './types';
+	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
 
 	let { voki, link, onMoreBtnClick, flags }: VokiItemViewOkStateProps = $props();
-
 
 	const openVokiFlagsInfoDialog = getVokiFlagsInfoDialogOpenFunction();
 	function onFlagClick(e: MouseEvent) {
@@ -53,13 +53,12 @@
 			</svg>
 		</div>
 		<div class="authors">
-			by: <span
-				class="primary-author-span interactable"
-				onclick={(e) => {
-					e.preventDefault();
-					goto(`/user/${voki.primaryAuthorId}`);
-				}}>{voki.primaryAuthorId}</span
-			>
+			<span class="by-label">by:</span>
+			<BasicUserDisplay
+				userId={voki.primaryAuthorId}
+				interactionLevel="UniqueNameGotoOnClick"
+				class="interactable author-view"
+			/>
 			{#if voki.coAuthorIds.length > 0}
 				<div
 					class="co-authors interactable"
@@ -202,23 +201,21 @@
 	.authors {
 		display: grid;
 		align-items: center;
-		color: var(--secondary-foreground);
-		font-size: 0.875rem;
 		overflow: hidden;
 		grid-template-columns: auto 1fr auto;
 	}
-
-	.primary-author-span {
-		margin-left: 0.25rem;
-		overflow: hidden;
-		white-space: nowrap;
-		text-overflow: ellipsis;
-		color: var(--primary);
-		font-weight: 450;
+	.authors > .by-label {
+		margin-right: 0.25rem;
+		font-size: 0.75rem;
+		color: var(--secondary-foreground);
+		font-weight: 500;
+		font-style: italic;
 	}
-
-	.primary-author-span:hover {
-		text-decoration: underline;
+	.authors > :global(.author-view) {
+		--profile-pic-width: 2rem;
+	}
+	.authors > :global(.author-view.ok) {
+		background-color: transparent;
 	}
 
 	.co-authors {
@@ -229,6 +226,8 @@
 		letter-spacing: -1.2px;
 		box-shadow: var(--shadow);
 		transition: all 0.06s ease-in;
+		color: var(--secondary-foreground);
+
 	}
 
 	.co-authors:hover {

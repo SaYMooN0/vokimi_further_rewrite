@@ -82,6 +82,7 @@
 			updateParentCoAuthors(response.data.coAuthorIds, response.data.invitedForCoAuthorUserIds);
 			dialog.close();
 			savingErrs = [];
+			usersChosenToInvite = [];
 		} else {
 			savingErrs = response.errs;
 		}

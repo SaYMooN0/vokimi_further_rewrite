@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { toast } from 'svelte-sonner';
 	import type { PageProps } from './$types';
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';

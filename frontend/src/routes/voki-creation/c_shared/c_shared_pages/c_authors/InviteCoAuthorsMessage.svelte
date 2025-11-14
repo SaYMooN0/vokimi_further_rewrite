@@ -10,7 +10,7 @@
 		coAuthorIds: string[];
 		invitedForCoAuthorUserIds: string[];
 		isViewerPrimaryAuthor: boolean;
-		updateCoAuthorsInfo: (coAuthorIds: string[], invitedForCoAuthorUserIds: string[]) => void;
+		updateParentCoAuthors: (coAuthorIds: string[], invitedForCoAuthorUserIds: string[]) => void;
 	}
 	let {
 		vokiId,
@@ -19,7 +19,7 @@
 		coAuthorIds,
 		invitedForCoAuthorUserIds,
 		isViewerPrimaryAuthor,
-		updateCoAuthorsInfo
+		updateParentCoAuthors
 	}: Props = $props();
 	let coAuthorsWithInvitedCount = $derived(coAuthorIds.length + invitedForCoAuthorUserIds.length);
 	let dialog = $state<CoAuthorInviteDialog>()!;
@@ -32,7 +32,7 @@
 	{coAuthorIds}
 	{invitedForCoAuthorUserIds}
 	{vokiId}
-	updateParentCoAuthors={updateCoAuthorsInfo}
+	updateParentCoAuthors={updateParentCoAuthors}
 />
 
 {#if coAuthorsWithInvitedCount === 0 && isViewerPrimaryAuthor}

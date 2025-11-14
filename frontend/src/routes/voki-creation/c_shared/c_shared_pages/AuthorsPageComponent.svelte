@@ -19,11 +19,14 @@
 		maxVokiCoAuthors,
 		vokiId
 	}: Props = $props();
+
 	let coAuthorIds = $state<string[]>(initCoAuthorIds);
 	let invitedForCoAuthorUserIds = $state<string[]>(initInvitedForCoAuthorUserIds);
+
 	function updateCoAuthorsInfo(newCoAuthorIds: string[], newInvitedIds: string[]) {
 		coAuthorIds = newCoAuthorIds;
 		invitedForCoAuthorUserIds = newInvitedIds;
+		console.log(newCoAuthorIds, newInvitedIds);
 	}
 </script>
 
@@ -42,6 +45,7 @@
 					{invitedForCoAuthorUserIds}
 					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
 					{vokiId}
+					updateParentCoAuthors={updateCoAuthorsInfo}
 				/>
 				<InviteCoAuthorsMessage
 					{vokiId}
@@ -50,7 +54,7 @@
 					{coAuthorIds}
 					{invitedForCoAuthorUserIds}
 					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
-					{updateCoAuthorsInfo}
+					updateParentCoAuthors={updateCoAuthorsInfo}
 				/>
 			</div>
 		{:else if authState.name === 'loading'}

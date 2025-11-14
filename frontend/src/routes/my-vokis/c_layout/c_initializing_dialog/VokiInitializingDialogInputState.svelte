@@ -54,7 +54,7 @@
 
 {#if isLoading}
 	<div class="loading-container">
-		<CubesLoader sizeRem={7} />
+		<CubesLoader sizeRem={7} color="var(--primary)" />
 		<p>Initializing new voki</p>
 	</div>
 {:else}

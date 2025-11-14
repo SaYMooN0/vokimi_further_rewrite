@@ -146,6 +146,11 @@ public class DraftVoki : AggregateRoot<VokiId>
     }
 
     public void DropCoAuthor(AppUserId coAuthorId) {
+        if (!CoAuthorIds.Contains(coAuthorId)) {
+            return;
+        }
+
         CoAuthorIds = CoAuthorIds.Remove(coAuthorId);
+        AddDomainEvent(new VokiCoAuthorRemovedEvent(Id, coAuthorId, this.Type));
     }
 }

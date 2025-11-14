@@ -43,8 +43,8 @@
 	/>
 	{#if isLoading}
 		<div class="loading-container">
-			<CubesLoader sizeRem={5} />
-			<label>Please wait</label>
+			<CubesLoader sizeRem={5} color="var(--primary)" />
+			<label>Updating Voki cover</label>
 		</div>
 	{:else}
 		<img src={StorageBucketMain.fileSrcWithVersion(cover, version)} alt="voki cover" />
@@ -60,7 +60,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		width: 30rem;
+		width: 28rem;
+		border-radius: 1rem;
 	}
 
 	.loading-container {
@@ -72,6 +73,8 @@
 		width: 100%;
 		aspect-ratio: var(--voki-cover-aspect-ratio);
 		animation: var(--default-fade-in-animation);
+		background-color: var(--secondary);
+		border-radius: 1rem;
 	}
 
 	.loading-container > label {
@@ -99,7 +102,7 @@
 		border: none;
 		border-radius: 0.25rem;
 		font-size: 1.25rem;
-		font-weight: 420;
+		font-weight: 450;
 		letter-spacing: 0.2px;
 		box-shadow: var(--shadow);
 		cursor: pointer;

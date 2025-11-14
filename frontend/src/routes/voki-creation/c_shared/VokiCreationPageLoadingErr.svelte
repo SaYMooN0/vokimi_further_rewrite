@@ -2,6 +2,7 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import { ApiVokisCatalog } from '$lib/ts/backend-communication/backend-services';
 	import { ErrUtils, type Err } from '$lib/ts/err';
+	import type { VokiType } from '$lib/ts/voki-type';
 
 	interface Props {
 		errs: Err[];
@@ -10,11 +11,11 @@
 	let { errs, vokiId }: Props = $props();
 	let isVokiNotFound = $derived(errs.some((err) => ErrUtils.isWithVokiNotFoundCode(err)));
 	async function isVokiAlreadyPublished(): Promise<boolean> {
-		const response = await ApiVokisCatalog.fetchJsonResponse<{ isPublished: boolean }>(
-			`/vokis/${vokiId}/is-published`,
+		const response = await ApiVokisCatalog.fetchJsonResponse<{ vokiType: VokiType }>(
+			`/vokis/${vokiId}/does-exist`,
 			{ method: 'GET' }
 		);
-		return response.isSuccess && response.data.isPublished;
+		return response.isSuccess;
 	}
 </script>
 
@@ -25,6 +26,7 @@
 		{:then isPublished}
 			{#if isPublished}
 				<h1>This Voki is already published</h1>
+				<a href="/catalog/{vokiId}">See this Voki in the catalog</a>
 			{:else}
 				<h1>Unable to load page data</h1>
 				<DefaultErrBlock errList={errs} />

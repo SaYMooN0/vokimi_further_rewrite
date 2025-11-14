@@ -1,0 +1,83 @@
+<script lang="ts">
+	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
+	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
+	import { toast } from 'svelte-sonner';
+	import { getConfirmActionDialogOpenFunction } from '../../../../../c_layout/ts_layout_contexts/confirm-action-dialog-context';
+
+	interface Props {
+		vokiId: string;
+		onSuccessfulDrop: (coAuthorIds: string[], invitedForCoAuthorUserIds: string[]) => void;
+	}
+	let { vokiId, onSuccessfulDrop }: Props = $props();
+
+	const { open: openConfirmationDialog, close: closeConfirmationDialog } =
+		getConfirmActionDialogOpenFunction();
+
+	export function open(userId: string) {
+		currentUserToDrop = userId;
+
+		const dropCoAuthor = async (userId: string) => {
+			const response = await ApiVokiCreationCore.fetchJsonResponse<{
+				coAuthorIds: string[];
+				invitedForCoAuthorUserIds: string[];
+			}>(`/vokis/${vokiId}/drop-co-author`, RJO.DELETE({ userId }));
+			if (response.isSuccess) {
+				onSuccessfulDrop(response.data.coAuthorIds, response.data.invitedForCoAuthorUserIds);
+				toast.success('Co-author dropped');
+				return [];
+			} else {
+				toast.error("Couldn't drop co-author");
+				return response.errs;
+			}
+		};
+		openConfirmationDialog({
+			mainContent: dropCoAuthorSnippet,
+			dialogButtons: {
+				confirmBtnText: 'Drop',
+				confirmBtnOnclick: () => {
+					dropCoAuthor(currentUserToDrop!);
+					closeConfirmationDialog();
+				},
+				cancelBtnText: 'Cancel',
+				cancelBtnOnclick: () => {
+					closeConfirmationDialog();
+				}
+			}
+		});
+	}
+	let currentUserToDrop: string | undefined = $state();
+</script>
+
+{#snippet dropCoAuthorSnippet()}
+	{#if currentUserToDrop}
+		<div class="main-text">
+			Are you sure you want to drop <BasicUserDisplay
+				userId={currentUserToDrop}
+				interactionLevel={'UniqueNameGotoOnClick'}
+			/> from co-authors?
+        </div>
+	{:else}
+		<p>No co-author to drop selected</p>
+	{/if}
+{/snippet}
+
+<style>
+  	.main-text {
+       
+		line-height: 1.375;
+		color: var(--text);
+		text-indent: 1em;
+		font-size: 1.25rem;
+		text-wrap: pretty;
+		font-weight: 475;
+		text-align: justify;
+		margin: 1rem 1rem;
+
+	}
+	.main-text > :global(.user-display) {
+		display: inline-grid;
+		vertical-align: middle;
+		--profile-pic-width: 2.375rem;
+		margin: 0.125rem 0.25rem;
+	}
+</style>

@@ -33,6 +33,7 @@
 
 		goto(`/authors/${userId}`);
 	}
+
 </script>
 
 {#if user.state === 'ok'}
@@ -41,12 +42,15 @@
 			{@render okStateContent(user.data, true)}
 		</a>
 	{:else}
-		<div class="user-display ok">
+		<div class="user-display ok {className}">
 			{@render okStateContent(user.data, interactionLevel === 'UniqueNameGotoOnClick')}
 		</div>
 	{/if}
 {:else if user.state === 'errs'}
-	<div class="user-display error interactive-all {className}" onclick={() => openErrsViewDialog(user.errs)}>
+	<div
+		class="user-display error interactive-all {className}"
+		onclick={() => openErrsViewDialog(user.errs)}
+	>
 		<svg class="profile-pic">
 			<use href="#common-crossed-circle-icon" />
 		</svg>
@@ -108,7 +112,6 @@
 		border-radius: 50%;
 		object-fit: cover;
 	}
-	
 
 	.user-display.ok .names {
 		display: flex;
