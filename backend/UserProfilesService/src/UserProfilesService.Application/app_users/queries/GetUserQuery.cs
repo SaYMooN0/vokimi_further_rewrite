@@ -3,7 +3,9 @@ using UserProfilesService.Domain.app_user_aggregate;
 
 namespace UserProfilesService.Application.app_users.queries;
 
-public sealed record GetUserQuery(AppUserId UserId) : IQuery<AppUser>;
+public sealed record GetUserQuery(
+    AppUserId UserId
+) : IQuery<AppUser>;
 
 internal sealed class GetUserQueryHandler : IQueryHandler<GetUserQuery, AppUser>
 {

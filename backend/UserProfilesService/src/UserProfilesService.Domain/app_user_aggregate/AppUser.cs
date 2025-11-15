@@ -29,7 +29,7 @@ public class AppUser : AggregateRoot<AppUserId>
 
         Id = userId;
         UniqueName = uniqueName;
-        DisplayName = UserDisplayName.Empty;
+        DisplayName = UserDisplayName.FromUniqueName(uniqueName);
         ProfilePic = profilePic;
         FavoriteTags = [];
         PreferredLanguages = [];

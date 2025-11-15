@@ -1,4 +1,5 @@
-﻿using VokisCatalogService.Domain.voki_aggregate;
+﻿using SharedKernel.common.vokis;
+using VokisCatalogService.Domain.voki_aggregate;
 
 namespace VokisCatalogService.Application.common.repositories;
 
@@ -10,4 +11,5 @@ public interface IBaseVokisRepository
     Task<BaseVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds, CancellationToken ct);
     Task<BaseVoki?> GetById(VokiId vokiId, CancellationToken ct);
     Task Update(BaseVoki voki, CancellationToken ct);
+    Task<VokiType?> GetVokiTypeById(VokiId vokiId, CancellationToken ct);
 }

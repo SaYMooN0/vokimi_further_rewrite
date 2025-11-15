@@ -1,18 +1,19 @@
 <script lang="ts">
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import type { UserInviteState } from '../../../types';
 
 	interface Props {
 		uniqueName: string;
 		displayName: string;
 		profilePic: string;
-		badge: UserItemInListState;
+		badge: UserInviteState;
 	}
 
 	let { uniqueName, displayName, profilePic, badge }: Props = $props();
+
 	let isInInvitedList = $derived(badge.state === 'CandidateToInvite' && badge.isUserInListToInvite);
 	function onUserItemClick() {
-		console.log('onUserItemClick', isInInvitedList);
 		if (badge.state === 'CandidateToInvite') {
 			if (isInInvitedList) {
 				badge.removeFromListToInvite();

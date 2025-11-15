@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using SharedKernel.common.app_users;
 using SharedKernel.exceptions;
 
 namespace UserProfilesService.Domain.app_user_aggregate;
@@ -25,18 +26,15 @@ public class UserDisplayName : ValueObject
     public override string ToString() => _value;
     public override IEnumerable<object> GetEqualityComponents() => [_value];
 
-    public static UserDisplayName Empty => new(string.Empty);
+    public static UserDisplayName FromUniqueName(UserUniqueName uniqueName) =>
+        new(uniqueName.Value);
 
     public static ErrOr<UserDisplayName> Create(string value) =>
         CheckForErr(value).IsErr(out var err) ? err : new UserDisplayName(value);
 
     public static ErrOrNothing CheckForErr(string? name) {
-        if (name is null) {
+        if (string.IsNullOrWhiteSpace(name)) {
             return ErrFactory.NoValue.Common("Name is required");
-        }
-
-        if (name.Length == 0) {
-            return ErrOrNothing.Nothing;
         }
 
         if (name.Length < MinLength || name.Length > MaxLength) {

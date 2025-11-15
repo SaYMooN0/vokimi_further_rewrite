@@ -3,11 +3,11 @@ using SharedKernel.common.vokis;
 
 namespace CoreVokiCreationService.Api.contracts;
 
-public record ListUserInvitesForCoAuthor(
+public record ListUserInvitesForCoAuthorResponse(
     InviteForCoAuthorVokiPreview[] Invites
 ) : ICreatableResponse<DraftVoki[]>
 {
-    public static ICreatableResponse<DraftVoki[]> Create(DraftVoki[] vokis) => new ListUserInvitesForCoAuthor(
+    public static ICreatableResponse<DraftVoki[]> Create(DraftVoki[] vokis) => new ListUserInvitesForCoAuthorResponse(
         vokis.Select(InviteForCoAuthorVokiPreview.Create).ToArray()
     );
 }

@@ -3,7 +3,7 @@ using UserProfilesService.Application.common.repositories;
 
 namespace UserProfilesService.Application.app_users.queries;
 
-public sealed record SearchUsersByNameQuery(
+public sealed record SearchUsersToInviteForCoAuthorQuery(
     string SearchValue,
     int Limit
 ) :
@@ -19,16 +19,18 @@ public sealed record SearchUsersByNameQuery(
     }
 }
 
-internal sealed class SearchUsersByNameQueryHandler :
-    IQueryHandler<SearchUsersByNameQuery, UserPreviewWithAllowInvitesSettingDto[]>
+internal sealed class SearchUsersToInviteForCoAuthorQueryHandler :
+    IQueryHandler<SearchUsersToInviteForCoAuthorQuery, UserPreviewWithAllowInvitesSettingDto[]>
 {
     private readonly IAppUsersRepository _appUsersRepository;
 
-    public SearchUsersByNameQueryHandler(IAppUsersRepository appUsersRepository) {
+    public SearchUsersToInviteForCoAuthorQueryHandler(IAppUsersRepository appUsersRepository) {
         _appUsersRepository = appUsersRepository;
     }
 
 
-    public async Task<ErrOr<UserPreviewWithAllowInvitesSettingDto[]>> Handle(SearchUsersByNameQuery query, CancellationToken ct) =>
+    public async Task<ErrOr<UserPreviewWithAllowInvitesSettingDto[]>> Handle(
+        SearchUsersToInviteForCoAuthorQuery query, CancellationToken ct
+    ) =>
         await _appUsersRepository.SearchToInviteByNameQuery(query.SearchValue, query.Limit, ct);
 }

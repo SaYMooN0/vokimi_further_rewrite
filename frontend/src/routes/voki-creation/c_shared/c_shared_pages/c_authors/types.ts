@@ -1,3 +1,4 @@
+import type { Err } from "$lib/ts/err";
 import type { AllowCoAuthorInvitesSettingValue } from "$lib/ts/users";
 
 export type VokiCreationAuthorsInfo = {
@@ -12,5 +13,21 @@ export type UserPreviewWithInvitesSettings = {
     uniqueName: string;
     displayName: string;
     profilePic: string;
-    AllowCoAuthorInvites: AllowCoAuthorInvitesSettingValue;
+    allowCoAuthorInvites: AllowCoAuthorInvitesSettingValue;
 }
+
+export type UserInviteState =
+    | { state: 'PrimaryAuthor' }
+    | { state: 'CoAuthor' }
+    | { state: 'AlreadyInvited' }
+    | {
+        state: 'CandidateToInvite';
+        isUserInListToInvite: boolean;
+        addToListToInvite: () => void;
+        removeFromListToInvite: () => void;
+    };
+
+export type UsersRecommendedToInvite =
+    | { state: 'ok'; users: UserPreviewWithInvitesSettings[] }
+    | { state: 'loading' }
+    | { state: 'errs'; errs: Err[] }

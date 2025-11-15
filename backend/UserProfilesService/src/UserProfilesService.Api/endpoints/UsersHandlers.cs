@@ -13,6 +13,7 @@ internal class UsersHandlers : IEndpointGroup
             .WithRequestValidation<UsersPreviewRequest>();
 
         group.MapGet("/search-to-invite", SearchUsersToInviteByName);
+        group.MapGet("/recommended-for-co-author", ListUsersRecommendedForCoAuthor);
     }
 
     private static async Task<IResult> GetUserPreviewData(
@@ -30,12 +31,20 @@ internal class UsersHandlers : IEndpointGroup
     private static async Task<IResult> SearchUsersToInviteByName(
         string searchValue, int limit,
         HttpContext httpContext, CancellationToken ct,
-        IQueryHandler<SearchUsersByNameQuery, UserPreviewWithAllowInvitesSettingDto[]> handler
+        IQueryHandler<SearchUsersToInviteForCoAuthorQuery, UserPreviewWithAllowInvitesSettingDto[]> handler
     ) {
-        SearchUsersByNameQuery query = new(searchValue, limit);
+        SearchUsersToInviteForCoAuthorQuery query = new(searchValue, limit);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults
-            .FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
+        return CustomResults.FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
+    }
+    private static async Task<IResult> ListUsersRecommendedForCoAuthor(
+        HttpContext httpContext, CancellationToken ct,
+        IQueryHandler<ListUsersRecommendedForCoAuthorQuery, UserPreviewWithAllowInvitesSettingDto[]> handler
+    ) {
+        ListUsersRecommendedForCoAuthorQuery query = new();
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
     }
 }

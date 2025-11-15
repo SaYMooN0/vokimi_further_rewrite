@@ -17,6 +17,7 @@ public interface IAppUsersRepository
     );
 
     Task<UserPreviewWithAllowInvitesSettingDto[]> SearchToInviteByNameQuery(string searchValue, int limit, CancellationToken ct);
+    Task<UserPreviewWithAllowInvitesSettingDto[]> ListAllUsers(CancellationToken ct);
 }
 
 public record UserPreviewDto(

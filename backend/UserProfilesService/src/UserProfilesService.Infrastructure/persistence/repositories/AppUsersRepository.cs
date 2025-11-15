@@ -46,7 +46,6 @@ public class AppUsersRepository : IAppUsersRepository
             .ToArrayAsync(ct);
     }
 
-  
 
     public async Task<UserPreviewWithAllowInvitesSettingDto[]> SearchToInviteByNameQuery(
         string searchValue, int limit, CancellationToken ct) {
@@ -79,13 +78,19 @@ public class AppUsersRepository : IAppUsersRepository
             .ThenBy(x => x.User.DisplayName)
             .Take(queryLimit)
             .Select(x => new UserPreviewWithAllowInvitesSettingDto(
-                x.User.Id,
-                x.User.UniqueName,
-                x.User.DisplayName,
-                x.User.ProfilePic,
-                x.User.Settings.AllowCoAuthorInvites
+                x.User.Id, x.User.UniqueName, x.User.DisplayName,
+                x.User.ProfilePic, x.User.Settings.AllowCoAuthorInvites
             ));
 
         return await query.ToArrayAsync(ct);
     }
+
+    public Task<UserPreviewWithAllowInvitesSettingDto[]> ListAllUsers(CancellationToken ct) =>
+        _db.AppUsers
+            .AsNoTracking()
+            .Select(u => new UserPreviewWithAllowInvitesSettingDto(
+                u.Id, u.UniqueName, u.DisplayName,
+                u.ProfilePic, u.Settings.AllowCoAuthorInvites
+            ))
+            .ToArrayAsync(ct);
 }

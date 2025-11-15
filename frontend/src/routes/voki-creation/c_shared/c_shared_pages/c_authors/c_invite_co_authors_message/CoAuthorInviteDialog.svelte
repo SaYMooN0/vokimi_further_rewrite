@@ -3,121 +3,65 @@
 	import UserSearchBar from './c_inviting_dialog/UserSearchBar.svelte';
 	import SearchedUsersListDisplay from './c_inviting_dialog/SearchedUsersListDisplay.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import type { UserPreviewWithInvitesSettings } from '../types';
 	import ConfirmInviteBtnContainer from './c_inviting_dialog/ConfirmInviteBtnContainer.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import type { Err } from '$lib/ts/err';
-	import { watch } from 'runed';
-	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
+	import type { CoAuthorsInviteDialogState } from '../co-authors-page-state';
+	
 	interface Props {
 		maxCoAuthorsCount: number;
-		primaryAuthorId: string;
 		coAuthorIds: string[];
 		invitedForCoAuthorUserIds: string[];
-		vokiId: string;
-		updateParentCoAuthors: (coAuthorIds: string[], invitedForCoAuthorUserIds: string[]) => void;
+		dialogState: CoAuthorsInviteDialogState;
+		updateCoAuthors: (newCoAuthorIds: string[], newInvitedForCoAuthorUserIds: string[]) => void;
 	}
 
 	let {
 		maxCoAuthorsCount,
-		primaryAuthorId,
 		coAuthorIds,
 		invitedForCoAuthorUserIds,
-		vokiId,
-		updateParentCoAuthors
+		dialogState,
+		updateCoAuthors
 	}: Props = $props();
 
 	let dialog = $state<DialogWithCloseButton>()!;
-	let searchedUsers = $state<UserPreviewWithInvitesSettings[]>([]);
-	let searchBarInputVal = $state('');
+
 	export function open() {
-		searchBarInputVal = '';
-		searchedUsers = [];
-		savingErrs = [];
-		isLoadingSave = false;
+		dialogState.clearOnDialogOpen();
 		dialog.open();
 	}
-	let usersChosenToInvite: UserPreviewWithInvitesSettings[] = $state([]);
 
-	function addUserToInvite(user: UserPreviewWithInvitesSettings) {
-		if (!usersChosenToInvite.some((u) => u.id === user.id)) {
-			usersChosenToInvite = [...usersChosenToInvite, user];
-		}
-	}
-
-	function removeUserFromToInvite(user: UserPreviewWithInvitesSettings) {
-		usersChosenToInvite = usersChosenToInvite.filter((u) => u.id !== user.id);
-	}
-
-	function isUserInListToInvite(userId: string) {
-		return usersChosenToInvite.some((u) => u.id === userId);
-	}
-	function getUserInviteStateForVoki(
-		userId: string
-	): 'PrimaryAuthor' | 'CoAuthor' | 'AlreadyInvited' | 'CandidateToInvite' {
-		if (userId === primaryAuthorId) {
-			return 'PrimaryAuthor';
-		} else if (coAuthorIds.includes(userId)) {
-			return 'CoAuthor';
-		} else if (invitedForCoAuthorUserIds.includes(userId)) {
-			return 'AlreadyInvited';
-		} else {
-			return 'CandidateToInvite';
-		}
-	}
-	async function confirmUsersInvite() {
-		savingErrs = [];
-		isLoadingSave = true;
-		const response = await ApiVokiCreationCore.fetchJsonResponse<{
-			coAuthorIds: string[];
-			invitedForCoAuthorUserIds: string[];
-		}>(
-			`/vokis/${vokiId}/invite-co-authors`,
-			RJO.POST({
-				userIds: usersChosenToInvite.map((u) => u.id)
-			})
+	function onInviteButtonClick() {
+		dialogState.confirmUsersInvite(
+			(newCoAuthorIds: string[], newInvitedForCoAuthorUserIds: string[]) => {
+				updateCoAuthors(newCoAuthorIds, newInvitedForCoAuthorUserIds);
+				dialog.close();
+			}
 		);
-		isLoadingSave = false;
-		if (response.isSuccess) {
-			updateParentCoAuthors(response.data.coAuthorIds, response.data.invitedForCoAuthorUserIds);
-			dialog.close();
-			savingErrs = [];
-			usersChosenToInvite = [];
-		} else {
-			savingErrs = response.errs;
-		}
 	}
-	let savingErrs: Err[] = $state([]);
-	let isLoadingSave = $state(false);
-	watch(
-		() => [searchBarInputVal, usersChosenToInvite],
-		() => {
-			savingErrs = [];
-		}
-	);
 </script>
 
 <DialogWithCloseButton dialogId="co-author-inviting-dialog" bind:this={dialog}>
-	<UserSearchBar bind:searchBarInputVal bind:searchedUsers />
+	<UserSearchBar
+		bind:searchBarInputVal={dialogState.searchBarInputVal}
+		bind:searchedUsers={dialogState.searchedUsers}
+	/>
 	<p1 class="co-authors-count"
 		>Co-authors (including invited) count: {coAuthorIds.length +
 			invitedForCoAuthorUserIds.length}/{maxCoAuthorsCount}</p1
 	>
 	<SearchedUsersListDisplay
-		isInputEmpty={StringUtils.isNullOrWhiteSpace(searchBarInputVal)}
-		userOptions={searchedUsers}
-		{isUserInListToInvite}
-		addToListToInvite={(u) => addUserToInvite(u)}
-		removeFromListToInvite={(u) => removeUserFromToInvite(u)}
-		getUserInviteStateForVoki={(userId) => getUserInviteStateForVoki(userId)}
+		isInputEmpty={StringUtils.isNullOrWhiteSpace(dialogState.searchBarInputVal)}
+		userOptions={dialogState.searchedUsers}
+		getUserInviteState={(u) => dialogState.getUserInviteState(u)}
+		usersRecommendedToInvite={dialogState.usersRecommendedToInvite}
 	/>
 	<ConfirmInviteBtnContainer
-		{usersChosenToInvite}
-		isLoading={isLoadingSave}
-		onInviteButtonClick={confirmUsersInvite}
+		usersChosenToInvite={dialogState.usersChosenToInvite}
+		isLoading={dialogState.isLoadingSave}
+		{onInviteButtonClick}
 	/>
 	<div class="errs-container">
-		<DefaultErrBlock errList={savingErrs} />
+		<DefaultErrBlock errList={dialogState.savingErrs} />
 	</div>
 	<label class="note"
 		>Note: invited user will see the type, name, cover and other main details of this Voki</label

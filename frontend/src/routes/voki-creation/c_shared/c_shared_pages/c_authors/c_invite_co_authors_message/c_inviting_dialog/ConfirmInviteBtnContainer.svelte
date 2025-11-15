@@ -11,7 +11,7 @@
 
 <div class="confirm-btn-container">
 	{#if usersChosenToInvite.length === 0}
-		<label>Choose users to invite</label>
+		<label class="no-users-selected-label">Choose users to invite</label>
 	{:else}
 		<button onclick={() => onInviteButtonClick()} class:loading={isLoading}>
 			{#if isLoading}
@@ -41,7 +41,10 @@
 		height: 4rem;
 		text-align: center;
 	}
-
+	.no-users-selected-label {
+		color: var(--secondary-foreground);
+		margin-top: auto;
+	}
 	.confirm-btn-container button {
 		width: 18rem;
 		padding: 0.375rem 1.25rem;

@@ -48,6 +48,6 @@ internal class RootHandlers : IEndpointGroup
         ListVokisUserInvitedForCoAuthorQuery query = new();
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<DraftVoki[], ListUserInvitesForCoAuthor>(result);
+        return CustomResults.FromErrOrToJson<DraftVoki[], ListUserInvitesForCoAuthorResponse>(result);
     }
 }
