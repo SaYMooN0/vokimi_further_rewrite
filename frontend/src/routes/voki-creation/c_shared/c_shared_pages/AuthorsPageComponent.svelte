@@ -3,31 +3,12 @@
 	import CoAuthorsList from './c_authors/CoAuthorsList.svelte';
 	import InviteCoAuthorsMessage from './c_authors/InviteCoAuthorsMessage.svelte';
 	import AuthView from '$lib/components/AuthView.svelte';
+	import type { CoAuthorsPageState } from './c_authors/co-authors-page-state.svelte';
 	interface Props {
-		primaryAuthorId: string;
-		initCoAuthorIds: string[];
-		initInvitedForCoAuthorUserIds: string[];
+		pageState: CoAuthorsPageState;
 		vokiCreationDate: Date;
-		maxVokiCoAuthors: number;
-		vokiId: string;
 	}
-	let {
-		primaryAuthorId,
-		initCoAuthorIds,
-		initInvitedForCoAuthorUserIds,
-		vokiCreationDate,
-		maxVokiCoAuthors,
-		vokiId
-	}: Props = $props();
-
-	let coAuthorIds = $state<string[]>(initCoAuthorIds);
-	let invitedForCoAuthorUserIds = $state<string[]>(initInvitedForCoAuthorUserIds);
-
-	function updateCoAuthorsInfo(newCoAuthorIds: string[], newInvitedIds: string[]) {
-		coAuthorIds = newCoAuthorIds;
-		invitedForCoAuthorUserIds = newInvitedIds;
-		console.log(newCoAuthorIds, newInvitedIds);
-	}
+	let { pageState, vokiCreationDate }: Props = $props();
 </script>
 
 <AuthView>
@@ -36,25 +17,17 @@
 			<div class="authors-tab-container">
 				<PrimaryAuthorDisplay
 					viewerId={authState.userId}
-					{primaryAuthorId}
 					creationDate={vokiCreationDate}
+					primaryAuthorId={pageState.primaryAuthorId}
 				/>
 				<CoAuthorsList
 					viewerId={authState.userId}
-					{coAuthorIds}
-					{invitedForCoAuthorUserIds}
-					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
-					{vokiId}
-					updateParentCoAuthors={updateCoAuthorsInfo}
+					isViewerPrimaryAuthor={pageState.primaryAuthorId === authState.userId}
+					{pageState}
 				/>
 				<InviteCoAuthorsMessage
-					{vokiId}
-					maxCoAuthors={maxVokiCoAuthors}
-					{primaryAuthorId}
-					{coAuthorIds}
-					{invitedForCoAuthorUserIds}
-					isViewerPrimaryAuthor={primaryAuthorId === authState.userId}
-					updateParentCoAuthors={updateCoAuthorsInfo}
+					isViewerPrimaryAuthor={pageState.primaryAuthorId === authState.userId}
+					{pageState}
 				/>
 			</div>
 		{:else if authState.name === 'loading'}

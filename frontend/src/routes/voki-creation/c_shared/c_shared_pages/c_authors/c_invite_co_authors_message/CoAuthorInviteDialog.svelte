@@ -1,18 +1,22 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import UserSearchBar from './c_inviting_dialog/UserSearchBar.svelte';
-	import SearchedUsersListDisplay from './c_inviting_dialog/SearchedUsersListDisplay.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import ConfirmInviteBtnContainer from './c_inviting_dialog/ConfirmInviteBtnContainer.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import type { CoAuthorsInviteDialogState } from '../co-authors-page-state';
-	
+	import type { CoAuthorsInviteDialogState } from '../co-authors-page-state.svelte';
+	import type { UserPreviewWithInvitesSettings, UserInviteState } from '../types';
+	import NoUsersSearched from './c_inviting_dialog/NoUsersSearched.svelte';
+	import SearchedUsersList from './c_inviting_dialog/SearchedUsersList.svelte';
+	import SearchInputEmptyState from './c_inviting_dialog/SearchInputEmptyState.svelte';
+
 	interface Props {
 		maxCoAuthorsCount: number;
 		coAuthorIds: string[];
 		invitedForCoAuthorUserIds: string[];
 		dialogState: CoAuthorsInviteDialogState;
 		updateCoAuthors: (newCoAuthorIds: string[], newInvitedForCoAuthorUserIds: string[]) => void;
+		getUserInviteState: (user: UserPreviewWithInvitesSettings) => UserInviteState;
 	}
 
 	let {
@@ -20,7 +24,8 @@
 		coAuthorIds,
 		invitedForCoAuthorUserIds,
 		dialogState,
-		updateCoAuthors
+		updateCoAuthors,
+		getUserInviteState
 	}: Props = $props();
 
 	let dialog = $state<DialogWithCloseButton>()!;
@@ -49,12 +54,18 @@
 		>Co-authors (including invited) count: {coAuthorIds.length +
 			invitedForCoAuthorUserIds.length}/{maxCoAuthorsCount}</p1
 	>
-	<SearchedUsersListDisplay
-		isInputEmpty={StringUtils.isNullOrWhiteSpace(dialogState.searchBarInputVal)}
-		userOptions={dialogState.searchedUsers}
-		getUserInviteState={(u) => dialogState.getUserInviteState(u)}
-		usersRecommendedToInvite={dialogState.usersRecommendedToInvite}
-	/>
+
+	{#if StringUtils.isNullOrWhiteSpace(dialogState.searchBarInputVal)}
+		<SearchInputEmptyState
+			usersRecommendedToInvite={dialogState.usersRecommendedToInvite}
+			{getUserInviteState}
+		/>
+	{:else if dialogState.searchedUsers.length === 0}
+		<NoUsersSearched />
+	{:else}
+		<SearchedUsersList users={dialogState.searchedUsers} {getUserInviteState} />
+	{/if}
+
 	<ConfirmInviteBtnContainer
 		usersChosenToInvite={dialogState.usersChosenToInvite}
 		isLoading={dialogState.isLoadingSave}

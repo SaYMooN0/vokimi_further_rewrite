@@ -40,7 +40,7 @@
 {#if isLoading}
 	<div class="loading-backdrop" aria-hidden="true">
 		<div class="loading-content">
-			<CubesLoader sizeRem={4} speedSec={1.75}  color= 'var(--primary)'/>
+			<CubesLoader sizeRem={4} speedSec={1.75} color="var(--primary)" />
 			<p class="loading-text">We are adding you to Voki co-authors<br /> Please wait a bit</p>
 		</div>
 	</div>
@@ -75,7 +75,6 @@
 		font-weight: 475;
 		text-align: justify;
 		margin: auto 0;
-
 	}
 	.main-text > :global(.user-display) {
 		display: inline-grid;

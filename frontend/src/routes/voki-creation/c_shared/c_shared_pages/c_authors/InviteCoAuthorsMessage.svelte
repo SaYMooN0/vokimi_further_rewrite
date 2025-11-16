@@ -2,7 +2,7 @@
 	import CoAuthorInviteDialog from './c_invite_co_authors_message/CoAuthorInviteDialog.svelte';
 	import InviteFirstCoAuthorMessage from './c_invite_co_authors_message/InviteFirstCoAuthorMessage.svelte';
 	import MoreCoAuthorsCanBeInvitedMessage from './c_invite_co_authors_message/MoreCoAuthorsCanBeInvitedMessage.svelte';
-	import type { CoAuthorsPageState } from './co-authors-page-state';
+	import type { CoAuthorsPageState } from './co-authors-page-state.svelte';
 
 	interface Props {
 		pageState: CoAuthorsPageState;
@@ -30,6 +30,7 @@
 	invitedForCoAuthorUserIds={pageState.invitedForCoAuthorUserIds}
 	updateCoAuthors={(newAuthors, newInvites) => updatePageStateCoAuthors(newAuthors, newInvites)}
 	dialogState={pageState.coAuthorsDialogState}
+	getUserInviteState={(u) => pageState.getUserInviteState(u)}
 />
 
 {#if coAuthorsWithInvitedCount === 0 && isViewerPrimaryAuthor}

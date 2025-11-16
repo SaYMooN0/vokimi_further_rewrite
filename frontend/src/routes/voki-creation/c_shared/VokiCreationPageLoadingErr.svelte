@@ -3,6 +3,7 @@
 	import { ApiVokisCatalog } from '$lib/ts/backend-communication/backend-services';
 	import { ErrUtils, type Err } from '$lib/ts/err';
 	import type { VokiType } from '$lib/ts/voki-type';
+	import VokiAlreadyPublishedMessage from './c_page_loading_err/VokiAlreadyPublishedMessage.svelte';
 
 	interface Props {
 		errs: Err[];
@@ -19,14 +20,13 @@
 	}
 </script>
 
-<div class="unable-to-load">
+<div class="container">
 	{#if isVokiNotFound}
 		{#await isVokiAlreadyPublished()}
 			<div class="is-published-check-loading">Something went wrong. We make additional checks</div>
 		{:then isPublished}
 			{#if isPublished}
-				<h1>This Voki is already published</h1>
-				<a href="/catalog/{vokiId}">See this Voki in the catalog</a>
+				<VokiAlreadyPublishedMessage {vokiId} />
 			{:else}
 				<h1>Unable to load page data</h1>
 				<DefaultErrBlock errList={errs} />
@@ -39,7 +39,7 @@
 </div>
 
 <style>
-	.unable-to-load {
+	.container {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;

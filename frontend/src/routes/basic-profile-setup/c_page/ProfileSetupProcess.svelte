@@ -30,6 +30,7 @@
 	}: Props = $props();
 
 	let setupProcessState = new ProfileSetupProcessState(
+		uniqueName,
 		initialLangs,
 		initialTags,
 		initialProfilePic,
@@ -134,14 +135,14 @@
 		{:else if currentStep === 'confirmation'}
 			<SetupProcessStepHeader text="Save chosen settings" />
 			<ProfileSetupConfirmationStep
-				{uniqueName}
+				uniqueName={setupProcessState.initialUniqueName}
 				languages={setupProcessState.chosenLanguages}
 				goToLanguagesStep={() => (currentStep = 'languages')}
 				chosenTags={setupProcessState.chosenFavoriteTags}
 				goToTagsStep={() => (currentStep = 'tags')}
 				profilePic={setupProcessState.profilePicInputValue}
 				goToPicStep={() => (currentStep = 'profile-pic')}
-				displayName={setupProcessState.displayNameInputValue}
+				displayName={setupProcessState.displayNameToSave}
 				goToNameStep={() => (currentStep = 'display-name')}
 				{changeStateToSaved}
 			/>

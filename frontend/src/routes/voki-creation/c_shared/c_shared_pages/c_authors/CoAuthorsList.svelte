@@ -3,31 +3,26 @@
 	import { toast } from 'svelte-sonner';
 	import VokiCoAuthorsListUserItem from './c_co_authors_list/VokiCoAuthorsListUserItem.svelte';
 	import DropCoAuthorConfirmationDialog from './c_co_authors_list/DropCoAuthorConfirmationDialog.svelte';
+	import type { CoAuthorsPageState } from './co-authors-page-state.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
-		isViewerPrimaryAuthor: boolean;
 		viewerId: string;
-		coAuthorIds: string[];
-		invitedForCoAuthorUserIds: string[];
-		vokiId: string;
-		updateParentCoAuthors: (coAuthorIds: string[], invitedForCoAuthorUserIds: string[]) => void;
+		isViewerPrimaryAuthor: boolean;
+		pageState: CoAuthorsPageState;
 	}
-	let {
-		viewerId,
-		coAuthorIds,
-		invitedForCoAuthorUserIds,
-		isViewerPrimaryAuthor,
-		vokiId,
-		updateParentCoAuthors
-	}: Props = $props();
+	let { viewerId, isViewerPrimaryAuthor, pageState }: Props = $props();
 
 	async function cancelInvite(userId: string) {
 		const response = await ApiVokiCreationCore.fetchJsonResponse<{
 			coAuthorIds: string[];
 			invitedForCoAuthorUserIds: string[];
-		}>(`/vokis/${vokiId}/cancel-co-author-invite`, RJO.DELETE({ userId }));
+		}>(`/vokis/${pageState.vokiId}/cancel-co-author-invite`, RJO.DELETE({ userId }));
 		if (response.isSuccess) {
-			updateParentCoAuthors(response.data.coAuthorIds, response.data.invitedForCoAuthorUserIds);
+			pageState.updateCoAuthorsInfo(
+				response.data.coAuthorIds,
+				response.data.invitedForCoAuthorUserIds
+			);
 			toast.success('Invite cancelled');
 		} else {
 			toast.error("Couldn't cancel invite");
@@ -45,11 +40,12 @@
 
 <DropCoAuthorConfirmationDialog
 	bind:this={dropCoAuthorDialog}
-	{vokiId}
-	onSuccessfulDrop={updateParentCoAuthors}
+	vokiId={pageState.vokiId}
+	onSuccessfulDrop={(newCoAuthors, newInvites) =>
+		pageState.updateCoAuthorsInfo(newCoAuthors, newInvites)}
 />
 <div class="all-co-authors-list">
-	{#each [...coAuthorIds].sort((a, b) => a.localeCompare(b)) as userId}
+	{#each [...pageState.coAuthorIds].sort((a, b) => a.localeCompare(b)) as userId}
 		{#key userId}
 			<VokiCoAuthorsListUserItem
 				{userId}
@@ -58,11 +54,13 @@
 			/>
 		{/key}
 	{/each}
-	{#if coAuthorIds.length > 0 && invitedForCoAuthorUserIds.length > 0}
-		<h2 class="invited-subheading">Invited co-authors({invitedForCoAuthorUserIds.length})</h2>
+	{#if pageState.coAuthorIds.length > 0 && pageState.invitedForCoAuthorUserIds.length > 0}
+		<h2 class="invited-subheading">
+			Invited co-authors({pageState.invitedForCoAuthorUserIds.length})
+		</h2>
 	{/if}
 
-	{#each [...invitedForCoAuthorUserIds].sort((a, b) => a.localeCompare(b)) as userId}
+	{#each [...pageState.invitedForCoAuthorUserIds].sort((a, b) => a.localeCompare(b)) as userId}
 		{#key userId}
 			<VokiCoAuthorsListUserItem
 				{userId}

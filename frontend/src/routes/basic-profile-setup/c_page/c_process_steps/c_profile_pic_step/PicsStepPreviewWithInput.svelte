@@ -72,7 +72,7 @@
 
 		<label>Place the image here</label>
 	{:else if isLoading}
-		<CubesLoader />
+		<CubesLoader color="var(--primary)"/>
 		<label>Loading...</label>
 	{:else}
 		<div class="preview">

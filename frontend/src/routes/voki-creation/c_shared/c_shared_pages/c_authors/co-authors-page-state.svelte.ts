@@ -7,7 +7,7 @@ export class CoAuthorsPageState {
     readonly vokiId: string;
     readonly maxCoAuthorsCount: number;
 
-    primaryAuthorId: string;
+    readonly primaryAuthorId: string;
     coAuthorIds: string[];
     invitedForCoAuthorUserIds: string[];
     coAuthorsDialogState: CoAuthorsInviteDialogState;
@@ -16,11 +16,31 @@ export class CoAuthorsPageState {
         this.vokiId = vokiId;
         this.maxCoAuthorsCount = maxCoAuthorsCount;
 
-        this.primaryAuthorId = $state(primaryAuthorId);
+        this.primaryAuthorId = primaryAuthorId;
         this.coAuthorIds = $state(coAuthorIds);
         this.invitedForCoAuthorUserIds = $state(invitedForCoAuthorUserIds);
 
         this.coAuthorsDialogState = new CoAuthorsInviteDialogState(vokiId);
+    }
+    getUserInviteState(user: UserPreviewWithInvitesSettings): UserInviteState {
+        if (user.id === this.primaryAuthorId) {
+            return { state: 'PrimaryAuthor' };
+        } else if (this.coAuthorIds.includes(user.id)) {
+            return { state: 'CoAuthor' };
+        } else if (this.invitedForCoAuthorUserIds.includes(user.id)) {
+            return { state: 'AlreadyInvited' };
+        } else {
+            return {
+                state: 'CandidateToInvite',
+                isUserInListToInvite: this.coAuthorsDialogState.isUserInListToInvite(user.id),
+                addToListToInvite: () => this.coAuthorsDialogState.addUserToInvite(user),
+                removeFromListToInvite: () => this.coAuthorsDialogState.removeUserFromToInvite(user)
+            };
+        }
+    }
+    updateCoAuthorsInfo(newCoAuthorIds: string[], newInvitedIds: string[]) {
+        this.coAuthorIds = newCoAuthorIds;
+        this.invitedForCoAuthorUserIds = newInvitedIds;
     }
 }
 
@@ -98,20 +118,5 @@ export class CoAuthorsInviteDialogState {
         }
     }
 
-    getUserInviteState(user: UserPreviewWithInvitesSettings): UserInviteState {
-        if (user.id === this.primaryAuthorId) {
-            return { state: 'PrimaryAuthor' };
-        } else if (this.coAuthorIds.includes(user.id)) {
-            return { state: 'CoAuthor' };
-        } else if (this.invitedForCoAuthorUserIds.includes(user.id)) {
-            return { state: 'AlreadyInvited' };
-        } else {
-            return {
-                state: 'CandidateToInvite',
-                isUserInListToInvite: this.isUserInListToInvite(user.id),
-                addToListToInvite: () => this.addUserToInvite(user),
-                removeFromListToInvite: () => this.removeUserFromToInvite(user)
-            };
-        }
-    }
+
 }

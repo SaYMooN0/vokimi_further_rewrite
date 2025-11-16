@@ -1,7 +1,7 @@
 <script lang="ts">
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import type { UserInviteState } from '../../../types';
+	import type { UserInviteState } from '../../types';
 
 	interface Props {
 		uniqueName: string;

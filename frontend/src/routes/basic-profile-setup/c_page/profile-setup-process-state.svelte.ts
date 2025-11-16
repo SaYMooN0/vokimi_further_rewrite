@@ -1,6 +1,7 @@
 import { ApiTags } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
 import type { Language } from "$lib/ts/language";
+import { StringUtils } from "$lib/ts/utils/string-utils";
 import { SvelteSet } from "svelte/reactivity";
 
 
@@ -12,6 +13,9 @@ export class ProfileSetupProcessState {
     readonly chosenFavoriteTags = new SvelteSet<Tag>();
     readonly profilePicInputValue = $state<string>("");
     readonly displayNameInputValue = $state<string>("");
+    readonly displayNameToSave;
+
+    readonly initialUniqueName;
 
     readonly suggestedTagsState: () => (
         | { name: "loading" }
@@ -36,7 +40,9 @@ export class ProfileSetupProcessState {
         };
     });
 
-    constructor(initialLangs: Language[], initialTags: Tag[], initialProfilePic: string, initialDisplayName: string) {
+    constructor(userUniqueName: string, initialLangs: Language[], initialTags: Tag[], initialProfilePic: string, initialDisplayName: string) {
+        this.initialUniqueName = userUniqueName;
+        this.displayNameToSave = $derived(StringUtils.isNullOrWhiteSpace(this.displayNameInputValue) ? this.initialUniqueName : this.displayNameInputValue);
 
         initialLangs.forEach((l) => this.chosenLanguages.add(l));
         initialTags.forEach((t) => this.chosenFavoriteTags.add(t));

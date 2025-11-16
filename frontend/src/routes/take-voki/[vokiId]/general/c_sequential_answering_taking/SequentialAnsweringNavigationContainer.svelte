@@ -39,7 +39,7 @@
 		onclick={() => onButtonClicked()}
 	>
 		{#if vokiTakingState.isLoadingNextQuestion}
-			<LinesLoader sizeRem={1.3} strokePx={2} color="var(--primary-foreground)" /> Loading
+			<LinesLoader sizeRem={1.3} strokePx={2} color="var(--primary-foreground)" />Loading
 		{:else if vokiTakingState.isCurrentQuestionLast}
 			Finish
 		{:else}
