@@ -41,7 +41,6 @@
 		font-size: 1.125rem;
 		font-weight: 450;
 		grid-template-columns: auto 1fr;
-
 	}
 
 	.right-btn:hover {
@@ -54,5 +53,12 @@
 		aspect-ratio: 1/1;
 		color: inherit;
 		stroke-width: 2.2;
+	}
+	.right-btn:focus {
+		outline: 0.125rem solid var(--muted-foreground);
+		box-shadow: var(--shadow);
+	}
+	.right-btn:focus:hover {
+		outline-color: var(--accent-foreground);
 	}
 </style>

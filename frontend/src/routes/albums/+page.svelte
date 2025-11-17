@@ -17,12 +17,12 @@
 			{#if !data.isSuccess}
 				<PageLoadErrView errs={data.errs} defaultMessage="Could not load your albums" />
 			{:else}
-				<UserAlbumsSection albums={data.data.albums} />
 				<AutoAlbumsSection
 					takenVokisAlbumsColor={data.data.takenVokisAlbums}
 					ratedVokisAlbumsColor={data.data.ratedVokisAlbums}
 					commentedVokisAlbumsColor={data.data.commentedVokisAlbums}
 				/>
+				<UserAlbumsSection albums={data.data.albums} />
 			{/if}
 		{:else}
 			<div class="login-required-container">

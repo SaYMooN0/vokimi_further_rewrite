@@ -2,13 +2,13 @@
 	import type { PageProps } from './$types';
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import VokiItemContextMenu from '$lib/components/voki_item/VokiItemContextMenu.svelte';
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
 	import type { VokiItemViewOkStateProps } from '$lib/components/voki_item/c_voki_item/types';
+	import VokiItemContextMenu from '$lib/components/voki_item/VokiItemContextMenu.svelte';
 
 	let { data }: PageProps = $props();
-	let vokiItemContextMenu: VokiItemContextMenu = $state<VokiItemContextMenu>()!;
+	let vokiItemContextMenu = $state<VokiItemContextMenu>()!;
 	function assembleVokiItemStateData(voki: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
 		return {
 			vokiId: voki.id,

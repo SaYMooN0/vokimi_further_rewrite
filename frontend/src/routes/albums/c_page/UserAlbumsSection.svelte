@@ -4,6 +4,8 @@
 	import { getCreateNewAlbumOpenFunction } from '../../c_layout/ts_layout_contexts/album-creation-dialog-context';
 	import type { VokiAlbumPreviewData } from '../types';
 	import AlbumsPageSectionHeader from './AlbumsPageSectionHeader.svelte';
+	import UserAlbumsContextMenu from './c_user_albums_section/UserAlbumsContextMenu.svelte';
+	import UserAlbumView from './c_user_albums_section/UserAlbumView.svelte';
 
 	interface Props {
 		albums: VokiAlbumPreviewData[];
@@ -17,6 +19,7 @@
 		};
 		openCreateNewAlbumDialog(onAfterCreated);
 	}
+	let userAlbumsContextMenu = $state<UserAlbumsContextMenu>()!;
 </script>
 
 {#snippet headerIcon()}
@@ -31,17 +34,27 @@
 		icon: headerIcon
 	}}
 />
+<UserAlbumsContextMenu bind:this={userAlbumsContextMenu} />
 {#if albums.length === 0}
 	<div class="no-albums-message">
 		<p>You have no albums</p>
 		<PrimaryButton onclick={() => openNewAlbumDialog()}>Create first album</PrimaryButton>
 	</div>
 {:else}
-	<div>
+	<div class="albums-list">
 		{#each albums as album}
-			<div>
-				{album.name}
-			</div>
+			<UserAlbumView
+				{album}
+				openContextMenu={(event, album) => userAlbumsContextMenu.open(event, album)}
+			/>
 		{/each}
 	</div>
 {/if}
+
+<style>
+	.albums-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+</style>

@@ -14,12 +14,15 @@
 
 {#if parentOnlyControl}
 	<input type="checkbox" {id} class="input" {checked} />
+	<label class="cbx unselectable">
+		<span><svg viewBox="0 0 12 10"> <polyline points="1.5 6 4.5 9 10.5 1" /></svg></span>
+	</label>
 {:else}
-	<input type="checkbox" {id} class="input" bind:checked />
+	<label class="cbx unselectable">
+		<input type="checkbox" {id} class="input" bind:checked />
+		<span><svg viewBox="0 0 12 10"> <polyline points="1.5 6 4.5 9 10.5 1" /></svg></span>
+	</label>
 {/if}
-<label class="cbx unselectable">
-	<span><svg viewBox="0 0 12 10"> <polyline points="1.5 6 4.5 9 10.5 1" /></svg></span>
-</label>
 
 <style>
 	input {
@@ -63,12 +66,14 @@
 		background-color: var(--secondary);
 	}
 
-	.input:checked + .cbx span {
+	.input:checked + .cbx span,
+	.input:checked +  span {
 		border-color: var(--primary);
 		background: var(--primary);
 	}
 
-	.input:checked + .cbx span svg {
+	.input:checked + .cbx span svg,
+	.input:checked + span svg {
 		stroke-dashoffset: 0;
 	}
 </style>
