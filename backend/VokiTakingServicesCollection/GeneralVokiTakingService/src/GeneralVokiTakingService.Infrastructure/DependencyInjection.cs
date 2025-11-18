@@ -4,7 +4,7 @@ using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Infrastructure.persistence;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories.taking_sessions;
-using Infrastructure.Auth;
+using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
 using InfrastructureShared.Base.domain_events_publisher;
 using MassTransit;

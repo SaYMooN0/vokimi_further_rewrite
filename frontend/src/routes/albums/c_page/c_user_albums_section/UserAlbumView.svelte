@@ -14,14 +14,12 @@
 </script>
 
 <a class="album-card" href={`/albums/${album.id}`}>
-	<div
-		class="album-icon-wrapper"
+	<svg
+		class="album-icon"
 		style="--icon-color-1: {album.mainColor}; --icon-color-2: {album.secondaryColor};"
 	>
-		<svg class="album-icon">
-			<use href={`#${album.icon}`} />
-		</svg>
-	</div>
+		<use href={`#${album.icon}`} />
+	</svg>
 
 	<div class="album-main">
 		<p class="album-name">{album.name}</p>
@@ -44,43 +42,35 @@
 
 <style>
 	.album-card {
-		display: block;
-		padding: 1rem;
-		border-radius: var(--radius);
+		display: grid;
+		grid-template-columns: auto 1fr 2rem;
+		gap: 0.75rem;
+		padding: 0.75rem 1rem;
+		border-radius: 0.75rem;
 		overflow: hidden;
-		text-decoration: none;
 		color: var(--text);
 		box-shadow: var(--shadow-xs);
-	}
-
-	.album-icon-wrapper {
-		flex: 0 0 auto;
-		width: 2.75rem;
-		height: 2.75rem;
-		border-radius: 9999rem;
-		display: flex;
 		align-items: center;
-		justify-content: center;
-		background-color: var(--back);
-		box-shadow: var(--shadow-xs);
+	}
+	.album-card:hover {
+		background-color: var(--secondary);
 	}
 
 	.album-icon {
-		width: 1.75rem;
-		height: 1.75rem;
+		width: 2.25rem;
+		height: 2.25rem;
 		stroke-width: 2;
 	}
 
 	.album-main {
-		flex: 1 1 auto;
 		min-width: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
+		gap: 0.125rem;
 	}
 
 	.album-name {
-		font-size: 1rem;
+		font-size: 1.25rem;
 		font-weight: 550;
 		color: var(--text);
 		white-space: nowrap;
@@ -94,26 +84,27 @@
 	}
 
 	.album-menu-button {
-		flex: 0 0 auto;
-		margin-left: 0.5rem;
 		padding: 0.25rem;
 		border: none;
-		border-radius: 9999rem;
+		width: 1.875rem;
+		height: 1.875rem;
 		background-color: transparent;
 		display: inline-flex;
+		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 0.1875rem;
 		cursor: pointer;
+		border-radius: 0.375rem;
 	}
 
 	.album-menu-button:hover {
-		background-color: var(--secondary);
+		background-color: var(--muted);
 	}
 
 	.menu-dot {
-		width: 0.125rem;
-		height: 0.125rem;
+		margin: auto auto;
+		width: 4px;
+		height: 4px;
 		border-radius: 9999rem;
 		background-color: var(--muted-foreground);
 	}

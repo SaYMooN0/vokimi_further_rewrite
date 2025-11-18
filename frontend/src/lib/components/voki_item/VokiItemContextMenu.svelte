@@ -1,5 +1,6 @@
 <script lang="ts">
-	import BaseContextMenu from '../context_menu/BaseContextMenu.svelte';
+	import BaseContextMenu from "../BaseContextMenu.svelte";
+
 
 	let container: BaseContextMenu = $state<BaseContextMenu>()!;
 

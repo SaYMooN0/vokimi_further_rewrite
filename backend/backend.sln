@@ -116,9 +116,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokiTakingServicesLib.Domai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbSeeder", "DbSeeder\DbSeeder.csproj", "{1DB0640C-51A1-4FA0-A281-C50A62572E7C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{869A7F8D-20E4-447F-B85D-C8232D9F045D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "InfrastructureShared", "InfrastructureShared", "{869A7F8D-20E4-447F-B85D-C8232D9F045D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Auth", "Libs\Infrastructure\Infrastructure.Auth\Infrastructure.Auth.csproj", "{13A9E3DA-A823-479E-B12C-3468586FC208}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureShared.Auth", "Libs\Infrastructure\InfrastructureShared.Auth\InfrastructureShared.Auth.csproj", "{13A9E3DA-A823-479E-B12C-3468586FC208}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureShared.Storage", "Libs\Infrastructure\InfrastructureShared.Storage\InfrastructureShared.Storage.csproj", "{A649C5BB-DA40-4689-8A43-7D85994A96AD}"
 EndProject

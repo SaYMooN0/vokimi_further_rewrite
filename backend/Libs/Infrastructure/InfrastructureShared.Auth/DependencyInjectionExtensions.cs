@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.auth;
 
-namespace Infrastructure.Auth;
+namespace InfrastructureShared.Auth;
 
 public static class DependencyInjectionExtensions
 {

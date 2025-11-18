@@ -7,7 +7,7 @@ using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Infrastructure.persistence;
 using CoreVokiCreationService.Infrastructure.persistence.repositories;
 using CoreVokiCreationService.Infrastructure.storage;
-using Infrastructure.Auth;
+using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
 using InfrastructureShared.Base.domain_events_publisher;
 using InfrastructureShared.Storage;

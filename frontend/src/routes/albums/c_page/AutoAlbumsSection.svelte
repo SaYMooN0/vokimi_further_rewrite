@@ -74,5 +74,6 @@
 		display: grid;
 		grid-template-columns: 1fr 1fr 1fr;
 		gap: 1.5rem;
+		padding: 0 1rem;
 	}
 </style>

@@ -2,7 +2,7 @@
 using AlbumsService.Infrastructure.persistence;
 using AlbumsService.Infrastructure.persistence.repositories;
 using ApplicationShared;
-using Infrastructure.Auth;
+using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
 using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.AspNetCore.Hosting;

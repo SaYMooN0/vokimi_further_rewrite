@@ -6,7 +6,7 @@ using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Infrastructure.persistence;
 using GeneralVokiCreationService.Infrastructure.persistence.repositories;
 using GeneralVokiCreationService.Infrastructure.storage;
-using Infrastructure.Auth;
+using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
 using InfrastructureShared.Base.domain_events_publisher;
 using InfrastructureShared.Storage;

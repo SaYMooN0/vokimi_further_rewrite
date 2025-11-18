@@ -1,5 +1,5 @@
 <script lang="ts">
-	import BaseContextMenu from '$lib/components/context_menu/BaseContextMenu.svelte';
+	import BaseContextMenu from '$lib/components/BaseContextMenu.svelte';
 	import type { VokiAlbumPreviewData } from '../../types';
 
 	let container: BaseContextMenu = $state<BaseContextMenu>()!;

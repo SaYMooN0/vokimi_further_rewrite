@@ -1,6 +1,6 @@
 using System.Reflection;
 using ApiShared.extensions;
-using Infrastructure.Auth;
+using InfrastructureShared.Auth;
 using VokimiStorageService.extensions;
 
 namespace VokimiStorageService;

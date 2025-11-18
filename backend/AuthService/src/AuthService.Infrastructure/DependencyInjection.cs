@@ -6,7 +6,7 @@ using AuthService.Infrastructure.background_services;
 using AuthService.Infrastructure.email_service;
 using AuthService.Infrastructure.persistence;
 using AuthService.Infrastructure.persistence.repositories;
-using Infrastructure.Auth;
+using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
 using InfrastructureShared.Base.domain_events_publisher;
 using MassTransit;
@@ -31,7 +31,7 @@ public static class DependencyInjection
             .AddDefaultServices()
             .AddPersistence(configuration, env)
             .AddAuth(configuration)
-            .AddPasswordHasherAndTokenGenerator()
+            .AddPasswordHasherAndTokenGenerator(configuration)
             .AddEmailService(configuration)
             .AddFrontendConfig(configuration)
             .AddMassTransitWithIntegrationEventHandlers(configuration, typeof(Application.DependencyInjection).Assembly)
@@ -44,9 +44,21 @@ public static class DependencyInjection
         .AddDomainEventsPublisher()
         .AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
-    private static IServiceCollection AddPasswordHasherAndTokenGenerator(this IServiceCollection services) => services
-        .AddScoped<IPasswordHasher, PasswordHasher>()
-        .AddScoped<ITokenGenerator, TokenGenerator>();
+    private static IServiceCollection AddPasswordHasherAndTokenGenerator(
+        this IServiceCollection services,
+        IConfiguration configuration
+    ) {
+        AuthPrivateKeyConfig? privateKeyConf = configuration.GetSection("AuthPrivateKey").Get<AuthPrivateKeyConfig>();
+        if (privateKeyConf is null) {
+            throw new Exception("Email service is not configured");
+        }
+
+        return services
+            .AddSingleton(privateKeyConf)
+            .AddScoped<IPasswordHasher, PasswordHasher>()
+            .AddScoped<ITokenGenerator, TokenGenerator>();
+    }
+
 
     private static IServiceCollection AddIntegrationEventsPublisher(this IServiceCollection services) {
         services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
@@ -98,7 +110,7 @@ public static class DependencyInjection
     ) {
         var frontendConfig = configuration.GetSection("FrontendConfig").Get<FrontendConfig>();
         if (frontendConfig is null) {
-            throw new Exception("Email service is not configured");
+            throw new Exception("No frontend config provided");
         }
 
         services.AddSingleton(frontendConfig);
