@@ -1,28 +1,73 @@
 <script lang="ts">
-	import { onClickOutside } from 'runed';
 	import { onMount, onDestroy, type Snippet } from 'svelte';
+	import { onClickOutside } from 'runed';
 
-	let containerRef = $state<HTMLElement>()!;
-	let menuState = $state({
+	type XY = { x: number; y: number };
+
+	let containerRef = $state<HTMLElement | null>(null);
+
+	let menuState: { isOpen: boolean; initialClick: XY; position: XY; offset: XY } = $state({
 		isOpen: false,
-		x: 0,
-		y: 0
+		initialClick: { x: 0, y: 0 },
+		position: { x: 0, y: 0 },
+		offset: { x: 0, y: 0 }
 	});
+
 	let scrollPos = $state({ x: 0, y: 0 });
+
 	interface Props {
 		children: Snippet;
 		class?: string;
 		onAfterClose?: () => void;
 	}
+
 	let { children, class: className = '', onAfterClose }: Props = $props();
+
+	export function open(x: number, y: number, offsetX = 0, offsetY = 0) {
+		menuState.initialClick = { x, y };
+		menuState.offset = { x: offsetX, y: offsetY };
+		menuState.isOpen = true;
+
+		lockScroll();
+		requestAnimationFrame(fixPosition);
+	}
+
+	function fixPosition() {
+		if (!containerRef) return;
+
+		const box = containerRef.getBoundingClientRect();
+		const vw = window.innerWidth;
+		const vh = window.innerHeight;
+
+		let left = menuState.initialClick.x;
+		let top = menuState.initialClick.y;
+
+		let flippedX = false;
+		let flippedY = false;
+
+		if (left + box.width > vw) {
+			left -= box.width;
+			flippedX = true;
+		}
+
+		if (top + box.height > vh) {
+			top -= box.height;
+			flippedY = true;
+		}
+
+		const offsetX = flippedX ? -menuState.offset.x : menuState.offset.x;
+		const offsetY = flippedY ? -menuState.offset.y : menuState.offset.y;
+
+		menuState.position = {
+			x: left + offsetX,
+			y: top + offsetY
+		};
+	}
+
 	function preventScroll(e: Event) {
 		e.preventDefault();
 	}
 
-	export function open(x: number, y: number) {
-		menuState = { isOpen: true, x, y };
-		lockScroll();
-	}
 	function lockScroll() {
 		scrollPos = { x: window.scrollX, y: window.scrollY };
 		window.addEventListener('wheel', preventScroll, { passive: false });
@@ -32,10 +77,9 @@
 	export function close() {
 		menuState.isOpen = false;
 		unlockScroll();
-		if (onAfterClose) {
-			onAfterClose();
-		}
+		onAfterClose?.();
 	}
+
 	function unlockScroll() {
 		window.removeEventListener('wheel', preventScroll);
 		window.removeEventListener('touchmove', preventScroll);
@@ -47,8 +91,8 @@
 				close();
 			}
 		});
-		observer.observe(document.body, { attributes: true, subtree: true });
 
+		observer.observe(document.body, { attributes: true, subtree: true });
 		window.addEventListener('scroll', close, { passive: true });
 
 		onDestroy(() => {
@@ -64,7 +108,7 @@
 	<div
 		bind:this={containerRef}
 		class="context-menu {className}"
-		style="top:{menuState.y}px; left:{menuState.x}px;"
+		style="top:{menuState.position.y}px; left:{menuState.position.x}px;"
 	>
 		{@render children()}
 	</div>
@@ -73,18 +117,14 @@
 <style>
 	.context-menu {
 		position: absolute;
-		padding: 0.5rem;
-		border-radius: var(--radius);
-		background: var(--secondary);
-		box-shadow: var(--shadow-md);
-		animation: fade-in 80ms ease-out;
+		animation: fade-in 10.08s ease-out;
 		z-index: 9999;
 	}
 
 	@keyframes fade-in {
 		from {
 			opacity: 0;
-			transform: scale(0.96);
+			transform: scale(0.196);
 		}
 		to {
 			opacity: 1;

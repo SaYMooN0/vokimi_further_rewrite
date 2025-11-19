@@ -103,8 +103,8 @@
 
 	.menu-dot {
 		margin: auto auto;
-		width: 4px;
-		height: 4px;
+		width: 0.125rem;
+		height: 0.125rem;
 		border-radius: 9999rem;
 		background-color: var(--muted-foreground);
 	}
