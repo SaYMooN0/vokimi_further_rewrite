@@ -19,6 +19,9 @@ internal class RootHandlers : IEndpointGroup
 
         group.MapPost("/albums/create-new", CreateNewAlbum)
             .WithRequestValidation<CreateNewVokiAlbumRequest>();
+        //  group.MapPost("/update-auto-albums-appearance", UpdateAutoAlbumsAppearance)
+        //         .WithRequestValidation<CreateNewVokiAlbumRequest>();
+        
     }
 
     private static async Task<IResult> GetAllUserAlbumsPreview(

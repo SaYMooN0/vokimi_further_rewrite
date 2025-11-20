@@ -10,7 +10,7 @@
 	let { onclick, children, class: userClass = '', ...props }: Props = $props();
 </script>
 
-<button class={`primary-btn ${userClass}`} {onclick} {...props}>
+<button class="primary-btn {userClass}" {onclick} {...props}>
 	{@render children()}
 </button>
 
@@ -30,7 +30,6 @@
 		transition: background-color 0.08s ease-in-out;
 		transition: all 0.12s ease;
 		cursor: pointer;
-
 	}
 
 	.primary-btn:hover {

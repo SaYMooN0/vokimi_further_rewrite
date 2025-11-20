@@ -18,9 +18,9 @@
 				<PageLoadErrView errs={data.errs} defaultMessage="Could not load your albums" />
 			{:else}
 				<AutoAlbumsSection
-					takenVokisAlbumsColor={data.data.takenVokisAlbums}
-					ratedVokisAlbumsColor={data.data.ratedVokisAlbums}
-					commentedVokisAlbumsColor={data.data.commentedVokisAlbums}
+					takenVokisAlbumsColors={data.data.takenVokisAlbums}
+					ratedVokisAlbumsColors={data.data.ratedVokisAlbums}
+					commentedVokisAlbumsColors={data.data.commentedVokisAlbums}
 				/>
 				<UserAlbumsSection albums={data.data.albums} />
 			{/if}

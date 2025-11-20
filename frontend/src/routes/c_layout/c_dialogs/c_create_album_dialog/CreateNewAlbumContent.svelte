@@ -9,20 +9,12 @@
 	import CreateNewAlbumIconInput from './c_content/CreateNewAlbumIconInput.svelte';
 	import CreateNewAlbumColorInput from './c_content/CreateNewAlbumColorInput.svelte';
 	import { ApiAlbums, RJO } from '$lib/ts/backend-communication/backend-services';
+	import { Icons } from '$lib/ts/icons';
 
 	interface Props {
 		onAfterSave: (newAlbumId: string) => void;
 	}
 	let { onAfterSave }: Props = $props();
-
-	const allIconIds = [
-		'albums-bookmark-1-icon',
-		'albums-bookmark-2-icon',
-		'albums-clock-1-icon',
-		'albums-clock-2-icon',
-		'albums-star-1-icon',
-		'albums-star-2-icon'
-	];
 
 	let name = $state('');
 	let icon = $state('albums-bookmark-1-icon');
@@ -55,7 +47,7 @@
 	}
 
 	function setRandom() {
-		icon = randomFrom(allIconIds);
+		icon = randomFrom(Icons.Album);
 		mainColorInput = randomFrom(colorsPresets);
 		if (Math.random() > 0.5) {
 			let delta = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
@@ -164,7 +156,7 @@
 	<div class="field">
 		<span class="label">Icon</span>
 		<CreateNewAlbumIconInput
-			icons={allIconIds}
+			icons={Icons.Album}
 			bind:value={icon}
 			mainColor={mainColorInput}
 			secondaryColor={secondaryColorWithIfTwoCheck}

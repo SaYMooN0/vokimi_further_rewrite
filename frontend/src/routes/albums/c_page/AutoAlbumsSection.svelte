@@ -5,11 +5,11 @@
 	import AutoAlbumsAppearanceEditingDialog from './c_auto_albums_section/AutoAlbumsAppearanceEditingDialog.svelte';
 
 	interface Props {
-		takenVokisAlbumsColor: AutoAlbumsColorsPair;
-		ratedVokisAlbumsColor: AutoAlbumsColorsPair;
-		commentedVokisAlbumsColor: AutoAlbumsColorsPair;
+		takenVokisAlbumsColors: AutoAlbumsColorsPair;
+		ratedVokisAlbumsColors: AutoAlbumsColorsPair;
+		commentedVokisAlbumsColors: AutoAlbumsColorsPair;
 	}
-	let { takenVokisAlbumsColor, ratedVokisAlbumsColor, commentedVokisAlbumsColor }: Props = $props();
+	let { takenVokisAlbumsColors, ratedVokisAlbumsColors, commentedVokisAlbumsColors }: Props = $props();
 	let dialog = $state<AutoAlbumsAppearanceEditingDialog>()!;
 </script>
 
@@ -33,7 +33,12 @@
 		></path>
 	</svg>
 {/snippet}
-<AutoAlbumsAppearanceEditingDialog bind:this={dialog} />
+<AutoAlbumsAppearanceEditingDialog
+	bind:this={dialog}
+	{takenVokisAlbumsColors}
+	{ratedVokisAlbumsColors}
+	{commentedVokisAlbumsColors}
+/>
 <AlbumsPageSectionHeader
 	headerText="Auto albums"
 	rightButton={{
@@ -50,22 +55,22 @@
 		href="/albums/taken-vokis"
 		text="Taken Vokis"
 		iconId="#albums-taken-vokis-icon"
-		iconMainColor={takenVokisAlbumsColor.mainColor}
-		iconSecondaryColor={takenVokisAlbumsColor.secondaryColor}
+		iconMainColor={takenVokisAlbumsColors.mainColor}
+		iconSecondaryColor={takenVokisAlbumsColors.secondaryColor}
 	/>
 	<AutoAlbumLink
 		href="/albums/rated-vokis"
 		text="Rated Vokis"
 		iconId="#albums-rated-vokis-icon"
-		iconMainColor={ratedVokisAlbumsColor.mainColor}
-		iconSecondaryColor={ratedVokisAlbumsColor.secondaryColor}
+		iconMainColor={ratedVokisAlbumsColors.mainColor}
+		iconSecondaryColor={ratedVokisAlbumsColors.secondaryColor}
 	/>
 	<AutoAlbumLink
 		href="/albums/commented-vokis"
 		text="Commented Vokis"
 		iconId="#albums-commented-vokis-icon"
-		iconMainColor={commentedVokisAlbumsColor.mainColor}
-		iconSecondaryColor={commentedVokisAlbumsColor.secondaryColor}
+		iconMainColor={commentedVokisAlbumsColors.mainColor}
+		iconSecondaryColor={commentedVokisAlbumsColors.secondaryColor}
 	/>
 </div>
 
