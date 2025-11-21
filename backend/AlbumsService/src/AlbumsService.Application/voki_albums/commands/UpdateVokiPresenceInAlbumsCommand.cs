@@ -29,11 +29,24 @@ internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
             .ToDictionary(a => a.Id, a => a);
         List<VokiAlbum> changedAlbumsList = [];
 
+        ErrOrNothing errs = ErrOrNothing.Nothing;
+
         foreach (var (albumId, isChosen) in command.AlbumIdToIsChosen) {
             if (albums.TryGetValue(albumId, out var album)) {
-                album.SetVokiPresenceTo(isChosen, command.VokiId);
+                ErrOrNothing res = album.SetVokiPresenceTo(userId, isChosen, command.VokiId);
+                errs.AddNextIfErr(res);
                 changedAlbumsList.Add(album);
             }
+        }
+
+        if (errs.IsErr(out var err)) {
+            if (errs.Any(e => e.Code == ErrCodes.NoAccess)) {
+                return ErrFactory.NoAccess(
+                    "Couldn't update voki in albums presence because you don't have access to modify some of the albums"
+                );
+            }
+
+            return err;
         }
 
         await _vokiAlbumsRepository.UpdateRange(changedAlbumsList, ct);

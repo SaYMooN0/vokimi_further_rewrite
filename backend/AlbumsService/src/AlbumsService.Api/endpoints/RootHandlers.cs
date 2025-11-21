@@ -1,7 +1,9 @@
 ﻿using AlbumsService.Api.contracts;
 using AlbumsService.Api.contracts.create_new_album;
+using AlbumsService.Application.app_users.commands;
 using AlbumsService.Application.app_users.queries;
 using AlbumsService.Application.voki_albums.commands;
+using AlbumsService.Domain.app_user_aggregate;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApiShared;
 using ApiShared.extensions;
@@ -18,10 +20,10 @@ internal class RootHandlers : IEndpointGroup
         group.MapGet("/all-albums-preview", GetAllUserAlbumsPreview);
 
         group.MapPost("/albums/create-new", CreateNewAlbum)
-            .WithRequestValidation<CreateNewVokiAlbumRequest>();
-        //  group.MapPost("/update-auto-albums-appearance", UpdateAutoAlbumsAppearance)
-        //         .WithRequestValidation<CreateNewVokiAlbumRequest>();
-        
+            .WithRequestValidation<SaveVokiAlbumRequest>();
+
+        group.MapPost("/update-auto-albums-appearance", UpdateAutoAlbumsAppearance)
+            .WithRequestValidation<UpdateAutoAlbumsAppearanceRequest>();
     }
 
     private static async Task<IResult> GetAllUserAlbumsPreview(
@@ -37,7 +39,7 @@ internal class RootHandlers : IEndpointGroup
         HttpContext httpContext, CancellationToken ct,
         ICommandHandler<CreateNewAlbumCommand, VokiAlbum> handler
     ) {
-        var request = httpContext.GetValidatedRequest<CreateNewVokiAlbumRequest>();
+        var request = httpContext.GetValidatedRequest<SaveVokiAlbumRequest>();
 
         CreateNewAlbumCommand command = new(
             request.ParsedName, request.ParsedIcon, request.ParsedMainColor, request.ParsedSecondaryColor
@@ -47,5 +49,15 @@ internal class RootHandlers : IEndpointGroup
         return CustomResults.FromErrOrToJson<VokiAlbum, AlbumCreatedResponse>(result);
     }
 
-  
+    private static async Task<IResult> UpdateAutoAlbumsAppearance(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<UpdateAutoAlbumsAppearanceCommand, UserAutoAlbumsAppearance> handler
+    ) {
+        var request = httpContext.GetValidatedRequest<UpdateAutoAlbumsAppearanceRequest>();
+
+        UpdateAutoAlbumsAppearanceCommand command = new(request.ParsedAppearance);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrToJson<UserAutoAlbumsAppearance, AutoAlbumsAppearanceResponse>(result);
+    }
 }

@@ -3,18 +3,24 @@
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import type { Err } from '$lib/ts/err';
 	import { watch } from 'runed';
-	import type { AutoAlbumsColorsPair } from '../../types';
+	import type { AutoAlbumsAppearance, AutoAlbumsColorsPair } from '../../types';
 	import AutoAlbumColorEditor from './c_auto_albums_appearance_dialog/AutoAlbumColorEditor.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import { ApiAlbums, RJO } from '$lib/ts/backend-communication/backend-services';
 
 	interface Props {
 		takenVokisAlbumsColors: AutoAlbumsColorsPair;
 		ratedVokisAlbumsColors: AutoAlbumsColorsPair;
 		commentedVokisAlbumsColors: AutoAlbumsColorsPair;
+		updateParent: (newAppearances: AutoAlbumsAppearance) => void;
 	}
 
-	let { takenVokisAlbumsColors, ratedVokisAlbumsColors, commentedVokisAlbumsColors }: Props =
-		$props();
+	let {
+		takenVokisAlbumsColors,
+		ratedVokisAlbumsColors,
+		commentedVokisAlbumsColors,
+		updateParent
+	}: Props = $props();
 
 	let takenEditingColors: AutoAlbumsColorsPair = $state(takenVokisAlbumsColors);
 	let ratedEditingColors: AutoAlbumsColorsPair = $state(ratedVokisAlbumsColors);
@@ -45,12 +51,30 @@
 		}
 	);
 	async function save() {
-		errs = [{ message: 'Not implemented' }];
-		// const response=;
+		errs = [];
+		isLoading = true;
+		const response = await ApiAlbums.fetchJsonResponse<AutoAlbumsAppearance>(
+			`/update-auto-albums-appearance`,
+			RJO.POST({
+				takenMainColor: takenEditingColors.mainColor,
+				takenSecondaryColor: takenEditingColors.secondaryColor,
+				ratedMainColor: ratedEditingColors.mainColor,
+				ratedSecondaryColor: ratedEditingColors.secondaryColor,
+				commentedMainColor: commentedEditingColors.mainColor,
+				commentedSecondaryColor: commentedEditingColors.secondaryColor
+			})
+		);
+		if (response.isSuccess) {
+			updateParent(response.data);
+			dialog.close();
+		} else {
+			errs = response.errs;
+		}
+		isLoading = false;
 	}
 </script>
 
-<DialogWithCloseButton
+`<DialogWithCloseButton
 	bind:this={dialog}
 	dialogId="auto-albums-editing-dialog"
 	subheading="Auto albums appearance editing"
@@ -82,6 +106,7 @@
 		>{isLoading ? 'Saving...' : 'Save'}</PrimaryButton
 	>
 </DialogWithCloseButton>
+`
 
 <style>
 	.albums-grid {

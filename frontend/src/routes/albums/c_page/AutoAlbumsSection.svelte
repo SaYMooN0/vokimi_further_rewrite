@@ -1,15 +1,14 @@
 <script lang="ts">
-	import type { AutoAlbumsColorsPair } from '../types';
+	import type { AutoAlbumsAppearance, AutoAlbumsColorsPair } from '../types';
 	import AlbumsPageSectionHeader from './AlbumsPageSectionHeader.svelte';
 	import AutoAlbumLink from './c_auto_albums_section/AutoAlbumLink.svelte';
 	import AutoAlbumsAppearanceEditingDialog from './c_auto_albums_section/AutoAlbumsAppearanceEditingDialog.svelte';
 
 	interface Props {
-		takenVokisAlbumsColors: AutoAlbumsColorsPair;
-		ratedVokisAlbumsColors: AutoAlbumsColorsPair;
-		commentedVokisAlbumsColors: AutoAlbumsColorsPair;
+		initialAutoAlbumsAppearance: AutoAlbumsAppearance;
 	}
-	let { takenVokisAlbumsColors, ratedVokisAlbumsColors, commentedVokisAlbumsColors }: Props = $props();
+	let { initialAutoAlbumsAppearance }: Props = $props();
+	let autoAlbumsAppearance = $state(initialAutoAlbumsAppearance);
 	let dialog = $state<AutoAlbumsAppearanceEditingDialog>()!;
 </script>
 
@@ -35,9 +34,10 @@
 {/snippet}
 <AutoAlbumsAppearanceEditingDialog
 	bind:this={dialog}
-	{takenVokisAlbumsColors}
-	{ratedVokisAlbumsColors}
-	{commentedVokisAlbumsColors}
+	takenVokisAlbumsColors={autoAlbumsAppearance.takenVokisAlbums}
+	ratedVokisAlbumsColors={autoAlbumsAppearance.ratedVokisAlbums}
+	commentedVokisAlbumsColors={autoAlbumsAppearance.commentedVokisAlbums}
+	updateParent={(newAppearances) => (autoAlbumsAppearance = newAppearances)}
 />
 <AlbumsPageSectionHeader
 	headerText="Auto albums"
@@ -55,22 +55,22 @@
 		href="/albums/taken-vokis"
 		text="Taken Vokis"
 		iconId="#albums-taken-vokis-icon"
-		iconMainColor={takenVokisAlbumsColors.mainColor}
-		iconSecondaryColor={takenVokisAlbumsColors.secondaryColor}
+		iconMainColor={autoAlbumsAppearance.takenVokisAlbums.mainColor}
+		iconSecondaryColor={autoAlbumsAppearance.takenVokisAlbums.secondaryColor}
 	/>
 	<AutoAlbumLink
 		href="/albums/rated-vokis"
 		text="Rated Vokis"
 		iconId="#albums-rated-vokis-icon"
-		iconMainColor={ratedVokisAlbumsColors.mainColor}
-		iconSecondaryColor={ratedVokisAlbumsColors.secondaryColor}
+		iconMainColor={autoAlbumsAppearance.ratedVokisAlbums.mainColor}
+		iconSecondaryColor={autoAlbumsAppearance.ratedVokisAlbums.secondaryColor}
 	/>
 	<AutoAlbumLink
 		href="/albums/commented-vokis"
 		text="Commented Vokis"
 		iconId="#albums-commented-vokis-icon"
-		iconMainColor={commentedVokisAlbumsColors.mainColor}
-		iconSecondaryColor={commentedVokisAlbumsColors.secondaryColor}
+		iconMainColor={autoAlbumsAppearance.commentedVokisAlbums.mainColor}
+		iconSecondaryColor={autoAlbumsAppearance.commentedVokisAlbums.secondaryColor}
 	/>
 </div>
 

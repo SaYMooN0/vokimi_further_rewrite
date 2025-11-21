@@ -1,25 +1,18 @@
 ﻿using AlbumsService.Application.app_users.queries;
 using AlbumsService.Application.common.repositories;
-using AlbumsService.Application.voki_albums.queries;
-using AlbumsService.Domain.app_user_aggregate;
-using AlbumsService.Domain.voki_album_aggregate;
 using ApiShared;
 
 namespace AlbumsService.Api.contracts;
 
 public record class AllAlbumsPreviewResponse(
-    AutoAlbumsColorsPairResponse TakenVokisAlbums,
-    AutoAlbumsColorsPairResponse RatedVokisAlbums,
-    AutoAlbumsColorsPairResponse CommentedVokisAlbums,
+    AutoAlbumsAppearanceResponse AutoAlbumsAppearance,
     VokiAlbumPreviewResponse[] Albums
 ) : ICreatableResponse<ListAllUserAlbumsPreviewQueryResult>
 {
     public static ICreatableResponse<ListAllUserAlbumsPreviewQueryResult> Create(
         ListAllUserAlbumsPreviewQueryResult res
     ) => new AllAlbumsPreviewResponse(
-        AutoAlbumsColorsPairResponse.TakenVokisAlbums(res.AutoAlbumsAppearance),
-        AutoAlbumsColorsPairResponse.RatedVokisAlbums(res.AutoAlbumsAppearance),
-        AutoAlbumsColorsPairResponse.CommentedVokisAlbums(res.AutoAlbumsAppearance),
+        AutoAlbumsAppearanceResponse.FromUserAppearance(res.AutoAlbumsAppearance),
         res.Albums.Select(VokiAlbumPreviewResponse.FromAlbum).ToArray()
     );
 }
@@ -41,16 +34,4 @@ public record VokiAlbumPreviewResponse(
         a.SecondaryColor.ToString(),
         a.VokiIdsCount
     );
-}
-
-public record AutoAlbumsColorsPairResponse(string MainColor, string SecondaryColor)
-{
-    public static AutoAlbumsColorsPairResponse TakenVokisAlbums(UserAutoAlbumsAppearance data) =>
-        new(data.TakenMainColor.ToString(), data.TakenSecondaryColor.ToString());
-
-    public static AutoAlbumsColorsPairResponse RatedVokisAlbums(UserAutoAlbumsAppearance data) =>
-        new(data.RatedMainColor.ToString(), data.RatedSecondaryColor.ToString());
-
-    public static AutoAlbumsColorsPairResponse CommentedVokisAlbums(UserAutoAlbumsAppearance data) =>
-        new(data.CommentedMainColor.ToString(), data.CommentedSecondaryColor.ToString());
 }

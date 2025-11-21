@@ -39,12 +39,33 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
 
     public bool HasVoki(VokiId vokiId) => VokiIds.Contains(vokiId);
 
-    public void SetVokiPresenceTo(bool presence, VokiId voki) {
+    public ErrOrNothing SetVokiPresenceTo(AppUserId userId, bool presence, VokiId voki) {
+        if (userId != OwnerId) {
+            return ErrFactory.NoAccess();
+        }
+
         if (presence) {
             VokiIds = VokiIds.Add(voki);
         }
         else {
             VokiIds = VokiIds.Remove(voki);
         }
+
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOrNothing Update(
+        AppUserId userId, AlbumName name, AlbumIcon icon,
+        HexColor mainColor, HexColor secondaryColor
+    ) {
+        if (userId != OwnerId) {
+            return ErrFactory.NoAccess("Could not update the album because user is not owner");
+        }
+
+        Name = name;
+        Icon = icon;
+        MainColor = mainColor;
+        SecondaryColor = secondaryColor;
+        return ErrOrNothing.Nothing;
     }
 }

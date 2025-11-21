@@ -64,4 +64,21 @@ public class ErrOrNothing
         AddNextIfErr(next);
         return this;
     }
+
+    public bool Any(Func<Err, bool> predicate) {
+        if (_err is null) {
+            return false;
+        }
+
+        Err? current = _err;
+        while (current is not null) {
+            if (predicate(current)) {
+                return true;
+            }
+
+            current = current.Next;
+        }
+
+        return false;
+    }
 }

@@ -24,7 +24,7 @@ public class HexColor : ValueObject
 
     public static ErrOrNothing CheckHexColorForErr(string color) {
         if (string.IsNullOrWhiteSpace(color)) {
-            return ErrFactory.NoValue.Common("No value provided for ");
+            return ErrFactory.NoValue.Common("No value provided for color");
         }
 
         if (!HexColorRegex.IsMatch(color)) {
@@ -34,6 +34,7 @@ public class HexColor : ValueObject
         return ErrOrNothing.Nothing;
     }
 
+    public static HexColor Default => new HexColor("#b0b0b0");
     public override IEnumerable<object> GetEqualityComponents() => [Value];
     public override string ToString() => Value;
 }

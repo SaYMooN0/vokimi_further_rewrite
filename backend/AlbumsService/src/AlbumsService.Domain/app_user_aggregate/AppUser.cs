@@ -11,7 +11,7 @@ public class AppUser : AggregateRoot<AppUserId>
     public AppUser(AppUserId id) {
         Id = id;
         AlbumIds = [];
-        AutoAlbumsAppearance = UserAutoAlbumsAppearance.Create();
+        AutoAlbumsAppearance = UserAutoAlbumsAppearance.Default();
     }
 
     public const int MaxAlbumsForUser = 250;
@@ -32,5 +32,9 @@ public class AppUser : AggregateRoot<AppUserId>
             AlbumIds = AlbumIds.Remove(id);
             AddDomainEvent(new VokiAlbumDeletedDomainEvent(id));
         }
+    }
+
+    public void UpdateAutoAlbumsAppearance(UserAutoAlbumsAppearance appearance) {
+        AutoAlbumsAppearance = appearance;
     }
 }

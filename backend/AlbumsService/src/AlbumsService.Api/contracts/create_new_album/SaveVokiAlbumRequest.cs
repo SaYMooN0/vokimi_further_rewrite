@@ -5,7 +5,7 @@ using SharedKernel.errs;
 
 namespace AlbumsService.Api.contracts.create_new_album;
 
-public class CreateNewVokiAlbumRequest : IRequestWithValidationNeeded
+public class SaveVokiAlbumRequest : IRequestWithValidationNeeded
 {
     public string Name { get; init; }
     public string Icon { get; init; }

@@ -1,4 +1,3 @@
-export type AutoAlbumsColorsPair = { mainColor: string, secondaryColor: string };
 
 export type VokiAlbumPreviewData = {
     id: string;
@@ -8,4 +7,11 @@ export type VokiAlbumPreviewData = {
     secondaryColor: string;
     vokisCount: number;
 };
-export type VokiIdToDateDict = Record<string, Date>; 
+export type VokiIdToDateDict = Record<string, Date>;
+
+export type AutoAlbumsAppearance = {
+    takenVokisAlbums: AutoAlbumsColorsPair,
+    ratedVokisAlbums: AutoAlbumsColorsPair,
+    commentedVokisAlbums: AutoAlbumsColorsPair
+}
+export type AutoAlbumsColorsPair = { mainColor: string, secondaryColor: string };

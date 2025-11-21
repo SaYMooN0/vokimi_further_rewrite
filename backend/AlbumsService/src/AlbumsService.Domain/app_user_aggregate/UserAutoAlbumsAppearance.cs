@@ -9,7 +9,7 @@ public record UserAutoAlbumsAppearance(
     HexColor CommentedSecondaryColor
 )
 {
-    public static UserAutoAlbumsAppearance Create() => new(
+    public static UserAutoAlbumsAppearance Default() => new(
         HexColor.Create("#007dfe").AsSuccess(),
         HexColor.Create("#007dfe").AsSuccess(),
         HexColor.Create("#ffb700").AsSuccess(),
