@@ -6,8 +6,7 @@ namespace AlbumsService.Application.voki_albums.queries;
 
 public sealed record ListAlbumsDataForVokiQuery(VokiId VokiId) : IQuery<AlbumWithVokiPresenceDto[]>;
 
-internal sealed class ListAlbumsDataForVokiQueryHandler
-    : IQueryHandler<ListAlbumsDataForVokiQuery, AlbumWithVokiPresenceDto[]>
+internal sealed class ListAlbumsDataForVokiQueryHandler : IQueryHandler<ListAlbumsDataForVokiQuery, AlbumWithVokiPresenceDto[]>
 {
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
     private readonly IUserContext _userContext;

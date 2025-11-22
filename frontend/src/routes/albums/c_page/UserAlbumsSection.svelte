@@ -5,6 +5,7 @@
 	import type { VokiAlbumPreviewData } from '../types';
 	import AlbumsPageSectionHeader from './AlbumsPageSectionHeader.svelte';
 	import ConfirmAlbumDeletionDIalog from './c_user_albums_section/ConfirmAlbumDeletionDIalog.svelte';
+	import CopyVokisFromAnotherAlbumDialog from './c_user_albums_section/CopyVokisFromAnotherAlbumDialog.svelte';
 	import EditAlbumDialog from './c_user_albums_section/EditAlbumDialog.svelte';
 	import UserAlbumsContextMenu from './c_user_albums_section/UserAlbumsContextMenu.svelte';
 	import UserAlbumView from './c_user_albums_section/UserAlbumView.svelte';
@@ -22,8 +23,10 @@
 		openCreateNewAlbumDialog(onAfterCreated);
 	}
 	let userAlbumsContextMenu = $state<UserAlbumsContextMenu>()!;
+
 	let editAlbumDialog = $state<EditAlbumDialog>()!;
 	let confirmAlbumDeletionDialog = $state<ConfirmAlbumDeletionDIalog>()!;
+	let copyVokisFromAnotherAlbumDialog = $state<CopyVokisFromAnotherAlbumDialog>()!;
 </script>
 
 {#snippet headerIcon()}
@@ -40,10 +43,13 @@
 />
 <ConfirmAlbumDeletionDIalog bind:this={confirmAlbumDeletionDialog} />
 <EditAlbumDialog bind:this={editAlbumDialog} />
+<CopyVokisFromAnotherAlbumDialog bind:this={copyVokisFromAnotherAlbumDialog} userAlbums={albums} />
+
 <UserAlbumsContextMenu
 	bind:this={userAlbumsContextMenu}
 	openDeleteAlbumDialog={(a) => confirmAlbumDeletionDialog.open(a)}
 	openEditAlbumDialog={(a) => editAlbumDialog.open(a)}
+	openCopyFromAnotherAlbumDialog={(a) => copyVokisFromAnotherAlbumDialog.open(a)}
 />
 {#if albums.length === 0}
 	<div class="no-albums-message">

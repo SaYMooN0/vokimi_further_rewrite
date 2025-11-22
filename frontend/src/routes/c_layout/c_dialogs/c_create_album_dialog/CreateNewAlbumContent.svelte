@@ -33,28 +33,20 @@
 			savingErrs = [];
 		}
 	);
-	const colorsPresets = [
-		'#ff595e',
-		'#ffca3a',
-		'#ff006e',
-		'#8338ec',
-		'#3a86ff',
-		'#e07a5f',
-		'#81b29a'
-	];
+	
 	function randomFrom<T>(arr: T[]): T {
 		return arr[Math.floor(Math.random() * arr.length)];
 	}
 
 	function setRandom() {
 		icon = randomFrom(Icons.Album);
-		mainColorInput = randomFrom(colorsPresets);
+		mainColorInput = randomFrom(ColorUtils.AlbumColorsPresets);
 		if (Math.random() > 0.5) {
 			let delta = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
 			delta = Math.random() > 0.5 ? delta : -delta;
 			secondaryColorInput = ColorUtils.adjustLightness(mainColorInput, delta);
 		} else {
-			secondaryColorInput = randomFrom(colorsPresets);
+			secondaryColorInput = randomFrom(ColorUtils.AlbumColorsPresets);
 		}
 	}
 

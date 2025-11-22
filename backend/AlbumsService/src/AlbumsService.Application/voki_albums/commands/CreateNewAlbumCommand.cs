@@ -39,7 +39,7 @@ internal sealed class CreateNewAlbumCommandHandler :
         }
 
         var userId = userIdRes.AsSuccess();
-        AppUser? user = await _appUsersRepository.GetById(userId);
+        AppUser? user = await _appUsersRepository.GetById(userId, ct);
         if (user is null) {
             return ErrFactory.NotFound.User();
         }
@@ -53,8 +53,8 @@ internal sealed class CreateNewAlbumCommandHandler :
             return err;
         }
 
-        await _appUsersRepository.Update(user);
-        await _vokiAlbumsRepository.Add(album);
+        await _appUsersRepository.Update(user, ct);
+        await _vokiAlbumsRepository.Add(album, ct);
 
         return album;
     }

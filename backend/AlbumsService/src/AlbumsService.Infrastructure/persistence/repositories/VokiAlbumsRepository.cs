@@ -23,7 +23,7 @@ public class VokiAlbumsRepository : IVokiAlbumsRepository
             .Where(a => a.OwnerId == userId)
             .ToArrayAsync(ct);
 
-    public Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSortedAsNoTracking(AppUserId userId) =>
+    public Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSortedAsNoTracking(AppUserId userId, CancellationToken ct) =>
         _db.VokiAlbums
             .AsNoTracking()
             .Where(a => a.OwnerId == userId)
@@ -32,23 +32,26 @@ public class VokiAlbumsRepository : IVokiAlbumsRepository
                 a.Id, a.Name, a.Icon, a.MainColor, a.SecondaryColor,
                 a.VokiIds.Count, a.CreationDate
             ))
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: ct);
 
-    public async Task Add(VokiAlbum album) {
-        await _db.VokiAlbums.AddAsync(album);
-        await _db.SaveChangesAsync();
+    public async Task Add(VokiAlbum album, CancellationToken ct) {
+        await _db.VokiAlbums.AddAsync(album, ct);
+        await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<VokiAlbum?> GetById(VokiAlbumId albumId) =>
-        await _db.VokiAlbums.FindAsync(albumId);
+    public async Task<VokiAlbum?> GetById(VokiAlbumId albumId, CancellationToken ct) =>
+        await _db.VokiAlbums.FindAsync([albumId], cancellationToken: ct);
 
-    public async Task DeleteAlbum(VokiAlbum album) {
+    public async Task DeleteAlbum(VokiAlbum album, CancellationToken ct) {
         _db.VokiAlbums.Remove(album);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
 
     public async Task UpdateRange(IEnumerable<VokiAlbum> albums, CancellationToken ct) {
         _db.VokiAlbums.UpdateRange(albums);
         await _db.SaveChangesAsync(ct);
     }
+
+    public Task<VokiAlbum?> GetByIdAsNoTracking(VokiAlbumId albumId, CancellationToken ct) =>
+        _db.VokiAlbums.FirstOrDefaultAsync(v => v.Id == albumId, ct);
 }

@@ -6,8 +6,8 @@ namespace AlbumsService.Application.app_users.queries;
 
 public sealed record ListAllUserAlbumsPreviewQuery() : IQuery<ListAllUserAlbumsPreviewQueryResult>;
 
-internal sealed class ListAllUserAlbumsPreviewQueryHandler :
-    IQueryHandler<ListAllUserAlbumsPreviewQuery, ListAllUserAlbumsPreviewQueryResult>
+internal sealed class
+    ListAllUserAlbumsPreviewQueryHandler : IQueryHandler<ListAllUserAlbumsPreviewQuery, ListAllUserAlbumsPreviewQueryResult>
 {
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
     private readonly IAppUsersRepository _appUsersRepository;
@@ -32,7 +32,9 @@ internal sealed class ListAllUserAlbumsPreviewQueryHandler :
             return ErrFactory.NotFound.User();
         }
 
-        var albums = await _vokiAlbumsRepository.GetPreviewsForUserSortedAsNoTracking(_userContext.AuthenticatedUserId);
+        VokiAlbumPreviewDto[] albums = await _vokiAlbumsRepository.GetPreviewsForUserSortedAsNoTracking(
+            _userContext.AuthenticatedUserId, ct
+        );
         return new ListAllUserAlbumsPreviewQueryResult(albumsAppearance, albums);
     }
 }

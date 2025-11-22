@@ -22,13 +22,13 @@ internal sealed class UpdateAutoAlbumsAppearanceCommandHandler :
 
     public async Task<ErrOr<UserAutoAlbumsAppearance>> Handle(UpdateAutoAlbumsAppearanceCommand command, CancellationToken ct) {
         AppUserId userId = _userContext.AuthenticatedUserId;
-        AppUser? user = await _appUsersRepository.GetById(userId);
+        AppUser? user = await _appUsersRepository.GetById(userId,ct);
         if (user is null) {
             return ErrFactory.NotFound.User("Couldn't find user to update albums appearance");
         }
 
         user.UpdateAutoAlbumsAppearance(command.NewAppearance);
-        await _appUsersRepository.Update(user);
+        await _appUsersRepository.Update(user,ct);
         return user.AutoAlbumsAppearance;
     }
 }
