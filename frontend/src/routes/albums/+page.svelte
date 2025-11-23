@@ -7,6 +7,7 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 
 	let { data }: PageProps = $props();
+	let userAlbums = $state(data?.data?.albums ?? []);
 </script>
 
 <AuthView>
@@ -18,7 +19,7 @@
 				<PageLoadErrView errs={data.errs} defaultMessage="Could not load your albums" />
 			{:else}
 				<AutoAlbumsSection initialAutoAlbumsAppearance={data.data.autoAlbumsAppearance} />
-				<UserAlbumsSection albums={data.data.albums} />
+				<UserAlbumsSection albums={userAlbums} />
 			{/if}
 		{:else}
 			<div class="login-required-container">

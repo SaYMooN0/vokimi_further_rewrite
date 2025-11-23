@@ -4,7 +4,7 @@ using ApiShared;
 namespace AlbumsService.Api.contracts.create_new_album;
 
 public record AlbumCreatedResponse(
-    string CreateAlbumId
+    string CreatedAlbumId
 ) : ICreatableResponse<VokiAlbum>
 {
     public static ICreatableResponse<VokiAlbum> Create(VokiAlbum album) => new AlbumCreatedResponse(

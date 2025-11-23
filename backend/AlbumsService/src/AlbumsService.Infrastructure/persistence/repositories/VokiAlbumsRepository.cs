@@ -54,4 +54,9 @@ public class VokiAlbumsRepository : IVokiAlbumsRepository
 
     public Task<VokiAlbum?> GetByIdAsNoTracking(VokiAlbumId albumId, CancellationToken ct) =>
         _db.VokiAlbums.FirstOrDefaultAsync(v => v.Id == albumId, ct);
+
+    public async Task Update(VokiAlbum album, CancellationToken ct) {
+        _db.VokiAlbums.Update(album);
+        await _db.SaveChangesAsync(ct);
+    }
 }

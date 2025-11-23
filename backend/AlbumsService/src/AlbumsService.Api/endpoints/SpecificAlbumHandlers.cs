@@ -49,7 +49,7 @@ internal class SpecificAlbumHandlers : IEndpointGroup
         );
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrToJson<VokiAlbum, AlbumCreatedResponse>(result);
+        return CustomResults.FromErrOrToJson<VokiAlbum, VokiAlbumPreviewResponse>(result);
     }
 
     private static async Task<IResult> DeleteAlbum(

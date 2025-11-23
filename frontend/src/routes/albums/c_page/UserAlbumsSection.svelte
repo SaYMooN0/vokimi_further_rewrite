@@ -27,6 +27,12 @@
 	let editAlbumDialog = $state<EditAlbumDialog>()!;
 	let confirmAlbumDeletionDialog = $state<ConfirmAlbumDeletionDIalog>()!;
 	let copyVokisFromAnotherAlbumDialog = $state<CopyVokisFromAnotherAlbumDialog>()!;
+	function updateAlbum(newAlbum: VokiAlbumPreviewData) {
+		let albumToUpdateInd = albums.findIndex((a) => a.id === newAlbum.id);
+		if (albumToUpdateInd != -1) {
+			albums[albumToUpdateInd] = newAlbum;
+		}
+	}
 </script>
 
 {#snippet headerIcon()}
@@ -42,7 +48,7 @@
 	}}
 />
 <ConfirmAlbumDeletionDIalog bind:this={confirmAlbumDeletionDialog} />
-<EditAlbumDialog bind:this={editAlbumDialog} />
+<EditAlbumDialog bind:this={editAlbumDialog} updateParent={(a) => updateAlbum(a)} />
 <CopyVokisFromAnotherAlbumDialog bind:this={copyVokisFromAnotherAlbumDialog} userAlbums={albums} />
 
 <UserAlbumsContextMenu

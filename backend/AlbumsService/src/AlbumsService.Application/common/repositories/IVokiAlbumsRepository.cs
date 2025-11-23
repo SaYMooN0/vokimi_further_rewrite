@@ -12,6 +12,7 @@ public interface IVokiAlbumsRepository
     Task DeleteAlbum(VokiAlbum album, CancellationToken ct);
     Task UpdateRange(IEnumerable<VokiAlbum> albums, CancellationToken ct);
     Task<VokiAlbum?> GetByIdAsNoTracking(VokiAlbumId albumId, CancellationToken ct);
+    Task Update(VokiAlbum album, CancellationToken ct);
 }
 
 public record VokiAlbumPreviewDto(

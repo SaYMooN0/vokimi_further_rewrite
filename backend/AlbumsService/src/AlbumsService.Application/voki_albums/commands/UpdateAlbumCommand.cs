@@ -34,7 +34,7 @@ internal sealed class UpdateAlbumCommandHandler : ICommandHandler<UpdateAlbumCom
             return err;
         }
 
-        await _vokiAlbumsRepository.Add(album,ct);
+        await _vokiAlbumsRepository.Update(album,ct);
         return album;
     }
 }

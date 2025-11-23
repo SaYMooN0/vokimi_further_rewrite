@@ -6,10 +6,10 @@
 	import { ColorUtils } from '$lib/ts/utils/color-utils';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { watch } from 'runed';
-	import CreateNewAlbumIconInput from './c_content/CreateNewAlbumIconInput.svelte';
-	import CreateNewAlbumColorInput from './c_content/CreateNewAlbumColorInput.svelte';
 	import { ApiAlbums, RJO } from '$lib/ts/backend-communication/backend-services';
 	import { Icons } from '$lib/ts/icons';
+	import AlbumIconPicker from '../../../../lib/components/inputs/albums/AlbumIconPicker.svelte';
+	import AlbumColorInput from '../../../../lib/components/inputs/albums/AlbumColorInput.svelte';
 
 	interface Props {
 		onAfterSave: (newAlbumId: string) => void;
@@ -33,7 +33,7 @@
 			savingErrs = [];
 		}
 	);
-	
+
 	function randomFrom<T>(arr: T[]): T {
 		return arr[Math.floor(Math.random() * arr.length)];
 	}
@@ -70,7 +70,7 @@
 		if (savingErrs.length > 0) {
 			return;
 		}
-		const response = await ApiAlbums.fetchJsonResponse<{ createAlbumId: string }>(
+		const response = await ApiAlbums.fetchJsonResponse<{ createdAlbumId: string }>(
 			`/albums/create-new`,
 			RJO.POST({
 				name,
@@ -80,7 +80,7 @@
 			})
 		);
 		if (response.isSuccess) {
-			onAfterSave(response.data.createAlbumId);
+			onAfterSave(response.data.createdAlbumId);
 		} else {
 			savingErrs = response.errs;
 		}
@@ -147,7 +147,7 @@
 
 	<div class="field">
 		<span class="label">Icon</span>
-		<CreateNewAlbumIconInput
+		<AlbumIconPicker
 			icons={Icons.Album}
 			bind:value={icon}
 			mainColor={mainColorInput}
@@ -156,9 +156,9 @@
 	</div>
 
 	<div class="colors-row">
-		<CreateNewAlbumColorInput label={mainColorInputLabel} bind:value={mainColorInput} />
+		<AlbumColorInput label={mainColorInputLabel} bind:value={mainColorInput} />
 		{#if useTwoColors}
-			<CreateNewAlbumColorInput label="Secondary color" bind:value={secondaryColorInput} />
+			<AlbumColorInput label="Secondary color" bind:value={secondaryColorInput} />
 		{/if}
 	</div>
 	<label class="use-two">
