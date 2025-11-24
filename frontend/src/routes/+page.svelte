@@ -5,10 +5,10 @@
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
 	import type { VokiItemViewOkStateProps } from '$lib/components/voki_item/c_voki_item/types';
-	import VokiItemContextMenu from '$lib/components/voki_item/VokiItemContextMenu.svelte';
+	import BaseContextMenu from '$lib/components/BaseContextMenu.svelte';
 
 	let { data }: PageProps = $props();
-	let vokiItemContextMenu = $state<VokiItemContextMenu>()!;
+	let contextMenu = $state<BaseContextMenu>()!;
 	function assembleVokiItemStateData(voki: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
 		return {
 			vokiId: voki.id,
@@ -18,7 +18,7 @@
 				primaryAuthorId: voki.primaryAuthorId,
 				coAuthorIds: voki.coAuthorIds
 			},
-			onMoreBtnClick: (mEvent: MouseEvent) => vokiItemContextMenu.open(mEvent.x, mEvent.y, voki.id),
+			onMoreBtnClick: (mEvent: MouseEvent) => contextMenu.open(mEvent.x, mEvent.y, voki.id),
 			link: `/catalog/${voki.id}`,
 			flags: {
 				language: voki.language,
@@ -34,7 +34,9 @@
 {:else if data.data.vokis.length === 0}
 	<h1>Voki catalog is empty</h1>
 {:else}
-	<VokiItemContextMenu bind:this={vokiItemContextMenu} />
+	<BaseContextMenu bind:this={contextMenu}>
+		<div>Content</div>
+	</BaseContextMenu>
 	<VokiItemsGridContainer>
 		{#each data.data.vokis as voki}
 			<VokiItemView

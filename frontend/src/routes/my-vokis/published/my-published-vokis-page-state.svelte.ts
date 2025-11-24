@@ -38,15 +38,20 @@ export class MyPublishedVokisPageState {
     }
 
     getVokiViewItemState(
-        vokiId: string
+        vokiId: string,
+        openContextMenu: (mEvent: MouseEvent) => void
     ):
         | { name: 'ok'; data: VokiItemViewOkStateProps }
         | { name: 'loading' }
         | { name: 'errs'; data: VokiItemViewErrStateProps } {
         const voki = MyPublishedVokisCacheStore.Get(vokiId);
 
-        if (voki.state === 'loading') return { name: 'loading' };
-        if (voki.state === 'errs') return { name: 'errs', data: { vokiId, errs: voki.errs } };
+        if (voki.state === 'loading') {
+            return { name: 'loading' };
+        }
+        if (voki.state === 'errs') {
+            return { name: 'errs', data: { vokiId, errs: voki.errs } };
+        }
 
         return {
             name: 'ok',
@@ -58,7 +63,7 @@ export class MyPublishedVokisPageState {
                     primaryAuthorId: voki.data.primaryAuthorId,
                     coAuthorIds: voki.data.coAuthorIds
                 },
-                onMoreBtnClick: () => toast.error("Voki more button isn't implemented yet"),
+                onMoreBtnClick: (e) => openContextMenu(e),
                 link: `/catalog/${vokiId}`
             }
         };

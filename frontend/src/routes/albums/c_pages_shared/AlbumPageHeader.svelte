@@ -1,8 +1,12 @@
 <script lang="ts">
+	import type { Snippet } from 'svelte';
+
+	type AutoAlbumHeaderContent = { type: 'auto'; albumName: string };
+	type UserAlbumHeaderContent = { type: 'user'; icon: Snippet; albumName: string };
 	interface Props {
-		albumName: string;
+		content: AutoAlbumHeaderContent | UserAlbumHeaderContent;
 	}
-	let { albumName }: Props = $props();
+	let { content }: Props = $props();
 </script>
 
 <h1>
@@ -10,7 +14,13 @@
 		<svg><use href="#caret-left-icon" /></svg>
 		back
 	</a>
-	Your {albumName} auto album:
+	{#if content.type === 'auto'}
+		Your {content.albumName} auto album:
+	{:else if content.type === 'user'}
+		{@render content.icon()} <span>{content.albumName}</span>album
+	{:else}
+		<span class="error">Could not determine album type</span>
+	{/if}
 </h1>
 <div class="line" />
 
@@ -60,5 +70,9 @@
 		height: 0.125rem;
 		margin: 1rem 0;
 		background-color: var(--secondary);
+	}
+	.error {
+		color: var(--err-foreground);
+		font-weight: 550;
 	}
 </style>

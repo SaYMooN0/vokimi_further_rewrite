@@ -74,7 +74,7 @@
 	}
 </script>
 
-`<DialogWithCloseButton
+<DialogWithCloseButton
 	bind:this={dialog}
 	dialogId="auto-albums-editing-dialog"
 	subheading="Auto albums appearance editing"
@@ -106,7 +106,6 @@
 		>{isLoading ? 'Saving...' : 'Save'}</PrimaryButton
 	>
 </DialogWithCloseButton>
-`
 
 <style>
 	.albums-grid {

@@ -44,7 +44,6 @@ export class MyVokiInvitesPageState {
         }
     }
 
-    
     updateByInviteIds(inviteIds: string[]) {
         if (this.loadingState.state !== 'loaded') {
             this.loadInvites();

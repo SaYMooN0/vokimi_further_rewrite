@@ -17,11 +17,12 @@
 
 	interface Props {
 		children: Snippet;
-		class?: string;
 		onAfterClose?: () => void;
+		class?: string;
+		id?: string;
 	}
 
-	let { children, class: className = '', onAfterClose }: Props = $props();
+	let { children, class: className = '', onAfterClose, id = '' }: Props = $props();
 
 	export function open(x: number, y: number, offsetX = 0, offsetY = 0) {
 		menuState.initialClick = { x, y };
@@ -109,6 +110,7 @@
 		bind:this={containerRef}
 		class="context-menu {className}"
 		style="top:{menuState.position.y}px; left:{menuState.position.x}px;"
+		{id}
 	>
 		{@render children()}
 	</div>
@@ -117,14 +119,14 @@
 <style>
 	.context-menu {
 		position: absolute;
-		animation: fade-in 10.08s ease-out;
+		animation: fade-in 0.04s ease-out;
 		z-index: 9999;
 	}
 
 	@keyframes fade-in {
 		from {
 			opacity: 0;
-			transform: scale(0.196);
+			transform: scale(0.6);
 		}
 		to {
 			opacity: 1;

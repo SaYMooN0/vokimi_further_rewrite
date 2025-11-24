@@ -7,6 +7,7 @@
 	import MyVokisPageUnexpectedStateAfterLoading from '../c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
 	import { registerCurrentPageApi } from '../my-vokis-page-context';
 	import { MyPublishedVokisPageState } from './my-published-vokis-page-state.svelte';
+	import { toast } from 'svelte-sonner';
 
 	const pageState = new MyPublishedVokisPageState();
 
@@ -20,6 +21,15 @@
 			}
 		});
 	});
+	let vokiItemContextMenu = $state<VokiItemContextMenu>();
+	function openContextMenu(mEvent: MouseEvent, vokiId: string): void {
+		if (vokiItemContextMenu) {
+			console.log(mEvent.x, mEvent.y);
+			vokiItemContextMenu.open(mEvent.x, mEvent.y, vokiId);
+		} else {
+			toast.error('Failed to open context menu');
+		}
+	}
 </script>
 
 {#if pageState.publishedVokiIds.state === 'loading'}
@@ -30,9 +40,12 @@
 	{#if pageState.publishedVokiIds.vokiIds.length === 0}
 		<h1>You don't have any published vokis</h1>
 	{:else}
+		<VokiItemContextMenu bind:this={vokiItemContextMenu} id/>
 		<VokiItemsGridContainer>
 			{#each pageState.publishedVokiIds.vokiIds as vokiId}
-				<VokiItemView state={pageState.getVokiViewItemState(vokiId)} />
+				<VokiItemView
+					state={pageState.getVokiViewItemState(vokiId, (ev) => openContextMenu(ev, vokiId))}
+				/>
 			{/each}
 		</VokiItemsGridContainer>
 	{/if}
