@@ -119,8 +119,8 @@
 <style>
 	.context-menu {
 		position: absolute;
-		animation: fade-in 0.04s ease-out;
 		z-index: 9999;
+		animation: fade-in 0.04s ease-out;
 	}
 
 	@keyframes fade-in {
@@ -128,6 +128,7 @@
 			opacity: 0;
 			transform: scale(0.6);
 		}
+
 		to {
 			opacity: 1;
 			transform: scale(1);

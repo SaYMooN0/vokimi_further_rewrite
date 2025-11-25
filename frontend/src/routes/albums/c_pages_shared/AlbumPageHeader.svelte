@@ -17,7 +17,7 @@
 	{#if content.type === 'auto'}
 		Your {content.albumName} auto album:
 	{:else if content.type === 'user'}
-		{@render content.icon()} <span>{content.albumName}</span>album
+		{@render content.icon()} <span class="album-name">{content.albumName}</span>album
 	{:else}
 		<span class="error">Could not determine album type</span>
 	{/if}
@@ -71,6 +71,11 @@
 		margin: 1rem 0;
 		background-color: var(--secondary);
 	}
+
+	.album-name{
+
+	}
+
 	.error {
 		color: var(--err-foreground);
 		font-weight: 550;

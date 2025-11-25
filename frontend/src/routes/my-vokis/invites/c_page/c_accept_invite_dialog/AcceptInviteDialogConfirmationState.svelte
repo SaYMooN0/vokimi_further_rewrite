@@ -67,52 +67,58 @@
 
 <style>
 	.main-text {
-		line-height: 1.375;
-		color: var(--text);
-		text-indent: 1em;
-		font-size: 1.25rem;
-		text-wrap: pretty;
-		font-weight: 475;
-		text-align: justify;
 		margin: auto 0;
+		color: var(--text);
+		font-size: 1.25rem;
+		font-weight: 475;
+		line-height: 1.375;
+		text-align: justify;
+		text-indent: 1em;
+		text-wrap: pretty;
 	}
+
 	.main-text > :global(.user-display) {
 		display: inline-grid;
 		vertical-align: middle;
+
 		--profile-pic-width: 2.375rem;
+
 		margin: 0.125rem 0.25rem;
 	}
+
 	.main-text > .voki-name {
-		color: var(--muted-foreground);
-		font-weight: 500;
 		border-radius: 0.5rem;
+		color: var(--muted-foreground);
 		font-size: 1.375rem;
-		text-indent: 0;
+		font-weight: 500;
 		text-decoration: underline;
+		text-indent: 0;
 	}
+
 	:global(.confirm-invite-errs-block) {
 		margin: 0.5rem 0;
 	}
+
 	.buttons {
-		margin-top: auto;
 		display: flex;
-		gap: 0.75rem;
 		justify-content: flex-end;
+		gap: 0.75rem;
 		width: 100%;
+		margin-top: auto;
 	}
 
 	.btn {
 		display: inline-flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		width: 7.5rem;
 		padding: 0.375rem 1rem;
 		border: none;
-		font-size: 1rem;
-		cursor: pointer;
 		border-radius: 0.25rem;
+		font-size: 1rem;
 		font-weight: 450;
 		letter-spacing: 0.25px;
+		cursor: pointer;
 	}
 
 	.btn.primary {
@@ -123,6 +129,7 @@
 	.btn.primary:hover:where(:not([disabled])) {
 		background-color: var(--primary-hov);
 	}
+
 	.btn.secondary {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
@@ -132,42 +139,41 @@
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.loading-backdrop {
 		position: absolute;
 		display: grid;
-		place-items: center;
-		align-items: center;
-		align-content: center;
-		justify-items: center;
-		justify-content: center;
-		height: 100%;
+		place-content: center center;
+		place-items: center center;
 		width: 100%;
-		inset: 0;
+		height: 100%;
 		border-radius: inherit;
-		background: rgba(40, 40, 40, 0.06);
-		backdrop-filter: blur(1px);
-
+		background: rgb(40 40 40 / 6%);
 		animation: var(--default-fade-in);
+		place-items: center;
+		inset: 0;
+		backdrop-filter: blur(1px);
 	}
-	.loading-content {
-		background-color: var(--back);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
-		width: fit-content;
-		margin-bottom: 1rem;
-		gap: 1.5rem;
 
+	.loading-content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 1.5rem;
+		width: fit-content;
+		padding: 2rem;
+		margin-bottom: 1rem;
 		border-radius: 1rem;
-		padding: 2rem 2rem;
+		background-color: var(--back);
 	}
+
 	.loading-text {
-		font-size: 1.375rem;
-		letter-spacing: 0.5px;
 		color: var(--muted-foreground);
-		text-align: center;
+		font-size: 1.375rem;
 		font-weight: 475;
 		line-height: 1.125;
+		text-align: center;
+		letter-spacing: 0.5px;
 	}
 </style>

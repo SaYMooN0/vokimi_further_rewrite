@@ -30,9 +30,8 @@
 		display: grid;
 		flex-direction: column;
 		height: 100%;
-		flex-direction: column;
-		flex: 1;
 		min-height: 0;
+		flex: 1;
 	}
 
 	.users-list {

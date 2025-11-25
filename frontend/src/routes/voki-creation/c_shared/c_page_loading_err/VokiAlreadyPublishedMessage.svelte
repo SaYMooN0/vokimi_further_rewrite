@@ -36,33 +36,33 @@
 	}
 
 	.ufo-icon {
-		height: 8rem;
 		width: 8rem;
+		height: 8rem;
 		fill: var(--primary-hov);
 	}
 
 	.title {
+		color: var(--text);
 		font-size: 1.75rem;
 		font-weight: 600;
-		color: var(--text);
 	}
 
 	.subtitle {
-		font-size: 1.125rem;
-		color: var(--muted-foreground);
-		line-height: 1.4;
 		padding: 0.5rem 0;
+		color: var(--muted-foreground);
+		font-size: 1.125rem;
+		line-height: 1.4;
 	}
 
 	.catalog-btn {
 		display: inline-block;
-		margin-top: 0.5rem;
 		padding: 0.5rem 1.5rem;
+		margin-top: 0.5rem;
+		border-radius: var(--radius);
+		background: var(--primary);
+		color: var(--primary-foreground);
 		font-size: 1.125rem;
 		font-weight: 500;
-		color: var(--primary-foreground);
-		background: var(--primary);
-		border-radius: var(--radius);
 		transition: background-color 0.1s ease;
 	}
 

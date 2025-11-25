@@ -85,26 +85,30 @@
 <style>
 	.user-display {
 		--profile-pic-width: 2.75rem;
+
 		display: inline-grid;
-		grid-template-columns: var(--profile-pic-width) 1fr;
 		align-items: center;
 		gap: 0.25rem;
 		width: fit-content;
-
 		border-radius: 100vw;
 		background-color: var(--back);
-		text-decoration: none;
 		line-height: default;
+		text-decoration: none;
+		grid-template-columns: var(--profile-pic-width) 1fr;
 	}
+
 	.user-display:not(.interactive-all) {
 		cursor: default;
 	}
+
 	.user-display.interactive-all {
 		cursor: pointer;
 	}
+
 	.user-display * {
 		cursor: inherit;
 	}
+
 	.user-display .profile-pic {
 		display: block;
 		width: 100%;
@@ -133,6 +137,7 @@
 		font-size: 0.875rem;
 		font-weight: 440;
 	}
+
 	.user-display.ok .unique-name.interactive:hover {
 		color: var(--primary);
 		cursor: pointer !important;
@@ -141,6 +146,7 @@
 	.user-display.ok.interactive-all:hover .unique-name {
 		color: var(--primary);
 	}
+
 	.names-container-loading {
 		display: grid;
 		gap: 0.5rem;
@@ -150,23 +156,28 @@
 	.names-container-loading > label {
 		border-radius: 0.375rem;
 	}
+
 	.names-container-loading > label:nth-child(1) {
 		width: 100%;
 		height: 1rem;
 	}
+
 	.names-container-loading > label:nth-child(2) {
-		height: 0.875rem;
 		width: 75%;
+		height: 0.875rem;
 	}
+
 	.skeleton-anim {
-		background: var(--secondary);
 		position: relative;
-		overflow: hidden;
+		background: var(--secondary);
 		box-shadow: var(--shadow-xs);
 		cursor: default;
+		overflow: hidden;
 	}
+
 	.skeleton-anim::after {
 		position: absolute;
+		height: 100%;
 		background: linear-gradient(
 			120deg,
 			transparent 0%,
@@ -180,35 +191,38 @@
 		content: '';
 		inset: 0;
 		background-size: 200% 100%;
-		height: 100%;
 	}
 
 	.user-display.error {
 		color: var(--secondary-foreground);
 	}
+
 	.error .profile-pic {
 		padding: 0.5rem;
 		background-color: var(--secondary);
 		box-shadow: var(--shadow-xs);
 		stroke-width: 1.25;
 	}
+
 	.error .error-label {
+		width: max-content;
+		padding: 0.125rem 0.5rem;
+		border-radius: 0.375rem;
 		font-size: 1rem;
 		font-weight: 450;
-		padding: 0.125rem 0.5rem;
-		width: max-content;
-		border-radius: 0.375rem;
 	}
+
 	.error-label > svg {
-		color: inherit;
-		height: 1.25rem;
 		width: 1.25rem;
-		stroke-width: 2;
+		height: 1.25rem;
 		padding: 0;
-		vertical-align: middle;
 		padding-bottom: 0.125rem;
 		margin-left: 0.125rem;
+		color: inherit;
+		stroke-width: 2;
+		vertical-align: middle;
 	}
+
 	.user-display.error:hover .error-label {
 		background-color: var(--secondary);
 		color: var(--muted-foreground);

@@ -32,31 +32,34 @@
 
 <style>
 	.input-empty-state {
-		height: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 0.25rem;
+		height: 100%;
 	}
+
 	.notes {
-		background-color: var(--secondary);
 		padding: 0.25rem;
 		border-radius: 0.5rem;
+		background-color: var(--secondary);
 	}
+
 	.title {
 		color: var(--secondary-foreground);
 		font-size: 1rem;
+		font-weight: 450;
 		line-height: 1.25rem;
 		text-align: center;
-		font-weight: 450;
 	}
 
 	.subtitle {
 		color: var(--secondary-foreground);
 		font-size: 0.875rem;
+		font-weight: 450;
 		line-height: 1rem;
 		text-align: center;
-		font-weight: 450;
 	}
+
 	.search-val {
 		font-weight: 550;
 		text-decoration: underline;

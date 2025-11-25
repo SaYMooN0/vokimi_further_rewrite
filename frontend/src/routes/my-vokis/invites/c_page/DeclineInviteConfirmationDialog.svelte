@@ -80,9 +80,9 @@
 	}
 
 	.title {
+		color: var(--text);
 		font-size: 1.4rem;
 		font-weight: 600;
-		color: var(--text);
 		line-height: 1.35;
 	}
 
@@ -92,30 +92,33 @@
 	}
 
 	.subtitle {
-		font-size: 1rem;
 		color: var(--muted-foreground);
+		font-size: 1rem;
 		line-height: 1.45;
 	}
 
 	.buttons {
 		display: flex;
-		gap: 1rem;
 		flex-direction: row;
 		justify-content: right;
+		gap: 1rem;
 		margin-top: 0.5rem;
 	}
+
 	.btn {
 		padding: 0.5rem 1.5rem;
+		border: none;
 		border-radius: var(--radius);
 		font-size: 1rem;
 		font-weight: 475;
-		cursor: pointer;
-		border: none;
 		transition: all 0.12s ease;
+		cursor: pointer;
 	}
+
 	.btn:hover {
 transform: scale(1.05);
 	}	
+
 	.btn-decline {
 		background: var(--err-back);
 		color: var(--err-foreground);

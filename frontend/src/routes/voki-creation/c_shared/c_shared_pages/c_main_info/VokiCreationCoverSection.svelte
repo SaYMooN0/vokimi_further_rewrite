@@ -71,10 +71,10 @@
 		align-items: center;
 		gap: 1rem;
 		width: 100%;
-		aspect-ratio: var(--voki-cover-aspect-ratio);
-		animation: var(--default-fade-in-animation);
-		background-color: var(--secondary);
 		border-radius: 1rem;
+		background-color: var(--secondary);
+		animation: var(--default-fade-in-animation);
+		aspect-ratio: var(--voki-cover-aspect-ratio);
 	}
 
 	.loading-container > label {

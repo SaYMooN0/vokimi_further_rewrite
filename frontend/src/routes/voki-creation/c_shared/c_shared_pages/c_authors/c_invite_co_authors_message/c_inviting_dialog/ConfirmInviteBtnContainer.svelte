@@ -41,10 +41,12 @@
 		height: 4rem;
 		text-align: center;
 	}
+
 	.no-users-selected-label {
-		color: var(--secondary-foreground);
 		margin-top: auto;
+		color: var(--secondary-foreground);
 	}
+
 	.confirm-btn-container button {
 		width: 18rem;
 		padding: 0.375rem 1.25rem;

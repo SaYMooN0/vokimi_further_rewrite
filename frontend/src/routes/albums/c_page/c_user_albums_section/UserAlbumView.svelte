@@ -16,7 +16,9 @@
 <a class="album-card" href={`/albums/${album.id}`}>
 	<svg
 		class="album-icon"
-		style="--icon-color-1: {album.mainColor}; --icon-color-2: {album.secondaryColor};"
+		style="
+
+--icon-color-1: {album.mainColor}; --icon-color-2: {album.secondaryColor};"
 	>
 		<use href={`#${album.icon}`} />
 	</svg>
@@ -43,15 +45,16 @@
 <style>
 	.album-card {
 		display: grid;
-		grid-template-columns: auto 1fr 2rem;
+		align-items: center;
 		gap: 0.75rem;
 		padding: 0.75rem 1rem;
 		border-radius: 0.75rem;
-		overflow: hidden;
 		color: var(--text);
 		box-shadow: var(--shadow-xs);
-		align-items: center;
+		grid-template-columns: auto 1fr 2rem;
+		overflow: hidden;
 	}
+
 	.album-card:hover {
 		background-color: var(--secondary);
 	}
@@ -63,38 +66,38 @@
 	}
 
 	.album-main {
-		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 0.125rem;
+		min-width: 0;
 	}
 
 	.album-name {
+		color: var(--text);
 		font-size: 1.25rem;
 		font-weight: 550;
-		color: var(--text);
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
 	}
 
 	.album-meta {
-		font-size: 0.875rem;
 		color: var(--muted-foreground);
+		font-size: 0.875rem;
 	}
 
 	.album-menu-button {
-		padding: 0.25rem;
-		border: none;
-		width: 1.875rem;
-		height: 1.875rem;
-		background-color: transparent;
 		display: inline-flex;
 		flex-direction: column;
-		align-items: center;
 		justify-content: center;
-		cursor: pointer;
+		align-items: center;
+		width: 1.875rem;
+		height: 1.875rem;
+		padding: 0.25rem;
+		border: none;
 		border-radius: 0.375rem;
+		background-color: transparent;
+		cursor: pointer;
 	}
 
 	.album-menu-button:hover {
@@ -102,9 +105,9 @@
 	}
 
 	.menu-dot {
-		margin: auto auto;
 		width: 0.125rem;
 		height: 0.125rem;
+		margin: auto;
 		border-radius: 9999rem;
 		background-color: var(--muted-foreground);
 	}

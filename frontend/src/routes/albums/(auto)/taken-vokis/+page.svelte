@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AutoAlbumPageHeader from '../c_shared/AutoAlbumPageHeader.svelte';
+	import AlbumPageHeader from '../../c_pages_shared/AlbumPageHeader.svelte';
 	import AutoAlbumsNoAlbumsMessage from '../c_shared/AutoAlbumsNoAlbumsMessage.svelte';
 	import type { PageProps } from './$types';
 
@@ -25,7 +25,7 @@
 		howToAddVokis="Vokis will be added automatically to this album after you take them for the first time"
 	/>
 {:else}
-	<AutoAlbumPageHeader albumName={data.albumName} />
+	<AlbumPageHeader content={{ type: 'auto', albumName: data.albumName }} />
 	<div class="albums-container">
 		{#each sortedAndFilteredVokis as voki}
 			<div>

@@ -262,17 +262,17 @@
 	}
 
 	.icon-option {
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
 		width: 2.5rem;
 		height: 2.5rem;
 		padding: 0;
-		border-radius: 0.75rem;
 		border: 0.125rem solid transparent;
+		border-radius: 0.75rem;
 		background-color: var(--muted);
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
 		color: var(--secondary-foreground);
+		cursor: pointer;
 	}
 
 	.icon-option:hover {
@@ -288,7 +288,7 @@
 	.icon-preview {
 		width: 1.5rem;
 		aspect-ratio: 1/1;
-		fill: currentColor;
+		fill: currentcolor;
 		stroke-width: 1.8;
 	}
 
@@ -399,8 +399,8 @@
 
 	.no-album-selected {
 		padding: 1.5rem;
-		text-align: center;
 		color: var(--muted-foreground);
 		font-size: 1rem;
+		text-align: center;
 	}
 </style>

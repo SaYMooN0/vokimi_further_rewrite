@@ -46,6 +46,7 @@
 		width: 60rem;
 		margin: 4rem auto;
 	}
+
 	.is-published-check-loading {
 		animation: fade-in-from-zero-with-delay 1s ease-in;
 	}

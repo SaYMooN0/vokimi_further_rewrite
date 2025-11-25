@@ -31,6 +31,10 @@
 
 <style>
 	a {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.25rem;
 		width: fit-content;
 		box-sizing: border-box;
 		padding: 0.25rem 1.5rem;
@@ -44,27 +48,28 @@
 		transition: background-color 0.08s ease-in-out;
 		transition: all 0.12s ease;
 		cursor: pointer;
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 0.25rem;
 	}
+
 	a svg {
-		height: 1.5rem;
 		width: 1.5rem;
-		stroke-width: 2;
+		height: 1.5rem;
 		padding-top: 0.125rem;
+		stroke-width: 2;
 	}
+
 	a:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.arrow {
 		transition: all 0.12s ease;
 		transform-origin: center;
 	}
+
 	a:hover .arrow {
 		transform: translate(2px, -2px);
 	}
+
 	a:active .arrow {
 		transform:translate(2px, -2px) scale(0.9) ;
 	}

@@ -105,15 +105,15 @@
 	}
 
 	.title {
+		color: var(--text);
 		font-size: 1.125rem;
 		font-weight: 550;
-		color: var(--text);
 		white-space: nowrap;
 	}
 
 	.subtitle {
-		font-size: 0.875rem;
 		color: var(--muted-foreground);
+		font-size: 0.875rem;
 		white-space: nowrap;
 	}
 
@@ -121,8 +121,8 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		font-size: 0.9rem;
 		color: var(--secondary-foreground);
+		font-size: 0.9rem;
 	}
 
 	.use-two-colors-label {
@@ -145,10 +145,11 @@
 	.field.hide {
 		opacity: 0;
 	}
+
 	.label {
+		color: var(--secondary-foreground);
 		font-size: 0.875rem;
 		font-weight: 500;
-		color: var(--secondary-foreground);
 	}
 
 	.input-row {
@@ -159,18 +160,18 @@
 	}
 
 	input[type='color'] {
-		-webkit-appearance: none;
-		appearance: none;
 		width: 2rem;
 		height: 2rem;
+		padding: 0;
 		border: none;
 		background-color: var(--back);
-		padding: 0;
-		cursor: pointer;
-		overflow: hidden;
-		padding: 0;
 		transition: transform 0.08s ease-in-out;
+		cursor: pointer;
+		-webkit-appearance: none;
+		appearance: none;
+		overflow: hidden;
 	}
+
 	input[type='color']::-webkit-color-swatch-wrapper {
 		padding: 0;
 		border: none;
@@ -194,13 +195,13 @@
 
 	.hex-input {
 		min-width: 0;
-		font-family: monospace;
-		font-size: 1rem;
-		color: var(--text);
-		background-color: var(--back);
-		border-radius: 0.5rem;
 		padding: 0.3rem 0.75rem;
 		border: 0.125rem solid var(--muted);
+		border-radius: 0.5rem;
+		background-color: var(--back);
+		color: var(--text);
+		font-size: 1rem;
+		font-family: monospace;
 		outline: none;
 	}
 

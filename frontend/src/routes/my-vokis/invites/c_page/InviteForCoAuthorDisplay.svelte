@@ -148,10 +148,10 @@
 
 	.actions {
 		display: flex;
-		align-items: center;
 		justify-content: flex-end;
-		width: 100%;
+		align-items: center;
 		gap: 0.5rem;
+		width: 100%;
 	}
 
 	.btn {

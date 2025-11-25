@@ -21,9 +21,9 @@
 <style>
 	.by-label {
 		margin-right: 0.5rem;
+		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: 450;
-		color: var(--secondary-foreground);
 
 	}
 
@@ -35,8 +35,8 @@
 
 	.plus-label {
 		margin: 0 0.25rem;
+		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: 450;
-		color: var(--secondary-foreground);
 	}
 </style>

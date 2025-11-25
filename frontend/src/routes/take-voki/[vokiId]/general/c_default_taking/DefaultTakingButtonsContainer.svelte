@@ -130,6 +130,7 @@
 		opacity: 0.8;
 		pointer-events: none;
 	}
+
 	.finish-btn.hidden {
 		opacity: 0;
 		transform: scale(0);

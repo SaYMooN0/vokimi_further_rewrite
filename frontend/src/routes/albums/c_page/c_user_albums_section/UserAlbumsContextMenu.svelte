@@ -24,7 +24,7 @@
 		currentAlbum
 			? {
 					type: 'actions',
-					actions: [
+					items: [
 						{
 							label: 'Edit',
 							icon: editIcon,
@@ -151,15 +151,16 @@
 
 <style>
 	:global(#user-album-context-menu:has(.no-album-selected-label)) {
-		grid-template-columns: auto 1fr;
 		align-items: center;
 		gap: 0.5rem;
+		padding: 0.25rem 0.75rem;
 		border-radius: 0.5rem;
 		box-shadow: var(--shadow-xs), var(--shadow);
-		padding: 0.25rem 0.75rem;
+		grid-template-columns: auto 1fr;
 	}
+
 	.no-album-icon {
-		height: 1.25rem;
 		width: 1.25rem;
+		height: 1.25rem;
 	}
 </style>

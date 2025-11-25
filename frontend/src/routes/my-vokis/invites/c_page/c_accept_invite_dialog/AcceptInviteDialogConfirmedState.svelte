@@ -27,58 +27,64 @@
 	.confirmed-content {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
 		align-items: center;
+		gap: 1rem;
 		width: 100%;
 		margin: auto 0;
 	}
+
 	.cover {
-		max-height: 14rem;
 		min-height: 10rem;
-		aspect-ratio: var(--voki-cover-aspect-ratio);
+		max-height: 14rem;
 		border-radius: var(--voki-cover-border-radius);
 		box-shadow: var(--shadow-xs);
+		aspect-ratio: var(--voki-cover-aspect-ratio);
 	}
+
 	.main-text {
-		line-height: 1.375;
+		max-height: 20rem;
 		color: var(--text);
-		text-indent: 1em;
 		font-size: 1.25rem;
 		font-weight: 475;
+		line-height: 1.375;
 		text-align: justify;
+		text-indent: 1em;
 		overflow-wrap: anywhere;
 		text-wrap: pretty;
-		max-height: 20rem;
 		overflow-y: auto;
 	}
+
 	.main-text > .voki-name {
-		color: var(--muted-foreground);
-		font-weight: 500;
-		border-radius: 0.5rem;
-		font-size: 1.375rem;
-		text-indent: 0;
-		text-decoration: underline;
 		margin-bottom: 1rem;
+		border-radius: 0.5rem;
+		color: var(--muted-foreground);
+		font-size: 1.375rem;
+		font-weight: 500;
+		text-decoration: underline;
+		text-indent: 0;
 	}
+
 	.buttons {
-		margin-top: auto;
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
 		align-items: center;
+		gap: 0.5rem;
+		margin-top: auto;
 	}
+
 	.close-btn {
-		font-size: 1rem;
-		border: none;
-		background-color: var(--muted);
-		color: var(--muted-foreground);
-		cursor: pointer;
 		width: fit-content;
 		padding: 0.25rem 2rem;
+		border: none;
+		border-radius: 0.25rem;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+		font-size: 1rem;
 		font-weight: 450;
 		letter-spacing: 0.25px;
-		border-radius: 0.25rem;
+		cursor: pointer;
 	}
+
 	.close-btn:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);

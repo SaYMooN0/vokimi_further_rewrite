@@ -63,21 +63,23 @@
 
 <style>
   	.main-text {
-       
-		line-height: 1.375;
+		margin: 1rem;
 		color: var(--text);
-		text-indent: 1em;
 		font-size: 1.25rem;
-		text-wrap: pretty;
 		font-weight: 475;
+		line-height: 1.375;
 		text-align: justify;
-		margin: 1rem 1rem;
+		text-indent: 1em;
+		text-wrap: pretty;
 
 	}
+
 	.main-text > :global(.user-display) {
 		display: inline-grid;
 		vertical-align: middle;
+
 		--profile-pic-width: 2.375rem;
+
 		margin: 0.125rem 0.25rem;
 	}
 </style>

@@ -8,6 +8,7 @@
 	import { registerCurrentPageApi } from '../my-vokis-page-context';
 	import { MyPublishedVokisPageState } from './my-published-vokis-page-state.svelte';
 	import { toast } from 'svelte-sonner';
+	import BaseContextMenu from '$lib/components/context_menus/BaseContextMenu.svelte';
 
 	const pageState = new MyPublishedVokisPageState();
 
@@ -21,7 +22,6 @@
 			}
 		});
 	});
-	let vokiItemContextMenu = $state<VokiItemContextMenu>();
 	function openContextMenu(mEvent: MouseEvent, vokiId: string): void {
 		if (vokiItemContextMenu) {
 			console.log(mEvent.x, mEvent.y);
@@ -40,7 +40,7 @@
 	{#if pageState.publishedVokiIds.vokiIds.length === 0}
 		<h1>You don't have any published vokis</h1>
 	{:else}
-		<VokiItemContextMenu bind:this={vokiItemContextMenu} id/>
+		
 		<VokiItemsGridContainer>
 			{#each pageState.publishedVokiIds.vokiIds as vokiId}
 				<VokiItemView

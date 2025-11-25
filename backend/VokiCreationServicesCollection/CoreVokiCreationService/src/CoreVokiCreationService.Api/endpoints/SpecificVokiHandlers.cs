@@ -102,7 +102,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());
-    }
+    }    
 
     private static async Task<IResult> DeclineCoAuthorInvite(
         HttpContext httpContext, CancellationToken ct,

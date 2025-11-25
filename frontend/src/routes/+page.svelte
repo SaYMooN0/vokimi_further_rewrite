@@ -5,7 +5,7 @@
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
 	import type { VokiItemViewOkStateProps } from '$lib/components/voki_item/c_voki_item/types';
-	import BaseContextMenu from '$lib/components/BaseContextMenu.svelte';
+	import BaseContextMenu from '$lib/components/context_menus/BaseContextMenu.svelte';
 
 	let { data }: PageProps = $props();
 	let contextMenu = $state<BaseContextMenu>()!;

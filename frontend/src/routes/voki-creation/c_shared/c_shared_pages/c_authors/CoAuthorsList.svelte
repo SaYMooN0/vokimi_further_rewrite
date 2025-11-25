@@ -79,17 +79,19 @@
 		width: 100%;
 		margin-top: 1rem;
 	}
+
 	.action-btn {
+		width: 8rem;
+		padding: 0.375rem 0;
+		border: none;
+		border-radius: 0.5rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 		font-size: 0.875rem;
 		font-weight: 500;
-		border: none;
-		padding: 0.375rem 0;
-		border-radius: 0.5rem;
-		width: 8rem;
 		cursor: pointer;
 	}
+
 	.action-btn:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);

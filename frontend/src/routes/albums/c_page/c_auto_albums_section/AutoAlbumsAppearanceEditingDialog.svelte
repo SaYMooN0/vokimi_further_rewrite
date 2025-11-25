@@ -114,11 +114,13 @@
 		gap: 2.5rem;
 		padding: 0 2rem;
 	}
+
 	:global(#auto-albums-editing-dialog .err-block) {
-		margin-top: 2rem;
 		min-height: 2rem;
+		margin-top: 2rem;
 		margin-bottom: 1rem;
 	}
+
 	.columns-sep {
 		align-self: center;
 		width: 0.125rem;
@@ -126,12 +128,14 @@
 		border-radius: 0.125rem;
 		background-color: var(--muted);
 	}
+
 	:global(#auto-albums-editing-dialog .primary-btn) {
 		width: 15rem;
-		font-weight: 475;
 		border-radius: 0.375rem;
+		font-weight: 475;
 		letter-spacing: 1px;
 	}
+
 	:global(#auto-albums-editing-dialog .primary-btn.loading) {
 		opacity: 0.8;
 		transform: none !important;

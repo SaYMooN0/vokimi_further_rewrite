@@ -23,6 +23,9 @@ internal class SpecificAlbumHandlers : IEndpointGroup
             .WithRequestValidation<SaveVokiAlbumRequest>();
 
         group.MapDelete("/delete", DeleteAlbum);
+        
+        // group.MapPatch("/copy-vokis-from-albums", CopyVokisFromAlbumsToAlbum)
+        //     .WithRequestValidation<CopyVokisFromAlbumsToAlbumRequest>();
     }
 
     private static async Task<IResult> GetAlbum(
@@ -63,4 +66,19 @@ internal class SpecificAlbumHandlers : IEndpointGroup
 
         return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
     }
+    // private static async Task<IResult> CopyVokisFromAlbumsToAlbum(
+    //     HttpContext httpContext, CancellationToken ct,
+    //     ICommandHandler<UpdateAlbumCommand, VokiAlbum> handler
+    // ) {
+    //     var albumId = httpContext.GetAlbumIdFromRoute();
+    //     var request = httpContext.GetValidatedRequest<CopyVokisFromAlbumsToAlbumRequest>();
+    //
+    //     UpdateAlbumCommand command = new(
+    //         albumId, request.ParsedName, request.ParsedIcon,
+    //         request.ParsedMainColor, request.ParsedSecondaryColor
+    //     );
+    //     var result = await handler.Handle(command, ct);
+    //
+    //     return //vokis added
+    // }
 }

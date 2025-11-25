@@ -54,10 +54,12 @@
 		color: inherit;
 		stroke-width: 2.2;
 	}
+
 	.right-btn:focus {
 		outline: 0.125rem solid var(--muted-foreground);
 		box-shadow: var(--shadow);
 	}
+
 	.right-btn:focus:hover {
 		outline-color: var(--accent-foreground);
 	}

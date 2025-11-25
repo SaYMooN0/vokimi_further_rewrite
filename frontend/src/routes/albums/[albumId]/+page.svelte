@@ -1,10 +1,24 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
-	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
+	import VokiItemView, {
+		type VokiItemViewState
+	} from '$lib/components/voki_item/VokiItemView.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
+	let vokis: VokiItemViewState[] = $state([]);
+	function loadVokis() {
+		if (data.response.isSuccess === false) {
+			return;
+		}
+	}
+	loadVokis();
+
+	function getVokiViewItemState(vokiId: string): VokiItemViewState {
+
+		
+	}
 </script>
 
 {#if !data.response.isSuccess}
@@ -16,7 +30,7 @@
 {:else}
 	<VokiItemsGridContainer>
 		{#each data.response.data.vokiIds as vokiId}
-			<VokiItemView state={pageState.getVokiViewItemState(vokiId)} />
+			<VokiItemView state={getVokiViewItemState(vokiId)} />
 		{/each}
 	</VokiItemsGridContainer>
 {/if}

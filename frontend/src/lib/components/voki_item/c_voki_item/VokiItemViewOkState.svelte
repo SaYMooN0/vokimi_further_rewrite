@@ -203,16 +203,19 @@
 		overflow: hidden;
 		grid-template-columns: auto 1fr auto;
 	}
+
 	.authors > .by-label {
 		margin-right: 0.25rem;
-		font-size: 0.75rem;
 		color: var(--secondary-foreground);
+		font-size: 0.75rem;
 		font-weight: 500;
 		font-style: italic;
 	}
+
 	.authors > :global(.author-view) {
 		--profile-pic-width: 2rem;
 	}
+
 	.authors > :global(.author-view.ok) {
 		background-color: transparent;
 	}
@@ -221,11 +224,11 @@
 		padding: 0 0.25rem;
 		margin: 0.125rem 0.25rem 0.125rem 0;
 		border-radius: 0.25rem;
+		color: var(--secondary-foreground);
 		font-weight: 440;
 		letter-spacing: -1.2px;
 		box-shadow: var(--shadow);
 		transition: all 0.06s ease-in;
-		color: var(--secondary-foreground);
 
 	}
 

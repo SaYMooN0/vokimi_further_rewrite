@@ -3,9 +3,10 @@
 	import BaseContextMenu from './BaseContextMenu.svelte';
 
 	export type ActionsContextMenuJustContent = { type: 'content'; content: Snippet };
-	export type ActionsContextMenuActionsContent = { type: 'actions'; actions: Action[] };
+	export type ActionsContextMenuActionsContent = { type: 'actions'; items: ActionContentItem[] };
 
 	type ActionType = 'default' | 'red';
+	type ActionContentItem = 'divider' | Action;
 	type Action = {
 		label: string;
 		icon?: Snippet;
@@ -28,22 +29,26 @@
 
 <BaseContextMenu bind:this={menu} class="generic-context-menu {className}" {onAfterClose} {id}>
 	{#if content.type === 'actions'}
-		{#each content.actions as a}
-			{#if a.action.isLink}
-				<a class="action {a.type === 'red' ? 'red' : ''}" href={a.action.href}>
-					{@render actionContent(a)}
+		{#each content.items as it}
+			{#if it === 'divider'}
+				<div class="divider" />
+			{:else if it.action.isLink}
+				<a class="action {it.type === 'red' ? 'red' : ''}" href={it.action.href}>
+					{@render actionContent(it)}
 				</a>
-			{:else if !a.action.isLink}
+			{:else if !it.action.isLink}
 				<div
-					class="action {a.type === 'red' ? 'red' : ''}"
-					onclick={() => (a.action as { onclick: () => void }).onclick()}
+					class="action {it.type === 'red' ? 'red' : ''}"
+					onclick={() => (it.action as { onclick: () => void }).onclick()}
 				>
-					{@render actionContent(a)}
+					{@render actionContent(it)}
 				</div>
 			{/if}
 		{/each}
-	{:else}
+	{:else if content.type === 'content'}
 		{@render content.content()}
+	{:else}
+		<span>No content</span>
 	{/if}
 </BaseContextMenu>
 {#snippet actionContent(a: { label: string; icon?: Snippet })}
@@ -56,38 +61,40 @@
 <style>
 	:global(.generic-context-menu) {
 		display: grid;
-		background-color: var(--back);
-		color: var(--muted-foreground);
-		border-radius: 0.25rem;
-		box-shadow: var(--shadow-xs);
 		width: max-content;
 		padding: 0.125rem;
+		border-radius: 0.25rem;
+		background-color: var(--back);
+		color: var(--muted-foreground);
+		box-shadow: var(--shadow-xs);
 	}
 
 	.action {
 		display: grid;
-		grid-template-columns: auto 1fr;
 		align-items: center;
 		gap: 0.375rem;
 		padding: 0.25rem 1.25rem 0.25rem 0.5rem;
-		cursor: default;
 		border-radius: inherit;
+		color: inherit;
 		font-size: 1rem;
 		font-weight: 410;
-		color: inherit;
 		text-decoration: none;
+		cursor: default;
+		grid-template-columns: auto 1fr;
 	}
 
 	.icon-container {
 		width: 1.125rem;
 		height: 1.125rem;
 	}
+
 	.icon-container > :global(svg) {
 		width: 100%;
 		height: 100%;
 		stroke-width: 1.675;
 		color: inherit;
 	}
+
 	.action:hover {
 		background-color: var(--accent);
 		color: var(--primary);

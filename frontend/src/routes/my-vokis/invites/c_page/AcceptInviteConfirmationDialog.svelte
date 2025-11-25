@@ -71,8 +71,8 @@
 <style>
 	:global(#accept-invite-dialog > .dialog-content) {
 		position: relative;
-		min-height: 32rem;
 		width: 48rem;
+		min-height: 32rem;
 		padding-top: 2.5rem;
 		padding-bottom: 2.5rem;
 	}

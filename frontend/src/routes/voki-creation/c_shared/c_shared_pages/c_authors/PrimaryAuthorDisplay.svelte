@@ -195,21 +195,23 @@
 	}
 
 	.err .main-content {
-		padding: 0.5rem 0.75rem;
-		color: var(--muted-foreground);
-		font-size: 1.25rem;
-		font-weight: 450;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		gap: 0.125rem;
+		padding: 0.5rem 0.75rem;
+		color: var(--muted-foreground);
+		font-size: 1.25rem;
+		font-weight: 450;
 	}
+
 	.err:hover .main-content {
 		text-decoration: underline;
 	}
+
 	.err .main-content > svg {
-		height: 1.375rem;
 		width: 1.375rem;
+		height: 1.375rem;
 		padding-top: 0.125rem;
 		stroke-width: 2;
 	}

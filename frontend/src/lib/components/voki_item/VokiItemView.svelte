@@ -4,11 +4,13 @@
 	import VokiItemViewLoadingState from './c_voki_item/VokiItemViewLoadingState.svelte';
 	import VokiItemViewOkState from './c_voki_item/VokiItemViewOkState.svelte';
 
+	export type VokiItemViewState =
+		| { name: 'ok'; data: VokiItemViewOkStateProps }
+		| { name: 'loading' }
+		| { name: 'errs'; data: VokiItemViewErrStateProps };
+
 	interface Props {
-		state:
-			| { name: 'ok'; data: VokiItemViewOkStateProps }
-			| { name: 'loading' }
-			| { name: 'errs'; data: VokiItemViewErrStateProps };
+		state: VokiItemViewState;
 	}
 
 	let { state }: Props = $props();
@@ -21,4 +23,3 @@
 {:else if state.name === 'errs'}
 	<VokiItemViewErrState {...state.data} />
 {/if}
-
