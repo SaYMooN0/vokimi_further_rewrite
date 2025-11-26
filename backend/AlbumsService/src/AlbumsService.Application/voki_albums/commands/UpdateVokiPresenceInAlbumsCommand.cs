@@ -33,7 +33,7 @@ internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
 
         foreach (var (albumId, isChosen) in command.AlbumIdToIsChosen) {
             if (albums.TryGetValue(albumId, out var album)) {
-                ErrOrNothing res = album.SetVokiPresenceTo(userId, isChosen, command.VokiId);
+                ErrOrNothing res = album.SetVokiPresenceTo(_userContext, isChosen, command.VokiId);
                 errs.AddNextIfErr(res);
                 changedAlbumsList.Add(album);
             }

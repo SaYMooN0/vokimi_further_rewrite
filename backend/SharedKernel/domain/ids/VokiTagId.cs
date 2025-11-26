@@ -20,7 +20,7 @@ public class VokiTagId : ValueObject, IEntityId
         }
 
         Value = value;
-    }
+    }   
 
     public static ErrOr<VokiTagId> Create(string value) {
         if (!IsStringValidTag(value)) {

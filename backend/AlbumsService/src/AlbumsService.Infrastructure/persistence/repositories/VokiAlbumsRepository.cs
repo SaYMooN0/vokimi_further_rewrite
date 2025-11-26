@@ -59,4 +59,10 @@ public class VokiAlbumsRepository : IVokiAlbumsRepository
         _db.VokiAlbums.Update(album);
         await _db.SaveChangesAsync(ct);
     }
+
+    public Task<VokiAlbum[]> ListByIdsAsNoTracking(IEnumerable<VokiAlbumId> ids, CancellationToken ct) =>
+        _db.VokiAlbums
+            .AsNoTracking()
+            .Where(a => ids.Contains(a.Id))
+            .ToArrayAsync(ct);
 }

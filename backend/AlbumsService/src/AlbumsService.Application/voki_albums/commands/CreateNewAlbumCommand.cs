@@ -45,7 +45,7 @@ internal sealed class CreateNewAlbumCommandHandler :
         }
 
         VokiAlbum album = VokiAlbum.CreateNew(
-            userId, command.Name, command.Icon,
+            _userContext, command.Name, command.Icon,
             command.MainColor, command.SecondaryColor, _dateTimeProvider.UtcNow
         );
         var addingRes = user.AddAlbum(album.Id);

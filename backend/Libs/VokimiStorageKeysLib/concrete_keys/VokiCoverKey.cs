@@ -23,7 +23,6 @@ public class VokiCoverKey : BaseStorageImageKey
 
     public static VokiCoverKey CreateWithId(VokiId id, ImageFileExtension extension) =>
         new($"{KeyConsts.VokisFolder}/{id}/cover.{extension}");
-
     public bool IsWithId(VokiId expectedId) => VokiId == expectedId;
 
     private static class Scheme

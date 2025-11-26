@@ -1,5 +1,4 @@
-﻿using SharedKernel.common.rules;
-using SharedKernel.common.vokis;
+﻿using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.concrete_keys;

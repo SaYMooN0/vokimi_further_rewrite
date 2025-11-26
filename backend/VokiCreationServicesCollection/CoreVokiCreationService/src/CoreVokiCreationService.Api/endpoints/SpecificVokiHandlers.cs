@@ -15,7 +15,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
         group.MapGet("/brief-info", GetVokiBriefInfo);
         group.MapGet("/authors-info", GetVokiAuthorsInfo);
-
+ 
         group.MapDelete("/drop-co-author", DropCoAuthor)
             .WithRequestValidation<VokiCoAuthorActionRequest>();
         group.MapPost("/invite-co-authors", InviteCoAuthors)
