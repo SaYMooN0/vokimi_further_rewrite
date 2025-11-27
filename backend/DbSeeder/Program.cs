@@ -1,131 +1,143 @@
-﻿using AlbumsService.Infrastructure.persistence;
-using AuthService.Infrastructure.persistence;
+﻿using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using CoreVokiCreationService.Infrastructure.persistence;
-using DbSeeder;
 using DbSeeder.seeding.newtonsoft;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Infrastructure.persistence;
-using GeneralVokiTakingService.Infrastructure.persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using TagsService.Infrastructure.persistence;
-using UserProfilesService.Infrastructure.persistence;
-using VokiCommentsService.Infrastructure.persistence;
-using VokiRatingsService.Infrastructure.persistence;
-using VokisCatalogService.Infrastructure.persistence;
+using SharedKernel.domain.ids;
 
+namespace DbSeeder;
 
-IConfiguration appSettingsConfig = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("appsettings.json", optional: false)
-    .Build();
-Dictionary<string, Func<Task>> actions = new() {
-    ["clear"] = ClearAllDbs,
-    ["add_draft_voki"] = AddDraftVokiFromJson,
-    ["exit"] = () => {
-        Console.WriteLine("Program exit...");
-        return Task.CompletedTask;
+internal abstract class Program
+{
+    public static async Task<int> Main(string[] args) {
+        CancellationToken ct = new CancellationToken();
+
+        IConfiguration appSettingsConfig = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false)
+            .Build();
+        Dictionary<string, Func<IConfiguration, CancellationToken, Task>> actions = new() {
+            ["clear"] = ClearAllDbs,
+            ["add_draft_voki"] = AddDraftVokiFromJson,
+            ["exit"] = (_, _) => {
+                Console.WriteLine("Program exit...");
+                return Task.CompletedTask;
+            }
+        };
+
+        string actionKeys = string.Join(", ", actions.Keys);
+        Console.WriteLine($"Select action: ({actionKeys})");
+        string action = "add_draft_voki";
+        // string action = Console.ReadLine()!;
+        await actions[action].Invoke(appSettingsConfig, ct);
+        return 0;
     }
-};
 
-var actionKeys = string.Join(", ", actions.Keys);
-Console.WriteLine($"Select action: ({actionKeys})");
-var action = Console.ReadLine()!;
-await actions[action].Invoke();
-return 0;
 
-async Task AddDraftVokiFromJson() {
-    Console.WriteLine("Input path to file: ");
-    string path = Console.ReadLine()!;
-    var jsonString = File.ReadAllText(path);
-    string filledJson = VokiJsonPlaceholderFiller.FillPlaceholders(jsonString);
+    static async Task AddDraftVokiFromJson(IConfiguration config, CancellationToken ct) {
+        Console.WriteLine("Input path to file: ");
+        string path = "D:/e.json";
+        // string path = Console.ReadLine()!;
+        string jsonString = await File.ReadAllTextAsync(path, ct);
+        Console.WriteLine("Input voki author id:");
+        // string idStr = Console.ReadLine()!;
+        string idStr = "019ad45d-745a-74ab-b445-dc580be06599";
+        AppUserId authorId = new AppUserId(new(idStr));
+        var (vokiCore, vokiGen) = CreateVokiFromJson(jsonString, authorId);
 
-    var settings = new JsonSerializerSettings {
-        ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
-        ObjectCreationHandling = ObjectCreationHandling.Replace,
-        MissingMemberHandling = MissingMemberHandling.Ignore,
-        NullValueHandling = NullValueHandling.Include,
-        ContractResolver = new PrivateSetterAndFieldsResolver(),
-        TypeNameHandling = TypeNameHandling.Auto
-    };
-    DraftGeneralVoki voki = JsonConvert.DeserializeObject<DraftGeneralVoki>(filledJson, settings) ?? throw new();
-    GeneralVokiCreationDbContext db = GeneralVokiCreationDbContext(appSettingsConfig);
-    await db.Database.EnsureCreatedAsync();
-    await db.Database.BeginTransactionAsync();
-    db.Vokis.Add(voki);
-    await db.SaveChangesAsync();
-    await db.Database.CommitTransactionAsync();
-}
+        GeneralVokiCreationDbContext generalVokiCreationDb = DbContextsCollection.GeneralVokiCreation(config);
+        CoreVokiCreationDbContext coreVokiCreationDb = DbContextsCollection.CoreVokiCreation(config);
 
-async Task ClearAllDbs() {
-    DbContext[] dbs = [
-        AuthDbContext(appSettingsConfig),
-        TagsDbContext(appSettingsConfig),
-        UserProfilesDbContext(appSettingsConfig),
-        CoreVokiCreationDbContext(appSettingsConfig),
-        GeneralVokiCreationDbContext(appSettingsConfig),
-        VokisCatalogDbContext(appSettingsConfig),
-        GeneralVokiTakingDbContext(appSettingsConfig),
-        VokiRatingsDbContext(appSettingsConfig),
-        VokiCommentsDbContext(appSettingsConfig),
-        AlbumsDbContext(appSettingsConfig),
-    ];
-    foreach (var db in dbs) {
-        await db.Database.EnsureDeletedAsync();
-        await db.Database.EnsureCreatedAsync();
-        Console.WriteLine($"Cleared {db.GetType().Name}");
+        await generalVokiCreationDb.Database.EnsureCreatedAsync(ct);
+        await generalVokiCreationDb.Database.BeginTransactionAsync(ct);
+        await coreVokiCreationDb.Database.EnsureCreatedAsync(ct);
+        await coreVokiCreationDb.Database.BeginTransactionAsync(ct);
+        try {
+            CoreVokiCreationService.Domain.app_user_aggregate.AppUser? author =
+                await coreVokiCreationDb.AppUsers.FirstOrDefaultAsync(u => u.Id == authorId, ct);
+            if (author is null) {
+                throw new Exception($"User with id {authorId} not found");
+            }
+
+            author.AddInitializedVoki(vokiGen.Id);
+            coreVokiCreationDb.AppUsers.Update(author);
+            await coreVokiCreationDb.Vokis.AddAsync(vokiCore, ct);
+            await coreVokiCreationDb.SaveChangesAsync(ct);
+
+
+            await generalVokiCreationDb.Vokis.AddAsync(vokiGen, ct);
+            await generalVokiCreationDb.SaveChangesAsync(ct);
+
+            await generalVokiCreationDb.Database.CommitTransactionAsync(ct);
+            await coreVokiCreationDb.Database.CommitTransactionAsync(ct);
+        }
+        catch (Exception e) {
+            Console.WriteLine(e);
+            await generalVokiCreationDb.Database.RollbackTransactionAsync(ct);
+            await coreVokiCreationDb.Database.RollbackTransactionAsync(ct);
+        }
+
+
+        await generalVokiCreationDb.Database.CommitTransactionAsync(ct);
     }
-}
 
-AuthDbContext AuthDbContext(IConfiguration config) => new(
-    DbOptions<AuthDbContext>(config, "AuthServiceDb"), FakePublisher.Instance
-);
+    private static (DraftVoki vokiCore, DraftGeneralVoki vokiGen) CreateVokiFromJson(
+        string jsonString, AppUserId authorId
+    ) {
+        string filledJson = VokiJsonPlaceholderFiller.FillPlaceholders(jsonString);
+        var settings = new JsonSerializerSettings {
+            ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
+            MissingMemberHandling = MissingMemberHandling.Ignore,
+            NullValueHandling = NullValueHandling.Include
+        };
 
-TagsDbContext TagsDbContext(IConfiguration config) => new(
-    DbOptions<TagsDbContext>(config, "TagsServiceDb"), FakePublisher.Instance
-);
-
-UserProfilesDbContext UserProfilesDbContext(IConfiguration config) => new(
-    DbOptions<UserProfilesDbContext>(config, "UserProfilesServiceDb"), FakePublisher.Instance
-);
-
-CoreVokiCreationDbContext CoreVokiCreationDbContext(IConfiguration config) => new(
-    DbOptions<CoreVokiCreationDbContext>(config, "CoreVokiCreationServiceDb"), FakePublisher.Instance
-);
-
-GeneralVokiCreationDbContext GeneralVokiCreationDbContext(IConfiguration config) => new(
-    DbOptions<GeneralVokiCreationDbContext>(config, "GeneralVokiCreationServiceDb"), FakePublisher.Instance
-);
-
-VokisCatalogDbContext VokisCatalogDbContext(IConfiguration config) => new(
-    DbOptions<VokisCatalogDbContext>(config, "VokisCatalogServiceDb"), FakePublisher.Instance
-);
-
-GeneralVokiTakingDbContext GeneralVokiTakingDbContext(IConfiguration config) => new(
-    DbOptions<GeneralVokiTakingDbContext>(config, "GeneralVokiTakingServiceDb"), FakePublisher.Instance
-);
-
-VokiRatingsDbContext VokiRatingsDbContext(IConfiguration config) => new(
-    DbOptions<VokiRatingsDbContext>(config, "VokiRatingsServiceDb"), FakePublisher.Instance
-);
-
-VokiCommentsDbContext VokiCommentsDbContext(IConfiguration config) => new(
-    DbOptions<VokiCommentsDbContext>(config, "VokiCommentsServiceDb"), FakePublisher.Instance
-);
-
-AlbumsDbContext AlbumsDbContext(IConfiguration config) => new(
-    DbOptions<AlbumsDbContext>(config, "AlbumsServiceDb"), FakePublisher.Instance
-);
+        settings.Converters.Add(new DraftVokiConverter());
+        settings.Converters.Add(new DraftGeneralVokiConverter());
 
 
-static DbContextOptions<T> DbOptions<T>(
-    IConfiguration config,
-    string str
-) where T : DbContext {
-    string connection = config.GetConnectionString(str)
-                        ?? throw new NullReferenceException($"Connection string '{str}' is not provided");
+        DraftGeneralVoki vokiGen = JsonConvert.DeserializeObject<DraftGeneralVoki>(filledJson, settings)!;
+        DraftVoki vokiCore = JsonConvert.DeserializeObject<DraftVoki>(filledJson, settings)!;
 
-    DbContextOptionsBuilder<T> optionsBuilder = new();
-    return optionsBuilder.UseNpgsql(connection).Options;
+        JsonUtil.SetProperty(vokiGen, "Id", new VokiId(Guid.CreateVersion7()));
+        JsonUtil.SetProperty(vokiGen, "PrimaryAuthorId", authorId);
+        JsonUtil.SetProperty(vokiGen, "CreationDate", DateTime.UtcNow);
+
+        foreach (var q in vokiGen.Questions) {
+            JsonUtil.SetProperty(q, "Id", GeneralVokiQuestionId.CreateNew());
+
+            foreach (var a in q.Answers) {
+                JsonUtil.SetProperty(a, "Id", GeneralVokiAnswerId.CreateNew());
+            }
+        }
+
+        foreach (var r in vokiGen.Results) {
+            JsonUtil.SetProperty(r, "CreationDate", DateTime.UtcNow);
+        }
+
+   
+        return (vokiCore, vokiGen);
+    }
+
+    static async Task ClearAllDbs(IConfiguration config, CancellationToken ct) {
+        DbContext[] dbs = [
+            DbContextsCollection.Auth(config),
+            DbContextsCollection.Tags(config),
+            DbContextsCollection.UserProfiles(config),
+            DbContextsCollection.CoreVokiCreation(config),
+            DbContextsCollection.GeneralVokiCreation(config),
+            DbContextsCollection.VokisCatalog(config),
+            DbContextsCollection.GeneralVokiTaking(config),
+            DbContextsCollection.VokiRatings(config),
+            DbContextsCollection.VokiComments(config),
+            DbContextsCollection.Albums(config),
+        ];
+        foreach (var db in dbs) {
+            await db.Database.EnsureDeletedAsync(ct);
+            await db.Database.EnsureCreatedAsync(ct);
+            Console.WriteLine($"Cleared {db.GetType().Name}");
+        }
+    }
 }

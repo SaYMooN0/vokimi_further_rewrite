@@ -49,7 +49,7 @@ public class ErrOr<T>
             return _success!;
         }
 
-        throw new InvalidOperationException("No success value available");
+        throw new InvalidOperationException($"No success value available. Error value: {_err}");
     }
 
     public Err AsErr() {
