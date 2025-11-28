@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SharedKernel.domain.ids;
+using VokimiStorageKeysLib.concrete_keys;
+using VokimiStorageKeysLib.extension;
 
 namespace DbSeeder;
 
@@ -78,16 +80,18 @@ internal abstract class Program
             Console.WriteLine(e);
             await generalVokiCreationDb.Database.RollbackTransactionAsync(ct);
             await coreVokiCreationDb.Database.RollbackTransactionAsync(ct);
+            
         }
 
 
-        await generalVokiCreationDb.Database.CommitTransactionAsync(ct);
     }
 
     private static (DraftVoki vokiCore, DraftGeneralVoki vokiGen) CreateVokiFromJson(
-        string jsonString, AppUserId authorId
+        string jsonString,
+        AppUserId authorId
     ) {
         string filledJson = VokiJsonPlaceholderFiller.FillPlaceholders(jsonString);
+
         var settings = new JsonSerializerSettings {
             ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
             MissingMemberHandling = MissingMemberHandling.Ignore,
@@ -97,13 +101,26 @@ internal abstract class Program
         settings.Converters.Add(new DraftVokiConverter());
         settings.Converters.Add(new DraftGeneralVokiConverter());
 
-
         DraftGeneralVoki vokiGen = JsonConvert.DeserializeObject<DraftGeneralVoki>(filledJson, settings)!;
         DraftVoki vokiCore = JsonConvert.DeserializeObject<DraftVoki>(filledJson, settings)!;
 
-        JsonUtil.SetProperty(vokiGen, "Id", new VokiId(Guid.CreateVersion7()));
+        VokiId id = new VokiId(Guid.CreateVersion7());
+        DateTime nowUtc = DateTime.UtcNow;
+        var cover = VokiCoverKey.CreateWithId(id, ImageFileExtension.Jpg);
+
+
+        JsonUtil.SetProperty(vokiGen, "Id", id);
+        JsonUtil.SetProperty(vokiCore, "Id", id);   
+        
+        JsonUtil.SetProperty(vokiGen, "Cover", cover);
+        JsonUtil.SetProperty(vokiCore, "Cover", cover);
+
         JsonUtil.SetProperty(vokiGen, "PrimaryAuthorId", authorId);
-        JsonUtil.SetProperty(vokiGen, "CreationDate", DateTime.UtcNow);
+        JsonUtil.SetProperty(vokiCore, "PrimaryAuthorId", authorId);
+
+        JsonUtil.SetProperty(vokiGen, "CreationDate", nowUtc);
+        JsonUtil.SetProperty(vokiCore, "CreationDate", nowUtc);
+
 
         foreach (var q in vokiGen.Questions) {
             JsonUtil.SetProperty(q, "Id", GeneralVokiQuestionId.CreateNew());
@@ -117,9 +134,9 @@ internal abstract class Program
             JsonUtil.SetProperty(r, "CreationDate", DateTime.UtcNow);
         }
 
-   
         return (vokiCore, vokiGen);
     }
+
 
     static async Task ClearAllDbs(IConfiguration config, CancellationToken ct) {
         DbContext[] dbs = [

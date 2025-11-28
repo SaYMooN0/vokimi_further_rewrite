@@ -30,12 +30,12 @@ internal sealed class ListTagsPopularForLanguagesQueryHandler
                 VokiTagId.Create("schachnovelle").AsSuccess(),
                 VokiTagId.Create("heidegger").AsSuccess()
             ],
-            [Language.Eng] = [
+            [Language.Fra] = [
                 VokiTagId.Create("le_petit_prince").AsSuccess(),
                 VokiTagId.Create("les_miserables").AsSuccess(),
                 VokiTagId.Create("asterix").AsSuccess()
             ],
-            [Language.Fra] = [
+            [Language.Ukr] = [
                 VokiTagId.Create("гоголь").AsSuccess(),
                 VokiTagId.Create("тарас_шевченко").AsSuccess()
             ],

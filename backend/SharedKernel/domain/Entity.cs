@@ -3,7 +3,6 @@ namespace SharedKernel.domain;
 public abstract class Entity<IdType> : IComparable where IdType : IEntityId
 {
     public IdType Id { get; protected init; } = default!;
-    protected Entity() { }
 
     public override bool Equals(object? other) {
         if (other is null || other.GetType() != GetType()) {

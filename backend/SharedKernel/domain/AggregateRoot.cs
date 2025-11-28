@@ -5,8 +5,6 @@ namespace SharedKernel.domain;
 
 public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot where TId : IEntityId
 {
-    protected AggregateRoot() : base() { }
-
     private readonly List<IDomainEvent> _domainEvents = [];
 
     protected void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
@@ -14,6 +12,9 @@ public abstract class AggregateRoot<TId> : Entity<TId>, IAggregateRoot where TId
     public IImmutableList<IDomainEvent> GetDomainEventsCopy() => _domainEvents.ToImmutableList();
 
     public List<IDomainEvent> PopAndClearDomainEvents() {
+        if (_domainEvents is null) {
+            return [];
+        }
         var copy = _domainEvents.ToList();
         _domainEvents.Clear();
 
