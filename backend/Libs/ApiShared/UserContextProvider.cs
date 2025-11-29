@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using SharedKernel.auth;
+﻿using ApplicationShared;
+using InfrastructureShared.Auth;
+using Microsoft.AspNetCore.Http;
+using SharedKernel;
 
 namespace ApiShared;
 
-public class UserContextProvider : IUserContext
+internal class UserContextProvider : IUserContext
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ITokenParser _tokenParser;
@@ -26,16 +28,27 @@ public class UserContextProvider : IUserContext
             return err;
         }
 
-        _httpContextAccessor.HttpContext!.Items[IUserContext.UserIdContextKey] = errOrId.AsSuccess();
-        return errOrId.AsSuccess();
+        AppUserId userId = errOrId.AsSuccess();
+        if (_httpContextAccessor.HttpContext is not null) {
+            _httpContextAccessor.HttpContext.Items[IUserContext.UserIdContextKey] = userId;
+        }
+
+        return userId;
     }
 
-    private bool TryGetTokenFromCookie(out string? token) =>
-        _httpContextAccessor.HttpContext!.Request.Cookies.TryGetValue(IUserContext.TokenCookieKey, out token);
+    private bool TryGetTokenFromCookie(out string? token) {
+        if (_httpContextAccessor.HttpContext is not null) {
+            return _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(IUserContext.TokenCookieKey, out token);
+        }
+
+        token = null;
+        return false;
+    }
 
     private bool TryGetUserIdFromContextItems(out AppUserId userId) {
         if (
-            _httpContextAccessor.HttpContext!.Items.TryGetValue(IUserContext.UserIdContextKey, out var userIdObj)
+            _httpContextAccessor.HttpContext is not null
+            && _httpContextAccessor.HttpContext.Items.TryGetValue(IUserContext.UserIdContextKey, out var userIdObj)
             && userIdObj is AppUserId typedId
         ) {
             userId = typedId;

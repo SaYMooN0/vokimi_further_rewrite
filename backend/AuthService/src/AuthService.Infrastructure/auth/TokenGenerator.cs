@@ -7,7 +7,6 @@ using AuthService.Domain.app_user_aggregate;
 using InfrastructureShared.Auth;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using SharedKernel.auth;
 
 namespace AuthService.Infrastructure.auth;
 
@@ -33,7 +32,7 @@ internal sealed class TokenGenerator : ITokenGenerator
     public JwtTokenString CreateToken(AppUser user) {
         try {
             Claim[] claims = [
-                new(TokenParser.UserIdClaim, user.Id.ToString())
+                new(ITokenParser.UserIdClaim, user.Id.ToString())
             ];
 
             SigningCredentials creds =

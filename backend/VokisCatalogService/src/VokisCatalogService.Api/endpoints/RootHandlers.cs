@@ -8,8 +8,7 @@ internal class RootHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
-        group.MapGet("/taken-vokis", GetUserTakenVokis)
-            .WithAuthenticationRequired();
+        group.MapGet("/taken-vokis", GetUserTakenVokis);
     }
 
     private static async Task<IResult> GetUserTakenVokis(

@@ -1,5 +1,6 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
+using ApplicationShared;
 using Microsoft.AspNetCore.Mvc;
 using VokimiStorageService.s3_storage.s3;
 using VokimiStorageService.s3_storage.storage_service;
@@ -14,8 +15,7 @@ internal class EndpointHandlers : IEndpointGroup
         group.MapGet("/{*fileKey}", GetFileFromStorage)
             .DisableAntiforgery();
         group.MapPut("/upload-temp-image", UploadTempImage)
-            .DisableAntiforgery()
-            .WithAuthenticationRequired();
+            .DisableAntiforgery();
     }
 
     private static async Task<IResult> GetFileFromStorage(
@@ -33,10 +33,16 @@ internal class EndpointHandlers : IEndpointGroup
     }
 
     private static async Task<IResult> UploadTempImage(
-        HttpContext httpContext, CancellationToken ct,
+        HttpContext httpContext,
+        CancellationToken ct,
         [FromForm] IFormFile file,
-        IStorageService storageService
+        IStorageService storageService,
+        IUserContext userContext
     ) {
+        if (userContext.UserIdFromToken().IsErr()) {
+            return CustomResults.ErrorResponse(ErrFactory.AuthRequired());
+        }
+
         FileData fileData = new(file.OpenReadStream(), file.ContentType);
         ErrOr<TempImageKey> res = await storageService.PutTempImageFile(fileData, ct);
 

@@ -10,8 +10,7 @@ internal class RootHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
-        group.MapGet("/rated-vokis", GetUserRatedVokis)
-            .WithAuthenticationRequired();
+        group.MapGet("/rated-vokis", GetUserRatedVokis);
     }
 
     private static async Task<IResult> GetUserRatedVokis(

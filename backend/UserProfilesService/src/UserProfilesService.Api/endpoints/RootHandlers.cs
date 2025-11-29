@@ -10,12 +10,10 @@ internal  class RootHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
-        group.MapGet("/basic-setup-info", GetUserBasicSetupInfo)
-            .WithAuthenticationRequired();
+        group.MapGet("/basic-setup-info", GetUserBasicSetupInfo);
 
         group.MapPost("/save-basic-setup", SaveBasicProfileSetup)
-            .WithRequestValidation<SaveBasicProfileSetupRequest>()
-            .WithAuthenticationRequired();
+            .WithRequestValidation<SaveBasicProfileSetupRequest>();
     }
 
     private static async Task<IResult> GetUserBasicSetupInfo(

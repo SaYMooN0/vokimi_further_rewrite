@@ -1,20 +1,18 @@
-﻿using GeneralVokiTakingService.Application.common.repositories;
+﻿using ApplicationShared;
+using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
-using SharedKernel.auth;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
-using VokiTakingServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
 public sealed record StartVokiTakingCommand(VokiId VokiId) :
-    ICommand<StartVokiTakingCommandResponse>,
-    IWithVokTakingAccessValidationStep;
+    ICommand<StartVokiTakingCommandResponse>;
 
 internal sealed class StartVokiTakingCommandHandler :
     ICommandHandler<StartVokiTakingCommand, StartVokiTakingCommandResponse>
@@ -48,7 +46,11 @@ internal sealed class StartVokiTakingCommandHandler :
         }
 
         AppUserId? vokiTaker = _userContext.UserIdFromToken().IsSuccess(out var id) ? id : null;
-
+        AuthenticatedUserContext? authenticatedUserContext = vokiTaker is null? null : new AuthenticatedUserContext(vokiTaker);
+        if (voki.CheckUserAccessToTake(authenticatedUserContext).IsErr(out var err)) {
+            return err;
+        }
+        
         BaseVokiTakingSession takingSession;
         if (voki.ForceSequentialAnswering) {
             takingSession = SessionWithSequentialAnswering.Create(

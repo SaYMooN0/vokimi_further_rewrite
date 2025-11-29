@@ -11,11 +11,10 @@ internal class RootHandlers : IEndpointGroup
 {
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
-        
-        group.MapGet("/commented-vokis", GetUserCommentedVokis)
-            .WithAuthenticationRequired();
+
+        group.MapGet("/commented-vokis", GetUserCommentedVokis);
     }
-    
+
     private static async Task<IResult> GetUserCommentedVokis(
         CancellationToken ct, HttpContext httpContext,
         IQueryHandler<ListUserCommentedVokiIdsQuery, VokiIdWithLastCommentedDateDto[]> handler
@@ -25,4 +24,4 @@ internal class RootHandlers : IEndpointGroup
 
         return CustomResults.FromErrOrToJson<VokiIdWithLastCommentedDateDto[], UserCommentedVokiIdsResponse>(result);
     }
-} 
+}

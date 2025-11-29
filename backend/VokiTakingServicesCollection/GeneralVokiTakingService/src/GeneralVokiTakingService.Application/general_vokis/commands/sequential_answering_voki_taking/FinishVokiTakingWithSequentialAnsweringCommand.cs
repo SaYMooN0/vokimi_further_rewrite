@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Application.common.repositories;
+﻿using ApplicationShared;
+using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
@@ -6,7 +7,6 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
-using SharedKernel.auth;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
 
@@ -48,12 +48,14 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
     public async Task<ErrOr<GeneralVokiResultId>> Handle(
         FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct
     ) {
-        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(command.VokiId, ct);
+        GeneralVoki? voki =
+            await _generalVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
         }
 
-        SessionWithSequentialAnswering? session = await _sessionsWithSequentialAnsweringRepository.GetById(command.SessionId, ct);
+        SessionWithSequentialAnswering? session =
+            await _sessionsWithSequentialAnsweringRepository.GetById(command.SessionId, ct);
         if (session is null) {
             return ErrFactory.NotFound.Common("Could not finish voki taking because taking session was not started");
         }
@@ -62,7 +64,7 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
             _dateTimeProvider.UtcNow,
             sessionStartTime: command.SessionStartTime,
             clientSessionFinishedTime: command.ClientSessionFinishTime,
-            _userContext,
+            _userContext.UserIdFromToken().IsSuccess(out var userId) ? new AuthenticatedUserContext(userId) : null,
             lastQuestionId: command.LastQuestionId,
             lastQuestionOrderInVokiTaking: command.LastQuestionOrderInVokiTaking,
             lastQuestionShownAt: command.LastQuestionShownAt,

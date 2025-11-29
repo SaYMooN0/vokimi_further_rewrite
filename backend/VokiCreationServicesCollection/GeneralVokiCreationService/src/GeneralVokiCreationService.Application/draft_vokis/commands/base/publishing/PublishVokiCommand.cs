@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel;
 using VokiCreationServicesLib.Application;
@@ -8,7 +9,8 @@ using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
 
 public record class PublishVokiCommand(VokiId VokiId) :
-    ICommand<PublishVokiCommandResult>,
+    ICommand<PublishVokiCommandResult>,   
+    IWithAuthCheckStep,
     IWithVokiPrimaryAuthorValidationStep;
 
 public abstract record PublishVokiCommandResult

@@ -1,7 +1,7 @@
 ﻿using AlbumsService.Domain.voki_album_aggregate;
 using ApiShared;
 
-namespace AlbumsService.Api.contracts.create_new_album;
+namespace AlbumsService.Api.contracts;
 
 public record AlbumCreatedResponse(
     string CreatedAlbumId

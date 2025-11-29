@@ -1,12 +1,17 @@
-﻿using SharedKernel;
-using SharedKernel.auth;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.app_user_aggregate;
 using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Application.voki_ratings.commands;
 
-public sealed record RateVokiCommand(VokiId VokiId, ushort NewRating) : ICommand<VokiRating>;
+public sealed record RateVokiCommand(
+    VokiId VokiId,
+    ushort NewRating
+) : ICommand<VokiRating>,
+    IWithAuthCheckStep;
 
 internal sealed class RateVokiCommandHandler : ICommandHandler<RateVokiCommand, VokiRating>
 {

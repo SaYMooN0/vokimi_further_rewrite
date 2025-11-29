@@ -1,12 +1,15 @@
 ﻿using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.app_user_aggregate;
-using SharedKernel.auth;
+using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 
 namespace AlbumsService.Application.app_users.commands;
 
 public sealed record UpdateAutoAlbumsAppearanceCommand(
     UserAutoAlbumsAppearance NewAppearance
-) : ICommand<UserAutoAlbumsAppearance>;
+) :
+    ICommand<UserAutoAlbumsAppearance>,
+    IWithAuthCheckStep;
 
 internal sealed class UpdateAutoAlbumsAppearanceCommandHandler :
     ICommandHandler<UpdateAutoAlbumsAppearanceCommand, UserAutoAlbumsAppearance>
@@ -20,15 +23,16 @@ internal sealed class UpdateAutoAlbumsAppearanceCommandHandler :
     }
 
 
-    public async Task<ErrOr<UserAutoAlbumsAppearance>> Handle(UpdateAutoAlbumsAppearanceCommand command, CancellationToken ct) {
+    public async Task<ErrOr<UserAutoAlbumsAppearance>> Handle(UpdateAutoAlbumsAppearanceCommand command,
+        CancellationToken ct) {
         AppUserId userId = _userContext.AuthenticatedUserId;
-        AppUser? user = await _appUsersRepository.GetById(userId,ct);
+        AppUser? user = await _appUsersRepository.GetById(userId, ct);
         if (user is null) {
             return ErrFactory.NotFound.User("Couldn't find user to update albums appearance");
         }
 
         user.UpdateAutoAlbumsAppearance(command.NewAppearance);
-        await _appUsersRepository.Update(user,ct);
+        await _appUsersRepository.Update(user, ct);
         return user.AutoAlbumsAppearance;
     }
 }

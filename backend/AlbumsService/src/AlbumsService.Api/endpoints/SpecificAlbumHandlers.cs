@@ -1,6 +1,5 @@
 ﻿using AlbumsService.Api.contracts;
 using AlbumsService.Api.contracts.copy_vokis_from_albums_to_album;
-using AlbumsService.Api.contracts.create_new_album;
 using AlbumsService.Api.extensions;
 using AlbumsService.Application.app_users.commands;
 using AlbumsService.Application.voki_albums.commands;
@@ -15,8 +14,7 @@ namespace AlbumsService.Api.endpoints;
 internal class SpecificAlbumHandlers : IEndpointGroup
 {
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
-        var group = routeBuilder.MapGroup("/albums/{albumId}")
-            .WithGroupAuthenticationRequired();
+        var group = routeBuilder.MapGroup("/albums/{albumId}");
 
         group.MapGet("/", GetAlbum);
 

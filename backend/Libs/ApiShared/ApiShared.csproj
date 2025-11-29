@@ -13,6 +13,8 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj"/>
+        <ProjectReference Include="..\ApplicationShared\ApplicationShared.csproj" />
+        <ProjectReference Include="..\Infrastructure\InfrastructureShared.Auth\InfrastructureShared.Auth.csproj" />
     </ItemGroup>
 
 </Project>

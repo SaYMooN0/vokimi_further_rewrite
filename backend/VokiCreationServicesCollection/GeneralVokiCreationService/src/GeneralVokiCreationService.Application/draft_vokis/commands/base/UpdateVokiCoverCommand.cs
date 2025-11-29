@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
@@ -10,7 +11,8 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 public sealed record UpdateVokiCoverCommand(
     VokiId VokiId,
     TempImageKey CoverKey
-) : ICommand<VokiCoverKey>,
+) : ICommand<VokiCoverKey>,   
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVokiCoverCommand, VokiCoverKey>

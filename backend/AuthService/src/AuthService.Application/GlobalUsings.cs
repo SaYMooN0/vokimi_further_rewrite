@@ -1,7 +1,6 @@
 ﻿global using ApplicationShared.messaging;
 global using AuthService.Domain.common;
 global using SharedKernel;
-global using SharedKernel.auth;
 global using SharedKernel.common;
 global using SharedKernel.domain.events;
 global using SharedKernel.domain.ids;

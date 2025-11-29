@@ -1,9 +1,12 @@
-﻿using SharedKernel.auth;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using VokiCommentsService.Application.common.repositories;
 
 namespace VokiCommentsService.Application.app_users.queries;
 
-public sealed record ListUserCommentedVokiIdsQuery() : IQuery<VokiIdWithLastCommentedDateDto[]>;
+public sealed record ListUserCommentedVokiIdsQuery() :
+    IQuery<VokiIdWithLastCommentedDateDto[]>,
+    IWithAuthCheckStep;
 
 internal sealed class ListUserCommentedVokiIdsQueryHandler :
     IQueryHandler<ListUserCommentedVokiIdsQuery, VokiIdWithLastCommentedDateDto[]>

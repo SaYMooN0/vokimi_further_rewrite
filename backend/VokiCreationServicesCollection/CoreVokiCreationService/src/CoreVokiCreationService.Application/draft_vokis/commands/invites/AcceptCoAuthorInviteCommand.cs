@@ -1,11 +1,14 @@
-﻿using CoreVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
+using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
-using SharedKernel.auth;
 
 namespace CoreVokiCreationService.Application.draft_vokis.commands.invites;
 
-public sealed record class AcceptCoAuthorInviteCommand(VokiId VokiId) :
-    ICommand;
+public sealed record class AcceptCoAuthorInviteCommand(
+    VokiId VokiId
+) : ICommand,
+    IWithAuthCheckStep;
 
 internal sealed class AcceptCoAuthorInviteCommandHandler :
     ICommandHandler<AcceptCoAuthorInviteCommand>

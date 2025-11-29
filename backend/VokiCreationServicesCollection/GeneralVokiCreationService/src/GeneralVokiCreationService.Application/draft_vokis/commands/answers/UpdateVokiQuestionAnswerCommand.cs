@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Application.draft_vokis.commands.answers.auxiliary;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
@@ -14,6 +15,7 @@ public sealed record UpdateVokiQuestionAnswerCommand(
     ImmutableHashSet<GeneralVokiResultId> NewRelatedResultIds
 ) :
     ICommand<VokiQuestionAnswer>,
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateVokiQuestionAnswerCommandHandler :

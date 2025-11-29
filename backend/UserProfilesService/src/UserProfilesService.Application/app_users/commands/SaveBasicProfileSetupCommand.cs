@@ -1,4 +1,5 @@
-﻿using SharedKernel.auth;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using UserProfilesService.Application.common;
 using UserProfilesService.Application.common.repositories;
 using UserProfilesService.Domain.app_user_aggregate;
@@ -12,7 +13,8 @@ public sealed record SaveBasicProfileSetupCommand(
     UserDisplayName DisplayName,
     HashSet<Language> PreferredLanguages,
     ImmutableHashSet<VokiTagId> Tags
-) : ICommand;
+) : ICommand,
+    IWithAuthCheckStep;
 
 internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<SaveBasicProfileSetupCommand>
 {
@@ -65,7 +67,8 @@ internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<Save
         return ErrOrNothing.Nothing;
     }
 
-    private Task<ErrOr<UserProfilePicKey>> HandleProfilePicKey(AppUserId userId, string stringKey, CancellationToken ct) {
+    private Task<ErrOr<UserProfilePicKey>>
+        HandleProfilePicKey(AppUserId userId, string stringKey, CancellationToken ct) {
         if (TempImageKey.FromString(stringKey).IsSuccess(out var tempKey)) {
             return _mainStorageBucket.CopyUserProfilePicFromTemp(tempKey, userId, ct);
         }

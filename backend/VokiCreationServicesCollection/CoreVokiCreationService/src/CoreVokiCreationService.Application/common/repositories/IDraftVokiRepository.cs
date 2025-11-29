@@ -5,9 +5,9 @@ namespace CoreVokiCreationService.Application.common.repositories;
 public interface IDraftVokiRepository
 {
     Task Add(DraftVoki voki);
-    Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId);
+    Task<VokiId[]> ListVokiAuthoredByUserIdOrderByCreationDate(AppUserId userId);
     Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId);
-    Task<DraftVoki[]> ListByIdWhereUserIsInvitedForCoAuthorAsNoTracking( AppUserId userId);
+    Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking( AppUserId userId);
 
     Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds);
     Task<DraftVoki?> GetById(VokiId vokiId);

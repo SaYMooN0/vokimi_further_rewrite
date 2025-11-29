@@ -11,8 +11,6 @@ internal class QuestionAnswersHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/questions/{questionId}/answers/");
 
-        group.WithGroupAuthenticationRequired();
-
         group.MapPost("/add-new", AddNewAnswerToVokiQuestion)
             .WithRequestValidation<SaveVokiQuestionAnswerRequest>();
 
@@ -63,6 +61,4 @@ internal class QuestionAnswersHandlers : IEndpointGroup
 
         return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
     }
-
-   
 }

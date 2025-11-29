@@ -8,7 +8,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\..\Libs\ApplicationShared\ApplicationShared.csproj"/>
-        <ProjectReference Include="..\..\..\VokiTakingServicesLib\VokiTakingServicesLib.Application\VokiTakingServicesLib.Application.csproj" />
         <ProjectReference Include="..\GeneralVokiTakingService.Domain\GeneralVokiTakingService.Domain.csproj"/>
     </ItemGroup>
 </Project>

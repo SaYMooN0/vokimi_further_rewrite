@@ -1,13 +1,16 @@
 ﻿using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.app_user_aggregate;
-using SharedKernel.auth;
+using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 
 namespace AlbumsService.Application.app_users.queries;
 
-public sealed record ListAllUserAlbumsPreviewQuery() : IQuery<ListAllUserAlbumsPreviewQueryResult>;
+public sealed record ListAllUserAlbumsPreviewQuery() :
+    IQuery<ListAllUserAlbumsPreviewQueryResult>,
+    IWithAuthCheckStep;
 
-internal sealed class
-    ListAllUserAlbumsPreviewQueryHandler : IQueryHandler<ListAllUserAlbumsPreviewQuery, ListAllUserAlbumsPreviewQueryResult>
+internal sealed class ListAllUserAlbumsPreviewQueryHandler :
+    IQueryHandler<ListAllUserAlbumsPreviewQuery, ListAllUserAlbumsPreviewQueryResult>
 {
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
     private readonly IAppUsersRepository _appUsersRepository;

@@ -2,7 +2,9 @@
 
 namespace UserProfilesService.Application.app_users.queries;
 
-public sealed record ListUsersNamesWithProfilePicsQuery(ImmutableHashSet<AppUserId> UserIds) : IQuery<UserPreviewDto[]>;
+public sealed record ListUsersNamesWithProfilePicsQuery(
+    ImmutableHashSet<AppUserId> UserIds
+) : IQuery<UserPreviewDto[]>;
 
 internal sealed class ListUsersNamesWithProfilePicsQueryHandler :
     IQueryHandler<ListUsersNamesWithProfilePicsQuery, UserPreviewDto[]>

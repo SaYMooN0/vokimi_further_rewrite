@@ -1,4 +1,5 @@
-﻿using CoreVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Application.pipeline_behaviors;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
@@ -6,6 +7,7 @@ namespace CoreVokiCreationService.Application.draft_vokis.queries;
 
 public sealed record GetVokiQuery(VokiId VokiId) :
     IQuery<DraftVoki>,
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, DraftVoki>

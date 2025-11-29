@@ -11,8 +11,6 @@ internal class RootHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
-        group.WithGroupAuthenticationRequired();
-
         group.MapGet("/list-user-voki-ids", ListUserVokiIds);
         group.MapPost("/initialize-new-voki", InitializeNewVoki)
             .WithRequestValidation<InitializeNewVokiRequest>();

@@ -3,7 +3,7 @@ using ApiShared;
 using SharedKernel.common;
 using SharedKernel.errs;
 
-namespace AlbumsService.Api.contracts.create_new_album;
+namespace AlbumsService.Api.contracts;
 
 public class SaveVokiAlbumRequest : IRequestWithValidationNeeded
 {

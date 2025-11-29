@@ -1,14 +1,16 @@
 using AlbumsService.Application.common.repositories;
 using AlbumsService.Application.voki_albums.queries;
 using AlbumsService.Domain.voki_album_aggregate;
-using SharedKernel.auth;
+using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
 public sealed record UpdateVokiPresenceInAlbumsCommand(
     VokiId VokiId,
     Dictionary<VokiAlbumId, bool> AlbumIdToIsChosen
-) : ICommand<AlbumWithVokiPresenceDto[]>;
+) : ICommand<AlbumWithVokiPresenceDto[]>,
+    IWithAuthCheckStep;
 
 internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
     ICommandHandler<UpdateVokiPresenceInAlbumsCommand, AlbumWithVokiPresenceDto[]>
@@ -16,7 +18,8 @@ internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
     private readonly IUserContext _userContext;
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
 
-    public UpdateVokiPresenceInAlbumsCommandHandler(IUserContext userContext, IVokiAlbumsRepository vokiAlbumsRepository) {
+    public UpdateVokiPresenceInAlbumsCommandHandler(IUserContext userContext,
+        IVokiAlbumsRepository vokiAlbumsRepository) {
         _userContext = userContext;
         _vokiAlbumsRepository = vokiAlbumsRepository;
     }
@@ -33,7 +36,7 @@ internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
 
         foreach (var (albumId, isChosen) in command.AlbumIdToIsChosen) {
             if (albums.TryGetValue(albumId, out var album)) {
-                ErrOrNothing res = album.SetVokiPresenceTo(_userContext, isChosen, command.VokiId);
+                ErrOrNothing res = album.SetVokiPresenceTo(new AuthenticatedUserContext(_userContext.AuthenticatedUserId), isChosen, command.VokiId);
                 errs.AddNextIfErr(res);
                 changedAlbumsList.Add(album);
             }

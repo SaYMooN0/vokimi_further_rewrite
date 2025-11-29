@@ -3,7 +3,7 @@ using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
-using SharedKernel.auth;
+using SharedKernel;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -53,7 +53,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,
         DateTime clientSessionFinishedTime,
-        IUserContext userContext,
+        IAuthenticatedUserContext? authenticatedUserContext,
         GeneralVokiQuestionId lastQuestionId,
         ushort lastQuestionOrderInVokiTaking,
         ClientServerTimePairDto lastQuestionShownAt,
@@ -70,7 +70,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             return err;
         }
 
-        if (ValidateVokiTaker(userContext, out var vokiTakerId).IsErr(out err)) {
+        if (ValidateVokiTaker(authenticatedUserContext, out var vokiTakerId).IsErr(out err)) {
             return err;
         }
 

@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SharedKernel.auth;
 using TagsService.Application.common.repositories;
 using TagsService.Infrastructure.persistence;
 using TagsService.Infrastructure.persistence.repositories;

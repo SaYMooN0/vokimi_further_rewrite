@@ -1,10 +1,13 @@
-﻿using SharedKernel.auth;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.app_user_aggregate;
 
 namespace VokisCatalogService.Application.vokis.queries;
 
-public sealed record ListTakenVokiIdsQuery() : IQuery<VokiIdWithLastTakenDateDto[]>;
+public sealed record ListTakenVokiIdsQuery() :
+    IQuery<VokiIdWithLastTakenDateDto[]>,
+    IWithAuthCheckStep;
 
 internal sealed class ListTakenVokiIdsQueryHandler :
     IQueryHandler<ListTakenVokiIdsQuery, VokiIdWithLastTakenDateDto[]>

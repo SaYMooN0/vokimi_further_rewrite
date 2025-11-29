@@ -1,4 +1,4 @@
-﻿using SharedKernel.auth;
+﻿using SharedKernel;
 using SharedKernel.common.vokis;
 using SharedKernel.domain;
 using SharedKernel.domain.ids;
@@ -14,8 +14,8 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
     protected abstract IVokiInteractionSettings BaseInteractionSettings { get; }
 
 
-    public ErrOrNothing CheckUserAccessToTake(IUserContext userContext) {
-        if (BaseInteractionSettings.SignedInOnlyTaking && userContext.UserIdFromToken().IsErr()) {
+    public ErrOrNothing CheckUserAccessToTake(IAuthenticatedUserContext? authenticatedUserContext) {
+        if (BaseInteractionSettings.SignedInOnlyTaking && authenticatedUserContext is null) {
             return ErrFactory.NoAccess("To take this Voki you need to be signed in");
         }
 

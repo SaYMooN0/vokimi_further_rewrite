@@ -1,9 +1,12 @@
-﻿using SharedKernel.auth;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using VokisCatalogService.Application.common.repositories;
 
 namespace VokisCatalogService.Application.vokis.queries;
 
-public sealed record ListIdsOfVokiAuthoredByUser() : IQuery<VokiId[]>;
+public sealed record ListIdsOfVokiAuthoredByUser() :
+    IQuery<VokiId[]>,
+    IWithAuthCheckStep;
 
 internal sealed class ListIdsOfVokiAuthoredByUserHandler : IQueryHandler<ListIdsOfVokiAuthoredByUser, VokiId[]>
 {

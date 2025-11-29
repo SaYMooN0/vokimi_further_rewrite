@@ -11,8 +11,6 @@ internal class SpecificVokiResultsHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/results/{resultId}/");
 
-        group.WithGroupAuthenticationRequired();
-
         group.MapGet("/", GetVokiResult);
         group.MapPut("/update", UpdateVokiResult)
             .WithRequestValidation<UpdateVokiResultRequest>();

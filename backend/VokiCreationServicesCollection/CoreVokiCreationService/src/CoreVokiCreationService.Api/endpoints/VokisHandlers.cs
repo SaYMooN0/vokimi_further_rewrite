@@ -9,8 +9,6 @@ internal class VokisHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/");
 
-        group.WithGroupAuthenticationRequired();
-
         group.MapPost("/brief-info", ListVokisBriefInfo)
             .WithRequestValidation<ListVokisBriefInfoRequest>();
     }

@@ -1,12 +1,14 @@
 using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.app_user_aggregate;
-using SharedKernel.auth;
+using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 
 namespace AlbumsService.Application.app_users.commands;
 
 public sealed record DeleteAlbumCommand(
     VokiAlbumId AlbumId
-) : ICommand;
+) : ICommand,
+    IWithAuthCheckStep;
 
 internal sealed class DeleteAlbumCommandHandler : ICommandHandler<DeleteAlbumCommand>
 {

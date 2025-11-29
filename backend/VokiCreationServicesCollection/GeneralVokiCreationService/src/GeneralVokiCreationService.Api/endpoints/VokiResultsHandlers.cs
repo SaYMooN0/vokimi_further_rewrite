@@ -10,8 +10,6 @@ internal class VokiResultsHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/results/");
 
-        group.WithGroupAuthenticationRequired();
-
         group.MapGet("/overview", GetVokiResultsOverview);
         group.MapPost("/add-new", AddNewResultToVoki)
             .WithRequestValidation<AddNewResultToVokiRequest>();

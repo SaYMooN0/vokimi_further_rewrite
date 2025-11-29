@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
@@ -10,7 +11,8 @@ public sealed record UpdateQuestionTextCommand(
     GeneralVokiQuestionId QuestionId,
     VokiQuestionText NewQuestionText
 ) :
-    ICommand<VokiQuestionText>,
+    ICommand<VokiQuestionText>,   
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateQuestionTextCommandHandler : ICommandHandler<UpdateQuestionTextCommand, VokiQuestionText>

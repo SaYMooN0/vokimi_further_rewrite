@@ -7,9 +7,9 @@ public record class VokiMainInfoResponse(
     string Cover,
     string[] Tags,
     VokiDetailsResponse Details
-)
+) : ICreatableResponse<DraftGeneralVoki>
 {
-    public static VokiMainInfoResponse Create(DraftGeneralVoki voki) => new(
+    public static ICreatableResponse<DraftGeneralVoki> Create(DraftGeneralVoki voki) => new VokiMainInfoResponse(
         voki.Name.ToString(),
         voki.Cover.ToString(),
         voki.Tags.Value.Select(t => t.ToString()).ToArray(),

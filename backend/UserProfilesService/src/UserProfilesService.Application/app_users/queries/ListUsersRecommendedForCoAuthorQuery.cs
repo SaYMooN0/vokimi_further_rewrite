@@ -1,4 +1,4 @@
-using SharedKernel.auth;
+using ApplicationShared;
 using UserProfilesService.Application.common.repositories;
 
 namespace UserProfilesService.Application.app_users.queries;

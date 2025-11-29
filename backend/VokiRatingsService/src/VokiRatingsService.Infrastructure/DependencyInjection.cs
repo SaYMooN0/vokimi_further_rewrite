@@ -9,7 +9,6 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SharedKernel.auth;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Infrastructure.persistence;
 using VokiRatingsService.Infrastructure.persistence.repositories;

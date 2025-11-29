@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
@@ -16,7 +17,8 @@ public sealed record UpdateVokiResultCommand(
     VokiResultText NewText,
     string? NewImage
 ) :
-    ICommand<VokiResult>,
+    ICommand<VokiResult>,   
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVokiResultCommand, VokiResult>

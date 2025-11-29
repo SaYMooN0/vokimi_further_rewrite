@@ -10,8 +10,6 @@ internal class VokiQuestionsHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/questions/");
 
-        group.WithGroupAuthenticationRequired();
-
         group.MapGet("/overview", GetVokiQuestionsOverview);
         group.MapPost("/add-new", AddNewQuestionToVoki)
             .WithRequestValidation<AddNewQuestionToVokiRequest>();

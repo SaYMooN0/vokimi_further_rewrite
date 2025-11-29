@@ -2,7 +2,7 @@
 using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
-using SharedKernel.auth;
+using SharedKernel;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -16,7 +16,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,
         DateTime clientFinishedTime,
-        IUserContext userContext,
+        IAuthenticatedUserContext? authenticatedUserContext,
         Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers,
         Func<Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>,
             ErrOr<GeneralVokiResultId>> getResultAccordingToAnswers
@@ -32,7 +32,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         }
 
 
-        if (ValidateVokiTaker(userContext, out var vokiTakerId).IsErr(out err)) {
+        if (ValidateVokiTaker(authenticatedUserContext, out var vokiTakerId).IsErr(out err)) {
             return err;
         }
 

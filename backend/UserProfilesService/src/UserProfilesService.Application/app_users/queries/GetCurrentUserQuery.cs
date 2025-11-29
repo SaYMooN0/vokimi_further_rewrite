@@ -1,10 +1,13 @@
-﻿using SharedKernel.auth;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using UserProfilesService.Application.common.repositories;
 using UserProfilesService.Domain.app_user_aggregate;
 
 namespace UserProfilesService.Application.app_users.queries;
 
-public sealed record GetCurrentUserQuery() : IQuery<AppUser>;
+public sealed record GetCurrentUserQuery() :
+    IQuery<AppUser>,
+    IWithAuthCheckStep;
 
 internal sealed class GetCurrentUserQueryHandler : IQueryHandler<GetCurrentUserQuery, AppUser>
 {

@@ -16,7 +16,8 @@ public sealed record UpdateQuestionImageSetCommand(
     HashSet<GeneralVokiQuestionImageKey> SavedKeys,
     VokiQuestionImagesAspectRatio ImagesAspectRatio
 ) :
-    ICommand<VokiQuestionImagesSet>,
+    ICommand<VokiQuestionImagesSet>,   
+    IWithAuthCheckStep,
     IWithBasicValidationStep,
     IWithVokiAccessValidationStep
 {

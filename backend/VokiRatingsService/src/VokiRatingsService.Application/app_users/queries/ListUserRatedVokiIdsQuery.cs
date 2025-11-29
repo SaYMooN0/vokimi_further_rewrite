@@ -1,9 +1,12 @@
-﻿using SharedKernel.auth;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using VokiRatingsService.Application.common.repositories;
 
 namespace VokiRatingsService.Application.app_users.queries;
 
-public sealed record ListUserRatedVokiIdsQuery() : IQuery<VokiIdWithRatingDateDto[]>;
+public sealed record ListUserRatedVokiIdsQuery() :
+    IQuery<VokiIdWithRatingDateDto[]>,
+    IWithAuthCheckStep;
 
 internal sealed class ListUserRatedVokiIdsQueryHandler :
     IQueryHandler<ListUserRatedVokiIdsQuery, VokiIdWithRatingDateDto[]>

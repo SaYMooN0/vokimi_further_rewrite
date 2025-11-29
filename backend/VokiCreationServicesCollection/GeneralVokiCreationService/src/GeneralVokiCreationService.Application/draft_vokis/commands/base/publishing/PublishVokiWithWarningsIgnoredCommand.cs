@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel;
 using VokiCreationServicesLib.Application;
@@ -7,7 +8,8 @@ using VokiCreationServicesLib.Application.pipeline_behaviors;
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
 
 public sealed record PublishVokiWithWarningsIgnoredCommand(VokiId VokiId) :
-    ICommand<VokiSuccessfullyPublishedResult>,
+    ICommand<VokiSuccessfullyPublishedResult>,   
+    IWithAuthCheckStep,
     IWithVokiPrimaryAuthorValidationStep;
 
 internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :

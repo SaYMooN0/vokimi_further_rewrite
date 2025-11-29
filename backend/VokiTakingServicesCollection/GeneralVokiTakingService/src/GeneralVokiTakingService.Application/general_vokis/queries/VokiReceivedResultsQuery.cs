@@ -1,16 +1,21 @@
-﻿using GeneralVokiTakingService.Application.common.repositories;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
-using SharedKernel.auth;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 using VokiTakingServicesLib.Domain.common;
 
 namespace GeneralVokiTakingService.Application.general_vokis.queries;
 
-public sealed record VokiReceivedResultsQuery(VokiId VokiId) : IQuery<VokiReceivedResultsQueryResult>;
+public sealed record VokiReceivedResultsQuery(
+    VokiId VokiId
+) : IQuery<VokiReceivedResultsQueryResult>,
+    IWithAuthCheckStep;
 
-internal sealed class VokiReceivedResultsQueryHandler : IQueryHandler<VokiReceivedResultsQuery, VokiReceivedResultsQueryResult>
+internal sealed class VokiReceivedResultsQueryHandler :
+    IQueryHandler<VokiReceivedResultsQuery, VokiReceivedResultsQueryResult>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
     private readonly IUserContext _userContext;
@@ -26,10 +31,10 @@ internal sealed class VokiReceivedResultsQueryHandler : IQueryHandler<VokiReceiv
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
     }
 
-    public async Task<ErrOr<VokiReceivedResultsQueryResult>> Handle(VokiReceivedResultsQuery previewQuery, CancellationToken ct) {
+    public async Task<ErrOr<VokiReceivedResultsQueryResult>> Handle(
+        VokiReceivedResultsQuery previewQuery, CancellationToken ct
+    ) {
         AppUserId userId = _userContext.AuthenticatedUserId;
-
-
         GeneralVoki? voki = await _generalVokisRepository.GetWithResultsByIdAsNoTracking(previewQuery.VokiId, ct);
 
         if (voki is null) {

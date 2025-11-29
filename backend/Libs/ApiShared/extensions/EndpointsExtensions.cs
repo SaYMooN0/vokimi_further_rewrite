@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using ApiShared.endpoints_filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
@@ -27,18 +26,10 @@ public static class EndpointsExtensions
             .GetRequiredService<IEnumerable<IEndpointGroup>>()
             .ToList()
             .ForEach(e => e.MapEndpoints(app));
-
-    public static RouteGroupBuilder WithGroupAuthenticationRequired(this RouteGroupBuilder builder) =>
-        builder.AddEndpointFilter<AuthenticationRequiredEndpointFilter>();
-
     public static RouteHandlerBuilder WithRequestValidation<T>(
         this RouteHandlerBuilder builder
     ) where T : class, IRequestWithValidationNeeded =>
         builder.AddEndpointFilter<RequestValidationRequiredEndpointFilter<T>>();
 
 
-    public static RouteHandlerBuilder WithAuthenticationRequired(
-        this RouteHandlerBuilder builder
-    ) =>
-        builder.AddEndpointFilter<AuthenticationRequiredEndpointFilter>();
 }

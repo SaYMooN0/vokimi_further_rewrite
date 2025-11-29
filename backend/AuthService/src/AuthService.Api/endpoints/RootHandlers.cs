@@ -1,6 +1,8 @@
-﻿using AuthService.Application.app_users.queries;
+﻿using ApplicationShared;
+using AuthService.Application.app_users.queries;
 using AuthService.Application.unconfirmed_users.commands;
-using SharedKernel.auth;
+using InfrastructureShared.Auth;
+using SharedKernel;
 
 namespace AuthService.Api.endpoints;
 
@@ -51,7 +53,7 @@ public class RootHandlers : IEndpointGroup
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (token) => {
-            httpContext.Response.Cookies.Append(IUserContext.TokenCookieKey, token.ToString(), AuthCookieOptions());
+            httpContext.Response.Cookies.Append(IUserContext.TokenCookieKey, token.Value, AuthCookieOptions());
             return Results.Ok();
         });
     }
@@ -66,7 +68,7 @@ public class RootHandlers : IEndpointGroup
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (token) => {
-            httpContext.Response.Cookies.Append(IUserContext.TokenCookieKey, token.ToString(), AuthCookieOptions());
+            httpContext.Response.Cookies.Append(IUserContext.TokenCookieKey, token.Value, AuthCookieOptions());
             return Results.Ok();
         });
     }

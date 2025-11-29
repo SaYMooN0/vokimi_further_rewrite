@@ -18,7 +18,7 @@ internal class DraftVokiRepository : IDraftVokiRepository
         await _db.SaveChangesAsync();
     }
 
-    public Task<VokiId[]> ListVokiAuthoredByUserIdsOrderByCreationDate(AppUserId userId) =>
+    public Task<VokiId[]> ListVokiAuthoredByUserIdOrderByCreationDate(AppUserId userId) =>
         _db.Vokis
             .FromSqlInterpolated($@"
                 SELECT ""Id""
@@ -34,7 +34,7 @@ internal class DraftVokiRepository : IDraftVokiRepository
         .AsNoTracking()
         .FirstOrDefaultAsync(v => v.Id == vokiId);
 
-    public Task<DraftVoki[]> ListByIdWhereUserIsInvitedForCoAuthorAsNoTracking(AppUserId userId) =>
+    public Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(AppUserId userId) =>
         _db.Vokis
             .FromSqlInterpolated($@"
                 SELECT *

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace ApiShared.endpoints_filters;
+namespace ApiShared;
 
 internal class RequestValidationRequiredEndpointFilter<T> : IEndpointFilter
     where T : class, IRequestWithValidationNeeded

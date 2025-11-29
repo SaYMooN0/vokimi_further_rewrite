@@ -11,8 +11,6 @@ internal class SpecificVokiHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
-        group.WithGroupAuthenticationRequired();
-
         group.MapGet("/brief-info", GetVokiBriefInfo);
         group.MapGet("/authors-info", GetVokiAuthorsInfo);
  
@@ -25,8 +23,6 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
         group.MapPatch("/accept-co-author-invite", AcceptCoAuthorInvite);
         group.MapPatch("/decline-co-author-invite", DeclineCoAuthorInvite);
-
-        group.MapGet("/view-as-invited-for-co-author-", ViewVokiAsInvitedForCoAuthor);
     }
 
     private static async Task<IResult> GetVokiBriefInfo(
@@ -118,15 +114,4 @@ internal class SpecificVokiHandlers : IEndpointGroup
         );
     }
 
-    private static async Task<IResult> ViewVokiAsInvitedForCoAuthor(
-        HttpContext httpContext, CancellationToken ct,
-        IQueryHandler<GetVokiQuery, DraftVoki> handler
-    ) {
-        VokiId vokiId = httpContext.GetVokiIdFromRoute();
-
-        GetVokiQuery query = new(vokiId);
-        var result = await handler.Handle(query, ct);
-
-        return CustomResults.FromErrOrToJson<DraftVoki, VokiBriefInfoResponse>(result);
-    }
 }

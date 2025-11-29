@@ -1,8 +1,9 @@
 ﻿using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.app_user_aggregate;
 using AlbumsService.Domain.voki_album_aggregate;
+using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel;
-using SharedKernel.auth;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
@@ -11,7 +12,9 @@ public sealed record CreateNewAlbumCommand(
     AlbumIcon Icon,
     HexColor MainColor,
     HexColor SecondaryColor
-) : ICommand<VokiAlbum>;
+) : 
+    ICommand<VokiAlbum>,
+    IWithAuthCheckStep;
 
 internal sealed class CreateNewAlbumCommandHandler :
     ICommandHandler<CreateNewAlbumCommand, VokiAlbum>
@@ -45,7 +48,7 @@ internal sealed class CreateNewAlbumCommandHandler :
         }
 
         VokiAlbum album = VokiAlbum.CreateNew(
-            _userContext, command.Name, command.Icon,
+            new AuthenticatedUserContext(_userContext.AuthenticatedUserId), command.Name, command.Icon,
             command.MainColor, command.SecondaryColor, _dateTimeProvider.UtcNow
         );
         var addingRes = user.AddAlbum(album.Id);

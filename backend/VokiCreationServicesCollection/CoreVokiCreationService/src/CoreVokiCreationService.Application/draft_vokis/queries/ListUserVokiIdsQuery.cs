@@ -1,9 +1,12 @@
-﻿using CoreVokiCreationService.Application.common.repositories;
-using SharedKernel.auth;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
+using CoreVokiCreationService.Application.common.repositories;
 
 namespace CoreVokiCreationService.Application.draft_vokis.queries;
 
-public sealed record ListUserVokiIdsQuery() : IQuery<ImmutableArray<VokiId>>;
+public sealed record ListUserVokiIdsQuery() :
+    IQuery<ImmutableArray<VokiId>>,
+    IWithAuthCheckStep;
 
 internal sealed class ListUserVokiIdsQueryHandler : IQueryHandler<ListUserVokiIdsQuery, ImmutableArray<VokiId>>
 {
@@ -17,6 +20,6 @@ internal sealed class ListUserVokiIdsQueryHandler : IQueryHandler<ListUserVokiId
 
     public async Task<ErrOr<ImmutableArray<VokiId>>> Handle(ListUserVokiIdsQuery query, CancellationToken ct) {
         AppUserId userId = _userContext.AuthenticatedUserId;
-        return (await _draftVokiRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(userId)).ToImmutableArray();
+        return (await _draftVokiRepository.ListVokiAuthoredByUserIdOrderByCreationDate(userId)).ToImmutableArray();
     }
 }

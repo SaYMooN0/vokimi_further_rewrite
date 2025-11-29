@@ -1,11 +1,13 @@
-﻿using CoreVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
+using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.app_user_aggregate;
-using SharedKernel.auth;
 
 namespace CoreVokiCreationService.Application.draft_vokis.commands.invites;
 
 public sealed record DeclineCoAuthorInviteCommand(VokiId VokiId) :
-    ICommand<ImmutableArray<VokiId>>;
+    ICommand<ImmutableArray<VokiId>>,
+    IWithAuthCheckStep;
 
 internal sealed class DeclineCoAuthorInviteCommandHandler :
     ICommandHandler<DeclineCoAuthorInviteCommand, ImmutableArray<VokiId>>

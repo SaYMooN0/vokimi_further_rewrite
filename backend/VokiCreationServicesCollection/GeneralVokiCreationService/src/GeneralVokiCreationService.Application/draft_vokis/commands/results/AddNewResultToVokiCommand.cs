@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using SharedKernel;
@@ -7,7 +8,8 @@ using VokiCreationServicesLib.Application.pipeline_behaviors;
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.results;
 
 public sealed record AddNewResultToVokiCommand(VokiId VokiId, VokiResultName ResultName) :
-    ICommand<ImmutableArray<VokiResult>>,
+    ICommand<ImmutableArray<VokiResult>>,   
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class AddNewResultToVokiCommandHandler :

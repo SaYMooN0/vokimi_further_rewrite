@@ -1,12 +1,17 @@
 ﻿using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.voki_album_aggregate;
-using SharedKernel.auth;
+using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 
 namespace AlbumsService.Application.voki_albums.queries;
 
-public sealed record ListAlbumsDataForVokiQuery(VokiId VokiId) : IQuery<AlbumWithVokiPresenceDto[]>;
+public sealed record ListAlbumsDataForVokiQuery(
+    VokiId VokiId
+) : IQuery<AlbumWithVokiPresenceDto[]>,
+    IWithAuthCheckStep;
 
-internal sealed class ListAlbumsDataForVokiQueryHandler : IQueryHandler<ListAlbumsDataForVokiQuery, AlbumWithVokiPresenceDto[]>
+internal sealed class ListAlbumsDataForVokiQueryHandler :
+    IQueryHandler<ListAlbumsDataForVokiQuery, AlbumWithVokiPresenceDto[]>
 {
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
     private readonly IUserContext _userContext;

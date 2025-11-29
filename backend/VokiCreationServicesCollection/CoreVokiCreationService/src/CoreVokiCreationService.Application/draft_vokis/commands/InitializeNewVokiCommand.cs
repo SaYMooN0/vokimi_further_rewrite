@@ -1,17 +1,20 @@
-﻿using CoreVokiCreationService.Application.common;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
+using CoreVokiCreationService.Application.common;
 using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using SharedKernel;
-using SharedKernel.auth;
 using SharedKernel.common.vokis;
 
 namespace CoreVokiCreationService.Application.draft_vokis.commands;
 
-public sealed record InitializeNewVokiCommand(VokiType VokiType, VokiName VokiName)
-    : ICommand<DraftVoki>;
+public sealed record InitializeNewVokiCommand(
+    VokiType VokiType,
+    VokiName VokiName
+) : ICommand<DraftVoki>,
+    IWithAuthCheckStep;
 
-internal sealed class InitializeNewVokiCommandHandler :
-    ICommandHandler<InitializeNewVokiCommand, DraftVoki>
+internal sealed class InitializeNewVokiCommandHandler : ICommandHandler<InitializeNewVokiCommand, DraftVoki>
 {
     private readonly IUserContext _userContext;
     private readonly IDraftVokiRepository _draftVokiRepository;

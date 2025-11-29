@@ -1,11 +1,13 @@
-﻿using SharedKernel.auth;
+﻿using ApplicationShared;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.app_user_aggregate;
 using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Application.voki_ratings.queries;
 
-public sealed record UserRatingsDataForVokiQuery(VokiId VokiId) : IQuery<UserRatingsDataForVokiQueryResult>;
+public sealed record UserRatingsDataForVokiQuery(
+    VokiId VokiId
+) : IQuery<UserRatingsDataForVokiQueryResult>;
 
 internal sealed class UserRatingsDataForVokiQueryHandler :
     IQueryHandler<UserRatingsDataForVokiQuery, UserRatingsDataForVokiQueryResult>

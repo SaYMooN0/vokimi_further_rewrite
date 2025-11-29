@@ -3,14 +3,14 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using SharedKernel.auth;
+using SharedKernel;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
 
 namespace InfrastructureShared.Auth;
 
-public class TokenParser : ITokenParser
+internal class TokenParser : ITokenParser
 {
     private static readonly JwtSecurityTokenHandler JwtSecurityTokenHandler = new();
     private readonly ILogger<TokenParser> _logger;
@@ -29,7 +29,6 @@ public class TokenParser : ITokenParser
         _publicKey = new RsaSecurityKey(rsa);
     }
 
-    public const string UserIdClaim = "UserId";
 
 
     public ErrOr<AppUserId> UserIdFromJwtToken(JwtTokenString token) {
@@ -44,17 +43,17 @@ public class TokenParser : ITokenParser
 
         try {
             ClaimsPrincipal principal = JwtSecurityTokenHandler.ValidateToken(
-                token.ToString(),
+                token.Value,
                 parameters,
                 out _
             );
 
-            Claim? userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == UserIdClaim);
+            Claim? userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == ITokenParser.UserIdClaim);
 
             if (userIdClaim is null) {
                 _logger.LogWarning(
                     "JWT token does not contain '{claimName}' claim. Token: '{token}'.",
-                    UserIdClaim, token.ToString()
+                    ITokenParser.UserIdClaim, token.Value
                 );
 
                 return ErrFactory.IncorrectFormat(
@@ -68,7 +67,7 @@ public class TokenParser : ITokenParser
             if (string.IsNullOrWhiteSpace(claimValue)) {
                 _logger.LogWarning(
                     "JWT token contains empty '{claimName}' claim. Token: '{token}'.",
-                    UserIdClaim, token.ToString()
+                    ITokenParser.UserIdClaim, token.Value
                 );
 
                 return ErrFactory.NoValue.Common(
@@ -80,7 +79,7 @@ public class TokenParser : ITokenParser
             if (!Guid.TryParse(claimValue, out Guid parsedGuid)) {
                 _logger.LogWarning(
                     "JWT token contains malformed userId claim. Value: '{claimValue}'. Token: '{token}'.",
-                    claimValue, token.ToString()
+                    claimValue, token.Value
                 );
 
                 return ErrFactory.IncorrectFormat(
@@ -95,7 +94,7 @@ public class TokenParser : ITokenParser
             _logger.LogError(
                 ex,
                 "Unexpected error while parsing JWT token. Token: '{token}'. Error: {errorMessage}.",
-                token.ToString(), ex.Message
+                token.Value, ex.Message
             );
 
             return ErrFactory.AuthRequired(

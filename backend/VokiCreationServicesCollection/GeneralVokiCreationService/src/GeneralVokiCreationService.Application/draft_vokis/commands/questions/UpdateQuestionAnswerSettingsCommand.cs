@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
@@ -11,7 +12,8 @@ public sealed record UpdateQuestionAnswerSettingsCommand(
     QuestionAnswersCountLimit NewCountLimit,
     bool ShuffleAnswers
 ) :
-    ICommand<VokiQuestion>,
+    ICommand<VokiQuestion>,   
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateQuestionAnswerSettingsCommandHandler :

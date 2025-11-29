@@ -1,11 +1,13 @@
 ﻿using AuthService.Application.abstractions;
 using AuthService.Application.common.repositories;
 using AuthService.Domain.app_user_aggregate;
-using SharedKernel.auth;
 
 namespace AuthService.Application.app_users.queries;
 
-public sealed record GetAuthTokenForAppUserQuery(Email Email, string Password) : IQuery<JwtTokenString>;
+public sealed record GetAuthTokenForAppUserQuery(
+    Email Email,
+    string Password
+) : IQuery<JwtTokenString>;
 
 internal sealed class GetAuthTokenForAppUserQueryHandler : IQueryHandler<GetAuthTokenForAppUserQuery, JwtTokenString>
 {
@@ -36,5 +38,4 @@ internal sealed class GetAuthTokenForAppUserQueryHandler : IQueryHandler<GetAuth
 
         return _tokenGenerator.CreateToken(user);
     }
-
 }

@@ -1,3 +1,4 @@
+using ApplicationShared;
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
@@ -6,7 +7,6 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
-using SharedKernel.auth;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;

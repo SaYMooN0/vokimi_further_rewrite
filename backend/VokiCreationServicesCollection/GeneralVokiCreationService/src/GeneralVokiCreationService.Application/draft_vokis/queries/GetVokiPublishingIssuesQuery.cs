@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
@@ -6,7 +7,8 @@ using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 namespace GeneralVokiCreationService.Application.draft_vokis.queries;
 
 public sealed record GetVokiPublishingIssuesQuery(VokiId VokiId) :
-    IQuery<ImmutableArray<VokiPublishingIssue>>,
+    IQuery<ImmutableArray<VokiPublishingIssue>>,   
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class GetVokiPublishingIssuesQueryHandler : IQueryHandler<GetVokiPublishingIssuesQuery,

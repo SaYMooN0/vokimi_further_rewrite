@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
@@ -8,7 +9,8 @@ public sealed record MoveQuestionDownInOrderCommand(
     VokiId VokiId,
     GeneralVokiQuestionId QuestionId
 ) :
-    ICommand<ImmutableArray<VokiQuestion>>,
+    ICommand<ImmutableArray<VokiQuestion>>,   
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class MoveQuestionDownInOrderCommandHandler :

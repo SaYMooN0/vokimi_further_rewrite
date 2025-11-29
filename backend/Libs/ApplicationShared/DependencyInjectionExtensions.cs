@@ -31,7 +31,7 @@ public static class DependencyInjectionExtensions
         );
 
         services.AddStepHandlers();
-        
+
         return services;
     }
 
@@ -39,6 +39,10 @@ public static class DependencyInjectionExtensions
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(BasicValidationStepHandler.QueryHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(BasicValidationStepHandler.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(BasicValidationStepHandler.CommandBaseHandler<>));
+
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(AuthCheckStepHandler.QueryHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>), typeof(AuthCheckStepHandler.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(AuthCheckStepHandler.CommandBaseHandler<>));
 
         return services;
     }

@@ -13,8 +13,6 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/questions/{questionId}/");
 
-        group.WithGroupAuthenticationRequired();
-
         group.MapGet("/", GetVokiQuestionFullData);
         group.MapPatch("/update-text", UpdateQuestionText)
             .WithRequestValidation<UpdateQuestionTextRequest>();

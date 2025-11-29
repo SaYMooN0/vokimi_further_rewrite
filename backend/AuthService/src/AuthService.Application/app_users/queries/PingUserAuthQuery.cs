@@ -1,6 +1,6 @@
-﻿using AuthService.Application.common.repositories;
+﻿using ApplicationShared;
+using AuthService.Application.common.repositories;
 using Microsoft.Extensions.Logging;
-using SharedKernel.auth;
 
 namespace AuthService.Application.app_users.queries;
 

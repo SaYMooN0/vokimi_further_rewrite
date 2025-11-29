@@ -1,9 +1,8 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
-using VokiTakingServicesLib.Application.repositories;
 
 namespace GeneralVokiTakingService.Application.common.repositories;
 
-public interface IGeneralVokisRepository : IBaseVokisRepository
+public interface IGeneralVokisRepository 
 {
     Task Add(GeneralVoki voki, CancellationToken ct);
     Task<GeneralVoki?> GetWithQuestionAnswersAndResultsAsNoTracking(VokiId vokiId, CancellationToken ct);

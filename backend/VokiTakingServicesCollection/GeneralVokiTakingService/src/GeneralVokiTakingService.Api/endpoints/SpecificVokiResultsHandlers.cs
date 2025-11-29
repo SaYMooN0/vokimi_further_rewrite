@@ -13,8 +13,7 @@ internal class SpecificVokiResultsHandlers : IEndpointGroup
 
         group.MapGet("/all", ViewAllVokiResults);
 
-        group.MapGet("/received", ViewVokiReceivedResults)
-            .WithAuthenticationRequired();
+        group.MapGet("/received", ViewVokiReceivedResults);
     }
 
     private static async Task<IResult> ViewSpecificResult(

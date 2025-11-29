@@ -15,7 +15,6 @@ internal class SpecificVokiHandlers : IEndpointGroup
         group.MapGet("/all-with-average", GetVokiOtherUsersRatingsWithAverage);
 
         group.MapPatch("/rate", RateVoki)
-            .WithAuthenticationRequired()
             .WithRequestValidation<RateVokiRequest>();
     }
 
@@ -33,11 +32,11 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
     private static async Task<IResult> GetVokiOtherUsersRatingsWithAverage(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ListVokiRatingsForVokiQuery, VokiRating[]> handler
+        IQueryHandler<ListiRatingsForVokiQuery, VokiRating[]> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        ListVokiRatingsForVokiQuery query = new(vokiId);
+        ListiRatingsForVokiQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOrToJson<VokiRating[], RatingsWithAverageResponse>(result);

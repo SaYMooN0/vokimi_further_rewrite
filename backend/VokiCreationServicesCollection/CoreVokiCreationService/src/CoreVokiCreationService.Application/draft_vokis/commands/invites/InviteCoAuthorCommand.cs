@@ -1,4 +1,5 @@
-﻿using CoreVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Application.pipeline_behaviors;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
@@ -9,6 +10,7 @@ public sealed record InviteCoAuthorCommand(
     ImmutableHashSet<AppUserId> UserIdsToInvite
 ) :
     ICommand<DraftVoki>,
+    IWithAuthCheckStep,
     IWithVokiPrimaryAuthorValidationStep;
 
 internal sealed class InviteCoAuthorCommandHandler :

@@ -1,6 +1,6 @@
-﻿using CoreVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared;
+using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
-using SharedKernel.auth;
 
 namespace CoreVokiCreationService.Application.pipeline_behaviors;
 

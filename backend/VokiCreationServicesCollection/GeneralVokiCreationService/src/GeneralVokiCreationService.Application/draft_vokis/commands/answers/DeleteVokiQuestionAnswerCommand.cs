@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
@@ -10,6 +11,7 @@ public sealed record DeleteVokiQuestionAnswerCommand(
     GeneralVokiAnswerId AnswerId
 ) :
     ICommand,
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class DeleteVokiQuestionAnswerCommandHandler : ICommandHandler<DeleteVokiQuestionAnswerCommand>

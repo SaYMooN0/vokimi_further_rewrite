@@ -1,12 +1,16 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
+using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base;
 
-public sealed record UpdateVokiNameCommand(VokiId VokiId, VokiName NewVokiName) :
-    ICommand<VokiName>,
+public sealed record UpdateVokiNameCommand(
+    VokiId VokiId,
+    VokiName NewVokiName
+) : ICommand<VokiName>,
+    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateVokiNameCommandHandler : ICommandHandler<UpdateVokiNameCommand, VokiName>

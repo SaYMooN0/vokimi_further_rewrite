@@ -1,6 +1,7 @@
-﻿
+﻿using SharedKernel.domain.ids;
+using SharedKernel.errs;
 
-namespace SharedKernel.auth;
+namespace ApplicationShared;
 
 public interface IUserContext
 {

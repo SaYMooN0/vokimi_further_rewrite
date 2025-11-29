@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
+using ApplicationShared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.auth;
 
 namespace ApiShared.extensions;
 
@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
     }
 
     private static IServiceCollection AddFrontendCors(this IServiceCollection services, IConfiguration configuration) {
-        var frontendUrl = configuration["FrontendUrl"] ?? throw new Exception("FrontendUrl is not configured");
+        string frontendUrl = configuration["FrontendUrl"] ?? throw new Exception("FrontendUrl is not configured");
 
         services.AddCors(options => {
             options.AddPolicy(FrontendCorsPolicy, policy => {

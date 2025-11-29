@@ -1,6 +1,6 @@
 ﻿using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
-using SharedKernel.auth;
+using SharedKernel;
 using SharedKernel.exceptions;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
@@ -117,8 +117,11 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
         return errs;
     }
 
-    protected ErrOrNothing ValidateVokiTaker(IUserContext userContext, out AppUserId? resolvedVokiTaker) {
-        AppUserId? contextId = userContext.UserIdFromToken().IsSuccess(out var id) ? id : null;
+    protected ErrOrNothing ValidateVokiTaker(
+        IAuthenticatedUserContext? authenticatedUserContext,
+        out AppUserId? resolvedVokiTaker
+    ) {
+        AppUserId? contextId = authenticatedUserContext?.UserId;
         if (
             this.VokiTaker is not null
             && contextId is not null
