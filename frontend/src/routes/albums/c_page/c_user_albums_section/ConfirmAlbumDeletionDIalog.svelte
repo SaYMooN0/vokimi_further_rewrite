@@ -1,14 +1,33 @@
 <script lang="ts">
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
-	import { ApiAlbums } from '$lib/ts/backend-communication/backend-services';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import { ApiAlbums, RJO } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
 	import type { VokiAlbumPreviewData } from '../../types';
 
+	interface Props {
+		removeAlbum: (albumId: string) => void;
+	}
+	let { removeAlbum }: Props = $props();
 	let album: VokiAlbumPreviewData | undefined = $state<VokiAlbumPreviewData>();
 	let dialog = $state<DialogWithCloseButton>()!;
 
 	async function confirmDeletion() {
-		const response = await ApiAlbums.fetchJsonResponse;
+		if (!album) {
+			errs = [{ message: 'No album selected' }];
+			return;
+		}
+		errs = [];
+		const response = await ApiAlbums.fetchVoidResponse(
+			`/albums/${album!.id}/delete`,
+			RJO.DELETE({})
+		);
+		if (response.isSuccess) {
+			removeAlbum(album.id);
+			dialog.close();
+		} else {
+			errs = response.errs;
+		}
 	}
 	let errs: Err[] = $state([]);
 	export function open(newAlbum: VokiAlbumPreviewData) {
@@ -20,10 +39,94 @@
 
 <DialogWithCloseButton bind:this={dialog} dialogId="confirm-album-deletion-dialog">
 	{#if album}
-		<h1>Are you sure you want to delete <span class="album-name">{album.name}</span> album?</h1>
-		<label class="vokis-count">It has {album.vokisCount} Vokis</label>
-		<button class="delete-album" onclick={() => confirmDeletion()}>Delete</button>
+		<h1 class="title">
+			Delete <span class="album-name">{album.name}</span>?
+		</h1>
+		<p class="description">
+			This action is <span>irreversible</span><br /> The album contains
+			<strong>{album.vokisCount}</strong> Vokis
+		</p>
+		<DefaultErrBlock errList={errs} />
+		<div class="buttons">
+			<button class="cancel-btn" onclick={() => dialog.close()}> Cancel </button>
+			<button class="delete-btn" onclick={() => confirmDeletion()}> Delete album </button>
+		</div>
 	{:else}
-		<label>No album to delete selected</label>
+		<p class="no-album">No album selected</p>
 	{/if}
 </DialogWithCloseButton>
+
+<style>
+	:global(#confirm-album-deletion-dialog > .dialog-content) {
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2rem;
+	}
+
+	.title {
+		font-size: 1.75rem;
+		font-weight: 550;
+		color: var(--text);
+		margin: 1rem 1rem 0;
+	}
+
+	.album-name {
+		color: var(--primary);
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		max-width: 26rem;
+		display: inline-block;
+		vertical-align: middle;
+		padding-bottom: 0.25rem;
+	}
+
+	.description {
+		font-size: 1.125rem;
+		color: var(--muted-foreground);
+		font-weight: 450;
+		line-height: 1.4;
+	}
+
+	.buttons {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		flex-direction: column;
+		gap: 1rem;
+		width: 100%;
+		margin-top: 1rem;
+	}
+	.buttons > * {
+		padding: 0.675rem 1rem;
+		border-radius: var(--radius);
+		border: none;
+		cursor: pointer;
+		font-size: 1rem;
+		font-weight: 450;
+	}
+	.delete-btn {
+		background-color: var(--err-foreground);
+		color: var(--primary-foreground);
+	}
+
+	.buttons > *:hover {
+		font-weight: 520;
+	}
+
+	.cancel-btn {
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+	}
+
+	.cancel-btn:hover {
+		background-color: var(--muted);
+	}
+
+	.no-album {
+		padding: 2rem;
+		text-align: center;
+		color: var(--muted-foreground);
+	}
+</style>

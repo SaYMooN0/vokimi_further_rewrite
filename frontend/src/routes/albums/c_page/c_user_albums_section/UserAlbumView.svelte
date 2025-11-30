@@ -7,8 +7,8 @@
 	}
 
 	const handleMenuClick = (event: MouseEvent) => {
-		event.preventDefault();
 		event.stopPropagation();
+		event.preventDefault();
 		openContextMenu(event, album);
 	};
 </script>
@@ -17,8 +17,8 @@
 	<svg
 		class="album-icon"
 		style="
-
---icon-color-1: {album.mainColor}; --icon-color-2: {album.secondaryColor};"
+		--icon-color-1: {album.mainColor}; 
+		--icon-color-2: {album.secondaryColor};"
 	>
 		<use href={`#${album.icon}`} />
 	</svg>

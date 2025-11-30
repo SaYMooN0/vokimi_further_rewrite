@@ -15,8 +15,8 @@
 	}
 	loadVokis();
 
-	function getVokiViewItemState(vokiId: string): VokiItemViewState {}
-	let;
+	// function getVokiViewItemState(vokiId: string): VokiItemViewState {}
+	// let;
 </script>
 
 {#if !data.response.isSuccess}
@@ -26,10 +26,10 @@
 		additionalParams={[{ name: 'albumId', value: data.albumId }]}
 	/>
 {:else}
-	<UserAlbumFilterAndSort />
+	<!-- <UserAlbumFilterAndSort />
 	<VokiItemsGridContainer>
 		{#each data.response.data.vokiIds as vokiId}
 			<VokiItemView state={getVokiViewItemState(vokiId)} />
 		{/each}
-	</VokiItemsGridContainer>
+	</VokiItemsGridContainer> -->
 {/if}

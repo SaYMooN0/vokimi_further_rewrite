@@ -9,7 +9,7 @@ public sealed record CopyVokisFromAlbumsToAlbumCommand(
     VokiAlbumId AlbumId,
     ImmutableHashSet<VokiAlbumId> AlbumIdsToCopyFrom
 ) :
-    ICommand<int>,
+    ICommand<VokisToAlbumFromAlbumsCopied>,
     IWithBasicValidationStep,
     IWithAuthCheckStep
 {
@@ -29,7 +29,8 @@ public sealed record CopyVokisFromAlbumsToAlbumCommand(
     }
 }
 
-internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler : ICommandHandler<CopyVokisFromAlbumsToAlbumCommand, int>
+internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler
+    : ICommandHandler<CopyVokisFromAlbumsToAlbumCommand, VokisToAlbumFromAlbumsCopied>
 {
     private readonly IUserContext _userContext;
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
@@ -40,14 +41,16 @@ internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler : ICommandHandler
         _vokiAlbumsRepository = vokiAlbumsRepository;
     }
 
-    public async Task<ErrOr<int>> Handle(CopyVokisFromAlbumsToAlbumCommand command, CancellationToken ct) {
+    public async Task<ErrOr<VokisToAlbumFromAlbumsCopied>> Handle(CopyVokisFromAlbumsToAlbumCommand command,
+        CancellationToken ct) {
         VokiAlbum? album = await _vokiAlbumsRepository.GetById(command.AlbumId, ct);
         if (album is null) {
             return ErrFactory.NotFound.Common("Could not copy vokis because destination does not exist");
         }
 
         var albumsToCopyFrom = await _vokiAlbumsRepository.ListByIdsAsNoTracking(command.AlbumIdsToCopyFrom, ct);
-        ErrOr<int> copyRes = album.CopyVokisFromAlbums(new AuthenticatedUserContext(_userContext.AuthenticatedUserId), albumsToCopyFrom);
+        var copyRes = album.CopyVokisFromAlbums(new AuthenticatedUserContext(_userContext.AuthenticatedUserId),
+            albumsToCopyFrom);
         if (copyRes.IsErr(out var err)) {
             return err;
         }

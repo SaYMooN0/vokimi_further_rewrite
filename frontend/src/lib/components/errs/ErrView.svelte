@@ -58,6 +58,7 @@
 		grid-template-columns: 1fr 1.5rem;
 		word-break: normal;
 		overflow-wrap: anywhere;
+		justify-items: left;
 	}
 
 	.err-message > svg {

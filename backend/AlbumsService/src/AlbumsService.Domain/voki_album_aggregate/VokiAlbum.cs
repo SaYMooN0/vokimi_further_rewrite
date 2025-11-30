@@ -76,8 +76,11 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
 
     public const int MaxAlbumsToCopyFrom = 120;
 
-    public ErrOr<int> CopyVokisFromAlbums(IAuthenticatedUserContext authenticatedUserContext,
-        VokiAlbum[] albumsToCopyFrom) {
+
+    public ErrOr<VokisToAlbumFromAlbumsCopied> CopyVokisFromAlbums(
+        IAuthenticatedUserContext authenticatedUserContext,
+        VokiAlbum[] albumsToCopyFrom
+    ) {
         if (albumsToCopyFrom.Length > MaxAlbumsToCopyFrom) {
             return ErrFactory.LimitExceeded(
                 $"Too many source albums specified. Maximum allowed: {MaxAlbumsToCopyFrom}",
@@ -102,6 +105,9 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
 
         int oldCount = VokiIds.Count;
         VokiIds = VokiIds.Union(albumsToAdd);
-        return VokiIds.Count - oldCount;
+        int vokisAdded = VokiIds.Count - oldCount;
+        return new VokisToAlbumFromAlbumsCopied(NewVokisCount: VokiIds.Count, vokisAdded);
     }
 }
+
+public record VokisToAlbumFromAlbumsCopied(int NewVokisCount, int VokisAdded);

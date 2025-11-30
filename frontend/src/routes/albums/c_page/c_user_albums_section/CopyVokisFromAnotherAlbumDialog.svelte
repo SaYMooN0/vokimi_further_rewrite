@@ -7,10 +7,12 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import type { Err } from '$lib/ts/err';
 	import { ApiAlbums, RJO } from '$lib/ts/backend-communication/backend-services';
+	import { toast } from 'svelte-sonner';
 	interface Props {
 		userAlbums: VokiAlbumPreviewData[];
+		updateParent: (newData: VokiAlbumPreviewData) => void;
 	}
-	let { userAlbums }: Props = $props();
+	let { userAlbums, updateParent }: Props = $props();
 	let destination: VokiAlbumPreviewData | undefined = $state(undefined)!;
 	let dialog = $state<DialogWithCloseButton>()!;
 	let isLoading = $state(false)!;
@@ -28,13 +30,24 @@
 		savingErrs = [];
 		isLoading = true;
 
-		const response = await ApiAlbums.fetchJsonResponse<{}>(
-			`/albums/${destination.id}/copy-from-albums`,
+		const response = await ApiAlbums.fetchJsonResponse<{
+			newVokisCount: number;
+			vokisAdded: number;
+		}>(
+			`/albums/${destination.id}/copy-vokis-from-albums`,
 			RJO.PATCH({
 				albumIds: Object.keys(chosenAlbums).filter((k) => chosenAlbums[k])
 			})
 		);
 		if (response.isSuccess) {
+			updateParent({ ...destination, vokisCount: response.data.newVokisCount });
+			isLoading = false;
+			dialog.close();
+			const toastMsg =
+				response.data.vokisAdded === 0
+					? 'All Vokis were already in this album'
+					: `Copied ${response.data.vokisAdded} Voki${response.data.vokisAdded === 1 ? '' : 's'}`;
+			toast.success(toastMsg);
 		} else {
 			savingErrs = response.errs;
 			isLoading = false;
@@ -49,16 +62,13 @@
 	onBeforeClose={() => (destination = undefined)}
 >
 	{#if destination}
-		<h1>Choose albums you want to copy Vokis from</h1>
+		<h1 class="dialog-heading">Choose albums you want to copy Vokis from</h1>
 		<div class="list">
-			<p class="type-subheader">User albums</p>
-
 			{#each userAlbums as album}
 				<label class="album unselectable" class:destination={album.id === destination.id}>
 					<svg
 						class="album-icon"
 						style="
-
 						--icon-color-1: {album.mainColor};
 						--icon-color-2: {album.secondaryColor};
  						"><use href="#{album.icon}" /></svg
@@ -96,7 +106,12 @@
 		width: 46rem;
 		padding: 2rem;
 	}
-
+	.dialog-heading {
+		color: var(--muted-foreground);
+		font-size: 1.75rem;
+		font-weight: 550;
+		text-align: center;
+	}
 	.list {
 		display: flex;
 		flex-direction: column;
@@ -105,14 +120,6 @@
 		padding: 0.5rem 0;
 		overflow-y: auto;
 	}
-
-	.type-subheader {
-		padding: 0.5rem 0.75rem;
-		color: var(--secondary-foreground);
-		font-size: 0.875rem;
-		font-weight: 500;
-	}
-
 	.album {
 		display: grid;
 		align-items: center;

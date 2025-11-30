@@ -33,6 +33,10 @@
 			albums[albumToUpdateInd] = newAlbum;
 		}
 	}
+
+	function removeAlbum(albumId: string) {
+		albums = albums.filter((a) => a.id !== albumId);
+	}
 </script>
 
 {#snippet headerIcon()}
@@ -47,9 +51,16 @@
 		icon: headerIcon
 	}}
 />
-<ConfirmAlbumDeletionDIalog bind:this={confirmAlbumDeletionDialog} />
+<ConfirmAlbumDeletionDIalog
+	bind:this={confirmAlbumDeletionDialog}
+	removeAlbum={(aId) => removeAlbum(aId)}
+/>
 <EditAlbumDialog bind:this={editAlbumDialog} updateParent={(a) => updateAlbum(a)} />
-<CopyVokisFromAnotherAlbumDialog bind:this={copyVokisFromAnotherAlbumDialog} userAlbums={albums} />
+<CopyVokisFromAnotherAlbumDialog
+	bind:this={copyVokisFromAnotherAlbumDialog}
+	userAlbums={albums}
+	updateParent={(a) => updateAlbum(a)}
+/>
 
 <UserAlbumsContextMenu
 	bind:this={userAlbumsContextMenu}

@@ -28,6 +28,7 @@ internal sealed class DeleteAlbumCommandHandler : ICommandHandler<DeleteAlbumCom
             return ErrFactory.NotFound.User("Couldn't delete album because the owner was not found");
         }
         user.DeleteAlbum(command.AlbumId);
+        await _appUsersRepository.Update(user, ct); 
         return ErrOrNothing.Nothing;
     }
 }

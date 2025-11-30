@@ -68,7 +68,7 @@ internal class SpecificAlbumHandlers : IEndpointGroup
 
     private static async Task<IResult> CopyVokisFromAlbumsToAlbum(
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<CopyVokisFromAlbumsToAlbumCommand, int> handler
+        ICommandHandler<CopyVokisFromAlbumsToAlbumCommand, VokisToAlbumFromAlbumsCopied> handler
     ) {
         var albumId = httpContext.GetAlbumIdFromRoute();
         var request = httpContext.GetValidatedRequest<CopyVokisFromAlbumsToAlbumRequest>();
@@ -77,7 +77,7 @@ internal class SpecificAlbumHandlers : IEndpointGroup
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result,
-            (vokisAdded) => Results.Json(new { VokisAdded = vokisAdded })
+            (vokisAdded) => Results.Json(result.AsSuccess())
         );
     }
 }
