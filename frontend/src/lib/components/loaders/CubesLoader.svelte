@@ -10,7 +10,6 @@
 <div
 	class="container"
 	style="
-
 		--size: {sizeRem}rem;
 		--speed: {speedSec}s;
 		--loader-color: {color};

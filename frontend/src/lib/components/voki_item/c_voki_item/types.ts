@@ -16,6 +16,7 @@ export interface VokiItemViewOkStateProps {
         hasMatureContent: boolean;
         authenticatedOnlyTaking: boolean;
     };
+    publicationDate?: Date;
 }
 
 export interface VokiItemViewErrStateProps {

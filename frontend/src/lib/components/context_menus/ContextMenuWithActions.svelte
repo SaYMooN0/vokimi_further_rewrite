@@ -9,7 +9,7 @@
 	type ActionContentItem = 'divider' | Action;
 	type Action = {
 		label: string;
-		icon?: Snippet;
+		iconHref: string | null;
 		action: { isLink: true; href: string } | { isLink: false; onclick: () => void };
 		type: ActionType;
 	};
@@ -29,19 +29,19 @@
 
 <BaseContextMenu bind:this={menu} class="generic-context-menu {className}" {onAfterClose} {id}>
 	{#if content.type === 'actions'}
-		{#each content.items as it}
-			{#if it === 'divider'}
+		{#each content.items as item}
+			{#if item === 'divider'}
 				<div class="divider" />
-			{:else if it.action.isLink}
-				<a class="action {it.type === 'red' ? 'red' : ''}" href={it.action.href}>
-					{@render actionContent(it)}
+			{:else if item.action.isLink}
+				<a class="action {item.type === 'red' ? 'red' : ''}" href={item.action.href}>
+					{@render actionContent(item)}
 				</a>
-			{:else if !it.action.isLink}
+			{:else if !item.action.isLink}
 				<div
-					class="action {it.type === 'red' ? 'red' : ''}"
-					onclick={() => (it.action as { onclick: () => void }).onclick()}
+					class="action {item.type === 'red' ? 'red' : ''}"
+					onclick={() => (item.action as { onclick: () => void }).onclick()}
 				>
-					{@render actionContent(it)}
+					{@render actionContent(item)}
 				</div>
 			{/if}
 		{/each}
@@ -51,9 +51,11 @@
 		<span>No content</span>
 	{/if}
 </BaseContextMenu>
-{#snippet actionContent(a: { label: string; icon?: Snippet })}
+{#snippet actionContent(a: { label: string; iconHref: string | null })}
 	<div class="icon-container">
-		{@render a.icon?.()}
+		{#if a.iconHref}
+			<svg><use href={a.iconHref} /></svg>
+		{/if}
 	</div>
 	<span>{a.label}</span>
 {/snippet}
@@ -88,10 +90,10 @@
 		height: 1.125rem;
 	}
 
-	.icon-container > :global(svg) {
+	.icon-container > svg {
 		width: 100%;
 		height: 100%;
-		stroke-width: 1.675;
+		stroke-width: 1.75;
 		color: inherit;
 	}
 

@@ -21,11 +21,11 @@
 
 {#if initialCount === 0}
 	<AutoAlbumsNoAlbumsMessage
-		albumName={data.albumName}
+		albumName="rated Vokis"
 		howToAddVokis="Vokis will be added automatically to this album after you rate them for the first time"
 	/>
 {:else}
-	<AlbumPageHeader content={{ type: 'auto', albumName: data.albumName }} />
+	<AlbumPageHeader content={{ type: 'auto', albumName: "rated Vokis" }} />
 	<div class="albums-container">
 		{#each sortedAndFilteredVokis as voki}
 			<div>

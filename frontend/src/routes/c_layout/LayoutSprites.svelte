@@ -6,6 +6,7 @@
 	import languagesIconsSprite from '$lib/icons/languages-icons.svg?raw';
 	import albumIconsSprite from '$lib/icons/album-icons.svg?raw';
 	import imageIconsSprite from '$lib/icons/image-icons.svg?raw';
+	import contextMenuIconsSprite from '$lib/icons/context-menu-icons.svg?raw';
 </script>
 
 <div class="sprites">
@@ -16,6 +17,7 @@
 	{@html languagesIconsSprite}
 	{@html albumIconsSprite}
 	{@html imageIconsSprite}
+	{@html contextMenuIconsSprite}
 </div>
 
 <style>

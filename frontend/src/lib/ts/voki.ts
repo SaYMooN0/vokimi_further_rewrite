@@ -26,4 +26,5 @@ export type PublishedVokiBriefInfo = {
     hasMatureContent: boolean;
     language: Language;
 	signedInOnlyTaking: boolean;
+    publicationDate: Date;
 };

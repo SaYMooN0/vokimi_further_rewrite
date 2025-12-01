@@ -36,7 +36,6 @@
 		dialog.open();
 	}
 </script>
-
 <DialogWithCloseButton bind:this={dialog} dialogId="confirm-album-deletion-dialog">
 	{#if album}
 		<h1 class="title">

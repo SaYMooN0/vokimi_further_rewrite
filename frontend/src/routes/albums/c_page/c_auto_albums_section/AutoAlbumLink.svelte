@@ -13,8 +13,8 @@
 	{href}
 	class="album-link"
 	style="
-
---icon-color-1: {iconMainColor}; --icon-color-2: {iconSecondaryColor};"
+--icon-color-1: {iconMainColor};
+--icon-color-2: {iconSecondaryColor};"
 >
 	<svg><use href={iconId} /></svg>
 	<label>{text}</label>

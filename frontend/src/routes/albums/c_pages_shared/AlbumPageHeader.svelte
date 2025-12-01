@@ -1,8 +1,10 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-
 	type AutoAlbumHeaderContent = { type: 'auto'; albumName: string };
-	type UserAlbumHeaderContent = { type: 'user'; icon: Snippet; albumName: string };
+	type UserAlbumHeaderContent = {
+		type: 'user';
+		icon: { href: string; mainColor: string; secondaryColor: string };
+		albumName: string;
+	};
 	interface Props {
 		content: AutoAlbumHeaderContent | UserAlbumHeaderContent;
 	}
@@ -12,23 +14,29 @@
 <h1>
 	<a href="/albums" class="back-link">
 		<svg><use href="#caret-left-icon" /></svg>
-		back
 	</a>
 	{#if content.type === 'auto'}
 		Your {content.albumName} auto album:
 	{:else if content.type === 'user'}
-		{@render content.icon()} <span class="album-name">{content.albumName}</span>album
+		<svg
+			class="album-icon"
+			style="
+			--icon-color-1: {content.icon.mainColor};
+			--icon-color-2: {content.icon.secondaryColor};"
+		>
+			<use href="#{content.icon.href}" />
+		</svg>
+		<span class="album-name" style="color: {content.icon.mainColor};">{content.albumName}</span> album
 	{:else}
 		<span class="error">Could not determine album type</span>
 	{/if}
 </h1>
-<div class="line" />
 
 <style>
 	h1 {
 		display: flex;
 		align-items: center;
-		margin: 2rem 0 0;
+		margin: 2rem 0 1rem;
 		color: var(--text);
 		font-size: 2rem;
 		font-weight: 575;
@@ -38,21 +46,18 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 0.125rem 0.5rem;
-		margin: 0 0.5rem;
 		border-radius: 2rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		font-size: 1.125rem;
-		font-weight: 500;
-		text-decoration: none;
+		margin-right: 0.5rem;
+		margin-top: 0.25rem;
 	}
 
 	.back-link > svg {
-		width: 1.25rem;
-		height: 1.25rem;
+		width: 1.5rem;
+		height: 1.5rem;
 		color: inherit;
-		stroke-width: 2;
+		stroke-width: 2.2;
 		transition: transform 0.15s ease-out;
 	}
 
@@ -62,18 +67,20 @@
 	}
 
 	.back-link:hover > svg {
-		transform: scale(1.08) translateX(-2px);
+		transform: scale(1.02) translateX(-1px);
 	}
 
-	.line {
-		width: 100%;
-		height: 0.125rem;
-		margin: 1rem 0;
-		background-color: var(--secondary);
+
+	.album-icon {
+		width: 2rem;
+		height: 2rem;
+		stroke-width: 2;
+		margin: 0.25rem 0.125rem 0 0.5rem;
 	}
-
-	.album-name{
-
+	.album-name {
+		font-weight: 525;
+		letter-spacing: 0.25px;
+		margin-right: 0.675rem;
 	}
 
 	.error {

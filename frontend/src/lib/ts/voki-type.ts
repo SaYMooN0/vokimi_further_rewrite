@@ -17,5 +17,8 @@ export namespace VokiTypeUtils {
     export function icon(type: VokiType): string {
         return `#${StringUtils.pascalToKebab(type)}-voki-type-icon`;
     }
+    export function all(): VokiType[] {
+        return ['General', 'Scoring', 'TierList'];
 
+    }
 }
