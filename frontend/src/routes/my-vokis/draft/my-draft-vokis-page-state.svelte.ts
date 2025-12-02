@@ -56,6 +56,7 @@ export class MyDraftVokisPageState {
             name: 'ok',
             data: {
                 vokiId,
+                type: voki.data.type,
                 voki: {
                     name: voki.data.name,
                     cover: voki.data.cover,

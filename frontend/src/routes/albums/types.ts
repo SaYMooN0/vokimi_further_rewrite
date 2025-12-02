@@ -1,5 +1,3 @@
-import type { VokiItemViewState } from "$lib/components/voki_item/VokiItemView.svelte";
-
 export type VokiAlbumPreviewData = {
     id: string;
     name: string;

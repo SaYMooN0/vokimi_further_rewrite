@@ -4,7 +4,7 @@
 	interface Props {
 		chosenVokiTypes: Set<VokiType>;
 		onVokiTypeClick: (vokiType: VokiType) => void;
-		sortOptions: string[];
+		sortOptions: Iterable<string>;
 		chooseSortOption: (sortOption: string) => void;
 		currentSortOption: string;
 	}
@@ -156,7 +156,7 @@
 		color: var(--accent-foreground);
 	}
 	.option.selected {
-	background-color: var(--accent);
+		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
 	.option > svg {

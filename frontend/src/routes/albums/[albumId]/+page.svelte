@@ -1,51 +1,26 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
-	import VokiItemView, {
-		type VokiItemViewState
-	} from '$lib/components/voki_item/VokiItemView.svelte';
+	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import type { VokiType } from '$lib/ts/voki-type';
-	import { toast } from 'svelte-sonner';
 	import AlbumPageFilterAndSort from '../c_pages_shared/AlbumPageFilterAndSort.svelte';
 	import type { PageProps } from './$types';
 	import AlbumPageHeader from '../c_pages_shared/AlbumPageHeader.svelte';
-	import { SvelteSet } from 'svelte/reactivity';
+	import { AlbumPageState } from './album-page-state.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { data }: PageProps = $props();
-	let allLoadedVokis: VokiItemViewState[] = $state([]);
-	let sortedAndFilteredVokis: () => VokiItemViewState[] = $derived(() => {
-		return [];
-	});
-	function loadVokis() {
-		if (data.response.isSuccess === false) {
-			return;
-		}
-		// allLoadedVokis = data.response.data.vokiIds.map((id) => {
-		// 	PublishedVokisStore.Get(id);
-		// });
-		 
-	}
-	loadVokis();
+	const pageState = new AlbumPageState(
+		data.response.isSuccess ? data.response.data.vokiIds : [],
+		(e) => toast.error("notification error: " + e)
+	);
 
-	const allSortOptions: string[] = ['From A to Z', 'From Z to A', 'Newest', 'Oldest'];
-	let filterAndSort: {
-		chosenVokiTypes: Set<VokiType>;
-		currentSortOption: string;
-	} = $state({ chosenVokiTypes: new SvelteSet<VokiType>(), currentSortOption: 'Newest' });
-	function chooseSortOption(opt: string) {
-		if (allSortOptions.includes(opt)) {
-			filterAndSort.currentSortOption = opt;
-		} else {
-			toast.error('Unknown sort option');
-		}
-	}
 	function onVokiTypeClick(vokiType: VokiType) {
-		if (filterAndSort.chosenVokiTypes.has(vokiType)) {
-			filterAndSort.chosenVokiTypes.delete(vokiType);
+		if (pageState.filterAndSort.chosenVokiTypes.has(vokiType)) {
+			pageState.filterAndSort.chosenVokiTypes.delete(vokiType);
 		} else {
-			filterAndSort.chosenVokiTypes.add(vokiType);
+			pageState.filterAndSort.chosenVokiTypes.add(vokiType);
 		}
-		console.log(filterAndSort.chosenVokiTypes.has(vokiType));
 	}
 </script>
 
@@ -69,13 +44,13 @@
 	/>
 	<AlbumPageFilterAndSort
 		{onVokiTypeClick}
-		{chooseSortOption}
-		sortOptions={allSortOptions}
-		chosenVokiTypes={filterAndSort.chosenVokiTypes}
-		currentSortOption={filterAndSort.currentSortOption}
+		chooseSortOption={(o) => pageState.chooseSortOption(o)}
+		sortOptions={pageState.allSortOptions}
+		chosenVokiTypes={pageState.filterAndSort.chosenVokiTypes}
+		currentSortOption={pageState.filterAndSort.currentSortOption}
 	/>
 	<VokiItemsGridContainer>
-		{#each sortedAndFilteredVokis() as voki}
+		{#each pageState.sortedAndFilteredVokis() as voki}
 			<VokiItemView state={voki} />
 		{/each}
 	</VokiItemsGridContainer>

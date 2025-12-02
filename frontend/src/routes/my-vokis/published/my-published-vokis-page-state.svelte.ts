@@ -1,7 +1,6 @@
 import type { VokiItemViewOkStateProps, VokiItemViewErrStateProps } from "$lib/components/voki_item/c_voki_item/types";
 import { ApiVokisCatalog } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
-import { toast } from "svelte-sonner";
 import { MyPublishedVokisCacheStore } from "./my-published-vokis-cache-store.svelte";
 
 
@@ -57,6 +56,7 @@ export class MyPublishedVokisPageState {
             name: 'ok',
             data: {
                 vokiId,
+                type: voki.data.type,
                 voki: {
                     name: voki.data.name,
                     cover: voki.data.cover,
