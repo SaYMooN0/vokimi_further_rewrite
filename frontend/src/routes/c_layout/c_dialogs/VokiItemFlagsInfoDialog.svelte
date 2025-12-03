@@ -16,8 +16,8 @@
 				<svg class="flag-icon"><use href="#common-auth-only-taking-icon" /></svg>
 			</div>
 			<label
-				><span class="flag-name">Authenticated only taking</span> Voki flag means that this Voki author
-				made so the it can only be taken by signed in users</label
+				><span class="flag-name">Authenticated only taking</span> Voki flag means that this Voki authors
+				made so that it can only be taken by signed in users</label
 			>
 		</div>
 		<div class="columns-sep"></div>
@@ -26,8 +26,8 @@
 				<svg class="flag-icon"><use href="#common-mature-content-icon" /></svg>
 			</div>
 			<label
-				><span class="flag-name">Mature content</span> Voki flag means that either the author or Vokimi
-				has marked this voki as containing content that is not suitable for children</label
+				><span class="flag-name">Mature content</span> flag means that either the authors or Vokimi has
+				marked this voki as containing content that is not suitable for children</label
 			>
 		</div>
 		<div class="columns-sep"></div>
@@ -79,9 +79,9 @@
 	}
 
 	.flag-icon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		box-sizing: border-box;
 		padding: 0.25rem;
 		border-radius: 24%;

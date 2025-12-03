@@ -1,12 +1,9 @@
 import { ApiVokisCatalog, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
-import type { PublishedVokiBriefInfo } from "$lib/ts/voki";
+import type { PublishedVokiBriefInfo, PublishedVokiViewState } from "$lib/ts/voki";
 import { SvelteMap } from "svelte/reactivity";
 
-export type PublishedVokiViewState =
-    | { state: "loading" }
-    | { state: "ok"; data: PublishedVokiBriefInfo }
-    | { state: "errs"; errs: Err[] };
+
 
 type CacheEntry = { entry: PublishedVokiViewState; expiresAt: number };
 
@@ -32,7 +29,7 @@ export namespace MyPublishedVokisCacheStore {
 
     export function GetWithForceRefresh(id: string): PublishedVokiViewState {
         enqueue(id);
-        return { state: "loading" };
+        return { state: "loading", vokiId: id };
     }
 
     export function Invalidate(id: string): void {
@@ -85,7 +82,8 @@ export namespace MyPublishedVokisCacheStore {
                         cache.set(id, {
                             entry: {
                                 state: "errs",
-                                errs: [{ message: "Published Voki not found", code: 23011 } as Err]
+                                errs: [{ message: "Published Voki not found", code: 23011 }],
+                                vokiId: id
                             },
                             expiresAt: Date.now() + TTL_MS
                         });
@@ -101,7 +99,7 @@ export namespace MyPublishedVokisCacheStore {
 
     function updateErr(id: string, errs: Err[], ttl: number): void {
         cache.set(id, {
-            entry: { state: "errs", errs },
+            entry: { state: "errs", errs, vokiId: id },
             expiresAt: Date.now() + ttl
         });
     }

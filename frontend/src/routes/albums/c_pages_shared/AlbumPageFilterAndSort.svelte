@@ -63,6 +63,7 @@
 		flex-direction: row;
 		gap: 0.5rem;
 		align-items: center;
+		margin: 0.5rem 0 1rem;
 	}
 	.main-label {
 		color: var(--muted-foreground);
@@ -81,18 +82,22 @@
 		border-radius: 0.25rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		font-size: 1.125rem;
+		font-size: 1rem;
 		border-radius: 100vw;
 		font-weight: 450;
 		cursor: pointer;
+	}
+	.type-badge:hover {
+		background-color: var(--accent);
+		color: var(--accent-foreground);
 	}
 	.type-badge.selected {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
 	.type-badge > svg {
-		width: 1.5rem;
-		height: 1.5rem;
+		width: 1.25rem;
+		height: 1.25rem;
 		color: inherit;
 		stroke-width: 2;
 	}

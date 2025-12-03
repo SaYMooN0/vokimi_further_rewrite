@@ -2,26 +2,26 @@
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
-	import type { VokiType } from '$lib/ts/voki-type';
 	import AlbumPageFilterAndSort from '../c_pages_shared/AlbumPageFilterAndSort.svelte';
 	import type { PageProps } from './$types';
 	import AlbumPageHeader from '../c_pages_shared/AlbumPageHeader.svelte';
 	import { AlbumPageState } from './album-page-state.svelte';
 	import { toast } from 'svelte-sonner';
+	import VokiInAlbumItemContextMenu from './c_page/VokiInAlbumItemContextMenu.svelte';
+	import NoVokisInAlbumToShow from './c_page/NoVokisInAlbumToShow.svelte';
 
 	let { data }: PageProps = $props();
 	const pageState = new AlbumPageState(
 		data.response.isSuccess ? data.response.data.vokiIds : [],
-		(e) => toast.error("notification error: " + e)
-	);
-
-	function onVokiTypeClick(vokiType: VokiType) {
-		if (pageState.filterAndSort.chosenVokiTypes.has(vokiType)) {
-			pageState.filterAndSort.chosenVokiTypes.delete(vokiType);
-		} else {
-			pageState.filterAndSort.chosenVokiTypes.add(vokiType);
+		(e, voki) => {
+			if (contextMenu) {
+				contextMenu.open(e, voki);
+			} else {
+				toast.error('Could not open context menu');
+			}
 		}
-	}
+	);
+	let contextMenu: VokiInAlbumItemContextMenu | null = $state(null);
 </script>
 
 {#if !data.response.isSuccess}
@@ -31,6 +31,11 @@
 		additionalParams={[{ name: 'albumId', value: data.albumId }]}
 	/>
 {:else}
+	<VokiInAlbumItemContextMenu
+		bind:this={contextMenu}
+		albumId={data.albumId!}
+		removeVokiFromAlbumInParent={(v) => pageState.removeVokiFromAlbum(v)}
+	/>
 	<AlbumPageHeader
 		content={{
 			type: 'user',
@@ -43,15 +48,27 @@
 		}}
 	/>
 	<AlbumPageFilterAndSort
-		{onVokiTypeClick}
+		onVokiTypeClick={(t) => pageState.toggleTypeFilter(t)}
 		chooseSortOption={(o) => pageState.chooseSortOption(o)}
 		sortOptions={pageState.allSortOptions}
 		chosenVokiTypes={pageState.filterAndSort.chosenVokiTypes}
 		currentSortOption={pageState.filterAndSort.currentSortOption}
 	/>
-	<VokiItemsGridContainer>
-		{#each pageState.sortedAndFilteredVokis() as voki}
-			<VokiItemView state={voki} />
-		{/each}
-	</VokiItemsGridContainer>
+	{#if pageState.isInitialListEmpty()}
+		<NoVokisInAlbumToShow
+			title="This album doesn’t have any Vokis yet"
+			subtitle="Add your first Voki to start building your collection"
+		/>
+	{:else if pageState.sortedAndFilteredVokis().length === 0}
+		<NoVokisInAlbumToShow
+			title="No Vokis match your filters"
+			subtitle="Try adjusting filters to see some Vokis"
+		/>
+	{:else}
+		<VokiItemsGridContainer>
+			{#each pageState.sortedAndFilteredVokis() as voki}
+				<VokiItemView state={voki} />
+			{/each}
+		</VokiItemsGridContainer>
+	{/if}
 {/if}

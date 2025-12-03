@@ -24,7 +24,6 @@
 	});
 	function openContextMenu(mEvent: MouseEvent, vokiId: string): void {
 		if (vokiItemContextMenu) {
-			console.log(mEvent.x, mEvent.y);
 			vokiItemContextMenu.open(mEvent.x, mEvent.y, vokiId);
 		} else {
 			toast.error('Failed to open context menu');

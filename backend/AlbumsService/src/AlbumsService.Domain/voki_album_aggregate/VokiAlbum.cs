@@ -108,6 +108,15 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
         int vokisAdded = VokiIds.Count - oldCount;
         return new VokisToAlbumFromAlbumsCopied(NewVokisCount: VokiIds.Count, vokisAdded);
     }
+
+    public ErrOrNothing RemoveVoki(IAuthenticatedUserContext authenticatedUserContext, VokiId vokiId) {
+        if (authenticatedUserContext.UserId != OwnerId) {
+            return ErrFactory.NoAccess("Could not remove voki from album because user is not owner");
+        }
+        VokiIds = VokiIds.Remove(vokiId);
+        return ErrOrNothing.Nothing;
+        
+    }
 }
 
 public record VokisToAlbumFromAlbumsCopied(int NewVokisCount, int VokisAdded);

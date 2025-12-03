@@ -2,7 +2,12 @@
 	import type { Snippet } from 'svelte';
 	import BaseContextMenu from './BaseContextMenu.svelte';
 
-	export type ActionsContextMenuJustContent = { type: 'content'; content: Snippet };
+	export type ActionsContextMenuSnippetContent = { type: 'snippet'; snippet: Snippet };
+	export type ActionsContextMenuMessageContent = {
+		type: 'message';
+		message: string;
+		iconHref: string | null;
+	};
 	export type ActionsContextMenuActionsContent = { type: 'actions'; items: ActionContentItem[] };
 
 	type ActionType = 'default' | 'red';
@@ -10,12 +15,17 @@
 	type Action = {
 		label: string;
 		iconHref: string | null;
-		action: { isLink: true; href: string } | { isLink: false; onclick: () => void };
+		action:
+			| { isLink: true; href: string }
+			| { isLink: false; onclick: (contextMenu: BaseContextMenu) => void };
 		type: ActionType;
 	};
 
 	interface Props {
-		content: ActionsContextMenuJustContent | ActionsContextMenuActionsContent;
+		content:
+			| ActionsContextMenuSnippetContent
+			| ActionsContextMenuActionsContent
+			| ActionsContextMenuMessageContent;
 		onAfterClose?: () => void;
 		class?: string;
 		id?: string;
@@ -25,9 +35,12 @@
 	export function open(x: number, y: number, ox = 0, oy = 0) {
 		menu.open(x, y, ox, oy);
 	}
+	export function close() {
+		menu.close();
+	}
 </script>
 
-<BaseContextMenu bind:this={menu} class="generic-context-menu {className}" {onAfterClose} {id}>
+<BaseContextMenu bind:this={menu} class="context-menu-with-actions unselectable {className}" {onAfterClose} {id}>
 	{#if content.type === 'actions'}
 		{#each content.items as item}
 			{#if item === 'divider'}
@@ -39,16 +52,24 @@
 			{:else if !item.action.isLink}
 				<div
 					class="action {item.type === 'red' ? 'red' : ''}"
-					onclick={() => (item.action as { onclick: () => void }).onclick()}
+					onclick={() =>
+						(item.action as { onclick: (ctxMenu: BaseContextMenu) => void }).onclick(menu)}
 				>
 					{@render actionContent(item)}
 				</div>
 			{/if}
 		{/each}
-	{:else if content.type === 'content'}
-		{@render content.content()}
+	{:else if content.type === 'snippet'}
+		{@render content.snippet()}
+	{:else if content.type === 'message'}
+		<div class="message-container">
+			{#if content.iconHref}
+				<svg><use href={content.iconHref} /></svg>
+			{/if}
+			<label>{content.message}</label>
+		</div>
 	{:else}
-		<span>No content</span>
+		<span>Unexpected content type: {(content as any).type}</span>
 	{/if}
 </BaseContextMenu>
 {#snippet actionContent(a: { label: string; iconHref: string | null })}
@@ -61,7 +82,7 @@
 {/snippet}
 
 <style>
-	:global(.generic-context-menu) {
+	:global(.context-menu-with-actions) {
 		display: grid;
 		width: max-content;
 		padding: 0.125rem;
@@ -105,5 +126,26 @@
 	.action.red:hover {
 		background-color: var(--err-back);
 		color: var(--err-foreground);
+	}
+	:global(.context-menu-with-actions:has(.message-container)) {
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.25rem 0.75rem;
+		border-radius: 0.5rem;
+		box-shadow: var(--shadow-xs), var(--shadow);
+		grid-template-columns: auto 1fr;
+	}
+	.message-container {
+		font-size: 1.125rem;
+		font-weight: 450;
+		display: flex;
+		align-items: center;
+	}
+	.message-container > svg {
+		width: 1.25rem;
+		height: 1.25rem;
+		display: inline;
+		stroke-width: 1.75;
+		margin-right: 0.25rem;
 	}
 </style>

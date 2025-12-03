@@ -1,3 +1,4 @@
+import type { Err } from "./err";
 import type { Language } from "./language";
 import type { VokiType } from "./voki-type";
 
@@ -15,7 +16,7 @@ export type GeneralVokiResultsVisibility =
     | "Anyone"
     | "AfterTaking"
     | "OnlyReceived";
-    
+
 export type PublishedVokiBriefInfo = {
     id: string;
     type: VokiType;
@@ -25,6 +26,10 @@ export type PublishedVokiBriefInfo = {
     coAuthorIds: string[];
     hasMatureContent: boolean;
     language: Language;
-	signedInOnlyTaking: boolean;
+    signedInOnlyTaking: boolean;
     publicationDate: Date;
 };
+export type PublishedVokiViewState =
+    | { state: "loading", vokiId: string }
+    | { state: "ok"; data: PublishedVokiBriefInfo }
+    | { state: "errs"; errs: Err[], vokiId: string };

@@ -55,6 +55,7 @@
 		font-size: 1.75rem;
 		font-weight: 550;
 		text-align: center;
+		letter-spacing: 0.125px;
 	}
 
 	.dialog-close-btn {

@@ -36,7 +36,7 @@
 	h1 {
 		display: flex;
 		align-items: center;
-		margin: 2rem 0 1rem;
+		margin: 2rem 0 0;
 		color: var(--text);
 		font-size: 2rem;
 		font-weight: 575;

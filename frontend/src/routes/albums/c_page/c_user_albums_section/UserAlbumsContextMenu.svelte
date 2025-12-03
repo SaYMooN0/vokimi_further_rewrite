@@ -1,7 +1,8 @@
 <script lang="ts">
 	import ContextMenuWithActions, {
 		type ActionsContextMenuActionsContent,
-		type ActionsContextMenuJustContent
+		type ActionsContextMenuMessageContent,
+		type ActionsContextMenuSnippetContent
 	} from '$lib/components/context_menus/ContextMenuWithActions.svelte';
 	import type { VokiAlbumPreviewData } from '../../types';
 
@@ -20,11 +21,20 @@
 		contextMenu.open(event.x, event.y, 8, -5);
 	}
 	let currentAlbum: VokiAlbumPreviewData | undefined = $state<VokiAlbumPreviewData>();
-	let menuContent: ActionsContextMenuJustContent | ActionsContextMenuActionsContent = $derived(
+	let menuContent: ActionsContextMenuMessageContent | ActionsContextMenuActionsContent = $derived(
 		currentAlbum
 			? {
 					type: 'actions',
 					items: [
+						{
+							label: 'Open',
+							iconHref: '#context-menu-open-icon',
+							action: {
+								isLink: true,
+								href: `/albums/${currentAlbum!.id}`
+							},
+							type: 'default'
+						},
 						{
 							label: 'Edit',
 							iconHref: '#context-menu-edit-icon',
@@ -36,19 +46,10 @@
 						},
 						{
 							label: 'Copy from another album',
-							iconHref: '#context-menu-copy-icon',
+							iconHref: '#context-menu-copy-from-album-icon',
 							action: {
 								isLink: false,
 								onclick: () => openCopyFromAnotherAlbumDialog(currentAlbum!)
-							},
-							type: 'default'
-						},
-						{
-							label: 'Open',
-							iconHref: '#context-menu-open-icon',
-							action: {
-								isLink: true,
-								href: `/albums/${currentAlbum!.id}`
 							},
 							type: 'default'
 						},
@@ -64,38 +65,11 @@
 					]
 				}
 			: {
-					type: 'content',
-					content: noAlbumContent
+					type: 'message',
+					message: 'No album selected',
+					iconHref: '#common-crossed-circle-icon'
 				}
 	);
 </script>
 
-<ContextMenuWithActions
-	bind:this={contextMenu}
-	content={menuContent}
-	id="user-album-context-menu"
-/>
-
-{#snippet noAlbumContent()}
-	<svg class="no-album-icon">
-		<use href="#common-crossed-circle-icon" />
-	</svg>
-
-	<label class="no-album-selected-label">No album selected</label>
-{/snippet}
-
-<style>
-	:global(#user-album-context-menu:has(.no-album-selected-label)) {
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0.25rem 0.75rem;
-		border-radius: 0.5rem;
-		box-shadow: var(--shadow-xs), var(--shadow);
-		grid-template-columns: auto 1fr;
-	}
-
-	.no-album-icon {
-		width: 1.25rem;
-		height: 1.25rem;
-	}
-</style>
+<ContextMenuWithActions bind:this={contextMenu} content={menuContent} />

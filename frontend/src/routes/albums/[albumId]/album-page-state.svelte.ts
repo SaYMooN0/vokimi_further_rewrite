@@ -1,11 +1,10 @@
 import type { VokiItemViewOkStateProps } from "$lib/components/voki_item/c_voki_item/types";
 import type { VokiItemViewState } from "$lib/components/voki_item/VokiItemView.svelte";
 import { PublishedVokisStore } from "$lib/ts/stores/published-vokis-store.svelte";
-import type { PublishedVokiBriefInfo } from "$lib/ts/voki";
+import type { PublishedVokiBriefInfo, PublishedVokiViewState } from "$lib/ts/voki";
 import type { VokiType } from "$lib/ts/voki-type";
 import { toast } from "svelte-sonner";
 import { SvelteSet } from "svelte/reactivity";
-import type { PublishedVokiViewState } from "../../my-vokis/published/my-published-vokis-cache-store.svelte";
 
 export class AlbumPageState {
     allLoadedVokis: PublishedVokiViewState[] = $state([]);
@@ -15,21 +14,33 @@ export class AlbumPageState {
     });
 
     readonly allSortOptions = ["From A to Z", "From Z to A", "Newest", "Oldest"] as const;
-    readonly #onMoreBtnClick: (e: MouseEvent) => void;
-    readonly vokiIds: string[];
-    constructor(vokiIds: string[], openContextMenu: (mEvent: MouseEvent) => void) {
+    readonly #onMoreBtnClick: (e: MouseEvent, voki: PublishedVokiBriefInfo) => void;
+    private vokiIds: string[];
+    constructor(vokiIds: string[], openContextMenu: (mEvent: MouseEvent, voki: PublishedVokiBriefInfo) => void) {
         this.vokiIds = vokiIds;
         this.loadVokis();
-        this.#onMoreBtnClick = (e) => openContextMenu(e);
+        this.#onMoreBtnClick = (e, voki) => openContextMenu(e, voki);
     }
+    removeVokiFromAlbum(voki: PublishedVokiBriefInfo) {
+        const id = voki.id;
+        this.vokiIds = this.vokiIds.filter((x) => x !== id);
+
+        this.allLoadedVokis = this.allLoadedVokis.filter((x) => {
+            if (x.state === "ok" && x.data.id === id) {
+                return false;
+            }
+            if (x.state === "loading" && x.vokiId === id || x.state === "errs" && x.vokiId === id) {
+                return false;
+            }
+            return true;
+        });
+
+    }
+
     loadVokis() {
         this.allLoadedVokis = this.vokiIds.map((id) => PublishedVokisStore.Get(id));
     }
 
-    forceRefetch() {
-        PublishedVokisStore.Clear();
-        this.loadVokis();
-    }
 
     private mapToView(item: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
         return {
@@ -41,8 +52,8 @@ export class AlbumPageState {
                 primaryAuthorId: item.primaryAuthorId,
                 coAuthorIds: item.coAuthorIds
             },
-            link: `/voki/${item.id}`,
-            onMoreBtnClick: (e) => this.#onMoreBtnClick(e),
+            link: `/catalog/${item.id}`,
+            onMoreBtnClick: (e) => this.#onMoreBtnClick(e, item),
             flags: {
                 language: item.language,
                 hasMatureContent: item.hasMatureContent,
@@ -61,7 +72,7 @@ export class AlbumPageState {
             } else if (item.state === "errs") {
                 nonOkItems.push({
                     name: "errs",
-                    data: { errs: item.errs }
+                    data: { errs: item.errs, vokiId: item.vokiId }
                 });
             } else {
                 nonOkItems.push({ name: "loading" });
@@ -117,5 +128,8 @@ export class AlbumPageState {
         } else {
             this.filterAndSort.chosenVokiTypes.add(type);
         }
+    }
+    isInitialListEmpty(): boolean {
+        return this.allLoadedVokis.length === 0;
     }
 }

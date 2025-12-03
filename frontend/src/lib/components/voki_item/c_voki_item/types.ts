@@ -21,6 +21,6 @@ export interface VokiItemViewOkStateProps {
 }
 
 export interface VokiItemViewErrStateProps {
-    vokiId?: string;
+    vokiId: string;
     errs: Err[];
 }

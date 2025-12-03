@@ -18,7 +18,8 @@
 				primaryAuthorId: voki.primaryAuthorId,
 				coAuthorIds: voki.coAuthorIds
 			},
-			onMoreBtnClick: (mEvent: MouseEvent) => contextMenu.open(mEvent.x, mEvent.y, voki.id),
+			type: voki.type,
+			onMoreBtnClick: (mEvent: MouseEvent) => contextMenu.open(mEvent.x, mEvent.y),
 			link: `/catalog/${voki.id}`,
 			flags: {
 				language: voki.language,

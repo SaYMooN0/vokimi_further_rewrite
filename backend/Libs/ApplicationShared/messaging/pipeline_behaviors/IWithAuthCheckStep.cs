@@ -1,3 +1,4 @@
+using SharedKernel;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;

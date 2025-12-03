@@ -1,12 +1,8 @@
 import { ApiVokisCatalog, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
-import type { PublishedVokiBriefInfo } from "$lib/ts/voki";
+import type { PublishedVokiBriefInfo, PublishedVokiViewState } from "$lib/ts/voki";
 
 export namespace PublishedVokisStore {
-    export type PublishedVokiViewState =
-        | { state: "loading" }
-        | { state: "ok"; data: PublishedVokiBriefInfo }
-        | { state: "errs"; errs: Err[] };
 
     type StateObj = {
         state: "loading" | "ok" | "errs";
@@ -16,7 +12,7 @@ export namespace PublishedVokisStore {
 
     type CacheEntry = { obj: StateObj; expiresAt: number };
 
-    const TTL_MS = 5 * 60 * 1000;     
+    const TTL_MS = 5 * 60 * 1000;
     const SOFT_ERR_TTL_MS = 5_000;
     const MAX_BATCH = 50;
     const MAX_CACHE_SIZE = 500;

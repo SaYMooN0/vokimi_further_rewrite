@@ -45,8 +45,7 @@ internal abstract class Program
         // string path = Console.ReadLine()!;
         string jsonString = await File.ReadAllTextAsync(path, ct);
         Console.WriteLine("Input voki author id:");
-        // string idStr = Console.ReadLine()!;
-        string idStr = "019ad45d-745a-74ab-b445-dc580be06599";
+        string idStr = Console.ReadLine()!;
         AppUserId authorId = new AppUserId(new(idStr));
         var (vokiCore, vokiGen) = CreateVokiFromJson(jsonString, authorId);
 
@@ -80,10 +79,7 @@ internal abstract class Program
             Console.WriteLine(e);
             await generalVokiCreationDb.Database.RollbackTransactionAsync(ct);
             await coreVokiCreationDb.Database.RollbackTransactionAsync(ct);
-            
         }
-
-
     }
 
     private static (DraftVoki vokiCore, DraftGeneralVoki vokiGen) CreateVokiFromJson(
@@ -110,8 +106,8 @@ internal abstract class Program
 
 
         JsonUtil.SetProperty(vokiGen, "Id", id);
-        JsonUtil.SetProperty(vokiCore, "Id", id);   
-        
+        JsonUtil.SetProperty(vokiCore, "Id", id);
+
         JsonUtil.SetProperty(vokiGen, "Cover", cover);
         JsonUtil.SetProperty(vokiCore, "Cover", cover);
 
