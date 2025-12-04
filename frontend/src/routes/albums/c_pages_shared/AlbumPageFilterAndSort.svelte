@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { VokiTypeUtils, type VokiType } from '$lib/ts/voki-type';
+	import { onClickOutside } from 'runed';
 
 	interface Props {
 		chosenVokiTypes: Set<VokiType>;
@@ -20,6 +21,10 @@
 	function onSortOptionsContainerClick() {
 		showSortOptions = !showSortOptions;
 	}
+	onClickOutside(
+		() => sortOptionsContainer,
+		() => (showSortOptions = false)
+	);
 </script>
 
 <div class="container">
@@ -38,7 +43,11 @@
 	</div>
 	<label class="main-label sort-label">Sort:</label>
 
-	<div class="sort-options-container unselectable" onclick={() => onSortOptionsContainerClick()}>
+	<div
+		bind:this={sortOptionsContainer}
+		class="sort-options-container unselectable"
+		onclick={() => onSortOptionsContainerClick()}
+	>
 		{currentSortOption}
 		<div class="all-options" class:show={showSortOptions}>
 			{#each sortOptions as option}
@@ -111,13 +120,13 @@
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 		padding: 0.25rem 0;
-		width: 10rem;
+		width: 12rem;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		cursor: pointer;
 		border-radius: 0.375rem;
-		font-size: 1.25rem;
+		font-size: 1.125rem;
 		font-weight: 450;
 		letter-spacing: 0.125px;
 	}

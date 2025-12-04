@@ -1,13 +1,8 @@
 <script lang="ts">
-	import type { VokiItemViewErrStateProps, VokiItemViewOkStateProps } from './c_voki_item/types';
+	import type { VokiItemViewState } from './c_voki_item/types';
 	import VokiItemViewErrState from './c_voki_item/VokiItemViewErrState.svelte';
 	import VokiItemViewLoadingState from './c_voki_item/VokiItemViewLoadingState.svelte';
 	import VokiItemViewOkState from './c_voki_item/VokiItemViewOkState.svelte';
-
-	export type VokiItemViewState =
-		| { name: 'ok'; data: VokiItemViewOkStateProps }
-		| { name: 'loading' }
-		| { name: 'errs'; data: VokiItemViewErrStateProps };
 
 	interface Props {
 		state: VokiItemViewState;
@@ -17,9 +12,9 @@
 </script>
 
 {#if state.name === 'ok'}
-	<VokiItemViewOkState {...state.data} />
+	<VokiItemViewOkState {...state.data} hide={state.hide} />
 {:else if state.name === 'loading'}
-	<VokiItemViewLoadingState />
+	<VokiItemViewLoadingState hide={state.hide} />
 {:else if state.name === 'errs'}
 	<VokiItemViewErrState {...state.data} />
 {/if}

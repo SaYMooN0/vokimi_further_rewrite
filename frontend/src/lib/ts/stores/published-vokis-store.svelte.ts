@@ -8,6 +8,7 @@ export namespace PublishedVokisStore {
         state: "loading" | "ok" | "errs";
         data?: PublishedVokiBriefInfo;
         errs?: Err[];
+        vokiId: string;
     };
 
     type CacheEntry = { obj: StateObj; expiresAt: number };
@@ -121,7 +122,7 @@ export namespace PublishedVokisStore {
             if (oldestKey !== undefined) cache.delete(oldestKey);
         }
 
-        const obj = $state<StateObj>({ state: "loading" });
+        const obj = $state<StateObj>({ state: "loading", vokiId: id });
         const created: CacheEntry = { obj, expiresAt: 0 };
         cache.set(id, created);
         return created;

@@ -3,11 +3,14 @@
 namespace VokiRatingsService.Api.contracts;
 
 public record class UserRatedVokiIdsResponse(
-    Dictionary<string, DateTime> VokiIdWithRatingDate
-) : ICreatableResponse<VokiIdWithRatingDateDto[]>
+    Dictionary<string, UserRatedVokiIdsResponse.RatingBriefDataResponse> VokiIdToLastRatingData
+) : ICreatableResponse<VokiIdWithLastRatingDto[]>
 {
-    public static ICreatableResponse<VokiIdWithRatingDateDto[]> Create(VokiIdWithRatingDateDto[] vokis) =>
-        new UserRatedVokiIdsResponse(
-            vokis.ToDictionary(v => v.VokiId.ToString(), v => v.Date)
+    public static ICreatableResponse<VokiIdWithLastRatingDto[]> Create(VokiIdWithLastRatingDto[] vokis) =>
+        new UserRatedVokiIdsResponse(vokis.ToDictionary(
+            v => v.VokiId.ToString(),
+            v => new RatingBriefDataResponse(v.Value, v.DateTime))
         );
+
+    public record RatingBriefDataResponse(ushort Value, DateTime DateTime);
 }

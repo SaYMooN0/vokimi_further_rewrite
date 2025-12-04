@@ -5,11 +5,16 @@ using VokiRatingsService.Application.common.repositories;
 namespace VokiRatingsService.Application.app_users.queries;
 
 public sealed record ListUserRatedVokiIdsQuery() :
-    IQuery<VokiIdWithRatingDateDto[]>,
-    IWithAuthCheckStep;
+    IQuery<VokiIdWithLastRatingDto[]>,
+    IWithAuthCheckStep
+{
+    public Err UnauthenticatedErr => ErrFactory.AuthRequired(
+        "To see your rated Vokis you need to log into your account"
+    );
+}
 
 internal sealed class ListUserRatedVokiIdsQueryHandler :
-    IQueryHandler<ListUserRatedVokiIdsQuery, VokiIdWithRatingDateDto[]>
+    IQueryHandler<ListUserRatedVokiIdsQuery, VokiIdWithLastRatingDto[]>
 {
     private readonly IUserContext _userContext;
     private readonly IRatingsRepository _ratingsRepository;
@@ -20,13 +25,8 @@ internal sealed class ListUserRatedVokiIdsQueryHandler :
     }
 
 
-    public async Task<ErrOr<VokiIdWithRatingDateDto[]>> Handle(ListUserRatedVokiIdsQuery query, CancellationToken ct) {
-        var userIdOrErr = _userContext.UserIdFromToken();
-        if (userIdOrErr.IsErr(out var err)) {
-            return ErrFactory.AuthRequired("To see your rated Vokis you need to log into your account");
-        }
-
-        AppUserId userId = userIdOrErr.AsSuccess();
-        return await _ratingsRepository.OrderedIdsOfVokiRatedByUser(userId, ct);
+    public async Task<ErrOr<VokiIdWithLastRatingDto[]>> Handle(ListUserRatedVokiIdsQuery query, CancellationToken ct) {
+        return await _ratingsRepository.OrderedIdsOfVokiRatedByUser(
+            new AuthenticatedUserContext(_userContext.AuthenticatedUserId), ct);
     }
 }

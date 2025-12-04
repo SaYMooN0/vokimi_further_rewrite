@@ -8,7 +8,8 @@
 	import { AlbumPageState } from './album-page-state.svelte';
 	import { toast } from 'svelte-sonner';
 	import VokiInAlbumItemContextMenu from './c_page/VokiInAlbumItemContextMenu.svelte';
-	import NoVokisInAlbumToShow from './c_page/NoVokisInAlbumToShow.svelte';
+	import AlbumEmptyMessage from '../c_pages_shared/AlbumEmptyMessage.svelte';
+	import NoVokisInAlbumMatchFilterMessage from '../c_pages_shared/NoVokisInAlbumMatchFilterMessage.svelte';
 
 	let { data }: PageProps = $props();
 	const pageState = new AlbumPageState(
@@ -47,28 +48,28 @@
 			albumName: data.response.data.name
 		}}
 	/>
-	<AlbumPageFilterAndSort
-		onVokiTypeClick={(t) => pageState.toggleTypeFilter(t)}
-		chooseSortOption={(o) => pageState.chooseSortOption(o)}
-		sortOptions={pageState.allSortOptions}
-		chosenVokiTypes={pageState.filterAndSort.chosenVokiTypes}
-		currentSortOption={pageState.filterAndSort.currentSortOption}
-	/>
+
 	{#if pageState.isInitialListEmpty()}
-		<NoVokisInAlbumToShow
+		<AlbumEmptyMessage
 			title="This album doesn’t have any Vokis yet"
 			subtitle="Add your first Voki to start building your collection"
 		/>
-	{:else if pageState.sortedAndFilteredVokis().length === 0}
-		<NoVokisInAlbumToShow
-			title="No Vokis match your filters"
-			subtitle="Try adjusting filters to see some Vokis"
-		/>
 	{:else}
-		<VokiItemsGridContainer>
-			{#each pageState.sortedAndFilteredVokis() as voki}
-				<VokiItemView state={voki} />
-			{/each}
-		</VokiItemsGridContainer>
+		<AlbumPageFilterAndSort
+			onVokiTypeClick={(t) => pageState.toggleTypeFilter(t)}
+			chooseSortOption={(o) => pageState.chooseSortOption(o)}
+			sortOptions={pageState.allSortOptions}
+			chosenVokiTypes={pageState.filterAndSort.chosenVokiTypes}
+			currentSortOption={pageState.filterAndSort.currentSortOption}
+		/>
+		{#if pageState.sortedAndFilteredVokis().length === 0}
+			<NoVokisInAlbumMatchFilterMessage />
+		{:else}
+			<VokiItemsGridContainer>
+				{#each pageState.sortedAndFilteredVokis() as voki}
+					<VokiItemView state={voki} />
+				{/each}
+			</VokiItemsGridContainer>
+		{/if}
 	{/if}
 {/if}

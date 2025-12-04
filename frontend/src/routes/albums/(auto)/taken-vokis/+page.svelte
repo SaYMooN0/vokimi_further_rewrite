@@ -1,22 +1,8 @@
 <script lang="ts">
 	import AlbumPageHeader from '../../c_pages_shared/AlbumPageHeader.svelte';
-	import AutoAlbumsNoAlbumsMessage from '../c_shared/AutoAlbumsNoAlbumsMessage.svelte';
+	import AutoAlbumsNoAlbumsMessage from '../../c_pages_shared/AlbumEmptyMessage.svelte';
 	import type { PageProps } from './$types';
 
-	let { data }: PageProps = $props();
-	function vokisWithLastTakenDate() {
-		if (data.response.isSuccess === false) {
-			return [];
-		}
-
-		return Object.entries(data.response.data.vokiIdWithLastTakenDate).sort(
-			(a, b) => b[1].getTime() - a[1].getTime()
-		);
-	}
-	let sortedAndFilteredVokis = $state(vokisWithLastTakenDate());
-	const initialCount = data.response.isSuccess
-		? Object.keys(data.response.data.vokiIdWithLastTakenDate).length
-		: 0;
 </script>
 
 {#if initialCount === 0}

@@ -3,10 +3,16 @@
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { toast } from 'svelte-sonner';
 	import { getVokiFlagsInfoDialogOpenFunction } from '../../../../routes/c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
-	import type { VokiItemViewOkStateProps } from './types';
+	import type { VokiItemHidableElements, VokiItemViewOkStateProps } from './types';
 	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
 
-	let { voki, link, onMoreBtnClick, flags }: VokiItemViewOkStateProps = $props();
+	let {
+		voki,
+		link,
+		onMoreBtnClick,
+		flags,
+		hide = []
+	}: VokiItemViewOkStateProps & { hide?: VokiItemHidableElements[] } = $props();
 
 	const openVokiFlagsInfoDialog = getVokiFlagsInfoDialogOpenFunction();
 	function onFlagClick(e: MouseEvent) {
@@ -38,38 +44,44 @@
 	</div>
 	<div class="bottom-items">
 		<div class="name-line">
-			<p class="voki-name">
-				{voki.name}
-			</p>
-			<svg
-				class="voki-more-btn interactable"
-				onclick={(e) => {
-					e.preventDefault();
-					onMoreBtnClick(e);
-				}}
-			>
-				<use href="#common-more-icon" />
-			</svg>
-		</div>
-		<div class="authors">
-			<span class="by-label">by:</span>
-			<BasicUserDisplay
-				userId={voki.primaryAuthorId}
-				interactionLevel="UniqueNameGotoOnClick"
-				class="interactable author-view"
-			/>
-			{#if voki.coAuthorIds.length > 0}
-				<div
-					class="co-authors interactable"
+			{#if !hide.includes('Name')}
+				<p class="voki-name">
+					{voki.name}
+				</p>
+			{/if}
+			{#if !hide.includes('MoreBtn')}
+				<svg
+					class="voki-more-btn interactable"
 					onclick={(e) => {
 						e.preventDefault();
-						toast.error('You cannot see co-authors here yet. Please go to the voki page');
+						onMoreBtnClick(e);
 					}}
 				>
-					+ {voki.coAuthorIds.length}
-				</div>
+					<use href="#common-more-icon" />
+				</svg>
 			{/if}
 		</div>
+		{#if !hide.includes('Authors')}
+			<div class="authors">
+				<span class="by-label">by:</span>
+				<BasicUserDisplay
+					userId={voki.primaryAuthorId}
+					interactionLevel="UniqueNameGotoOnClick"
+					class="interactable author-view"
+				/>
+				{#if voki.coAuthorIds.length > 0}
+					<div
+						class="co-authors interactable"
+						onclick={(e) => {
+							e.preventDefault();
+							toast.error('You cannot see co-authors here yet. Please go to the voki page');
+						}}
+					>
+						+ {voki.coAuthorIds.length}
+					</div>
+				{/if}
+			</div>
+		{/if}
 	</div>
 </a>
 
@@ -78,16 +90,18 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--voki-cover-name-gap);
-		gap: 0.25rem;
 		width: 100%;
 		height: fit-content;
 		padding: 0.5rem;
 		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
 		cursor: pointer;
+		gap: 0;
 	}
 
 	.cover-container {
 		position: relative;
+		aspect-ratio: var(--voki-cover-aspect-ratio);
+		height: min-content;
 	}
 
 	.flags-container {
@@ -151,6 +165,7 @@
 	}
 
 	.voki-name {
+		margin: 0.25rem 0;
 		display: flex;
 		display: -webkit-box;
 		flex-direction: row;
@@ -158,7 +173,7 @@
 		font-size: 1.125rem;
 		font-weight: 420;
 		line-height: calc(var(--voki-name-max-height) / 2);
-		letter-spacing: 0.12px;
+		letter-spacing: 0.125px;
 		-webkit-line-clamp: 2;
 		line-clamp: 2;
 		-webkit-box-orient: vertical;
@@ -191,6 +206,7 @@
 		color: var(--text);
 		aspect-ratio: 1/1;
 		stroke-width: 3.2;
+		margin: 0.25rem 0;
 	}
 
 	.voki-more-btn:hover {
@@ -229,7 +245,6 @@
 		letter-spacing: -1.2px;
 		box-shadow: var(--shadow);
 		transition: all 0.06s ease-in;
-
 	}
 
 	.co-authors:hover {

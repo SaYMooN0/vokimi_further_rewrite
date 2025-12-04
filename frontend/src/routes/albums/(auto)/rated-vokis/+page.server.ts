@@ -1,13 +1,10 @@
 import { ApiVokiRatings } from "$lib/ts/backend-communication/backend-services";
-import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { PageServerLoad } from "../../$types";
-import type { VokiIdToDateDict } from "../../types";
+import type { VokiIdToBriefRatingData } from "./types";
 
-export const load: PageServerLoad<{
-    response: ResponseResult<{ vokiIdWithRatingDate: VokiIdToDateDict }>;
-}> = async ({ fetch }) => {
+export const load: PageServerLoad = async ({ fetch }) => {
     return {
-        response: await ApiVokiRatings.serverFetchJsonResponse<{ vokiIdWithRatingDate: VokiIdToDateDict }>(
+        response: await ApiVokiRatings.serverFetchJsonResponse<{ vokiIdToLastRatingData: VokiIdToBriefRatingData }>(
             fetch, `/rated-vokis`, { method: "GET" }
         )
     };

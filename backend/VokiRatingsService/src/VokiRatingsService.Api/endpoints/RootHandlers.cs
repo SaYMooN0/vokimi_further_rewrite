@@ -15,11 +15,11 @@ internal class RootHandlers : IEndpointGroup
 
     private static async Task<IResult> GetUserRatedVokis(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ListUserRatedVokiIdsQuery, VokiIdWithRatingDateDto[]> handler
+        IQueryHandler<ListUserRatedVokiIdsQuery, VokiIdWithLastRatingDto[]> handler
     ) {
         ListUserRatedVokiIdsQuery query = new();
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<VokiIdWithRatingDateDto[], UserRatedVokiIdsResponse>(result);
+        return CustomResults.FromErrOrToJson<VokiIdWithLastRatingDto[], UserRatedVokiIdsResponse>(result);
     }
 }

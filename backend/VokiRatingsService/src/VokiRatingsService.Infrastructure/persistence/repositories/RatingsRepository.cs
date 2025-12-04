@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ApplicationShared;
+using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.voki_rating_aggregate;
 
@@ -32,11 +33,13 @@ public class RatingsRepository : IRatingsRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task<VokiIdWithRatingDateDto[]> OrderedIdsOfVokiRatedByUser(AppUserId userId, CancellationToken ct) =>
+    public Task<VokiIdWithLastRatingDto[]> OrderedIdsOfVokiRatedByUser(
+        IAuthenticatedUserContext userContext, CancellationToken ct
+    ) =>
         _db.Ratings
             .AsNoTracking()
-            .Where(r => r.UserId == userId)
+            .Where(r => r.UserId == userContext.UserId)
             .OrderByDescending(r => r.Current.DateTime)
-            .Select(r => new VokiIdWithRatingDateDto(r.VokiId, r.Current.DateTime))
+            .Select(r => new VokiIdWithLastRatingDto(r.VokiId, r.Current.Value, r.Current.DateTime))
             .ToArrayAsync(ct);
 }

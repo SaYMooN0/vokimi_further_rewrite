@@ -1,45 +1,55 @@
 import type { VokiItemViewOkStateProps, VokiItemViewState } from "$lib/components/voki_item/c_voki_item/types";
 import { PublishedVokisStore } from "$lib/ts/stores/published-vokis-store.svelte";
-import type { PublishedVokiBriefInfo, PublishedVokiViewState } from "$lib/ts/voki";
+import type { PublishedVokiViewState, PublishedVokiBriefInfo } from "$lib/ts/voki";
 import type { VokiType } from "$lib/ts/voki-type";
 import { toast } from "svelte-sonner";
 import { SvelteSet } from "svelte/reactivity";
+import type { VokiIdToBriefRatingData, BriefRatingData } from "./types";
 
-export class AlbumPageState {
+
+
+export class RatedVokisAlbumPageState {
     allLoadedVokis: PublishedVokiViewState[] = $state([]);
+
     filterAndSort = $state({
         chosenVokiTypes: new SvelteSet<VokiType>(),
-        currentSortOption: "Newest" as "From A to Z" | "From Z to A" | "Newest" | "Oldest"
+        currentSortOption: "Newest Rated" as
+            | "From A to Z"
+            | "From Z to A"
+            | "Newest Rated"
+            | "Oldest Rated"
+            | "Highest Rated"
+            | "Lowest Rated"
     });
 
-    readonly allSortOptions = ["From A to Z", "From Z to A", "Newest", "Oldest"] as const;
+    readonly allSortOptions = [
+        "From A to Z",
+        "From Z to A",
+        "Newest Rated",
+        "Oldest Rated",
+        "Highest Rated",
+        "Lowest Rated"
+    ] as const;
+
+    private ids: string[];
+    private ratingMap: VokiIdToBriefRatingData;
+
     readonly #onMoreBtnClick: (e: MouseEvent, voki: PublishedVokiBriefInfo) => void;
-    private vokiIds: string[];
-    constructor(vokiIds: string[], openContextMenu: (mEvent: MouseEvent, voki: PublishedVokiBriefInfo) => void) {
-        this.vokiIds = vokiIds;
+
+    constructor(
+        map: VokiIdToBriefRatingData,
+        openContextMenu: (e: MouseEvent, voki: PublishedVokiBriefInfo) => void
+    ) {
+        this.ratingMap = map;
+        this.ids = Object.keys(map);
+        this.#onMoreBtnClick = openContextMenu;
+
         this.loadVokis();
-        this.#onMoreBtnClick = (e, voki) => openContextMenu(e, voki);
-    }
-    removeVokiFromAlbum(voki: PublishedVokiBriefInfo) {
-        const id = voki.id;
-        this.vokiIds = this.vokiIds.filter((x) => x !== id);
-
-        this.allLoadedVokis = this.allLoadedVokis.filter((x) => {
-            if (x.state === "ok" && x.data.id === id) {
-                return false;
-            }
-            if (x.state === "loading" && x.vokiId === id || x.state === "errs" && x.vokiId === id) {
-                return false;
-            }
-            return true;
-        });
-
     }
 
     loadVokis() {
-        this.allLoadedVokis = this.vokiIds.map((id) => PublishedVokisStore.Get(id));
+        this.allLoadedVokis = this.ids.map((id) => PublishedVokisStore.Get(id));
     }
-
 
     private mapToView(item: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
         return {
@@ -60,21 +70,26 @@ export class AlbumPageState {
             }
         };
     }
-
-    sortedAndFilteredVokis: () => VokiItemViewState[] = $derived(() => {
+    sortedAndFilteredVokis: () => VokiItemViewStateWithVokiIdAndRating[] = $derived(() => {
         const okItems: PublishedVokiBriefInfo[] = [];
-        const nonOkItems: VokiItemViewState[] = [];
+        const nonOkItems: VokiItemViewStateWithVokiIdAndRating[] = [];
 
         for (const item of this.allLoadedVokis) {
-            if (item.state === "ok") {
-                okItems.push(item.data);
-            } else if (item.state === "errs") {
+            if (item.state === "ok") { okItems.push(item.data); }
+            else if (item.state === "errs") {
                 nonOkItems.push({
                     name: "errs",
-                    data: { errs: item.errs, vokiId: item.vokiId }
+                    data: { errs: item.errs, vokiId: item.vokiId },
+                    rating: this.ratingMap[item.vokiId],
+                    vokiId: item.vokiId
                 });
-            } else {
-                nonOkItems.push({ name: "loading" });
+            }
+            else if (item.state === "loading") {
+                nonOkItems.push({
+                    name: "loading",
+                    rating: this.ratingMap[item.vokiId],
+                    vokiId: item.vokiId
+                });
             }
         }
 
@@ -86,7 +101,11 @@ export class AlbumPageState {
         }
 
         const sort = this.filterAndSort.currentSortOption;
+
         filtered.sort((a, b) => {
+            const ra = this.ratingMap[a.id];
+            const rb = this.ratingMap[b.id];
+
             switch (sort) {
                 case "From A to Z":
                     return a.name.localeCompare(b.name);
@@ -94,20 +113,28 @@ export class AlbumPageState {
                 case "From Z to A":
                     return b.name.localeCompare(a.name);
 
-                case "Newest":
-                    return b.publicationDate.getTime() - a.publicationDate.getTime();
+                case "Newest Rated":
+                    return rb.dateTime.getTime() - ra.dateTime.getTime();
 
-                case "Oldest":
-                    return a.publicationDate.getTime() - b.publicationDate.getTime();
+                case "Oldest Rated":
+                    return ra.dateTime.getTime() - rb.dateTime.getTime();
+
+                case "Highest Rated":
+                    return rb.value - ra.value;
+
+                case "Lowest Rated":
+                    return ra.value - rb.value;
 
                 default:
                     return 0;
             }
         });
 
-        const okConverted: VokiItemViewState[] = filtered.map((v) => ({
+        const okConverted: VokiItemViewStateWithVokiIdAndRating[] = filtered.map((v) => ({
             name: "ok",
-            data: this.mapToView(v)
+            data: this.mapToView(v),
+            rating: this.ratingMap[v.id],
+            vokiId: v.id
         }));
 
         return [...okConverted, ...nonOkItems];
@@ -128,7 +155,9 @@ export class AlbumPageState {
             this.filterAndSort.chosenVokiTypes.add(type);
         }
     }
+
     isInitialListEmpty(): boolean {
         return this.allLoadedVokis.length === 0;
     }
 }
+type VokiItemViewStateWithVokiIdAndRating = VokiItemViewState & { vokiId: string, rating: BriefRatingData };

@@ -1,8 +1,12 @@
 <script lang="ts">
-	let { value }: { value: number } = $props<{ value: number }>();
+	interface Props {
+		value: number;
+		class?: string;
+	}
+	let { value, class: className = '' }: Props = $props();
 </script>
 
-<div class="stars-display">
+<div class="stars-display {className}">
 	{#each Array.from({ length: 5 }, (_, i) => i + 1) as i}
 		<svg class="star" class:filled={value >= i} viewBox="0 0 24 24">
 			<use href="#common-star-icon" />

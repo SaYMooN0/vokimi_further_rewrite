@@ -1,20 +1,9 @@
 <script lang="ts">
-	const messages = {
-		empty: {
-			
-		},
-		filtered: {}
-	};
-	interface Props {
-		title: string;
-		subtitle: string;
-	}
-	let { title, subtitle }: Props = $props();
 </script>
 
 <div class="no-vokis">
-	<h2 class="title">{title}</h2>
-	<p class="subtitle">{subtitle}</p>
+	<h2 class="title">No Vokis match your filters</h2>
+	<p class="subtitle">Try adjusting filters to see some Vokis</p>
 </div>
 
 <style>
@@ -22,7 +11,7 @@
 		padding: 2rem;
 		text-align: center;
 		color: var(--muted-foreground);
-        margin: 4rem auto 4rem;
+		margin: 4rem auto 4rem;
 	}
 
 	.title {

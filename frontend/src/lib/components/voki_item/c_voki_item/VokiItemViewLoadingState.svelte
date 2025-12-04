@@ -1,6 +1,14 @@
+<script lang="ts">
+	import type { VokiItemHidableElements } from './types';
+
+	let { hide = [] }: { hide?: VokiItemHidableElements[] } = $props();
+</script>
+
 <div class="skeleton-item">
 	<div class="skeleton-cover shimmer"></div>
-	<div class="skeleton-name shimmer"></div>
+	{#if !hide.includes('Name')}
+		<div class="skeleton-name shimmer"></div>
+	{/if}
 </div>
 
 <style>

@@ -1,1 +1,2 @@
-export type VokiIdToDateDict = Record<string, Date>;
+export type VokiIdToBriefRatingData = Record<string, BriefRatingData>;
+export type BriefRatingData = { value: number; dateTime: Date };

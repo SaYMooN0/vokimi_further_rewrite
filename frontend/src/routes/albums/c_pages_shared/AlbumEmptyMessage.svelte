@@ -1,9 +1,9 @@
 <script lang="ts">
 	interface Props {
-		albumName: string;
-		howToAddVokis: string;
+		title: string;
+		subtitle: string;
 	}
-	let { albumName, howToAddVokis }: Props = $props();
+	let { title, subtitle }: Props = $props();
 </script>
 
 <div class="container">
@@ -36,8 +36,8 @@
 		></path>
 	</svg>
 
-	<h1>Your {albumName} auto album is empty</h1>
-	<p class="how-to-add">{howToAddVokis}</p>
+	<h1>{title}</h1>
+	<p class="subtitle">{subtitle}</p>
 
 	<a href="/albums" class="back-link">
 		<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#caret-left-icon" /></svg>
@@ -76,7 +76,7 @@
 		line-height: 1;
 	}
 
-	.how-to-add {
+	.subtitle {
 		margin: 0 auto;
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;

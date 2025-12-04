@@ -2,9 +2,8 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
 	import { relativeTime } from 'svelte-relative-time';
-	import RatingStarsView from './RatingStarsView.svelte';
 	import type { Snippet } from 'svelte';
-	import { toast } from 'svelte-sonner';
+	import BasicStarsDisplay from '../../../../../../../lib/components/BasicStarsDisplay.svelte';
 
 	interface Props {
 		userId: string;
@@ -68,7 +67,7 @@
 		</a>
 		<div class="main-content">
 			{#if content.name === 'default'}
-				<RatingStarsView value={content.ratingValue} />
+				<BasicStarsDisplay value={content.ratingValue} />
 			{:else if content.name === 'custom'}
 				{@render content.children()}
 			{:else}
