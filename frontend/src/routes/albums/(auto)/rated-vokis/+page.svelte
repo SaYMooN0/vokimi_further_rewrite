@@ -70,7 +70,7 @@
 						</div>
 						<BasicStarsDisplay class="stars-display" value={voki.rating.value} />
 
-						<a href="/vokis/{voki.vokiId}/ratings" class="open-voki-page">See Voki ratings</a>
+						<a href="/catalog/{voki.vokiId}?tab=ratings" class="open-voki-page">See Voki ratings</a>
 						<span class="date" use:relativeTime={{ date: voki.rating.dateTime }} />
 					</div>
 				{/each}

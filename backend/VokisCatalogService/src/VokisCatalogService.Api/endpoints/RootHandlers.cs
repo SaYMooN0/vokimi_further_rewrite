@@ -1,5 +1,6 @@
 ﻿using VokisCatalogService.Api.contracts;
 using VokisCatalogService.Application.vokis.queries;
+using VokisCatalogService.Domain.app_user_aggregate;
 
 namespace VokisCatalogService.Api.endpoints;
 
@@ -13,11 +14,11 @@ internal class RootHandlers : IEndpointGroup
 
     private static async Task<IResult> GetUserTakenVokis(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ListTakenVokiIdsQuery, VokiIdWithLastTakenDateDto[]> handler
+        IQueryHandler<ListUserTakenVokisQuery,UserTakenVokisList> handler
     ) {
-        ListTakenVokiIdsQuery query = new();
+        ListUserTakenVokisQuery query = new();
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<VokiIdWithLastTakenDateDto[], UserTakenVokiIdsResponse>(result);
+        return CustomResults.FromErrOrToJson<UserTakenVokisList, UserTakenVokisResponse>(result);
     }
 }

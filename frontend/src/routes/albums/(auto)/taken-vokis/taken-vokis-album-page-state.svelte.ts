@@ -4,40 +4,50 @@ import type { PublishedVokiViewState, PublishedVokiBriefInfo } from "$lib/ts/vok
 import type { VokiType } from "$lib/ts/voki-type";
 import { toast } from "svelte-sonner";
 import { SvelteSet } from "svelte/reactivity";
-import type { VokiIdToBriefRatingData, BriefRatingData } from "./types";
 
+export type VokiIdToBriefVokiTakenData = Record<string, BriefVokiTakenData>;
 
+export type BriefVokiTakenData = {
+    timesTaken: number;
+    lastTimeTaken: Date;
+};
 
-export class RatedVokisAlbumPageState {
+export class TakenVokisAlbumPageState {
     allLoadedVokis: PublishedVokiViewState[] = $state([]);
 
     filterAndSort: {
-        chosenVokiTypes: SvelteSet<VokiType>,
-        currentSortOption: "From A to Z" | "From Z to A" | "Newest Rated" | "Oldest Rated" | "Highest Rated" | "Lowest Rated"
+        chosenVokiTypes: SvelteSet<VokiType>;
+        currentSortOption:
+            | "From A to Z"
+            | "From Z to A"
+            | "Most Taken"
+            | "Least Taken"
+            | "Recently Taken"
+            | "Longest Ago Taken";
     } = $state({
         chosenVokiTypes: new SvelteSet<VokiType>(),
-        currentSortOption: "Newest Rated"
+        currentSortOption: "Recently Taken"
     });
 
     readonly allSortOptions = [
         "From A to Z",
         "From Z to A",
-        "Newest Rated",
-        "Oldest Rated",
-        "Highest Rated",
-        "Lowest Rated"
+        "Most Taken",
+        "Least Taken",
+        "Recently Taken",
+        "Longest Ago Taken"
     ] as const;
 
     private ids: string[];
-    private ratingMap: VokiIdToBriefRatingData;
+    private takenMap: VokiIdToBriefVokiTakenData;
 
     readonly #onMoreBtnClick: (e: MouseEvent, voki: PublishedVokiBriefInfo) => void;
 
     constructor(
-        map: VokiIdToBriefRatingData,
+        map: VokiIdToBriefVokiTakenData,
         openContextMenu: (e: MouseEvent, voki: PublishedVokiBriefInfo) => void
     ) {
-        this.ratingMap = map;
+        this.takenMap = map;
         this.ids = Object.keys(map);
         this.#onMoreBtnClick = openContextMenu;
 
@@ -67,24 +77,25 @@ export class RatedVokisAlbumPageState {
             }
         };
     }
-    sortedAndFilteredVokis: () => VokiItemViewStateWithVokiIdAndRating[] = $derived(() => {
+
+    sortedAndFilteredVokis: () => VokiItemViewStateWithVokiIdAndTakenData[] = $derived(() => {
         const okItems: PublishedVokiBriefInfo[] = [];
-        const nonOkItems: VokiItemViewStateWithVokiIdAndRating[] = [];
+        const nonOkItems: VokiItemViewStateWithVokiIdAndTakenData[] = [];
 
         for (const item of this.allLoadedVokis) {
-            if (item.state === "ok") { okItems.push(item.data); }
-            else if (item.state === "errs") {
+            if (item.state === "ok") {
+                okItems.push(item.data);
+            } else if (item.state === "errs") {
                 nonOkItems.push({
                     name: "errs",
                     data: { errs: item.errs, vokiId: item.vokiId },
-                    rating: this.ratingMap[item.vokiId],
+                    taken: this.takenMap[item.vokiId],
                     vokiId: item.vokiId
                 });
-            }
-            else if (item.state === "loading") {
+            } else if (item.state === "loading") {
                 nonOkItems.push({
                     name: "loading",
-                    rating: this.ratingMap[item.vokiId],
+                    taken: this.takenMap[item.vokiId],
                     vokiId: item.vokiId
                 });
             }
@@ -100,8 +111,8 @@ export class RatedVokisAlbumPageState {
         const sort = this.filterAndSort.currentSortOption;
 
         filtered.sort((a, b) => {
-            const ra = this.ratingMap[a.id];
-            const rb = this.ratingMap[b.id];
+            const ta = this.takenMap[a.id];
+            const tb = this.takenMap[b.id];
 
             switch (sort) {
                 case "From A to Z":
@@ -110,29 +121,35 @@ export class RatedVokisAlbumPageState {
                 case "From Z to A":
                     return b.name.localeCompare(a.name);
 
-                case "Newest Rated":
-                    return rb.dateTime.getTime() - ra.dateTime.getTime();
+                case "Most Taken":
+                    return tb.timesTaken - ta.timesTaken;
 
-                case "Oldest Rated":
-                    return ra.dateTime.getTime() - rb.dateTime.getTime();
+                case "Least Taken":
+                    return ta.timesTaken - tb.timesTaken;
 
-                case "Highest Rated":
-                    return rb.value - ra.value;
+                case "Recently Taken":
+                    return (
+                        tb.lastTimeTaken.getTime() - ta.lastTimeTaken.getTime()
+                    );
 
-                case "Lowest Rated":
-                    return ra.value - rb.value;
+                case "Longest Ago Taken":
+                    return (
+                        ta.lastTimeTaken.getTime() - tb.lastTimeTaken.getTime()
+                    );
 
                 default:
                     return 0;
             }
         });
 
-        const okConverted: VokiItemViewStateWithVokiIdAndRating[] = filtered.map((v) => ({
-            name: "ok",
-            data: this.mapToView(v),
-            rating: this.ratingMap[v.id],
-            vokiId: v.id
-        }));
+        const okConverted: VokiItemViewStateWithVokiIdAndTakenData[] = filtered.map(
+            (v) => ({
+                name: "ok",
+                data: this.mapToView(v),
+                taken: this.takenMap[v.id],
+                vokiId: v.id
+            })
+        );
 
         return [...okConverted, ...nonOkItems];
     });
@@ -157,4 +174,8 @@ export class RatedVokisAlbumPageState {
         return this.allLoadedVokis.length === 0;
     }
 }
-type VokiItemViewStateWithVokiIdAndRating = VokiItemViewState & { vokiId: string, rating: BriefRatingData };
+
+type VokiItemViewStateWithVokiIdAndTakenData = VokiItemViewState & {
+    vokiId: string;
+    taken: BriefVokiTakenData;
+};

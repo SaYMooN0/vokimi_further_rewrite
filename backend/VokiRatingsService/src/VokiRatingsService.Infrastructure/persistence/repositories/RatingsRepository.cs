@@ -33,13 +33,12 @@ public class RatingsRepository : IRatingsRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task<VokiIdWithLastRatingDto[]> OrderedIdsOfVokiRatedByUser(
+    public Task<VokiIdWithLastRatingDto[]> ListIdsOfVokiRatedByUser(
         IAuthenticatedUserContext userContext, CancellationToken ct
     ) =>
         _db.Ratings
             .AsNoTracking()
             .Where(r => r.UserId == userContext.UserId)
-            .OrderByDescending(r => r.Current.DateTime)
             .Select(r => new VokiIdWithLastRatingDto(r.VokiId, r.Current.Value, r.Current.DateTime))
             .ToArrayAsync(ct);
 }

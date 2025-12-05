@@ -10,20 +10,36 @@
 	import VokiPageRatingsTab from './c_page/c_tabs/VokiPageRatingsTab.svelte';
 	import TabLinksContainer from './c_page/TabLinksContainer.svelte';
 	import VokiNotLoaded from './c_page/VokiNotLoaded.svelte';
-	import { VokiPageState } from './voki-page-state.svelte';
 	import { VokiCatalogVisitMarkerCookie } from '$lib/ts/cookies/voki-catalog-visit-marker-cookie';
 	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
-	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
-	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import { page } from '$app/state';
+	import { VokiPageState } from './voki-page-state.svelte';
+	import { goto } from '$app/navigation';
 
+	function getTabFromUrl() {
+		const t = page.url.searchParams.get('tab');
+		if (t === 'about' || t === 'comments' || t === 'ratings') {
+			return t;
+		}
+		return 'about';
+	}
 	let { data }: PageProps = $props();
 	let pageState = new VokiPageState(
 		data.vokiId,
-		data.currentTab,
+		getTabFromUrl(),
 		data.response.isSuccess ? data.response.data.ratingsCount : 0,
 		data.response.isSuccess ? data.response.data.commentsCount : 0
 	);
 
+	function setTab(tab: VokiPageState['currentTab']) {
+		if (tab !== pageState.currentTab) {
+			pageState.currentTab = tab;
+			const url = new URL(page.url);
+			url.searchParams.set('tab', tab);
+
+			goto(url.toString(), { replaceState: true, keepFocus: true, noScroll: true });
+		}
+	}
 	let refreshTimer: number | undefined;
 	onMount(() => {
 		if (browser) {
@@ -59,7 +75,7 @@
 			<div class="tabs-section">
 				<TabLinksContainer
 					currentTab={pageState.currentTab}
-					changeTab={(newTab) => (pageState.currentTab = newTab)}
+					changeTab={setTab}
 					commentsCount={pageState.commentsCount}
 					ratingsCount={pageState.ratingsCount}
 				/>

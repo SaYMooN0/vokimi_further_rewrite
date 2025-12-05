@@ -4,7 +4,7 @@ using VokiRatingsService.Application.common.repositories;
 
 namespace VokiRatingsService.Application.app_users.queries;
 
-public sealed record ListUserRatedVokiIdsQuery() :
+public sealed record ListUserRatedVokisQuery() :
     IQuery<VokiIdWithLastRatingDto[]>,
     IWithAuthCheckStep
 {
@@ -13,20 +13,20 @@ public sealed record ListUserRatedVokiIdsQuery() :
     );
 }
 
-internal sealed class ListUserRatedVokiIdsQueryHandler :
-    IQueryHandler<ListUserRatedVokiIdsQuery, VokiIdWithLastRatingDto[]>
+internal sealed class ListUserRatedVokisQueryHandler :
+    IQueryHandler<ListUserRatedVokisQuery, VokiIdWithLastRatingDto[]>
 {
     private readonly IUserContext _userContext;
     private readonly IRatingsRepository _ratingsRepository;
 
-    public ListUserRatedVokiIdsQueryHandler(IUserContext userContext, IRatingsRepository ratingsRepository) {
+    public ListUserRatedVokisQueryHandler(IUserContext userContext, IRatingsRepository ratingsRepository) {
         _userContext = userContext;
         _ratingsRepository = ratingsRepository;
     }
 
 
-    public async Task<ErrOr<VokiIdWithLastRatingDto[]>> Handle(ListUserRatedVokiIdsQuery query, CancellationToken ct) {
-        return await _ratingsRepository.OrderedIdsOfVokiRatedByUser(
+    public async Task<ErrOr<VokiIdWithLastRatingDto[]>> Handle(ListUserRatedVokisQuery query, CancellationToken ct) {
+        return await _ratingsRepository.ListIdsOfVokiRatedByUser(
             new AuthenticatedUserContext(_userContext.AuthenticatedUserId), ct);
     }
 }

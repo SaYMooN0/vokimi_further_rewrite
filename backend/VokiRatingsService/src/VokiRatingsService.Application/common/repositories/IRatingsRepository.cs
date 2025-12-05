@@ -10,7 +10,7 @@ public interface IRatingsRepository
     Task Update(VokiRating rating, CancellationToken ct);
     Task Add(VokiRating rating, CancellationToken ct);
 
-    Task<VokiIdWithLastRatingDto[]> OrderedIdsOfVokiRatedByUser(
+    Task<VokiIdWithLastRatingDto[]> ListIdsOfVokiRatedByUser(
         IAuthenticatedUserContext userContext, CancellationToken ct
     );
 }

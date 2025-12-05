@@ -1,5 +1,4 @@
-﻿using ApiShared.extensions;
-using VokiRatingsService.Api.contracts;
+﻿using VokiRatingsService.Api.contracts;
 using VokiRatingsService.Application.app_users.queries;
 using VokiRatingsService.Application.common.repositories;
 
@@ -15,9 +14,9 @@ internal class RootHandlers : IEndpointGroup
 
     private static async Task<IResult> GetUserRatedVokis(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ListUserRatedVokiIdsQuery, VokiIdWithLastRatingDto[]> handler
+        IQueryHandler<ListUserRatedVokisQuery, VokiIdWithLastRatingDto[]> handler
     ) {
-        ListUserRatedVokiIdsQuery query = new();
+        ListUserRatedVokisQuery query = new();
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOrToJson<VokiIdWithLastRatingDto[], UserRatedVokiIdsResponse>(result);
