@@ -17,6 +17,7 @@
 	<svg
 		class="album-icon"
 		style="
+
 		--icon-color-1: {album.mainColor}; 
 		--icon-color-2: {album.secondaryColor};"
 	>

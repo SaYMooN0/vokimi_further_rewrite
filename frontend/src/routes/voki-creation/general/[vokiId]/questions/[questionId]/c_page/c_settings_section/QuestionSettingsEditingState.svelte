@@ -113,16 +113,16 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-		width: 100%;
-		padding: 0.25rem 0.75rem;
+		padding: 0;
 		margin: 1rem 0 0 1rem;
 		transition: all 0.2s ease-in;
+		padding: 0.25rem 0.75rem;
 		interpolate-size: allow-keywords;
 		border-left: 0.125rem solid var(--secondary-foreground);
+		width: min-content;
 	}
 
 	.multiple-choice-inputs.show {
-		width: 100%;
 		height: auto;
 		opacity: 1;
 	}
@@ -141,7 +141,8 @@
 
 	.input-field {
 		display: grid;
-		grid-template-columns: 18rem 1fr;
+		grid-template-columns: 18rem auto;
+		width: fit-content;
 	}
 
 	.multiple-choice-inputs.hide :global(.input-field > label) {

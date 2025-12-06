@@ -9,20 +9,20 @@
 <style>
 	.no-vokis {
 		padding: 2rem;
-		text-align: center;
+		margin: 4rem auto;
 		color: var(--muted-foreground);
-		margin: 4rem auto 4rem;
+		text-align: center;
 	}
 
 	.title {
-		font-size: 1.5rem;
-		font-weight: 600;
 		margin-bottom: 0.25rem;
 		color: var(--text);
+		font-size: 1.5rem;
+		font-weight: 600;
 	}
 
 	.subtitle {
-		font-size: 1.125em;
 		color: var(--muted-foreground);
+		font-size: 1.125em;
 	}
 </style>

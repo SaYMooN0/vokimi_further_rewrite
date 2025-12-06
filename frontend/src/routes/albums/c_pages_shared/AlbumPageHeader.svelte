@@ -21,6 +21,7 @@
 		<svg
 			class="album-icon"
 			style="
+
 			--icon-color-1: {content.icon.mainColor};
 			--icon-color-2: {content.icon.secondaryColor};"
 		>
@@ -46,11 +47,11 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		margin-top: 0.25rem;
+		margin-right: 0.5rem;
 		border-radius: 2rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		margin-right: 0.5rem;
-		margin-top: 0.25rem;
 	}
 
 	.back-link > svg {
@@ -77,10 +78,11 @@
 		stroke-width: 2;
 		margin: 0.25rem 0.125rem 0 0.5rem;
 	}
+
 	.album-name {
+		margin-right: 0.675rem;
 		font-weight: 525;
 		letter-spacing: 0.25px;
-		margin-right: 0.675rem;
 	}
 
 	.error {

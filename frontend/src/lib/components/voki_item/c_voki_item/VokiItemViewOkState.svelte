@@ -90,12 +90,12 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--voki-cover-name-gap);
+		gap: 0;
 		width: 100%;
 		height: fit-content;
 		padding: 0.5rem;
 		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
 		cursor: pointer;
-		gap: 0;
 	}
 
 	.cover-container {
@@ -165,10 +165,10 @@
 	}
 
 	.voki-name {
-		margin: 0.25rem 0;
 		display: flex;
 		display: -webkit-box;
 		flex-direction: row;
+		margin: 0.25rem 0;
 		color: var(--text);
 		font-size: 1.125rem;
 		font-weight: 420;
@@ -202,11 +202,11 @@
 
 	.voki-more-btn {
 		height: calc(var(--voki-name-max-height) * 0.65);
+		margin: 0.25rem 0;
 		border-radius: 0.25rem;
 		color: var(--text);
 		aspect-ratio: 1/1;
 		stroke-width: 3.2;
-		margin: 0.25rem 0;
 	}
 
 	.voki-more-btn:hover {

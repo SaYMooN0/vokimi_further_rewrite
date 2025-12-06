@@ -93,30 +93,30 @@
 
 <style>
 	.vokis-container {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		width: 100%;
 	}
 
 	.voki-item {
-		width: 100%;
-		display: grid;
-		grid-template-columns: 20rem 1fr auto auto;
-		box-shadow: var(--shadow-xs);
-		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
 		position: relative;
+		display: grid;
+		width: 100%;
+		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
 		background-color: var(--back);
+		box-shadow: var(--shadow-xs);
+		grid-template-columns: 20rem 1fr auto auto;
 	}
 
 	.voki-name {
 		margin: 0.5rem;
+		color: var(--text);
 		font-size: 1.25rem;
 		font-weight: 500;
 		text-indent: 0.125em;
 		word-break: normal;
 		overflow-wrap: anywhere;
-		color: var(--text);
 	}
 
 	.name-and-authors {
@@ -139,18 +139,17 @@
 	}
 
 	.co-authors {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
 		margin: 0 0.25rem;
 		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: 450;
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.25rem;
 	}
 
 	.times-taken {
-		align-self: center;
-		justify-self: center;
+		place-self: center center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -158,31 +157,30 @@
 	}
 
 	.times-count {
+		color: var(--primary);
 		font-size: 1.5rem;
 		font-weight: 600;
-		color: var(--primary);
 	}
 
 	.times-label {
-		font-size: 0.875rem;
 		color: var(--secondary-foreground);
+		font-size: 0.875rem;
 	}
 
 	.date {
+		position: absolute;
+		right: 1rem;
+		bottom: 1rem;
 		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: 450;
-		position: absolute;
-		bottom: 1rem;
-		right: 1rem;
 	}
 
 	.open-voki-page {
 		margin: 0 2rem;
-		align-self: center;
-		justify-self: center;
-		font-size: 0.95rem;
 		color: var(--primary);
+		font-size: 0.95rem;
 		text-decoration: none;
+		place-self: center center;
 	}
 </style>

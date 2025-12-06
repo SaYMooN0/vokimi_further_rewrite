@@ -1,6 +1,7 @@
 import type { VokiItemViewOkStateProps, VokiItemViewErrStateProps } from "$lib/components/voki_item/c_voki_item/types";
 import { ApiVokisCatalog } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
+import type { PublishedVokiBriefInfo } from "$lib/ts/voki";
 import { MyPublishedVokisCacheStore } from "./my-published-vokis-cache-store.svelte";
 
 
@@ -12,8 +13,11 @@ type PublishedVokiIdsState =
 export class MyPublishedVokisPageState {
     publishedVokiIds: PublishedVokiIdsState = $state({ state: 'loading' });
 
-    constructor() {
+    readonly #onMoreBtnClick: (e: MouseEvent, voki: PublishedVokiBriefInfo) => void;
+    constructor(openContextMenu: (mEvent: MouseEvent, voki: PublishedVokiBriefInfo) => void) {
         this.loadPublishedVokis();
+        this.#onMoreBtnClick = (e, voki) => openContextMenu(e, voki);
+
     }
 
     async forceRefetch() {
@@ -37,8 +41,7 @@ export class MyPublishedVokisPageState {
     }
 
     getVokiViewItemState(
-        vokiId: string,
-        openContextMenu: (mEvent: MouseEvent) => void
+        vokiId: string
     ):
         | { name: 'ok'; data: VokiItemViewOkStateProps }
         | { name: 'loading' }
@@ -63,7 +66,7 @@ export class MyPublishedVokisPageState {
                     primaryAuthorId: voki.data.primaryAuthorId,
                     coAuthorIds: voki.data.coAuthorIds
                 },
-                onMoreBtnClick: (e) => openContextMenu(e),
+                onMoreBtnClick: (e) => this.#onMoreBtnClick(e, voki.data),
                 link: `/catalog/${vokiId}`
             }
         };

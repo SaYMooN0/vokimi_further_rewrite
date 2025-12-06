@@ -5,10 +5,10 @@
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
 	import type { VokiItemViewOkStateProps } from '$lib/components/voki_item/c_voki_item/types';
-	import BaseContextMenu from '$lib/components/context_menus/BaseContextMenu.svelte';
+	import CatalogVokiItemContextMenu from './catalog/c_page/CatalogVokiItemContextMenu.svelte';
 
 	let { data }: PageProps = $props();
-	let contextMenu = $state<BaseContextMenu>()!;
+	let contextMenu = $state<CatalogVokiItemContextMenu>()!;
 	function assembleVokiItemStateData(voki: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
 		return {
 			vokiId: voki.id,
@@ -19,7 +19,7 @@
 				coAuthorIds: voki.coAuthorIds
 			},
 			type: voki.type,
-			onMoreBtnClick: (mEvent: MouseEvent) => contextMenu.open(mEvent.x, mEvent.y),
+			onMoreBtnClick: (mEvent: MouseEvent) => contextMenu.open(mEvent, voki),
 			link: `/catalog/${voki.id}`,
 			flags: {
 				language: voki.language,
@@ -28,6 +28,10 @@
 			}
 		};
 	}
+	let vokisToView = $state<PublishedVokiBriefInfo[]>(data.isSuccess ? data.data.vokis : []);
+	function removeVokiFromList(voki: PublishedVokiBriefInfo) {
+		vokisToView = vokisToView.filter((v) => v.id !== voki.id);
+	}
 </script>
 
 {#if !data.isSuccess}
@@ -35,11 +39,12 @@
 {:else if data.data.vokis.length === 0}
 	<h1>Voki catalog is empty</h1>
 {:else}
-	<BaseContextMenu bind:this={contextMenu}>
-		<div>Content</div>
-	</BaseContextMenu>
+	<CatalogVokiItemContextMenu
+		bind:this={contextMenu}
+		removeVokiFromListInParent={removeVokiFromList}
+	/>
 	<VokiItemsGridContainer>
-		{#each data.data.vokis as voki}
+		{#each vokisToView as voki}
 			<VokiItemView
 				state={{
 					name: 'ok',

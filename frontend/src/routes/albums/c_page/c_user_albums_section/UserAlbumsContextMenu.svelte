@@ -2,7 +2,6 @@
 	import ContextMenuWithActions, {
 		type ActionsContextMenuActionsContent,
 		type ActionsContextMenuMessageContent,
-		type ActionsContextMenuSnippetContent
 	} from '$lib/components/context_menus/ContextMenuWithActions.svelte';
 	import type { VokiAlbumPreviewData } from '../../types';
 

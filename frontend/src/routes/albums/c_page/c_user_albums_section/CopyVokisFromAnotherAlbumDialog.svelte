@@ -69,6 +69,7 @@
 					<svg
 						class="album-icon"
 						style="
+
 						--icon-color-1: {album.mainColor};
 						--icon-color-2: {album.secondaryColor};
  						"><use href="#{album.icon}" /></svg
@@ -106,12 +107,14 @@
 		width: 46rem;
 		padding: 2rem;
 	}
+
 	.dialog-heading {
 		color: var(--muted-foreground);
 		font-size: 1.75rem;
 		font-weight: 550;
 		text-align: center;
 	}
+
 	.list {
 		display: flex;
 		flex-direction: column;
@@ -120,6 +123,7 @@
 		padding: 0.5rem 0;
 		overflow-y: auto;
 	}
+
 	.album {
 		display: grid;
 		align-items: center;

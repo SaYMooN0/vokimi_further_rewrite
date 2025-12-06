@@ -10,7 +10,13 @@
 	import { toast } from 'svelte-sonner';
 	import BaseContextMenu from '$lib/components/context_menus/BaseContextMenu.svelte';
 
-	const pageState = new MyPublishedVokisPageState();
+	const pageState = new MyPublishedVokisPageState((e, voki) => {
+		// if (contextMenu) {
+		// 	contextMenu.open(e, voki);
+		// } else {
+		// 	toast.error('Could not open context menu');
+		// }
+	});
 
 	onMount(() => {
 		const registerPageApi = registerCurrentPageApi();
@@ -22,13 +28,6 @@
 			}
 		});
 	});
-	function openContextMenu(mEvent: MouseEvent, vokiId: string): void {
-		if (vokiItemContextMenu) {
-			vokiItemContextMenu.open(mEvent.x, mEvent.y, vokiId);
-		} else {
-			toast.error('Failed to open context menu');
-		}
-	}
 </script>
 
 {#if pageState.publishedVokiIds.state === 'loading'}
@@ -39,12 +38,9 @@
 	{#if pageState.publishedVokiIds.vokiIds.length === 0}
 		<h1>You don't have any published vokis</h1>
 	{:else}
-		
 		<VokiItemsGridContainer>
 			{#each pageState.publishedVokiIds.vokiIds as vokiId}
-				<VokiItemView
-					state={pageState.getVokiViewItemState(vokiId, (ev) => openContextMenu(ev, vokiId))}
-				/>
+				<VokiItemView state={pageState.getVokiViewItemState(vokiId)} />
 			{/each}
 		</VokiItemsGridContainer>
 	{/if}

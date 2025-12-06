@@ -144,7 +144,6 @@
 		position: absolute;
 		display: grid;
 		place-content: center center;
-		place-items: center center;
 		width: 100%;
 		height: 100%;
 		border-radius: inherit;

@@ -11,13 +11,13 @@
 	export type ActionsContextMenuActionsContent = { type: 'actions'; items: ActionContentItem[] };
 
 	type ActionType = 'default' | 'red';
-	type ActionContentItem = 'divider' | Action;
-	type Action = {
+	type ActionContentItem = 'divider' | ActionsContextMenuAction;
+	export type ActionsContextMenuAction = {
 		label: string;
 		iconHref: string | null;
 		action:
 			| { isLink: true; href: string }
-			| { isLink: false; onclick: (contextMenu: BaseContextMenu) => void };
+			| { isLink: false; onclick: () => void };
 		type: ActionType;
 	};
 
@@ -127,6 +127,7 @@
 		background-color: var(--err-back);
 		color: var(--err-foreground);
 	}
+
 	:global(.context-menu-with-actions:has(.message-container)) {
 		align-items: center;
 		gap: 0.5rem;
@@ -135,17 +136,19 @@
 		box-shadow: var(--shadow-xs), var(--shadow);
 		grid-template-columns: auto 1fr;
 	}
+
 	.message-container {
-		font-size: 1.125rem;
-		font-weight: 450;
 		display: flex;
 		align-items: center;
+		font-size: 1.125rem;
+		font-weight: 450;
 	}
+
 	.message-container > svg {
+		display: inline;
 		width: 1.25rem;
 		height: 1.25rem;
-		display: inline;
-		stroke-width: 1.75;
 		margin-right: 0.25rem;
+		stroke-width: 1.75;
 	}
 </style>

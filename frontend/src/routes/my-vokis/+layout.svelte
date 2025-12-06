@@ -125,8 +125,8 @@
 		align-items: center;
 		gap: 2rem;
 		margin-top: 12rem;
-		animation-delay: 1s;
 		animation: loading-fade-in 1s ease-in-out;
+		animation-delay: 1s;
 	}
 
 	.loading h1 {

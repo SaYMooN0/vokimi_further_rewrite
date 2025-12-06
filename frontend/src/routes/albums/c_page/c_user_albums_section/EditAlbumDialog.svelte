@@ -254,43 +254,6 @@
 		font-weight: 320;
 	}
 
-	.icons-grid {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin-top: 0.5rem;
-	}
-
-	.icon-option {
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		width: 2.5rem;
-		height: 2.5rem;
-		padding: 0;
-		border: 0.125rem solid transparent;
-		border-radius: 0.75rem;
-		background-color: var(--muted);
-		color: var(--secondary-foreground);
-		cursor: pointer;
-	}
-
-	.icon-option:hover {
-		border-color: var(--secondary-foreground);
-	}
-
-	.icon-option.selected {
-		border-color: var(--primary);
-		background-color: var(--accent);
-		color: var(--accent-foreground);
-	}
-
-	.icon-preview {
-		width: 1.5rem;
-		aspect-ratio: 1/1;
-		fill: currentcolor;
-		stroke-width: 1.8;
-	}
 
 	.colors-row {
 		display: flex;
@@ -298,43 +261,6 @@
 		align-items: flex-start;
 		gap: 2rem;
 		margin-top: 1rem;
-	}
-
-	.color-input {
-		display: grid;
-		gap: 0.25rem;
-	}
-
-	.color-input-label {
-		margin-left: 1rem;
-		color: var(--secondary-foreground);
-		font-size: 0.875rem;
-	}
-
-	.color-input-row {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
-	}
-
-	.color-input-row input[type='color'] {
-		width: 2.5rem;
-		height: 2.5rem;
-		padding: 0;
-		border: none;
-		border-radius: 0.75rem;
-		background: transparent;
-		cursor: pointer;
-	}
-
-	.hex-preview {
-		min-width: 5rem;
-		padding: 0.25rem 0.5rem;
-		border-radius: 0.5rem;
-		background-color: var(--muted);
-		color: var(--secondary-foreground);
-		font-family: var(--font-mono, monospace);
-		font-size: 0.875rem;
 	}
 
 	.use-two {

@@ -70,109 +70,124 @@
 	.container {
 		display: flex;
 		flex-direction: row;
-		gap: 0.5rem;
 		align-items: center;
+		gap: 0.5rem;
 		margin: 0.5rem 0 1rem;
 	}
+
 	.main-label {
 		color: var(--muted-foreground);
 		font-size: 1.125rem;
 		font-weight: 500;
 	}
+
 	.voki-types {
 		display: flex;
 		gap: 0.5rem;
 	}
+
 	.type-badge {
 		display: flex;
 		align-items: center;
 		gap: 0.125rem;
 		padding: 0.25rem 1rem;
 		border-radius: 0.25rem;
+		border-radius: 100vw;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 		font-size: 1rem;
-		border-radius: 100vw;
 		font-weight: 450;
 		cursor: pointer;
 	}
+
 	.type-badge:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.type-badge.selected {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
+
 	.type-badge > svg {
 		width: 1.25rem;
 		height: 1.25rem;
 		color: inherit;
 		stroke-width: 2;
 	}
+
 	.sort-label {
 		margin-left: auto;
 	}
+
 	.sort-options-container {
-		display: flex;
-		gap: 0.5rem;
 		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.5rem;
+		width: 12rem;
+		padding: 0.25rem 0;
+		border-radius: 0.375rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-		padding: 0.25rem 0;
-		width: 12rem;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		cursor: pointer;
-		border-radius: 0.375rem;
 		font-size: 1.125rem;
 		font-weight: 450;
 		letter-spacing: 0.125px;
+		cursor: pointer;
 	}
+
 	.sort-options-container:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.sort-options-container:has(.all-options.show) {
 		border-radius: 0.375rem 0.375rem 0 0;
 	}
 
 	.all-options {
 		position: absolute;
-		opacity: 0;
-		pointer-events: none;
 		top: 100%;
 		left: 0;
 		z-index: 100;
+		width: calc(100% - 2px);
+		border-radius: 0 0 0.375rem 0.375rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		width: calc(100% - 2px);
-		transform: translateX(1px);
-		border-radius: 0 0 0.375rem 0.375rem;
+		opacity: 0;
 		box-shadow: var(--shadow-md), var(--shadow-xs);
+		transform: translateX(1px);
+		pointer-events: none;
 	}
+
 	.all-options.show {
 		opacity: 1;
 		pointer-events: all;
 	}
+
 	.option {
-		padding: 0.25rem 0.25rem 0.25rem 1rem;
-		cursor: pointer;
 		display: grid;
-		grid-template-columns: 1fr auto;
+		padding: 0.25rem 0.25rem 0.25rem 1rem;
 		font-size: 1.125rem;
+		cursor: pointer;
+		grid-template-columns: 1fr auto;
 	}
+
 	.option:hover {
 		background-color: var(--muted);
 	}
+
 	.option:active {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.option.selected {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.option > svg {
 		width: 1.5rem;
 		height: 1.5rem;

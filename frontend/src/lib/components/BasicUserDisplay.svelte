@@ -92,7 +92,7 @@
 		width: fit-content;
 		border-radius: 100vw;
 		background-color: var(--back);
-		line-height: default;
+		line-height: normal;
 		text-decoration: none;
 		grid-template-columns: var(--profile-pic-width) 1fr;
 	}

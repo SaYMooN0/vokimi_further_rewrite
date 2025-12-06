@@ -8,6 +8,3 @@
 <div class="loader appear-with-delay">
 {loadingText}
 </div>
-<style>
-
-</style>

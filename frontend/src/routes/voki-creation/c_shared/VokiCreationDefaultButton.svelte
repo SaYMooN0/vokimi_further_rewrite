@@ -16,7 +16,7 @@
 	.btn {
 		min-width: 9.5rem;
 		height: 2rem;
-		margin: 0.5rem 1rem 0 auto;
+		margin: 0.5rem 0 0 auto;
 		border: none;
 		border-radius: 0.25rem;
 		background-color: var(--primary);

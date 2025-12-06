@@ -81,18 +81,18 @@
 
 <style>
 	.vokis-container {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		width: 100%;
 	}
 
 	.voki-item {
-		display: grid;
-		grid-template-columns: 20rem 1fr auto auto;
-		box-shadow: var(--shadow-xs);
-		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
 		position: relative;
+		display: grid;
+		border-radius: calc(var(--voki-cover-border-radius) * 1.25);
+		box-shadow: var(--shadow-xs);
+		grid-template-columns: 20rem 1fr auto auto;
 	}
 
 	.voki-name {
@@ -103,6 +103,7 @@
 		word-break: normal;
 		overflow-wrap: anywhere;
 	}
+
 	.by-label {
 		margin-right: 0.5rem;
 		color: var(--secondary-foreground);
@@ -122,22 +123,23 @@
 		font-size: 1rem;
 		font-weight: 450;
 	}
+
 	.voki-item > :global(.stars-display) {
 		align-self: center;
 	}
+
 	.date {
+		position: absolute;
+		right: 1rem;
+		bottom: 1rem;
 		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: 450;
-		justify-self: right;
-		align-self: end;
-		position: absolute;
-		bottom: 1rem;
-		right: 1rem;
+		place-self: end right;
 	}
+
 	.open-voki-page {
 		margin: 0 2rem;
-
 		align-self: center;
 	}
 </style>

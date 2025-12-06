@@ -57,34 +57,34 @@
 
 <style>
 	:global(#confirm-album-deletion-dialog > .dialog-content) {
-		text-align: center;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: 2rem;
+		text-align: center;
 	}
 
 	.title {
+		margin: 1rem 1rem 0;
+		color: var(--text);
 		font-size: 1.75rem;
 		font-weight: 550;
-		color: var(--text);
-		margin: 1rem 1rem 0;
 	}
 
 	.album-name {
+		display: inline-block;
+		max-width: 26rem;
+		padding-bottom: 0.25rem;
 		color: var(--primary);
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		max-width: 26rem;
-		display: inline-block;
 		vertical-align: middle;
-		padding-bottom: 0.25rem;
 	}
 
 	.description {
-		font-size: 1.125rem;
 		color: var(--muted-foreground);
+		font-size: 1.125rem;
 		font-weight: 450;
 		line-height: 1.4;
 	}
@@ -97,14 +97,16 @@
 		width: 100%;
 		margin-top: 1rem;
 	}
+
 	.buttons > * {
 		padding: 0.675rem 1rem;
-		border-radius: var(--radius);
 		border: none;
-		cursor: pointer;
+		border-radius: var(--radius);
 		font-size: 1rem;
 		font-weight: 450;
+		cursor: pointer;
 	}
+
 	.delete-btn {
 		background-color: var(--err-foreground);
 		color: var(--primary-foreground);
@@ -125,7 +127,7 @@
 
 	.no-album {
 		padding: 2rem;
-		text-align: center;
 		color: var(--muted-foreground);
+		text-align: center;
 	}
 </style>
