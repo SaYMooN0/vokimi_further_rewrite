@@ -13,6 +13,8 @@
 	import { registerCreateNewAlbumOpenFunction } from './c_layout/ts_layout_contexts/album-creation-dialog-context';
 	import ErrsViewDialog from './c_layout/c_dialogs/ErrsViewDialog.svelte';
 	import { registerErrsViewDialogOpenFunction } from './c_layout/ts_layout_contexts/errs-view-dialog-context';
+	import AddVokiToAlbumsDialog from './c_layout/c_dialogs/AddVokiToAlbumsDialog.svelte';
+	import { registerAddVokiToAlbumsOpenFunction } from './c_layout/ts_layout_contexts/add-voki-to-albums-dialog-context';
 
 	let isFullWidthMode = $state(false);
 	let { children }: { children: Snippet } = $props<{ children: Snippet }>();
@@ -36,6 +38,9 @@
 
 	let errsViewDialog = $state<ErrsViewDialog>()!;
 	registerErrsViewDialogOpenFunction((errs) => errsViewDialog.open(errs));
+
+	let addVokiToAlbumsDialog = $state<AddVokiToAlbumsDialog>()!;
+	registerAddVokiToAlbumsOpenFunction((vokiId) => addVokiToAlbumsDialog.open(vokiId));
 </script>
 
 <SignInDialog bind:this={signInDialog} />
@@ -43,6 +48,8 @@
 <CreateNewAlbumDialog bind:this={createNewAlbumDialog} />
 <VokiItemFlagsInfoDialog bind:this={vokiItemFlagsInfoDialog} />
 <ErrsViewDialog bind:this={errsViewDialog} />
+<AddVokiToAlbumsDialog bind:this={addVokiToAlbumsDialog} />
+
 <LayoutSprites />
 <AppToaster />
 

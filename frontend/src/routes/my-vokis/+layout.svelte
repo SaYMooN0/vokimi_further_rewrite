@@ -69,6 +69,7 @@
 					{/if}</button
 				>
 			</div>
+
 			{#if navigating.type}
 				<div class="loading">
 					<h1>Loading your vokis</h1>
@@ -78,6 +79,7 @@
 				<div class="my-vokis-page-content">
 					{@render children()}
 				</div>
+				<div class="top-actions-fade"></div>
 			{/if}
 
 			<PrimaryButton onclick={() => vokiInitializingDialog.open()} class="create-new-voki-btn"
@@ -161,6 +163,21 @@
 
 	.my-vokis-page-content {
 		overflow-y: auto;
+		z-index: 1;
+		padding-bottom: 2rem;
+	}
+
+	.top-actions-fade {
+		position: absolute;
+		top: calc(var(--sidebar-links-top-padding) - 0.75rem);
+		right: 0;
+		left: 0;
+		z-index: 3;
+		width: 100%;
+		height: 1.5rem;
+		background: linear-gradient(to top, transparent, var(--back), var(--back));
+		content: '';
+		pointer-events: none;
 	}
 
 	.force-reload-btn {
@@ -212,6 +229,7 @@
 		position: absolute;
 		bottom: 1rem;
 		left: 50%;
+		z-index: 2;
 		display: flex;
 		flex-direction: row;
 		align-items: center;

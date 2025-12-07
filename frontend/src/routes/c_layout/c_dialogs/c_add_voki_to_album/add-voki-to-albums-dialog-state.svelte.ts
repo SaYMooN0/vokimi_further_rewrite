@@ -18,66 +18,51 @@ type AlbumsLoadingState =
     | { name: "errs"; errs: Err[] };
 
 export class AddVokiToAlbumsDialogState {
-    readonly vokiId: string;
     albumsState: AlbumsLoadingState = $state({ name: "loading" });
     albumToIsChosen: Record<string, boolean> = $state({});
 
-    private static readonly CACHE_MS = 5 * 60 * 1000;
-    private _lastLoadedAt = 0;
-    private _inflight: Promise<void> | null = null;
+    private _inflight: { vokiId: string; promise: Promise<void> } | null = null;
 
     private _initialChosenAlbumIds = new SvelteSet<string>();
 
-    constructor(vokiId: string) {
-        this.vokiId = vokiId;
+    constructor() {
+
     }
     isAlbumChosenChanged(albumId: string): boolean {
         const initial = this._initialChosenAlbumIds.has(albumId);
         const now = this.albumToIsChosen[albumId];
         return now !== initial;
     }
-    async ensureFresh(): Promise<void> {
-        if (this._inflight) {
-            return this._inflight;
+    async setVokiAndUpdate(vokiId: string): Promise<void> {
+        if (this._inflight && this._inflight.vokiId === vokiId) {
+            return this._inflight.promise;
         }
-
-        const fresh =
-            Date.now() - this._lastLoadedAt <= AddVokiToAlbumsDialogState.CACHE_MS &&
-            this.albumsState.name === "ok";
-
-        if (fresh) {
-            return;
-        }
-
-        this._inflight = this.updateForce().finally(() => (this._inflight = null));
-        return this._inflight;
-    }
-
-    async updateForce(): Promise<void> {
-        if (this._inflight) {
-            return this._inflight;
-        }
-
 
         const task = (async () => {
             this.albumsState = { name: "loading" };
 
             const response = await ApiAlbums.fetchJsonResponse<{ albums: AlbumDataWithVokiPresence[] }>(
-                `/vokis/${this.vokiId}/albums-data`,
+                `/vokis/${vokiId}/albums-data`,
                 { method: "GET" }
             );
 
             this.handleFetchAlbumsWithVokiPresence(response);
         })();
 
-        this._inflight = task.finally(() => (this._inflight = null));
-        return this._inflight;
+        this._inflight = {
+            vokiId,
+            promise: task.finally(() => (this._inflight = null))
+        };
+
+        return this._inflight.promise;
     }
 
-    async updateVokiPresenceInAlbums() {
+
+
+    async updateVokiPresenceInAlbums(vokiId: string) {
         this.albumsState = { name: "loading" };
         const response = await ApiAlbums.fetchJsonResponse<{ albums: AlbumDataWithVokiPresence[] }>(
-            `/vokis/${this.vokiId}/update-presence-in-albums`,
+            `/vokis/${vokiId}/update-presence-in-albums`,
             RJO.PATCH({ albumIdToIsChosen: this.albumToIsChosen })
         );
         this.handleFetchAlbumsWithVokiPresence(response);
@@ -109,10 +94,8 @@ export class AddVokiToAlbumsDialogState {
             }
 
             this.albumsState = { name: "ok", albums };
-            this._lastLoadedAt = Date.now();
         } else {
             this.albumsState = { name: "errs", errs: response.errs };
-            this._lastLoadedAt = 0;
         }
     }
 

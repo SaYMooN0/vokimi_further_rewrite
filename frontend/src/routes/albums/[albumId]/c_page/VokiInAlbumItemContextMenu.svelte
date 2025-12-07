@@ -37,7 +37,7 @@
 							iconHref: '#context-menu-copy-link-icon',
 							action: {
 								isLink: false,
-								onclick: (ctxMenu) => {
+								onclick: () => {
 									const link = `${location.origin}/catalog/${currentVoki!.id}`;
 									navigator.clipboard.writeText(link).then(
 										() => {
@@ -49,7 +49,7 @@
 										},
 										() => toast.error('Could not copy link')
 									);
-									ctxMenu.close();
+									contextMenu.close();
 								}
 							},
 							type: 'default'

@@ -6,6 +6,7 @@
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
 	import type { VokiItemViewOkStateProps } from '$lib/components/voki_item/c_voki_item/types';
 	import CatalogVokiItemContextMenu from './catalog/c_page/CatalogVokiItemContextMenu.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { data }: PageProps = $props();
 	let contextMenu = $state<CatalogVokiItemContextMenu>()!;
@@ -42,6 +43,7 @@
 	<CatalogVokiItemContextMenu
 		bind:this={contextMenu}
 		removeVokiFromListInParent={removeVokiFromList}
+		openReportVokiDialog={() => toast.error('Not implemented')}
 	/>
 	<VokiItemsGridContainer>
 		{#each vokisToView as voki}

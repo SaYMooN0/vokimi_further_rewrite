@@ -1,7 +1,7 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
-	import type { AlbumViewData } from '../add-voki-to-album-dialog-state.svelte';
+	import type { AlbumViewData } from './add-voki-to-albums-dialog-state.svelte';
 
 	interface Props {
 		albumsViewData: AlbumViewData[];
@@ -27,8 +27,8 @@
 					class="album-icon"
 					style="
 
---icon-color-1: {album.mainColor};
- --icon-color-2: {album.secondaryColor};"><use href="#{album.icon}" /></svg
+					--icon-color-1: {album.mainColor};
+					--icon-color-2: {album.secondaryColor};"><use href="#{album.icon}" /></svg
 				>
 				{album.name}
 				<DefaultCheckBox bind:checked={albumIdToIsChosen[album.id]} />

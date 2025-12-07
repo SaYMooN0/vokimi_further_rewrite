@@ -1,7 +1,5 @@
 import { setContext, getContext } from "svelte";
 
-
-
 const openFunctionKey = Symbol("open-create-new-album-dialog-function");
 type openCreateNewAlbumDialogFunction = (onAfterNewAlbumCreated: (newAlbumId: string) => void) => void;
 

@@ -41,11 +41,11 @@
 			{#if user.state === 'loading'}
 				<div class="display-name loading skeleton" aria-hidden="true"></div>
 			{:else if user.state === 'errs'}
-				<a class="display-name profile-link-el error" href="/auhtors/{userId}">
+				<a class="display-name profile-link-el error" href="/authors/{userId}">
 					Could not load user name</a
 				>
 			{:else if user.state === 'ok'}
-				<a class="display-name profile-link-el" href="/auhtors/{userId}">
+				<a class="display-name profile-link-el" href="/authors/{userId}">
 					{user.data.displayName}</a
 				>
 			{/if}
@@ -56,7 +56,7 @@
 		</div>
 		<a
 			class="unique-name-content profile-link-el"
-			href="/auhtors/{userId}"
+			href="/authors/{userId}"
 			class:not-loaded={user.state !== 'ok'}
 		>
 			{#if user.state === 'ok'}

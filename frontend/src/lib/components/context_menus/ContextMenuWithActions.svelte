@@ -8,10 +8,10 @@
 		message: string;
 		iconHref: string | null;
 	};
-	export type ActionsContextMenuActionsContent = { type: 'actions'; items: ActionContentItem[] };
+	export type ActionsContextMenuActionsContent = { type: 'actions'; items: ActionsContextMenuActionContentItem[] };
 
 	type ActionType = 'default' | 'red';
-	type ActionContentItem = 'divider' | ActionsContextMenuAction;
+	export type ActionsContextMenuActionContentItem = 'divider' | ActionsContextMenuAction;
 	export type ActionsContextMenuAction = {
 		label: string;
 		iconHref: string | null;

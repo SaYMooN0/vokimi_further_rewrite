@@ -5,28 +5,28 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import SignInRequiredToUseAlbums from '$lib/components/SignInRequiredToUseAlbums.svelte';
-	import { getCreateNewAlbumOpenFunction } from '../../../../../../c_layout/ts_layout_contexts/album-creation-dialog-context';
-	import { AddVokiToAlbumsDialogState } from './add-voki-to-album-dialog-state.svelte';
-	import AlbumsDialogAlbumsChoosing from './c_albums_dialog/AlbumsDialogAlbumsChoosing.svelte';
-	import AlbumsDialogNoAlbumsState from './c_albums_dialog/AlbumsDialogNoAlbumsState.svelte';
+	import { getCreateNewAlbumOpenFunction } from '../ts_layout_contexts/album-creation-dialog-context';
+	import { AddVokiToAlbumsDialogState } from './c_add_voki_to_album/add-voki-to-albums-dialog-state.svelte';
+	import AlbumsDialogAlbumsChoosing from './c_add_voki_to_album/AlbumsDialogAlbumsChoosing.svelte';
+	import AlbumsDialogNoAlbumsState from './c_add_voki_to_album/AlbumsDialogNoAlbumsState.svelte';
 
-	interface Props {
-		vokiId: string;
-	}
-	let { vokiId }: Props = $props();
-
+	let dialogState = new AddVokiToAlbumsDialogState();
 	let dialog = $state<DialogWithCloseButton>()!;
-	let dialogState = new AddVokiToAlbumsDialogState(vokiId);
-
-	export function open() {
-		dialogState.ensureFresh();
+	let currentVokiId: string | null = $state(null);
+	export function open(vokiId: string) {
+		currentVokiId = vokiId;
+		dialogState.setVokiAndUpdate(vokiId);
 		dialog.open();
 	}
 	const openCreateNewAlbumDialog = getCreateNewAlbumOpenFunction();
 	function changeToCreateNewAlbum() {
 		openCreateNewAlbumDialog(() => {
-			dialogState.updateForce();
-			open();
+			if (currentVokiId === null) {
+				return;
+			}
+			dialogState.setVokiAndUpdate(currentVokiId);
+
+			open(currentVokiId);
 		});
 		dialog.close();
 	}
@@ -37,7 +37,7 @@
 		{#snippet children(authState)}
 			{#if authState.name === 'loading' || dialogState.albumsState.name === 'loading'}
 				<div class="loading-container">
-					<CubesLoader sizeRem={6} color= 'var(--primary)' />
+					<CubesLoader sizeRem={6} color="var(--primary)" />
 					<h1>Loading your albums</h1>
 				</div>
 			{:else if authState.name === 'error'}
@@ -52,7 +52,7 @@
 					<h1>Error in the albums fetching part</h1>
 					<DefaultErrBlock errList={dialogState.albumsState.errs} />
 				</div>
-			{:else if dialogState.albumsState.name === 'ok'}
+			{:else if dialogState.albumsState.name === 'ok' && currentVokiId !== null}
 				{#if dialogState.albumsState.albums.length === 0}
 					<AlbumsDialogNoAlbumsState {changeToCreateNewAlbum} />
 				{:else}
@@ -61,12 +61,16 @@
 						albumsViewData={dialogState.albumsState.albums}
 						albumIdToIsChosen={dialogState.albumToIsChosen}
 						isAlbumChosenChanged={(id) => dialogState.isAlbumChosenChanged(id)}
-						updateVokiPresenceInAlbums={() => dialogState.updateVokiPresenceInAlbums()}
+						updateVokiPresenceInAlbums={() => dialogState.updateVokiPresenceInAlbums(currentVokiId!)}
 					/>
 				{/if}
 			{:else}
 				<h1>Something went wrong</h1>
-				<ReloadButton onclick={() => dialogState.updateForce()} />
+				{#if currentVokiId}
+					<ReloadButton onclick={() => dialogState.setVokiAndUpdate(currentVokiId!)} />
+				{:else}
+					<button onclick={() => dialog.close()}>Close</button>
+				{/if}
 			{/if}
 		{/snippet}
 	</AuthView>

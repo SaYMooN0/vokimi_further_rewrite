@@ -8,17 +8,19 @@
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
 	import { watch } from 'runed';
 	import { toast } from 'svelte-sonner';
+	import { getAddVokiToAlbumsOpenFunction } from '../../c_layout/ts_layout_contexts/add-voki-to-albums-dialog-context';
 
 	interface Props {
 		removeVokiFromListInParent: (voki: PublishedVokiBriefInfo) => void;
+		openReportVokiDialog: (vokiId: string) => void;
 	}
-
-	let { removeVokiFromListInParent }: Props = $props();
+	let { removeVokiFromListInParent, openReportVokiDialog }: Props = $props();
 	let contextMenu = $state<ContextMenuWithActions>()!;
+	const openAddVokiToAlbumDialog = getAddVokiToAlbumsOpenFunction();
 
 	export function open(event: MouseEvent, voki: PublishedVokiBriefInfo) {
 		currentVoki = voki;
-		contextMenu.open(event.x, event.y, 8, -5);
+		contextMenu.open(event.x, event.y, 4, 10);
 	}
 	let notAuthenticatedUserActions: () => ActionsContextMenuAction[] = () => [
 		{
@@ -27,6 +29,28 @@
 			action: {
 				isLink: true,
 				href: `/catalog/${currentVoki!.id}`
+			},
+			type: 'default'
+		},
+		{
+			label: 'Copy link',
+			iconHref: '#context-menu-copy-link-icon',
+			action: {
+				isLink: false,
+				onclick: () => {
+					const link = `${location.origin}/catalog/${currentVoki!.id}`;
+					navigator.clipboard.writeText(link).then(
+						() => {
+							const namePrev =
+								currentVoki!.name.length > 17
+									? currentVoki!.name.slice(0, 15) + '...'
+									: currentVoki!.name;
+							toast.success(`Copied link to '${namePrev}' to clipboard`);
+						},
+						() => toast.error('Could not copy link')
+					);
+					contextMenu.close();
+				}
 			},
 			type: 'default'
 		}
@@ -38,7 +62,10 @@
 			iconHref: '#context-menu-add-to-album-icon',
 			action: {
 				isLink: false,
-				onclick: () => {}
+				onclick: () => {
+					contextMenu.close();
+					openAddVokiToAlbumDialog(currentVoki!.id);
+				}
 			},
 			type: 'default'
 		},
@@ -48,6 +75,18 @@
 			action: {
 				isLink: false,
 				onclick: () => notInterestedAction(currentVoki!)
+			},
+			type: 'red'
+		},
+		{
+			label: 'Report',
+			iconHref: '#context-menu-report-icon',
+			action: {
+				isLink: false,
+				onclick: () => {
+					contextMenu.close();
+					openReportVokiDialog(currentVoki!.id);
+				}
 			},
 			type: 'red'
 		}

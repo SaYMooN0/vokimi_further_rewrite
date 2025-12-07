@@ -1,6 +1,5 @@
 <script lang="ts">
-	import AddVokiToAlbumsDialog from "./c_dialogs/AddVokiToAlbumsDialog.svelte";
-
+	import { getAddVokiToAlbumsOpenFunction } from '../../../../../c_layout/ts_layout_contexts/add-voki-to-albums-dialog-context';
 
 	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	let isHovered = $state(false);
@@ -10,16 +9,14 @@
 			isHovered = false;
 		}, 500);
 	}
-	let addVokiToAlbumsDialog = $state<AddVokiToAlbumsDialog>()!;
+	const openAddVokiToAlbumDialog = getAddVokiToAlbumsOpenFunction();
 </script>
-
-<AddVokiToAlbumsDialog bind:this={addVokiToAlbumsDialog} {vokiId} />
 
 <button
 	class="add-to-album-btn"
 	onmouseenter={() => animateIcon()}
 	onfocus={() => animateIcon()}
-	onclick={() => addVokiToAlbumsDialog.open()}
+	onclick={() => openAddVokiToAlbumDialog(vokiId)}
 >
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
