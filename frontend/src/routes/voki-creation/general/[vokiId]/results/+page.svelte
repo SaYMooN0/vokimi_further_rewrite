@@ -30,7 +30,6 @@
 		vokiId={data.vokiId!}
 		updateParentResults={(newResults) => (results = newResults)}
 	/>
-	<VokiCreationBasicHeader header={`Voki results (${results.length})`} />
 
 	{#if results.length === 0}
 		<ListEmptyMessage
@@ -39,6 +38,7 @@
 			onBtnClick={() => resultCreationDialog.open()}
 		/>
 	{:else}
+		<VokiCreationBasicHeader header={`Voki results (${results.length})`} />
 		<div class="results">
 			{#each results as result}
 				<GeneralVokiCreationResultItem

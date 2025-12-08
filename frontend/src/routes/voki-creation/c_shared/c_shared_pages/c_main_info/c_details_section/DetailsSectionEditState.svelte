@@ -2,7 +2,7 @@
 	import type { VokiDetails } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { TextareaAutosize } from 'runed';
-	import { getVokiCreationPageApiService } from '../../../../voki-creation-page-context';
+	import { getVokiCreationPageContext } from '../../../../voki-creation-page-context';
 	import VokiCreationFieldName from '../../../VokiCreationFieldName.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
@@ -34,7 +34,7 @@
 	let language = $state(details.language);
 	let hasMatureContent = $state(details.hasMatureContent);
 	let savingErrs = $state<Err[]>([]);
-	const vokiCreationApi = getVokiCreationPageApiService();
+	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
 	new TextareaAutosize({ element: () => descriptionTextarea, input: () => description });
 
 	async function saveChanges() {

@@ -1,14 +1,49 @@
 <script lang="ts">
-	import { navigating } from '$app/state';
+	import { navigating, page } from '$app/state';
 	import type { Snippet } from 'svelte';
 	import GeneralVokiCreationLayoutNavBar from './c_layout/GeneralVokiCreationLayoutNavBar.svelte';
-	import VokiCreationHeader from '../../c_layout/VokiCreationHeader.svelte';
-	import { setVokiCreationPageApiService } from '../../voki-creation-page-context';
+	import VokiCreationHeader, {
+		type VokiCreationHeaderVokiName
+	} from '../../c_layout/VokiCreationHeader.svelte';
+	import { setVokiCreationPageContext } from '../../voki-creation-page-context';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
 	import generalVokiCreationIconsSprite from '$lib/icons/general-voki-creation-icons.svg?raw';
+	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
+
 	const { children }: { children: Snippet } = $props();
-	setVokiCreationPageApiService('General');
+
+	let vokiName: VokiCreationHeaderVokiName = $state({ state: 'loading' });
+	async function fetchAndSetVokiName() {
+		console.log('fetchAndSetVokiName');
+		if (!page.params.vokiId) {
+			vokiName = {
+				state: 'errs',
+				errs: [{ message: 'Voki id is not specified' }],
+				reload: () => fetchAndSetVokiName()
+			};
+			return;
+		}
+		vokiName = { state: 'loading' };
+		const response = await ApiVokiCreationGeneral.getVokiName(page.params.vokiId);
+		if (response.isSuccess && response.data.vokiId === page.params.vokiId) {
+			vokiName = { state: 'ok', value: response.data.vokiName };
+		} else if (!response.isSuccess) {
+			vokiName = {
+				state: 'errs',
+				errs: response.errs,
+				reload: () => fetchAndSetVokiName()
+			};
+		} else {
+			vokiName = {
+				state: 'errs',
+				errs: [{ message: 'Something went wrong with fetching voki name' }],
+				reload: () => fetchAndSetVokiName()
+			};
+		}
+	}
+	fetchAndSetVokiName();
+	setVokiCreationPageContext(ApiVokiCreationGeneral, () => fetchAndSetVokiName());
 </script>
 
 <div class="sprites">
@@ -16,13 +51,13 @@
 	{@html generalVokiCreationIconsSprite}
 </div>
 
-<VokiCreationHeader vokiName="Voki name bla bla ki name ki name " typeName="general" />
+<VokiCreationHeader {vokiName} vokiType="General" />
 <GeneralVokiCreationLayoutNavBar />
 
 {#if navigating.type}
 	<div class="loading fade-in-animation">
 		<h1>Loading tab data</h1>
-		<CubesLoader sizeRem={5} color= 'var(--primary)' />
+		<CubesLoader sizeRem={5} color="var(--primary)" />
 	</div>
 {:else}
 	<div class="fade-in-animation">

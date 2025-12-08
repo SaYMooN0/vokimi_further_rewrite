@@ -3,7 +3,7 @@
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
-	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
+	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
 	import type { Err } from '$lib/ts/err';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../VokiCreationSaveAndCancelButtons.svelte';
@@ -17,7 +17,7 @@
 	let newName = $state(vokiName);
 	let isEditing = $state(false);
 	let savingErrs = $state<Err[]>([]);
-	const vokiCreationApi = getVokiCreationPageApiService();
+	const { vokiCreationApi, invalidateVokiName } = getVokiCreationPageContext();
 
 	new TextareaAutosize({ element: () => textarea, input: () => newName });
 
@@ -32,6 +32,7 @@
 			vokiName = newName;
 			isEditing = false;
 			savingErrs = [];
+			invalidateVokiName();
 		} else {
 			savingErrs = response.errs;
 		}
@@ -49,7 +50,7 @@
 			name={StringUtils.rndStr()}
 		/>
 		{#if savingErrs.length > 0}
-			<DefaultErrBlock errList={savingErrs}/>
+			<DefaultErrBlock errList={savingErrs} />
 		{/if}
 		<VokiCreationSaveAndCancelButtons
 			onCancel={() => (isEditing = false)}
@@ -106,8 +107,7 @@
 		font-size: 1.5rem;
 		font-weight: 500;
 		text-decoration: none;
-	word-break: normal;
+		word-break: normal;
 		overflow-wrap: anywhere;
-
 	}
 </style>

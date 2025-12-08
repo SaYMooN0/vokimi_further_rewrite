@@ -15,6 +15,8 @@
 	import { page } from '$app/state';
 	import { VokiPageState } from './voki-page-state.svelte';
 	import { goto } from '$app/navigation';
+	import { VokiTypeUtils } from '$lib/ts/voki-type';
+	import { VokiUtils } from '$lib/ts/voki';
 
 	function getTabFromUrl() {
 		const t = page.url.searchParams.get('tab');
@@ -55,6 +57,12 @@
 			clearInterval(refreshTimer);
 		}
 	});
+	function canUserManageVoki(uId: string) {
+		if (!data.response.isSuccess) {
+			return false;
+		}
+		return VokiUtils.canUserManageVoki(data.response.data, uId);
+	}
 </script>
 
 {#if !data.response.isSuccess}
@@ -106,9 +114,9 @@
 		<CoverSection
 			vokiId={data.response.data.id}
 			cover={data.response.data.cover}
-			usersWithAccessToManage={[data.response.data.primaryAuthorId]}
+			canUserManageVoki={(uId) => canUserManageVoki(uId)}
 			vokiType={data.response.data.type}
-			authenticatedOnlyTaking={true}
+			signedInOnlyTaking={data.response.data.signedInOnlyTaking}
 		/>
 	</div>
 {/if}

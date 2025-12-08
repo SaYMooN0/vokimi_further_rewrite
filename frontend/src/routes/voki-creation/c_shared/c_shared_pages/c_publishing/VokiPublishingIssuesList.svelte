@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
+	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
 	import type {
 		VokiPublishingIssue,
 		VokiSuccessfullyPublishedData
@@ -28,7 +28,8 @@
 	}>();
 	const problems = issues.filter((issue) => issue.type === 'Problem');
 	const warnings = issues.filter((issue) => issue.type === 'Warning');
-	const vokiCreationApi = getVokiCreationPageApiService();
+	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
+
 
 	async function ignoreWarningsAndPublish() {
 		const response = await vokiCreationApi.publishWithWarningsIgnored(vokiId);

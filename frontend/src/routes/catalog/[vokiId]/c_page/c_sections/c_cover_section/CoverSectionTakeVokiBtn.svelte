@@ -7,9 +7,9 @@
 	interface Props {
 		vokiId: string;
 		vokiType: VokiType;
-		authenticatedOnlyTaking: boolean;
+		signedInOnlyTaking: boolean;
 	}
-	let { vokiId, vokiType, authenticatedOnlyTaking }: Props = $props();
+	let { vokiId, vokiType, signedInOnlyTaking }: Props = $props();
 
 	let authNeededToTakeVokiDialog = $state<AuthNeededToTakeVokiDialog>()!;
 </script>
@@ -17,7 +17,7 @@
 <AuthNeededToTakeVokiDialog bind:this={authNeededToTakeVokiDialog} />
 <AuthView>
 	{#snippet children(authState)}
-		{#if authenticatedOnlyTaking && !authState.isAuthenticated}
+		{#if signedInOnlyTaking && !authState.isAuthenticated}
 			<button class="take-voki-btn" onclick={() => authNeededToTakeVokiDialog.open()}>
 				{@render btnContent()}
 			</button>

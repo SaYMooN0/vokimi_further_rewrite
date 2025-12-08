@@ -19,6 +19,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.MapGet("/main-info", GetVokiMainInfo);
+        group.MapGet("/voki-name", GetVokiName);
 
         group.MapPatch("/set-cover-to-default", SetVokiCoverToDefault);
         group.MapPatch("/update-cover", UpdateVokiCover)
@@ -49,6 +50,17 @@ internal class SpecificVokiHandlers : IEndpointGroup
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOrToJson<DraftGeneralVoki, VokiMainInfoResponse>(result);
+    }
+    private static async Task<IResult> GetVokiName(
+        CancellationToken ct, HttpContext httpContext,
+        IQueryHandler<GetVokiQuery, DraftGeneralVoki> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+
+        GetVokiQuery query = new(id);
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOrToJson<DraftGeneralVoki, VokiNameResponse>(result);
     }
 
     private static async Task<IResult> UpdateVokiName(

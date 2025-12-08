@@ -33,3 +33,9 @@ export type PublishedVokiViewState =
     | { state: "loading", vokiId: string }
     | { state: "ok"; data: PublishedVokiBriefInfo }
     | { state: "errs"; errs: Err[], vokiId: string };
+
+export namespace VokiUtils {
+    export function canUserManageVoki(voki: PublishedVokiBriefInfo, signedInUserId: string): boolean {
+        return voki.primaryAuthorId === signedInUserId;
+    }
+}

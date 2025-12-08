@@ -32,6 +32,7 @@ export interface IVokiCreationBackendService {
     setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newCover: string; }>>;
     updateVokiCover(vokiId: string, newCover: string): Promise<ResponseResult<{ newCover: string; }>>;
     updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newName: string; }>>;
+    getVokiName(vokiId: string): Promise<ResponseResult<{ vokiId: string, vokiName: string; }>>;
     updateVokiTags(vokiId: string, tags: string[]): Promise<ResponseResult<{ newTags: string[]; }>>;
     updateVokiDetails(vokiId: string, details: VokiDetails): Promise<ResponseResult<VokiDetails>>;
     checkForPublishingIssues(vokiId: string): Promise<ResponseResult<VokiPublishingIssuesList>>;
@@ -44,6 +45,7 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
     constructor(baseUrl: string) {
         super(baseUrl);
     }
+
 
 
     public async setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newCover: string; }>> {
@@ -66,6 +68,12 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
             RJO.PATCH({ newName })
         );
     }
+    public async getVokiName(vokiId: string): Promise<ResponseResult<{ vokiId: string, vokiName: string; }>> {
+        return await this.fetchJsonResponse<{ vokiId: string, vokiName: string; }>(
+            `/vokis/${vokiId}/voki-name`, { method: 'GET' }
+        );
+    }
+
 
     public async updateVokiTags(vokiId: string, newTags: string[]): Promise<ResponseResult<{ newTags: string[]; }>> {
         return await this.fetchJsonResponse<{ newTags: string[]; }>(

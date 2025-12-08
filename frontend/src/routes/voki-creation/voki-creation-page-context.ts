@@ -1,19 +1,24 @@
-import { ApiVokiCreationGeneral, type IVokiCreationBackendService } from '$lib/ts/backend-communication/voki-creation-backend-service';
-import type { VokiType } from '$lib/ts/voki-type';
+import { type IVokiCreationBackendService } from '$lib/ts/backend-communication/voki-creation-backend-service';
 import { getContext, setContext } from 'svelte';
 
 
 
 const key = Symbol("voki-creation-page-api");
+type ContextType = {
+	vokiCreationApi: IVokiCreationBackendService,
+	invalidateVokiName: () => void
+}
+export function setVokiCreationPageContext(
+	apiService: IVokiCreationBackendService,
+	invalidateVokiName: () => void
+) {
 
-export function setVokiCreationPageApiService(vokiType: VokiType) {
-	const apiService = vokiType === 'General' ? ApiVokiCreationGeneral : undefined;
-	if (apiService === undefined) {
-		throw new Error(`Unknown voki type: ${vokiType}`);
-	}
-	setContext(key, apiService);
+	setContext<ContextType>(key, {
+		vokiCreationApi: apiService,
+		invalidateVokiName: invalidateVokiName
+	});
 }
 
-export function getVokiCreationPageApiService() {
-	return getContext<IVokiCreationBackendService>(key);
+export function getVokiCreationPageContext() {
+	return getContext<ContextType>(key);
 }

@@ -7,9 +7,10 @@
 	} from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { toast } from 'svelte-sonner';
-	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
+	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
 
-	const vokiCreationApi = getVokiCreationPageApiService();
+	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
+
 	const {
 		vokiId,
 		showNewIssuesOnIssuesFound,

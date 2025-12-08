@@ -3,14 +3,14 @@
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { type VokiPublishingIssue } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import { getVokiCreationPageApiService } from '../../voki-creation-page-context';
+	import { getVokiCreationPageContext } from '../../voki-creation-page-context';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import VokiPublishingIssuesList from './c_publishing/VokiPublishingIssuesList.svelte';
 	import NoVokiPublishingIssues from './c_publishing/NoVokiPublishingIssues.svelte';
 	import VokiPublishedDialog from './c_publishing/VokiPublishedDialog.svelte';
 
 	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
-	const vokiCreationApi = getVokiCreationPageApiService();
+	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
 
 	let pageState = $state<PageState>({ name: 'message' });
 
@@ -47,7 +47,7 @@
 	</div>
 {:else if pageState.name === 'loading'}
 	<div class="msg-container loading">
-		<CubesLoader sizeRem={5}  color= 'var(--primary)'/>
+		<CubesLoader sizeRem={5} color="var(--primary)" />
 		<label>Searching for issues</label>
 	</div>
 {:else if pageState.name === 'error'}

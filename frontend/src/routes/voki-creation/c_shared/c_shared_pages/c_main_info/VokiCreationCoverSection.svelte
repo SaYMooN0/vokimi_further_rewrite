@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { toast } from 'svelte-sonner';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import { getVokiCreationPageApiService } from '../../../voki-creation-page-context';
+	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import CoverChangingDialog from './c_cover_section/CoverChangingDialog.svelte';
 
@@ -9,7 +9,7 @@
 		cover: string;
 		vokiId: string;
 	}>();
-	const vokiCreationApi = getVokiCreationPageApiService();
+	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
 	let version = $state(0);
 	let isLoading = $state(false);
 	let changeCoverDialog = $state<CoverChangingDialog>()!;

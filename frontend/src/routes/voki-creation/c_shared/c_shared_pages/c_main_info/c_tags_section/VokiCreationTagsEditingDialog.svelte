@@ -2,9 +2,8 @@
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import { getVokiCreationPageApiService } from '../../../../voki-creation-page-context';
+	import { getVokiCreationPageContext } from '../../../../voki-creation-page-context';
 	import TagOperatingDisplay from './TagOperatingDisplay.svelte';
 	import TagsDialogSearchBar from './TagsDialogSearchBar.svelte';
 
@@ -20,7 +19,8 @@
 	let errs = $state<Err[]>([]);
 	let tagsToChooseFrom: string[] = $state([]);
 	let chosenTags = $state<string[]>([]);
-	const vokiCreationApi = getVokiCreationPageApiService();
+	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
+
 
 	async function saveData() {
 		const response = await vokiCreationApi.updateVokiTags(vokiId, chosenTags);

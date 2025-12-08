@@ -9,22 +9,21 @@
 	interface Props {
 		vokiId: string;
 		cover: string;
-		usersWithAccessToManage: string[];
 		vokiType: VokiType;
-		authenticatedOnlyTaking: boolean;
+		signedInOnlyTaking: boolean;
+		canUserManageVoki: (userId: string) => boolean;
 	}
-	let { vokiId, cover, usersWithAccessToManage, vokiType, authenticatedOnlyTaking }: Props =
-		$props();
+	let { vokiId, cover, vokiType, signedInOnlyTaking, canUserManageVoki }: Props = $props();
 </script>
 
 <div class="voki-cover-section">
 	<img class="voki-cover" src={StorageBucketMain.fileSrc(cover)} alt="voki cover" />
 	<div class="buttons-container">
-		<CoverSectionTakeVokiBtn {vokiId} {vokiType} {authenticatedOnlyTaking} />
+		<CoverSectionTakeVokiBtn {vokiId} {vokiType} {signedInOnlyTaking} />
 		<CoverSectionAddToAlbumBtn {vokiId} />
 		<AuthView>
 			{#snippet children(authState)}
-				{#if authState.name === 'authenticated' && usersWithAccessToManage.includes(authState.userId)}
+				{#if authState.name === 'authenticated' && canUserManageVoki(authState.userId)}
 					<CoverSectionManageVokiBtn {vokiId} />
 				{/if}
 			{/snippet}

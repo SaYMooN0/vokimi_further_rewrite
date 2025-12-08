@@ -18,7 +18,7 @@ export type VokiOverviewInfo = {
     publicationDate: Date;
     ratingsCount: number;
     commentsCount: number;
-    authenticatedOnlyTaking: boolean;
+    signedInOnlyTaking: boolean;
 };
 
 export type RatingsTabDataType =
