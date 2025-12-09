@@ -1,6 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
 using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
@@ -35,7 +34,7 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
     }
 
     public async Task<ErrOr<VokiResult>> Handle(UpdateVokiResultCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId, ct))!;
         var imageRes = await HandleImage(command.NewImage, command.VokiId, command.ResultId, ct);
         if (imageRes.IsErr(out var err)) {
             return err;
@@ -46,7 +45,7 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
             return err;
         }
 
-        await _draftGeneralVokisRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki, ct);
         return res.AsSuccess();
     }
 

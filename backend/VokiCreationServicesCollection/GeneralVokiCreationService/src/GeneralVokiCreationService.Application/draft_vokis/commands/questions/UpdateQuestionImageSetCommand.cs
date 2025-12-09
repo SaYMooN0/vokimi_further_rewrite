@@ -1,6 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
 using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
@@ -49,7 +48,7 @@ internal sealed class UpdateQuestionImageSetCommandHandler :
     }
 
     public async Task<ErrOr<VokiQuestionImagesSet>> Handle(UpdateQuestionImageSetCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId, ct))!;
 
         List<GeneralVokiQuestionImageKey> resultKeys = [..command.SavedKeys];
 
@@ -79,7 +78,7 @@ internal sealed class UpdateQuestionImageSetCommandHandler :
             return err;
         }
 
-        await _draftGeneralVokisRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki, ct);
 
         return imagesSet;
     }

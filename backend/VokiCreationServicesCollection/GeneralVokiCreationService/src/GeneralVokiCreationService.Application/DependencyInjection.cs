@@ -10,7 +10,10 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services) {
         services.AddApplicationMessaging(typeof(DependencyInjection));
+        
         services.AddLibStepHandlers();
+        services.AddLibMessaging();
+        
         services.AddSingleton<DraftVokiAnswerDataSavingService>();
 
         return services;

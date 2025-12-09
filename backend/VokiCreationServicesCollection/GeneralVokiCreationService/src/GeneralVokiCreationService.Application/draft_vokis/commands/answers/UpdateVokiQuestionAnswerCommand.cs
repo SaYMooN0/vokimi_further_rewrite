@@ -1,5 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common.repositories;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Application.draft_vokis.commands.answers.auxiliary;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
@@ -41,7 +41,8 @@ internal sealed class UpdateVokiQuestionAnswerCommandHandler :
             return err;
         }
 
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
+        DraftGeneralVoki voki =
+            (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
         ErrOr<VokiQuestionAnswer> res = voki.UpdateQuestionAnswer(
             command.QuestionId, command.AnswerId, answerDataRes.AsSuccess(), command.NewRelatedResultIds
         );
@@ -49,7 +50,7 @@ internal sealed class UpdateVokiQuestionAnswerCommandHandler :
             return err;
         }
 
-        await _draftGeneralVokisRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki, ct);
         return res.AsSuccess();
     }
 }

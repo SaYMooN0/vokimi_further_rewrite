@@ -2,7 +2,6 @@
 using Amazon.S3;
 using ApplicationShared;
 using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Application.common.repositories;
 using GeneralVokiCreationService.Infrastructure.persistence;
 using GeneralVokiCreationService.Infrastructure.persistence.repositories;
 using GeneralVokiCreationService.Infrastructure.storage;
@@ -14,7 +13,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using VokiCreationServicesLib.Application.repositories;
+using VokiCreationServicesLib.Application.common;
+using VokiCreationServicesLib.Infrastructure.storage;
 
 namespace GeneralVokiCreationService.Infrastructure;
 
@@ -30,14 +30,14 @@ public static class DependencyInjection
             .AddPersistence(configuration, env)
             .AddS3(configuration)
             .AddAuth(configuration)
-            .AddMassTransitWithIntegrationEventHandlers(configuration, typeof(Application.DependencyInjection).Assembly);
+            .AddMassTransitWithIntegrationEventHandlers(configuration,
+                typeof(Application.DependencyInjection).Assembly);
     }
 
     private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
         .AddDateTimeProvider()
         .AddDomainEventsPublisher()
         .AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
-
 
 
     private static IServiceCollection AddPersistence(
@@ -71,6 +71,8 @@ public static class DependencyInjection
         ));
 
         services.AddSingleton(s3Config.MainBucket); //S3MainBucketConf
+
+        services.AddScoped<IVokiCreationLibMainStorageBucket, VokiCreationLibLibMainStorageBucket>();
         services.AddScoped<IMainStorageBucket, MainStorageBucket>();
 
         return services;

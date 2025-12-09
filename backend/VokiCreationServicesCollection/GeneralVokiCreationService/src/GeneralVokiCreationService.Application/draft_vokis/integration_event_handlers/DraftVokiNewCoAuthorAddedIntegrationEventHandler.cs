@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -32,7 +32,7 @@ public class DraftVokiNewCoAuthorAddedIntegrationEventHandler : IConsumer<DraftV
             return;
         }
 
-        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetById(msg.VokiId);
+        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetById(msg.VokiId, context.CancellationToken);
         if (voki is null) {
             _logger.LogWarning(
                 "Received {EventName} but draft voki {VokiId} was not found. Could not add co-author {AppUserId}",
@@ -52,7 +52,7 @@ public class DraftVokiNewCoAuthorAddedIntegrationEventHandler : IConsumer<DraftV
             UnexpectedBehaviourException.ThrowErr(err);
         }
 
-        await _draftGeneralVokisRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki, context.CancellationToken);
         
         _logger.LogInformation(
             "Processed {EventName}: co-author {AppUserId} added to Voki {VokiId}",

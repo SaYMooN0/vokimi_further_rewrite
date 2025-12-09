@@ -1,5 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common.repositories;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel;
 using VokiCreationServicesLib.Application;
@@ -9,7 +9,7 @@ using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
 
 public record class PublishVokiCommand(VokiId VokiId) :
-    ICommand<PublishVokiCommandResult>,   
+    ICommand<PublishVokiCommandResult>,
     IWithAuthCheckStep,
     IWithVokiPrimaryAuthorValidationStep;
 
@@ -36,7 +36,9 @@ internal sealed class PublishVokiCommandHandler :
     }
 
     public async Task<ErrOr<PublishVokiCommandResult>> Handle(PublishVokiCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
+        DraftGeneralVoki voki =
+            (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
+        
         var issues = voki.CheckForPublishingIssues();
         if (issues.Any()) {
             return new PublishVokiCommandResult.FailedToPublish(issues);
@@ -47,7 +49,7 @@ internal sealed class PublishVokiCommandHandler :
             return err;
         }
 
-        await _draftGeneralVokisRepository.Delete(voki);
+        await _draftGeneralVokisRepository.Delete(voki, ct);
         return new PublishVokiCommandResult.Success(
             new VokiSuccessfullyPublishedResult(voki.Id, voki.Cover, voki.Name)
         );

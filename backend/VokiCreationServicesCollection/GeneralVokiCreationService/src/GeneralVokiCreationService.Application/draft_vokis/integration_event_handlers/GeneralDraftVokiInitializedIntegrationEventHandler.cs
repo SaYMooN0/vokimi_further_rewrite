@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Application.common.repositories;
+﻿using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using MassTransit;
 using SharedKernel.common.vokis;
@@ -23,6 +23,6 @@ public class GeneralDraftVokiInitializedIntegrationEventHandler : IConsumer<Gene
             new VokiCoverKey(context.Message.Cover),
             context.Message.CreationDate
         );
-        await _draftGeneralVokisRepository.Add(newGeneralVoki);
+        await _draftGeneralVokisRepository.Add(newGeneralVoki, context.CancellationToken);
     }
 }

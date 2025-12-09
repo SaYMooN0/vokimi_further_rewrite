@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\..\Libs\ApiShared\ApiShared.csproj" />
+      <ProjectReference Include="..\..\..\VokiCreationServicesLib\src\VokiCreationServicesLib.Api\VokiCreationServicesLib.Api.csproj" />
       <ProjectReference Include="..\GeneralVokiCreationService.Infrastructure\GeneralVokiCreationService.Infrastructure.csproj" />
     </ItemGroup>
 

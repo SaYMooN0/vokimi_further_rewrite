@@ -1,13 +1,13 @@
-﻿using VokimiStorageKeysLib.concrete_keys;
+﻿using VokiCreationServicesLib.Application.common;
+using VokimiStorageKeysLib.concrete_keys;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 using VokimiStorageKeysLib.temp_keys;
 
 namespace GeneralVokiCreationService.Application.common;
 
-public interface IMainStorageBucket
+public interface IMainStorageBucket 
 {
-    Task<ErrOrNothing> CopyDefaultVokiCoverForVoki(VokiCoverKey defaultVokiCover, CancellationToken ct);
-    Task<ErrOrNothing> CopyVokiCoverFromTempToStandard(TempImageKey temp, VokiCoverKey destination, CancellationToken ct);
+
 
     Task<ErrOrNothing> CopyVokiResultImageFromTempToStandard(
         TempImageKey temp,

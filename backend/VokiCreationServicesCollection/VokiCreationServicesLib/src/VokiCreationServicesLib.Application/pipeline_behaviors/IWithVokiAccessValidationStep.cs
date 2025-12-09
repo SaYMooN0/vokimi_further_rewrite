@@ -3,7 +3,7 @@ using ApplicationShared.messaging;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
-using VokiCreationServicesLib.Application.repositories;
+using VokiCreationServicesLib.Application.common;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 namespace VokiCreationServicesLib.Application.pipeline_behaviors;
@@ -40,7 +40,7 @@ public static class VokiAccessValidationStepHandler
 
         public async Task<ErrOr<TResponse>> Handle(TCommand command, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId);
+            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
@@ -73,7 +73,7 @@ public static class VokiAccessValidationStepHandler
 
         public async Task<ErrOrNothing> Handle(TCommand command, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId);
+            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
@@ -106,7 +106,7 @@ public static class VokiAccessValidationStepHandler
 
         public async Task<ErrOr<TResponse>> Handle(TQuery query, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(query.VokiId);
+            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(query.VokiId, ct);
             
             if (voki is null) {
                 return query.VokiNotFoundErr;

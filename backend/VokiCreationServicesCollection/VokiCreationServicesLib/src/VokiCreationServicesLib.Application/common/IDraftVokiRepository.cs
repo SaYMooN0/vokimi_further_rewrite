@@ -1,0 +1,11 @@
+﻿using SharedKernel.domain.ids;
+using VokiCreationServicesLib.Domain.draft_voki_aggregate;
+
+namespace VokiCreationServicesLib.Application.common;
+
+public interface IDraftVokiRepository
+{
+    Task<BaseDraftVoki?> GetByIdAsNoTracking(VokiId vokiId, CancellationToken ct);
+    Task<BaseDraftVoki?> GetById(VokiId vokiId, CancellationToken ct);
+    Task Update(BaseDraftVoki voki, CancellationToken ct);
+}

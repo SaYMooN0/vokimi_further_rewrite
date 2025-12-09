@@ -26,18 +26,12 @@
 		}
 		vokiName = { state: 'loading' };
 		const response = await ApiVokiCreationGeneral.getVokiName(page.params.vokiId);
-		if (response.isSuccess && response.data.vokiId === page.params.vokiId) {
+		if (response.isSuccess) {
 			vokiName = { state: 'ok', value: response.data.vokiName };
-		} else if (!response.isSuccess) {
-			vokiName = {
-				state: 'errs',
-				errs: response.errs,
-				reload: () => fetchAndSetVokiName()
-			};
 		} else {
 			vokiName = {
 				state: 'errs',
-				errs: [{ message: 'Something went wrong with fetching voki name' }],
+				errs: response.errs,
 				reload: () => fetchAndSetVokiName()
 			};
 		}

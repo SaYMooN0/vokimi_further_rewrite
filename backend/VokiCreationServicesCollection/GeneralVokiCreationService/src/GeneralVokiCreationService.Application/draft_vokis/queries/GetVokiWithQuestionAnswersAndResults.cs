@@ -1,5 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common.repositories;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
@@ -18,6 +18,6 @@ internal sealed class GetVokiWithQuestionAnswersAndResultsHandler : IQueryHandle
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
     public async Task<ErrOr<DraftGeneralVoki>> Handle(GetVokiWithQuestionAnswersAndResults query, CancellationToken ct) {
-        return (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(query.VokiId))!; 
+        return (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(query.VokiId, ct))!; 
     }
 }

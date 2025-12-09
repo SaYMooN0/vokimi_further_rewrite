@@ -1,6 +1,6 @@
 ﻿using VokimiStorageKeysLib.temp_keys;
 
-namespace GeneralVokiCreationService.Api.contracts.voki.update_requests;
+namespace VokiCreationServicesLib.Api.contracts.update_requests;
 
 public class UpdateVokiCoverRequest : IRequestWithValidationNeeded
 {

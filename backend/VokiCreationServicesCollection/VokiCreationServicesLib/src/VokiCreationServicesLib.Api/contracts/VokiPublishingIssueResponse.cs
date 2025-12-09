@@ -1,6 +1,6 @@
 ﻿using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
-namespace GeneralVokiCreationService.Api.contracts.voki;
+namespace VokiCreationServicesLib.Api.contracts;
 
 public record VokiPublishingIssueResponse(
     PublishingIssueType Type,

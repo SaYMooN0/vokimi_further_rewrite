@@ -1,5 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common.repositories;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel;
 using VokiCreationServicesLib.Application;
@@ -8,7 +8,7 @@ using VokiCreationServicesLib.Application.pipeline_behaviors;
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
 
 public sealed record PublishVokiWithWarningsIgnoredCommand(VokiId VokiId) :
-    ICommand<VokiSuccessfullyPublishedResult>,   
+    ICommand<VokiSuccessfullyPublishedResult>,
     IWithAuthCheckStep,
     IWithVokiPrimaryAuthorValidationStep;
 
@@ -31,14 +31,14 @@ internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
         PublishVokiWithWarningsIgnoredCommand command,
         CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId))!;
+        DraftGeneralVoki voki =
+            (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
         var publishingRes = voki.PublishWithWarningsIgnored(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {
             return err;
         }
 
-        await _draftGeneralVokisRepository.Delete(voki);
-
+        await _draftGeneralVokisRepository.Delete(voki, ct);
         return new VokiSuccessfullyPublishedResult(voki.Id, voki.Cover, voki.Name);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common.repositories;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using SharedKernel;
@@ -29,13 +29,13 @@ internal sealed class AddNewResultToVokiCommandHandler :
     public async Task<ErrOr<ImmutableArray<VokiResult>>> Handle(
         AddNewResultToVokiCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId, ct))!;
         var res = voki.AddNewResult(command.ResultName, _dateTimeProvider);
         if (res.IsErr(out var err)) {
             return err;
         }
 
-        await _draftGeneralVokisRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki, ct);
         return voki.Results;
     }
 }

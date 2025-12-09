@@ -1,5 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common.repositories;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 
@@ -22,9 +22,9 @@ internal sealed class UpdateVokiTakingProcessSettingsCommandHandler :
     public async Task<ErrOr<VokiTakingProcessSettings>> Handle(
         UpdateVokiTakingProcessSettingsCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetById(command.VokiId))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetById(command.VokiId, ct))!;
         voki.UpdateTakingProcessSettings(command.NewSettings);
-        await _draftGeneralVokisRepository.Update(voki);
+        await _draftGeneralVokisRepository.Update(voki, ct);
         return voki.TakingProcessSettings;
     }
 }
