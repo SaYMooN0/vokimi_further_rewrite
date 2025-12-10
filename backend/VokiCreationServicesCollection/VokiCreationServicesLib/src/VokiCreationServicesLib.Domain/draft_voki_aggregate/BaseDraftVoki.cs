@@ -1,4 +1,5 @@
-﻿using SharedKernel.common.vokis;
+﻿using SharedKernel;
+using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.concrete_keys;
@@ -47,8 +48,8 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         CoAuthors = newSetRes.AsSuccess();
         return ErrOrNothing.Nothing;
     }
-    public ErrOrNothing RemoveCoAuthor(AppUserId coAuthorId)
-    {
+
+    public ErrOrNothing RemoveCoAuthor(AppUserId coAuthorId) {
         if (coAuthorId == PrimaryAuthorId) {
             return ErrFactory.Conflict("Primary author cannot be removed from co-authors");
         }
@@ -61,8 +62,17 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         CoAuthors = newSetRes.AsSuccess();
         return ErrOrNothing.Nothing;
     }
+
     public bool HasAccessToEdit(AppUserId userId) =>
         userId == PrimaryAuthorId || CoAuthors.Contains(userId);
+
+    public static bool DoesUserHaveAccess(
+        IAuthenticatedUserContext userContext,
+        AppUserId primaryAuthorId,
+        VokiCoAuthorIdsSet coAuthorIds
+    ) {
+        return userContext.UserId == primaryAuthorId || coAuthorIds.Contains(userContext.UserId);
+    }
 
     public void UpdateName(VokiName newVokiName) {
         Name = newVokiName;

@@ -15,8 +15,8 @@ public class DraftVokiNameUpdatedIntegrationEventHandler : IConsumer<DraftVokiNa
     }
 
     public async Task Consume(ConsumeContext<DraftVokiNameUpdatedIntegrationEvent> context) {
-        DraftVoki voki = (await _draftVokiRepository.GetById(context.Message.VokiId))!;
+        DraftVoki voki = (await _draftVokiRepository.GetById(context.Message.VokiId, context.CancellationToken))!;
         voki.UpdateName(new VokiName(context.Message.NewVokiName));
-        await _draftVokiRepository.Update(voki);
+        await _draftVokiRepository.Update(voki, context.CancellationToken);
     }
 }

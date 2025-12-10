@@ -4,5 +4,5 @@ namespace VokiCommentsService.Application.common.repositories;
 
 public interface IAppUsersRepository
 {
-    Task Add(AppUser user);
+    Task Add(AppUser user, CancellationToken ct);
 }

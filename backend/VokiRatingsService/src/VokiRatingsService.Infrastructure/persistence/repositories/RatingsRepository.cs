@@ -13,10 +13,12 @@ public class RatingsRepository : IRatingsRepository
         _db = db;
     }
 
-    public Task<VokiRating?> GetByUserForVokiWithHistory(AppUserId userId, VokiId vokiId, CancellationToken ct) =>
+    public Task<VokiRating?> GetUserRatingForVokiWithHistory(
+        IAuthenticatedUserContext userContext, VokiId vokiId, CancellationToken ct
+    ) =>
         _db.Ratings
             .Include(r => r.History)
-            .FirstOrDefaultAsync(r => r.VokiId == vokiId && r.UserId == userId, cancellationToken: ct);
+            .FirstOrDefaultAsync(r => r.VokiId == vokiId && r.UserId == userContext.UserId, cancellationToken: ct);
 
     public Task<VokiRating[]> GetForVokiAsNoTracking(VokiId vokiId, CancellationToken ct) => _db.Ratings
         .AsNoTracking()

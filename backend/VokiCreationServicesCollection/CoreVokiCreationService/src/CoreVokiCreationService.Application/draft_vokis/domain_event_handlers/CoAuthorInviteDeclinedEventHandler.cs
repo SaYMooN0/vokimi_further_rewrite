@@ -12,8 +12,8 @@ internal class CoAuthorInviteDeclinedEventHandler : IDomainEventHandler<CoAuthor
     }
 
     public async Task Handle(CoAuthorInviteDeclinedEvent e, CancellationToken ct) {
-        DraftVoki voki = (await _draftVokiRepository.GetById(e.VokiId))!;
+        DraftVoki voki = (await _draftVokiRepository.GetById(e.VokiId, ct))!;
         voki.DeclineCoAuthorInvite(e.AppUserId);
-        await _draftVokiRepository.Update(voki);
+        await _draftVokiRepository.Update(voki, ct);
     }
 }

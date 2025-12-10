@@ -18,6 +18,8 @@ internal class UserContextProvider : IUserContext
     public AppUserId AuthenticatedUserId =>
         TryGetUserIdFromContextItems(out var userId) ? userId : UserIdFromToken().AsSuccess();
 
+    public IAuthenticatedUserContext AuthenticatedUser => new AuthenticatedUserContext(AuthenticatedUserId);
+
     public ErrOr<AppUserId> UserIdFromToken() {
         if (!TryGetTokenFromCookie(out string? token) || string.IsNullOrEmpty(token)) {
             return ErrFactory.AuthRequired("User is not authenticated", "Log in to your account");

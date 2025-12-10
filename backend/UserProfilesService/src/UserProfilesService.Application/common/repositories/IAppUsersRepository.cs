@@ -12,9 +12,7 @@ public interface IAppUsersRepository
     Task Update(AppUser user, CancellationToken ct);
     Task<AppUser?> GetByIdAsNoTracking(AppUserId userId, CancellationToken ct);
 
-    public Task<UserPreviewDto[]> GetUserNamesWithProfilePics(
-        IEnumerable<AppUserId> userIds, CancellationToken ct
-    );
+    public Task<UserPreviewDto[]> GetUserNamesWithProfilePics(IEnumerable<AppUserId> userIds, CancellationToken ct);
 
     Task<UserPreviewWithAllowInvitesSettingDto[]> SearchToInviteByNameQuery(string searchValue, int limit, CancellationToken ct);
     Task<UserPreviewWithAllowInvitesSettingDto[]> ListAllUsers(CancellationToken ct);

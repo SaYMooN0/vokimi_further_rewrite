@@ -12,25 +12,25 @@ internal class UnconfirmedUsersRepository : IUnconfirmedUsersRepository
         _db = db;
     }
 
-    public Task<UnconfirmedUser?> GetByEmail(Email email) =>
-        _db.UnconfirmedUsers.FirstOrDefaultAsync(u => u.Email == email);
+    public Task<UnconfirmedUser?> GetByEmail(Email email, CancellationToken ct) =>
+        _db.UnconfirmedUsers.FirstOrDefaultAsync(u => u.Email == email, cancellationToken: ct);
 
-    public async Task Add(UnconfirmedUser unconfirmedUser) {
-        await _db.UnconfirmedUsers.AddAsync(unconfirmedUser);
-        await _db.SaveChangesAsync();
+    public async Task Add(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
+        await _db.UnconfirmedUsers.AddAsync(unconfirmedUser, ct);
+        await _db.SaveChangesAsync(ct);
     }
 
-    public Task Update(UnconfirmedUser unconfirmedUser) {
+    public Task Update(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
         _db.UnconfirmedUsers.Update(unconfirmedUser);
-        return _db.SaveChangesAsync();
+        return _db.SaveChangesAsync(ct);
     }
 
-    public async Task<UnconfirmedUser?> GetById(UnconfirmedUserId userId) =>
-        await _db.UnconfirmedUsers.FindAsync(userId);
+    public async Task<UnconfirmedUser?> GetById(UnconfirmedUserId userId, CancellationToken ct) =>
+        await _db.UnconfirmedUsers.FindAsync([userId], cancellationToken: ct);
 
-    public Task Delete(UnconfirmedUser unconfirmedUser) {
+    public Task Delete(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
         _db.UnconfirmedUsers.Remove(unconfirmedUser);
-        return _db.SaveChangesAsync();
+        return _db.SaveChangesAsync(ct);
     }
 
     public async Task<int> DeleteAllExpiredUsers(DateTime utcNow, CancellationToken ct) {

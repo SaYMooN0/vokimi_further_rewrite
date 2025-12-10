@@ -23,10 +23,10 @@ internal sealed class DropCoAuthorCommandHandler : ICommandHandler<DropCoAuthorC
 
 
     public async Task<ErrOr<DraftVoki>> Handle(DropCoAuthorCommand command, CancellationToken ct) {
-        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId))!;
+        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
         voki.DropCoAuthor(command.CoAuthorId);
 
-        await _draftVokiRepository.Update(voki);
+        await _draftVokiRepository.Update(voki, ct);
         return voki;
     }
 }

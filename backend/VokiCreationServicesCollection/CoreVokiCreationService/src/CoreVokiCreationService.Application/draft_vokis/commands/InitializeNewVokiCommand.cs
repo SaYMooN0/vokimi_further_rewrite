@@ -50,7 +50,7 @@ internal sealed class InitializeNewVokiCommandHandler : ICommandHandler<Initiali
             );
         }
 
-        await _draftVokiRepository.Add(voki);
+        await _draftVokiRepository.Add(voki, ct);
         return voki;
     }
 }

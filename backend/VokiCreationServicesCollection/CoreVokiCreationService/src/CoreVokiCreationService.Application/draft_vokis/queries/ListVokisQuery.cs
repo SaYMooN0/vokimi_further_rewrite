@@ -36,6 +36,6 @@ internal sealed class ListVokisQueryHandler : IQueryHandler<ListVokisQuery, Draf
             return  ErrFactory.NoAccess("You do not have access to one or more of the requested vokis");
         }
         
-        return await _draftVokiRepository.GetMultipleByIdAsNoTracking(query.VokiIds);
+        return await _draftVokiRepository.GetMultipleByIdAsNoTracking(query.VokiIds, ct);
     }
 }

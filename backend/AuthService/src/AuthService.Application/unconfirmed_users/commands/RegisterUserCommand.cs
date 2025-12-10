@@ -27,20 +27,20 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
     }
 
     public async Task<ErrOrNothing> Handle(RegisterUserCommand command, CancellationToken ct) {
-        if ((await AnyConfirmedUserWithEmail(command.Email)).IsErr(out var err)) {
+        if ((await AnyConfirmedUserWithEmail(command.Email, ct)).IsErr(out var err)) {
             return err;
         }
 
-        UnconfirmedUser? unconfirmedUser = await _unconfirmedUsersRepository.GetByEmail(command.Email);
+        UnconfirmedUser? unconfirmedUser = await _unconfirmedUsersRepository.GetByEmail(command.Email, ct);
         if (unconfirmedUser is null) {
-            return await CreateNewUnconfirmedUser(command);
+            return await CreateNewUnconfirmedUser(command, ct);
         }
 
-        return await OverrideExistingUnconfirmedUser(unconfirmedUser, command);
+        return await OverrideExistingUnconfirmedUser(unconfirmedUser, command, ct);
     }
 
 
-    private async Task<ErrOrNothing> CreateNewUnconfirmedUser(RegisterUserCommand command) {
+    private async Task<ErrOrNothing> CreateNewUnconfirmedUser(RegisterUserCommand command, CancellationToken ct) {
         var creationRes = UnconfirmedUser.CreateNew(
             command.UniqueName, command.Email, _dateTimeProvider.UtcNow, command.Password, _passwordHasher
         );
@@ -48,12 +48,12 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
             return err;
         }
 
-        await _unconfirmedUsersRepository.Add(creationRes.AsSuccess());
+        await _unconfirmedUsersRepository.Add(creationRes.AsSuccess(), ct);
         return ErrOrNothing.Nothing;
     }
 
     private async Task<ErrOrNothing> OverrideExistingUnconfirmedUser(
-        UnconfirmedUser unconfirmedUser, RegisterUserCommand command
+        UnconfirmedUser unconfirmedUser, RegisterUserCommand command, CancellationToken ct
     ) {
         ErrOrNothing res = unconfirmedUser.Override(
             command.UniqueName, command.Password, _passwordHasher, _dateTimeProvider.UtcNow
@@ -62,12 +62,12 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
             return err;
         }
 
-        await _unconfirmedUsersRepository.Update(unconfirmedUser);
+        await _unconfirmedUsersRepository.Update(unconfirmedUser, ct);
         return ErrOrNothing.Nothing;
     }
 
-    private async Task<ErrOrNothing> AnyConfirmedUserWithEmail(Email email) {
-        bool isEmailTaken = await _appUsersRepository.AnyUserWithEmail(email);
+    private async Task<ErrOrNothing> AnyConfirmedUserWithEmail(Email email, CancellationToken ct) {
+        bool isEmailTaken = await _appUsersRepository.AnyUserWithEmail(email, ct);
         if (isEmailTaken) {
             return ErrFactory.Conflict(
                 "This email is already taken",

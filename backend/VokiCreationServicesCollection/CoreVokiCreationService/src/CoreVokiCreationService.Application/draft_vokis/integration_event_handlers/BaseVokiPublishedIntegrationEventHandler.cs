@@ -14,12 +14,12 @@ public class BaseVokiPublishedIntegrationEventHandler : IConsumer<BaseVokiPublis
     }
 
     public async Task Consume(ConsumeContext<BaseVokiPublishedIntegrationEvent> context) {
-        DraftVoki? voki = await _draftVokiRepository.GetById(context.Message.VokiId);
+        DraftVoki? voki = await _draftVokiRepository.GetById(context.Message.VokiId, context.CancellationToken);
         if (voki is null) {
             return;
         }
 
         voki.MarkAsPublished();
-        await _draftVokiRepository.Delete(voki);
+        await _draftVokiRepository.Delete(voki, context.CancellationToken);
     }
 }

@@ -17,7 +17,8 @@ internal class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<AppUser?> GetById(AppUserId userId) => await _db.AppUsers.FindAsync(userId);
+    public async Task<AppUser?> GetById(AppUserId userId, CancellationToken ct) =>
+        await _db.AppUsers.FindAsync([userId], cancellationToken: ct);
 
     public Task<AppUser?> GetByIdAsNoTracking(AppUserId userId, CancellationToken ct) => _db.AppUsers
         .AsNoTracking()

@@ -10,8 +10,7 @@ public sealed record class AcceptCoAuthorInviteCommand(
 ) : ICommand,
     IWithAuthCheckStep;
 
-internal sealed class AcceptCoAuthorInviteCommandHandler :
-    ICommandHandler<AcceptCoAuthorInviteCommand>
+internal sealed class AcceptCoAuthorInviteCommandHandler : ICommandHandler<AcceptCoAuthorInviteCommand>
 {
     private readonly IDraftVokiRepository _draftVokiRepository;
     private readonly IUserContext _userContext;
@@ -24,13 +23,13 @@ internal sealed class AcceptCoAuthorInviteCommandHandler :
 
     public async Task<ErrOrNothing> Handle(AcceptCoAuthorInviteCommand command, CancellationToken ct) {
         AppUserId? userId = _userContext.AuthenticatedUserId;
-        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId))!;
+        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
         ErrOrNothing result = voki.AcceptInviteBy(userId);
         if (result.IsErr(out var err)) {
             return err;
         }
 
-        await _draftVokiRepository.Update(voki);
+        await _draftVokiRepository.Update(voki, ct);
         return ErrOrNothing.Nothing;
     }
 }

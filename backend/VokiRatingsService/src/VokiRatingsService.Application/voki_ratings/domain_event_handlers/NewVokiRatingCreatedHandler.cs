@@ -16,11 +16,11 @@ internal class NewVokiRatingCreatedHandler : IDomainEventHandler<NewVokiRatingCr
     }
 
     public async Task Handle(NewVokiRatingCreatedEvent e, CancellationToken ct) {
-        Voki voki = (await _vokisRepository.GetById(e.VokiId))!;
+        Voki voki = (await _vokisRepository.GetById(e.VokiId, ct))!;
         voki.AddRating(e.RatingId);
         await _vokisRepository.Update(voki, ct);
 
-        AppUser user = (await _appUsersRepository.GetById(e.UserId))!;
+        AppUser user = (await _appUsersRepository.GetById(e.UserId, ct))!;
         user.AddRating(e.RatingId);
         await _appUsersRepository.Update(user, ct);
     }

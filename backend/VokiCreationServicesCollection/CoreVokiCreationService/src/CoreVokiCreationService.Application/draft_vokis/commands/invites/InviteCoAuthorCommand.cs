@@ -24,13 +24,13 @@ internal sealed class InviteCoAuthorCommandHandler :
 
 
     public async Task<ErrOr<DraftVoki>> Handle(InviteCoAuthorCommand command, CancellationToken ct) {
-        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId))!;
+        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
         ErrOrNothing result = voki.InviteCoAuthors(command.UserIdsToInvite);
         if (result.IsErr(out var err)) {
             return err;
         }
 
-        await _draftVokiRepository.Update(voki);
+        await _draftVokiRepository.Update(voki, ct);
         return voki;
     }
 }

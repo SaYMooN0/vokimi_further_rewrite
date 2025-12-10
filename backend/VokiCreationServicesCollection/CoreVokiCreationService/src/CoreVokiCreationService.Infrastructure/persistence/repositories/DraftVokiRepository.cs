@@ -13,12 +13,12 @@ internal class DraftVokiRepository : IDraftVokiRepository
     }
 
 
-    public async Task Add(DraftVoki voki) {
-        await _db.Vokis.AddAsync(voki);
-        await _db.SaveChangesAsync();
+    public async Task Add(DraftVoki voki, CancellationToken ct) {
+        await _db.Vokis.AddAsync(voki, ct);
+        await _db.SaveChangesAsync(ct);
     }
 
-    public Task<VokiId[]> ListVokiAuthoredByUserIdOrderByCreationDate(AppUserId userId) =>
+    public Task<VokiId[]> ListVokiAuthoredByUserIdOrderByCreationDate(AppUserId userId, CancellationToken ct) =>
         _db.Vokis
             .FromSqlInterpolated($@"
                 SELECT ""Id""
@@ -28,38 +28,41 @@ internal class DraftVokiRepository : IDraftVokiRepository
                 ORDER BY ""CreationDate"" DESC
             ")
             .Select(v => v.Id)
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: ct);
 
-    public Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId) => _db.Vokis
-        .AsNoTracking()
-        .FirstOrDefaultAsync(v => v.Id == vokiId);
+    public Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId, CancellationToken ct) =>
+        _db.Vokis
+            .AsNoTracking()
+            .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(AppUserId userId) =>
+    public Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(
+        IAuthenticatedUserContext userContext, CancellationToken ct
+    ) =>
         _db.Vokis
             .FromSqlInterpolated($@"
                 SELECT *
                 FROM ""Vokis""
-                WHERE {userId.Value} = ANY(""InvitedForCoAuthorUserIds"")
+                WHERE {userContext.UserId.Value} = ANY(""InvitedForCoAuthorUserIds"")
             ")
             .AsNoTracking()
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: ct);
 
 
-    public Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds) =>
+    public Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds, CancellationToken ct) =>
         _db.Vokis.AsNoTracking()
             .Where(v => queryVokiIds.Contains(v.Id))
-            .ToArrayAsync();
+            .ToArrayAsync(cancellationToken: ct);
 
-    public Task<DraftVoki?> GetById(VokiId vokiId) => _db.Vokis
-        .FirstOrDefaultAsync(v => v.Id == vokiId);
+    public Task<DraftVoki?> GetById(VokiId vokiId, CancellationToken ct) => _db.Vokis
+        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public async Task Update(DraftVoki voki) {
+    public async Task Update(DraftVoki voki, CancellationToken ct) {
         _db.Vokis.Update(voki);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
 
-    public async Task Delete(DraftVoki voki) {
+    public async Task Delete(DraftVoki voki, CancellationToken ct) {
         _db.Vokis.Remove(voki);
-        await _db.SaveChangesAsync();
+        await _db.SaveChangesAsync(ct);
     }
 }

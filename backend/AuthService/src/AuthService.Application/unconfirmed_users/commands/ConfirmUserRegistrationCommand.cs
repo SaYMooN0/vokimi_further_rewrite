@@ -31,7 +31,7 @@ internal sealed class ConfirmUserRegistrationCommandHandler :
     }
 
     public async Task<ErrOr<JwtTokenString>> Handle(ConfirmUserRegistrationCommand command, CancellationToken ct) {
-        bool anyConfirmed = await _appUsersRepository.AnyUserWithId(new AppUserId(command.UserId.Value));
+        bool anyConfirmed = await _appUsersRepository.AnyUserWithId(new AppUserId(command.UserId.Value), ct);
         if (anyConfirmed) {
             return ErrFactory.Unspecified(
                 "This user has already been confirmed",
@@ -39,7 +39,7 @@ internal sealed class ConfirmUserRegistrationCommandHandler :
             );
         }
 
-        UnconfirmedUser? unconfirmedUser = await _unconfirmedUsersRepository.GetById(command.UserId);
+        UnconfirmedUser? unconfirmedUser = await _unconfirmedUsersRepository.GetById(command.UserId, ct);
         if (unconfirmedUser is null) {
             return ErrFactory.NotFound.Common(
                 "Couldn't find user to confirm. Maybe this user has already been confirmed or the link has expired"
@@ -57,8 +57,8 @@ internal sealed class ConfirmUserRegistrationCommandHandler :
             unconfirmedUser.UserUniqueName,
             _dateTimeProvider.UtcNow
         );
-        await _appUsersRepository.Add(user);
-        await _unconfirmedUsersRepository.Delete(unconfirmedUser);
+        await _appUsersRepository.Add(user, ct);
+        await _unconfirmedUsersRepository.Delete(unconfirmedUser, ct);
 
         return _tokenGenerator.CreateToken(user);
     }

@@ -22,7 +22,8 @@ internal sealed class ViewVokiAsInvitedForCoAuthorQueryHandler
     }
 
     public async Task<ErrOr<DraftVoki[]>> Handle(ListVokisUserInvitedForCoAuthorQuery query, CancellationToken ct) {
-        return await _draftVokiRepository.ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(_userContext
-            .AuthenticatedUserId);
+        return await _draftVokiRepository.ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(
+            new AuthenticatedUserContext(_userContext.AuthenticatedUserId), ct
+        );
     }
 }

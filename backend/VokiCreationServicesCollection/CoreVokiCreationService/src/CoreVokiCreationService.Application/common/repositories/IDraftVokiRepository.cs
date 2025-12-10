@@ -1,16 +1,20 @@
 ﻿using CoreVokiCreationService.Domain.draft_voki_aggregate;
+using SharedKernel;
 
 namespace CoreVokiCreationService.Application.common.repositories;
 
 public interface IDraftVokiRepository
 {
-    Task Add(DraftVoki voki);
-    Task<VokiId[]> ListVokiAuthoredByUserIdOrderByCreationDate(AppUserId userId);
-    Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId);
-    Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking( AppUserId userId);
+    Task Add(DraftVoki voki, CancellationToken ct);
+    Task<VokiId[]> ListVokiAuthoredByUserIdOrderByCreationDate(AppUserId userId, CancellationToken ct);
+    Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId, CancellationToken ct);
 
-    Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds);
-    Task<DraftVoki?> GetById(VokiId vokiId);
-    Task Update(DraftVoki voki);
-    Task Delete(DraftVoki voki);
+    Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(
+        IAuthenticatedUserContext userContext, CancellationToken ct
+    );
+
+    Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds, CancellationToken ct);
+    Task<DraftVoki?> GetById(VokiId vokiId, CancellationToken ct);
+    Task Update(DraftVoki voki, CancellationToken ct);
+    Task Delete(DraftVoki voki, CancellationToken ct);
 }

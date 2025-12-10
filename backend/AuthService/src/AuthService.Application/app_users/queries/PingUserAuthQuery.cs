@@ -29,7 +29,7 @@ internal sealed class PingUserAuthQueryHandler : IQueryHandler<PingUserAuthQuery
         }
 
         AppUserId userId = idFromToken.AsSuccess();
-        bool doesUserExist = await _appUsersRepository.AnyUserWithId(userId);
+        bool doesUserExist = await _appUsersRepository.AnyUserWithId(userId, ct);
         if (!doesUserExist) {
             _logger.LogError("User with correct userId in token ({1}) was not found in the database", userId);
             return PingUserAuthQueryResult.Unauthenticated();

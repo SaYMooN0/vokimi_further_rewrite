@@ -11,16 +11,16 @@ internal class VokisRepository : IVokisRepository
         _db = db;
     }
 
-    public async Task<Voki?> GetById(VokiId vokiId) =>
-        await _db.Vokis.FindAsync(vokiId);
+    public async Task<Voki?> GetById(VokiId vokiId, CancellationToken ct) =>
+        await _db.Vokis.FindAsync([vokiId], cancellationToken: ct);
 
     public async Task Update(Voki voki, CancellationToken ct) {
         _db.Vokis.Update(voki);
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task Add(Voki voki) {
-        _db.Vokis.Add(voki);
-        await _db.SaveChangesAsync();
+    public async Task Add(Voki voki, CancellationToken ct) {
+        await _db.Vokis.AddAsync(voki, ct);
+        await _db.SaveChangesAsync(ct);
     }
 }

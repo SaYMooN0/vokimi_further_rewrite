@@ -1,6 +1,7 @@
 ﻿using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Application.common;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
@@ -79,6 +80,25 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
 
     public Task<DraftGeneralVoki?> GetById(VokiId generalVokiId, CancellationToken ct) => _db.Vokis
         .FirstOrDefaultAsync(v => v.Id == generalVokiId, cancellationToken: ct);
+
+    public async Task<(VokiName, AppUserId PrimaryAuthor, VokiCoAuthorIdsSet CoAuthors)?> GetVokiName(
+        VokiId vokiId, CancellationToken ct
+    ) {
+        var res = await _db.Vokis
+            .AsNoTracking()
+            .Select(v => new {
+                v.Id,
+                v.Name,
+                v.PrimaryAuthorId,
+                CoAuthors = EF.Property<VokiCoAuthorIdsSet>(v, "CoAuthors")
+            })
+            .FirstOrDefaultAsync(v => v.Id == vokiId, ct);
+        if (res is null) {
+            return null;
+        }
+
+        return (res.Name, res.PrimaryAuthorId, res.CoAuthors);
+    }
 
     async Task<BaseDraftVoki?> IDraftVokiRepository.GetById(VokiId vokiId, CancellationToken ct) =>
         await GetById(generalVokiId: vokiId, ct);

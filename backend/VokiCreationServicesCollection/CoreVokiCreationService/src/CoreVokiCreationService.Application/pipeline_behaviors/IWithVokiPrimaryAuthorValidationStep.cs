@@ -36,7 +36,7 @@ internal static class VokiPrimaryAuthorValidationStepHandler
 
         public async Task<ErrOr<TResponse>> Handle(TCommand command, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            DraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId);
+            DraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
@@ -68,7 +68,7 @@ internal static class VokiPrimaryAuthorValidationStepHandler
 
         public async Task<ErrOrNothing> Handle(TCommand command, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            DraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId);
+            DraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
@@ -100,7 +100,7 @@ internal static class VokiPrimaryAuthorValidationStepHandler
 
         public async Task<ErrOr<TResponse>> Handle(TQuery query, CancellationToken ct) {
             AppUserId userId = _userContext.AuthenticatedUserId;
-            DraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(query.VokiId);
+            DraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(query.VokiId, ct);
             if (voki is null) {
                 return query.VokiNotFoundErr;
             }

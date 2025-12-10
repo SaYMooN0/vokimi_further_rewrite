@@ -11,8 +11,8 @@ internal class AppUsersRepository : IAppUsersRepository
         _db = db;
     }
 
-    public async Task Add(AppUser user) {
-        await _db.AddAsync(user);
-        await _db.SaveChangesAsync();
+    public async Task Add(AppUser user, CancellationToken ct) {
+        await _db.AddAsync(user, ct);
+        await _db.SaveChangesAsync(ct);
     }
 }

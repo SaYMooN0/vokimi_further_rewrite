@@ -12,20 +12,20 @@ internal class AppUsersRepository : IAppUsersRepository
         _db = db;
     }
 
-    public Task<bool> AnyUserWithId(AppUserId appUserId) => _db.AppUsers
+    public Task<bool> AnyUserWithId(AppUserId appUserId, CancellationToken ct) => _db.AppUsers
         .AsNoTracking()
-        .AnyAsync(u => u.Id == appUserId);
+        .AnyAsync(u => u.Id == appUserId, cancellationToken: ct);
 
-    public Task<bool> AnyUserWithEmail(Email email) => _db.AppUsers
+    public Task<bool> AnyUserWithEmail(Email email, CancellationToken ct) => _db.AppUsers
         .AsNoTracking()
-        .AnyAsync(u => u.Email == email);
+        .AnyAsync(u => u.Email == email, cancellationToken: ct);
 
-    public Task<AppUser?> GetByEmailAsNoTracking(Email email) => _db.AppUsers
+    public Task<AppUser?> GetByEmailAsNoTracking(Email email, CancellationToken ct) => _db.AppUsers
         .AsNoTracking()
-        .FirstOrDefaultAsync(u => u.Email == email);
+        .FirstOrDefaultAsync(u => u.Email == email, cancellationToken: ct);
 
-    public async Task Add(AppUser user) {
-        await _db.AppUsers.AddAsync(user);
-        await _db.SaveChangesAsync();
+    public async Task Add(AppUser user, CancellationToken ct) {
+        await _db.AppUsers.AddAsync(user, ct);
+        await _db.SaveChangesAsync(ct);
     }
 }
