@@ -1,4 +1,5 @@
 ﻿using SharedKernel.common;
+using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace SharedKernel.integration_events.voki_publishing;
@@ -15,23 +16,26 @@ public record class GeneralVokiPublishedIntegrationEvent(
     VokiTagId[] Tags,
     DateTime InitializingDate,
     DateTime PublishingDate,
-    bool SignedInOnlyTaking,
     //Voki Type specific 
     GeneralVokiQuestionIntegrationEventDto[] Questions,
     bool ForceSequentialAnswering,
     bool ShuffleQuestions,
     GeneralVokiResultIntegrationEventDto[] Results,
-    GeneralVokiResultsVisibility ResultsVisibility,
-    bool ShowResultsDistribution
+    GeneralVokiInteractionSettingsIntegrationEventDto InteractionSettings
 ) : BaseVokiPublishedIntegrationEvent(
     VokiId, PrimaryAuthorId, CoAuthors,
     Name, Cover, Description,
     HasMatureContent, Language, Tags,
-    InitializingDate, PublishingDate,
-    SignedInOnlyTaking
+    InitializingDate, PublishingDate
 );
 
-public sealed record class GeneralVokiQuestionIntegrationEventDto(
+public record GeneralVokiInteractionSettingsIntegrationEventDto(
+    bool SignedInOnlyTaking,
+    GeneralVokiResultsVisibility ResultsVisibility,
+    bool ShowResultsDistribution
+);
+
+public sealed record GeneralVokiQuestionIntegrationEventDto(
     GeneralVokiQuestionId Id,
     string Text,
     string[] Images,
@@ -44,7 +48,7 @@ public sealed record class GeneralVokiQuestionIntegrationEventDto(
     ushort MaxAnswersCount
 );
 
-public sealed record class GeneralVokiAnswerIntegrationEventDto(
+public sealed record GeneralVokiAnswerIntegrationEventDto(
     GeneralVokiAnswerId Id,
     ushort OrderInQuestion,
     GeneralVokiAnswerTypeDataIntegrationEventDto TypeData,
@@ -64,7 +68,7 @@ public sealed record GeneralVokiAnswerTypeDataIntegrationEventDto(
     }
 }
 
-public sealed record class GeneralVokiResultIntegrationEventDto(
+public sealed record GeneralVokiResultIntegrationEventDto(
     GeneralVokiResultId Id,
     string Name,
     string Text,

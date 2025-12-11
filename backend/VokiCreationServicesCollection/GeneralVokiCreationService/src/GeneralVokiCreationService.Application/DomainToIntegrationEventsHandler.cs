@@ -42,12 +42,14 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
             Tags: e.Tags.Value.ToArray(),
             InitializingDate: e.InitializingDate,
             PublishingDate: e.PublishingDate,
-            SignedInOnlyTaking: e.InteractionSettings.SignedInOnlyTaking,
             VokiPublishedEventMapper.QuestionIntegrationEventDtoArray(e.Questions),
             ForceSequentialAnswering: e.TakingProcessSettings.ForceSequentialAnswering,
             ShuffleQuestions: e.TakingProcessSettings.ShuffleQuestions,
             VokiPublishedEventMapper.ResultIntegrationEventDtoArray(e.Results),
-            ResultsVisibility: e.InteractionSettings.ResultsVisibility,
-            ShowResultsDistribution: e.InteractionSettings.ShowResultsDistribution
+            new GeneralVokiInteractionSettingsIntegrationEventDto(
+                SignedInOnlyTaking: e.InteractionSettings.SignedInOnlyTaking,
+                ResultsVisibility: e.InteractionSettings.ResultsVisibility,
+                ShowResultsDistribution: e.InteractionSettings.ShowResultsDistribution
+            )
         ), ct);
 }

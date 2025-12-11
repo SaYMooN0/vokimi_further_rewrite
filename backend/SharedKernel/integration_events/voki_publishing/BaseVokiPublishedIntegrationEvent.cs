@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using SharedKernel.common;
+using SharedKernel.common.vokis;
 
 namespace SharedKernel.integration_events.voki_publishing;
 
@@ -17,6 +18,5 @@ public abstract record class BaseVokiPublishedIntegrationEvent(
     Language Language,
     VokiTagId[] Tags,
     DateTime InitializingDate,
-    DateTime PublishingDate,
-    bool SignedInOnlyTaking
+    DateTime PublishingDate
 ) : IIntegrationEvent;

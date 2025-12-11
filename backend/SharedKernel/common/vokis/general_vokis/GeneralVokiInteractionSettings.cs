@@ -1,8 +1,4 @@
-﻿using SharedKernel.common.vokis.general_vokis;
-using SharedKernel.exceptions;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate;
-
-namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+﻿namespace SharedKernel.common.vokis.general_vokis;
 
 public class GeneralVokiInteractionSettings : ValueObject, IVokiInteractionSettings
 {
@@ -52,11 +48,11 @@ public class GeneralVokiInteractionSettings : ValueObject, IVokiInteractionSetti
     );
 
     public static ErrOr<GeneralVokiInteractionSettings> Create(
-        bool authOnlyAccess,
-        GeneralVokiResultsVisibility visibility,
+        bool signedInOnlyTaking,
+        GeneralVokiResultsVisibility resultsVisibility,
         bool showResultsDistribution
     ) =>
-        CheckResultsVisibilityForErr(authOnlyAccess, visibility).IsErr(out var err)
+        CheckResultsVisibilityForErr(signedInOnlyTaking, resultsVisibility).IsErr(out var err)
             ? err
-            : new GeneralVokiInteractionSettings(authOnlyAccess, visibility, showResultsDistribution);
+            : new GeneralVokiInteractionSettings(signedInOnlyTaking, resultsVisibility, showResultsDistribution);
 }

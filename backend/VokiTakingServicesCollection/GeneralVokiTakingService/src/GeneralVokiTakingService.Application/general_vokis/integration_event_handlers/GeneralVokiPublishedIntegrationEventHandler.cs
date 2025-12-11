@@ -23,7 +23,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
 
     public async Task Consume(ConsumeContext<GeneralVokiPublishedIntegrationEvent> context) {
         var e = context.Message;
-        var voki = GeneralVoki.CreateNew(
+        GeneralVoki voki = GeneralVoki.CreateNew(
             e.VokiId,
             new VokiCoverKey(e.Cover),
             name: new VokiName(e.Name),
@@ -32,9 +32,9 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
             forceSequentialAnswering: e.ForceSequentialAnswering,
             shuffleQuestions: e.ShuffleQuestions,
             GeneralVokiInteractionSettings.Create(
-                e.SignedInOnlyTaking,
-                e.ResultsVisibility,
-                showResultsDistribution: e.ShowResultsDistribution
+                signedInOnlyTaking: e.InteractionSettings.SignedInOnlyTaking,
+                resultsVisibility: e.InteractionSettings.ResultsVisibility,
+                showResultsDistribution: e.InteractionSettings.ShowResultsDistribution
             ).AsSuccess()
         );
         await _generalVokisRepository.Add(voki, context.CancellationToken);

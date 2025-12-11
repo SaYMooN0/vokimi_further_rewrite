@@ -1,4 +1,4 @@
-﻿namespace VokiCreationServicesLib.Domain.draft_voki_aggregate;
+﻿namespace SharedKernel.common.vokis;
 
 public interface IVokiInteractionSettings
 {

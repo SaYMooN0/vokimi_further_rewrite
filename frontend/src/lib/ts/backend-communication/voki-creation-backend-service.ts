@@ -2,12 +2,7 @@ import type { Language } from "../language";
 import { BackendService, RJO } from "./backend-services";
 import type { ResponseResult } from "./result-types";
 
-export type VokiMainInfo = {
-    name: string;
-    cover: string;
-    tags: string[];
-    details: VokiDetails;
-}
+
 
 export type VokiDetails = {
     description: string;

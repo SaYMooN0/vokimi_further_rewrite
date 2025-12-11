@@ -62,6 +62,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         TakingProcessSettings = newSettings;
     }
 
+    public void UpdateInteractionSettings(GeneralVokiInteractionSettings newSettings) {
+        InteractionSettings = newSettings;
+    }
+
     public ErrOr<GeneralVokiQuestionId> AddNewQuestion(GeneralVokiAnswerType answersType) {
         if (_questions.Count >= MaxQuestionsCount) {
             return ErrFactory.LimitExceeded(

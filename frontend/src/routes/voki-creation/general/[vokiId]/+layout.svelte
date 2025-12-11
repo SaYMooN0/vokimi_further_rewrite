@@ -2,14 +2,13 @@
 	import { navigating, page } from '$app/state';
 	import type { Snippet } from 'svelte';
 	import GeneralVokiCreationLayoutNavBar from './c_layout/GeneralVokiCreationLayoutNavBar.svelte';
-	import VokiCreationHeader, {
-		type VokiCreationHeaderVokiName
-	} from '../../c_layout/VokiCreationHeader.svelte';
+	import { type VokiCreationHeaderVokiName } from '../../c_layout/VokiCreationVokiNameHeader.svelte';
 	import { setVokiCreationPageContext } from '../../voki-creation-page-context';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
 	import generalVokiCreationIconsSprite from '$lib/icons/general-voki-creation-icons.svg?raw';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
+	import VokiCreationVokiNameHeader from '../../c_layout/VokiCreationVokiNameHeader.svelte';
 
 	const { children }: { children: Snippet } = $props();
 
@@ -45,7 +44,7 @@
 	{@html generalVokiCreationIconsSprite}
 </div>
 
-<VokiCreationHeader {vokiName} vokiType="General" />
+<VokiCreationVokiNameHeader {vokiName} vokiType="General" />
 <GeneralVokiCreationLayoutNavBar />
 
 {#if navigating.type}

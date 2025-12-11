@@ -6,11 +6,11 @@
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import DetailsSectionEditState from './c_details_section/DetailsSectionEditState.svelte';
 	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
-
-	let { details, vokiId }: { details: VokiDetails; vokiId: string } = $props<{
+	interface Props {
 		details: VokiDetails;
 		vokiId: string;
-	}>();
+	}
+	let { details, vokiId }: Props = $props();
 	let isEditing = $state(false);
 </script>
 
@@ -62,7 +62,6 @@
 		font-weight: 500;
 		word-break: normal;
 		overflow-wrap: anywhere;
-
 	}
 
 	.field:has(:global(.no-description)) {

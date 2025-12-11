@@ -1,12 +1,11 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel;
 using VokiCreationServicesLib.Application;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
-namespace GeneralVokiCreationService.Application.draft_vokis.commands.@base.publishing;
+namespace GeneralVokiCreationService.Application.draft_vokis.commands.publishing;
 
 public record class PublishVokiCommand(VokiId VokiId) :
     ICommand<PublishVokiCommandResult>,
