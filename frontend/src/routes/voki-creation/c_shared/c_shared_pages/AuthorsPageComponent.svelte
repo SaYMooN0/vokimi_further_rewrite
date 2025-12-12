@@ -4,6 +4,7 @@
 	import InviteCoAuthorsMessage from './c_authors/InviteCoAuthorsMessage.svelte';
 	import AuthView from '$lib/components/AuthView.svelte';
 	import type { CoAuthorsPageState } from './c_authors/co-authors-page-state.svelte';
+	import VokiManagersSection from './c_authors/VokiManagersSection.svelte';
 	interface Props {
 		pageState: CoAuthorsPageState;
 		vokiCreationDate: Date;
@@ -29,6 +30,13 @@
 					isViewerPrimaryAuthor={pageState.primaryAuthorId === authState.userId}
 					{pageState}
 				/>
+				{#if pageState.coAuthorIds.length + pageState.invitedForCoAuthorUserIds.length > 0}
+					<VokiManagersSection
+						isViewerPrimaryAuthor={pageState.primaryAuthorId === authState.userId}
+						viewerId={authState.userId}
+						expectedManagers={pageState.expectedManagers}
+					/>
+				{/if}
 			</div>
 		{:else if authState.name === 'loading'}
 			<div>Loading...</div>

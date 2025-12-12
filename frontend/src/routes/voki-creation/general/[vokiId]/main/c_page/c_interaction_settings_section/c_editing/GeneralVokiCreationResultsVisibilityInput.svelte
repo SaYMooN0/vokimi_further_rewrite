@@ -1,27 +1,45 @@
 <script lang="ts">
 	import type { GeneralVokiResultsVisibility } from '$lib/ts/voki';
+	import { watch } from 'runed';
 
 	interface Props {
 		value: GeneralVokiResultsVisibility;
+		signedInOnlyTaking: boolean;
 	}
-	let { value = $bindable() }: Props = $props();
+	let { value = $bindable(), signedInOnlyTaking }: Props = $props();
+	watch(()=>signedInOnlyTaking, ()=>{
+		if(!signedInOnlyTaking){
+			value = 'Anyone';
+		}
+	});
 </script>
 
 <div class="options">
-	{@render option('Anyone', 'Anyone')}
-	{@render option('AfterTaking', 'After taking')}
-	{@render option('OnlyReceived', 'Only received')}
-</div>
-
-{#snippet option(optionVal: GeneralVokiResultsVisibility, optionValName: string)}
 	<div
 		class="option unselectable"
-		class:selected={value === optionVal}
-		onclick={() => (value = optionVal)}
+		class:selected={value === 'Anyone'}
+		onclick={() => (value = 'Anyone')}
 	>
-		{optionValName}
+		Anyone
 	</div>
-{/snippet}
+	<div
+		class="option unselectable"
+		class:selected={value === 'AfterTaking'}
+		class:disabled={!signedInOnlyTaking}
+		onclick={() => (value = 'AfterTaking')}
+	>
+		After taking
+	</div>
+	<div
+		class="option unselectable"
+		class:selected={value === 'OnlyReceived'}
+		class:disabled={!signedInOnlyTaking}
+
+		onclick={() => (value = 'OnlyReceived')}
+	>
+		Only received
+	</div>
+</div>
 
 <style>
 	.options {
@@ -55,5 +73,13 @@
 	.option.selected {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
+
+	}
+	.option.disabled {
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+		opacity: 0.7;
+		box-shadow: var(--shadow-xs);
+		pointer-events: none;
 	}
 </style>

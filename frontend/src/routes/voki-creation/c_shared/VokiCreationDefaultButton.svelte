@@ -11,7 +11,7 @@
 
 <style>
 	.btn {
-		min-width: 9.5rem;
+		min-width: 10rem;
 		height: 2rem;
 		margin: 0.5rem 0 0 auto;
 		border: none;

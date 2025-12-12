@@ -3,6 +3,7 @@
 	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
 	import { toast } from 'svelte-sonner';
 	import { getConfirmActionDialogOpenFunction } from '../../../../../c_layout/ts_layout_contexts/confirm-action-dialog-context';
+	import type { Err } from '$lib/ts/err';
 
 	interface Props {
 		vokiId: string;
@@ -10,13 +11,10 @@
 	}
 	let { vokiId, onSuccessfulDrop }: Props = $props();
 
-	const { open: openConfirmationDialog, close: closeConfirmationDialog } =
-		getConfirmActionDialogOpenFunction();
-
+	const dialog = getConfirmActionDialogOpenFunction();
 	export function open(userId: string) {
 		currentUserToDrop = userId;
-
-		const dropCoAuthor = async (userId: string) => {
+		const dropCoAuthor = async (): Promise<Err[]> => {
 			const response = await ApiVokiCreationCore.fetchJsonResponse<{
 				coAuthorIds: string[];
 				invitedForCoAuthorUserIds: string[];
@@ -24,24 +22,21 @@
 			if (response.isSuccess) {
 				onSuccessfulDrop(response.data.coAuthorIds, response.data.invitedForCoAuthorUserIds);
 				toast.success('Co-author dropped');
+				dialog.close();
 				return [];
 			} else {
-				toast.error("Couldn't drop co-author");
 				return response.errs;
 			}
 		};
-		openConfirmationDialog({
+		dialog.open({
 			mainContent: dropCoAuthorSnippet,
 			dialogButtons: {
 				confirmBtnText: 'Drop',
 				confirmBtnOnclick: () => {
-					dropCoAuthor(currentUserToDrop!);
-					closeConfirmationDialog();
+					return dropCoAuthor();
 				},
 				cancelBtnText: 'Cancel',
-				cancelBtnOnclick: () => {
-					closeConfirmationDialog();
-				}
+				cancelBtnOnclick: dialog.close
 			}
 		});
 	}
@@ -55,14 +50,14 @@
 				userId={currentUserToDrop}
 				interactionLevel={'UniqueNameGotoOnClick'}
 			/> from co-authors?
-        </div>
+		</div>
 	{:else}
 		<p>No co-author to drop selected</p>
 	{/if}
 {/snippet}
 
 <style>
-  	.main-text {
+	.main-text {
 		margin: 1rem;
 		color: var(--text);
 		font-size: 1.25rem;
@@ -71,7 +66,6 @@
 		text-align: justify;
 		text-indent: 1em;
 		text-wrap: pretty;
-
 	}
 
 	.main-text > :global(.user-display) {

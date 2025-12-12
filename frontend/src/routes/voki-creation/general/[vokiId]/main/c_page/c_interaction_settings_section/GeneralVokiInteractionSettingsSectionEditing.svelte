@@ -43,13 +43,18 @@
 </p>
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Results visibility:" />
-	<GeneralVokiCreationResultsVisibilityInput bind:value={editingSettingsState.resultsVisibility} />
+	<GeneralVokiCreationResultsVisibilityInput
+		bind:value={editingSettingsState.resultsVisibility}
+		signedInOnlyTaking={editingSettingsState.signedInOnlyTaking}
+	/>
 </p>
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Show results distribution:" />
 	<DefaultCheckBox bind:checked={editingSettingsState.showResultsDistribution} />
 </p>
+{#if savingErrs.length > 0}
 <DefaultErrBlock errList={savingErrs} />
+{/if}
 <VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
 
 <style>

@@ -69,4 +69,6 @@ public class AppUser : AggregateRoot<AppUserId>
 
     public void RemoveCoAuthoredVoki(VokiId vokiId) =>
         CoAuthoredVokiIds = CoAuthoredVokiIds.Remove(vokiId);
+
+   
 }

@@ -14,7 +14,6 @@
 
 	let vokiName: VokiCreationHeaderVokiName = $state({ state: 'loading' });
 	async function fetchAndSetVokiName() {
-		console.log('fetchAndSetVokiName');
 		if (!page.params.vokiId) {
 			vokiName = {
 				state: 'errs',

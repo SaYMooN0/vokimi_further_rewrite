@@ -48,15 +48,16 @@
 			</div>
 
 			{#each result.takings as t}
-				<div>
+				<div class="taking-row">
 					<label>
 						{DateUtils.toLocale(t.start)}
 					</label>
 					<label>
 						{DateUtils.toLocale(t.finish)}
 					</label>
-
-					<span>{(t.start, t.finish)}</span>
+					<label>
+						{DateUtils.formatDuration(t.start, t.finish)}
+					</label>
 				</div>
 			{/each}
 		</div>
@@ -195,5 +196,8 @@
 		font-size: 1rem;
 		font-weight: 550;
 		grid-template-columns: 1fr 1fr 1fr;
+	}
+	.taking-row label {
+		text-align: center;
 	}
 </style>

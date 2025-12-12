@@ -1,24 +1,44 @@
-export class DateUtils {
-    static toLocale(date: Date): string {
-        const locale = navigator.language || 'en-US';
-    
-        const timePart = date.toLocaleTimeString(locale, {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: false,
-        });
-    
-        return `${timePart} ${this.toLocaleDateOnly(date)}`;
-    }
-    static toLocaleDateOnly(date: Date): string {
-        const locale = navigator.language || 'en-US';
+export namespace DateUtils {
+	export function toLocale(date: Date): string {
+		const locale = navigator.language || 'en-US';
 
-        return date.toLocaleDateString(locale, {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-        });
-    }
-    
-    static readonly isoDateRegex: RegExp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
+		const timePart = date.toLocaleTimeString(locale, {
+			hour: '2-digit',
+			minute: '2-digit',
+			hour12: false,
+		});
+
+		return `${timePart} ${toLocaleDateOnly(date)}`;
+	}
+
+	export function toLocaleDateOnly(date: Date): string {
+		const locale = navigator.language || 'en-US';
+
+		return date.toLocaleDateString(locale, {
+			day: '2-digit',
+			month: '2-digit',
+			year: 'numeric',
+		});
+	}
+
+	export function formatDuration(start: Date, end: Date): string {
+		const totalSeconds = Math.floor(
+			(end.getTime() - start.getTime()) / 1000
+		);
+
+		const hours = Math.floor(totalSeconds / 3600);
+		const minutes = Math.floor((totalSeconds % 3600) / 60);
+		const seconds = totalSeconds % 60;
+
+		const parts: string[] = [];
+
+		if (hours > 0) parts.push(`${hours}h`);
+		if (minutes > 0 || hours > 0) parts.push(`${minutes}m`);
+		parts.push(`${seconds}s`);
+
+		return parts.join(' ');
+	}
+
+	export const isoDateRegex: RegExp =
+		/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
 }

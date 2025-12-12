@@ -1,7 +1,7 @@
 import { ApiVokiCreationCore, RJO, ApiUserProfiles } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
 import { watch } from "runed";
-import type { UserPreviewWithInvitesSettings, UsersRecommendedToInvite, UserInviteState } from "./types";
+import type { UserPreviewWithInvitesSettings, UsersRecommendedToInvite, UserInviteState, VokiExpectedManagersSetting } from "./types";
 
 export class CoAuthorsPageState {
     readonly vokiId: string;
@@ -11,14 +11,23 @@ export class CoAuthorsPageState {
     coAuthorIds: string[];
     invitedForCoAuthorUserIds: string[];
     coAuthorsDialogState: CoAuthorsInviteDialogState;
+    expectedManagers: VokiExpectedManagersSetting;
 
-    constructor(vokiId: string, primaryAuthorId: string, coAuthorIds: string[], invitedForCoAuthorUserIds: string[], maxCoAuthorsCount: number) {
+    constructor(
+        vokiId: string,
+        primaryAuthorId: string,
+        coAuthorIds: string[],
+        invitedForCoAuthorUserIds: string[],
+        maxCoAuthorsCount: number,
+        expectedManagers: VokiExpectedManagersSetting
+    ) {
         this.vokiId = vokiId;
         this.maxCoAuthorsCount = maxCoAuthorsCount;
 
         this.primaryAuthorId = primaryAuthorId;
         this.coAuthorIds = $state(coAuthorIds);
         this.invitedForCoAuthorUserIds = $state(invitedForCoAuthorUserIds);
+        this.expectedManagers = $state(expectedManagers);
 
         this.coAuthorsDialogState = new CoAuthorsInviteDialogState(vokiId);
     }

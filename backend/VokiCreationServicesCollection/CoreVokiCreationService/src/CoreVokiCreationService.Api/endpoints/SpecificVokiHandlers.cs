@@ -1,5 +1,6 @@
 ﻿using CoreVokiCreationService.Api.contracts;
 using CoreVokiCreationService.Api.contracts.vokis_brief_info;
+using CoreVokiCreationService.Application.draft_vokis.commands;
 using CoreVokiCreationService.Application.draft_vokis.commands.invites;
 using CoreVokiCreationService.Application.draft_vokis.queries;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
@@ -13,7 +14,9 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
         group.MapGet("/brief-info", GetVokiBriefInfo);
         group.MapGet("/authors-info", GetVokiAuthorsInfo);
- 
+
+        group.MapDelete("/leave-voki-creation", LeaveVokiCreation);
+
         group.MapDelete("/drop-co-author", DropCoAuthor)
             .WithRequestValidation<VokiCoAuthorActionRequest>();
         group.MapPost("/invite-co-authors", InviteCoAuthors)
@@ -62,6 +65,18 @@ internal class SpecificVokiHandlers : IEndpointGroup
         return CustomResults.FromErrOrToJson<DraftVoki, VokiCoAuthorsWithInvitedResponse>(result);
     }
 
+    private static async Task<IResult> LeaveVokiCreation(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<LeaveVokiCreationCommand> handler
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+    
+        LeaveVokiCreationCommand command = new(vokiId);
+        var result = await handler.Handle(command, ct);
+    
+        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
+    }
+
     private static async Task<IResult> DropCoAuthor(
         HttpContext httpContext, CancellationToken ct,
         ICommandHandler<DropCoAuthorCommand, DraftVoki> handler
@@ -98,7 +113,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());
-    }    
+    }
 
     private static async Task<IResult> DeclineCoAuthorInvite(
         HttpContext httpContext, CancellationToken ct,
@@ -113,5 +128,4 @@ internal class SpecificVokiHandlers : IEndpointGroup
             new { VokiIds = vokiIds.Select(id => id.ToString()).ToArray() })
         );
     }
-
 }

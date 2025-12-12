@@ -7,7 +7,12 @@ export type VokiCreationAuthorsInfo = {
     invitedForCoAuthorUserIds: string[];
     vokiCreationDate: Date;
     maxVokiCoAuthors: number;
+    expectedManagers: VokiExpectedManagersSetting;
 }
+export type VokiExpectedManagersSetting = {
+    makeAllCoAuthorsManagers: boolean;
+    userIdsToBecomeManagers: string[];
+};
 export type UserPreviewWithInvitesSettings = {
     id: string;
     uniqueName: string;

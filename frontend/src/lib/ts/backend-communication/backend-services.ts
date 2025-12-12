@@ -108,6 +108,7 @@ export class BackendService {
         const contentType = response.headers.get("content-type");
 
         if (contentType?.includes("application/json")) {
+            
             try {
                 const json = await response.json();
                 if (!Array.isArray(json.errs)) {

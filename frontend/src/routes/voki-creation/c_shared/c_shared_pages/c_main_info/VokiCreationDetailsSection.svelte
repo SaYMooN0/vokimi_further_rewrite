@@ -58,7 +58,7 @@
 		width: 100%;
 		margin-top: 1rem;
 		color: var(--text);
-		font-size: 1.5rem;
+		font-size: 1.25rem;
 		font-weight: 500;
 		word-break: normal;
 		overflow-wrap: anywhere;

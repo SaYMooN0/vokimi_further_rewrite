@@ -42,4 +42,7 @@
 		display: flex;
 		flex-direction: column;
 	}
+	.interaction-settings > :global(.err-block) {
+		margin: 1rem 0;
+	}
 </style>

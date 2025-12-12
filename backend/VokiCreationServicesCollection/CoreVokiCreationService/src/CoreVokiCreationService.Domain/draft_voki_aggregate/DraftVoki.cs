@@ -1,4 +1,5 @@
 ﻿using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
+using SharedKernel;
 using SharedKernel.common.rules;
 using SharedKernel.common.vokis;
 using VokimiStorageKeysLib.concrete_keys;
@@ -13,6 +14,7 @@ public class DraftVoki : AggregateRoot<VokiId>
     public VokiCoverKey Cover { get; private set; }
     public AppUserId PrimaryAuthorId { get; }
     public ImmutableHashSet<AppUserId> CoAuthorIds { get; private set; }
+    public VokiExpectedManagersSetting ExpectedManagers { get; private set; }
     public ImmutableHashSet<AppUserId> InvitedForCoAuthorUserIds { get; private set; }
     public DateTime CreationDate { get; }
 
@@ -152,5 +154,12 @@ public class DraftVoki : AggregateRoot<VokiId>
 
         CoAuthorIds = CoAuthorIds.Remove(coAuthorId);
         AddDomainEvent(new VokiCoAuthorRemovedEvent(Id, coAuthorId, this.Type));
+    }
+    public void LeaveVokiCreation(IAuthenticatedUserContext userContext) {
+        if (!CoAuthorIds.Contains(userContext.UserId)) {
+            return;
+        }
+        CoAuthorIds = CoAuthorIds.Remove(userContext.UserId);
+        AddDomainEvent(new VokiCoAuthorRemovedEvent(Id, userContext.UserId, this.Type));
     }
 }

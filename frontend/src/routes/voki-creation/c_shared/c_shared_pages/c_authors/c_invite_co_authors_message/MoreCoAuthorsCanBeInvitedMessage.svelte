@@ -25,8 +25,7 @@
 
 <CoAuthorsMessageTemplate {subtitle} title={null} actionItem={templateActionItem()} />
 {#snippet subtitle()}
-	Voki can have up to {maxCoAuthors} co-authors<br />
-	{maxCoAuthors - coAuthorsWithInvitedCount} more can be invited
+	{maxCoAuthors - coAuthorsWithInvitedCount} more co-authors can be invited
 {/snippet}
 {#snippet onlyPrimaryAuthorCanInvite()}
 	<div class="only-primary-author-can-invite">

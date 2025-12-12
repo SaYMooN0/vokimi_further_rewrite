@@ -64,6 +64,7 @@
 	</div>
 	<VokiCreationDefaultButton
 		text="Edit answer settings"
+		class="edit-settings-button"
 		onclick={() => (isEditingState = true)}
 	/>
 {/if}
@@ -74,5 +75,8 @@
 		flex-direction: row;
 		gap: 0.5rem;
 		margin: 1.5rem 0 0;
+	}
+	:global(.edit-settings-button) {
+		padding: 0 1rem;
 	}
 </style>

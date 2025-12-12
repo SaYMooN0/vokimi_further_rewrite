@@ -4,7 +4,7 @@
 	import VokiCoAuthorsListUserItem from './c_co_authors_list/VokiCoAuthorsListUserItem.svelte';
 	import DropCoAuthorConfirmationDialog from './c_co_authors_list/DropCoAuthorConfirmationDialog.svelte';
 	import type { CoAuthorsPageState } from './co-authors-page-state.svelte';
-	import { page } from '$app/state';
+	import LeaveVokiCreationConfirmationDialog from './c_co_authors_list/LeaveVokiCreationConfirmationDialog.svelte';
 
 	interface Props {
 		viewerId: string;
@@ -12,6 +12,9 @@
 		pageState: CoAuthorsPageState;
 	}
 	let { viewerId, isViewerPrimaryAuthor, pageState }: Props = $props();
+
+	let dropCoAuthorDialog = $state<DropCoAuthorConfirmationDialog>()!;
+	let leaveVokiCreationDialog = $state<LeaveVokiCreationConfirmationDialog>()!;
 
 	async function cancelInvite(userId: string) {
 		const response = await ApiVokiCreationCore.fetchJsonResponse<{
@@ -28,7 +31,15 @@
 			toast.error("Couldn't cancel invite");
 		}
 	}
-	let dropCoAuthorDialog = $state<DropCoAuthorConfirmationDialog>()!;
+	function decideCoAuthorActionButton(userId: string) {
+		if (viewerId === userId && !isViewerPrimaryAuthor) {
+			return leaveVokiCreationButton;
+		}
+		if (isViewerPrimaryAuthor) {
+			return dropCoAuthorButton;
+		}
+		return null;
+	}
 </script>
 
 {#snippet cancelInviteButton(userId: string)}
@@ -37,6 +48,11 @@
 {#snippet dropCoAuthorButton(userId: string)}
 	<button class="action-btn" onclick={() => dropCoAuthorDialog.open(userId)}>Drop co-author</button>
 {/snippet}
+{#snippet leaveVokiCreationButton()}
+	<button class="action-btn" onclick={() => leaveVokiCreationDialog.open()}
+		>Leave Voki creation</button
+	>
+{/snippet}
 
 <DropCoAuthorConfirmationDialog
 	bind:this={dropCoAuthorDialog}
@@ -44,13 +60,17 @@
 	onSuccessfulDrop={(newCoAuthors, newInvites) =>
 		pageState.updateCoAuthorsInfo(newCoAuthors, newInvites)}
 />
+<LeaveVokiCreationConfirmationDialog
+	bind:this={leaveVokiCreationDialog}
+	vokiId={pageState.vokiId}
+/>
 <div class="all-co-authors-list">
 	{#each [...pageState.coAuthorIds].sort((a, b) => a.localeCompare(b)) as userId}
 		{#key userId}
 			<VokiCoAuthorsListUserItem
 				{userId}
 				userCoAuthorState={userId === viewerId ? 'viewerIsAuthor' : 'coAuthor'}
-				actionButton={isViewerPrimaryAuthor ? dropCoAuthorButton : null}
+				actionButton={decideCoAuthorActionButton(userId)}
 			/>
 		{/key}
 	{/each}
@@ -81,7 +101,7 @@
 	}
 
 	.action-btn {
-		width: 8rem;
+		width: 10rem;
 		padding: 0.375rem 0;
 		border: none;
 		border-radius: 0.5rem;
