@@ -1,4 +1,5 @@
-﻿using SharedKernel;
+﻿using System.Collections.Immutable;
+using SharedKernel;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
@@ -11,6 +12,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     protected BaseDraftVoki() { }
     public AppUserId PrimaryAuthorId { get; }
     protected VokiCoAuthorIdsSet CoAuthors { get; private set; }
+    protected ImmutableHashSet<AppUserId> UserIdsToBecomeManagers { get; private set; }
     public VokiName Name { get; private set; }
     public VokiCoverKey Cover { get; private set; }
     public VokiDetails Details { get; private set; }
@@ -26,16 +28,16 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         Id = vokiId;
         PrimaryAuthorId = primaryAuthorId;
         CoAuthors = VokiCoAuthorIdsSet.Empty;
+        UserIdsToBecomeManagers = [];
 
         Name = name;
         Cover = cover;
         Details = VokiDetails.Default;
         Tags = VokiTagsSet.Empty;
-
         CreationDate = creationDate;
     }
 
-    public ErrOrNothing AddCoAuthor(AppUserId newCoAuthorId) {
+    public ErrOrNothing AddCoAuthor(AppUserId newCoAuthorId, ImmutableHashSet<AppUserId> newUserIdsToBecomeManagers) {
         if (newCoAuthorId == PrimaryAuthorId) {
             return ErrFactory.Conflict("Primary author cannot be a co-author of the Voki");
         }
@@ -46,10 +48,11 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         }
 
         CoAuthors = newSetRes.AsSuccess();
+        UserIdsToBecomeManagers = NormalizeUsersToBecomeManagers(newUserIdsToBecomeManagers);
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOrNothing RemoveCoAuthor(AppUserId coAuthorId) {
+    public ErrOrNothing RemoveCoAuthor(AppUserId coAuthorId, ImmutableHashSet<AppUserId> newUserIdsToBecomeManagers) {
         if (coAuthorId == PrimaryAuthorId) {
             return ErrFactory.Conflict("Primary author cannot be removed from co-authors");
         }
@@ -60,8 +63,12 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         }
 
         CoAuthors = newSetRes.AsSuccess();
+        UserIdsToBecomeManagers = NormalizeUsersToBecomeManagers(newUserIdsToBecomeManagers);
         return ErrOrNothing.Nothing;
     }
+
+    private ImmutableHashSet<AppUserId> NormalizeUsersToBecomeManagers(ImmutableHashSet<AppUserId> candidateManagers) =>
+        candidateManagers.Intersect(CoAuthors.ToImmutableHashSet());
 
     public bool HasAccessToEdit(AppUserId userId) =>
         userId == PrimaryAuthorId || CoAuthors.Contains(userId);

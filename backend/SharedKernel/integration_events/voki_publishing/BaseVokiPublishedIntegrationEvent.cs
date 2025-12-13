@@ -11,6 +11,7 @@ public abstract record class BaseVokiPublishedIntegrationEvent(
     VokiId VokiId,
     AppUserId PrimaryAuthorId,
     AppUserId[] CoAuthors,
+    AppUserId[] Managers,
     string Name,
     string Cover,
     string Description,

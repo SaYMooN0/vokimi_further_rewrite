@@ -11,8 +11,13 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
 {
     protected BaseVoki() { }
     public VokiName Name { get; }
+    protected VokiManagersIdsSet ManagersSet { get; private set; }
     protected abstract IVokiInteractionSettings BaseInteractionSettings { get; }
 
+    protected BaseVoki(VokiName name, VokiManagersIdsSet managers) {
+        Name = name;
+        ManagersSet = managers;
+    }
 
     public ErrOrNothing CheckUserAccessToTake(IAuthenticatedUserContext? authenticatedUserContext) {
         if (BaseInteractionSettings.SignedInOnlyTaking && authenticatedUserContext is null) {
@@ -22,7 +27,6 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         return ErrOrNothing.Nothing;
     }
 
-    protected BaseVoki(VokiName name) {
-        Name = name;
-    }
+    public void UpdateManagersSet(VokiManagersIdsSet newManagers) =>
+        ManagersSet = newManagers;
 }

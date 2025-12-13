@@ -5,5 +5,6 @@ namespace CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 public record class VokiCoAuthorRemovedEvent(
     VokiId VokiId,
     AppUserId AppUserId,
-    VokiType VokiType
+    VokiType VokiType,
+    ImmutableHashSet<AppUserId> UserIdsExpectedToBecomeManagers
 ) : IDomainEvent;

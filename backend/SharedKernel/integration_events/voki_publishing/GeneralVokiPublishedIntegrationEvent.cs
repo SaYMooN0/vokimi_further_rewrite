@@ -8,6 +8,7 @@ public record class GeneralVokiPublishedIntegrationEvent(
     VokiId VokiId,
     AppUserId PrimaryAuthorId,
     AppUserId[] CoAuthors,
+    AppUserId[] Managers,
     string Name,
     string Cover,
     string Description,
@@ -23,7 +24,7 @@ public record class GeneralVokiPublishedIntegrationEvent(
     GeneralVokiResultIntegrationEventDto[] Results,
     GeneralVokiInteractionSettingsIntegrationEventDto InteractionSettings
 ) : BaseVokiPublishedIntegrationEvent(
-    VokiId, PrimaryAuthorId, CoAuthors,
+    VokiId, PrimaryAuthorId, CoAuthors, Managers,
     Name, Cover, Description,
     HasMatureContent, Language, Tags,
     InitializingDate, PublishingDate

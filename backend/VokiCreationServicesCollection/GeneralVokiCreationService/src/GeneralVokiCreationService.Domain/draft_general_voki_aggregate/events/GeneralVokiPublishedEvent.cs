@@ -12,6 +12,7 @@ public record GeneralVokiPublishedEvent(
     VokiId VokiId,
     AppUserId PrimaryAuthorId,
     VokiCoAuthorIdsSet CoAuthors,
+    ImmutableHashSet<AppUserId> UserIdsToBecomeManagers,
     VokiName Name,
     VokiCoverKey Cover,
     VokiDetails Details,

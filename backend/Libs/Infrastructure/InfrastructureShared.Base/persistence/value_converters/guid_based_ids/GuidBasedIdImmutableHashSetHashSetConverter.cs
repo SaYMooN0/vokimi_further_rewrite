@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InfrastructureShared.Base.persistence.value_converters.guid_based_ids;
 
-internal class GuidBasedIdImmutableHashSetConverter<T> : ValueConverter<ImmutableHashSet<T>, Guid[]>
+public class GuidBasedIdImmutableHashSetConverter<T> : ValueConverter<ImmutableHashSet<T>, Guid[]>
     where T : GuidBasedId
 {
     public GuidBasedIdImmutableHashSetConverter()
@@ -15,7 +15,7 @@ internal class GuidBasedIdImmutableHashSetConverter<T> : ValueConverter<Immutabl
         ) { }
 }
 
-internal class GuidBasedIdImmutableHashSetComparer<T> : ValueComparer<ImmutableHashSet<T>> where T : GuidBasedId
+public class GuidBasedIdImmutableHashSetComparer<T> : ValueComparer<ImmutableHashSet<T>> where T : GuidBasedId
 {
     public GuidBasedIdImmutableHashSetComparer() : base(
         (t1, t2) => t1!.SequenceEqual(t2!),

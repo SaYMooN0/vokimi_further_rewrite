@@ -30,6 +30,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         CreationDate = creationDate;
         CoAuthorIds = [];
         InvitedForCoAuthorUserIds = [];
+        ExpectedManagers = VokiExpectedManagersSetting.AllCoAuthorsWillBecomeManagers();
     }
 
     public static DraftVoki Create(VokiName name, VokiType type, AppUserId primaryAuthorId, DateTime creationDate) {
@@ -99,17 +100,16 @@ public class DraftVoki : AggregateRoot<VokiId>
         return ErrOrNothing.Nothing;
     }
 
-
-    public ErrOrNothing AcceptInviteBy(AppUserId userId) {
-        if (CoAuthorIds.Contains(userId)) {
+    public ErrOrNothing AcceptInviteBy(IAuthenticatedUserContext userContext) {
+        if (CoAuthorIds.Contains(userContext.UserId)) {
             return ErrOrNothing.Nothing;
         }
 
-        if (PrimaryAuthorId == userId) {
+        if (PrimaryAuthorId == userContext.UserId) {
             return ErrFactory.Conflict("Primary author cannot become a co-author");
         }
 
-        if (!InvitedForCoAuthorUserIds.Contains(userId)) {
+        if (!InvitedForCoAuthorUserIds.Contains(userContext.UserId)) {
             return ErrFactory.Unspecified("You are not listed as invited in this voki");
         }
 
@@ -119,9 +119,9 @@ public class DraftVoki : AggregateRoot<VokiId>
             );
         }
 
-        CoAuthorIds = CoAuthorIds.Add(userId);
-        InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
-        AddDomainEvent(new CoAuthorInviteAcceptedEvent(Id, userId, Type));
+        CoAuthorIds = CoAuthorIds.Add(userContext.UserId);
+        InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userContext.UserId);
+        AddDomainEvent(new CoAuthorInviteAcceptedEvent(Id, userContext.UserId, Type, DecideUserIdsToBecomeManagers()));
         return ErrOrNothing.Nothing;
     }
 
@@ -138,7 +138,6 @@ public class DraftVoki : AggregateRoot<VokiId>
         InvitedForCoAuthorUserIds = InvitedForCoAuthorUserIds.Remove(userId);
     }
 
-    // public ErrOrNothing DropCoAuthor() { }
     public void MarkAsPublished() {
         foreach (var invitedUserIds in InvitedForCoAuthorUserIds) {
             AddDomainEvent(new CoAuthorInviteCanceledEvent(Id, invitedUserIds));
@@ -153,13 +152,37 @@ public class DraftVoki : AggregateRoot<VokiId>
         }
 
         CoAuthorIds = CoAuthorIds.Remove(coAuthorId);
-        AddDomainEvent(new VokiCoAuthorRemovedEvent(Id, coAuthorId, this.Type));
+        ExpectedManagers = ExpectedManagers.Without(coAuthorId);
+
+        AddDomainEvent(new VokiCoAuthorRemovedEvent(Id, coAuthorId, this.Type, DecideUserIdsToBecomeManagers()));
     }
+
     public void LeaveVokiCreation(IAuthenticatedUserContext userContext) {
         if (!CoAuthorIds.Contains(userContext.UserId)) {
             return;
         }
+
         CoAuthorIds = CoAuthorIds.Remove(userContext.UserId);
-        AddDomainEvent(new VokiCoAuthorRemovedEvent(Id, userContext.UserId, this.Type));
+        ExpectedManagers = ExpectedManagers.Without(userContext.UserId);
+        AddDomainEvent(new VokiCoAuthorRemovedEvent(
+            Id, userContext.UserId, this.Type,
+            DecideUserIdsToBecomeManagers()
+        ));
+    }
+
+    private ImmutableHashSet<AppUserId> DecideUserIdsToBecomeManagers() =>
+        ExpectedManagers.DecideManagers(this.CoAuthorIds);
+
+    public ErrOrNothing UpdateExpectedManagers(VokiExpectedManagersSetting newExpectedManagers) {
+        if (newExpectedManagers.AnySpecifiedUser(u => !CoAuthorIds.Contains(u))) {
+            return ErrFactory.Conflict("Some of users specified to become managers are not co-authors");
+        }
+
+        if (newExpectedManagers.SpecifiedUserContains(this.PrimaryAuthorId)) {
+            return ErrFactory.Conflict("Primary author cannot be specified to become manager");
+        }
+
+        this.ExpectedManagers = newExpectedManagers;
+        return ErrOrNothing.Nothing;
     }
 }

@@ -3,6 +3,7 @@ using InfrastructureShared.Base.persistence.extensions;
 using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedKernel.common.vokis;
 using VokiTakingServicesLib.Domain.common;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.entities_configurations.general_vokis;
@@ -42,6 +43,10 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
             .Property<ImmutableHashSet<VokiTakenRecordId>>("VokiTakenRecordIds")
             .HasGuidBasedIdsImmutableHashSetConversion();
 
+        builder
+            .Property<VokiManagersIdsSet>("ManagersSet")
+            .HasConversion<VokiManagersIdsSetConverter>();
+        
         builder.ComplexProperty(x => x.InteractionSettings, b => {
             b.Property(s => s.SignedInOnlyTaking);
             b.Property(d => d.ResultsVisibility).HasConversion<string>();

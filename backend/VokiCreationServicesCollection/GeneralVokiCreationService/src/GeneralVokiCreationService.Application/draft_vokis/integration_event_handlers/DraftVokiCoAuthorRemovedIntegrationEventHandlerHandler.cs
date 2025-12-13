@@ -7,7 +7,8 @@ using SharedKernel.integration_events.draft_vokis.co_authors;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.integration_event_handlers;
 
-public class DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler : IConsumer<DraftVokiCoAuthorRemovedIntegrationEvent>
+public class
+    DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler : IConsumer<DraftVokiCoAuthorRemovedIntegrationEvent>
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly ILogger<DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler> _logger;
@@ -41,7 +42,10 @@ public class DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler : IConsumer<
             return;
         }
 
-        ErrOrNothing result = voki.RemoveCoAuthor(msg.AppUserId);
+        ErrOrNothing result = voki.RemoveCoAuthor(
+            msg.AppUserId,
+            msg.UserIdsExpectedToBecomeManagers.ToImmutableHashSet()
+        );
 
         if (result.IsErr(out var err)) {
             _logger.LogError(
@@ -51,9 +55,9 @@ public class DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler : IConsumer<
 
             UnexpectedBehaviourException.ThrowErr(err);
         }
-        
+
         await _draftGeneralVokisRepository.Update(voki, context.CancellationToken);
-        
+
         _logger.LogInformation(
             "Processed {EventName}: co-author {AppUserId} removed from Voki {VokiId}",
             eventName, msg.AppUserId, msg.VokiId

@@ -10,6 +10,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
     public VokiCoverKey Cover { get; }
     public AppUserId PrimaryAuthorId { get; }
     public ImmutableHashSet<AppUserId> CoAuthorIds { get; }
+    protected VokiManagersIdsSet ManagersSet { get; private set; }
     public VokiDetails Details { get; }
     public ImmutableHashSet<VokiTagId> Tags { get; }
     public DateTime PublicationDate { get; }
@@ -20,7 +21,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
 
     protected BaseVoki(
         VokiId id, VokiName name, VokiCoverKey cover,
-        AppUserId primaryAuthorId, ImmutableHashSet<AppUserId> coAuthorIds,
+        AppUserId primaryAuthorId, ImmutableHashSet<AppUserId> coAuthorIds, VokiManagersIdsSet managers,
         VokiDetails details, ImmutableHashSet<VokiTagId> tags, DateTime publicationDate,
         bool signedInOnlyTaking
     ) {
@@ -29,6 +30,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         Cover = cover;
         PrimaryAuthorId = primaryAuthorId;
         CoAuthorIds = coAuthorIds;
+        ManagersSet = managers;
         Details = details;
         Tags = tags;
         RatingsCount = 0;

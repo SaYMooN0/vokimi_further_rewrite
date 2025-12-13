@@ -18,7 +18,6 @@ public class VokiCoAuthorIdsSet : ValueObject
 
     public static VokiCoAuthorIdsSet Empty => new(ImmutableHashSet<AppUserId>.Empty);
     public bool Contains(AppUserId id) => _ids.Contains(id);
-    public int Count => _ids.Count;
 
     public static ErrOr<VokiCoAuthorIdsSet> Create(ImmutableHashSet<AppUserId> ids) {
         if (CheckForErr(ids).IsErr(out var err)) {
@@ -65,4 +64,5 @@ public class VokiCoAuthorIdsSet : ValueObject
         : ErrOrNothing.Nothing;
 
     public AppUserId[] ToArray() => _ids.ToArray();
+    public ImmutableHashSet<AppUserId> ToImmutableHashSet() => _ids.ToImmutableHashSet();
 }

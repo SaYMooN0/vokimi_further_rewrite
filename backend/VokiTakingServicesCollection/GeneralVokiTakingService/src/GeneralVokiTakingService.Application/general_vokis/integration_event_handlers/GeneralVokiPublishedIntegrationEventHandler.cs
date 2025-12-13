@@ -35,7 +35,8 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
                 signedInOnlyTaking: e.InteractionSettings.SignedInOnlyTaking,
                 resultsVisibility: e.InteractionSettings.ResultsVisibility,
                 showResultsDistribution: e.InteractionSettings.ShowResultsDistribution
-            ).AsSuccess()
+            ).AsSuccess(),
+            VokiManagersIdsSet.Create(e.Managers.ToImmutableHashSet()).AsSuccess()
         );
         await _generalVokisRepository.Add(voki, context.CancellationToken);
     }

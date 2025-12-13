@@ -23,8 +23,9 @@ public sealed class GeneralVoki : BaseVoki
 
     public GeneralVoki(
         VokiId id, VokiName name, ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
-        bool forceSequentialAnswering, bool shuffleQuestions, GeneralVokiInteractionSettings interactionSettings
-    ) : base(name) {
+        bool forceSequentialAnswering, bool shuffleQuestions, GeneralVokiInteractionSettings interactionSettings,
+        VokiManagersIdsSet managers
+    ) : base(name, managers) {
         Id = id;
         Questions = questions;
         _results = results;
@@ -39,13 +40,14 @@ public sealed class GeneralVoki : BaseVoki
     public static GeneralVoki CreateNew(
         VokiId id, VokiCoverKey coverKey, VokiName name,
         ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,
-        bool forceSequentialAnswering, bool shuffleQuestions, GeneralVokiInteractionSettings interactionSettings
+        bool forceSequentialAnswering, bool shuffleQuestions, GeneralVokiInteractionSettings interactionSettings,
+        VokiManagersIdsSet managers
     ) {
         GeneralVoki voki = new(
             id, name, questions, results,
             forceSequentialAnswering: forceSequentialAnswering,
             shuffleQuestions: shuffleQuestions,
-            interactionSettings
+            interactionSettings, managers
         );
         List<BaseStorageKey> vokiContentKeys = GatherVokiContentKeys(coverKey, questions, results);
         voki.AddDomainEvent(new PublishedVokiCreatedEvent(voki.Id, vokiContentKeys.ToArray()));
@@ -84,6 +86,7 @@ public sealed class GeneralVoki : BaseVoki
         VokiTakenRecordIds = VokiTakenRecordIds.Add(newRecordId);
         AddDomainEvent(new VokiGotNewVokiTakenRecordEvent(Id, vokiTakerId, (uint)VokiTakenRecordIds.Count));
     }
+
     public ErrOr<GeneralVokiResultId> GetResultIdByChosenAnswers(
         Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers
     ) {
@@ -226,7 +229,8 @@ public sealed class GeneralVoki : BaseVoki
             ? ErrOr<IEnumerable<VokiResultWithDistributionPercent>>.Success(
                 AttachDistributionToResults(_results, resultIdsToCount)
             )
-            : ErrFactory.NoAccess("To see all voki results you need to take this voki at least one time as a logged in user"),
+            : ErrFactory.NoAccess(
+                "To see all voki results you need to take this voki at least one time as a logged in user"),
         onlyReceived: () => UserHasReceivedAllResults(userReceivedResultIds)
             ? ErrOr<IEnumerable<VokiResultWithDistributionPercent>>.Success(
                 AttachDistributionToResults(_results, resultIdsToCount)

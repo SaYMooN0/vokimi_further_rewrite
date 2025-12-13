@@ -32,14 +32,14 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
         );
     }
 
-    public async Task Handle(CoAuthorInviteAcceptedEvent e, CancellationToken ct) => await _integrationEventPublisher.Publish(
-        new DraftVokiNewCoAuthorAddedIntegrationEvent(
-            e.VokiId, e.AppUserId, e.VokiType
+    public async Task Handle(CoAuthorInviteAcceptedEvent e, CancellationToken ct) => await
+        _integrationEventPublisher.Publish(new DraftVokiNewCoAuthorAddedIntegrationEvent(
+            e.VokiId, e.AppUserId, e.VokiType, e.UserIdsExpectedToBecomeManagers.ToArray()
         ), ct);
 
 
-    public async Task Handle(VokiCoAuthorRemovedEvent e, CancellationToken ct) => await _integrationEventPublisher.Publish(
-        new DraftVokiCoAuthorRemovedIntegrationEvent(
-            e.VokiId, e.AppUserId, e.VokiType
+    public async Task Handle(VokiCoAuthorRemovedEvent e, CancellationToken ct) => await
+        _integrationEventPublisher.Publish(new DraftVokiCoAuthorRemovedIntegrationEvent(
+            e.VokiId, e.AppUserId, e.VokiType, e.UserIdsExpectedToBecomeManagers.ToArray()
         ), ct);
 }

@@ -27,6 +27,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
             new VokiCoverKey(e.Cover),
             e.PrimaryAuthorId,
             e.CoAuthors.ToImmutableHashSet(),
+            VokiManagersIdsSet.Create(e.Managers.ToImmutableHashSet()).AsSuccess(),
             new VokiDetails(e.Description, e.HasMatureContent, e.Language),
             tags: e.Tags.ToImmutableHashSet(),
             e.PublishingDate,

@@ -2,6 +2,7 @@
 using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using SharedKernel.common.vokis;
 using VokisCatalogService.Domain.voki_aggregate;
 using VokisCatalogService.Infrastructure.persistence.configurations.extensions;
 using VokisCatalogService.Infrastructure.persistence.configurations.value_converters;
@@ -35,6 +36,10 @@ public class BaseVokisConfigurations : IEntityTypeConfiguration<BaseVoki>
         builder
             .Property(x => x.CoAuthorIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
+
+        builder
+            .Property<VokiManagersIdsSet>("ManagersSet")
+            .HasConversion<VokiManagersIdsSetConverter>();
 
         builder.OwnsOne(v => v.Details, d => {
             d.Property(p => p.Language).HasColumnName("Details_Language");

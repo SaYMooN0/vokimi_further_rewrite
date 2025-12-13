@@ -32,8 +32,7 @@ internal abstract class Program
 
         string actionKeys = string.Join(", ", actions.Keys);
         Console.WriteLine($"Select action: ({actionKeys})");
-        string action = "add_draft_voki";
-        // string action = Console.ReadLine()!;
+        string action = Console.ReadLine()!;
         await actions[action].Invoke(appSettingsConfig, ct);
         return 0;
     }

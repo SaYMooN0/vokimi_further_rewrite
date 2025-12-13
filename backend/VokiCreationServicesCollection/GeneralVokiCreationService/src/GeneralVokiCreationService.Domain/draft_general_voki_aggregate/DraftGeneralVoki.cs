@@ -53,8 +53,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         DateTime creationDate
     ) {
         DraftGeneralVoki newGeneralVoki = new(vokiId, primaryAuthorId, name, cover, creationDate);
-        newGeneralVoki.AddDomainEvent(
-            new NewDraftVokiInitializedEvent(newGeneralVoki.Id, newGeneralVoki.PrimaryAuthorId));
+        newGeneralVoki.AddDomainEvent(new NewDraftVokiInitializedEvent(
+            newGeneralVoki.Id,
+            newGeneralVoki.PrimaryAuthorId
+        ));
         return newGeneralVoki;
     }
 
@@ -496,7 +498,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         AddDomainEvent(new GeneralVokiPublishedEvent(
-            Id, PrimaryAuthorId, CoAuthors,
+            Id, PrimaryAuthorId, CoAuthors, UserIdsToBecomeManagers,
             Name, Cover, Details, Tags,
             InitializingDate: CreationDate,
             PublishingDate: dateTimeProvider.UtcNow,

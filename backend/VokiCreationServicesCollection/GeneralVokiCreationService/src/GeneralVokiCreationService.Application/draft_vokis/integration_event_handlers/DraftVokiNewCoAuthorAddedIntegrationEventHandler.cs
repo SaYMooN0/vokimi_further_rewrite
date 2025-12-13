@@ -41,7 +41,7 @@ public class DraftVokiNewCoAuthorAddedIntegrationEventHandler : IConsumer<DraftV
             return;
         }
 
-        ErrOrNothing result = voki.AddCoAuthor(msg.AppUserId);
+        ErrOrNothing result = voki.AddCoAuthor(msg.AppUserId, msg.UserIdsExpectedToBecomeManagers.ToImmutableHashSet());
 
         if (result.IsErr(out var err)) {
             _logger.LogError(
@@ -53,7 +53,7 @@ public class DraftVokiNewCoAuthorAddedIntegrationEventHandler : IConsumer<DraftV
         }
 
         await _draftGeneralVokisRepository.Update(voki, context.CancellationToken);
-        
+
         _logger.LogInformation(
             "Processed {EventName}: co-author {AppUserId} added to Voki {VokiId}",
             eventName, msg.AppUserId, msg.VokiId

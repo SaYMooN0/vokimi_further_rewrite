@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+﻿using System.Collections.Immutable;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using InfrastructureShared.Base.persistence.extensions;
 using InfrastructureShared.Base.persistence.value_converters;
 using Microsoft.EntityFrameworkCore;
@@ -52,13 +53,17 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
             .HasConversion<VokiCoAuthorIdsSetConverter>();
 
         builder
+            .Property<ImmutableHashSet<AppUserId>>("UserIdsToBecomeManagers")
+            .HasGuidBasedIdsImmutableHashSetConversion();
+
+        builder
             .Property(x => x.CreationDate);
 
         builder.ComplexProperty(x => x.TakingProcessSettings, b => {
             b.Property(s => s.ShuffleQuestions);
             b.Property(d => d.ForceSequentialAnswering);
-        }); 
-        
+        });
+
         builder.ComplexProperty(x => x.InteractionSettings, b => {
             b.Property(s => s.SignedInOnlyTaking);
             b.Property(d => d.ResultsVisibility);
@@ -70,15 +75,15 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
             .HasMany<VokiQuestion>("_questions")
             .WithOne()
             .HasForeignKey("VokiId")
-            .IsRequired()            
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
-        
+
         builder.Ignore(x => x.Results);
         builder
             .HasMany<VokiResult>("_results")
             .WithOne()
             .HasForeignKey("VokiId")
-            .IsRequired()            
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

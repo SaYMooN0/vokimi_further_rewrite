@@ -2,6 +2,7 @@
 using CoreVokiCreationService.Infrastructure.persistence.configurations.value_converters;
 using InfrastructureShared.Base.persistence.extensions;
 using InfrastructureShared.Base.persistence.value_converters;
+using InfrastructureShared.Base.persistence.value_converters.guid_based_ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,7 +26,7 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
         builder
             .Property(x => x.Cover)
             .HasConversion<VokiCoverKeyConverter>();
-        
+
         builder
             .Property(x => x.PrimaryAuthorId)
             .ValueGeneratedNever()
@@ -38,9 +39,19 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
             .HasColumnName("CoAuthorIds");
 
         builder
+            .ComplexProperty(x => x.ExpectedManagers, e => {
+                e.Property<ImmutableHashSet<AppUserId>>("UserIdsToBecomeManagers")
+                    .HasGuidBasedIdsImmutableHashSetConversion()
+                    .HasColumnName("expectedManagers_UserIdsToBecomeManagers");
+
+                e.Property<bool>("MakeAllCoAuthorsManagers")
+                    .HasColumnName("expectedManagers_MakeAllCoAuthorsManagers");
+            });
+
+        builder
             .Property(x => x.InvitedForCoAuthorUserIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
-        
+
         builder
             .Property(x => x.CreationDate)
             .HasColumnName("CreationDate");

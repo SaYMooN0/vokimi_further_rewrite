@@ -34,6 +34,7 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
             e.VokiId,
             e.PrimaryAuthorId,
             CoAuthors: e.CoAuthors.ToArray(),
+            Managers: e.UserIdsToBecomeManagers.ToArray(),
             Name: e.Name.ToString(),
             Cover: e.Cover.ToString(),
             Description: e.Details.Description.ToString(),
