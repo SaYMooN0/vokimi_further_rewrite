@@ -10,7 +10,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
     public VokiCoverKey Cover { get; }
     public AppUserId PrimaryAuthorId { get; }
     public ImmutableHashSet<AppUserId> CoAuthorIds { get; }
-    protected VokiManagersIdsSet ManagersSet { get; private set; }
+    public VokiManagersIdsSet ManagersSet { get; private set; }
     public VokiDetails Details { get; }
     public ImmutableHashSet<VokiTagId> Tags { get; }
     public DateTime PublicationDate { get; }

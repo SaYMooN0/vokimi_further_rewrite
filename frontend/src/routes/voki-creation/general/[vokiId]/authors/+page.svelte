@@ -13,7 +13,8 @@
 			data.primaryAuthorId,
 			data.coAuthorIds,
 			data.invitedForCoAuthorUserIds,
-			data.maxVokiCoAuthors
+			data.maxVokiCoAuthors,
+			data.expectedManagers
 		);
 		return pageState;
 	}

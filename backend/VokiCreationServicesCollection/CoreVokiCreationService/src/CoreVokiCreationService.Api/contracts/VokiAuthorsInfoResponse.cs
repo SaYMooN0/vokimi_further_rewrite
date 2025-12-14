@@ -3,12 +3,13 @@ using SharedKernel.common.rules;
 
 namespace CoreVokiCreationService.Api.contracts;
 
-public record class VokiAuthorsInfoResponse(
+internal record class VokiAuthorsInfoResponse(
     string PrimaryAuthorId,
     string[] CoAuthorIds,
     string[] InvitedForCoAuthorUserIds,
     DateTime VokiCreationDate,
-    int MaxVokiCoAuthors
+    int MaxVokiCoAuthors,
+    VokiExpectedManagersSettingResponse ExpectedManagers
 ) : ICreatableResponse<DraftVoki>
 {
     public static ICreatableResponse<DraftVoki> Create(DraftVoki voki) => new VokiAuthorsInfoResponse(
@@ -16,6 +17,7 @@ public record class VokiAuthorsInfoResponse(
         voki.CoAuthorIds.Select(id => id.ToString()).ToArray(),
         voki.InvitedForCoAuthorUserIds.Select(id => id.ToString()).ToArray(),
         voki.CreationDate,
-        VokiRules.MaxCoAuthors
+        VokiRules.MaxCoAuthors,
+        VokiExpectedManagersSettingResponse.FromSetting(voki.ExpectedManagers)
     );
 }

@@ -40,8 +40,7 @@ internal abstract class Program
 
     static async Task AddDraftVokiFromJson(IConfiguration config, CancellationToken ct) {
         Console.WriteLine("Input path to file: ");
-        string path = "D:/e.json";
-        // string path = Console.ReadLine()!;
+        string path = Console.ReadLine()!;
         string jsonString = await File.ReadAllTextAsync(path, ct);
         Console.WriteLine("Input voki author id:");
         string idStr = Console.ReadLine()!;
@@ -147,9 +146,10 @@ internal abstract class Program
             DbContextsCollection.Albums(config),
         ];
         foreach (var db in dbs) {
+            Console.Write($"Clearing {db.GetType().Name}: ");
             await db.Database.EnsureDeletedAsync(ct);
             await db.Database.EnsureCreatedAsync(ct);
-            Console.WriteLine($"Cleared {db.GetType().Name}");
+            Console.WriteLine("Success");
         }
     }
 }

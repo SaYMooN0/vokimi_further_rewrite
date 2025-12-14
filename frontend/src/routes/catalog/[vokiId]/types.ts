@@ -11,6 +11,7 @@ export type VokiOverviewInfo = {
     cover: string;
     primaryAuthorId: string;
     coAuthorIds: string[];
+    managerIds:string[];
     description: string;
     hasMatureContent: boolean;
     language: Language;

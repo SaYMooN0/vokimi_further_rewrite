@@ -40,11 +40,11 @@ public class DraftVokisConfigurations : IEntityTypeConfiguration<DraftVoki>
 
         builder
             .ComplexProperty(x => x.ExpectedManagers, e => {
-                e.Property<ImmutableHashSet<AppUserId>>("UserIdsToBecomeManagers")
-                    .HasGuidBasedIdsImmutableHashSetConversion()
+                e.Property(s=>s.UserIdsToBecomeManagers)
+                    .HasConversion<VokiManagersIdsSetConverter>()
                     .HasColumnName("expectedManagers_UserIdsToBecomeManagers");
 
-                e.Property<bool>("MakeAllCoAuthorsManagers")
+                e.Property(s=>s.MakeAllCoAuthorsManagers)
                     .HasColumnName("expectedManagers_MakeAllCoAuthorsManagers");
             });
 

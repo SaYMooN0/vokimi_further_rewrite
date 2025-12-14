@@ -1,4 +1,5 @@
 ﻿using CoreVokiCreationService.Api.contracts;
+using CoreVokiCreationService.Api.contracts.managers;
 using CoreVokiCreationService.Api.contracts.vokis_brief_info;
 using CoreVokiCreationService.Application.draft_vokis.commands;
 using CoreVokiCreationService.Application.draft_vokis.commands.invites;
@@ -26,6 +27,8 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
         group.MapPatch("/accept-co-author-invite", AcceptCoAuthorInvite);
         group.MapPatch("/decline-co-author-invite", DeclineCoAuthorInvite);
+
+        group.MapPatch("/update-expected-managers", UpdateExpectedManagers);
     }
 
     private static async Task<IResult> GetVokiBriefInfo(
@@ -70,10 +73,10 @@ internal class SpecificVokiHandlers : IEndpointGroup
         ICommandHandler<LeaveVokiCreationCommand> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
-    
+
         LeaveVokiCreationCommand command = new(vokiId);
         var result = await handler.Handle(command, ct);
-    
+
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
 
@@ -127,5 +130,18 @@ internal class SpecificVokiHandlers : IEndpointGroup
         return CustomResults.FromErrOr(result, (vokiIds) => Results.Json(
             new { VokiIds = vokiIds.Select(id => id.ToString()).ToArray() })
         );
+    }
+
+    private static async Task<IResult> UpdateExpectedManagers(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<UpdateExpectedManagersCommand, VokiExpectedManagersSetting> handler
+    ) {
+        var request = httpContext.GetValidatedRequest<UpdateVokiExpectedManagersRequest>();
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+
+        UpdateExpectedManagersCommand command = new(vokiId, request.ParsedSetting);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrToJson<VokiExpectedManagersSetting, VokiExpectedManagersSettingResponse>(result);
     }
 }

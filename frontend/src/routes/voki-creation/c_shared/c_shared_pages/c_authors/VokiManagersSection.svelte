@@ -1,6 +1,8 @@
 <script lang="ts">
 	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
+	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
+	import VokiManagersEditingState from './c_managers_section/VokiManagersEditingState.svelte';
 	import type { VokiExpectedManagersSetting } from './types';
 
 	interface Props {
@@ -9,23 +11,35 @@
 		expectedManagers: VokiExpectedManagersSetting;
 	}
 	let { isViewerPrimaryAuthor, viewerId, expectedManagers }: Props = $props();
+	let isEditing = $state(false);
 </script>
 
-{#if isViewerPrimaryAuthor}
+{#if isViewerPrimaryAuthor && isEditing}
+	<VokiManagersEditingState
+		cancelEditing={() => {
+			isEditing = false;
+		}}
+	/>
+{:else if isViewerPrimaryAuthor && !isEditing}
 	<p>
-		<VokiCreationFieldName fieldName="After publishing:" />
+		<VokiCreationFieldName fieldName="Voki managers:" />
 		{#if expectedManagers.makeAllCoAuthorsManagers}
 			<label class="field-value">All co-authors will become managers</label>
+		{:else if expectedManagers.userIdsToBecomeManagers.length === 0}
+			<label class="field-value">No co-authors will become managers</label>
 		{:else}
-			<label class="field-value">Chosen co-authors will become managers: </label>
+			<label class="field-value"
+				>Chosen({expectedManagers.userIdsToBecomeManagers}) co-authors will become managers:
+			</label>
 			{#each expectedManagers.userIdsToBecomeManagers as managerId}
 				<BasicUserDisplay userId={managerId} interactionLevel={'UniqueNameGotoOnClick'} />
 			{/each}
 		{/if}
 	</p>
+	<VokiCreationDefaultButton text="Edit Managers" onclick={() => (isEditing = true)} />
 {:else}
 	<p>
-		<VokiCreationFieldName fieldName="After publishing:" />
+		<VokiCreationFieldName fieldName="Voki managers:" />
 		{#if expectedManagers.makeAllCoAuthorsManagers}
 			<label class="field-value">All co-authors will become managers</label>
 		{:else if expectedManagers.userIdsToBecomeManagers.includes(viewerId)}
