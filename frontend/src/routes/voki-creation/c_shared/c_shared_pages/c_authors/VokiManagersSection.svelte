@@ -9,8 +9,16 @@
 		isViewerPrimaryAuthor: boolean;
 		viewerId: string;
 		expectedManagers: VokiExpectedManagersSetting;
+		updateManagersSetting: (setting: VokiExpectedManagersSetting) => void;
+		vokiCoAuthors: string[];
 	}
-	let { isViewerPrimaryAuthor, viewerId, expectedManagers }: Props = $props();
+	let {
+		isViewerPrimaryAuthor,
+		viewerId,
+		expectedManagers,
+		updateManagersSetting,
+		vokiCoAuthors
+	}: Props = $props();
 	let isEditing = $state(false);
 </script>
 
@@ -19,6 +27,10 @@
 		cancelEditing={() => {
 			isEditing = false;
 		}}
+		updateParent={updateManagersSetting}
+		savedSelectedUserIds={expectedManagers.userIdsToBecomeManagers}
+		initialMakeAllManagers={expectedManagers.makeAllCoAuthorsManagers}
+		{vokiCoAuthors}
 	/>
 {:else if isViewerPrimaryAuthor && !isEditing}
 	<p>

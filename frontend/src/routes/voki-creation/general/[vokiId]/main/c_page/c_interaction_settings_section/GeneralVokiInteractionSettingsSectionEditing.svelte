@@ -4,10 +4,11 @@
 	import { RJO } from '$lib/ts/backend-communication/backend-services';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
+	import { watch } from 'runed';
 	import VokiCreationFieldName from '../../../../../c_shared/VokiCreationFieldName.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../c_shared/VokiCreationSaveAndCancelButtons.svelte';
 	import type { GeneralVokiInteractionSettings } from '../../types';
-	import GeneralVokiCreationResultsVisibilityInput from './c_editing/GeneralVokiCreationResultsVisibilityInput.svelte';
+	import VokiCreationOneOfMultipleChoicesInput from '../../../../../c_shared/VokiCreationOneOfMultipleChoicesInput.svelte';
 
 	interface Props {
 		vokiId: string;
@@ -35,6 +36,14 @@
 			savingErrs = response.errs;
 		}
 	}
+	watch(
+		() => editingSettingsState.signedInOnlyTaking,
+		() => {
+			if (!editingSettingsState.signedInOnlyTaking) {
+				editingSettingsState.resultsVisibility = 'Anyone';
+			}
+		}
+	);
 </script>
 
 <p class="field-p">
@@ -43,9 +52,29 @@
 </p>
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Results visibility:" />
-	<GeneralVokiCreationResultsVisibilityInput
-		bind:value={editingSettingsState.resultsVisibility}
-		signedInOnlyTaking={editingSettingsState.signedInOnlyTaking}
+
+	<VokiCreationOneOfMultipleChoicesInput
+		containerClass="results-visibility-input"
+		options={[
+			{
+				name: 'Anyone',
+				selected: editingSettingsState.resultsVisibility === 'Anyone',
+				disabled: false,
+				onclick: () => (editingSettingsState.resultsVisibility = 'Anyone')
+			},
+			{
+				name: 'After taking',
+				selected: editingSettingsState.resultsVisibility === 'AfterTaking',
+				disabled: !editingSettingsState.signedInOnlyTaking,
+				onclick: () => (editingSettingsState.resultsVisibility = 'AfterTaking')
+			},
+			{
+				name: 'Only received',
+				selected: editingSettingsState.resultsVisibility === 'OnlyReceived',
+				disabled: !editingSettingsState.signedInOnlyTaking,
+				onclick: () => (editingSettingsState.resultsVisibility = 'OnlyReceived')
+			}
+		]}
 	/>
 </p>
 <p class="field-p">
@@ -53,16 +82,23 @@
 	<DefaultCheckBox bind:checked={editingSettingsState.showResultsDistribution} />
 </p>
 {#if savingErrs.length > 0}
-<DefaultErrBlock errList={savingErrs} />
+	<DefaultErrBlock errList={savingErrs} />
 {/if}
 <VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
 
 <style>
 	.field-p {
-		display: flex;
+		display: grid;
+		grid-template-columns: max-content 1fr;
 		flex-direction: row;
 		align-items: center;
 		gap: 0.5rem;
 		margin-top: 1rem;
+	}
+	.field-p :global(.results-visibility-input) {
+		padding-left: 0.5rem;
+	}
+	.field-p :global(.results-visibility-input > .option) {
+		width: 9.5rem;
 	}
 </style>

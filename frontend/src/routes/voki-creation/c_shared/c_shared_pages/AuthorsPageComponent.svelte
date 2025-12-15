@@ -35,6 +35,8 @@
 						isViewerPrimaryAuthor={pageState.primaryAuthorId === authState.userId}
 						viewerId={authState.userId}
 						expectedManagers={pageState.expectedManagers}
+						vokiCoAuthors={pageState.coAuthorIds}
+						updateManagersSetting={(newManagers) => (pageState.expectedManagers = newManagers)}
 					/>
 				{/if}
 			</div>
