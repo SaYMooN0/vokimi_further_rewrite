@@ -37,6 +37,7 @@
 						expectedManagers={pageState.expectedManagers}
 						vokiCoAuthors={pageState.coAuthorIds}
 						updateManagersSetting={(newManagers) => (pageState.expectedManagers = newManagers)}
+						vokiId={pageState.vokiId}
 					/>
 				{/if}
 			</div>

@@ -28,7 +28,8 @@ internal class SpecificVokiHandlers : IEndpointGroup
         group.MapPatch("/accept-co-author-invite", AcceptCoAuthorInvite);
         group.MapPatch("/decline-co-author-invite", DeclineCoAuthorInvite);
 
-        group.MapPatch("/update-expected-managers", UpdateExpectedManagers);
+        group.MapPatch("/update-expected-managers", UpdateExpectedManagers)
+            .WithRequestValidation<UpdateVokiExpectedManagersRequest>();
     }
 
     private static async Task<IResult> GetVokiBriefInfo(

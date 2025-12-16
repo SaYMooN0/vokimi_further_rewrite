@@ -5,8 +5,8 @@ namespace CoreVokiCreationService.Api.contracts.managers;
 
 public class UpdateVokiExpectedManagersRequest : IRequestWithValidationNeeded
 {
-    public bool MakeAllCoAuthorsManagers { get; }
-    public string[] UserIdsToBecomeManagers { get; }
+    public bool MakeAllCoAuthorsManagers { get; init; }
+    public string[] UserIdsToBecomeManagers { get; init; }
 
     public ErrOrNothing Validate() {
         if (MakeAllCoAuthorsManagers) {

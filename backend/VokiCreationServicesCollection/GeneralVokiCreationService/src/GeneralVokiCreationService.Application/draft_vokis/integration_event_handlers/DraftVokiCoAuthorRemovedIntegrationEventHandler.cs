@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Application.common;
+﻿using System.Text;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -7,15 +7,14 @@ using SharedKernel.integration_events.draft_vokis.co_authors;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.integration_event_handlers;
 
-public class
-    DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler : IConsumer<DraftVokiCoAuthorRemovedIntegrationEvent>
+public class DraftVokiCoAuthorRemovedIntegrationEventHandler : IConsumer<DraftVokiCoAuthorRemovedIntegrationEvent>
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
-    private readonly ILogger<DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler> _logger;
+    private readonly ILogger<DraftVokiCoAuthorRemovedIntegrationEventHandler> _logger;
 
-    public DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler(
+    public DraftVokiCoAuthorRemovedIntegrationEventHandler(
         IDraftGeneralVokisRepository draftGeneralVokisRepository,
-        ILogger<DraftVokiCoAuthorRemovedIntegrationEventHandlerHandler> logger
+        ILogger<DraftVokiCoAuthorRemovedIntegrationEventHandler> logger
     ) {
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _logger = logger;
@@ -24,7 +23,9 @@ public class
     public async Task Consume(ConsumeContext<DraftVokiCoAuthorRemovedIntegrationEvent> context) {
         var msg = context.Message;
         var eventName = nameof(DraftVokiCoAuthorRemovedIntegrationEvent);
-
+        var rawBody = context.ReceiveContext.GetBody();
+        var json = Encoding.UTF8.GetString(rawBody.ToArray());
+        Console.WriteLine(json);
         if (msg.VokiType != VokiType.General) {
             _logger.LogInformation(
                 "Skipping {EventName} for Voki {VokiId}: unsupported Voki type {VokiType}",

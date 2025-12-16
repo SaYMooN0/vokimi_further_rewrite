@@ -1,6 +1,7 @@
 ﻿using ApplicationShared;
 using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.vokis;
+using SharedKernel.integration_events.draft_vokis;
 using SharedKernel.integration_events.draft_vokis.co_authors;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
 
@@ -9,7 +10,8 @@ namespace CoreVokiCreationService.Application;
 internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler,
     IDomainEventHandler<NewDraftVokiInitializedEvent>,
     IDomainEventHandler<CoAuthorInviteAcceptedEvent>,
-    IDomainEventHandler<VokiCoAuthorRemovedEvent>
+    IDomainEventHandler<VokiCoAuthorRemovedEvent>,
+    IDomainEventHandler<DraftVokiExpectedManagersUpdatedEvent>
 
 // and all other domain events that need to be published as integration events
 {
@@ -41,5 +43,10 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
     public async Task Handle(VokiCoAuthorRemovedEvent e, CancellationToken ct) => await
         _integrationEventPublisher.Publish(new DraftVokiCoAuthorRemovedIntegrationEvent(
             e.VokiId, e.AppUserId, e.VokiType, e.UserIdsExpectedToBecomeManagers.ToArray()
+        ), ct);
+
+    public async Task Handle(DraftVokiExpectedManagersUpdatedEvent e, CancellationToken ct) => await
+        _integrationEventPublisher.Publish(new DraftVokiExpectedManagersUpdatedIntegrationEvent(
+          "assasa"
         ), ct);
 }

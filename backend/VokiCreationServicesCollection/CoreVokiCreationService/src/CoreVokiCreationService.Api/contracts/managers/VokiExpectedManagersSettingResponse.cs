@@ -1,6 +1,6 @@
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
-namespace CoreVokiCreationService.Api.contracts;
+namespace CoreVokiCreationService.Api.contracts.managers;
 
 public record VokiExpectedManagersSettingResponse(
     bool MakeAllCoAuthorsManagers,

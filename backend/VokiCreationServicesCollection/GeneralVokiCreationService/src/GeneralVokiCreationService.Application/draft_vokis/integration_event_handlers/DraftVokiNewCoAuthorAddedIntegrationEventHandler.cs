@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Application.common;
+﻿using System.Text;
+using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using MassTransit;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,9 @@ public class DraftVokiNewCoAuthorAddedIntegrationEventHandler : IConsumer<DraftV
     }
 
     public async Task Consume(ConsumeContext<DraftVokiNewCoAuthorAddedIntegrationEvent> context) {
+        var rawBody = context.ReceiveContext.GetBody();
+        var json = Encoding.UTF8.GetString(rawBody.ToArray());
+Console.WriteLine(json);
         var msg = context.Message;
         var eventName = nameof(DraftVokiNewCoAuthorAddedIntegrationEvent);
 

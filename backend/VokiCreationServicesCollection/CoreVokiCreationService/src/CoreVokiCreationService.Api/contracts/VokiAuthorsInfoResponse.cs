@@ -1,4 +1,5 @@
-﻿using CoreVokiCreationService.Domain.draft_voki_aggregate;
+﻿using CoreVokiCreationService.Api.contracts.managers;
+using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using SharedKernel.common.rules;
 
 namespace CoreVokiCreationService.Api.contracts;

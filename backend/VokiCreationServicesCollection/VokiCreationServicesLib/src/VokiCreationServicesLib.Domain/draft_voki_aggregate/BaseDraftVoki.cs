@@ -67,6 +67,10 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         return ErrOrNothing.Nothing;
     }
 
+    public void UpdateExpectedManagers(ImmutableHashSet<AppUserId> newUserIdsToBecomeManagers) {
+        UserIdsToBecomeManagers = NormalizeUsersToBecomeManagers(newUserIdsToBecomeManagers);
+    }
+
     private ImmutableHashSet<AppUserId> NormalizeUsersToBecomeManagers(ImmutableHashSet<AppUserId> candidateManagers) =>
         candidateManagers.Intersect(CoAuthors.ToImmutableHashSet());
 

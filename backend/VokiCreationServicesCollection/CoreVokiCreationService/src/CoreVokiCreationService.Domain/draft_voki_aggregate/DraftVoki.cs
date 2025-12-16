@@ -183,6 +183,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         }
 
         this.ExpectedManagers = newExpectedManagers;
+        AddDomainEvent(new DraftVokiExpectedManagersUpdatedEvent(Id, this.Type, DecideUserIdsToBecomeManagers()));
         return ErrOrNothing.Nothing;
     }
 }
