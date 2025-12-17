@@ -8,8 +8,7 @@
 	import type { Err } from '$lib/ts/err';
 	import { toast } from 'svelte-sonner';
 	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
-
-	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
+	const vokiCreationCtx = getVokiCreationPageContext();
 
 	const {
 		vokiId,
@@ -26,7 +25,7 @@
 	}>();
 
 	async function publishVokiButtonPressed() {
-		const response = await vokiCreationApi.publish(vokiId);
+		const response = await vokiCreationCtx.vokiCreationApi.publish(vokiId);
 		if (response.isSuccess) {
 			if ('issues' in response.data) {
 				toast.error('During publishing some publishing issues were found. Please check them');
@@ -69,8 +68,8 @@
 		font-size: 2rem;
 		font-weight: 520;
 		text-align: center;
-	letter-spacing: 0.25px;
-	text-wrap: balance;
+		letter-spacing: 0.25px;
+		text-wrap: balance;
 	}
 
 	.no-issues-container > :global(.primary-btn) {

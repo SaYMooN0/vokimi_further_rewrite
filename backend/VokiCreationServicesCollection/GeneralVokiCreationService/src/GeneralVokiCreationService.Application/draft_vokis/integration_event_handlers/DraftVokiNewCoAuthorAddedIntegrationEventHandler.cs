@@ -22,9 +22,6 @@ public class DraftVokiNewCoAuthorAddedIntegrationEventHandler : IConsumer<DraftV
     }
 
     public async Task Consume(ConsumeContext<DraftVokiNewCoAuthorAddedIntegrationEvent> context) {
-        var rawBody = context.ReceiveContext.GetBody();
-        var json = Encoding.UTF8.GetString(rawBody.ToArray());
-Console.WriteLine(json);
         var msg = context.Message;
         var eventName = nameof(DraftVokiNewCoAuthorAddedIntegrationEvent);
 

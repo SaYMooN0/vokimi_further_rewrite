@@ -6,16 +6,22 @@ import { getContext, setContext } from 'svelte';
 const key = Symbol("voki-creation-page-api");
 type ContextType = {
 	vokiCreationApi: IVokiCreationBackendService,
-	invalidateVokiName: () => void
+	headerVokiName: {
+		value: string | undefined,
+		invalidate: () => void
+	}
 }
 export function setVokiCreationPageContext(
 	apiService: IVokiCreationBackendService,
-	invalidateVokiName: () => void
+	headerVokiName: {
+		value: string | undefined,
+		invalidate: () => void
+	}
 ) {
 
 	setContext<ContextType>(key, {
 		vokiCreationApi: apiService,
-		invalidateVokiName: invalidateVokiName
+		headerVokiName: headerVokiName
 	});
 }
 

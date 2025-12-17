@@ -70,8 +70,8 @@
 		transition:
 			stroke-dashoffset 0.125s ease-out,
 			opacity 0.125s ease-out;
-		animation: check-anim 1s ease-out backwards;
-		animation-delay: 0.5s;
+		animation: check-anim 0.75s ease-out backwards;
+		animation-delay: 0.25s;
 	}
 
 	@keyframes check-anim {

@@ -9,13 +9,13 @@
 		cover: string;
 		vokiId: string;
 	}>();
-	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
+	const vokiCreationCtx = getVokiCreationPageContext();
 	let version = $state(0);
 	let isLoading = $state(false);
 	let changeCoverDialog = $state<CoverChangingDialog>()!;
 	async function changeImageToDefault() {
 		isLoading = true;
-		const response = await vokiCreationApi.setVokiCoverToDefault(vokiId);
+		const response = await vokiCreationCtx.vokiCreationApi.setVokiCoverToDefault(vokiId);
 		if (response.isSuccess) {
 			cover = response.data.newCover;
 		} else {
@@ -25,7 +25,7 @@
 	}
 	async function updateVokiCoverWithNewSelected(newCover: string) {
 		isLoading = true;
-		const response = await vokiCreationApi.updateVokiCover(vokiId, newCover);
+		const response = await vokiCreationCtx.vokiCreationApi.updateVokiCover(vokiId, newCover);
 		if (response.isSuccess) {
 			cover = response.data.newCover;
 			version++;

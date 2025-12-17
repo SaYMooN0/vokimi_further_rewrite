@@ -34,11 +34,10 @@
 	let language = $state(details.language);
 	let hasMatureContent = $state(details.hasMatureContent);
 	let savingErrs = $state<Err[]>([]);
-	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
-	new TextareaAutosize({ element: () => descriptionTextarea, input: () => description });
+	const vokiCreationCtx = getVokiCreationPageContext();
 
 	async function saveChanges() {
-		const response = await vokiCreationApi.updateVokiDetails(vokiId, {
+		const response = await vokiCreationCtx.vokiCreationApi.updateVokiDetails(vokiId, {
 			description,
 			language,
 			hasMatureContent
@@ -51,6 +50,7 @@
 			savingErrs = response.errs;
 		}
 	}
+	new TextareaAutosize({ element: () => descriptionTextarea, input: () => description });
 </script>
 
 <VokiCreationFieldName fieldName="Description:" />

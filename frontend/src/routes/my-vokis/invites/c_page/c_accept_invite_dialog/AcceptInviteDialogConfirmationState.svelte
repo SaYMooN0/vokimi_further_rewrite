@@ -10,8 +10,10 @@
 		invite: InviteForVokiCoAuthorData;
 		changeStateToConfirmed: (inviteData: InviteForVokiCoAuthorData) => void;
 		closeDialog: () => void;
+		deleteInviteOnSuccessAccept: (vokiId: string) => void;
 	}
-	let { invite, changeStateToConfirmed, closeDialog }: Props = $props();
+	let { invite, changeStateToConfirmed, closeDialog, deleteInviteOnSuccessAccept }: Props =
+		$props();
 
 	let isLoading = $state(false);
 	let errs = $state<Err[]>([]);
@@ -26,6 +28,7 @@
 		isLoading = false;
 
 		if (response.isSuccess) {
+			deleteInviteOnSuccessAccept(invite.vokiId);
 			changeStateToConfirmed(invite);
 		} else {
 			errs = response.errs;

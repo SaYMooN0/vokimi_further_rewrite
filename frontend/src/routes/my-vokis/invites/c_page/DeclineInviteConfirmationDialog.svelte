@@ -5,10 +5,10 @@
 	import type { InviteForVokiCoAuthorData } from '../my-voki-invites-page-state.svelte';
 
 	interface Props {
-		updateParent: (inviteIds: string[]) => void;
+		deleteInviteOnSuccessDecline: (vokiId: string) => void;
 	}
 
-	let { updateParent }: Props = $props();
+	let { deleteInviteOnSuccessDecline }: Props = $props();
 	let inviteToDecline: InviteForVokiCoAuthorData | undefined = $state();
 	let dialog = $state<DialogWithCloseButton>()!;
 	let isLoading = $state(false);
@@ -27,14 +27,14 @@
 		}
 
 		isLoading = true;
-		const response = await ApiVokiCreationCore.fetchJsonResponse<{ vokiIds: string[] }>(
+		const response = await ApiVokiCreationCore.fetchVoidResponse(
 			`/vokis/${inviteToDecline.vokiId}/decline-co-author-invite`,
 			RJO.PATCH({})
 		);
 		isLoading = false;
 
 		if (response.isSuccess) {
-			updateParent(response.data.vokiIds);
+			deleteInviteOnSuccessDecline(inviteToDecline.vokiId);
 			closeDialog();
 		} else {
 			errs = response.errs;

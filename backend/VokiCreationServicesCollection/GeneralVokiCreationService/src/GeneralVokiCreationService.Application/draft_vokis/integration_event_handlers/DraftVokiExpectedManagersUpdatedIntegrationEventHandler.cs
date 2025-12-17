@@ -21,30 +21,26 @@ public class DraftVokiExpectedManagersUpdatedIntegrationEventHandler : IConsumer
     }
 
     public async Task Consume(ConsumeContext<DraftVokiExpectedManagersUpdatedIntegrationEvent> context) {
-        var rawBody = context.ReceiveContext.GetBody();
-        var json = Encoding.UTF8.GetString(rawBody.ToArray());
-        Console.WriteLine(json);
-         await Task.Delay(100);
-        // var msg = context.Message;
-        // var eventName = nameof(DraftVokiExpectedManagersUpdatedIntegrationEvent);
-        //
-        // if (msg.VokiType != VokiType.General) {
-        //     _logger.LogInformation(
-        //         "Skipping {EventName} for Voki {VokiId}: unsupported Voki type {VokiType}", eventName, msg.VokiId, msg.VokiType
-        //     );
-        //     return;
-        // }
-        //
-        // DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetById(msg.VokiId, context.CancellationToken);
-        // if (voki is null) {
-        //     _logger.LogWarning(
-        //         "Received {EventName} but draft voki {VokiId} was not found. Could not update expected managers",
-        //         eventName, msg.VokiId
-        //     );
-        //     return;
-        // }
-        //
-        // voki.UpdateExpectedManagers(msg.ExpectedManagers.ToImmutableHashSet());
-        // await _draftGeneralVokisRepository.Update(voki, context.CancellationToken);
+        var msg = context.Message;
+        var eventName = nameof(DraftVokiExpectedManagersUpdatedIntegrationEvent);
+        
+        if (msg.VokiType != VokiType.General) {
+            _logger.LogInformation(
+                "Skipping {EventName} for Voki {VokiId}: unsupported Voki type {VokiType}", eventName, msg.VokiId, msg.VokiType
+            );
+            return;
+        }
+        
+        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetById(msg.VokiId, context.CancellationToken);
+        if (voki is null) {
+            _logger.LogWarning(
+                "Received {EventName} but draft voki {VokiId} was not found. Could not update expected managers",
+                eventName, msg.VokiId
+            );
+            return;
+        }
+        
+        voki.UpdateExpectedManagers(msg.ExpectedManagers.ToImmutableHashSet());
+        await _draftGeneralVokisRepository.Update(voki, context.CancellationToken);
     }
 }

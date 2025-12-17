@@ -6,11 +6,10 @@ using CoreVokiCreationService.Domain.app_user_aggregate;
 namespace CoreVokiCreationService.Application.draft_vokis.commands.invites;
 
 public sealed record DeclineCoAuthorInviteCommand(VokiId VokiId) :
-    ICommand<ImmutableArray<VokiId>>,
+    ICommand,
     IWithAuthCheckStep;
 
-internal sealed class DeclineCoAuthorInviteCommandHandler :
-    ICommandHandler<DeclineCoAuthorInviteCommand, ImmutableArray<VokiId>>
+internal sealed class DeclineCoAuthorInviteCommandHandler : ICommandHandler<DeclineCoAuthorInviteCommand>
 {
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IUserContext _userContext;
@@ -21,10 +20,10 @@ internal sealed class DeclineCoAuthorInviteCommandHandler :
     }
 
 
-    public async Task<ErrOr<ImmutableArray<VokiId>>> Handle(DeclineCoAuthorInviteCommand command, CancellationToken ct) {
+    public async Task<ErrOrNothing> Handle(DeclineCoAuthorInviteCommand command, CancellationToken ct) {
         AppUser user = (await _appUsersRepository.GetById(_userContext.AuthenticatedUserId, ct))!;
         user.DeclineCoAuthorInvite(command.VokiId);
         await _appUsersRepository.Update(user, ct);
-        return user.InvitedToCoAuthorVokiIds.ToImmutableArray();
+        return ErrOrNothing.Nothing;
     }
 }

@@ -121,16 +121,14 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
     private static async Task<IResult> DeclineCoAuthorInvite(
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<DeclineCoAuthorInviteCommand, ImmutableArray<VokiId>> handler
+        ICommandHandler<DeclineCoAuthorInviteCommand> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
         DeclineCoAuthorInviteCommand command = new(vokiId);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (vokiIds) => Results.Json(
-            new { VokiIds = vokiIds.Select(id => id.ToString()).ToArray() })
-        );
+        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
 
     private static async Task<IResult> UpdateExpectedManagers(

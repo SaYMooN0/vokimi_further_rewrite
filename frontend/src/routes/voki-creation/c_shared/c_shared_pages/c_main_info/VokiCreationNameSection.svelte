@@ -17,7 +17,7 @@
 	let newName = $state(vokiName);
 	let isEditing = $state(false);
 	let savingErrs = $state<Err[]>([]);
-	const { vokiCreationApi, invalidateVokiName } = getVokiCreationPageContext();
+	const { vokiCreationApi, headerVokiName } = getVokiCreationPageContext();
 
 	new TextareaAutosize({ element: () => textarea, input: () => newName });
 
@@ -32,10 +32,13 @@
 			vokiName = newName;
 			isEditing = false;
 			savingErrs = [];
-			invalidateVokiName();
+			headerVokiName.invalidate();
 		} else {
 			savingErrs = response.errs;
 		}
+	}
+	if (vokiName != headerVokiName.value) {
+		headerVokiName.invalidate();
 	}
 </script>
 

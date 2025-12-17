@@ -47,6 +47,6 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
 
     public async Task Handle(DraftVokiExpectedManagersUpdatedEvent e, CancellationToken ct) => await
         _integrationEventPublisher.Publish(new DraftVokiExpectedManagersUpdatedIntegrationEvent(
-          "assasa"
+         e.VokiId, e.VokiType, e.ExpectedManagers.ToArray()
         ), ct);
 }

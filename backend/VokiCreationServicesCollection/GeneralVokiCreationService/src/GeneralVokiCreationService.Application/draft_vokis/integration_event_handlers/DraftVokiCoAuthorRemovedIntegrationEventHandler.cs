@@ -23,9 +23,6 @@ public class DraftVokiCoAuthorRemovedIntegrationEventHandler : IConsumer<DraftVo
     public async Task Consume(ConsumeContext<DraftVokiCoAuthorRemovedIntegrationEvent> context) {
         var msg = context.Message;
         var eventName = nameof(DraftVokiCoAuthorRemovedIntegrationEvent);
-        var rawBody = context.ReceiveContext.GetBody();
-        var json = Encoding.UTF8.GetString(rawBody.ToArray());
-        Console.WriteLine(json);
         if (msg.VokiType != VokiType.General) {
             _logger.LogInformation(
                 "Skipping {EventName} for Voki {VokiId}: unsupported Voki type {VokiType}",

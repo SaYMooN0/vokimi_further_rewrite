@@ -82,7 +82,7 @@
 				name: 'Selected co-authors',
 				selected: expectedManagers.name === 'selected',
 				disabled: false,
-				onclick: () => (expectedManagers = { name: 'selected', userIds: vokiCoAuthors })
+				onclick: () => (expectedManagers = { name: 'selected', userIds: savedSelectedUserIds })
 			},
 			{
 				name: 'No co-authors',

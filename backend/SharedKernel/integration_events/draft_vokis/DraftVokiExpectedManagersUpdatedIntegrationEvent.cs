@@ -1,9 +1,9 @@
+﻿using SharedKernel.common.vokis;
+
 namespace SharedKernel.integration_events.draft_vokis;
 
 public record class DraftVokiExpectedManagersUpdatedIntegrationEvent(
-    string msg
+    VokiId VokiId,
+    VokiType VokiType,
+    AppUserId[] ExpectedManagers
 ) : IIntegrationEvent;
-
-// VokiId VokiId,
-// VokiType VokiType,
-// AppUserId[] ExpectedManagers,

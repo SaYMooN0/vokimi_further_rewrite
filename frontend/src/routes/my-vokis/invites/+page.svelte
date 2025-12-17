@@ -33,10 +33,13 @@
 	{#if pageState.loadingState.invites.length === 0}
 		<h1>You don't have any invites</h1>
 	{:else}
-		<AcceptInviteConfirmationDialog bind:this={acceptInviteDialog} />
+		<AcceptInviteConfirmationDialog
+			bind:this={acceptInviteDialog}
+			deleteInviteOnSuccessAccept={(vokiId) => pageState.deleteInvite(vokiId)}
+		/>
 		<DeclineInviteConfirmationDialog
 			bind:this={declineInviteDialog}
-			updateParent={(newInvites) => pageState.updateByInviteIds(newInvites)}
+			deleteInviteOnSuccessDecline={(vokiId) => pageState.deleteInvite(vokiId)}
 		/>
 		<div class="invites-container">
 			{#each pageState.loadingState.invites as inv}

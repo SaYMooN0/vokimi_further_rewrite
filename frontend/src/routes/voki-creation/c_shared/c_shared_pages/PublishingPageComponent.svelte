@@ -10,7 +10,7 @@
 	import VokiPublishedDialog from './c_publishing/VokiPublishedDialog.svelte';
 
 	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
-	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
+	const vokiCreationCtx = getVokiCreationPageContext();
 
 	let pageState = $state<PageState>({ name: 'message' });
 
@@ -22,7 +22,7 @@
 
 	async function loadPublishingIssues() {
 		pageState = { name: 'loading' };
-		const response = await vokiCreationApi.checkForPublishingIssues(vokiId);
+		const response = await vokiCreationCtx.vokiCreationApi.checkForPublishingIssues(vokiId);
 		if (response.isSuccess) {
 			pageState = { name: 'fetched', issues: response.data.issues };
 		} else {

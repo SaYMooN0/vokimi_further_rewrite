@@ -5,6 +5,10 @@
 	import AcceptInviteDialogConfirmationState from './c_accept_invite_dialog/AcceptInviteDialogConfirmationState.svelte';
 	import AcceptInviteDialogConfirmedState from './c_accept_invite_dialog/AcceptInviteDialogConfirmedState.svelte';
 
+	interface Props {
+		deleteInviteOnSuccessAccept: (vokiId: string) => void;
+	}
+	let { deleteInviteOnSuccessAccept }: Props = $props();
 	type DialogState =
 		| { name: 'NoInviteSelected' }
 		| { name: 'ConfirmMessage'; invite: InviteForVokiCoAuthorData }
@@ -49,6 +53,7 @@
 				};
 			}}
 			{closeDialog}
+			{deleteInviteOnSuccessAccept}
 		/>
 	{:else if dialogState.name === 'Confirmed'}
 		<AcceptInviteDialogConfirmedState

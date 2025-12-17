@@ -28,11 +28,10 @@
 	}>();
 	const problems = issues.filter((issue) => issue.type === 'Problem');
 	const warnings = issues.filter((issue) => issue.type === 'Warning');
-	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
-
+	const vokiCreationCtx = getVokiCreationPageContext();
 
 	async function ignoreWarningsAndPublish() {
-		const response = await vokiCreationApi.publishWithWarningsIgnored(vokiId);
+		const response = await vokiCreationCtx.vokiCreationApi.publishWithWarningsIgnored(vokiId);
 		if (response.isSuccess) {
 			onPublishedSuccessfully(response.data);
 		} else {

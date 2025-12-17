@@ -19,11 +19,10 @@
 	let errs = $state<Err[]>([]);
 	let tagsToChooseFrom: string[] = $state([]);
 	let chosenTags = $state<string[]>([]);
-	const { vokiCreationApi, invalidateVokiName: _ } = getVokiCreationPageContext();
-
+	const vokiCreationCtx = getVokiCreationPageContext();
 
 	async function saveData() {
-		const response = await vokiCreationApi.updateVokiTags(vokiId, chosenTags);
+		const response = await vokiCreationCtx.vokiCreationApi.updateVokiTags(vokiId, chosenTags);
 		if (response.isSuccess) {
 			updateParent(response.data.newTags);
 			dialogElement.close();

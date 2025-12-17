@@ -11,12 +11,12 @@
 	import TabLinksContainer from './c_page/TabLinksContainer.svelte';
 	import VokiNotLoaded from './c_page/VokiNotLoaded.svelte';
 	import { VokiCatalogVisitMarkerCookie } from '$lib/ts/cookies/voki-catalog-visit-marker-cookie';
-	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
 	import { page } from '$app/state';
 	import { VokiPageState } from './voki-page-state.svelte';
 	import { goto } from '$app/navigation';
 	import { VokiTypeUtils } from '$lib/ts/voki-type';
 	import { VokiUtils } from '$lib/ts/voki';
+	import ParticipantsSection from './c_page/c_sections/ParticipantsSection.svelte';
 
 	function getTabFromUrl() {
 		const t = page.url.searchParams.get('tab');
@@ -71,9 +71,10 @@
 	<div class="voki-page-container">
 		<div class="main-content">
 			<NameSection name={data.response.data.name} />
-			<AuthorsSection
+			<ParticipantsSection
 				primaryAuthorId={data.response.data.primaryAuthorId}
 				coAuthorIds={data.response.data.coAuthorIds}
+				managerIds={data.response.data.managerIds}
 			/>
 			<MainDetailsSection
 				type={data.response.data.type}

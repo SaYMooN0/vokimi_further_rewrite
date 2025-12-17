@@ -24,7 +24,7 @@ export type PublishedVokiBriefInfo = {
     cover: string;
     primaryAuthorId: string;
     coAuthorIds: string[];
-    managerIds:string[];
+    managerIds: string[];
     hasMatureContent: boolean;
     language: Language;
     signedInOnlyTaking: boolean;
@@ -37,6 +37,7 @@ export type PublishedVokiViewState =
 
 export namespace VokiUtils {
     export function canUserManageVoki(voki: PublishedVokiBriefInfo, signedInUserId: string): boolean {
-        return voki.primaryAuthorId === signedInUserId;
+        console.log(voki, signedInUserId);
+        return voki.primaryAuthorId === signedInUserId || voki.managerIds.includes(signedInUserId);
     }
 }

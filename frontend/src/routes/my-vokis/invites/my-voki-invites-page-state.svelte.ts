@@ -43,40 +43,13 @@ export class MyVokiInvitesPageState {
             this.loadingState = { state: 'errs', errs: response.errs };
         }
     }
-
-    updateByInviteIds(inviteIds: string[]) {
+    deleteInvite(vokiId: string) {
         if (this.loadingState.state !== 'loaded') {
             this.loadInvites();
             return;
         }
-
-        const current = this.loadingState.invites;
-
-        const incomingSet = new Set(inviteIds);
-        const currentSet = new Set(current.map(i => i.vokiId));
-
-        let hasNew = false;
-        for (const id of inviteIds) {
-            if (!currentSet.has(id)) {
-                hasNew = true;
-                break;
-            }
-        }
-
-        if (hasNew) {
-            this.loadInvites();
-            return;
-        }
-
-        const filtered = current.filter(inv => incomingSet.has(inv.vokiId));
-        if (filtered.length === current.length) {
-            return;
-        }
-
-        this.loadingState = {
-            state: 'loaded',
-            invites: filtered
-        };
+        this.loadingState.invites = this.loadingState.invites.filter(inv => inv.vokiId !== vokiId);
     }
+
 
 }

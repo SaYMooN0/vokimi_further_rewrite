@@ -12,7 +12,7 @@
 
 	const { children }: { children: Snippet } = $props();
 
-	let vokiName: VokiCreationHeaderVokiName = $state({ state: 'loading' });
+	let vokiName: VokiCreationHeaderVokiName = $state()!;
 	async function fetchAndSetVokiName() {
 		if (!page.params.vokiId) {
 			vokiName = {
@@ -35,7 +35,11 @@
 		}
 	}
 	fetchAndSetVokiName();
-	setVokiCreationPageContext(ApiVokiCreationGeneral, () => fetchAndSetVokiName());
+	let headerVokiName = $derived({
+		value: vokiName.state === 'ok' ? vokiName.value : undefined,
+		invalidate: () => fetchAndSetVokiName()
+	});
+	setVokiCreationPageContext(ApiVokiCreationGeneral, headerVokiName);
 </script>
 
 <div class="sprites">
