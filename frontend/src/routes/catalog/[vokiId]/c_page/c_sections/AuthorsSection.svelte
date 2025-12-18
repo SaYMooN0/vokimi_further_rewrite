@@ -3,9 +3,8 @@
 	interface Props {
 		primaryAuthorId: string;
 		coAuthorIds: string[];
-		managerIds: string[];
 	}
-	let { primaryAuthorId, coAuthorIds, managerIds }: Props = $props();
+	let { primaryAuthorId, coAuthorIds }: Props = $props();
 </script>
 
 <div class="participants-section">

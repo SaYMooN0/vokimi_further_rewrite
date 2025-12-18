@@ -1,8 +1,9 @@
 <script lang="ts">
-	const { fieldName, className = '' }: { fieldName: string; className?: string } = $props<{
+	interface Props {
 		fieldName: string;
-		className?: string;
-	}>();
+		class?: string;
+	}
+	const { fieldName, class: className = '' }: Props = $props();
 </script>
 
 <label class={className}>{fieldName}</label>
@@ -12,5 +13,6 @@
 		color: var(--secondary-foreground);
 		font-size: 1.125rem;
 		font-weight: 450;
+		line-height: 1.875rem;
 	}
 </style>

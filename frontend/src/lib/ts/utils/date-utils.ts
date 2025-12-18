@@ -1,6 +1,8 @@
+import { browser } from "$app/environment";
+
 export namespace DateUtils {
 	export function toLocale(date: Date): string {
-		const locale = navigator.language || 'en-US';
+		const locale = browser ? navigator.language : 'en-US';
 
 		const timePart = date.toLocaleTimeString(locale, {
 			hour: '2-digit',
@@ -12,7 +14,7 @@ export namespace DateUtils {
 	}
 
 	export function toLocaleDateOnly(date: Date): string {
-		const locale = navigator.language || 'en-US';
+		const locale = browser ? navigator.language : 'en-US';
 
 		return date.toLocaleDateString(locale, {
 			day: '2-digit',

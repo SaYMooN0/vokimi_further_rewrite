@@ -10,7 +10,12 @@ export class VokiPageState {
     ratingsCount: number = $state(0);
     commentsCount: number = $state(0);
     ratingsTabData: RatingsTabDataType = $state({ state: 'empty' });
-    constructor(vokiId: string, pageTab: VokiPageTab, ratingsCount: number, commentsCount: number) {
+    constructor(
+        vokiId: string,
+        pageTab: VokiPageTab,
+        ratingsCount: number,
+        commentsCount: number
+    ) {
         this.vokiId = vokiId;
         this.currentTab = pageTab;
         this.ratingsCount = ratingsCount;

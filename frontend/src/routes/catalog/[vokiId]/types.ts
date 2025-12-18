@@ -11,7 +11,7 @@ export type VokiOverviewInfo = {
     cover: string;
     primaryAuthorId: string;
     coAuthorIds: string[];
-    managerIds:string[];
+    managerIds: string[];
     description: string;
     hasMatureContent: boolean;
     language: Language;
@@ -36,3 +36,7 @@ export type RatingsTabDataType =
 
 export type VokiRatingsWithAverage = { averageRating: number, ratings: VokiRatingData[] };
 export type VokiRatingData = { value: number; userId: string; dateTime: Date; };
+export type VokiOverviewTypeWithSpecificInfo =
+    | { type: 'General', forceSequentialAnswering: boolean, shuffleQuestions: boolean, anyAudioAnswers: boolean }
+    | { type: 'Scoring' }
+    | { type: 'TierList' };

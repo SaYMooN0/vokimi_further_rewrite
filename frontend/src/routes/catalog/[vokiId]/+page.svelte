@@ -3,7 +3,6 @@
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageProps } from './$types';
 	import CoverSection from './c_page/c_sections/CoverSection.svelte';
-	import MainDetailsSection from './c_page/c_sections/MainDetailsSection.svelte';
 	import NameSection from './c_page/c_sections/NameSection.svelte';
 	import VokiPageAboutTab from './c_page/c_tabs/VokiPageAboutTab.svelte';
 	import VokiPageCommentsTab from './c_page/c_tabs/VokiPageCommentsTab.svelte';
@@ -14,9 +13,8 @@
 	import { page } from '$app/state';
 	import { VokiPageState } from './voki-page-state.svelte';
 	import { goto } from '$app/navigation';
-	import { VokiTypeUtils } from '$lib/ts/voki-type';
 	import { VokiUtils } from '$lib/ts/voki';
-	import ParticipantsSection from './c_page/c_sections/ParticipantsSection.svelte';
+	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
 
 	function getTabFromUrl() {
 		const t = page.url.searchParams.get('tab');
@@ -71,16 +69,11 @@
 	<div class="voki-page-container">
 		<div class="main-content">
 			<NameSection name={data.response.data.name} />
-			<ParticipantsSection
+			<AuthorsSection
 				primaryAuthorId={data.response.data.primaryAuthorId}
 				coAuthorIds={data.response.data.coAuthorIds}
-				managerIds={data.response.data.managerIds}
 			/>
-			<MainDetailsSection
-				type={data.response.data.type}
-				language={data.response.data.language}
-				hasMatureContent={data.response.data.hasMatureContent}
-			/>
+			
 			<div class="tabs-section">
 				<TabLinksContainer
 					currentTab={pageState.currentTab}
@@ -92,9 +85,16 @@
 					{#if pageState.currentTab === 'about'}
 						<VokiPageAboutTab
 							vokiId={pageState.vokiId}
+							primaryAuthorId={data.response.data.primaryAuthorId}
+							coAuthorIds={data.response.data.coAuthorIds}
+							managerIds={data.response.data.managerIds}
 							tags={data.response.data.tags}
 							description={data.response.data.description}
 							publicationDate={data.response.data.publicationDate}
+							signedInOnlyTaking={data.response.data.signedInOnlyTaking}
+							type={data.response.data.type}
+							language={data.response.data.language}
+							hasMatureContent={data.response.data.hasMatureContent}
 						/>
 					{:else if pageState.currentTab === 'comments'}
 						<VokiPageCommentsTab />
@@ -148,7 +148,6 @@
 	.current-tab {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
 		margin: 1rem 0.25rem 0.75rem;
 	}
 

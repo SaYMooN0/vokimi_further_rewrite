@@ -26,7 +26,7 @@
 		<p class="field">
 			<VokiCreationFieldName fieldName="Description:" />
 			{#if StringUtils.isNullOrWhiteSpace(details.description)}
-				<FieldNotSetLabel text="No description" className="no-description" />
+				<FieldNotSetLabel text="No description" class="no-description" />
 			{:else}
 				{details.description}
 			{/if}
@@ -38,7 +38,7 @@
 		<p class="field">
 			<VokiCreationFieldName fieldName="Mature content:" />
 			{#if details.hasMatureContent}
-				Has mature content
+				Contains mature content
 			{:else}
 				No mature content
 			{/if}

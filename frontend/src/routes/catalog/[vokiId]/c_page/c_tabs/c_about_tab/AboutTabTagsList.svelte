@@ -49,7 +49,9 @@
 		color: var(--primary-foreground);
 		cursor: pointer;
 	}
-
+	.suggest-tag-btn.right {
+		margin-left: auto;
+	}
 	.suggest-tag-btn:hover {
 		background-color: var(--primary-hov);
 	}

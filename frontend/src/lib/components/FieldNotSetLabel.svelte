@@ -1,14 +1,16 @@
 <script lang="ts">
-	const { text, className = '' }: { text: string; className?: string } = $props<{
+	interface Props {
 		text: string;
-		className?: string;
-	}>();
+		class?: string;
+		showIcon?: boolean;
+	}
+	const { text, class: className = '', showIcon = true }: Props = $props();
 </script>
 
 <label class="not-set {className}">
-	<svg>
-		<use href="#common-crossed-circle-icon" />
-	</svg>{text}
+	{#if showIcon}
+		<svg><use href="#common-crossed-circle-icon" /></svg>
+	{/if}{text}
 </label>
 
 <style>
