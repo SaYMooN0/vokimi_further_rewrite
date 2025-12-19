@@ -24,7 +24,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (voki) => Results.Json(
-            VokiOverviewResponse.Create(voki)
+            VokiOverviewResponse.FromBaseVoki(voki)
         ));
     }
 

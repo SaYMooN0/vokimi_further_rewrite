@@ -23,11 +23,11 @@ internal sealed record class VokiBriefInfoResponse(
         v.Name.ToString(),
         v.Cover.ToString(),
         v.PrimaryAuthorId.ToString(),
-        v.CoAuthorIds.Select(id => id.ToString()).ToArray(),
-        ManagerIds:  v.ManagersSet.ToArray().Select(id => id.ToString()).ToArray(),
+        CoAuthorIds: v.CoAuthorIds.Select(id => id.ToString()).ToArray(),
+        ManagerIds: v.ManagersSet.ToArray().Select(id => id.ToString()).ToArray(),
         v.Details.HasMatureContent,
         v.Details.Language,
-        v.SignedInOnlyTaking,
+        v.BaseInteractionSettings.SignedInOnlyTaking,
         v.PublicationDate
     );
 }

@@ -19,7 +19,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
 
     public async Task Consume(ConsumeContext<GeneralVokiPublishedIntegrationEvent> context) {
         var e = context.Message;
-        bool anyAudioAnswers = e.Questions.Any(q => q.AnswersType.HasAudio());
+        bool anyAudios = CheckIfVokiHasAnyAudios(e);
 
         GeneralVoki voki = GeneralVoki.CreateNew(
             e.VokiId,
@@ -31,11 +31,22 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
             new VokiDetails(e.Description, e.HasMatureContent, e.Language),
             tags: e.Tags.ToImmutableHashSet(),
             e.PublishingDate,
+            GeneralVokiInteractionSettings.Create(
+                signedInOnlyTaking: e.InteractionSettings.SignedInOnlyTaking,
+                resultsVisibility: e.InteractionSettings.ResultsVisibility,
+                showResultsDistribution: e.InteractionSettings.ShowResultsDistribution
+            ).AsSuccess(),
             questionsCount: (ushort)e.Questions.Length,
             resultsCount: (ushort)e.Results.Length,
-            anyAudioAnswers: anyAudioAnswers,
-            signedInOnlyTaking: e.InteractionSettings.SignedInOnlyTaking
+            anyAudios: anyAudios,
+            forceSequentialAnswering: e.ForceSequentialAnswering,
+            shuffleQuestions: e.ShuffleQuestions
         );
         await _generalVokisRepository.Add(voki, context.CancellationToken);
+    }
+
+    private static bool CheckIfVokiHasAnyAudios(GeneralVokiPublishedIntegrationEvent v) {
+        bool anyAudioAnswers = v.Questions.Any(q => q.AnswersType.HasAudio());
+        return anyAudioAnswers;
     }
 }

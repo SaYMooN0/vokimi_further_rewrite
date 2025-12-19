@@ -20,7 +20,25 @@ export type VokiOverviewInfo = {
     ratingsCount: number;
     commentsCount: number;
     signedInOnlyTaking: boolean;
+} & VokiTypeWithSpecificData;
+
+type VokiTypeMap = {
+    General: GeneralVokiTypeSpecificData;
+    Scoring: ScoringVokiTypeSpecificData;
+    TierList: TierListVokiTypeSpecificData;
 };
+
+export type VokiTypeWithSpecificData = {
+    [K in keyof VokiTypeMap]: {
+        type: K;
+        typeSpecificData: VokiTypeMap[K];
+    }
+}[keyof VokiTypeMap];
+
+export type GeneralVokiTypeSpecificData = { forceSequentialAnswering: boolean, shuffleQuestions: boolean, anyAudioAnswers: boolean };
+export type TierListVokiTypeSpecificData = {};
+export type ScoringVokiTypeSpecificData = {};
+
 
 export type RatingsTabDataType =
     | { state: 'empty' }
@@ -36,7 +54,3 @@ export type RatingsTabDataType =
 
 export type VokiRatingsWithAverage = { averageRating: number, ratings: VokiRatingData[] };
 export type VokiRatingData = { value: number; userId: string; dateTime: Date; };
-export type VokiOverviewTypeWithSpecificInfo =
-    | { type: 'General', forceSequentialAnswering: boolean, shuffleQuestions: boolean, anyAudioAnswers: boolean }
-    | { type: 'Scoring' }
-    | { type: 'TierList' };

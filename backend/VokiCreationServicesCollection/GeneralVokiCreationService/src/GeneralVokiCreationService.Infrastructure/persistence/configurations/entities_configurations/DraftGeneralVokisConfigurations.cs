@@ -64,11 +64,7 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
             b.Property(d => d.ForceSequentialAnswering);
         });
 
-        builder.ComplexProperty(x => x.InteractionSettings, b => {
-            b.Property(s => s.SignedInOnlyTaking);
-            b.Property(d => d.ResultsVisibility);
-            b.Property(d => d.ShowResultsDistribution);
-        });
+        builder.HasInteractionSettingsAsComplexProperty(x => x.InteractionSettings);
 
         builder.Ignore(x => x.Questions);
         builder

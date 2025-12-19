@@ -1,4 +1,5 @@
 <script lang="ts">
+	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 
 	interface Props {
@@ -10,7 +11,7 @@
 	function managersThatWereCoAuthors() {
 		return managerIds.filter((managerId) => coAuthorIds.has(managerId));
 	}
-	function managersWithNoCoAuthors() {
+	function managersThatWereNotCoAuthors() {
 		return managerIds.filter((managerId) => !coAuthorIds.has(managerId));
 	}
 	let dialog = $state<DialogWithCloseButton>()!;
@@ -19,17 +20,42 @@
 	}
 </script>
 
-<DialogWithCloseButton bind:this={dialog}>
-	<div class="column-names">manager | was an author</div>
-	<div>
-		<div class="row" title="primary author">
-			primary author
+<DialogWithCloseButton bind:this={dialog} subheading="Voki managers">
+	<div class="managers-list-row">
+		<span class="column-name">Manager</span>
+		<span class="column-name">Was user an author</span>
+	</div>
+	<div class="managers-list">
+		<div class="managers-list-row" title="primary author">
+			<BasicUserDisplay userId={primaryAuthorId} interactionLevel="WholeComponentLink" />
 			<!-- check with primary color -->
-			<svg><use href="#common-check-icon" /></svg>
+			<svg class="check-icon primary-author"><use href="#common-check-icon" /></svg>
 		</div>
+		<div class="sep"></div>
 		{#each managersThatWereCoAuthors() as m}
-			author
-			<svg><use href="#common-check-icon" /></svg>
+			<div class="managers-list-row" title={m}>
+				<BasicUserDisplay userId={m} interactionLevel="WholeComponentLink" />
+				<svg class="check-icon"><use href="#common-check-icon" /></svg>
+			</div>
+		{/each}
+		<div class="sep"></div>
+		{#each managersThatWereNotCoAuthors() as m}
+			<div class="managers-list-row" title={m}>
+				<BasicUserDisplay userId={m} interactionLevel="WholeComponentLink" />
+				<div class="empty-div"></div>
+			</div>
 		{/each}
 	</div>
 </DialogWithCloseButton>
+
+<style>
+	.managers-list {
+		display: flex;
+		flex-direction: column;
+		overflow-y: auto;
+	}
+	.managers-list-row {
+		display: grid;
+		grid-template-columns: 1fr 4rem;
+	}
+</style>

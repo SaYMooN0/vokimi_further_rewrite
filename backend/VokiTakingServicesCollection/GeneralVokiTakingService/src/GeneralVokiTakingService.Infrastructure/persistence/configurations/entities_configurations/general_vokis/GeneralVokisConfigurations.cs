@@ -46,11 +46,7 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
         builder
             .Property<VokiManagersIdsSet>("ManagersSet")
             .HasConversion<VokiManagersIdsSetConverter>();
-        
-        builder.ComplexProperty(x => x.InteractionSettings, b => {
-            b.Property(s => s.SignedInOnlyTaking);
-            b.Property(d => d.ResultsVisibility).HasConversion<string>();
-            b.Property(d => d.ShowResultsDistribution);
-        });
+
+        builder.HasInteractionSettingsAsComplexProperty(x => x.InteractionSettings);
     }
 }

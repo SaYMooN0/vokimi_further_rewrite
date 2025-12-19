@@ -15,6 +15,7 @@
 	import { goto } from '$app/navigation';
 	import { VokiUtils } from '$lib/ts/voki';
 	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
+	import type { VokiTypeWithSpecificData } from './types';
 
 	function getTabFromUrl() {
 		const t = page.url.searchParams.get('tab');
@@ -61,6 +62,7 @@
 		}
 		return VokiUtils.canUserManageVoki(data.response.data, uId);
 	}
+	console.log(data);
 </script>
 
 {#if !data.response.isSuccess}
@@ -73,7 +75,7 @@
 				primaryAuthorId={data.response.data.primaryAuthorId}
 				coAuthorIds={data.response.data.coAuthorIds}
 			/>
-			
+
 			<div class="tabs-section">
 				<TabLinksContainer
 					currentTab={pageState.currentTab}
@@ -84,17 +86,12 @@
 				<div class="current-tab">
 					{#if pageState.currentTab === 'about'}
 						<VokiPageAboutTab
-							vokiId={pageState.vokiId}
-							primaryAuthorId={data.response.data.primaryAuthorId}
-							coAuthorIds={data.response.data.coAuthorIds}
-							managerIds={data.response.data.managerIds}
-							tags={data.response.data.tags}
-							description={data.response.data.description}
-							publicationDate={data.response.data.publicationDate}
-							signedInOnlyTaking={data.response.data.signedInOnlyTaking}
-							type={data.response.data.type}
-							language={data.response.data.language}
-							hasMatureContent={data.response.data.hasMatureContent}
+							vokiId={data.vokiId}
+							{...data.response.data}
+							typeWithData={{
+								type: data.response.data.type,
+								typeSpecificData: data.response.data.typeSpecificData
+							} as VokiTypeWithSpecificData}
 						/>
 					{:else if pageState.currentTab === 'comments'}
 						<VokiPageCommentsTab />

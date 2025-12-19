@@ -6,8 +6,8 @@
 	import AboutTabManagersSection from './c_about_tab/AboutTabManagersSection.svelte';
 	import { DateUtils } from '$lib/ts/utils/date-utils';
 	import { LanguageUtils, type Language } from '$lib/ts/language';
-	import type { VokiType } from '$lib/ts/voki-type';
-	import type { VokiOverviewTypeWithSpecificInfo } from '../../types';
+	import type { VokiTypeWithSpecificData } from '../../types';
+	import AboutTabTypeSection from './c_about_tab/AboutTabTypeSection.svelte';
 
 	interface Props {
 		vokiId: string;
@@ -17,10 +17,10 @@
 		tags: string[];
 		description: string;
 		publicationDate: Date;
-		type: VokiOverviewTypeWithSpecificInfo;
 		language: Language;
 		hasMatureContent: boolean;
 		signedInOnlyTaking: boolean;
+		typeWithData: VokiTypeWithSpecificData;
 	}
 	let {
 		vokiId,
@@ -30,14 +30,15 @@
 		tags,
 		description,
 		publicationDate,
-		type,
 		language,
 		hasMatureContent,
-		signedInOnlyTaking
+		signedInOnlyTaking,
+		typeWithData
 	}: Props = $props();
 </script>
 
 <div class="about-tab">
+	<AboutTabTypeSection {typeWithData} />
 	<div class="field-line language">
 		<VokiPageTabSectionLabel fieldName="Access:" />
 		<span class="value"

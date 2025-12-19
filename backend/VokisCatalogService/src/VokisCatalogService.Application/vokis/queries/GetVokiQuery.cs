@@ -1,5 +1,6 @@
 using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.voki_aggregate;
+using VokisCatalogService.Domain.voki_aggregate.voki_types;
 
 namespace VokisCatalogService.Application.vokis.queries;
 
@@ -21,7 +22,6 @@ internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, BaseVoki
                 $"There is no published voki with id {query.VokiId}"
             );
         }
-
         return voki;
     }
 }

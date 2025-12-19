@@ -1,4 +1,5 @@
 ﻿using VokimiStorageKeysLib.concrete_keys;
+using VokisCatalogService.Domain.voki_aggregate.voki_types;
 
 namespace VokisCatalogService.Domain.voki_aggregate;
 
@@ -17,13 +18,12 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
     public uint RatingsCount { get; private set; }
     public uint CommentsCount { get; private set; }
     public uint VokiTakingsCount { get; private set; }
-    public bool SignedInOnlyTaking { get; private set; }
+    public abstract IVokiInteractionSettings BaseInteractionSettings { get; }
 
     protected BaseVoki(
         VokiId id, VokiName name, VokiCoverKey cover,
         AppUserId primaryAuthorId, ImmutableHashSet<AppUserId> coAuthorIds, VokiManagersIdsSet managers,
-        VokiDetails details, ImmutableHashSet<VokiTagId> tags, DateTime publicationDate,
-        bool signedInOnlyTaking
+        VokiDetails details, ImmutableHashSet<VokiTagId> tags, DateTime publicationDate
     ) {
         Id = id;
         Name = name;
@@ -37,7 +37,6 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         CommentsCount = 0;
         VokiTakingsCount = 0;
         PublicationDate = publicationDate;
-        SignedInOnlyTaking = signedInOnlyTaking;
     }
 
     public void UpdateVokiTakingsCount(uint newVokiTakingsCount) {
@@ -51,4 +50,18 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
             RatingsCount = newRatingsCount;
         }
     }
+}
+
+public static class BaseVokiExtensions
+{
+    public static TResult MatchOnType<TResult>(
+        this BaseVoki v,
+        Func<GeneralVoki, TResult> onGeneral,
+        Func<TierListVoki, TResult> onTierList,
+        Func<ScoringVoki, TResult> onScoring
+    ) => v.Type.Match(
+        onGeneral: () => onGeneral((v as GeneralVoki)!),
+        onTierList: () => onTierList((v as TierListVoki)!),
+        onScoring: () => onScoring((v as ScoringVoki)!)
+    );
 }
