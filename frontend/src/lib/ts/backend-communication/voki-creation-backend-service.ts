@@ -9,15 +9,20 @@ export type VokiDetails = {
     language: Language;
     hasMatureContent: boolean;
 }
+
+export type DraftVokiPublishingData = {
+    issues: VokiPublishingIssue[]
+    primaryAuthorId: string
+    coAuthorIds: string[]
+}
 export type VokiPublishingIssueType = 'Problem' | 'Warning';
 export type VokiPublishingIssue = {
     type: VokiPublishingIssueType;
     message: string;
     source: string;
     fixRecommendation: string;
-
 }
-type VokiPublishingIssuesList = { issues: VokiPublishingIssue[] }
+
 export type VokiSuccessfullyPublishedData = {
     id: string;
     cover: string;
@@ -30,9 +35,9 @@ export interface IVokiCreationBackendService {
     getVokiName(vokiId: string): Promise<ResponseResult<{ vokiName: string; }>>;
     updateVokiTags(vokiId: string, tags: string[]): Promise<ResponseResult<{ newTags: string[]; }>>;
     updateVokiDetails(vokiId: string, details: VokiDetails): Promise<ResponseResult<VokiDetails>>;
-    checkForPublishingIssues(vokiId: string): Promise<ResponseResult<VokiPublishingIssuesList>>;
+    checkForPublishingIssues(vokiId: string): Promise<ResponseResult<DraftVokiPublishingData>>;
     publish(vokiId: string): Promise<ResponseResult<
-        VokiSuccessfullyPublishedData | VokiPublishingIssuesList
+        VokiSuccessfullyPublishedData | DraftVokiPublishingData
     >>;
     publishWithWarningsIgnored(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
 }
@@ -86,13 +91,13 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
             })
         );
     }
-    public async checkForPublishingIssues(vokiId: string): Promise<ResponseResult<VokiPublishingIssuesList>> {
-        return await this.fetchJsonResponse<{ issues: VokiPublishingIssue[]; }>(
-            `/vokis/${vokiId}/publishing-issues`, { method: 'GET' }
+    public async checkForPublishingIssues(vokiId: string): Promise<ResponseResult<DraftVokiPublishingData>> {
+        return await this.fetchJsonResponse<DraftVokiPublishingData>(
+            `/vokis/${vokiId}/publishing-data`, { method: 'GET' }
         );
     }
-    public async publish(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData | VokiPublishingIssuesList>> {
-        return await this.fetchJsonResponse<VokiSuccessfullyPublishedData | VokiPublishingIssuesList>(
+    public async publish(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData | DraftVokiPublishingData>> {
+        return await this.fetchJsonResponse<VokiSuccessfullyPublishedData | DraftVokiPublishingData>(
             `/vokis/${vokiId}/publish`, RJO.POST({})
         );
     }

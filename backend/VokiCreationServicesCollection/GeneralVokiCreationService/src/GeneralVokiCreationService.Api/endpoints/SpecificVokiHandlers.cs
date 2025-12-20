@@ -59,15 +59,14 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
         return CustomResults.FromErrOr(result, settings => Results.Json(settings));
     }
 
-    protected override Delegate CheckVokiForPublishingIssuesHandler => async (
+    protected override Delegate GetVokiPublishingData => async (
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<GetVokiPublishingIssuesQuery, ImmutableArray<VokiPublishingIssue>> handler
+        IQueryHandler<GetVokiPublishingDataQuery, GetVokiPublishingDataQueryResult> handler
     ) => {
         VokiId id = httpContext.GetVokiIdFromRoute();
-        var result = await handler.Handle(new GetVokiPublishingIssuesQuery(id), ct);
+        var result = await handler.Handle(new GetVokiPublishingDataQuery(id), ct);
 
-        return CustomResults.FromErrOr(result, issues =>
-            Results.Json(new { Issues = issues.Select(VokiPublishingIssueResponse.Create).ToArray() }));
+        return CustomResults.FromErrOrToJson<GetVokiPublishingDataQueryResult, VokiPublishingDataResponse>(result);
     };
 
     protected override Delegate PublishVokiHandler => async (

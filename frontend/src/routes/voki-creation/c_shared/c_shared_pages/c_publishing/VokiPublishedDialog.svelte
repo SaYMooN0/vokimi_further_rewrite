@@ -2,7 +2,7 @@
 	import BaseDialog from '$lib/components/dialogs/BaseDialog.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { VokiSuccessfullyPublishedData } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import VokiPublishedDIalogConfettiIcon from './c_published_dialog/VokiPublishedDIalogConfettiIcon.svelte';
+	import VokiPublishedDialogConfettiIcon from './c_published_dialog/VokiPublishedDialogConfettiIcon.svelte';
 
 	let dialog = $state<BaseDialog>()!;
 	let vokiData = $state<VokiSuccessfullyPublishedData>();
@@ -15,7 +15,7 @@
 
 <BaseDialog bind:this={dialog} dialogId="voki-published-dialog">
 	{#if vokiData}
-		<h1 class="title">Congratulations <VokiPublishedDIalogConfettiIcon /></h1>
+		<h1 class="title">Congratulations <VokiPublishedDialogConfettiIcon /></h1>
 		<img class="cover" src={StorageBucketMain.fileSrc(vokiData.cover)} />
 		<p class="message">
 			Voki

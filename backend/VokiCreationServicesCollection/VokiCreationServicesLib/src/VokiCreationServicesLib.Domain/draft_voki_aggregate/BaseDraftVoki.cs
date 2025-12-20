@@ -11,7 +11,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
 {
     protected BaseDraftVoki() { }
     public AppUserId PrimaryAuthorId { get; }
-    protected VokiCoAuthorIdsSet CoAuthors { get; private set; }
+    public VokiCoAuthorIdsSet CoAuthors { get; private set; }
     protected ImmutableHashSet<AppUserId> UserIdsToBecomeManagers { get; private set; }
     public VokiName Name { get; private set; }
     public VokiCoverKey Cover { get; private set; }

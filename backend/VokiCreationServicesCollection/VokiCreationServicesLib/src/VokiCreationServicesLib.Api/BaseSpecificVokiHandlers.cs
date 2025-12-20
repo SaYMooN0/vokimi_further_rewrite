@@ -33,7 +33,7 @@ public abstract class BaseSpecificVokiHandlers
         group.MapPatch("/update-tags", UpdateVokiTags)
             .WithRequestValidation<UpdateVokiTagsRequest>();
 
-        group.MapGet("/publishing-issues", CheckVokiForPublishingIssuesHandler);
+        group.MapGet("/publishing-issues", GetVokiPublishingData);
         group.MapPost("/publish", PublishVokiHandler);
         group.MapPost("/publish-with-warnings-ignored", PublishVokiWithWarningsIgnoredHandler);
 
@@ -110,7 +110,7 @@ public abstract class BaseSpecificVokiHandlers
         return CustomResults.FromErrOr(result, tagsSet =>
             Results.Json(new { NewTags = tagsSet.Value.Select(t => t.ToString()).ToArray() }));
     }
-protected abstract Delegate CheckVokiForPublishingIssuesHandler { get; }
+protected abstract Delegate GetVokiPublishingData { get; }
 protected abstract Delegate PublishVokiHandler { get; }
 protected abstract Delegate PublishVokiWithWarningsIgnoredHandler { get; }
 

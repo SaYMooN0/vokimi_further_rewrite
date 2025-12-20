@@ -9,23 +9,14 @@
 	import VokiCreationBasicHeader from '../../VokiCreationBasicHeader.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import ReloadButton from '$lib/components/buttons/ReloadButton.svelte';
-
-	const {
-		issues,
-		refetch,
-		vokiId,
-		onPublishedSuccessfully
-	}: {
+	interface Props {
 		issues: VokiPublishingIssue[];
 		refetch: () => void;
 		vokiId: string;
 		onPublishedSuccessfully: (data: VokiSuccessfullyPublishedData) => void;
-	} = $props<{
-		issues: VokiPublishingIssue[];
-		refetch: () => void;
-		vokiId: string;
-		onPublishedSuccessfully: (data: VokiSuccessfullyPublishedData) => void;
-	}>();
+		isUserPrimaryAuthor: boolean;
+	}
+	let { issues, refetch, vokiId, onPublishedSuccessfully, isUserPrimaryAuthor }: Props = $props();
 	const problems = issues.filter((issue) => issue.type === 'Problem');
 	const warnings = issues.filter((issue) => issue.type === 'Warning');
 	const vokiCreationCtx = getVokiCreationPageContext();
@@ -69,14 +60,20 @@
 	{/each}
 </div>
 <DefaultErrBlock class="publishing-err-block" errList={errs} />
-{#if problems.length > 0}
-	<p class="fix-msg">Please fix all problems before publishing</p>
-{:else if warnings.length > 0}
-	<button class="ignore-and-publish-btn" onclick={() => ignoreWarningsAndPublish()}
-		>Ignore warnings and publish</button
-	>
+{#if isUserPrimaryAuthor}
+	{#if problems.length > 0}
+		<p class="fix-msg">Please fix all problems before publishing</p>
+	{:else if warnings.length > 0}
+		<button class="ignore-and-publish-btn" onclick={() => ignoreWarningsAndPublish()}
+			>Ignore warnings and publish</button
+		>
+	{:else}
+		<ErrView err={{ message: 'An error has occurred, please reload the page' }} />
+	{/if}
 {:else}
-	<ErrView err={{ message: 'An error has occurred, please reload the page' }} />
+	<p class="only-primary-author">
+		<svg><use href="#common-info-icon" /></svg> Only primary author can publish Voki
+	</p>
 {/if}
 
 <style>
@@ -163,5 +160,26 @@
 		color: var(--primary);
 		letter-spacing: 0.25px;
 		cursor: pointer;
+	}
+	.only-primary-author {
+		width: fit-content;
+		padding: 0.25rem 1.75rem;
+		margin: 1rem auto 0.25rem;
+		color: var(--secondary-foreground);
+		font-weight: 450;
+		font-size: 1.125rem;
+		border-radius: 0.5rem;
+		padding: 0.25rem 1rem;
+		background-color: var(--secondary);
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.25rem;
+		cursor: default;
+	}
+	.only-primary-author > svg {
+		height: 1.25rem;
+		width: 1.25rem;
+		stroke-width: 2;
 	}
 </style>

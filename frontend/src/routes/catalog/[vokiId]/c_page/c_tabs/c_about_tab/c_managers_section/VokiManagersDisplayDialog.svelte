@@ -28,7 +28,6 @@
 	<div class="managers-list">
 		<div class="managers-list-row" title="primary author">
 			<BasicUserDisplay userId={primaryAuthorId} interactionLevel="WholeComponentLink" />
-			<!-- check with primary color -->
 			<svg class="check-icon primary-author"><use href="#common-check-icon" /></svg>
 		</div>
 		<div class="sep"></div>
@@ -57,5 +56,15 @@
 	.managers-list-row {
 		display: grid;
 		grid-template-columns: 1fr 4rem;
+	}
+	.check-icon {
+		width: 2rem;
+		aspect-ratio: 1;
+	}
+	.primary-author {
+		color: var(--primary);
+	}
+	.empty-div {
+		width: 2rem;
 	}
 </style>

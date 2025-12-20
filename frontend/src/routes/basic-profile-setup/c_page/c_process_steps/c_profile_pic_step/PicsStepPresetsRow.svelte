@@ -42,7 +42,7 @@
 	.pics-container {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 0.5rem;
+		gap: 0.75rem;
 	}
 
 	.img {
@@ -52,5 +52,12 @@
 		aspect-ratio: 1/1;
 		object-fit: cover;
 		place-content: center;
+		transition: all 0.12s ease-out;
+		box-shadow: var(--shadow-xs), var(--shadow);
+		cursor: pointer;
+	}
+	.img:hover {
+		transform: scale(1.08);
+		box-shadow: var(--shadow-xs), var(--shadow-lg);
 	}
 </style>

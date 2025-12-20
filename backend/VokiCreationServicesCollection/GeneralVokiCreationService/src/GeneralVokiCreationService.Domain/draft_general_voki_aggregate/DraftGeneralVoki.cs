@@ -472,7 +472,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
 
-    public ImmutableArray<VokiPublishingIssue> CheckForPublishingIssues() => [
+    public ImmutableArray<VokiPublishingIssue> GatherAllPublishingIssues() => [
         ..base.CheckCoverForPublishingIssues(),
         ..base.CheckTagsForPublishingIssues(),
         ..base.CheckDetailsForPublishingIssues(),
@@ -481,7 +481,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     ];
 
     public ErrOrNothing PublishWithWarningsIgnored(IDateTimeProvider dateTimeProvider) {
-        var issues = CheckForPublishingIssues();
+        var issues = GatherAllPublishingIssues();
         bool anyProblems = issues.Any(i => i.Type == PublishingIssueType.Problem);
         if (anyProblems) {
             return ErrFactory.Conflict("Cannot publish Voki because of an unresolved problem");

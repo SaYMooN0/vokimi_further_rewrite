@@ -20,13 +20,22 @@
 </div>
 
 <style>
-    .field-line {
+	.container {
+		display: flex;
+		flex-direction: column;
+	}
+	.field-line {
 		margin: 0;
+        		display: flex;
+		flex-direction: row;
 	}
 
-	.field-line .value {
+	.field-line .type-value {
 		margin-left: 0.5rem;
 		font-size: 1.125rem;
 		font-weight: 500;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
 	}
 </style>

@@ -38,7 +38,7 @@ internal sealed class PublishVokiCommandHandler :
         DraftGeneralVoki voki =
             (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
         
-        var issues = voki.CheckForPublishingIssues();
+        var issues = voki.GatherAllPublishingIssues();
         if (issues.Any()) {
             return new PublishVokiCommandResult.FailedToPublish(issues);
         }

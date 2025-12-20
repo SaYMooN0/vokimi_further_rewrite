@@ -7,45 +7,39 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import VokiPublishingIssuesList from './c_publishing/VokiPublishingIssuesList.svelte';
 	import NoVokiPublishingIssues from './c_publishing/NoVokiPublishingIssues.svelte';
-	import VokiPublishedDialog from './c_publishing/VokiPublishedDialog.svelte';
-
-	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
+	import VokiPublishedDialog from './c_publishing/ConfirmVokiPublishingDialog.svelte';
+	import ConfirmVokiPublishingDialog from './c_publishing/ConfirmVokiPublishingDialog.svelte';
+	interface Props {
+		vokiId: string;
+		initialIssues: VokiPublishingIssue[];
+		primaryAuthorId: string;
+		coAuthorIds: string[];
+	}
+	let { vokiId, initialIssues, primaryAuthorId, coAuthorIds }: Props = $props();
 	const vokiCreationCtx = getVokiCreationPageContext();
 
-	let pageState = $state<PageState>({ name: 'message' });
+	let pageState = $state<PageState>({ name: 'ok', issues: initialIssues });
 
 	type PageState =
-		| { name: 'message' }
 		| { name: 'loading' }
 		| { name: 'error'; errs: Err[] }
-		| { name: 'fetched'; issues: VokiPublishingIssue[] };
+		| { name: 'ok'; issues: VokiPublishingIssue[] };
 
 	async function loadPublishingIssues() {
 		pageState = { name: 'loading' };
 		const response = await vokiCreationCtx.vokiCreationApi.checkForPublishingIssues(vokiId);
 		if (response.isSuccess) {
-			pageState = { name: 'fetched', issues: response.data.issues };
+			pageState = { name: 'ok', issues: response.data.issues };
 		} else {
 			pageState = { name: 'error', errs: response.errs };
 		}
 	}
-	let vokiPublishedDialog = $state<VokiPublishedDialog>()!;
+	let confirmVokiPublishedDialog = $state<ConfirmVokiPublishingDialog>()!;
 </script>
 
-<VokiPublishedDialog bind:this={vokiPublishedDialog} />
-{#if pageState.name === 'message'}
-	<div class="msg-container">
-		<label class="warning-label">Warning</label>
-		<p class="warning-text">
-			Publishing your Voki will make it public — anyone can view it and take it. After publishing,
-			most parts can’t be changed, so make sure it’s ready. Click the button below to run the check.
-			We’ll scan your Voki for issues and show you if anything needs fixing.
-		</p>
-		<PrimaryButton onclick={() => loadPublishingIssues()} class="check-for-issues-btn"
-			>Check for issues</PrimaryButton
-		>
-	</div>
-{:else if pageState.name === 'loading'}
+<ConfirmVokiPublishingDialog bind:this={confirmVokiPublishedDialog} />
+
+{#if pageState.name === 'loading'}
 	<div class="msg-container loading">
 		<CubesLoader sizeRem={5} color="var(--primary)" />
 		<label>Searching for issues</label>
@@ -55,21 +49,23 @@
 		<DefaultErrBlock errList={pageState.errs} />
 		<PrimaryButton onclick={() => loadPublishingIssues()} class="refetch">Refetch</PrimaryButton>
 	</div>
-{:else if pageState.issues.length != 0}
+{:else if pageState.name === 'ok' && pageState.issues.length != 0}
 	<VokiPublishingIssuesList
 		issues={pageState.issues}
 		{vokiId}
 		refetch={() => loadPublishingIssues()}
 		onPublishedSuccessfully={(publishedData) => vokiPublishedDialog.open(publishedData)}
 	/>
-{:else}
+{:else if pageState.name === 'ok' && pageState.issues.length === 0}
 	<NoVokiPublishingIssues
 		{vokiId}
 		onPublishedSuccessfully={(publishedData) => vokiPublishedDialog.open(publishedData)}
 		showNewIssuesOnIssuesFound={(issuesList: VokiPublishingIssue[]) => {
-			pageState = { name: 'fetched', issues: issuesList };
+			pageState = { name: 'ok', issues: issuesList };
 		}}
 	/>
+{:else}
+	<h2>Something went wrong. Please refresh the page</h2>
 {/if}
 
 <style>
