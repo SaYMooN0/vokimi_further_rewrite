@@ -7,26 +7,18 @@ using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.publishing;
 
-public record class PublishVokiCommand(VokiId VokiId) :
-    ICommand<PublishVokiCommandResult>,
+public record class PublishVokiWithNoIssuesCommand(VokiId VokiId) :
+    ICommand<VokiSuccessfullyPublishedResult>,
     IWithAuthCheckStep,
     IWithVokiPrimaryAuthorValidationStep;
 
-public abstract record PublishVokiCommandResult
-{
-    public sealed record Success(VokiSuccessfullyPublishedResult VokiData) : PublishVokiCommandResult;
-
-    public sealed record FailedToPublish(ImmutableArray<VokiPublishingIssue> Issues) : PublishVokiCommandResult;
-}
-
-internal sealed class PublishVokiCommandHandler :
-    ICommandHandler<PublishVokiCommand, PublishVokiCommandResult>
+internal sealed class PublishVokiWithNoIssuesCommandHandler :
+    ICommandHandler<PublishVokiWithNoIssuesCommand, VokiSuccessfullyPublishedResult>
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
-
-    public PublishVokiCommandHandler(
+    public PublishVokiWithNoIssuesCommandHandler(
         IDraftGeneralVokisRepository draftGeneralVokisRepository,
         IDateTimeProvider dateTimeProvider
     ) {
@@ -34,23 +26,17 @@ internal sealed class PublishVokiCommandHandler :
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOr<PublishVokiCommandResult>> Handle(PublishVokiCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki =
-            (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
-        
-        var issues = voki.GatherAllPublishingIssues();
-        if (issues.Any()) {
-            return new PublishVokiCommandResult.FailedToPublish(issues);
-        }
+    public async Task<ErrOr<VokiSuccessfullyPublishedResult>> Handle(
+        PublishVokiWithNoIssuesCommand command, CancellationToken ct
+    ) {
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
 
-        var publishingRes = voki.PublishWithWarningsIgnored(_dateTimeProvider);
+        var publishingRes = voki.PublishWithNoIssues(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {
             return err;
         }
 
         await _draftGeneralVokisRepository.Delete(voki, ct);
-        return new PublishVokiCommandResult.Success(
-            new VokiSuccessfullyPublishedResult(voki.Id, voki.Cover, voki.Name)
-        );
+        return new VokiSuccessfullyPublishedResult(voki.Id, voki.Cover, voki.Name);
     }
 }

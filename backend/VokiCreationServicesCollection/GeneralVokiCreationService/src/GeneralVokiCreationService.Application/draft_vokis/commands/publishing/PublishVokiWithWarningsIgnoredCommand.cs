@@ -16,8 +16,6 @@ internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
-
-
     public PublishVokiWithWarningsIgnoredCommandHandler(
         IDraftGeneralVokisRepository draftGeneralVokisRepository,
         IDateTimeProvider dateTimeProvider
@@ -30,8 +28,7 @@ internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
         PublishVokiWithWarningsIgnoredCommand command,
         CancellationToken ct
     ) {
-        DraftGeneralVoki voki =
-            (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
         var publishingRes = voki.PublishWithWarningsIgnored(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {
             return err;

@@ -1,14 +1,19 @@
 <script lang="ts">
-	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
+	import AuthView from '$lib/components/AuthView.svelte';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import { type VokiPublishingIssue } from '$lib/ts/backend-communication/voki-creation-backend-service';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
+	import type {
+		VokiPublishingIssue,
+		VokiSuccessfullyPublishedData
+	} from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { getVokiCreationPageContext } from '../../voki-creation-page-context';
-	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import VokiPublishingIssuesList from './c_publishing/VokiPublishingIssuesList.svelte';
-	import NoVokiPublishingIssues from './c_publishing/NoVokiPublishingIssues.svelte';
-	import VokiPublishedDialog from './c_publishing/ConfirmVokiPublishingDialog.svelte';
 	import ConfirmVokiPublishingDialog from './c_publishing/ConfirmVokiPublishingDialog.svelte';
+	import NoVokiPublishingIssues from './c_publishing/NoVokiPublishingIssues.svelte';
+	import VokiPublishingIssuesList from './c_publishing/VokiPublishingIssuesList.svelte';
+	import VokiSuccessfullyPublishedMessage from './c_publishing/VokiSuccessfullyPublishedMessage.svelte';
+
 	interface Props {
 		vokiId: string;
 		initialIssues: VokiPublishingIssue[];
@@ -18,26 +23,36 @@
 	let { vokiId, initialIssues, primaryAuthorId, coAuthorIds }: Props = $props();
 	const vokiCreationCtx = getVokiCreationPageContext();
 
-	let pageState = $state<PageState>({ name: 'ok', issues: initialIssues });
+	let pageState = $state<PageState>({ name: 'issues', issues: initialIssues });
 
 	type PageState =
 		| { name: 'loading' }
 		| { name: 'error'; errs: Err[] }
-		| { name: 'ok'; issues: VokiPublishingIssue[] };
+		| { name: 'issues'; issues: VokiPublishingIssue[] }
+		| { name: 'published'; vokiData: VokiSuccessfullyPublishedData };
 
 	async function loadPublishingIssues() {
 		pageState = { name: 'loading' };
-		const response = await vokiCreationCtx.vokiCreationApi.checkForPublishingIssues(vokiId);
+		const response = await vokiCreationCtx.vokiCreationApi.loadPublishingData(vokiId);
 		if (response.isSuccess) {
-			pageState = { name: 'ok', issues: response.data.issues };
+			pageState = { name: 'issues', issues: response.data.issues };
 		} else {
 			pageState = { name: 'error', errs: response.errs };
 		}
 	}
 	let confirmVokiPublishedDialog = $state<ConfirmVokiPublishingDialog>()!;
+	function switchToPublishedSuccessfully(vokiData: VokiSuccessfullyPublishedData) {
+		pageState = { name: 'published', vokiData };
+	}
 </script>
 
-<ConfirmVokiPublishingDialog bind:this={confirmVokiPublishedDialog} />
+<ConfirmVokiPublishingDialog
+	bind:this={confirmVokiPublishedDialog}
+	issues={pageState.name === 'issues' ? pageState.issues : []}
+	refetchIssues={() => loadPublishingIssues()}
+	{switchToPublishedSuccessfully}
+	{vokiId}
+/>
 
 {#if pageState.name === 'loading'}
 	<div class="msg-container loading">
@@ -49,21 +64,21 @@
 		<DefaultErrBlock errList={pageState.errs} />
 		<PrimaryButton onclick={() => loadPublishingIssues()} class="refetch">Refetch</PrimaryButton>
 	</div>
-{:else if pageState.name === 'ok' && pageState.issues.length != 0}
-	<VokiPublishingIssuesList
-		issues={pageState.issues}
-		{vokiId}
-		refetch={() => loadPublishingIssues()}
-		onPublishedSuccessfully={(publishedData) => vokiPublishedDialog.open(publishedData)}
-	/>
-{:else if pageState.name === 'ok' && pageState.issues.length === 0}
+{:else if pageState.name === 'issues' && pageState.issues.length != 0}
+	<AuthView>
+		<VokiPublishingIssuesList
+			issues={pageState.issues}
+			refetch={() => loadPublishingIssues()}
+			openPublishingConfirmationDialog={() => confirmVokiPublishedDialog.open()}
+			isUserPrimaryAuthor={(uId) => uId === primaryAuthorId}
+		/>
+	</AuthView>
+{:else if pageState.name === 'issues' && pageState.issues.length === 0}
 	<NoVokiPublishingIssues
-		{vokiId}
-		onPublishedSuccessfully={(publishedData) => vokiPublishedDialog.open(publishedData)}
-		showNewIssuesOnIssuesFound={(issuesList: VokiPublishingIssue[]) => {
-			pageState = { name: 'ok', issues: issuesList };
-		}}
+		openPublishingConfirmationDialog={() => confirmVokiPublishedDialog.open()}
 	/>
+{:else if pageState.name === 'published'}
+	<VokiSuccessfullyPublishedMessage vokiData={pageState.vokiData} />
 {:else}
 	<h2>Something went wrong. Please refresh the page</h2>
 {/if}
@@ -84,21 +99,7 @@
 		animation: var(--default-fade-in-animation);
 	}
 
-	.warning-label {
-		color: var(--secondary-foreground);
-		font-size: 1.75rem;
-		font-weight: 550;
-		letter-spacing: 1px;
-	}
-
-	.warning-text {
-		margin-top: 1rem;
-		font-size: 1.25rem;
-		font-weight: 420;
-		text-align: justify;
-		letter-spacing: 0.25px;
-		text-indent: 0.5em;
-	}
+	
 
 	.msg-container > :global(.check-for-issues-btn) {
 		margin-top: auto;

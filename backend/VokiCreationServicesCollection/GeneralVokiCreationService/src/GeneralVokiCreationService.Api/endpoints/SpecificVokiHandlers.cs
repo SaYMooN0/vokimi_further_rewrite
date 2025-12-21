@@ -7,7 +7,6 @@ using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Api;
 using VokiCreationServicesLib.Api.contracts;
 using VokiCreationServicesLib.Application;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -69,22 +68,14 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
         return CustomResults.FromErrOrToJson<GetVokiPublishingDataQueryResult, VokiPublishingDataResponse>(result);
     };
 
-    protected override Delegate PublishVokiHandler => async (
+    protected override Delegate PublishVokiWithNoIssuesHandler => async (
         HttpContext httpContext, CancellationToken ct,
-        ICommandHandler<PublishVokiCommand, PublishVokiCommandResult> handler
+        ICommandHandler<PublishVokiWithNoIssuesCommand, VokiSuccessfullyPublishedResult> handler
     ) => {
         VokiId id = httpContext.GetVokiIdFromRoute();
-        var result = await handler.Handle(new PublishVokiCommand(id), ct);
+        var result = await handler.Handle(new PublishVokiWithNoIssuesCommand(id), ct);
 
-        return CustomResults.FromErrOr(result, r => r switch {
-            PublishVokiCommandResult.Success s =>
-                Results.Json(VokiSuccessfullyPublishedResponse.Create(s.VokiData)),
-
-            PublishVokiCommandResult.FailedToPublish f =>
-                Results.Json(new { Issues = f.Issues.Select(VokiPublishingIssueResponse.Create).ToArray() }),
-
-            _ => throw new ArgumentException("Unknown publish result")
-        });
+        return CustomResults.FromErrOrToJson<VokiSuccessfullyPublishedResult, VokiSuccessfullyPublishedResponse>(result);
     };
 
     protected override Delegate PublishVokiWithWarningsIgnoredHandler => async (
@@ -94,9 +85,6 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
         VokiId id = httpContext.GetVokiIdFromRoute();
         var result = await handler.Handle(new PublishVokiWithWarningsIgnoredCommand(id), ct);
 
-        return CustomResults.FromErrOrToJson<
-            VokiSuccessfullyPublishedResult,
-            VokiSuccessfullyPublishedResponse
-        >(result);
+        return CustomResults.FromErrOrToJson<VokiSuccessfullyPublishedResult, VokiSuccessfullyPublishedResponse>(result);
     };
 }

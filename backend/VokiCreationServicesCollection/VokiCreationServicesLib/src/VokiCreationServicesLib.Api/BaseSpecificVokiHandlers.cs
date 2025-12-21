@@ -33,16 +33,17 @@ public abstract class BaseSpecificVokiHandlers
         group.MapPatch("/update-tags", UpdateVokiTags)
             .WithRequestValidation<UpdateVokiTagsRequest>();
 
-        group.MapGet("/publishing-issues", GetVokiPublishingData);
-        group.MapPost("/publish", PublishVokiHandler);
+        group.MapGet("/publishing-data", GetVokiPublishingData);
+        group.MapPost("/publish-with-no-issues", PublishVokiWithNoIssuesHandler);
         group.MapPost("/publish-with-warnings-ignored", PublishVokiWithWarningsIgnoredHandler);
 
 
         return group;
     }
+
     private static async Task<IResult> GetVokiName(
         CancellationToken ct, HttpContext httpContext,
-        [FromServices] IQueryHandler<GetVokiNameQuery, VokiName> handler
+        IQueryHandler<GetVokiNameQuery, VokiName> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var result = await handler.Handle(new GetVokiNameQuery(id), ct);
@@ -53,7 +54,7 @@ public abstract class BaseSpecificVokiHandlers
 
     private static async Task<IResult> UpdateVokiName(
         HttpContext httpContext, CancellationToken ct,
-        [FromServices] ICommandHandler<UpdateVokiNameCommand, VokiName> handler
+        ICommandHandler<UpdateVokiNameCommand, VokiName> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var req = httpContext.GetValidatedRequest<UpdateVokiNameRequest>();
@@ -65,7 +66,7 @@ public abstract class BaseSpecificVokiHandlers
 
     private static async Task<IResult> SetVokiCoverToDefault(
         HttpContext httpContext, CancellationToken ct,
-        [FromServices] ICommandHandler<SetVokiCoverToDefaultCommand, VokiCoverKey> handler
+        ICommandHandler<SetVokiCoverToDefaultCommand, VokiCoverKey> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var result = await handler.Handle(new SetVokiCoverToDefaultCommand(id), ct);
@@ -76,7 +77,7 @@ public abstract class BaseSpecificVokiHandlers
 
     private static async Task<IResult> UpdateVokiCover(
         HttpContext httpContext, CancellationToken ct,
-        [FromServices] ICommandHandler<UpdateVokiCoverCommand, VokiCoverKey> handler
+        ICommandHandler<UpdateVokiCoverCommand, VokiCoverKey> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var req = httpContext.GetValidatedRequest<UpdateVokiCoverRequest>();
@@ -88,7 +89,7 @@ public abstract class BaseSpecificVokiHandlers
 
     private static async Task<IResult> UpdateVokiDetails(
         HttpContext httpContext, CancellationToken ct,
-        [FromServices] ICommandHandler<UpdateVokiDetailsCommand, VokiDetails> handler
+        ICommandHandler<UpdateVokiDetailsCommand, VokiDetails> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var req = httpContext.GetValidatedRequest<UpdateVokiDetailsRequest>();
@@ -100,7 +101,7 @@ public abstract class BaseSpecificVokiHandlers
 
     private static async Task<IResult> UpdateVokiTags(
         HttpContext httpContext, CancellationToken ct,
-        [FromServices] ICommandHandler<UpdateVokiTagsCommand, VokiTagsSet> handler
+        ICommandHandler<UpdateVokiTagsCommand, VokiTagsSet> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var req = httpContext.GetValidatedRequest<UpdateVokiTagsRequest>();
@@ -110,9 +111,8 @@ public abstract class BaseSpecificVokiHandlers
         return CustomResults.FromErrOr(result, tagsSet =>
             Results.Json(new { NewTags = tagsSet.Value.Select(t => t.ToString()).ToArray() }));
     }
-protected abstract Delegate GetVokiPublishingData { get; }
-protected abstract Delegate PublishVokiHandler { get; }
-protected abstract Delegate PublishVokiWithWarningsIgnoredHandler { get; }
 
-   
+    protected abstract Delegate GetVokiPublishingData { get; }
+    protected abstract Delegate PublishVokiWithNoIssuesHandler { get; }
+    protected abstract Delegate PublishVokiWithWarningsIgnoredHandler { get; }
 }

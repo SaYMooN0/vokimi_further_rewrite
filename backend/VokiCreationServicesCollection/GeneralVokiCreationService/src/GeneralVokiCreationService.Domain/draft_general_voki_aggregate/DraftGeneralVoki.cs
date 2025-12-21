@@ -487,6 +487,22 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             return ErrFactory.Conflict("Cannot publish Voki because of an unresolved problem");
         }
 
+        AddVokiPublishedDomainEvent(dateTimeProvider.UtcNow);
+        return ErrOrNothing.Nothing;
+    }
+
+    public ErrOrNothing PublishWithNoIssues(IDateTimeProvider dateTimeProvider) {
+        if (GatherAllPublishingIssues().Length > 0) {
+            return ErrFactory.Conflict(
+                "Could not publish voki because new publishing issues were found. Please check them"
+            );
+        }
+
+        AddVokiPublishedDomainEvent(dateTimeProvider.UtcNow);
+        return ErrOrNothing.Nothing;
+    }
+
+    private void AddVokiPublishedDomainEvent(DateTime utcNow) {
         QuestionDomainEventDto ParseQuestionToDto(VokiQuestion q) {
             return new QuestionDomainEventDto(
                 q.Id, q.Text, q.ImageSet, q.AnswersType, q.OrderInVoki,
@@ -501,11 +517,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             Id, PrimaryAuthorId, CoAuthors, UserIdsToBecomeManagers,
             Name, Cover, Details, Tags,
             InitializingDate: CreationDate,
-            PublishingDate: dateTimeProvider.UtcNow,
+            PublishingDate: utcNow,
             TakingProcessSettings, InteractionSettings,
             _questions.Select(ParseQuestionToDto).ToArray(),
             _results.Select(r => new ResultDomainEventDto(r.Id, r.Name, r.Text, r.Image)).ToArray()
         ));
-        return ErrOrNothing.Nothing;
     }
 }

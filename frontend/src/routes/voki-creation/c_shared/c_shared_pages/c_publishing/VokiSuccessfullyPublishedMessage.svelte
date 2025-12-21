@@ -2,37 +2,29 @@
 	import BaseDialog from '$lib/components/dialogs/BaseDialog.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { VokiSuccessfullyPublishedData } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import VokiPublishedDialogConfettiIcon from './c_published_dialog/VokiPublishedDialogConfettiIcon.svelte';
-
-	let dialog = $state<BaseDialog>()!;
-	let vokiData = $state<VokiSuccessfullyPublishedData>();
-
-	export function open(data: VokiSuccessfullyPublishedData) {
-		vokiData = data;
-		dialog.open();
+	import VokiPublishedDialogConfettiIcon from './c_successfully_published/VokiPublishedDialogConfettiIcon.svelte';
+	interface Props {
+		vokiData: VokiSuccessfullyPublishedData;
 	}
+	let { vokiData }: Props = $props();
 </script>
 
-<BaseDialog bind:this={dialog} dialogId="voki-published-dialog">
-	{#if vokiData}
-		<h1 class="title">Congratulations <VokiPublishedDialogConfettiIcon /></h1>
-		<img class="cover" src={StorageBucketMain.fileSrc(vokiData.cover)} />
-		<p class="message">
-			Voki
-			<span>{vokiData!.name}</span>
-			has been successfully published
-		</p>
-		<a href={`/catalog/${vokiData!.id}`} class="view-button">View published Voki page</a>
-	{:else}
-		<h1 class="title">Error</h1>
-		<p class="message">Something went wrong, please try again</p>
-	{/if}
-</BaseDialog>
+<div class="voki-published-container">
+	<h1 class="title">Congratulations <VokiPublishedDialogConfettiIcon /></h1>
+	<img class="cover" src={StorageBucketMain.fileSrc(vokiData.cover)} />
+	<p class="message">
+		Voki
+		<span>{vokiData.name}</span>
+		has been successfully published
+	</p>
+	<a href={`/catalog/${vokiData.id}`} class="view-button">View published Voki page</a>
+</div>
 
 <style>
-	:global(#voki-published-dialog .dialog-content) {
-		width: 38rem;
-		min-height: 34rem;
+	.voki-published-container {
+		display: flex;
+		flex-direction: column;
+		justify-items: center;
 	}
 
 	.title {

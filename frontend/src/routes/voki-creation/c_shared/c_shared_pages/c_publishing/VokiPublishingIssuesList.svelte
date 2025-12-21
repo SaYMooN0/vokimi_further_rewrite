@@ -1,80 +1,68 @@
 <script lang="ts">
-	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
 	import type {
 		VokiPublishingIssue,
-		VokiSuccessfullyPublishedData
 	} from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import type { Err } from '$lib/ts/err';
 	import ErrView from '$lib/components/errs/ErrView.svelte';
 	import VokiCreationBasicHeader from '../../VokiCreationBasicHeader.svelte';
-	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import ReloadButton from '$lib/components/buttons/ReloadButton.svelte';
+	import AuthView from '$lib/components/AuthView.svelte';
 	interface Props {
 		issues: VokiPublishingIssue[];
 		refetch: () => void;
-		vokiId: string;
-		onPublishedSuccessfully: (data: VokiSuccessfullyPublishedData) => void;
-		isUserPrimaryAuthor: boolean;
+		openPublishingConfirmationDialog: () => void;
+		isUserPrimaryAuthor: (userId: string) => boolean;
 	}
-	let { issues, refetch, vokiId, onPublishedSuccessfully, isUserPrimaryAuthor }: Props = $props();
+	let { issues, refetch, openPublishingConfirmationDialog, isUserPrimaryAuthor }: Props = $props();
 	const problems = issues.filter((issue) => issue.type === 'Problem');
 	const warnings = issues.filter((issue) => issue.type === 'Warning');
-	const vokiCreationCtx = getVokiCreationPageContext();
-
-	async function ignoreWarningsAndPublish() {
-		const response = await vokiCreationCtx.vokiCreationApi.publishWithWarningsIgnored(vokiId);
-		if (response.isSuccess) {
-			onPublishedSuccessfully(response.data);
-		} else {
-			errs = response.errs;
-		}
-	}
-	let errs = $state<Err[]>([]);
 </script>
 
-<VokiCreationBasicHeader header={`Voki publishing issues (${issues.length})`} />
-<ReloadButton onclick={() => refetch()} />
-<div class="all-issues-container">
-	{#each problems as problem}
-		<div class="issue problem">
-			<div class="type">
-				<svg><use href="#error-icon" /></svg>
-				Problem
-			</div>
-			<div class="source">{problem.source}</div>
-			<div class="message">{problem.message}</div>
-			<div class="recommendation">{problem.fixRecommendation}</div>
-		</div>
-	{/each}
+<AuthView>
+	{#snippet children(authState)}
+		<VokiCreationBasicHeader header={`Voki publishing issues (${issues.length})`} />
+		<ReloadButton onclick={() => refetch()} />
+		<div class="all-issues-container">
+			{#each problems as problem}
+				<div class="issue problem">
+					<div class="type">
+						<svg><use href="#error-icon" /></svg>
+						Problem
+					</div>
+					<div class="source">{problem.source}</div>
+					<div class="message">{problem.message}</div>
+					<div class="recommendation">{problem.fixRecommendation}</div>
+				</div>
+			{/each}
 
-	{#each warnings as warning}
-		<div class="issue warning">
-			<div class="type">
-				<svg><use href="#warning-icon" /></svg>
-				Warning
-			</div>
-			<div class="source">{warning.source}</div>
-			<div class="message">{warning.message}</div>
-			<div class="recommendation">{warning.fixRecommendation}</div>
+			{#each warnings as warning}
+				<div class="issue warning">
+					<div class="type">
+						<svg><use href="#warning-icon" /></svg>
+						Warning
+					</div>
+					<div class="source">{warning.source}</div>
+					<div class="message">{warning.message}</div>
+					<div class="recommendation">{warning.fixRecommendation}</div>
+				</div>
+			{/each}
 		</div>
-	{/each}
-</div>
-<DefaultErrBlock class="publishing-err-block" errList={errs} />
-{#if isUserPrimaryAuthor}
-	{#if problems.length > 0}
-		<p class="fix-msg">Please fix all problems before publishing</p>
-	{:else if warnings.length > 0}
-		<button class="ignore-and-publish-btn" onclick={() => ignoreWarningsAndPublish()}
-			>Ignore warnings and publish</button
-		>
-	{:else}
-		<ErrView err={{ message: 'An error has occurred, please reload the page' }} />
-	{/if}
-{:else}
-	<p class="only-primary-author">
-		<svg><use href="#common-info-icon" /></svg> Only primary author can publish Voki
-	</p>
-{/if}
+		{#if isUserPrimaryAuthor(authState.isAuthenticated ? authState.userId : '')}
+			{#if problems.length > 0}
+				<p class="fix-msg">Please fix all problems before publishing</p>
+			{:else if warnings.length > 0}
+				<button class="ignore-and-publish-btn" onclick={() => openPublishingConfirmationDialog()}
+					>Ignore warnings and publish</button
+				>
+			{:else}
+				<ErrView err={{ message: 'An error has occurred, please reload the page' }} />
+			{/if}
+		{:else}
+			<p class="only-primary-author unselectable">
+				<svg><use href="#common-info-icon" /></svg> Only primary author can publish Voki
+			</p>
+		{/if}
+	{/snippet}
+</AuthView>
 
 <style>
 	.all-issues-container {

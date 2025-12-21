@@ -35,10 +35,9 @@ export interface IVokiCreationBackendService {
     getVokiName(vokiId: string): Promise<ResponseResult<{ vokiName: string; }>>;
     updateVokiTags(vokiId: string, tags: string[]): Promise<ResponseResult<{ newTags: string[]; }>>;
     updateVokiDetails(vokiId: string, details: VokiDetails): Promise<ResponseResult<VokiDetails>>;
-    checkForPublishingIssues(vokiId: string): Promise<ResponseResult<DraftVokiPublishingData>>;
-    publish(vokiId: string): Promise<ResponseResult<
-        VokiSuccessfullyPublishedData | DraftVokiPublishingData
-    >>;
+
+    loadPublishingData(vokiId: string): Promise<ResponseResult<DraftVokiPublishingData>>;
+    publishWithNoIssues(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
     publishWithWarningsIgnored(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
 }
 class VokiCreationBackendService extends BackendService implements IVokiCreationBackendService {
@@ -91,14 +90,14 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
             })
         );
     }
-    public async checkForPublishingIssues(vokiId: string): Promise<ResponseResult<DraftVokiPublishingData>> {
+    public async loadPublishingData(vokiId: string): Promise<ResponseResult<DraftVokiPublishingData>> {
         return await this.fetchJsonResponse<DraftVokiPublishingData>(
             `/vokis/${vokiId}/publishing-data`, { method: 'GET' }
         );
     }
-    public async publish(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData | DraftVokiPublishingData>> {
-        return await this.fetchJsonResponse<VokiSuccessfullyPublishedData | DraftVokiPublishingData>(
-            `/vokis/${vokiId}/publish`, RJO.POST({})
+    public async publishWithNoIssues(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>> {
+        return await this.fetchJsonResponse<VokiSuccessfullyPublishedData>(
+            `/vokis/${vokiId}/publish-with-no-issues`, RJO.POST({})
         );
     }
     public async publishWithWarningsIgnored(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>> {
