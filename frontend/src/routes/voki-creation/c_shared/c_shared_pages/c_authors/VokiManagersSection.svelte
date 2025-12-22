@@ -58,10 +58,11 @@
 	.managers-section {
 		margin-top: 2rem;
 	}
+
 	.managers-section.editing {
-		box-shadow: var(--shadow-xs);
-		border-radius: 0.5rem;
 		padding: 1rem;
+		border-radius: 0.5rem;
+		box-shadow: var(--shadow-xs);
 
 	}
 </style>

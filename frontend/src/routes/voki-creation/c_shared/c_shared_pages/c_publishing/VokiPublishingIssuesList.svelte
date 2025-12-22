@@ -132,8 +132,6 @@
 		padding: 0.125rem 0.375rem;
 		margin: 1rem auto;
 		border: none;
-		border-radius: 1rem;
-		border-radius: 0;
 		background-color: transparent;
 		color: var(--muted-foreground);
 		font-size: 1.25rem;
@@ -149,25 +147,26 @@
 		letter-spacing: 0.25px;
 		cursor: pointer;
 	}
+
 	.only-primary-author {
-		width: fit-content;
-		padding: 0.25rem 1.75rem;
-		margin: 1rem auto 0.25rem;
-		color: var(--secondary-foreground);
-		font-weight: 450;
-		font-size: 1.125rem;
-		border-radius: 0.5rem;
-		padding: 0.25rem 1rem;
-		background-color: var(--secondary);
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		gap: 0.25rem;
+		width: fit-content;
+		padding: 0.25rem 1rem;
+		margin: 1rem auto 0.25rem;
+		border-radius: 0.5rem;
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+		font-size: 1.125rem;
+		font-weight: 450;
 		cursor: default;
 	}
+
 	.only-primary-author > svg {
-		height: 1.25rem;
 		width: 1.25rem;
+		height: 1.25rem;
 		stroke-width: 2;
 	}
 </style>

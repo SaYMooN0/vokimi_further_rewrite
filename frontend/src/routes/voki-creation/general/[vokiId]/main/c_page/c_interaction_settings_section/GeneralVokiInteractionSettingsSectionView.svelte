@@ -38,8 +38,8 @@
 		flex-direction: row;
 		align-items: center;
 		gap: 0.5rem;
-		margin-top: 1rem;
         width: max-content;
+		margin-top: 1rem;
 		color: var(--text);
 		font-size: 1.25rem;
 		font-weight: 500;

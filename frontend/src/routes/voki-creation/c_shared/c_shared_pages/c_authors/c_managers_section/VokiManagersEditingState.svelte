@@ -136,65 +136,74 @@
 		grid-template-columns: max-content 1fr;
 		align-items: center;
 	}
+
 	.managers-input-p > :global(.voki-managers-input) {
-		margin-left: auto;
-		width: fit-content;
 		gap: 3rem;
+		width: fit-content;
+		margin-left: auto;
 	}
+
 	.managers-input-p > :global(.voki-managers-input > .option) {
 		width: 13rem;
 		padding: 0.375rem 0;
 	}
+
 	.hint-p {
+		margin: 0.375rem 0;
 		margin-top: 0.5rem;
 		color: var(--secondary-foreground);
-		font-weight: 425;
 		font-size: 0.875rem;
-		margin: 0.375rem 0;
+		font-weight: 425;
 	}
+
 	.co-authors-select-container {
 		display: flex;
-		flex-wrap: wrap;
-		flex-direction: row;
-		gap: 1rem;
+		flex-flow: row wrap;
 		align-items: center;
+		gap: 1rem;
 	}
+
 	.chosen-users-label {
 		padding: 0.875rem 0;
 		color: var(--muted-foreground);
 		font-weight: 500;
 		letter-spacing: 0.125px;
 	}
+
 	.co-author {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
 	}
+
 	.co-author > .remove-btn {
-		height: 1.25rem;
 		width: 1.25rem;
+		height: 1.25rem;
+		padding: 0.125rem;
+		border-radius: 0.5rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		border-radius: 0.5rem;
-		stroke-width: 2;
-		padding: 0.125rem;
 		cursor: pointer;
+		stroke-width: 2;
 	}
+
 	.co-author > .remove-btn:hover {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 	}
+
 	.edit-co-authors-btn {
+		height: fit-content;
 		padding: 0.25rem 1.25rem;
+		border: none;
+		border-radius: 0.25rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-		border: none;
-		height: fit-content;
 		font-size: 1.125rem;
 		font-weight: 450;
-		border-radius: 0.25rem;
 		letter-spacing: 0.25px;
 	}
+
 	.edit-co-authors-btn:hover {
 		background-color: var(--primary-hov);
 	}

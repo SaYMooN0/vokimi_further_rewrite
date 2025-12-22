@@ -46,13 +46,16 @@
 		font-size: 1.25rem;
 		font-weight: 440;
 	}
+
 	.creation-header-container:has(.could-not-load-label) {
 		gap: 2rem;
 		padding-right: 1rem;
 	}
+
 	.creation-header-container > :global(.reload-btn) {
 		margin: 0;
 	}
+
 	.could-not-load-label > svg {
 		width: 1.25rem;
 		height: 1.25rem;
@@ -63,16 +66,19 @@
 		stroke-width: 2.25;
 		vertical-align: middle;
 	}
+
 	.could-not-load-label {
-		background-color: var(--muted);
 		padding: 0.125rem 1rem;
 		border-radius: 100vw;
+		background-color: var(--muted);
 	}
+
 	.could-not-load-label:hover,
 	.could-not-load-label:active,
 	.could-not-load-label:focus {
 		box-shadow: var(--shadow-xs), var(--shadow-md);
 	}
+
 	.creation-header-container .voki-name {
 		display: inline-block;
 		max-width: calc(50vw - 4rem);
@@ -83,6 +89,7 @@
 		color: var(--primary);
 		font-weight: 500;
 	}
+
 	.loader {
 		position: relative;
 		width: 14rem;
@@ -106,6 +113,7 @@
 		content: '';
 		inset: 0;
 	}
+
 	@keyframes shimmer {
 		0% {
 			transform: translateX(-35%);

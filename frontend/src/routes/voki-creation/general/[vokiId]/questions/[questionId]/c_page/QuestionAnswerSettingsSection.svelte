@@ -76,6 +76,7 @@
 		gap: 0.5rem;
 		margin: 1.5rem 0 0;
 	}
+
 	:global(.edit-settings-button) {
 		padding: 0 1rem;
 	}

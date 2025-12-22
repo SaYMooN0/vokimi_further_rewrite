@@ -197,6 +197,7 @@
 		font-weight: 550;
 		grid-template-columns: 1fr 1fr 1fr;
 	}
+
 	.taking-row label {
 		text-align: center;
 	}

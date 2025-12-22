@@ -29,24 +29,23 @@
 
 	.participants-section {
 		display: flex;
-		flex-direction: row;
+		flex-flow: row wrap;
 		align-items: center;
-		flex-wrap: wrap;
 		gap: 0.375rem;
 	}
 
 	.plus-icon {
-		margin: 0 0.25rem;
-		color: var(--secondary-foreground);
-		stroke-width: 3.25;
-		height: 1rem;
-		width: 1rem;
-		padding: 0.125rem;
-		background-color: var(--secondary);
-		box-shadow: var(--shadow-xs);
-		border-radius: 99vw;
 		display: flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		width: 1rem;
+		height: 1rem;
+		padding: 0.125rem;
+		margin: 0 0.25rem;
+		border-radius: 99vw;
+		background-color: var(--secondary);
+		color: var(--secondary-foreground);
+		box-shadow: var(--shadow-xs);
+		stroke-width: 3.25;
 	}
 </style>

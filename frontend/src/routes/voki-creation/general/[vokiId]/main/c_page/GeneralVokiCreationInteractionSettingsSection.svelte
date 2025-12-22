@@ -38,10 +38,11 @@
 
 <style>
 	.interaction-settings {
-		width: 100%;
 		display: flex;
 		flex-direction: column;
+		width: 100%;
 	}
+
 	.interaction-settings > :global(.err-block) {
 		margin: 1rem 0;
 	}

@@ -49,26 +49,29 @@
 		flex-direction: column;
 		gap: 1rem;
 	}
+
 	:global(#co-authors-to-become-managers-dialog > .dialog-content > .subheading) {
-		padding: 0 2rem 1rem;
 		width: max-content;
+		padding: 0 2rem 1rem;
 	}
+
 	.co-authors {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 		width: 100%;
 	}
+
 	.co-author {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 		width: 100%;
+		height: fit-content;
 		padding: 0.125rem 1rem;
 		border-radius: 0.5rem;
-
-		height: fit-content;
 	}
+
 	.co-author:has(:global(.ok)):hover {
 		box-shadow: var(--shadow-xs);
 	}

@@ -95,9 +95,11 @@
 		gap: 0.5rem;
 		margin-top: 1rem;
 	}
+
 	.field-p :global(.results-visibility-input) {
 		padding-left: 0.5rem;
 	}
+
 	.field-p :global(.results-visibility-input > .option) {
 		width: 9.5rem;
 	}

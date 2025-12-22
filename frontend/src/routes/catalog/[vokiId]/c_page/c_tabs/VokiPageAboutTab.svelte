@@ -78,6 +78,7 @@
 		flex-direction: column;
 		gap: 0.25rem;
 	}
+
 	.field-line {
 		margin: 0;
 	}
@@ -96,15 +97,17 @@
 		align-items: center;
 		gap: 0.25rem;
 	}
+
 	.language-value > svg {
 		height: 1.25rem;
 		aspect-ratio: var(--lang-icon-aspect-ratio);
 		border-radius: 0.375rem;
 		stroke-width: 1.9;
 	}
+
 	.publication-date > .exact {
+		color: var(--secondary-foreground);
 		font-size: 1rem;
 		font-weight: 400;
-		color: var(--secondary-foreground);
 	}
 </style>

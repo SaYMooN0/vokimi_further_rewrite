@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Api.contracts;
@@ -8,7 +7,6 @@ using VokiCreationServicesLib.Api.contracts.update_requests;
 using VokiCreationServicesLib.Application.draft_vokis.commands;
 using VokiCreationServicesLib.Application.draft_vokis.queries;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.concrete_keys;
 
 namespace VokiCreationServicesLib.Api;

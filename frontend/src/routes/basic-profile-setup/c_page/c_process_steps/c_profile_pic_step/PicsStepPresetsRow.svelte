@@ -49,15 +49,16 @@
 		display: grid;
 		width: 100%;
 		border-radius: 99rem;
+		box-shadow: var(--shadow-xs), var(--shadow);
+		transition: all 0.12s ease-out;
+		cursor: pointer;
 		aspect-ratio: 1/1;
 		object-fit: cover;
 		place-content: center;
-		transition: all 0.12s ease-out;
-		box-shadow: var(--shadow-xs), var(--shadow);
-		cursor: pointer;
 	}
+
 	.img:hover {
-		transform: scale(1.08);
 		box-shadow: var(--shadow-xs), var(--shadow-lg);
+		transform: scale(1.08);
 	}
 </style>

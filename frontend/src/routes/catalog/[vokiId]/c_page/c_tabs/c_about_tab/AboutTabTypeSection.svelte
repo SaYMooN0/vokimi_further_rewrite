@@ -24,18 +24,19 @@
 		display: flex;
 		flex-direction: column;
 	}
+
 	.field-line {
-		margin: 0;
         		display: flex;
 		flex-direction: row;
+		margin: 0;
 	}
 
 	.field-line .type-value {
-		margin-left: 0.5rem;
-		font-size: 1.125rem;
-		font-weight: 500;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		margin-left: 0.5rem;
+		font-size: 1.125rem;
+		font-weight: 500;
 	}
 </style>

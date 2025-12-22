@@ -26,6 +26,7 @@
 		const response = await vokiCreationCtx.vokiCreationApi.publishWithWarningsIgnored(vokiId);
 		if (response.isSuccess) {
 			switchToPublishedSuccessfully(response.data);
+			dialog.close();
 		} else {
 			publishingErrs = response.errs;
 		}
@@ -35,6 +36,7 @@
 		const response = await vokiCreationCtx.vokiCreationApi.publishWithNoIssues(vokiId);
 		if (response.isSuccess) {
 			switchToPublishedSuccessfully(response.data);
+			dialog.close();
 		} else {
 			publishingErrs = response.errs;
 		}
@@ -55,7 +57,9 @@
 			Voki has {issues.length} publishing issues. Its is highly recommended to fix them before publishing
 		</div>
 		<PrimaryButton onclick={() => dialog.close()}>Fix issues</PrimaryButton>
-		<button onclick={() => publishWithIssuesIgnored()}>Ignore and publish</button>
+		<button onclick={() => publishWithIssuesIgnored()} class="ignore-and-publish-btn"
+			>Ignore and publish</button
+		>
 	{:else}
 		<PrimaryButton onclick={() => publishWithNoIssues()}>Publish</PrimaryButton>
 	{/if}
@@ -70,35 +74,60 @@
 	}
 
 	.warning-text {
-		margin-top: 1rem;
-		font-size: 1.25rem;
-		font-weight: 420;
-		text-align: justify;
-		letter-spacing: 0.25px;
-		text-indent: 0.5em;
 		width: 50ch;
+		margin-top: 1rem;
 		margin-bottom: 1rem;
-	}
-	.issues-msg {
-		margin: 0.25rem 0;
-		background-color: var(--warn-back);
-		color: var(--warn-foreground);
+		font-size: 1.25rem;
 		font-weight: 425;
-		font-size: 1rem;
-		text-align: center;
-		text-wrap: balance;
+		line-height: 1.375;
+		text-align: justify;
+		letter-spacing: 0.375px;
+		text-indent: 1em;
+	}
+
+	.issues-msg {
 		width: 38ch;
 		padding: 0.25rem 0;
+		margin: 0.25rem 0;
 		border-radius: 1rem;
+		background-color: var(--warn-back);
+		color: var(--warn-foreground);
+		font-size: 1rem;
+		font-weight: 425;
 		line-height: 1.25;
+		text-align: center;
+		text-wrap: balance;
 	}
+
 	.issues-msg > svg {
 		width: 1.25rem;
 		height: 1.25rem;
 		vertical-align: middle;
 		stroke-width: 2;
 	}
+
 	:global(#confirm-voki-publishing-dialog .primary-btn) {
+		padding-right: 2rem;
+		padding-left: 2rem;
 		margin-top: 1rem;
+		letter-spacing: 0.5px;
+	}
+
+	.ignore-and-publish-btn {
+		padding: 0.125rem 1rem;
+		margin-top: 0.5rem;
+		border: none;
+		border-radius: 0.5rem;
+		background-color: transparent;
+		color: var(--secondary-foreground);
+		font-size: 1rem;
+		font-weight: 500;
+		transition: all 0.08s ease-in-out;
+		cursor: pointer;
+	}
+
+	.ignore-and-publish-btn:hover {
+		background-color: var(--secondary);
+		text-decoration: underline;
 	}
 </style>

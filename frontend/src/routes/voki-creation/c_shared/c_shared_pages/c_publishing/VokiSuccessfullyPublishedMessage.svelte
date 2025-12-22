@@ -25,6 +25,9 @@
 		display: flex;
 		flex-direction: column;
 		justify-items: center;
+		width: fit-content;
+		margin: 6rem auto;
+		
 	}
 
 	.title {
@@ -33,6 +36,7 @@
 		align-items: center;
 		gap: 0.25rem;
 		width: 100%;
+		margin: 0;
 		color: var(--primary);
 		font-size: 2rem;
 		font-weight: 500;
@@ -49,7 +53,7 @@
 
 	.cover {
 		height: 18rem;
-		margin-top: 2rem;
+		margin-top: 1rem;
 		border-radius: 0.75rem;
 		box-shadow: var(--shadow-xs);
 		aspect-ratio: var(--voki-cover-aspect-ratio);

@@ -24,7 +24,8 @@
 		<FieldNotSetLabel showIcon={false} text="Only primary author" />
 	{:else}
 		<label class="managers-dialog-open-label" onclick={() => vokiManagersDisplayDialog.open()}
-			>primary author and <span>{managerIds.length}</span> managers</label
+			>primary author and <span>{managerIds.length}</span>
+			manager{managerIds.length === 1 ? '' : 's'}</label
 		>
 	{/if}
 </p>
@@ -36,12 +37,13 @@
 		gap: 0.5rem;
 		margin: 0;
 	}
+
 	.managers-dialog-open-label {
-		cursor: pointer;
-		font-weight: 475;
 		color: var(--muted-foreground);
-		text-decoration: underline;
 		font-size: 1rem;
+		font-weight: 475;
+		text-decoration: underline;
+		cursor: pointer;
 		text-decoration-thickness: 2px;
 	}
 

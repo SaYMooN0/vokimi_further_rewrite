@@ -20,51 +20,71 @@
 	}
 </script>
 
-<DialogWithCloseButton bind:this={dialog} subheading="Voki managers">
-	<div class="managers-list-row">
+<DialogWithCloseButton
+	bind:this={dialog}
+	subheading="Voki managers ({managerIds.length})"
+	dialogId="voki-managers-dialog"
+>
+	<div class="managers-table">
 		<span class="column-name">Manager</span>
-		<span class="column-name">Was user an author</span>
-	</div>
-	<div class="managers-list">
-		<div class="managers-list-row" title="primary author">
-			<BasicUserDisplay userId={primaryAuthorId} interactionLevel="WholeComponentLink" />
-			<svg class="check-icon primary-author"><use href="#common-check-icon" /></svg>
-		</div>
-		<div class="sep"></div>
-		{#each managersThatWereCoAuthors() as m}
-			<div class="managers-list-row" title={m}>
+		<span class="column-name">Was an author before</span>
+
+		<BasicUserDisplay userId={primaryAuthorId} interactionLevel="WholeComponentLink" />
+		<svg class="status-icon primary-author"><use href="#common-check-icon" /></svg>
+
+		{#if managersThatWereCoAuthors().length}
+			{#each managersThatWereCoAuthors() as m}
 				<BasicUserDisplay userId={m} interactionLevel="WholeComponentLink" />
-				<svg class="check-icon"><use href="#common-check-icon" /></svg>
-			</div>
-		{/each}
-		<div class="sep"></div>
-		{#each managersThatWereNotCoAuthors() as m}
-			<div class="managers-list-row" title={m}>
+				<svg class="status-icon">
+					<use href="#common-check-icon" />
+				</svg>
+			{/each}
+		{/if}
+
+		{#if managersThatWereNotCoAuthors().length}
+			{#each managersThatWereNotCoAuthors() as m}
 				<BasicUserDisplay userId={m} interactionLevel="WholeComponentLink" />
-				<div class="empty-div"></div>
-			</div>
-		{/each}
+				<span class="status-placeholder">—</span>
+			{/each}
+		{/if}
 	</div>
 </DialogWithCloseButton>
 
 <style>
-	.managers-list {
-		display: flex;
-		flex-direction: column;
+	.managers-table {
+		display: grid;
+		width: 40rem;
+		grid-template-columns: 1fr auto;
+		row-gap: 0.75rem;
+		max-height: 32rem;
 		overflow-y: auto;
 	}
-	.managers-list-row {
+
+	.column-name {
 		display: grid;
-		grid-template-columns: 1fr 4rem;
+		padding: 0 0.5rem;
+		color: var(--secondary-foreground);
+		font-size: 1rem;
+		font-weight: 500;
+		text-align: center;
+		grid-template-columns: 1fr auto;
 	}
-	.check-icon {
-		width: 2rem;
-		aspect-ratio: 1;
+
+	.status-icon {
+		width: 1.75rem;
+		height: 1.75rem;
+		color: var(--secondary-foreground);
+		justify-self: center;
+		stroke-width: 2;
 	}
-	.primary-author {
+
+	.status-icon.primary-author {
 		color: var(--primary);
 	}
-	.empty-div {
-		width: 2rem;
+
+	.status-placeholder {
+		justify-self: center;
+		color: var(--muted-foreground);
+		font-size: 1.1rem;
 	}
 </style>

@@ -83,14 +83,15 @@
 <style>
 	.top {
 		display: flex;
-		align-items: center;
-
 		justify-content: space-between;
+		align-items: center;
 		gap: 0.75rem;
 	}
+
 	.top > :global(.btn) {
 		margin: 0;
 	}
+
 	.title {
 		display: flex;
 		align-items: center;
@@ -98,33 +99,32 @@
 	}
 
 	.chip {
-		font-size: 1rem;
 		padding: 0.25rem 0.875rem;
 		border-radius: 999rem;
-		font-weight: 450;
-		box-shadow: var(--shadow-xs);
 		background: var(--secondary);
 		color: var(--secondary-foreground);
+		font-size: 1rem;
+		font-weight: 450;
+		box-shadow: var(--shadow-xs);
 		white-space: nowrap;
 	}
 
 	.policy-msg {
-		color: var(--secondary-foreground);
 		margin: 0.5rem 0;
+		color: var(--secondary-foreground);
 	}
 
 	.selected-co-authors-container {
-		margin-top: 0;
 		display: flex;
-		flex-wrap: wrap;
-		flex-direction: row;
+		flex-flow: row wrap;
 		gap: 2rem;
+		margin-top: 0;
 	}
 
 	.you-row {
 		display: flex;
-		align-items: center;
 		justify-content: space-between;
+		align-items: center;
 		gap: 0.75rem;
 		padding: 0.75rem;
 		border-radius: 0.75rem;
@@ -137,8 +137,8 @@
 	}
 
 	.you-value {
-		font-weight: 600;
 		color: var(--text);
+		font-weight: 600;
 		letter-spacing: 0.125px;
 	}
 </style>
