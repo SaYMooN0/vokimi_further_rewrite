@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { toast } from 'svelte-sonner';
 	interface Props {
 		moveQuestionUpInOrder: () => void;
 		moveQuestionDownInOrder: () => void;

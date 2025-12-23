@@ -28,7 +28,7 @@
 			<use href="#common-crossed-circle-icon" />
 		</svg>
 		<label class="could-not-load-label" onclick={() => openErrsViewDialog(inviter.errs)}
-			>Could not load user data<svg><use href="#common-information-icon" /></svg>
+			>Could not load user data<svg><use href="#common-info-icon" /></svg>
 		</label>
 	{:else}
 		<img

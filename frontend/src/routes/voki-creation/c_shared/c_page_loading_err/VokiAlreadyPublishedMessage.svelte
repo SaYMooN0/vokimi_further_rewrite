@@ -1,8 +1,10 @@
 <script lang="ts">
+	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
+
 	interface Props {
-		vokiId: string;
+		voki: PublishedVokiBriefInfo;
 	}
-	let { vokiId }: Props = $props();
+	let { voki }: Props = $props();
 </script>
 
 <div class="card">
@@ -24,7 +26,7 @@
 		in the catalog.
 	</p>
 
-	<a class="catalog-btn" href={`/catalog/${vokiId}`}>Open in catalog</a>
+	<a class="catalog-btn" href={`/catalog/${voki.id}`}>Open in catalog</a>
 </div>
 
 <style>

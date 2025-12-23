@@ -58,7 +58,7 @@
 		<div class="profile-pic"></div>
 		<div class="main-content">
 			Something went wrong. Could not load user data <svg>
-				<use href="#common-information-icon" /></svg
+				<use href="#common-info-icon" /></svg
 			>
 		</div>
 	{/if}

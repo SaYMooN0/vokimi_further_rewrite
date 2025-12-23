@@ -19,7 +19,9 @@
 	<div class="err-message">
 		{err.message}
 		{#if ErrUtils.hasSomethingExceptMessage(err)}
-			<svg onclick={toggleDetails} bind:this={iconElement}><use href="#error-content-toggle-icon" /></svg>
+			<svg onclick={toggleDetails} bind:this={iconElement}
+				><use href="#common-toggle-content-arrow" /></svg
+			>
 		{/if}
 	</div>
 	{#if ErrUtils.hasNonEmptyDetails(err)}
@@ -69,11 +71,11 @@
 		stroke-width: 2.5;
 	}
 
-	:global(.err-message > .rotate-down) {
+	.err-message > :global(svg.rotate-down) {
 		animation: rotate-down 0.4s ease-in-out forwards;
 	}
 
-	:global(.err-message > .rotate-up) {
+	.err-message > :global(svg.rotate-up) {
 		animation: rotate-up 0.4s ease-in-out forwards;
 	}
 

@@ -55,7 +55,7 @@
 			<use href="#common-crossed-circle-icon" />
 		</svg>
 		<label class="error-label"
-			>Error in loading<svg><use href="#common-information-icon" /></svg></label
+			>Error in loading<svg><use href="#common-info-icon" /></svg></label
 		>
 	</div>
 {:else if user.state === 'loading'}

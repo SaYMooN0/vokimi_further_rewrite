@@ -19,6 +19,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
     public uint CommentsCount { get; private set; }
     public uint VokiTakingsCount { get; private set; }
     public abstract IVokiInteractionSettings BaseInteractionSettings { get; }
+    public CatalogPageSettings CatalogPageSettings { get; }
 
     protected BaseVoki(
         VokiId id, VokiName name, VokiCoverKey cover,

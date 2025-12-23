@@ -38,7 +38,7 @@
 <style>
 	:global(#voki-initializing-dialog .dialog-content) {
 		width: 48rem;
-		height: 36rem;
+		min-height: 38rem;
 	}
 
 	:global(#voki-initializing-dialog .dialog-content:has(.voki-initialized-container)) {

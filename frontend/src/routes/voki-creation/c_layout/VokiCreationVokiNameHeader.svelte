@@ -21,7 +21,7 @@
 	{#if vokiName.state === 'errs'}
 		<label class="could-not-load-label" onclick={() => openErrsViewDialog(vokiName.errs)}
 			>Could not load voki name
-			<svg><use href="#common-information-icon" /> </svg>
+			<svg><use href="#common-info-icon" /> </svg>
 		</label>
 		<ReloadButton onclick={() => vokiName.reload()} />
 	{:else}

@@ -1,6 +1,7 @@
 import { ApiVokisCatalog, RJO } from "$lib/ts/backend-communication/backend-services";
-import type { Err } from "$lib/ts/err";
+import { ErrCodes, type Err } from "$lib/ts/err";
 import type { PublishedVokiBriefInfo, PublishedVokiViewState } from "$lib/ts/voki";
+import type { ResponseResult } from "../backend-communication/result-types";
 
 export namespace PublishedVokisStore {
 
@@ -52,7 +53,24 @@ export namespace PublishedVokisStore {
         pendingIds.clear();
         timer = undefined;
     }
-
+    export function FetchOne(id: string): Promise<ResponseResult<PublishedVokiBriefInfo>> {
+        const entry = ensureCacheEntry(id);
+        setLoading(entry);
+        return ApiVokisCatalog.fetchJsonResponse<{
+            vokis: PublishedVokiBriefInfo[];
+        }>("/vokis/brief-info", RJO.POST({ ids: [id] })).then(response => {
+            if (response.isSuccess && response.data.vokis.length > 0) {
+                const data = response.data.vokis[0];
+                updateOk(entry, data);
+                return { isSuccess: true, data };
+            }
+            updateErr(entry, [{ message: "Could not load Voki data" }], SOFT_ERR_TTL_MS);
+            if (response.isSuccess) {
+                return { isSuccess: false, errs: [{ message: "Voki not found", code: ErrCodes.NotFound.Voki }] };
+            }
+            return response;
+        })
+    }
 
     function enqueue(id: string) {
         pendingIds.add(id);
@@ -107,7 +125,9 @@ export namespace PublishedVokisStore {
 
     function ensureCacheEntry(id: string): CacheEntry {
         const existing = cache.get(id);
-        if (existing) return existing;
+        if (existing) {
+            return existing;
+        }
 
         if (cache.size >= MAX_CACHE_SIZE) {
             let oldestKey: string | undefined;
@@ -119,7 +139,9 @@ export namespace PublishedVokisStore {
                     oldestKey = key;
                 }
             }
-            if (oldestKey !== undefined) cache.delete(oldestKey);
+            if (oldestKey !== undefined) {
+                cache.delete(oldestKey);
+            }
         }
 
         const obj = $state<StateObj>({ state: "loading", vokiId: id });

@@ -21,8 +21,10 @@ public record class VokiOverviewResponse(
     uint CommentsCount,
     bool SignedInOnlyTaking,
     VokiOverviewResponse.VokiTypeWithSpecificDataResponse TypeWithSpecificData
-)
+) : ICreatableResponse<BaseVoki>
 {
+    public static ICreatableResponse<BaseVoki> Create(BaseVoki voki) => FromBaseVoki(voki);
+
     public static VokiOverviewResponse FromBaseVoki(BaseVoki v) => new(
         v.Id.ToString(),
         v.Type,

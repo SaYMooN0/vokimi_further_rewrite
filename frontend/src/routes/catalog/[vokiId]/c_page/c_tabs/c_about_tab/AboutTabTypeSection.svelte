@@ -6,7 +6,17 @@
 		typeWithData: VokiTypeWithSpecificData;
 	}
 	let { typeWithData }: Props = $props();
-	let showTypeSpecificData = $state(false);
+	let hideTypeSpecificData = $state(true);
+
+	let iconElement = $state<SVGSVGElement>()!;
+
+	function toggleDetails() {
+		hideTypeSpecificData = !hideTypeSpecificData;
+		if (iconElement) {
+			iconElement.classList.remove('rotate-down', 'rotate-up');
+			iconElement.classList.add(hideTypeSpecificData ? 'rotate-down' : 'rotate-up');
+		}
+	}
 </script>
 
 <div class="container">
@@ -15,8 +25,10 @@
 		<div class="type-value">
 			<span>{VokiTypeUtils.name(typeWithData.type)}</span>
 		</div>
+		<div class="show-deai" onclick={toggleDetails}>details <svg bind:this={iconElement}><use href="#common-toggle-content-arrow" /></svg>
+		</div>
 	</div>
-	<div class="type-specific-data" class:show={showTypeSpecificData}></div>
+	<div class="type-specific-data" class:hidden={hideTypeSpecificData}>dsds</div>
 </div>
 
 <style>
@@ -26,7 +38,7 @@
 	}
 
 	.field-line {
-        		display: flex;
+		display: flex;
 		flex-direction: row;
 		margin: 0;
 	}
@@ -38,5 +50,55 @@
 		margin-left: 0.5rem;
 		font-size: 1.125rem;
 		font-weight: 500;
+	}
+
+	.field-line > svg {
+		width: 1.5rem;
+		height: 1.5rem;
+		transition: transform 0.17s ease-in;
+		transform-origin: center;
+		cursor: pointer;
+		stroke-width: 2.5;
+	}
+
+	.field-line > :global(svg.rotate-down) {
+		animation: rotate-down 0.3s ease-in-out forwards;
+	}
+
+	.field-line > :global(svg.rotate-up) {
+		animation: rotate-up 0.3s ease-in-out forwards;
+	}
+
+	.type-specific-data {
+		height: auto;
+		transition: all 0.2s ease;
+		interpolate-size: allow-keywords;
+	}
+
+	.type-specific-data.hidden {
+		height: 0;
+		margin: 0;
+		font-size: 0;
+		opacity: 0;
+	}
+
+	@keyframes rotate-down {
+		from {
+			transform: rotate(0deg);
+		}
+
+		to {
+			transform: rotate(-180deg);
+		}
+	}
+
+	@keyframes rotate-up {
+		from {
+			transform: rotate(-180deg);
+		}
+
+		to {
+			transform: rotate(0deg);
+		}
 	}
 </style>
