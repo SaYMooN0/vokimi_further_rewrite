@@ -19,7 +19,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
     public uint CommentsCount { get; private set; }
     public uint VokiTakingsCount { get; private set; }
     public abstract IVokiInteractionSettings BaseInteractionSettings { get; }
-    public CatalogPageSettings CatalogPageSettings { get; }
+    public CatalogPageSettings CatalogPageSettings { get; private set; }
 
     protected BaseVoki(
         VokiId id, VokiName name, VokiCoverKey cover,
@@ -38,6 +38,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         CommentsCount = 0;
         VokiTakingsCount = 0;
         PublicationDate = publicationDate;
+        CatalogPageSettings = CatalogPageSettings.Default;
     }
 
     public void UpdateVokiTakingsCount(uint newVokiTakingsCount) {

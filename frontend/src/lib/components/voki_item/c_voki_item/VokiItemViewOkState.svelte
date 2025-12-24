@@ -3,7 +3,7 @@
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { toast } from 'svelte-sonner';
 	import { getVokiFlagsInfoDialogOpenFunction } from '../../../../routes/c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
-	import type { VokiItemHidableElements, VokiItemViewOkStateProps } from './types';
+	import type { VokiItemHidableElements, VokiItemViewOkStateProps } from './voki-item';
 	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
 
 	let {

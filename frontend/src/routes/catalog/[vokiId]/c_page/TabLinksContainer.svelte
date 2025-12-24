@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { VokiPageTab } from '../proxy+page.server';
+	import type { VokiPageTab } from '../types';
 
 	let {
 		currentTab,

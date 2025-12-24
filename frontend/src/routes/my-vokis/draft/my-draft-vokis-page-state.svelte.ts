@@ -1,4 +1,4 @@
-import type { VokiItemViewOkStateProps, VokiItemViewErrStateProps } from "$lib/components/voki_item/c_voki_item/types";
+import type { VokiItemViewOkStateProps, VokiItemViewErrStateProps } from "$lib/components/voki_item/c_voki_item/voki-item";
 import { ApiVokiCreationCore } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
 import { StringUtils } from "$lib/ts/utils/string-utils";

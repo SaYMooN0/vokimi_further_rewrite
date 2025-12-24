@@ -53,7 +53,7 @@
 	<DefaultErrBlock errList={publishingErrs} />
 	{#if issues.length > 0}
 		<div class="issues-msg">
-			<svg><use href="#warning-icon" /></svg>
+			<svg><use href="#common-warning-icon" /></svg>
 			Voki has {issues.length} publishing issues. Its is highly recommended to fix them before publishing
 		</div>
 		<PrimaryButton onclick={() => dialog.close()}>Fix issues</PrimaryButton>

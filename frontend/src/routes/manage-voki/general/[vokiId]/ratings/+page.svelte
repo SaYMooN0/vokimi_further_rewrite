@@ -1,0 +1,1 @@
+<p>ratings page</p>

@@ -1,5 +1,13 @@
 <script lang="ts">
-	let { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
+	import { StringUtils } from '$lib/ts/utils/string-utils';
+	import type { VokiType } from '$lib/ts/voki-type';
+
+	interface Props {
+		vokiId: string;
+		vokiType: VokiType;
+	}
+	let { vokiId, vokiType }: Props = $props();
+
 	let isHovered = $state(false);
 	function animateIcon() {
 		isHovered = true;
@@ -7,10 +15,11 @@
 			isHovered = false;
 		}, 650);
 	}
+	let managePageLink = $derived(`/manage-voki/${StringUtils.pascalToKebab(vokiType)}/${vokiId}/catalog-page`);
 </script>
 
 <a
-	href="/manage-voki/{vokiId}"
+	href={managePageLink}
 	class="manage-voki-btn"
 	onmouseenter={() => animateIcon()}
 	onfocus={() => animateIcon()}

@@ -1,4 +1,4 @@
-import type { VokiItemViewOkStateProps, VokiItemViewState } from "$lib/components/voki_item/c_voki_item/types";
+import { VokiItemViewUtils, type VokiItemViewOkStateProps, type VokiItemViewState } from "$lib/components/voki_item/c_voki_item/voki-item";
 import { PublishedVokisStore } from "$lib/ts/stores/published-vokis-store.svelte";
 import type { PublishedVokiBriefInfo, PublishedVokiViewState } from "$lib/ts/voki";
 import type { VokiType } from "$lib/ts/voki-type";
@@ -41,24 +41,12 @@ export class AlbumPageState {
     }
 
 
-    private mapToView(item: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
-        return {
-            vokiId: item.id,
-            type: item.type,
-            voki: {
-                name: item.name,
-                cover: item.cover,
-                primaryAuthorId: item.primaryAuthorId,
-                coAuthorIds: item.coAuthorIds
-            },
-            link: `/catalog/${item.id}`,
-            onMoreBtnClick: (e) => this.#onMoreBtnClick(e, item),
-            flags: {
-                language: item.language,
-                hasMatureContent: item.hasMatureContent,
-                authenticatedOnlyTaking: item.signedInOnlyTaking
-            }
-        };
+    private mapToView(voki: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
+        return VokiItemViewUtils.briefInfoToVokiItemOkStateProps(
+            voki,
+            `/catalog/${voki.id}`,
+            (e) => this.#onMoreBtnClick(e, voki)
+        );
     }
 
     sortedAndFilteredVokis: () => VokiItemViewState[] = $derived(() => {

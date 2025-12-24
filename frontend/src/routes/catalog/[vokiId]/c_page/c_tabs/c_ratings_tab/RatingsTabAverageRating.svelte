@@ -33,7 +33,7 @@
 	{/if}
 	<VokiPageTabSectionLabel
 		fieldName="({count} total rating{count === 1 ? '' : 's'})"
-		className="ratings-count"
+		class="ratings-count"
 	/>
 	{#if loading}
 		<div class="loader-backdrop">

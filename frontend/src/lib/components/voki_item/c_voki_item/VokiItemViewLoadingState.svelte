@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { VokiItemHidableElements } from './types';
+	import type { VokiItemHidableElements } from './voki-item';
 
 	let { hide = [] }: { hide?: VokiItemHidableElements[] } = $props();
 </script>

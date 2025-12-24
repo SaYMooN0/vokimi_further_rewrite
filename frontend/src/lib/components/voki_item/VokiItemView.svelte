@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { VokiItemViewState } from './c_voki_item/types';
+	import type { VokiItemViewState } from './c_voki_item/voki-item';
 	import VokiItemViewErrState from './c_voki_item/VokiItemViewErrState.svelte';
 	import VokiItemViewLoadingState from './c_voki_item/VokiItemViewLoadingState.svelte';
 	import VokiItemViewOkState from './c_voki_item/VokiItemViewOkState.svelte';

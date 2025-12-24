@@ -23,7 +23,7 @@
 
 <div class="related-results">
 	{#if relatedResultIds.length === 0}
-		<FieldNotSetLabel text="related results" className="no-related-results" />
+		<FieldNotSetLabel text="related results" class="no-related-results" />
 	{:else}
 		<label class="related-results-label">Related results ({relatedResultIds.length})</label>
 		{#each relatedResultIds as id}

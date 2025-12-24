@@ -13,7 +13,7 @@
 <div class="related-results">
 	<label class="related-results-label">Related results ({relatedResultIds.length})</label>
 	{#if relatedResultIds.length === 0}
-		<FieldNotSetLabel text="related results" className="no-related-results" />
+		<FieldNotSetLabel text="related results" class="no-related-results" />
 	{:else}
 		{#each relatedResultIds as result}
 			<div class="result" class:err={resultsIdToName[result] === undefined}>

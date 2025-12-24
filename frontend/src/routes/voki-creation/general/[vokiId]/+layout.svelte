@@ -39,6 +39,7 @@
 		value: vokiName.state === 'ok' ? vokiName.value : undefined,
 		invalidate: () => fetchAndSetVokiName()
 	});
+	// svelte-ignore state_referenced_locally
 	setVokiCreationPageContext(ApiVokiCreationGeneral, headerVokiName);
 </script>
 

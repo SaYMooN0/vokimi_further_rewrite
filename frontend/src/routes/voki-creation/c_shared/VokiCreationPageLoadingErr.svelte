@@ -17,6 +17,7 @@
 		| { type: 'additional-checks' }
 		| { type: 'voki-published'; voki: PublishedVokiBriefInfo }
 		| { type: 'unable-to-load' } = $state({ type: 'unable-to-load' });
+
 	onMount(() => {
 		const isVokiNotFoundAsDraft = errs.some((err) => ErrUtils.isWithVokiNotFoundCode(err));
 		if (isVokiNotFoundAsDraft) {
@@ -36,7 +37,7 @@
 
 <div class="container">
 	{#if componentState.type === 'voki-published'}
-		<VokiAlreadyPublishedMessage {vokiId} />
+		<VokiAlreadyPublishedMessage voki={componentState.voki} />
 	{:else if componentState.type === 'additional-checks'}
 		<div class="is-published-check-loading">Something went wrong. We make additional checks</div>
 	{:else if componentState.type === 'unable-to-load'}

@@ -25,7 +25,8 @@
 		<div class="type-value">
 			<span>{VokiTypeUtils.name(typeWithData.type)}</span>
 		</div>
-		<div class="show-deai" onclick={toggleDetails}>details <svg bind:this={iconElement}><use href="#common-toggle-content-arrow" /></svg>
+		<div class="show-more-btn" onclick={toggleDetails}>
+			More <svg bind:this={iconElement}><use href="#common-toggle-content-arrow" /></svg>
 		</div>
 	</div>
 	<div class="type-specific-data" class:hidden={hideTypeSpecificData}>dsds</div>
@@ -52,7 +53,7 @@
 		font-weight: 500;
 	}
 
-	.field-line > svg {
+	.show-more-btn > svg {
 		width: 1.5rem;
 		height: 1.5rem;
 		transition: transform 0.17s ease-in;
@@ -61,11 +62,11 @@
 		stroke-width: 2.5;
 	}
 
-	.field-line > :global(svg.rotate-down) {
+	.show-more-btn > :global(svg.rotate-down) {
 		animation: rotate-down 0.3s ease-in-out forwards;
 	}
 
-	.field-line > :global(svg.rotate-up) {
+	.show-more-btn > :global(svg.rotate-up) {
 		animation: rotate-up 0.3s ease-in-out forwards;
 	}
 

@@ -1,10 +1,19 @@
 <script lang="ts">
+	import {
+		type VokiItemViewState,
+		VokiItemViewUtils
+	} from '$lib/components/voki_item/c_voki_item/voki-item';
+	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
 
 	interface Props {
 		voki: PublishedVokiBriefInfo;
 	}
 	let { voki }: Props = $props();
+	let vokiItemProps: VokiItemViewState = $derived({
+		name: 'ok',
+		data: VokiItemViewUtils.briefInfoToVokiItemOkStateProps(voki, `/catalog/${voki.id}`, () => {})
+	});
 </script>
 
 <div class="card">
@@ -19,7 +28,7 @@
 			d="M7.05518 8.0054C7.40336 5.73714 9.36329 4 11.729 4H12.2714C14.6371 4 16.597 5.73714 16.9452 8.0054C16.9133 8.07425 16.8662 8.13466 16.8005 8.18039C16.3864 8.4684 15.19 9 12.0002 9C8.81036 9 7.614 8.4684 7.19991 8.18039C7.13417 8.13466 7.08706 8.07425 7.05518 8.0054Z"
 		/>
 	</svg>
-
+	<VokiItemView state={vokiItemProps} />
 	<h1 class="title">This Voki is already published</h1>
 	<p class="subtitle">
 		This Voki has been published and can no longer be edited here.<br /> You can view the published version

@@ -25,7 +25,7 @@
 			{#each problems as problem}
 				<div class="issue problem">
 					<div class="type">
-						<svg><use href="#error-icon" /></svg>
+						<svg><use href="#common-error-icon" /></svg>
 						Problem
 					</div>
 					<div class="source">{problem.source}</div>
@@ -37,7 +37,7 @@
 			{#each warnings as warning}
 				<div class="issue warning">
 					<div class="type">
-						<svg><use href="#warning-icon" /></svg>
+						<svg><use href="#common-warning-icon" /></svg>
 						Warning
 					</div>
 					<div class="source">{warning.source}</div>

@@ -4,30 +4,21 @@
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
-	import type { VokiItemViewOkStateProps } from '$lib/components/voki_item/c_voki_item/types';
+	import {
+		VokiItemViewUtils,
+		type VokiItemViewOkStateProps
+	} from '$lib/components/voki_item/c_voki_item/voki-item';
 	import CatalogVokiItemContextMenu from './catalog/c_page/CatalogVokiItemContextMenu.svelte';
 	import { toast } from 'svelte-sonner';
 
 	let { data }: PageProps = $props();
 	let contextMenu = $state<CatalogVokiItemContextMenu>()!;
 	function assembleVokiItemStateData(voki: PublishedVokiBriefInfo): VokiItemViewOkStateProps {
-		return {
-			vokiId: voki.id,
-			voki: {
-				name: voki.name,
-				cover: voki.cover,
-				primaryAuthorId: voki.primaryAuthorId,
-				coAuthorIds: voki.coAuthorIds
-			},
-			type: voki.type,
-			onMoreBtnClick: (mEvent: MouseEvent) => contextMenu.open(mEvent, voki),
-			link: `/catalog/${voki.id}`,
-			flags: {
-				language: voki.language,
-				hasMatureContent: voki.hasMatureContent,
-				authenticatedOnlyTaking: voki.signedInOnlyTaking
-			}
-		};
+		return VokiItemViewUtils.briefInfoToVokiItemOkStateProps(
+			voki,
+			`/catalog/${voki.id}`,
+			(mEvent: MouseEvent) => contextMenu.open(mEvent, voki)
+		);
 	}
 	let vokisToView = $state<PublishedVokiBriefInfo[]>(data.isSuccess ? data.data.vokis : []);
 	function removeVokiFromList(voki: PublishedVokiBriefInfo) {

@@ -24,7 +24,7 @@
 		<AuthView>
 			{#snippet children(authState)}
 				{#if authState.name === 'authenticated' && canUserManageVoki(authState.userId)}
-					<CoverSectionManageVokiBtn {vokiId} />
+					<CoverSectionManageVokiBtn {vokiId} {vokiType} />
 				{/if}
 			{/snippet}
 		</AuthView>
