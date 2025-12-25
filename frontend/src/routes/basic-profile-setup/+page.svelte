@@ -1,8 +1,8 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 	import type { PageProps } from './$types';
-	import ProfileSetupProcess from './c_page/ProfileSetupProcess.svelte';
-	import SetupSavedMessage from './c_page/SetupSavedMessage.svelte';
+	import ProfileSetupProcess from './_c_page/ProfileSetupProcess.svelte';
+	import SetupSavedMessage from './_c_page/SetupSavedMessage.svelte';
 
 	let { data }: PageProps = $props();
 	let setupState: 'process' | 'complete' = $state('process');

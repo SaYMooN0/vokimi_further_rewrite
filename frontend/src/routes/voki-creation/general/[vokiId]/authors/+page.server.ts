@@ -1,5 +1,5 @@
 import type { ServerLoad } from "@sveltejs/kit";
-import type { VokiCreationAuthorsInfo } from "../../../c_shared/c_shared_pages/c_authors/types";
+import type { VokiCreationAuthorsInfo } from "../../../_c_shared/_c_shared_pages/_c_authors/types";
 import { ApiVokiCreationCore } from "$lib/ts/backend-communication/backend-services";
 
 export const load: ServerLoad = async ({ params, fetch }) => {

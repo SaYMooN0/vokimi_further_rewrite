@@ -2,7 +2,7 @@ import {
     VokiItemViewUtils,
     type VokiItemViewOkStateProps,
     type VokiItemViewState
-} from "$lib/components/voki_item/c_voki_item/voki-item";
+} from "$lib/components/voki_item/_c_voki_item/voki-item";
 import { PublishedVokisStore } from "$lib/ts/stores/published-vokis-store.svelte";
 import type { PublishedVokiViewState, PublishedVokiBriefInfo } from "$lib/ts/voki";
 import type { VokiType } from "$lib/ts/voki-type";

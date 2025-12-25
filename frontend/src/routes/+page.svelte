@@ -7,8 +7,8 @@
 	import {
 		VokiItemViewUtils,
 		type VokiItemViewOkStateProps
-	} from '$lib/components/voki_item/c_voki_item/voki-item';
-	import CatalogVokiItemContextMenu from './catalog/c_page/CatalogVokiItemContextMenu.svelte';
+	} from '$lib/components/voki_item/_c_voki_item/voki-item';
+	import CatalogVokiItemContextMenu from './catalog/_c_page/CatalogVokiItemContextMenu.svelte';
 	import { toast } from 'svelte-sonner';
 
 	let { data }: PageProps = $props();

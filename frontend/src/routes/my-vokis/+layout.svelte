@@ -1,12 +1,12 @@
 <script lang="ts">
-	import MyVokisLink from './c_layout/MyVokisLink.svelte';
-	import VokiInitializingDialog from './c_layout/VokiInitializingDialog.svelte';
+	import MyVokisLink from './_c_layout/MyVokisLink.svelte';
+	import VokiInitializingDialog from './_c_layout/VokiInitializingDialog.svelte';
 	import { type Snippet } from 'svelte';
 	import { navigating, page } from '$app/state';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import AuthView from '$lib/components/AuthView.svelte';
-	import MyVokiAuthNeeded from './c_layout/MyVokiAuthNeeded.svelte';
+	import MyVokiAuthNeeded from './_c_layout/MyVokiAuthNeeded.svelte';
 	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { toast } from 'svelte-sonner';
 	import { setCurrentPage, type MyVokiPageApi } from './my-vokis-page-context';

@@ -3,8 +3,8 @@
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
 	import { onMount } from 'svelte';
-	import MyVokisPageInitialLoading from '../c_shared/MyVokisPageInitialLoading.svelte';
-	import MyVokisPageUnexpectedStateAfterLoading from '../c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
+	import MyVokisPageInitialLoading from '../_c_shared/MyVokisPageInitialLoading.svelte';
+	import MyVokisPageUnexpectedStateAfterLoading from '../_c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
 	import { registerCurrentPageApi } from '../my-vokis-page-context';
 	import { MyPublishedVokisPageState } from './my-published-vokis-page-state.svelte';
 	import { toast } from 'svelte-sonner';

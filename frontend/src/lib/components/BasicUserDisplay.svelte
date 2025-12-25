@@ -2,7 +2,7 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
 	import type { UserProfilePreview } from '$lib/ts/users';
-	import { getErrsViewDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/errs-view-dialog-context';
+	import { getErrsViewDialogOpenFunction } from '../../routes/_c_layout/_ts_layout_contexts/errs-view-dialog-context';
 	import { goto } from '$app/navigation';
 
 	type ComponentInteraction = 'WholeComponentLink' | 'UniqueNameGotoOnClick' | 'JustDisplay';

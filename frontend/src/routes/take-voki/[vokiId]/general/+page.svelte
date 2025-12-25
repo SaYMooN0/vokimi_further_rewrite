@@ -8,7 +8,7 @@
 	import type { GeneralVokiTakingData } from './types';
 	import { goto } from '$app/navigation';
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import VokiTakingHeader from '../c_types_shared/VokiTakingHeader.svelte';
+	import VokiTakingHeader from '../_c_types_shared/VokiTakingHeader.svelte';
 
 	let { data }: PageProps = $props();
 	function vokiTakingCase(

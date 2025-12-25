@@ -2,7 +2,7 @@
 	import { ErrUtils, type Err, type ErrType } from '$lib/ts/err';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import type { Snippet } from 'svelte';
-	import { getSignInDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/sign-in-dialog-context';
+	import { getSignInDialogOpenFunction } from '../../routes/_c_layout/_ts_layout_contexts/sign-in-dialog-context';
 	import DefaultErrBlock from './errs/DefaultErrBlock.svelte';
 
 	const openSignInDialog = getSignInDialogOpenFunction();

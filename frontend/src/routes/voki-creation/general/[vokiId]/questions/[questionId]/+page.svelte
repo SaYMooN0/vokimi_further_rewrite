@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import UnableToLoad from '../../../../c_shared/VokiCreationPageLoadingErr.svelte';
-	import QuestionTextSection from './c_page/QuestionTextSection.svelte';
-	import VokiCreationBasicHeader from '../../../../c_shared/VokiCreationBasicHeader.svelte';
-	import QuestionImagesSection from './c_page/QuestionImagesSection.svelte';
-	import QuestionAnswerSettingsSection from './c_page/QuestionAnswerSettingsSection.svelte';
-	import QuestionAnswersSection from './c_page/QuestionAnswersSection.svelte';
+	import UnableToLoad from '../../../../_c_shared/VokiCreationPageLoadingErr.svelte';
+	import QuestionTextSection from './_c_page/QuestionTextSection.svelte';
+	import VokiCreationBasicHeader from '../../../../_c_shared/VokiCreationBasicHeader.svelte';
+	import QuestionImagesSection from './_c_page/QuestionImagesSection.svelte';
+	import QuestionAnswerSettingsSection from './_c_page/QuestionAnswerSettingsSection.svelte';
+	import QuestionAnswersSection from './_c_page/QuestionAnswersSection.svelte';
 	import { setQuestionPageContext } from './question-page-context.svelte';
-	import VokiCreationPageLoadingErr from '../../../../c_shared/VokiCreationPageLoadingErr.svelte';
+	import VokiCreationPageLoadingErr from '../../../../_c_shared/VokiCreationPageLoadingErr.svelte';
 
 	let { data }: PageProps = $props();
 	let questionAnswers = $state(data.data?.answers.sort((a, b) => a.order - b.order) ?? []);

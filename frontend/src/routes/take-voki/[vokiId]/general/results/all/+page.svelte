@@ -1,9 +1,9 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import GeneralVokiResultPagesHeader from '../c_pages_shared/GeneralVokiResultPagesHeader.svelte';
-	import GeneralVokiResultPagesVokiNameSpan from '../c_pages_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
+	import GeneralVokiResultPagesHeader from '../_c_pages_shared/GeneralVokiResultPagesHeader.svelte';
+	import GeneralVokiResultPagesVokiNameSpan from '../_c_pages_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
 	import type { PageProps } from './$types';
-	import GeneralVokiResultWithDistributionItem from './c_page/GeneralVokiResultWithDistributionItem.svelte';
+	import GeneralVokiResultWithDistributionItem from './_c_page/GeneralVokiResultWithDistributionItem.svelte';
 	import type { ViewAllVokiResultsResponse } from './types';
 
 	let { data }: PageProps = $props();

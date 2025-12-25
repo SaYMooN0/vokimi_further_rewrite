@@ -2,9 +2,9 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
-	import MyVokisPageUnexpectedStateAfterLoading from '../c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
+	import MyVokisPageUnexpectedStateAfterLoading from '../_c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
 	import { onMount } from 'svelte';
-	import MyVokisPageInitialLoading from '../c_shared/MyVokisPageInitialLoading.svelte';
+	import MyVokisPageInitialLoading from '../_c_shared/MyVokisPageInitialLoading.svelte';
 	import { MyDraftVokisPageState } from './my-draft-vokis-page-state.svelte';
 	import { registerCurrentPageApi } from '../my-vokis-page-context';
 

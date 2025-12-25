@@ -1,4 +1,4 @@
-import { VokiItemViewUtils, type VokiItemViewOkStateProps, type VokiItemViewState } from "$lib/components/voki_item/c_voki_item/voki-item";
+import { type VokiItemViewOkStateProps, VokiItemViewUtils, type VokiItemViewState } from "$lib/components/voki_item/_c_voki_item/voki-item";
 import { PublishedVokisStore } from "$lib/ts/stores/published-vokis-store.svelte";
 import type { PublishedVokiBriefInfo, PublishedVokiViewState } from "$lib/ts/voki";
 import type { VokiType } from "$lib/ts/voki-type";

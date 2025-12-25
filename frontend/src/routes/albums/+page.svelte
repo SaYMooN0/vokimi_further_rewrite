@@ -1,10 +1,10 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import AutoAlbumsSection from './c_page/AutoAlbumsSection.svelte';
 	import type { PageProps } from './$types';
 	import AuthView from '$lib/components/AuthView.svelte';
-	import UserAlbumsSection from './c_page/UserAlbumsSection.svelte';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import AutoAlbumsSection from './_c_page/AutoAlbumsSection.svelte';
+	import UserAlbumsSection from './_c_page/UserAlbumsSection.svelte';
 
 	let { data }: PageProps = $props();
 	let userAlbums = $state(data?.data?.albums ?? []);

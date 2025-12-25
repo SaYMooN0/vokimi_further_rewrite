@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { type Snippet } from 'svelte';
-	import SideBar from './c_layout/SideBar.svelte';
-	import AppToaster from './c_layout/AppToaster.svelte';
-	import LayoutSprites from './c_layout/LayoutSprites.svelte';
-	import ConfirmActionDialog from './c_layout/c_dialogs/ConfirmActionDialog.svelte';
-	import SignInDialog from './c_layout/c_dialogs/SignInDialog.svelte';
-	import { registerConfirmActionDialogOpenFunction } from './c_layout/ts_layout_contexts/confirm-action-dialog-context';
-	import { registerSignInDialogOpenFunction } from './c_layout/ts_layout_contexts/sign-in-dialog-context';
-	import VokiItemFlagsInfoDialog from './c_layout/c_dialogs/VokiItemFlagsInfoDialog.svelte';
-	import { registerVokiFlagsInfoDialogOpenFunction } from './c_layout/ts_layout_contexts/voki-flags-info-dialog-context';
-	import CreateNewAlbumDialog from './c_layout/c_dialogs/CreateNewAlbumDialog.svelte';
-	import { registerCreateNewAlbumOpenFunction } from './c_layout/ts_layout_contexts/album-creation-dialog-context';
-	import ErrsViewDialog from './c_layout/c_dialogs/ErrsViewDialog.svelte';
-	import { registerErrsViewDialogOpenFunction } from './c_layout/ts_layout_contexts/errs-view-dialog-context';
-	import AddVokiToAlbumsDialog from './c_layout/c_dialogs/AddVokiToAlbumsDialog.svelte';
-	import { registerAddVokiToAlbumsOpenFunction } from './c_layout/ts_layout_contexts/add-voki-to-albums-dialog-context';
+	import SideBar from './_c_layout/SideBar.svelte';
+	import AppToaster from './_c_layout/AppToaster.svelte';
+	import LayoutSprites from './_c_layout/LayoutSprites.svelte';
+	import ConfirmActionDialog from './_c_layout/_c_dialogs/ConfirmActionDialog.svelte';
+	import SignInDialog from './_c_layout/_c_dialogs/SignInDialog.svelte';
+	import { registerConfirmActionDialogOpenFunction } from './_c_layout/_ts_layout_contexts/confirm-action-dialog-context';
+	import { registerSignInDialogOpenFunction } from './_c_layout/_ts_layout_contexts/sign-in-dialog-context';
+	import VokiItemFlagsInfoDialog from './_c_layout/_c_dialogs/VokiItemFlagsInfoDialog.svelte';
+	import { registerVokiFlagsInfoDialogOpenFunction } from './_c_layout/_ts_layout_contexts/voki-flags-info-dialog-context';
+	import CreateNewAlbumDialog from './_c_layout/_c_dialogs/CreateNewAlbumDialog.svelte';
+	import { registerCreateNewAlbumOpenFunction } from './_c_layout/_ts_layout_contexts/album-creation-dialog-context';
+	import ErrsViewDialog from './_c_layout/_c_dialogs/ErrsViewDialog.svelte';
+	import { registerErrsViewDialogOpenFunction } from './_c_layout/_ts_layout_contexts/errs-view-dialog-context';
+	import AddVokiToAlbumsDialog from './_c_layout/_c_dialogs/AddVokiToAlbumsDialog.svelte';
+	import { registerAddVokiToAlbumsOpenFunction } from './_c_layout/_ts_layout_contexts/add-voki-to-albums-dialog-context';
 
 	let isFullWidthMode = $state(false);
 	let { children }: { children: Snippet } = $props<{ children: Snippet }>();

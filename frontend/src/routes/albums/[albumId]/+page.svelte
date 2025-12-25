@@ -2,14 +2,14 @@
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 	import VokiItemsGridContainer from '$lib/components/voki_item/VokiItemsGridContainer.svelte';
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
-	import AlbumPageFilterAndSort from '../c_pages_shared/AlbumPageFilterAndSort.svelte';
+	import AlbumPageFilterAndSort from '../_c_pages_shared/AlbumPageFilterAndSort.svelte';
 	import type { PageProps } from './$types';
-	import AlbumPageHeader from '../c_pages_shared/AlbumPageHeader.svelte';
+	import AlbumPageHeader from '../_c_pages_shared/AlbumPageHeader.svelte';
 	import { AlbumPageState } from './album-page-state.svelte';
 	import { toast } from 'svelte-sonner';
-	import VokiInAlbumItemContextMenu from './c_page/VokiInAlbumItemContextMenu.svelte';
-	import AlbumEmptyMessage from '../c_pages_shared/AlbumEmptyMessage.svelte';
-	import NoVokisInAlbumMatchFilterMessage from '../c_pages_shared/NoVokisInAlbumMatchFilterMessage.svelte';
+	import AlbumEmptyMessage from '../_c_pages_shared/AlbumEmptyMessage.svelte';
+	import NoVokisInAlbumMatchFilterMessage from '../_c_pages_shared/NoVokisInAlbumMatchFilterMessage.svelte';
+	import VokiInAlbumItemContextMenu from './_c_page/VokiInAlbumItemContextMenu.svelte';
 
 	let { data }: PageProps = $props();
 	const pageState = new AlbumPageState(

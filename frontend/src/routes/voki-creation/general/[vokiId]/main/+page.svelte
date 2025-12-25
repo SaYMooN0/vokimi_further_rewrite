@@ -1,8 +1,8 @@
 <script lang="ts">
-	import MainInfoPageComponent from '../../../c_shared/c_shared_pages/MainInfoPageComponent.svelte';
-	import VokiCreationPageLoadingErr from '../../../c_shared/VokiCreationPageLoadingErr.svelte';
+	import MainInfoPageComponent from '../../../_c_shared/_c_shared_pages/MainInfoPageComponent.svelte';
+	import VokiCreationPageLoadingErr from '../../../_c_shared/VokiCreationPageLoadingErr.svelte';
 	import type { PageProps } from './$types';
-	import GeneralVokiCreationInteractionSettingsSection from './c_page/GeneralVokiCreationInteractionSettingsSection.svelte';
+	import GeneralVokiCreationInteractionSettingsSection from './_c_page/GeneralVokiCreationInteractionSettingsSection.svelte';
 
 	let { data }: PageProps = $props();
 </script>

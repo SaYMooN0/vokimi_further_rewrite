@@ -1,12 +1,12 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import ListEmptyMessage from '../../../c_shared/ListEmptyMessage.svelte';
-	import VokiCreationBasicHeader from '../../../c_shared/VokiCreationBasicHeader.svelte';
+	import ListEmptyMessage from '../../../_c_shared/ListEmptyMessage.svelte';
+	import VokiCreationBasicHeader from '../../../_c_shared/VokiCreationBasicHeader.svelte';
 	import type { PageProps } from './$types';
-	import GeneralVokiCreationResultItem from './c_results_page/GeneralVokiCreationResultItem.svelte';
-	import ResultInitializingDialog from './c_results_page/ResultInitializingDialog.svelte';
+	import GeneralVokiCreationResultItem from './_c_results_page/GeneralVokiCreationResultItem.svelte';
+	import ResultInitializingDialog from './_c_results_page/ResultInitializingDialog.svelte';
 	import type { ResultOverViewData } from './types';
-	import VokiCreationPageLoadingErr from '../../../c_shared/VokiCreationPageLoadingErr.svelte';
+	import VokiCreationPageLoadingErr from '../../../_c_shared/VokiCreationPageLoadingErr.svelte';
 
 	let { data }: PageProps = $props();
 	let resultCreationDialog = $state<ResultInitializingDialog>()!;

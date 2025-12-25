@@ -1,8 +1,8 @@
 <script lang="ts">
-	import AuthorsPageComponent from '../../../c_shared/c_shared_pages/AuthorsPageComponent.svelte';
-	import { CoAuthorsPageState } from '../../../c_shared/c_shared_pages/c_authors/co-authors-page-state.svelte';
-	import type { VokiCreationAuthorsInfo } from '../../../c_shared/c_shared_pages/c_authors/types';
-	import VokiCreationPageLoadingErr from '../../../c_shared/VokiCreationPageLoadingErr.svelte';
+	import AuthorsPageComponent from '../../../_c_shared/_c_shared_pages/AuthorsPageComponent.svelte';
+	import { CoAuthorsPageState } from '../../../_c_shared/_c_shared_pages/_c_authors/co-authors-page-state.svelte';
+	import type { VokiCreationAuthorsInfo } from '../../../_c_shared/_c_shared_pages/_c_authors/types';
+	import VokiCreationPageLoadingErr from '../../../_c_shared/VokiCreationPageLoadingErr.svelte';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();

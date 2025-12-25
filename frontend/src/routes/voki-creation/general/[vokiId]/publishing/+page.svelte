@@ -1,6 +1,6 @@
 <script lang="ts">
-	import PublishingPageComponent from '../../../c_shared/c_shared_pages/PublishingPageComponent.svelte';
-	import VokiCreationPageLoadingErr from '../../../c_shared/VokiCreationPageLoadingErr.svelte';
+	import PublishingPageComponent from '../../../_c_shared/_c_shared_pages/PublishingPageComponent.svelte';
+	import VokiCreationPageLoadingErr from '../../../_c_shared/VokiCreationPageLoadingErr.svelte';
 	import type { PageProps } from './$types';
 	let { data }: PageProps = $props();
 	console.log(data);

@@ -1,11 +1,11 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
 	import { onMount, onDestroy } from 'svelte';
-	import { DefaultGeneralVokiTakingState } from './c_default_taking/default-general-voki-taking-state.svelte';
-	import { createQuestionsKeyHandler } from './c_default_taking/default-voki-taking-questions-nav';
-	import DefaultGeneralVokiTakingErrsList from './c_default_taking/DefaultGeneralVokiTakingErrsList.svelte';
-	import DefaultTakingButtonsContainer from './c_default_taking/DefaultTakingButtonsContainer.svelte';
-	import DefaultTakingCurrentQuestionView from './c_default_taking/DefaultTakingCurrentQuestionView.svelte';
+	import { DefaultGeneralVokiTakingState } from './_c_default_taking/default-general-voki-taking-state.svelte';
+	import { createQuestionsKeyHandler } from './_c_default_taking/default-voki-taking-questions-nav';
+	import DefaultGeneralVokiTakingErrsList from './_c_default_taking/DefaultGeneralVokiTakingErrsList.svelte';
+	import DefaultTakingButtonsContainer from './_c_default_taking/DefaultTakingButtonsContainer.svelte';
+	import DefaultTakingCurrentQuestionView from './_c_default_taking/DefaultTakingCurrentQuestionView.svelte';
 	import type { GeneralVokiTakingData } from './types';
 
 	interface Props {

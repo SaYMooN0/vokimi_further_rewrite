@@ -32,6 +32,15 @@ public static class PropertyBuilderExtensions
         );
     }
 
+    public static ComplexTypePropertyBuilder<ImmutableHashSet<T>> HasGuidBasedIdsImmutableHashSetConversion<T>(
+        this ComplexTypePropertyBuilder<ImmutableHashSet<T>> builder
+    ) where T : GuidBasedId {
+        return builder.HasConversion(
+            new GuidBasedIdImmutableHashSetConverter<T>(),
+            new GuidBasedIdImmutableHashSetComparer<T>()
+        );
+    }
+
     public static PropertyBuilder<ImmutableHashSet<T>> HasGuidBasedIdsImmutableHashSetConversion<T>(
         this PropertyBuilder<ImmutableHashSet<T>> builder
     ) where T : GuidBasedId {

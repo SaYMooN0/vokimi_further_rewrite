@@ -1,13 +1,13 @@
 <script lang="ts">
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import { onMount } from 'svelte';
-	import MyVokisPageInitialLoading from '../c_shared/MyVokisPageInitialLoading.svelte';
-	import MyVokisPageUnexpectedStateAfterLoading from '../c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
+	import MyVokisPageInitialLoading from '../_c_shared/MyVokisPageInitialLoading.svelte';
+	import MyVokisPageUnexpectedStateAfterLoading from '../_c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
 	import { registerCurrentPageApi } from '../my-vokis-page-context';
 	import { MyVokiInvitesPageState } from './my-voki-invites-page-state.svelte';
-	import InviteForCoAuthorDisplay from './c_page/InviteForCoAuthorDisplay.svelte';
-	import AcceptInviteConfirmationDialog from './c_page/AcceptInviteConfirmationDialog.svelte';
-	import DeclineInviteConfirmationDialog from './c_page/DeclineInviteConfirmationDialog.svelte';
+	import InviteForCoAuthorDisplay from './_c_page/InviteForCoAuthorDisplay.svelte';
+	import AcceptInviteConfirmationDialog from './_c_page/AcceptInviteConfirmationDialog.svelte';
+	import DeclineInviteConfirmationDialog from './_c_page/DeclineInviteConfirmationDialog.svelte';
 
 	const pageState = new MyVokiInvitesPageState();
 	onMount(() => {

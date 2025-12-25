@@ -1,12 +1,12 @@
 <script lang="ts">
-	import AlbumPageHeader from '../../c_pages_shared/AlbumPageHeader.svelte';
+	import AlbumPageHeader from '../../_c_pages_shared/AlbumPageHeader.svelte';
 	import type { PageProps } from './$types';
 	import { TakenVokisAlbumPageState } from './taken-vokis-album-page-state.svelte';
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import AlbumPageFilterAndSort from '../../c_pages_shared/AlbumPageFilterAndSort.svelte';
+	import AlbumPageFilterAndSort from '../../_c_pages_shared/AlbumPageFilterAndSort.svelte';
 	import VokiItemView from '$lib/components/voki_item/VokiItemView.svelte';
-	import AlbumEmptyMessage from '../../c_pages_shared/AlbumEmptyMessage.svelte';
-	import NoVokisInAlbumMatchFilterMessage from '../../c_pages_shared/NoVokisInAlbumMatchFilterMessage.svelte';
+	import AlbumEmptyMessage from '../../_c_pages_shared/AlbumEmptyMessage.svelte';
+	import NoVokisInAlbumMatchFilterMessage from '../../_c_pages_shared/NoVokisInAlbumMatchFilterMessage.svelte';
 	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
 	import { relativeTime } from 'svelte-relative-time';
 

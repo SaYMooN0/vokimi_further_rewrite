@@ -1,10 +1,10 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import GeneralVokiResultPagesHeader from '../c_pages_shared/GeneralVokiResultPagesHeader.svelte';
-	import GeneralVokiResultPagesVokiNameSpan from '../c_pages_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
+	import GeneralVokiResultPagesHeader from '../_c_pages_shared/GeneralVokiResultPagesHeader.svelte';
+	import GeneralVokiResultPagesVokiNameSpan from '../_c_pages_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
 	import type { PageProps } from './$types';
-	import GeneralVokiResultMainData from './c_page/GeneralVokiResultMainData.svelte';
-	import GeneralVokiResultViewActions from './c_page/GeneralVokiResultViewActions.svelte';
+	import GeneralVokiResultMainData from './_c_page/GeneralVokiResultMainData.svelte';
+	import GeneralVokiResultViewActions from './_c_page/GeneralVokiResultViewActions.svelte';
 
 	let { data }: PageProps = $props();
 </script>

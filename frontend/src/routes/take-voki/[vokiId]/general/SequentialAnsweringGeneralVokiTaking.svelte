@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { SequentialAnsweringGeneralVokiTakingState } from './c_sequential_answering_taking/sequential-answering-general-voki-taking-state.svelte';
-	import SequentialAnsweringCurrentQuestionView from './c_sequential_answering_taking/SequentialAnsweringCurrentQuestionView.svelte';
-	import SequentialAnsweringNavigationContainer from './c_sequential_answering_taking/SequentialAnsweringNavigationContainer.svelte';
+	import { SequentialAnsweringGeneralVokiTakingState } from './_c_sequential_answering_taking/sequential-answering-general-voki-taking-state.svelte';
+	import SequentialAnsweringCurrentQuestionView from './_c_sequential_answering_taking/SequentialAnsweringCurrentQuestionView.svelte';
+	import SequentialAnsweringNavigationContainer from './_c_sequential_answering_taking/SequentialAnsweringNavigationContainer.svelte';
 	import type { GeneralVokiTakingData } from './types';
 
 	interface Props {

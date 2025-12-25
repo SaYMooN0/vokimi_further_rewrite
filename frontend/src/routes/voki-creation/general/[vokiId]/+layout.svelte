@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { navigating, page } from '$app/state';
 	import type { Snippet } from 'svelte';
-	import GeneralVokiCreationLayoutNavBar from './c_layout/GeneralVokiCreationLayoutNavBar.svelte';
-	import { type VokiCreationHeaderVokiName } from '../../c_layout/VokiCreationVokiNameHeader.svelte';
+	import GeneralVokiCreationLayoutNavBar from './_c_layout/GeneralVokiCreationLayoutNavBar.svelte';
+	import { type VokiCreationHeaderVokiName } from '../../_c_layout/VokiCreationVokiNameHeader.svelte';
 	import { setVokiCreationPageContext } from '../../voki-creation-page-context';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
 	import generalVokiCreationIconsSprite from '$lib/icons/general-voki-creation-icons.svg?raw';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import VokiCreationVokiNameHeader from '../../c_layout/VokiCreationVokiNameHeader.svelte';
+	import VokiCreationVokiNameHeader from '../../_c_layout/VokiCreationVokiNameHeader.svelte';
 
 	const { children }: { children: Snippet } = $props();
 
@@ -35,12 +35,12 @@
 		}
 	}
 	fetchAndSetVokiName();
-	let headerVokiName = $derived({
-		value: vokiName.state === 'ok' ? vokiName.value : undefined,
-		invalidate: () => fetchAndSetVokiName()
+	setVokiCreationPageContext(ApiVokiCreationGeneral, {
+		get value() {
+			return vokiName.state === 'ok' ? vokiName.value : undefined;
+		},
+		invalidate: fetchAndSetVokiName
 	});
-	// svelte-ignore state_referenced_locally
-	setVokiCreationPageContext(ApiVokiCreationGeneral, headerVokiName);
 </script>
 
 <div class="sprites">

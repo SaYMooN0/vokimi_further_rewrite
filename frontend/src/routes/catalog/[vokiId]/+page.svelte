@@ -2,19 +2,19 @@
 	import { browser } from '$app/environment';
 	import { onDestroy, onMount } from 'svelte';
 	import type { PageProps } from './$types';
-	import CoverSection from './c_page/c_sections/CoverSection.svelte';
-	import NameSection from './c_page/c_sections/NameSection.svelte';
-	import VokiPageAboutTab from './c_page/c_tabs/VokiPageAboutTab.svelte';
-	import VokiPageCommentsTab from './c_page/c_tabs/VokiPageCommentsTab.svelte';
-	import VokiPageRatingsTab from './c_page/c_tabs/VokiPageRatingsTab.svelte';
-	import TabLinksContainer from './c_page/TabLinksContainer.svelte';
-	import VokiNotLoaded from './c_page/VokiNotLoaded.svelte';
+	import CoverSection from './_c_page/_c_sections/CoverSection.svelte';
+	import NameSection from './_c_page/_c_sections/NameSection.svelte';
+	import VokiPageAboutTab from './_c_page/_c_tabs/VokiPageAboutTab.svelte';
+	import VokiPageCommentsTab from './_c_page/_c_tabs/VokiPageCommentsTab.svelte';
+	import VokiPageRatingsTab from './_c_page/_c_tabs/VokiPageRatingsTab.svelte';
+	import TabLinksContainer from './_c_page/TabLinksContainer.svelte';
+	import VokiNotLoaded from './_c_page/VokiNotLoaded.svelte';
 	import { VokiCatalogVisitMarkerCookie } from '$lib/ts/cookies/voki-catalog-visit-marker-cookie';
 	import { page } from '$app/state';
 	import { VokiPageState } from './voki-page-state.svelte';
 	import { goto } from '$app/navigation';
 	import { VokiUtils } from '$lib/ts/voki';
-	import AuthorsSection from './c_page/c_sections/AuthorsSection.svelte';
+	import AuthorsSection from './_c_page/_c_sections/AuthorsSection.svelte';
 	import type { VokiTypeWithSpecificData } from './types';
 
 	function getTabFromUrl() {

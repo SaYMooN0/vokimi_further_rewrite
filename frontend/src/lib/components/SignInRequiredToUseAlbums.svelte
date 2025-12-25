@@ -1,6 +1,6 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import { getSignInDialogOpenFunction } from '../../routes/c_layout/ts_layout_contexts/sign-in-dialog-context';
+	import { getSignInDialogOpenFunction } from '../../routes/_c_layout/_ts_layout_contexts/sign-in-dialog-context';
 
 	let { closeDialog }: { closeDialog: () => void } = $props<{ closeDialog: () => void }>();
 	const openSignInDialog = getSignInDialogOpenFunction();

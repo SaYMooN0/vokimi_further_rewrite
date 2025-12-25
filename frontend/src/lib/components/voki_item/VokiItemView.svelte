@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { VokiItemViewState } from './c_voki_item/voki-item';
-	import VokiItemViewErrState from './c_voki_item/VokiItemViewErrState.svelte';
-	import VokiItemViewLoadingState from './c_voki_item/VokiItemViewLoadingState.svelte';
-	import VokiItemViewOkState from './c_voki_item/VokiItemViewOkState.svelte';
+	import type { VokiItemViewState } from './_c_voki_item/voki-item';
+	import VokiItemViewErrState from './_c_voki_item/VokiItemViewErrState.svelte';
+	import VokiItemViewLoadingState from './_c_voki_item/VokiItemViewLoadingState.svelte';
+	import VokiItemViewOkState from './_c_voki_item/VokiItemViewOkState.svelte';
 
 	interface Props {
 		state: VokiItemViewState;

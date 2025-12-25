@@ -2,7 +2,7 @@
 	import { navigating, page } from '$app/state';
 	import type { Snippet } from 'svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
-	import ManageVokiLayoutHeader from '../../c_shared/ManageVokiLayoutNavBar.svelte';
+	import ManageVokiLayoutHeader from '../../_c_shared/ManageVokiLayoutNavBar.svelte';
 
 	const { children }: { children: Snippet } = $props();
 
