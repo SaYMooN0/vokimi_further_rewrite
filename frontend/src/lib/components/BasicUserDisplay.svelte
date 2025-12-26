@@ -33,7 +33,6 @@
 
 		goto(`/authors/${userId}`);
 	}
-
 </script>
 
 {#if user.state === 'ok'}
@@ -54,9 +53,7 @@
 		<svg class="profile-pic">
 			<use href="#common-crossed-circle-icon" />
 		</svg>
-		<label class="error-label"
-			>Error in loading<svg><use href="#common-info-icon" /></svg></label
-		>
+		<label class="error-label">Error in loading<svg><use href="#common-info-icon" /></svg></label>
 	</div>
 {:else if user.state === 'loading'}
 	<div class="user-display loading">
@@ -90,6 +87,7 @@
 		align-items: center;
 		gap: 0.25rem;
 		width: fit-content;
+		min-width: 0;
 		border-radius: 100vw;
 		background-color: var(--back);
 		line-height: normal;
@@ -121,21 +119,29 @@
 		display: flex;
 		flex-direction: column;
 		align-content: center;
+		min-width: 0;
 		padding-top: 0.125rem;
 		line-height: 1;
 		text-indent: 0;
+		overflow: hidden;
 	}
 
 	.user-display.ok .display-name {
 		color: var(--text);
 		font-size: 1rem;
 		font-weight: 450;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	.user-display.ok .unique-name {
 		color: var(--muted-foreground);
 		font-size: 0.875rem;
 		font-weight: 440;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	.user-display.ok .unique-name.interactive:hover {
@@ -155,16 +161,18 @@
 
 	.names-container-loading > label {
 		border-radius: 0.375rem;
+
+		--loading-name-label-height: 1rem;
 	}
 
 	.names-container-loading > label:nth-child(1) {
 		width: 100%;
-		height: 1rem;
+		height: var(--loading-name-label-height);
 	}
 
 	.names-container-loading > label:nth-child(2) {
 		width: 75%;
-		height: 0.875rem;
+		height: calc(var(--loading-name-label-height) * 0.875);
 	}
 
 	.skeleton-anim {

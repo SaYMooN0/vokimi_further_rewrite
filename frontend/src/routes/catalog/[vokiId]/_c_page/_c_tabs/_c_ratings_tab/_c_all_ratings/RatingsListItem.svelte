@@ -109,7 +109,7 @@
 	}
 
 	.profile-link-el {
-		cursor: default;
+		cursor: pointer;
 	}
 
 	.profile-pic-part {
@@ -146,22 +146,25 @@
 	.content-part {
 		display: flex;
 		flex-direction: column;
+		min-width: 0;
+		overflow: hidden;
 	}
 
 	.name-with-date-content {
 		display: grid;
-		grid-template-columns: 1fr auto;
+		grid-template-columns: auto 1fr;
 		align-items: center;
+		min-width: 0;
+		overflow: hidden;
 	}
 
 	.display-name {
-		width: fit-content;
 		height: 1.125rem;
 		color: var(--text);
 		font-size: 1.125rem;
 		font-weight: 550;
-		white-space: nowrap;
 		overflow: hidden;
+		white-space: nowrap;
 		text-overflow: ellipsis;
 	}
 
@@ -181,6 +184,7 @@
 	.date {
 		height: fit-content;
 		padding-right: 0.25rem;
+		margin-left: auto;
 		color: var(--secondary-foreground);
 		font-size: 0.875rem;
 		font-weight: 500;
@@ -188,11 +192,16 @@
 	}
 
 	.unique-name-content {
+		max-width: 100%;
 		min-height: 0.25rem;
 		margin-left: 0.25rem;
 		color: var(--muted-foreground);
 		font-size: 0.875rem;
 		font-weight: 480;
+		align-self: flex-start;
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	.rating-item:has(.profile-link-el:hover) .unique-name-content {

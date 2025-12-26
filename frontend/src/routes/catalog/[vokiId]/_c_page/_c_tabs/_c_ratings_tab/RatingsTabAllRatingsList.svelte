@@ -66,58 +66,58 @@
 	const openSignInDialog = getSignInDialogOpenFunction();
 </script>
 
-{#if ratingsViewState.userRatingState.name === 'unauthenticated'}
-	<UserRatingCannotRateMessage mainText="To rate Vokis you need to be logged in">
-		<div class="auth-needed-to-rate-btns">
-			<button class="login-btn" onclick={() => openSignInDialog('login')}>Login</button>
-			<button class="signup-btn" onclick={() => openSignInDialog('signup')}
-				>I don't have an account yet</button
-			>
-		</div>
-	</UserRatingCannotRateMessage>
-{:else if ratingsViewState.userRatingState.name === 'not-taken'}
-	<UserRatingCannotRateMessage mainText="To rate this Voki you need to take it first" />
-{:else}
-	<RatingsTabUserRating ratingState={ratingsViewState.userRatingState} {saveNewRating} />
-{/if}
-{#if ratingsViewState.userRatingState.name === 'rated' && ratingsViewState.otherUserRatings.length === 0}
-	<div class="no-other-ratings">No one else has rated this Voki</div>
-{:else if ratingsViewState.otherUserRatings.length != 0}
-	{#each ratingsViewState.otherUserRatings as rating}
-		<RatingsListItem
-			userId={rating.userId}
-			content={{ name: 'default', ratingValue: rating.value }}
-			dateTime={rating.dateTime}
-		/>
-	{/each}
-{/if}
+	{#if ratingsViewState.userRatingState.name === 'unauthenticated'}
+		<UserRatingCannotRateMessage mainText="To rate Vokis you need to be logged in">
+			<div class="auth-needed-to-rate-btns">
+				<button class="login-btn" onclick={() => openSignInDialog('login')}>Login</button>
+				<button class="signup-btn" onclick={() => openSignInDialog('signup')}
+					>I don't have an account yet</button
+				>
+			</div>
+		</UserRatingCannotRateMessage>
+	{:else if ratingsViewState.userRatingState.name === 'not-taken'}
+		<UserRatingCannotRateMessage mainText="To rate this Voki you need to take it first" />
+	{:else}
+		<RatingsTabUserRating ratingState={ratingsViewState.userRatingState} {saveNewRating} />
+	{/if}
+	{#if ratingsViewState.userRatingState.name === 'rated' && ratingsViewState.otherUserRatings.length === 0}
+		<div class="no-other-ratings">No one else has rated this Voki</div>
+	{:else if ratingsViewState.otherUserRatings.length != 0}
+		{#each ratingsViewState.otherUserRatings as rating}
+			<RatingsListItem
+				userId={rating.userId}
+				content={{ name: 'default', ratingValue: rating.value }}
+				dateTime={rating.dateTime}
+			/>
+		{/each}
+	{/if}
 
-<style>
-	.auth-needed-to-rate-btns {
-		display: flex;
-		justify-items: center;
-		gap: 2rem;
-	}
+	<style>
+		.auth-needed-to-rate-btns {
+			display: flex;
+			justify-items: center;
+			gap: 2rem;
+		}
 
-	.auth-needed-to-rate-btns > button {
-		padding: 0.25rem 1rem;
-		border: none;
-		border-radius: 0.25rem;
-		background-color: var(--primary);
-		color: var(--primary-foreground);
-		font-size: 1.125rem;
-		font-weight: 420;
-		cursor: pointer;
-	}
+		.auth-needed-to-rate-btns > button {
+			padding: 0.25rem 1rem;
+			border: none;
+			border-radius: 0.25rem;
+			background-color: var(--primary);
+			color: var(--primary-foreground);
+			font-size: 1.125rem;
+			font-weight: 420;
+			cursor: pointer;
+		}
 
-	.auth-needed-to-rate-btns > button:hover {
-		background-color: var(--primary-hov);
-	}
+		.auth-needed-to-rate-btns > button:hover {
+			background-color: var(--primary-hov);
+		}
 
-	.no-other-ratings {
-		margin: 0 auto;
-		color: var(--secondary-foreground);
-		font-size: 1.125rem;
-		font-weight: 450;
-	}
-</style>
+		.no-other-ratings {
+			margin: 0 auto;
+			color: var(--secondary-foreground);
+			font-size: 1.125rem;
+			font-weight: 450;
+		}
+	</style>

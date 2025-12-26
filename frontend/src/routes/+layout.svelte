@@ -77,6 +77,7 @@
 		display: grid;
 		gap: 1rem;
 		width: var(--width-limit);
+		max-width: var(--width-limit);
 		height: 100%;
 		margin: 0 auto;
 		grid-template-columns: auto 1fr;

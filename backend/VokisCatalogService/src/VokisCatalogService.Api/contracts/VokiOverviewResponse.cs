@@ -20,7 +20,7 @@ public record class VokiOverviewResponse(
     uint RatingsCount,
     uint CommentsCount,
     bool SignedInOnlyTaking,
-    VokiOverviewResponse.VokiTypeWithSpecificDataResponse TypeWithSpecificData
+    VokiOverviewResponse.VokiTypeWithSpecificDataResponse TypeSpecificData
 ) : ICreatableResponse<BaseVoki>
 {
     public static ICreatableResponse<BaseVoki> Create(BaseVoki voki) => FromBaseVoki(voki);
@@ -50,7 +50,7 @@ public record class VokiOverviewResponse(
         (g) => new GeneralVokiTypeWithSpecificDataResponse(
             ForceSequentialAnswering: false,
             ShuffleQuestions: false,
-            AnyAudioAnswers: g.AnyAudios
+            AnyAudios: g.AnyAudios
         ),
         (t) => new TierListVokiTypeWithSpecificDataResponse(),
         (s) => new ScoringVokiTypeWithSpecificDataResponse()
@@ -65,7 +65,7 @@ public record class VokiOverviewResponse(
     public record GeneralVokiTypeWithSpecificDataResponse(
         bool ForceSequentialAnswering,
         bool ShuffleQuestions,
-        bool AnyAudioAnswers
+        bool AnyAudios
     ) : VokiTypeWithSpecificDataResponse();
 
     public record TierListVokiTypeWithSpecificDataResponse() : VokiTypeWithSpecificDataResponse();

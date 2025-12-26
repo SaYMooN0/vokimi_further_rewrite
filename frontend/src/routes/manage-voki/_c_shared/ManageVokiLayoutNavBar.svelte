@@ -25,31 +25,33 @@
 
 <style>
 	.nav-bar {
-		width: calc(100% - 2rem);
-		margin: 1rem 1rem 0;
-		box-shadow: var(--shadow-xs);
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 		gap: 1rem;
-		border-radius: 100vw;
+		width: calc(100% - 2rem);
 		padding: 0.25rem;
+		margin: 1rem 1rem 0;
+		border-radius: 100vw;
+		box-shadow: var(--shadow-xs);
+		grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
 	}
 
 	.link {
 		display: block;
 		width: 100%;
 		padding: 0.5rem 0;
+		border-radius: 100vw;
 		color: var(--secondary-foreground);
 		font-size: 1.125rem;
 		font-weight: 450;
 		text-align: center;
 		text-decoration: none;
-		border-radius: 100vw;
 	}
+
 	.link:not(.active):hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.link.active {
 		background-color: var(--primary);
 		color: var(--primary-foreground);

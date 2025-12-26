@@ -66,7 +66,7 @@
 				<span class="by-label">by:</span>
 				<BasicUserDisplay
 					userId={voki.primaryAuthorId}
-					interactionLevel="UniqueNameGotoOnClick"
+					interactionLevel="WholeComponentLink"
 					class="interactable author-view"
 				/>
 				{#if voki.coAuthorIds.length > 0}
@@ -173,12 +173,14 @@
 		font-size: 1.125rem;
 		font-weight: 420;
 		line-height: calc(var(--voki-name-max-height) / 2);
+		text-align: left;
 		letter-spacing: 0.125px;
 		-webkit-line-clamp: 2;
 		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		text-overflow: ellipsis;
 		overflow: hidden;
+		overflow-wrap: anywhere;
 	}
 
 	.voki-item:not(:has(.interactable:hover)):hover .flag {
@@ -218,6 +220,7 @@
 		align-items: center;
 		overflow: hidden;
 		grid-template-columns: auto 1fr auto;
+		padding: 0.125rem 0;
 	}
 
 	.authors > .by-label {
@@ -228,8 +231,8 @@
 		font-style: italic;
 	}
 
-	.authors > :global(.author-view) {
-		--profile-pic-width: 2rem;
+	.authors > :global(.user-display) {
+		--profile-pic-width: 2.25rem !important;
 	}
 
 	.authors > :global(.author-view.ok) {

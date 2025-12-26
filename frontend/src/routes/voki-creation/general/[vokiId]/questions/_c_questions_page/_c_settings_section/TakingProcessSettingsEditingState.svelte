@@ -48,7 +48,7 @@
 		bind:value={editableSettings.shuffleQuestions}
 		trueLabel="Shuffled"
 		trueIconId="#common-shuffle-icon"
-		falseLabel="Ordered"
+		falseLabel="Determined"
 		falseIconId="#common-order-icon"
 	/>
 </p>

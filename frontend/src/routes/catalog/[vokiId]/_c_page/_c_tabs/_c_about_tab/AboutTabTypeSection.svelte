@@ -2,6 +2,7 @@
 	import { VokiTypeUtils } from '$lib/ts/voki-type';
 	import type { VokiTypeWithSpecificData } from '../../../types';
 	import VokiPageTabSectionLabel from '../_c_tabs_shared/VokiPageTabSectionLabel.svelte';
+	import GeneralVokiTypeSpecificDataContent from './_c_type_section_specific_data/GeneralVokiTypeSpecificDataContent.svelte';
 	interface Props {
 		typeWithData: VokiTypeWithSpecificData;
 	}
@@ -26,10 +27,16 @@
 			<span>{VokiTypeUtils.name(typeWithData.type)}</span>
 		</div>
 		<div class="show-more-btn" onclick={toggleDetails}>
-			More <svg bind:this={iconElement}><use href="#common-toggle-content-arrow" /></svg>
+			<svg bind:this={iconElement}><use href="#common-toggle-content-arrow" /></svg>
 		</div>
 	</div>
-	<div class="type-specific-data" class:hidden={hideTypeSpecificData}>dsds</div>
+	<div class="type-specific-data" class:hidden={hideTypeSpecificData}>
+		{#if typeWithData.type === 'General'}
+			<GeneralVokiTypeSpecificDataContent data={typeWithData.typeSpecificData} />
+		{:else}
+			<p>Unsupported type</p>
+		{/if}
+	</div>
 </div>
 
 <style>
@@ -41,7 +48,9 @@
 	.field-line {
 		display: flex;
 		flex-direction: row;
+		align-items: center;
 		margin: 0;
+		cursor: default;
 	}
 
 	.field-line .type-value {
@@ -53,9 +62,25 @@
 		font-weight: 500;
 	}
 
+	.show-more-btn {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 0.125rem 0.375rem;
+		margin-left: 0.375rem;
+		border-radius: 100vw;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+	}
+
+	.show-more-btn:hover {
+		background-color: var(--accent);
+		color: var(--accent-foreground);
+	}
+
 	.show-more-btn > svg {
-		width: 1.5rem;
-		height: 1.5rem;
+		width: 1rem;
+		height: 1rem;
 		transition: transform 0.17s ease-in;
 		transform-origin: center;
 		cursor: pointer;

@@ -124,8 +124,10 @@
 		display: grid;
 		gap: 1rem;
 		width: 100%;
+		min-width: 0;
 		margin-top: 2rem;
 		grid-template-columns: 1fr auto;
+		overflow: hidden;
 	}
 
 	.main-content {

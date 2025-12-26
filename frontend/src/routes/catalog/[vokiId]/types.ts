@@ -34,7 +34,7 @@ export type VokiTypeWithSpecificData = {
     }
 }[keyof VokiTypeMap];
 
-export type GeneralVokiTypeSpecificData = { forceSequentialAnswering: boolean, shuffleQuestions: boolean, anyAudioAnswers: boolean };
+export type GeneralVokiTypeSpecificData = { forceSequentialAnswering: boolean, shuffleQuestions: boolean, anyAudios: boolean };
 export type TierListVokiTypeSpecificData = {};
 export type ScoringVokiTypeSpecificData = {};
 
