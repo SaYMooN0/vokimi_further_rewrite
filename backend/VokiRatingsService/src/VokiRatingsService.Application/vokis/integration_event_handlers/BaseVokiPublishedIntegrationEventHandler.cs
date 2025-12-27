@@ -17,6 +17,7 @@ public class BaseVokiPublishedIntegrationEventHandler : IConsumer<BaseVokiPublis
     public async Task Consume(ConsumeContext<BaseVokiPublishedIntegrationEvent> context) {
         Voki voki = new Voki(
             context.Message.VokiId,
+            context.Message.PrimaryAuthorId,
             VokiManagersIdsSet.Create(context.Message.Managers.ToImmutableHashSet()).AsSuccess()
         );
         await _vokisRepository.Add(voki, context.CancellationToken);

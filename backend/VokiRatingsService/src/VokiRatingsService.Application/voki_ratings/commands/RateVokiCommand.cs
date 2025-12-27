@@ -42,8 +42,7 @@ internal sealed class RateVokiCommandHandler : ICommandHandler<RateVokiCommand, 
             );
         }
 
-        ErrOr<RatingValueWithDate> creationRes = RatingValueWithDate
-            .Create(command.NewRating, _dateTimeProvider.UtcNow);
+        ErrOr<RatingValueWithDate> creationRes = RatingValueWithDate.Create(command.NewRating, _dateTimeProvider.UtcNow);
 
         if (creationRes.IsErr(out var err)) {
             return err;
@@ -60,7 +59,11 @@ internal sealed class RateVokiCommandHandler : ICommandHandler<RateVokiCommand, 
             await _ratingsRepository.Add(rating, ct);
         }
         else {
-            rating.Update(ratingValue);
+            ErrOrNothing res = rating.Update(ratingValue);
+            if (res.IsErr(out var updateRatingErr)) {
+                return updateRatingErr;
+            }
+
             await _ratingsRepository.Update(rating, ct);
         }
 

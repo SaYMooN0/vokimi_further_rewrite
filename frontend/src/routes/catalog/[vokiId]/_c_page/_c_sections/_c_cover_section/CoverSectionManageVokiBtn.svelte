@@ -15,7 +15,7 @@
 			isHovered = false;
 		}, 650);
 	}
-	let managePageLink = $derived(`/manage-voki/${StringUtils.pascalToKebab(vokiType)}/${vokiId}/catalog-page`);
+	let managePageLink = $derived(`/manage-voki/${StringUtils.pascalToKebab(vokiType)}/${vokiId}/main`);
 </script>
 
 <a

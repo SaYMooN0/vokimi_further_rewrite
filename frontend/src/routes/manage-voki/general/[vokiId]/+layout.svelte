@@ -7,13 +7,13 @@
 	const { children }: { children: Snippet } = $props();
 
 	const allLinks: Record<(typeof MANAGE_TABS)[number], string> = {
-		'catalog-page': 'Catalog page',
+		main: 'Main information',
 		comments: 'Comments',
 		ratings: 'Ratings',
 		'voki-takings': 'Voki Takings'
 	};
 
-	const MANAGE_TABS = ['catalog-page', 'comments', 'ratings', 'voki-takings'] as const;
+	const MANAGE_TABS = ['main', 'comments', 'ratings', 'voki-takings'] as const;
 	const activeLinkKey = $derived.by(() => {
 		const segments = page.url.pathname.split('/').filter(Boolean);
 		return MANAGE_TABS.find((key) => segments.includes(key));
@@ -32,7 +32,7 @@
 		<CubesLoader sizeRem={5} color="var(--primary)" />
 	</div>
 {:else}
-	<div class="fade-in-animation">
+	<div class="manage-page-content fade-in-animation">
 		{@render children()}
 	</div>
 {/if}

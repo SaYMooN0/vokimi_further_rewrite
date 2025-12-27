@@ -35,6 +35,8 @@ export type PublishedVokiViewState =
     | { state: "ok"; data: PublishedVokiBriefInfo }
     | { state: "errs"; errs: Err[], vokiId: string };
 
+export type VokiRatingValue = 1 | 2 | 3 | 4 | 5;
+
 export namespace VokiUtils {
     export function canUserManageVoki(voki: PublishedVokiBriefInfo, signedInUserId: string): boolean {
         console.log(voki, signedInUserId);

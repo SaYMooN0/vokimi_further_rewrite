@@ -32,11 +32,11 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
     private static async Task<IResult> GetVokiOtherUsersRatingsWithAverage(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ListiRatingsForVokiQuery, VokiRating[]> handler
+        IQueryHandler<ListRatingsForVokiQuery, VokiRating[]> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        ListiRatingsForVokiQuery query = new(vokiId);
+        ListRatingsForVokiQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOrToJson<VokiRating[], RatingsWithAverageResponse>(result);

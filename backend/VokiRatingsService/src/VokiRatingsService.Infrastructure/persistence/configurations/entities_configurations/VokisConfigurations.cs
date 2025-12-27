@@ -20,7 +20,12 @@ internal class VokisConfigurations : IEntityTypeConfiguration<Voki>
         builder
             .Property(x => x.RatingIds)
             .HasGuidBasedIdsImmutableHashSetConversion();
-        
+
+        builder
+            .Property<AppUserId>("PrimaryAuthorId")
+            .HasGuidBasedIdConversion();
+
+
         builder
             .Property<VokiManagersIdsSet>("ManagersSet")
             .HasConversion<VokiManagersIdsSetConverter>();
