@@ -517,7 +517,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             Id, PrimaryAuthorId, CoAuthors, UserIdsToBecomeManagers,
             Name, Cover, Details, Tags,
             InitializingDate: CreationDate,
-            PublishingDate: utcNow,
+            PublicationDate: utcNow,
             TakingProcessSettings, InteractionSettings,
             _questions.Select(ParseQuestionToDto).ToArray(),
             _results.Select(r => new ResultDomainEventDto(r.Id, r.Name, r.Text, r.Image)).ToArray()

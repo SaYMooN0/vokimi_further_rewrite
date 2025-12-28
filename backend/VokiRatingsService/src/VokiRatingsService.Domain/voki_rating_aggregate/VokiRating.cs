@@ -1,4 +1,5 @@
-﻿using VokiRatingsService.Domain.voki_rating_aggregate.events;
+﻿using SharedKernel.exceptions;
+using VokiRatingsService.Domain.voki_rating_aggregate.events;
 
 namespace VokiRatingsService.Domain.voki_rating_aggregate;
 
@@ -7,37 +8,57 @@ public class VokiRating : AggregateRoot<VokiRatingId>
     private VokiRating() { }
     public AppUserId UserId { get; }
     public VokiId VokiId { get; }
-    public RatingValueWithDate Current { get; set; }
-    public RatingHistory History { get; }
+    public RatingValue CurrentValue { get; private set; }
+    public DateTime LastUpdated { get; private set; }
+    public DateTime InitialDateTime { get; }
+    public RatingValue InitialValue { get; }
+    public bool WasUpdated => LastUpdated != InitialDateTime;
 
-    private VokiRating(VokiRatingId id, AppUserId userId, VokiId vokiId, RatingValueWithDate value) {
+    private VokiRating(VokiRatingId id, AppUserId userId, VokiId vokiId, RatingValue value, DateTime now) {
         Id = id;
         UserId = userId;
         VokiId = vokiId;
-        Current = value;
-        History = RatingHistory.CreateNew();
+
+        CurrentValue = value;
+        InitialValue = value;
+
+        LastUpdated = now;
+        InitialDateTime = now;
     }
 
-    public static VokiRating CreateNew(AppUserId userId, VokiId vokiId, RatingValueWithDate value) {
-        VokiRating rating = new(VokiRatingId.CreateNew(), userId, vokiId, value);
+    public static VokiRating CreateNew(AppUserId userId, VokiId vokiId, RatingValue value, DateTime now) {
+        VokiRating rating = new(VokiRatingId.CreateNew(), userId, vokiId, value, now);
         rating.AddDomainEvent(new NewVokiRatingCreatedEvent(rating.Id, vokiId, userId));
         return rating;
     }
 
-    public ErrOrNothing Update(RatingValueWithDate newValue) {
-        if (newValue.DateTime < Current.DateTime) {
-            return ErrFactory.ValueOutOfRange(
-                "New rating date cannot be earlier than the last updated date",
-                $"New value datetime:{newValue.DateTime:o}. Last updated: {Current.DateTime:o}"
+    public ErrOrNothing Update(RatingValue newValue, DateTime now) {
+        if (now < InitialDateTime) {
+            UnexpectedBehaviourException.ThrowErr(
+                ErrFactory.Conflict(
+                    $"VokiRating has InitialDateTime in the future. Rating id: {Id}. Voki id: {VokiId}. User id: {UserId}. InitialDateTime: {InitialDateTime}. Now: {now}"
+                ),
+                userMessage: "Cannot update rating because of dates conflict"
             );
         }
 
-        ErrOrNothing historyErr = History.Add(Current);
-        if (historyErr.IsErr(out var err)) {
-            return err;
+        if (now < LastUpdated) {
+            UnexpectedBehaviourException.ThrowErr(
+                ErrFactory.Conflict(
+                    $"VokiRating has LastUpdated in the future. Rating id: {Id}. Voki id: {VokiId}. User id: {UserId}. LastUpdated: {LastUpdated}. Now: {now}"
+                ),
+                userMessage: "Cannot update rating because of dates conflict"
+            );
         }
 
-        Current = newValue;
+        // no-op update
+        if (newValue == CurrentValue) {
+            return ErrOrNothing.Nothing;
+        }
+
+        CurrentValue = newValue;
+        LastUpdated = now;
+        AddDomainEvent(new VokiRatingUpdatedEvent(VokiId));
         return ErrOrNothing.Nothing;
     }
 }

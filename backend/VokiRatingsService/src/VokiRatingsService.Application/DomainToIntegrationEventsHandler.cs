@@ -1,11 +1,11 @@
 ﻿using ApplicationShared;
 using SharedKernel.integration_events;
-using VokiRatingsService.Domain.voki_aggregate.events;
+using VokiRatingsService.Domain.voki_ratings_snapshot.events;
 
 namespace VokiRatingsService.Application;
 
 internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHandler,
-    IDomainEventHandler<NewRatingToVokiAddedEvent>
+    IDomainEventHandler<VokiRatingsChangedCount>
 // and all other domain events that need to be published as integration events
 {
     private readonly IIntegrationEventPublisher _integrationEventPublisher;
@@ -15,8 +15,8 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
     }
 
 
-    public async Task Handle(NewRatingToVokiAddedEvent e, CancellationToken ct) =>
-        await _integrationEventPublisher.Publish(new VokiRatedIntegrationEvent(
+    public async Task Handle(VokiRatingsChangedCount e, CancellationToken ct) =>
+        await _integrationEventPublisher.Publish(new VokiRatingsCountChangedIntegrationEvent(
             e.VokiId, e.NewRatingsCount
         ), ct);
 }

@@ -4,9 +4,9 @@ namespace VokiRatingsService.Api.contracts;
 
 public record class UserRatedVokiIdsResponse(
     Dictionary<string, UserRatedVokiIdsResponse.RatingBriefDataResponse> VokiIdToLastRatingData
-) : ICreatableResponse<VokiIdWithLastRatingDto[]>
+) : ICreatableResponse<VokiIdWithCurrentRatingDto[]>
 {
-    public static ICreatableResponse<VokiIdWithLastRatingDto[]> Create(VokiIdWithLastRatingDto[] vokis) =>
+    public static ICreatableResponse<VokiIdWithCurrentRatingDto[]> Create(VokiIdWithCurrentRatingDto[] vokis) =>
         new UserRatedVokiIdsResponse(vokis.ToDictionary(
             v => v.VokiId.ToString(),
             v => new RatingBriefDataResponse(v.Value, v.DateTime))

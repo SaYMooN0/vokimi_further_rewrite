@@ -30,7 +30,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
             VokiManagersIdsSet.Create(e.Managers.ToImmutableHashSet()).AsSuccess(),
             new VokiDetails(e.Description, e.HasMatureContent, e.Language),
             tags: e.Tags.ToImmutableHashSet(),
-            e.PublishingDate,
+            e.PublicationDate,
             GeneralVokiInteractionSettings.Create(
                 signedInOnlyTaking: e.InteractionSettings.SignedInOnlyTaking,
                 resultsVisibility: e.InteractionSettings.ResultsVisibility,

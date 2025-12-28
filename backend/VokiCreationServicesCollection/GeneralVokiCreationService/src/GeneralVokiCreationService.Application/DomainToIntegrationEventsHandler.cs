@@ -42,7 +42,7 @@ internal class DomainToIntegrationEventsHandler : IDomainToIntegrationEventsHand
             Language: e.Details.Language,
             Tags: e.Tags.Value.ToArray(),
             InitializingDate: e.InitializingDate,
-            PublishingDate: e.PublishingDate,
+            PublicationDate: e.PublicationDate,
             VokiPublishedEventMapper.QuestionIntegrationEventDtoArray(e.Questions),
             ForceSequentialAnswering: e.TakingProcessSettings.ForceSequentialAnswering,
             ShuffleQuestions: e.TakingProcessSettings.ShuffleQuestions,

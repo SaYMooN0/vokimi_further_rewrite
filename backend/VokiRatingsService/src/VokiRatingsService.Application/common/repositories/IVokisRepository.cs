@@ -1,4 +1,5 @@
-﻿using VokiRatingsService.Domain.voki_aggregate;
+﻿using SharedKernel.common.vokis;
+using VokiRatingsService.Domain.voki_aggregate;
 
 namespace VokiRatingsService.Application.common.repositories;
 
@@ -8,3 +9,4 @@ public interface IVokisRepository
     Task Update(Voki voki, CancellationToken ct);
     Task Add(Voki voki, CancellationToken ct);
 }
+public record VokiManagersDto(VokiId Id, AppUserId PrimaryAuthorId, VokiManagersIdsSet ManagersIds);

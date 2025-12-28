@@ -42,24 +42,24 @@ internal sealed class RateVokiCommandHandler : ICommandHandler<RateVokiCommand, 
             );
         }
 
-        ErrOr<RatingValueWithDate> creationRes = RatingValueWithDate.Create(command.NewRating, _dateTimeProvider.UtcNow);
+        ErrOr<RatingValue> creationRes = RatingValue.Create(command.NewRating);
 
         if (creationRes.IsErr(out var err)) {
             return err;
         }
 
         var ratingValue = creationRes.AsSuccess();
-        VokiRating? rating = await _ratingsRepository.GetUserRatingForVokiWithHistory(
+        VokiRating? rating = await _ratingsRepository.GetUserRatingForVoki(
             new AuthenticatedUserContext(userId), command.VokiId, ct
         );
 
 
         if (rating is null) {
-            rating = VokiRating.CreateNew(userId, command.VokiId, ratingValue);
+            rating = VokiRating.CreateNew(userId, command.VokiId, ratingValue, _dateTimeProvider.UtcNow);
             await _ratingsRepository.Add(rating, ct);
         }
         else {
-            ErrOrNothing res = rating.Update(ratingValue);
+            ErrOrNothing res = rating.Update(ratingValue, _dateTimeProvider.UtcNow);
             if (res.IsErr(out var updateRatingErr)) {
                 return updateRatingErr;
             }

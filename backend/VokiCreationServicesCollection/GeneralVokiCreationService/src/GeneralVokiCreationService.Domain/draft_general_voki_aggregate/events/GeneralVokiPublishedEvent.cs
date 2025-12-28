@@ -18,7 +18,7 @@ public record GeneralVokiPublishedEvent(
     VokiDetails Details,
     VokiTagsSet Tags,
     DateTime InitializingDate,
-    DateTime PublishingDate,
+    DateTime PublicationDate,
     //Voki Type specific 
     VokiTakingProcessSettings TakingProcessSettings,
     GeneralVokiInteractionSettings InteractionSettings,

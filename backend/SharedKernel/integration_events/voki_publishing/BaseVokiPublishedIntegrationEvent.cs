@@ -19,5 +19,5 @@ public abstract record class BaseVokiPublishedIntegrationEvent(
     Language Language,
     VokiTagId[] Tags,
     DateTime InitializingDate,
-    DateTime PublishingDate
+    DateTime PublicationDate
 ) : IIntegrationEvent;

@@ -16,7 +16,7 @@ public record class GeneralVokiPublishedIntegrationEvent(
     Language Language,
     VokiTagId[] Tags,
     DateTime InitializingDate,
-    DateTime PublishingDate,
+    DateTime PublicationDate,
     //Voki Type specific 
     GeneralVokiQuestionIntegrationEventDto[] Questions,
     bool ForceSequentialAnswering,
@@ -27,7 +27,7 @@ public record class GeneralVokiPublishedIntegrationEvent(
     VokiId, PrimaryAuthorId, CoAuthors, Managers,
     Name, Cover, Description,
     HasMatureContent, Language, Tags,
-    InitializingDate, PublishingDate
+    InitializingDate, PublicationDate
 );
 
 public record GeneralVokiInteractionSettingsIntegrationEventDto(

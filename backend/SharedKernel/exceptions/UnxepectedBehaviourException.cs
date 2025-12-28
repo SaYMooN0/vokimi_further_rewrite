@@ -1,4 +1,6 @@
-﻿namespace SharedKernel.exceptions;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SharedKernel.exceptions;
 
 using System.Runtime.CompilerServices;
 
@@ -33,7 +35,6 @@ public class UnexpectedBehaviourException : Exception
             throw new UnexpectedBehaviourException(err, caller, userMessage);
         }
     }
-
     public static void ThrowErr(
         Err err,
         string? userMessage = null,

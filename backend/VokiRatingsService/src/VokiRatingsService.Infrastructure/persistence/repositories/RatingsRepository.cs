@@ -1,5 +1,4 @@
-﻿using ApplicationShared;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.voki_rating_aggregate;
 
@@ -13,12 +12,13 @@ public class RatingsRepository : IRatingsRepository
         _db = db;
     }
 
-    public Task<VokiRating?> GetUserRatingForVokiWithHistory(
+    public Task<VokiRating?> GetUserRatingForVoki(
         IAuthenticatedUserContext userContext, VokiId vokiId, CancellationToken ct
-    ) =>
-        _db.Ratings
-            .Include(r => r.History)
-            .FirstOrDefaultAsync(r => r.VokiId == vokiId && r.UserId == userContext.UserId, cancellationToken: ct);
+    ) => _db.Ratings.FirstOrDefaultAsync(r =>
+            r.VokiId == vokiId
+            && r.UserId == userContext.UserId,
+        cancellationToken: ct
+    );
 
     public Task<VokiRating[]> GetForVokiAsNoTracking(VokiId vokiId, CancellationToken ct) => _db.Ratings
         .AsNoTracking()
@@ -35,12 +35,12 @@ public class RatingsRepository : IRatingsRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task<VokiIdWithLastRatingDto[]> ListIdsOfVokiRatedByUser(
+    public Task<VokiIdWithCurrentRatingDto[]> ListIdsOfVokiRatedByUser(
         IAuthenticatedUserContext userContext, CancellationToken ct
     ) =>
         _db.Ratings
             .AsNoTracking()
             .Where(r => r.UserId == userContext.UserId)
-            .Select(r => new VokiIdWithLastRatingDto(r.VokiId, r.Current.Value, r.Current.DateTime))
+            .Select(r => new VokiIdWithCurrentRatingDto(r.VokiId, r.CurrentValue, r.LastUpdated))
             .ToArrayAsync(ct);
 }

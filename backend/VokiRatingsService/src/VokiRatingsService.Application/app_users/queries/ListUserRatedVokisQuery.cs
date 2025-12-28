@@ -5,7 +5,7 @@ using VokiRatingsService.Application.common.repositories;
 namespace VokiRatingsService.Application.app_users.queries;
 
 public sealed record ListUserRatedVokisQuery() :
-    IQuery<VokiIdWithLastRatingDto[]>,
+    IQuery<VokiIdWithCurrentRatingDto[]>,
     IWithAuthCheckStep
 {
     public Err UnauthenticatedErr => ErrFactory.AuthRequired(
@@ -14,7 +14,7 @@ public sealed record ListUserRatedVokisQuery() :
 }
 
 internal sealed class ListUserRatedVokisQueryHandler :
-    IQueryHandler<ListUserRatedVokisQuery, VokiIdWithLastRatingDto[]>
+    IQueryHandler<ListUserRatedVokisQuery, VokiIdWithCurrentRatingDto[]>
 {
     private readonly IUserContext _userContext;
     private readonly IRatingsRepository _ratingsRepository;
@@ -25,7 +25,7 @@ internal sealed class ListUserRatedVokisQueryHandler :
     }
 
 
-    public async Task<ErrOr<VokiIdWithLastRatingDto[]>> Handle(ListUserRatedVokisQuery query, CancellationToken ct) {
+    public async Task<ErrOr<VokiIdWithCurrentRatingDto[]>> Handle(ListUserRatedVokisQuery query, CancellationToken ct) {
         return await _ratingsRepository.ListIdsOfVokiRatedByUser(
             new AuthenticatedUserContext(_userContext.AuthenticatedUserId), ct);
     }

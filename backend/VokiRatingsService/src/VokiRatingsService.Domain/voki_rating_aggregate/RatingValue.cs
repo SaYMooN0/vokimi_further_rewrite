@@ -2,17 +2,15 @@
 
 namespace VokiRatingsService.Domain.voki_rating_aggregate;
 
-public class RatingValueWithDate : ValueObject
+public class RatingValue : ValueObject
 {
-    private RatingValueWithDate(ushort value, DateTime dateTime) {
+    private RatingValue(ushort value) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckValueForErr(value));
         Value = value;
-        DateTime = dateTime;
     }
 
     public ushort Value { get; }
-    public DateTime DateTime { get; }
-    public override IEnumerable<object> GetEqualityComponents() => [Value, DateTime];
+    public override IEnumerable<object> GetEqualityComponents() => [Value];
 
     private const ushort
         MinValue = 1,
@@ -35,6 +33,6 @@ public class RatingValueWithDate : ValueObject
     }
 
 
-    public static ErrOr<RatingValueWithDate> Create(ushort value, DateTime dateTime) =>
-        CheckValueForErr(value).IsErr(out var err) ? err : new RatingValueWithDate(value, dateTime);
+    public static ErrOr<RatingValue> Create(ushort value) =>
+        CheckValueForErr(value).IsErr(out var err) ? err : new RatingValue(value);
 }

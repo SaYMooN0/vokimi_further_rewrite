@@ -1,6 +1,6 @@
 ﻿namespace SharedKernel.integration_events;
 
-public record class VokiRatedIntegrationEvent(
+public record class VokiRatingsCountChangedIntegrationEvent(
     VokiId VokiId,
     uint NewRatingsCount
 ) : IIntegrationEvent;

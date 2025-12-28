@@ -5,15 +5,15 @@ using VokisCatalogService.Domain.voki_aggregate;
 
 namespace VokisCatalogService.Application.vokis.integration_event_handlers;
 
-public class VokiRatedIntegrationEventHandler : IConsumer<VokiRatedIntegrationEvent>
+public class VokiRatingsCountChangedIntegrationEventHandler : IConsumer<VokiRatingsCountChangedIntegrationEvent>
 {
     private readonly IBaseVokisRepository _baseVokisRepository;
 
-    public VokiRatedIntegrationEventHandler(IBaseVokisRepository baseVokisRepository) {
+    public VokiRatingsCountChangedIntegrationEventHandler(IBaseVokisRepository baseVokisRepository) {
         _baseVokisRepository = baseVokisRepository;
     }
 
-    public async Task Consume(ConsumeContext<VokiRatedIntegrationEvent> context) {
+    public async Task Consume(ConsumeContext<VokiRatingsCountChangedIntegrationEvent> context) {
         BaseVoki? voki = await _baseVokisRepository.GetById(context.Message.VokiId, context.CancellationToken);
         if (voki is null) {
             return;

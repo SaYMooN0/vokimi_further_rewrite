@@ -35,8 +35,8 @@ export type VokiTypeWithSpecificData = {
 }[keyof VokiTypeMap];
 
 export type GeneralVokiTypeSpecificData = { forceSequentialAnswering: boolean, shuffleQuestions: boolean, anyAudios: boolean };
-export type TierListVokiTypeSpecificData = {};
-export type ScoringVokiTypeSpecificData = {};
+export type TierListVokiTypeSpecificData = object;
+export type ScoringVokiTypeSpecificData = object;
 
 
 export const AllVokiPageTabs = ['about', 'comments', 'ratings'] as const;

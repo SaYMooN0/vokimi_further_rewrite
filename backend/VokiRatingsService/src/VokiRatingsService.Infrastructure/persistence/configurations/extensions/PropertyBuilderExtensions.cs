@@ -6,8 +6,8 @@ namespace VokiRatingsService.Infrastructure.persistence.configurations.extension
 
 public static class PropertyBuilderExtensions
 {
-    public static PropertyBuilder<ImmutableArray<RatingValueWithDate>> HasRatingValueWithDateArrayConversion(
-        this PropertyBuilder<ImmutableArray<RatingValueWithDate>> builder
+    public static PropertyBuilder<ImmutableArray<RatingValue>> HasRatingValueWithDateArrayConversion(
+        this PropertyBuilder<ImmutableArray<RatingValue>> builder
     ) {
         return builder.HasConversion(
             new RatingValueWithDateArrayConverter(),

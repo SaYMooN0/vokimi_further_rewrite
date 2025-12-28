@@ -5,7 +5,7 @@ using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Infrastructure.persistence.configurations.value_converters;
 
-internal class RatingValueWithDateArrayConverter : ValueConverter<ImmutableArray<RatingValueWithDate>, string[]>
+internal class RatingValueWithDateArrayConverter : ValueConverter<ImmutableArray<RatingValue>, string[]>
 {
     private const char Sep = '|';
     private static readonly CultureInfo C = CultureInfo.InvariantCulture;
@@ -16,21 +16,21 @@ internal class RatingValueWithDateArrayConverter : ValueConverter<ImmutableArray
         strings => FromStringArray(strings)
     ) { }
 
-    private static string[] ToStringArray(ImmutableArray<RatingValueWithDate> ratings) =>
+    private static string[] ToStringArray(ImmutableArray<RatingValue> ratings) =>
         ratings.Select(r => $"{r.Value}{Sep}{r.DateTime.ToString(DateFmt, C)}").ToArray();
 
-    private static ImmutableArray<RatingValueWithDate> FromStringArray(string[] strs) =>
+    private static ImmutableArray<RatingValue> FromStringArray(string[] strs) =>
         strs
             .Select(s => {
                 var parts = s.Split(Sep, 2);
                 var value = ushort.Parse(parts[0], NumberStyles.None, C);
                 var dt = DateTime.ParseExact(parts[1], DateFmt, C, DateTimeStyles.RoundtripKind);
-                return RatingValueWithDate.Create(value, dt).AsSuccess();
+                return RatingValue.Create(value, dt).AsSuccess();
             })
             .ToImmutableArray();
 }
 
-internal sealed class RatingValueWithDateArrayComparer : ValueComparer<ImmutableArray<RatingValueWithDate>>
+internal sealed class RatingValueWithDateArrayComparer : ValueComparer<ImmutableArray<RatingValue>>
 {
     public RatingValueWithDateArrayComparer()
         : base(

@@ -26,7 +26,7 @@ namespace SharedKernel.integration_events;
 [JsonDerivedType(typeof(BaseVokiTakenIntegrationEvent),typeDiscriminator: nameof(BaseVokiTakenIntegrationEvent))]
 [JsonDerivedType(typeof(GeneralVokiTakenIntegrationEvent),typeDiscriminator: nameof(GeneralVokiTakenIntegrationEvent))]
 
-[JsonDerivedType(typeof(VokiRatedIntegrationEvent),typeDiscriminator: nameof(VokiRatedIntegrationEvent))]
+[JsonDerivedType(typeof(VokiRatingsCountChangedIntegrationEvent),typeDiscriminator: nameof(VokiRatingsCountChangedIntegrationEvent))]
 
 [JsonDerivedType(typeof(DraftVokiNewCoAuthorAddedIntegrationEvent),typeDiscriminator: nameof(DraftVokiNewCoAuthorAddedIntegrationEvent))]
 [JsonDerivedType(typeof(DraftVokiCoAuthorRemovedIntegrationEvent),typeDiscriminator: nameof(DraftVokiCoAuthorRemovedIntegrationEvent))]
