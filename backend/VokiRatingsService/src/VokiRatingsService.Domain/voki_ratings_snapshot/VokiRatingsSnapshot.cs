@@ -1,3 +1,4 @@
+using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_aggregate;
 using VokiRatingsService.Domain.voki_ratings_snapshot.events;
 

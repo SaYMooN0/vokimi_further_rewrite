@@ -4,7 +4,7 @@ using UserProfilesService.Domain.app_user_aggregate;
 
 namespace UserProfilesService.Infrastructure.persistence.repositories;
 
-public class AppUsersRepository : IAppUsersRepository
+internal class AppUsersRepository : IAppUsersRepository
 {
     private readonly UserProfilesDbContext _db;
 

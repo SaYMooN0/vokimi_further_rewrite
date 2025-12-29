@@ -1,10 +1,10 @@
 ﻿using AlbumsService.Infrastructure.persistence;
-using InfrastructureShared.Base;
+using InfrastructureShared.EfCore;
 using Microsoft.AspNetCore.Builder;
 
 namespace AlbumsService.Infrastructure;
 
-public static class RequestPipeline
+public static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder AddInfrastructureMiddleware(this IApplicationBuilder app) {
         app.UseMiddleware<EventualConsistencyMiddleware<AlbumsDbContext>>();

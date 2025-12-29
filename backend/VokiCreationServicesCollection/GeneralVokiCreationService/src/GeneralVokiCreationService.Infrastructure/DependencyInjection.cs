@@ -7,7 +7,7 @@ using GeneralVokiCreationService.Infrastructure.persistence.repositories;
 using GeneralVokiCreationService.Infrastructure.storage;
 using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
-using InfrastructureShared.Base.domain_events_publisher;
+using InfrastructureShared.EfCore;
 using InfrastructureShared.Storage;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

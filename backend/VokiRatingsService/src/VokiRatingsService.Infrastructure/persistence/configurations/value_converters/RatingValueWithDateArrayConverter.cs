@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Infrastructure.persistence.configurations.value_converters;

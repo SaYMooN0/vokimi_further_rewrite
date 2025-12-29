@@ -1,4 +1,5 @@
 using VokiRatingsService.Application.common.repositories;
+using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Application;

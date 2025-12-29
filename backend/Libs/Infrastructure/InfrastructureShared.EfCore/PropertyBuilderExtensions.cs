@@ -1,13 +1,12 @@
 ﻿using System.Collections.Immutable;
 using System.Linq.Expressions;
 using InfrastructureShared.Base.persistence.value_converters.guid_based_ids;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.common.vokis.scoring_voki;
 using SharedKernel.common.vokis.tier_list_voki;
 
-namespace InfrastructureShared.Base.persistence.extensions;
+namespace InfrastructureShared.EfCore;
 
 public static class PropertyBuilderExtensions
 {

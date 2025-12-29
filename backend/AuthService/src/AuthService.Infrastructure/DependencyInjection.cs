@@ -8,14 +8,11 @@ using AuthService.Infrastructure.persistence;
 using AuthService.Infrastructure.persistence.repositories;
 using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
-using InfrastructureShared.Base.domain_events_publisher;
-using MassTransit;
+using InfrastructureShared.EfCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace AuthService.Infrastructure;
 

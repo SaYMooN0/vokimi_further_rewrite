@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.common.vokis;
 
-namespace InfrastructureShared.Base.persistence.value_converters;
+namespace InfrastructureShared.EfCore.value_converters;
 
 public class VokiManagersIdsSetConverter : ValueConverter<VokiManagersIdsSet, Guid[]>
 {

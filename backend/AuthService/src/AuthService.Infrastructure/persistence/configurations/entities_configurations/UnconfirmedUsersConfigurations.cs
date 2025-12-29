@@ -1,7 +1,7 @@
 ﻿using AuthService.Domain.unconfirmed_user_aggregate;
 using AuthService.Infrastructure.persistence.configurations.value_converters;
-using InfrastructureShared.Base.persistence.extensions;
 using InfrastructureShared.Base.persistence.value_converters;
+using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

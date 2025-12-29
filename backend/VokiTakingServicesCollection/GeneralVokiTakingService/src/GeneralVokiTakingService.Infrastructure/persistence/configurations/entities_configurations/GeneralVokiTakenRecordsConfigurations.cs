@@ -1,6 +1,6 @@
 ﻿using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Infrastructure.persistence.configurations.extensions;
-using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

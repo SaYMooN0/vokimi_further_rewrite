@@ -1,6 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters.results;
-using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

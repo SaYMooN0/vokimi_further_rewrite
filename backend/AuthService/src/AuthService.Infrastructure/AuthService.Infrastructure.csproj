@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Libs\Infrastructure\InfrastructureShared.Auth\InfrastructureShared.Auth.csproj" />
-        <ProjectReference Include="..\..\..\Libs\Infrastructure\InfrastructureShared.Base\InfrastructureShared.Base.csproj" />
+        <ProjectReference Include="..\..\..\Libs\Infrastructure\InfrastructureShared.EfCore\InfrastructureShared.EfCore.csproj" />
         <ProjectReference Include="..\AuthService.Application\AuthService.Application.csproj" />
     </ItemGroup>
     <ItemGroup>

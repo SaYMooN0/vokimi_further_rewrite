@@ -1,14 +1,11 @@
 ﻿using ApplicationShared;
 using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
-using InfrastructureShared.Base.domain_events_publisher;
-using MassTransit;
+using InfrastructureShared.EfCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using TagsService.Application.common.repositories;
 using TagsService.Infrastructure.persistence;
 using TagsService.Infrastructure.persistence.repositories;

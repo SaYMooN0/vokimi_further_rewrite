@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AlbumsService.Infrastructure.persistence.repositories;
 
-public class VokiAlbumsRepository : IVokiAlbumsRepository
+internal class VokiAlbumsRepository : IVokiAlbumsRepository
 {
     private readonly AlbumsDbContext _db;
 

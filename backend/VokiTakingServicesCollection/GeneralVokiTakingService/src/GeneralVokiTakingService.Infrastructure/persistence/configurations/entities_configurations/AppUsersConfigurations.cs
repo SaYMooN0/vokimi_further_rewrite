@@ -1,5 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.app_user_aggregate;
-using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,14 +1,14 @@
-﻿using InfrastructureShared.Base.persistence.extensions;
+﻿using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VokiRatingsService.Domain.voki_rating_aggregate;
+using VokiRatingsService.Domain.voki_ratings_snapshot;
 using VokiRatingsService.Infrastructure.persistence.configurations.extensions;
 
 namespace VokiRatingsService.Infrastructure.persistence.configurations.entities_configurations;
 
-internal class RatingHistoryConfigurations : IEntityTypeConfiguration<RatingHistory>
+internal class VokiRatingsSnapshotConfigurations : IEntityTypeConfiguration<VokiRatingsSnapshot>
 {
-    public void Configure(EntityTypeBuilder<RatingHistory> builder) {
+    public void Configure(EntityTypeBuilder<VokiRatingsSnapshot> builder) {
         builder
             .HasKey(x => x.Id);
         builder
@@ -19,5 +19,6 @@ internal class RatingHistoryConfigurations : IEntityTypeConfiguration<RatingHist
         builder
             .Property(x => x.Values)
             .HasRatingValueWithDateArrayConversion();
+    ...
     }
 }

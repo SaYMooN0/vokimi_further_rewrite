@@ -4,7 +4,7 @@ using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories.taking_sessions;
 
-public class SessionsWithFreeAnsweringRepository : ISessionsWithFreeAnsweringRepository
+internal class SessionsWithFreeAnsweringRepository : ISessionsWithFreeAnsweringRepository
 {
     private readonly GeneralVokiTakingDbContext _db;
 

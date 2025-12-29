@@ -1,10 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Application.common.repositories;
+using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_rating_aggregate;
+using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Infrastructure.persistence.repositories;
 
-public class RatingsRepository : IRatingsRepository
+internal class RatingsRepository : IRatingsRepository
 {
     private readonly VokiRatingsDbContext _db;
 
@@ -43,4 +45,19 @@ public class RatingsRepository : IRatingsRepository
             .Where(r => r.UserId == userContext.UserId)
             .Select(r => new VokiIdWithCurrentRatingDto(r.VokiId, r.CurrentValue, r.LastUpdated))
             .ToArrayAsync(ct);
+    
+    public async Task<VokiRatingsDistribution> GetRatingsDistributionForVoki(
+        VokiId vokiId,
+        CancellationToken ct
+    ) {
+        RatingValue[] ratings = await _db.Ratings
+            .AsNoTracking()
+            .Where(r => r.VokiId == vokiId)
+            .Select(r => r.CurrentValue)
+            .ToArrayAsync(ct);
+
+        return VokiRatingsDistribution.FromRatingsArray(ratings);
+    }
+
+    
 }

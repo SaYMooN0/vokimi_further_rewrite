@@ -2,7 +2,7 @@
 
 namespace VokiCommentsService.Infrastructure.persistence.repositories;
 
-public class CommentsRepository : ICommentsRepository
+internal class CommentsRepository : ICommentsRepository
 {
     private readonly VokiCommentsDbContext _db;
 

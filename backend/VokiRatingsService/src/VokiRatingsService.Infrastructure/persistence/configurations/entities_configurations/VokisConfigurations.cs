@@ -1,8 +1,7 @@
-﻿using InfrastructureShared.Base.persistence.extensions;
-using InfrastructureShared.Base.persistence.value_converters;
+﻿using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SharedKernel.common.vokis;
 using VokiRatingsService.Domain.voki_aggregate;
 
 namespace VokiRatingsService.Infrastructure.persistence.configurations.entities_configurations;
@@ -18,16 +17,11 @@ internal class VokisConfigurations : IEntityTypeConfiguration<Voki>
             .HasGuidBasedIdConversion();
 
         builder
-            .Property(x => x.RatingIds)
-            .HasGuidBasedIdsImmutableHashSetConversion();
-
+            .Property(x => x.PrimaryAuthorId)
+            .HasGuidBasedIdConversion(); 
+        
         builder
-            .Property<AppUserId>("PrimaryAuthorId")
-            .HasGuidBasedIdConversion();
-
-
-        builder
-            .Property<VokiManagersIdsSet>("ManagersSet")
+            .Property(x => x.ManagersSet)
             .HasConversion<VokiManagersIdsSetConverter>();
     }
 }

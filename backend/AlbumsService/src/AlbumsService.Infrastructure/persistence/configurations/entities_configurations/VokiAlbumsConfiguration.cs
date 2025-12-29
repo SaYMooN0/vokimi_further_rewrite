@@ -1,7 +1,7 @@
 ﻿using AlbumsService.Domain.voki_album_aggregate;
 using AlbumsService.Infrastructure.persistence.configurations.value_converters;
-using InfrastructureShared.Base.persistence.extensions;
 using InfrastructureShared.Base.persistence.value_converters;
+using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

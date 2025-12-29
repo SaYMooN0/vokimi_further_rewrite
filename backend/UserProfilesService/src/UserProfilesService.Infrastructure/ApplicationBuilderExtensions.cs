@@ -1,4 +1,4 @@
-﻿using InfrastructureShared.Base;
+﻿using InfrastructureShared.EfCore;
 using Microsoft.AspNetCore.Builder;
 using UserProfilesService.Infrastructure.persistence;
 

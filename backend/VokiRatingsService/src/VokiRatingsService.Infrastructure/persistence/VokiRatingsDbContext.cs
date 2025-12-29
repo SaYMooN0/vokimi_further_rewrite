@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Domain.app_user_aggregate;
 using VokiRatingsService.Domain.voki_aggregate;
 using VokiRatingsService.Domain.voki_rating_aggregate;
+using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Infrastructure.persistence;
 
@@ -19,6 +20,7 @@ public class VokiRatingsDbContext : DbContext
     public DbSet<AppUser> AppUsers { get; init; } = null!;
     public DbSet<Voki> Vokis { get; init; } = null!;
     public DbSet<VokiRating> Ratings { get; init; } = null!;
+    public DbSet<VokiRatingsSnapshot> VokiRatingsSnapshots { get; init; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VokiRatingsDbContext).Assembly);
@@ -40,6 +42,4 @@ public class VokiRatingsDbContext : DbContext
             await _publisher.Publish(domainEvent);
         }
     }
- 
-
 }

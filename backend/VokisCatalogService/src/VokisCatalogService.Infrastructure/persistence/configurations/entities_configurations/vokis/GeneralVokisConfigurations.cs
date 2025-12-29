@@ -1,4 +1,4 @@
-﻿using InfrastructureShared.Base.persistence.extensions;
+﻿using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokisCatalogService.Domain.voki_aggregate;

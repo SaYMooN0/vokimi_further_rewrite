@@ -1,4 +1,5 @@
 ﻿using InfrastructureShared.Base.persistence.extensions;
+using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokiRatingsService.Domain.voki_rating_aggregate;
@@ -37,16 +38,5 @@ internal class VokiRatingsConfigurations : IEntityTypeConfiguration<VokiRating>
             .HasForeignKey<RatingHistory>("RatingId")
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
-
-        // indexes
-        
-        builder.HasIndex(x => x.UserId)
-            .HasDatabaseName("IX_VokiRating_UserId");
-
-        builder.HasIndex(x => x.VokiId)
-            .HasDatabaseName("IX_VokiRating_VokiId");
-        builder.HasIndex(x => new { x.UserId, x.VokiId })
-            .IsUnique()
-            .HasDatabaseName("UX_VokiRating_User_Voki");
     }
 }

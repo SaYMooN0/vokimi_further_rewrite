@@ -3,15 +3,15 @@
 namespace VokiRatingsService.Api.contracts;
 
 public record VokiRatingDataResponse(
-    ushort Value,
     string UserId,
+    ushort Value,
     DateTime DateTime
 ) : ICreatableResponse<VokiRating>
 {
     public static VokiRatingDataResponse FromRating(VokiRating rating) => new(
-        rating.Current.Value,
         rating.UserId.ToString(),
-        rating.Current.DateTime
+        rating.CurrentValue.Value,
+        rating.LastUpdated
     );
 
     public static ICreatableResponse<VokiRating> Create(VokiRating rating) => FromRating(rating);

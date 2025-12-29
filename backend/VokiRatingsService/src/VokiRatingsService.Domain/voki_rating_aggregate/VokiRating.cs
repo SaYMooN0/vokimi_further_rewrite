@@ -1,4 +1,5 @@
 ﻿using SharedKernel.exceptions;
+using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_rating_aggregate.events;
 
 namespace VokiRatingsService.Domain.voki_rating_aggregate;

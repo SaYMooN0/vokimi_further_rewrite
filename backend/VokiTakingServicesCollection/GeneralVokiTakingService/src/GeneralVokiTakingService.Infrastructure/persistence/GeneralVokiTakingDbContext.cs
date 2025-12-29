@@ -16,6 +16,7 @@ public class GeneralVokiTakingDbContext : DbContext
     ) : base(options) {
         _publisher = publisher;
     }
+
     public DbSet<AppUser> AppUsers { get; init; } = null!;
     public DbSet<GeneralVoki> Vokis { get; init; } = null!;
     public DbSet<GeneralVokiTakenRecord> VokiTakenRecords { get; init; } = null!;

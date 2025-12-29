@@ -1,7 +1,6 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
 using ApplicationShared;
-using CoreVokiCreationService.Application;
 using CoreVokiCreationService.Application.common;
 using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Infrastructure.persistence;
@@ -9,15 +8,12 @@ using CoreVokiCreationService.Infrastructure.persistence.repositories;
 using CoreVokiCreationService.Infrastructure.storage;
 using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
-using InfrastructureShared.Base.domain_events_publisher;
+using InfrastructureShared.EfCore;
 using InfrastructureShared.Storage;
-using MassTransit;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace CoreVokiCreationService.Infrastructure;
 

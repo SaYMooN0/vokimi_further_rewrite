@@ -5,8 +5,8 @@ namespace VokiRatingsService.Application.common.repositories;
 
 public interface IVokisRepository
 {
-    Task<Voki?> GetById(VokiId vokiId, CancellationToken ct);
-    Task Update(Voki voki, CancellationToken ct);
+    Task<VokiManagersDto?> GetVokiManagerDto(VokiId vokiId, CancellationToken ct);
     Task Add(Voki voki, CancellationToken ct);
 }
+
 public record VokiManagersDto(VokiId Id, AppUserId PrimaryAuthorId, VokiManagersIdsSet ManagersIds);

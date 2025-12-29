@@ -6,6 +6,7 @@ using GeneralVokiTakingService.Infrastructure.persistence.repositories;
 using GeneralVokiTakingService.Infrastructure.persistence.repositories.taking_sessions;
 using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
+using InfrastructureShared.EfCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

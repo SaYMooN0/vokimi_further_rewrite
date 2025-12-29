@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel.domain.events;
+using SharedKernel.errs.utils;
 using SharedKernel.exceptions;
 
 namespace InfrastructureShared.Base.domain_events_publisher;

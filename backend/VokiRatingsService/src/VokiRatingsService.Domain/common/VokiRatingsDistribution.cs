@@ -1,4 +1,4 @@
-namespace VokiRatingsService.Domain.voki_ratings_snapshot;
+namespace VokiRatingsService.Domain.common;
 
 public class VokiRatingsDistribution : ValueObject
 {
@@ -36,4 +36,40 @@ public class VokiRatingsDistribution : ValueObject
         rating4Count: 0,
         rating5Count: 0
     );
+    public static VokiRatingsDistribution FromRatingsArray(RatingValue[] ratings)
+    {
+        if (ratings.Length == 0) {
+            return Empty;
+        }
+
+        uint r1 = 0, r2 = 0, r3 = 0, r4 = 0, r5 = 0;
+
+        foreach (var rating in ratings) {
+            switch (rating.Value) {
+                case 1:
+                    r1++;
+                    break;
+                case 2:
+                    r2++;
+                    break;
+                case 3:
+                    r3++;
+                    break;
+                case 4:
+                    r4++;
+                    break;
+                case 5:
+                    r5++;
+                    break;
+            }
+        }
+
+        return new VokiRatingsDistribution(
+            rating1Count: r1,
+            rating2Count: r2,
+            rating3Count: r3,
+            rating4Count: r4,
+            rating5Count: r5
+        );
+    }
 }

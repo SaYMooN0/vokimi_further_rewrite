@@ -1,13 +1,14 @@
 ﻿using AuthService.Infrastructure.persistence;
 using InfrastructureShared.Base;
+using InfrastructureShared.EfCore;
 using Microsoft.AspNetCore.Builder;
 
 namespace AuthService.Infrastructure;
 
-public static class RequestPipeline
+public static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder AddInfrastructureMiddleware(this IApplicationBuilder app) {
-        app.UseMiddleware<EventualConsistencyMiddleware<AuthDbContext>>();
+        app.AddEventualConsistencyMiddleware<AuthDbContext>();
         return app;
     }
 }

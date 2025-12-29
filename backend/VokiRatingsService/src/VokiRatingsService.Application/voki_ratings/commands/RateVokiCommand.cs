@@ -3,6 +3,7 @@ using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.app_user_aggregate;
+using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_rating_aggregate;
 
 namespace VokiRatingsService.Application.voki_ratings.commands;

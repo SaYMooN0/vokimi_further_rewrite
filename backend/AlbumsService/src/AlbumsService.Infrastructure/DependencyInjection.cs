@@ -5,6 +5,7 @@ using ApplicationShared;
 using InfrastructureShared.Auth;
 using InfrastructureShared.Base;
 using InfrastructureShared.Base.domain_events_publisher;
+using InfrastructureShared.EfCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

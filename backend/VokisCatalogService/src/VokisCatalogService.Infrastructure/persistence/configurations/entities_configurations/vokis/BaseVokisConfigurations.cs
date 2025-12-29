@@ -1,5 +1,5 @@
-﻿using InfrastructureShared.Base.persistence.extensions;
-using InfrastructureShared.Base.persistence.value_converters;
+﻿using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.common.vokis;

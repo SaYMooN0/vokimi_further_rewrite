@@ -2,7 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
-namespace InfrastructureShared.Base;
+
+namespace InfrastructureShared.EfCore;
 
 public class EventualConsistencyMiddleware<T> where T : DbContext
 {
@@ -39,9 +40,9 @@ public class EventualConsistencyMiddleware<T> where T : DbContext
                         transaction.TransactionId, context.Request.Path
                     );
                 }
-                catch (Exception rbEx) {
+                catch (Exception rollbackEx) {
                     _logger.LogError(
-                        rbEx, "Rollback failed for transaction {TransactionId} after error in request {Path}",
+                        rollbackEx, "Rollback failed for transaction {TransactionId} after error in request {Path}",
                         transaction.TransactionId, context.Request.Path
                     );
                 }

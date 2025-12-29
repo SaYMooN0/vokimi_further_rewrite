@@ -8,10 +8,7 @@ internal class ManageVokiEndpoints : IEndpointGroup
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/manage");
 
         group.MapGet("/ratings", GetManageVokiRatingsData);
-        group.MapGet("/all-with-average", GetVokiOtherUsersRatingsWithAverage);
-
-        group.MapPatch("/rate", RateVoki)
-            .WithRequestValidation<RateVokiRequest>();
+       
     }
 
     private static async Task<IResult> GetManageVokiRatingsData(

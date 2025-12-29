@@ -1,4 +1,4 @@
-﻿using InfrastructureShared.Base.persistence.extensions;
+﻿using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokiRatingsService.Domain.app_user_aggregate;
@@ -22,7 +22,5 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
         builder
             .Property<ImmutableHashSet<VokiId>>("TakenVokiIds")
             .HasGuidBasedIdsImmutableHashSetConversion();
-
-       
     }
 }

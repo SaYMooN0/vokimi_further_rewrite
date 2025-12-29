@@ -4,7 +4,7 @@ using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories.taking_sessions;
 
-public class SessionsWithSequentialAnsweringRepository : ISessionsWithSequentialAnsweringRepository
+internal class SessionsWithSequentialAnsweringRepository : ISessionsWithSequentialAnsweringRepository
 {
     private readonly GeneralVokiTakingDbContext _db;
 

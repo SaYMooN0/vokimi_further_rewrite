@@ -1,6 +1,6 @@
 ﻿using SharedKernel.exceptions;
 
-namespace VokiRatingsService.Domain.voki_rating_aggregate;
+namespace VokiRatingsService.Domain.common;
 
 public class RatingValue : ValueObject
 {

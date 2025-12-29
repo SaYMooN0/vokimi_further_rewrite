@@ -3,7 +3,7 @@ using VokisCatalogService.Domain.voki_aggregate.voki_types;
 
 namespace VokisCatalogService.Infrastructure.persistence.repositories;
 
-public class GeneralVokisRepository : IGeneralVokisRepository
+internal class GeneralVokisRepository : IGeneralVokisRepository
 {
     private readonly VokisCatalogDbContext _db;
 

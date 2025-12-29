@@ -1,8 +1,8 @@
 ﻿using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using CoreVokiCreationService.Infrastructure.persistence.configurations.value_converters;
-using InfrastructureShared.Base.persistence.extensions;
 using InfrastructureShared.Base.persistence.value_converters;
-using InfrastructureShared.Base.persistence.value_converters.guid_based_ids;
+using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.value_converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

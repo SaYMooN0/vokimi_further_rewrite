@@ -12,12 +12,8 @@ public record class RatingsWithAverageResponse(
         CalculateAverageRating(ratings)
     );
 
-    private static double CalculateAverageRating(VokiRating[] ratings) {
-        if (ratings.Length == 0) {
-            return 0;
-        }
-
-        double sum = ratings.Sum(r => r.Current.Value);
-        return sum / ratings.Length;
-    }
+    private static double CalculateAverageRating(VokiRating[] ratings) =>
+        ratings.Length == 0 
+            ? 0
+            : (double)ratings.Sum(r => r.CurrentValue.Value) / ratings.Length;
 }
