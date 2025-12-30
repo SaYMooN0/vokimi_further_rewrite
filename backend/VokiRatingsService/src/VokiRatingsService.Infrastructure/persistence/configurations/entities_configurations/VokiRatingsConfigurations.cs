@@ -1,8 +1,8 @@
-﻿using InfrastructureShared.Base.persistence.extensions;
-using InfrastructureShared.EfCore;
+﻿using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokiRatingsService.Domain.voki_rating_aggregate;
+using VokiRatingsService.Infrastructure.persistence.configurations.value_converters;
 
 namespace VokiRatingsService.Infrastructure.persistence.configurations.entities_configurations;
 
@@ -24,19 +24,16 @@ internal class VokiRatingsConfigurations : IEntityTypeConfiguration<VokiRating>
             .Property(x => x.VokiId)
             .HasGuidBasedIdConversion();
 
-        builder.ComplexProperty(x => x.Current, cp => {
-            cp
-                .Property(x => x.Value)
-                .HasColumnName("Current_Value");
-            cp
-                .Property(x => x.DateTime)
-                .HasColumnName("Current_DateTime");
-        });
         builder
-            .HasOne(x => x.History)
-            .WithOne()
-            .HasForeignKey<RatingHistory>("RatingId")
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+            .Property(x => x.CurrentValue)
+            .HasConversion<RatingValueConverter>();
+        builder.Property(x => x.LastUpdated);
+
+        builder
+            .Property(x => x.InitialValue)
+            .HasConversion<RatingValueConverter>();
+        builder.Property(x => x.InitialDateTime);
+
+        builder.Ignore(x => x.WasUpdated);
     }
 }

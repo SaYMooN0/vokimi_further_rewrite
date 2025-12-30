@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Linq.Expressions;
-using InfrastructureShared.Base.persistence.value_converters.guid_based_ids;
+using InfrastructureShared.EfCore.value_converters.guid_based_ids;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.common.vokis.scoring_voki;

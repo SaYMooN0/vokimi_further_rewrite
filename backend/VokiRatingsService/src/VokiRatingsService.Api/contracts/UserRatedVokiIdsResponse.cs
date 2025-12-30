@@ -9,7 +9,7 @@ public record class UserRatedVokiIdsResponse(
     public static ICreatableResponse<VokiIdWithCurrentRatingDto[]> Create(VokiIdWithCurrentRatingDto[] vokis) =>
         new UserRatedVokiIdsResponse(vokis.ToDictionary(
             v => v.VokiId.ToString(),
-            v => new RatingBriefDataResponse(v.Value, v.DateTime))
+            v => new RatingBriefDataResponse(v.Value.Value, v.DateTime))
         );
 
     public record RatingBriefDataResponse(ushort Value, DateTime DateTime);

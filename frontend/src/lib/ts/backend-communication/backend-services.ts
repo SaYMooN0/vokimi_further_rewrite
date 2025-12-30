@@ -69,23 +69,10 @@ export class BackendService {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);
                 return { isSuccess: true, data };
-
-            }
-            const contentType = response.headers.get("content-type");
-            if (contentType?.includes("application/json")) {
-                const json = await response.json();
-                if (Array.isArray(json.errs)) {
-                    return {
-                        isSuccess: false,
-                        errs: json.errs.map(ErrUtils.fromPlain)
-                    };
-                }
             }
 
-            return {
-                isSuccess: false,
-                errs: [ErrUtils.createUnknown("Response was not valid JSON with an 'errs' array")]
-            };
+            const errs = await this.parseErrResponse(response);
+            return { isSuccess: false, errs };
 
         } catch (e: any) {
             return {
@@ -108,7 +95,7 @@ export class BackendService {
         const contentType = response.headers.get("content-type");
 
         if (contentType?.includes("application/json")) {
-            
+
             try {
                 const json = await response.json();
                 if (!Array.isArray(json.errs)) {
@@ -166,7 +153,7 @@ export const ApiVokiTakingGeneral = new BackendService('/api/voki-taking/general
 
 export const RJO = {
     POST: (data: any): RequestInit => formRequestJsonOptions(data, "POST"),
-    PUT:  (data: any): RequestInit => formRequestJsonOptions(data, "PUT"),
+    PUT: (data: any): RequestInit => formRequestJsonOptions(data, "PUT"),
     PATCH: (data: any): RequestInit => formRequestJsonOptions(data, "PATCH"),
     DELETE: (data: any): RequestInit => formRequestJsonOptions(data, "DELETE"),
 };

@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace InfrastructureShared.Base.persistence.value_converters;
+namespace InfrastructureShared.EfCore.value_converters;
 
 public class ObjectToJsonConverter<T> : ValueConverter<T, string> where T : class
 {

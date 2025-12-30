@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.common;
 
-namespace InfrastructureShared.Base.persistence.value_converters;
+namespace InfrastructureShared.EfCore.value_converters;
 public class HexColorConverter : ValueConverter<HexColor, string>
 {
     public HexColorConverter() : base(

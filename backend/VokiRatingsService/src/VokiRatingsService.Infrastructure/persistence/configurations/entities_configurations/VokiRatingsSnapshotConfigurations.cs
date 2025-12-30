@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
-using VokiRatingsService.Infrastructure.persistence.configurations.extensions;
 
 namespace VokiRatingsService.Infrastructure.persistence.configurations.entities_configurations;
 
@@ -17,8 +16,23 @@ internal class VokiRatingsSnapshotConfigurations : IEntityTypeConfiguration<Voki
             .HasGuidBasedIdConversion();
 
         builder
-            .Property(x => x.Values)
-            .HasRatingValueWithDateArrayConversion();
-    ...
+            .Property(x => x.VokiId)
+            .HasGuidBasedIdConversion();
+        
+        builder.Property(x => x.Date);
+        
+        builder.ComplexProperty(
+            x => x.Distribution,
+            c => {
+                c.Property(d => d.Rating1Count);
+                c.Property(d => d.Rating2Count);
+                c.Property(d => d.Rating3Count);
+                c.Property(d => d.Rating4Count);
+                c.Property(d => d.Rating5Count);
+                c.Ignore(d => d.TotalCount);
+                c.Ignore(d => d.TotalSum);
+
+            }
+        );
     }
 }

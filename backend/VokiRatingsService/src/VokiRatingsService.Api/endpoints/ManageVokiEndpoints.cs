@@ -1,4 +1,7 @@
-using VokiRatingsService.Api.contracts;
+using ApiShared.extensions;
+using VokiRatingsService.Api.contracts.manage_voki;
+using VokiRatingsService.Application.vokis.queries;
+using VokiRatingsService.Domain.common;
 
 namespace VokiRatingsService.Api.endpoints;
 
@@ -13,13 +16,13 @@ internal class ManageVokiEndpoints : IEndpointGroup
 
     private static async Task<IResult> GetManageVokiRatingsData(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<UserRatingsDataForVokiQuery, UserRatingsDataForVokiQueryResult> handler
+        IQueryHandler<ManageVokiRatingsDistributionQuery, VokiRatingsDistribution> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        UserRatingsDataForVokiQuery query = new(vokiId);
+        ManageVokiRatingsDistributionQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<UserRatingsDataForVokiQueryResult, UserRatingsDataForVokiResponse>(result);
+        return CustomResults.FromErrOrToJson<VokiRatingsDistribution, ManageVokiResponse>(result);
     }
 }

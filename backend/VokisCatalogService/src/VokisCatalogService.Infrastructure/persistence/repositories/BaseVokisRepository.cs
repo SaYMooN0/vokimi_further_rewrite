@@ -47,17 +47,4 @@ internal class BaseVokisRepository : IBaseVokisRepository
         _db.BaseVokis.Update(voki);
         await _db.SaveChangesAsync(ct);
     }
-
-    public async Task<VokiType?> GetVokiTypeById(VokiId vokiId, CancellationToken ct) {
-        var voki = await _db.BaseVokis
-            .AsNoTracking()
-            .Select(v => new { v.Id, v.Type })
-            .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
-
-        if (voki is null) {
-            return null;
-        }
-
-        return voki.Type;
-    }
 }

@@ -11,8 +11,8 @@ public class VokiRating : AggregateRoot<VokiRatingId>
     public VokiId VokiId { get; }
     public RatingValue CurrentValue { get; private set; }
     public DateTime LastUpdated { get; private set; }
-    public DateTime InitialDateTime { get; }
     public RatingValue InitialValue { get; }
+    public DateTime InitialDateTime { get; }
     public bool WasUpdated => LastUpdated != InitialDateTime;
 
     private VokiRating(VokiRatingId id, AppUserId userId, VokiId vokiId, RatingValue value, DateTime now) {

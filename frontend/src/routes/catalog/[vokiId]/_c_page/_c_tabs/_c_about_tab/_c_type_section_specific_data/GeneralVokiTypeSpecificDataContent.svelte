@@ -8,7 +8,6 @@
 	let { data }: Props = $props();
 </script>
 {JSON.stringify(data)}
-d
 <!-- <TypeSpecificDataBooleanField fieldName="Any audio content:" value={data.anyAudios} /> -->
 <!-- <TypeSpecificDataBooleanField
 	fieldName="Force sequential answering:"

@@ -18,10 +18,12 @@ internal class VokisConfigurations : IEntityTypeConfiguration<Voki>
 
         builder
             .Property(x => x.PrimaryAuthorId)
-            .HasGuidBasedIdConversion(); 
-        
+            .HasGuidBasedIdConversion();
+
         builder
             .Property(x => x.ManagersSet)
             .HasConversion<VokiManagersIdsSetConverter>();
+
+        builder.Property<DateTime>("PublicationDate");
     }
 }

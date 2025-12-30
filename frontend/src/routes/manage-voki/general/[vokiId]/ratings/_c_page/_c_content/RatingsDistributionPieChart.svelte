@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { VokiRatingValue } from '$lib/ts/voki';
-	import type { RatingValueToCountType } from '../types';
+	import type { RatingValueToCountType } from '../../types';
 
 	interface Props {
 		distribution: RatingValueToCountType;
@@ -98,7 +98,8 @@
 		display: flex;
 		align-items: center;
 		gap: 2rem;
-		--chart-size: 12rem;
+		display: grid;
+		grid-template-columns: 1fr 10rem;
 		background-color: var(--secondary);
 		border-radius: 1rem;
 	}
@@ -109,9 +110,8 @@
 		--slice-3: color-mix(in srgb, var(--primary-hov) 60%, var(--secondary));
 		--slice-4: color-mix(in srgb, var(--primary-hov) 40%, var(--secondary));
 		--slice-5: color-mix(in srgb, var(--primary-hov) 20%, var(--secondary));
-
-		width: var(--chart-size);
-		height: var(--chart-size);
+		width: 100%;
+		aspect-ratio: 1/1;
 		display: block;
 	}
 
@@ -135,7 +135,6 @@
 	.slice-5 {
 		fill: var(--slice-5);
 	}
-
 
 	.legend {
 		display: flex;

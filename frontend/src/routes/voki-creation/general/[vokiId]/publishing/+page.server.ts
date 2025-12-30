@@ -2,7 +2,6 @@ import { ApiVokiCreationGeneral, type DraftVokiPublishingData } from '$lib/ts/ba
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
-
     return {
         response: await ApiVokiCreationGeneral.serverFetchJsonResponse<DraftVokiPublishingData>(
             fetch, `/vokis/${params.vokiId}/publishing-data`, { method: 'GET' }

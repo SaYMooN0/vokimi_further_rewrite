@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SharedKernel.exceptions;
 
-namespace InfrastructureShared.Base.persistence.value_converters.guid_based_ids;
+namespace InfrastructureShared.EfCore.value_converters.guid_based_ids;
 
 public class NullableGuidBasedIdConverter<TId> : ValueConverter<TId?, Guid?> where TId : GuidBasedId
 {

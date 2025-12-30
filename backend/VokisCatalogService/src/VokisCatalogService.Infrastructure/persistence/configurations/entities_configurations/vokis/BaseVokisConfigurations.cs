@@ -58,7 +58,7 @@ public class BaseVokisConfigurations : IEntityTypeConfiguration<BaseVoki>
         builder.Property(x => x.CommentsCount);
         builder.Property(x => x.VokiTakingsCount);
 
-        builder.ComplexProperty(x => x.CatalogPageSettings, s => {
+        builder.OwnsOne(x => x.CatalogPageSettings, s => {
             s.Property(p => p.ShowVokisRecommendedByPrimaryAuthor);
             s.Property(p => p.VokiIdsRecommendedByPrimaryAuthor)
                 .HasGuidBasedIdsImmutableHashSetConversion();
