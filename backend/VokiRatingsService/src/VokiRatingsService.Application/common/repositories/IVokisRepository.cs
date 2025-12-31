@@ -6,6 +6,7 @@ namespace VokiRatingsService.Application.common.repositories;
 public interface IVokisRepository
 {
     Task<VokiManagersDto?> GetVokiManagerDto(VokiId vokiId, CancellationToken ct);
+    Task<Voki?> GetVokiAsNoTrackingById(VokiId vokiId, CancellationToken ct);
     Task Add(Voki voki, CancellationToken ct);
 }
 

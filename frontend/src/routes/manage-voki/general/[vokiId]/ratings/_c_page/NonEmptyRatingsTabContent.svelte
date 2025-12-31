@@ -33,10 +33,11 @@
 		</div>
 		<div class="main-field">Total ratings count: <label>{totalCount}</label></div>
 	</div>
-	<div class="chart-part">
+	<div class="pie-chart-part">
 		<RatingsDistributionPieChart {distribution} />
 	</div>
 </div>
+
 
 <style>
 	.ratings-top-data {

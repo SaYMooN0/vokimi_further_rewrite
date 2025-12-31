@@ -24,6 +24,6 @@ internal class VokisConfigurations : IEntityTypeConfiguration<Voki>
             .Property(x => x.ManagersSet)
             .HasConversion<VokiManagersIdsSetConverter>();
 
-        builder.Property<DateTime>("PublicationDate");
+        builder.Property(x => x.PublicationDate);
     }
 }

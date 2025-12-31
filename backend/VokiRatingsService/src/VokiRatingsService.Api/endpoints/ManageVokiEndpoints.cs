@@ -1,7 +1,6 @@
 using ApiShared.extensions;
 using VokiRatingsService.Api.contracts.manage_voki;
 using VokiRatingsService.Application.vokis.queries;
-using VokiRatingsService.Domain.common;
 
 namespace VokiRatingsService.Api.endpoints;
 
@@ -10,19 +9,30 @@ internal class ManageVokiEndpoints : IEndpointGroup
     public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/manage");
 
-        group.MapGet("/ratings", GetManageVokiRatingsData);
-       
+        group.MapGet("/overview", ManageVokiRatingsOverview);
+        group.MapGet("/snapshots", ManageVokiRatingsSnapshots);
     }
 
-    private static async Task<IResult> GetManageVokiRatingsData(
+    private static async Task<IResult> ManageVokiRatingsOverview(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ManageVokiRatingsDistributionQuery, VokiRatingsDistribution> handler
+        IQueryHandler<ManageVokiRatingsOverviewQuery, ManageVokiRatingsOverviewQueryResult> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        ManageVokiRatingsDistributionQuery query = new(vokiId);
+        ManageVokiRatingsOverviewQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<VokiRatingsDistribution, ManageVokiResponse>(result);
+        return CustomResults.FromErrOrToJson<ManageVokiRatingsOverviewQueryResult, ManageVokiRatingsOverviewResponse>(result);
+    }
+    private static async Task<IResult> ManageVokiRatingsSnapshots(
+        CancellationToken ct, HttpContext httpContext,
+        IQueryHandler<ManageVokiRatingsSnapshotsQuery, ManageVokiRatingsSnapshotsQueryResult> handler
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+
+        ManageVokiRatingsSnapshotsQuery query = new(vokiId);
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOrToJson<ManageVokiRatingsSnapshotsQueryResult, >(result);
     }
 }

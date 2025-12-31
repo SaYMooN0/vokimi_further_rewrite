@@ -3,23 +3,22 @@ using ApplicationShared.messaging.pipeline_behaviors;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_aggregate;
-using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Application.vokis.queries;
 
-public sealed record ManageVokiRatingsDistributionQuery(
+public sealed record ManageVokiRatingsOverviewQuery(
     VokiId VokiId
-) : IQuery<VokiRatingsDistribution>,
+) : IQuery<ManageVokiRatingsOverviewQueryResult>,
     IWithAuthCheckStep;
 
-internal sealed class ManageVokiRatingsDistributionQueryHandler :
-    IQueryHandler<ManageVokiRatingsDistributionQuery, VokiRatingsDistribution>
+internal sealed class ManageVokiRatingsOverviewQueryHandler :
+    IQueryHandler<ManageVokiRatingsOverviewQuery, ManageVokiRatingsOverviewQueryResult>
 {
     private readonly IUserContext _userContext;
     private readonly IRatingsRepository _ratingsRepository;
     private readonly IVokisRepository _vokisRepository;
 
-    public ManageVokiRatingsDistributionQueryHandler(
+    public ManageVokiRatingsOverviewQueryHandler(
         IUserContext userContext,
         IRatingsRepository ratingsRepository,
         IVokisRepository vokisRepository
@@ -30,18 +29,21 @@ internal sealed class ManageVokiRatingsDistributionQueryHandler :
     }
 
 
-    public async Task<ErrOr<VokiRatingsDistribution>> Handle(
-        ManageVokiRatingsDistributionQuery query, CancellationToken ct
+    public async Task<ErrOr<ManageVokiRatingsOverviewQueryResult>> Handle(
+        ManageVokiRatingsOverviewQuery query, CancellationToken ct
     ) {
-        var voki = await _vokisRepository.GetVokiManagerDto(query.VokiId, ct);
+        Voki? voki = await _vokisRepository.GetVokiAsNoTrackingById(query.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Voki does not exist");
         }
 
-        if (!Voki.CanUserManage(_userContext.AuthenticatedUser, voki.PrimaryAuthorId, voki.ManagersIds)) {
+        if (!voki.CanUserManage(_userContext.AuthenticatedUser)) {
             return ErrFactory.NoAccess("To get this data you need to be a Voki manager");
         }
 
-        return await _ratingsRepository.GetRatingsDistributionForVoki(query.VokiId, ct);
+        var distribution = await _ratingsRepository.GetRatingsDistributionForVoki(query.VokiId, ct);
+        return new ManageVokiRatingsOverviewQueryResult(distribution, voki.PublicationDate);
     }
 }
+
+public sealed record ManageVokiRatingsOverviewQueryResult(VokiRatingsDistribution Distribution, DateTime PublicationDate);

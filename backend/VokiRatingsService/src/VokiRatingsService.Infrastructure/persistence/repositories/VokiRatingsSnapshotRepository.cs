@@ -16,8 +16,7 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
         VokiId vokiId,
         DateOnly date,
         CancellationToken ct
-    )
-    {
+    ) {
         var dayStart = date.ToDateTime(TimeOnly.MinValue);
         var nextDayStart = dayStart.AddDays(1);
 
@@ -42,4 +41,14 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
         _db.VokiRatingsSnapshots.Update(snapshot);
         await _db.SaveChangesAsync(ct);
     }
+
+    public Task<VokiRatingsSnapshot[]> ListSortedSnapshotsForVokiAsNoTracking(
+        VokiId vokiId,
+        CancellationToken ct
+    ) =>
+        _db.VokiRatingsSnapshots
+            .AsNoTracking()
+            .Where(s => s.VokiId == vokiId)
+            .OrderBy(s => s.Date)
+            .ToArrayAsync(ct);
 }

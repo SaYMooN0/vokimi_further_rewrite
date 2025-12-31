@@ -7,7 +7,7 @@ public class Voki : AggregateRoot<VokiId>
     private Voki() { }
     public AppUserId PrimaryAuthorId { get; }
     public VokiManagersIdsSet ManagersSet { get; private set; }
-    private DateTime PublicationDate { get; }
+    public DateTime PublicationDate { get; }
 
     public Voki(VokiId id, AppUserId primaryAuthorId, VokiManagersIdsSet managers, DateTime publicationDate) {
         Id = id;

@@ -13,8 +13,8 @@
 
 {#if !data.response.isSuccess}
 	<ManageVokiPageLoadingErr vokiId={data.vokiId} errs={data.response.errs} />
-{:else if ratingsCountNotZero(data.response.data)}
-	<NonEmptyRatingsTabContent distribution={data.response.data} />
+{:else if ratingsCountNotZero(data.response.data.distribution)}
+	<NonEmptyRatingsTabContent distribution={data.response.data.distribution} />
 {:else}
 	<NoRatingsMessage vokiId={data.vokiId} />
 {/if}
