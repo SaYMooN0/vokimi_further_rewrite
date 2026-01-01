@@ -26,7 +26,7 @@
 		flex-direction: column;
 		justify-items: center;
 		width: fit-content;
-		margin: 6rem auto;
+		margin: 2rem auto;
 		
 	}
 
@@ -52,11 +52,12 @@
 	}
 
 	.cover {
-		height: 18rem;
-		margin-top: 1rem;
+		width: 32rem;
+		margin: 1rem auto 0;
 		border-radius: 0.75rem;
 		box-shadow: var(--shadow-xs);
 		aspect-ratio: var(--voki-cover-aspect-ratio);
+
 	}
 
 	.message {

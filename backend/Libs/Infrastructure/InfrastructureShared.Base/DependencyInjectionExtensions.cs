@@ -4,25 +4,21 @@ using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SharedKernel;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 namespace InfrastructureShared.Base;
 
 public static class DependencyInjectionExtensions
 {
-
     public static IServiceCollection AddMassTransitWithIntegrationEventHandlers(
         this IServiceCollection services,
         IConfiguration configuration,
         Assembly applicationLayerAssembly
     ) {
-        string? serviceName = configuration["ServiceName"];
-        if (serviceName is null) {
-            throw new ArgumentNullException(
-                $"ServiceName is not provided in the service with{applicationLayerAssembly.FullName}"
-            );
-        }
+        var serviceName = GetServiceName(configuration);
 
-        var rabbitConfig = configuration.GetSection("MessageBroker");
+        IConfigurationSection rabbitConfig = configuration.GetSection("MessageBroker");
 
         var host = rabbitConfig["Host"] ?? throw new ArgumentException("MessageBroker:Host is not configured");
         var username = rabbitConfig["Username"] ??
@@ -55,8 +51,12 @@ public static class DependencyInjectionExtensions
 
                 cfg.ConfigureEndpoints(context, new KebabCaseEndpointNameFormatter(serviceName + ":"));
 
-                cfg.UseMessageRetry(
-                    r => { r.Interval(retryCount, TimeSpan.FromSeconds(retryIntervalSeconds)); }
+                cfg.UseMessageRetry(r => {
+                        r.Interval(
+                            retryCount: retryCount,
+                            interval: TimeSpan.FromSeconds(retryIntervalSeconds)
+                        );
+                    }
                 );
             });
         });
@@ -64,9 +64,30 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
+    private static string GetServiceName(IConfiguration configuration) =>
+        configuration["ServiceName"] ?? throw new(
+            $"ServiceName is not provided in the '{Assembly.GetExecutingAssembly().FullName}' assembly'"
+        );
+
     public static IServiceCollection AddDateTimeProvider(this IServiceCollection services) =>
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
-    
+
     public static IServiceCollection AddDomainEventsPublisher(this IServiceCollection services) =>
         services.AddTransient<IDomainEventsPublisher, DomainEventsPublisher>();
+
+    public static void AddConfiguredLogging(this IServiceCollection services, IConfiguration configuration) {
+        services.AddOpenTelemetry()
+            .ConfigureResource(resource => resource
+                .AddService(GetServiceName(configuration))
+                .AddAttributes([
+                    new("service.entry_assembly_name", Assembly.GetEntryAssembly()!.GetName().Name!)
+                ])
+            )
+            .WithTracing(tracing =>
+                tracing
+                    .AddAspNetCoreInstrumentation()
+                    // .AddNpgsql()
+                    .AddConsoleExporter()
+            );
+    }
 }

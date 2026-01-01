@@ -69,10 +69,16 @@
 	openCopyFromAnotherAlbumDialog={(a) => copyVokisFromAnotherAlbumDialog.open(a)}
 />
 {#if albums.length === 0}
-	<div class="no-albums-message">
-		<p>You have no albums</p>
-		<PrimaryButton onclick={() => openNewAlbumDialog()}>Create first album</PrimaryButton>
-	</div>
+	{#if albums.length === 0}
+		<div class="no-albums">
+			<h2>You don't have any Albums</h2>
+			<p>
+				Albums help you organize Vokis into meaningful collections — by topic, mood, or purpose.
+				<br />
+				Use button above to create your first album
+			</p>
+		</div>
+	{/if}
 {:else}
 	<div class="albums-list">
 		{#each albums as album}
@@ -89,5 +95,32 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+	}
+	.no-albums {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		position: relative;
+		margin-top: 2rem;
+	}
+
+	.no-albums h2 {
+		color: var(--text);
+		font-size: 1.25rem;
+		font-weight: 600;
+		margin-bottom: 0.5rem;
+	}
+
+	.no-albums p {
+		color: var(--muted-foreground);
+		font-size: 1rem;
+		margin-bottom: 1.25rem;
+		font-weight: 450;
+		text-wrap: pretty;
+		line-height: 1.4;
 	}
 </style>

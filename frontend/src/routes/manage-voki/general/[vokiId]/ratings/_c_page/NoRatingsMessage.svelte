@@ -1,24 +1,6 @@
-<!-- <script lang="ts">
-	interface Props {
-		vokiId: string;
-	}
-	let { vokiId }: Props = $props();
-	const rateVokiLink = `/catalog/${vokiId}?tab=ratings`;
-	function onCopyLinkClick() {}
-</script>
-
-<div class="no-ratings-message">
-	<h1 class="main-msg">This voki doesn't have any ratings yet</h1>
-	<p class="invite-friends">You can invite your friends to take and rate this voki</p>
-	<div class="actions-container">
-		<a class="rate-voki-link" href={rateVokiLink}>Rate this voki</a>
-		<svg class="copy-link-btn" onclick={() => onCopyLinkClick()}
-			><use href="#context-menu-copy-from-album-icon" /></svg
-		>
-	</div>
-</div> -->
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		vokiId: string;
@@ -28,50 +10,25 @@
 	const rateVokiPath = `/catalog/${vokiId}?tab=ratings`;
 	const catalogPath = `/catalog/${vokiId}`;
 
-	let copied = $state(false);
-	let copyErr = $state<string | null>(null);
-
 	let resetCopiedTimeout: ReturnType<typeof setTimeout> | null = null;
 
 	function getShareUrl(): string {
-		// на сервере location нет — вернём относительный путь
-		if (!browser) return rateVokiPath;
+		if (!browser) {
+			return rateVokiPath;
+		}
 		return `${location.origin}${rateVokiPath}`;
 	}
 
-	async function copyText(text: string) {
-		// 1) Clipboard API
-		if (browser && navigator?.clipboard?.writeText) {
-			await navigator.clipboard.writeText(text);
-			return;
-		}
-
-		// 2) fallback
-		const ta = document.createElement('textarea');
-		ta.value = text;
-		ta.setAttribute('readonly', '');
-		ta.style.position = 'fixed';
-		ta.style.left = '-9999rem';
-		document.body.appendChild(ta);
-		ta.select();
-		document.execCommand('copy');
-		document.body.removeChild(ta);
-	}
-
 	async function onCopyLinkClick() {
-		copyErr = null;
-
 		try {
-			await copyText(getShareUrl());
-			copied = true;
-
-			if (resetCopiedTimeout) clearTimeout(resetCopiedTimeout);
-			resetCopiedTimeout = setTimeout(() => {
-				copied = false;
-			}, 1400);
+			if (browser && navigator?.clipboard?.writeText) {
+				await navigator.clipboard.writeText(getShareUrl());
+				toast.success('Link copied to clipboard');
+			} else {
+				toast.error('Failed to copy link to clipboard');
+			}
 		} catch {
-			copyErr = 'Could not copy the link';
-			copied = false;
+			toast.error('Failed to copy link to clipboard');
 		}
 	}
 
@@ -93,41 +50,22 @@
 
 		<div class="share-row">
 			<input
-				class="share-input"
+				class="share-input share-row-el"
 				readonly
 				value={getShareUrl()}
 				onclick={onShareInputClick}
 				aria-label="Share link"
 			/>
 
-			<button class="icon-btn" type="button" onclick={onCopyLinkClick} aria-label="Copy link">
+			<button
+				class="icon-btn share-row-el"
+				type="button"
+				onclick={onCopyLinkClick}
+				aria-label="Copy link"
+			>
 				<svg class="icon"><use href="#context-menu-copy-link-icon" /></svg>
 			</button>
 		</div>
-
-		{#if copied}
-			<div class="hint ok">
-				<svg class="hint-icon" viewBox="0 0 24 24" aria-hidden="true">
-					<path
-						d="M9.2 16.2 5.5 12.6a1 1 0 1 1 1.4-1.4l2.3 2.3 7-7a1 1 0 0 1 1.4 1.4l-8.4 8.3z"
-						fill="currentColor"
-					/>
-				</svg>
-				Copied
-			</div>
-		{/if}
-
-		{#if copyErr}
-			<div class="hint err">
-				<svg class="hint-icon" viewBox="0 0 24 24" aria-hidden="true">
-					<path
-						d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 13h-2v-2h2v2zm0-4h-2V7h2v4z"
-						fill="currentColor"
-					/>
-				</svg>
-				{copyErr}
-			</div>
-		{/if}
 	</div>
 
 	<div class="actions">
@@ -140,7 +78,7 @@
 	.no-ratings-message {
 		min-height: 100%;
 		display: flex;
-        flex-direction: column;
+		flex-direction: column;
 		padding: 2rem 4rem;
 	}
 
@@ -150,33 +88,31 @@
 		gap: 0.5rem;
 		background: var(--accent);
 		color: var(--accent-foreground);
-		padding: 0.4rem 0.75rem;
+		padding: 0.375rem 1rem;
 		border-radius: 999rem;
-		font-weight: 600;
-		font-size: 0.95rem;
+		font-weight: 550;
+		font-size: 1rem;
 		width: fit-content;
-		box-shadow: var(--shadow-xs);
 	}
 
 	.title {
-		margin-top: 0.9rem;
+		margin-top: 1rem;
 		color: var(--text);
-		font-size: 1.85rem;
-		line-height: 1.15;
+		font-size: 1.875rem;
+		line-height: 1;
 		font-weight: 700;
 	}
 
 	.subtitle {
-		margin-top: 0.6rem;
+		margin-top: 0.75rem;
 		color: var(--muted-foreground);
-		font-size: 1.1rem;
-		line-height: 1.45;
+		font-size: 1.125rem;
+		font-weight: 425;
 	}
 
 	.share {
-		margin-top: 1.6rem;
-		background: color-mix(in srgb, var(--secondary) 75%, transparent);
-		border: 0.0625rem solid color-mix(in srgb, var(--muted) 70%, transparent);
+		margin-top: 2rem;
+		background: var(--secondary);
 		border-radius: 1rem;
 		padding: 1rem;
 		box-shadow: var(--shadow-xs);
@@ -184,7 +120,7 @@
 
 	.share-label {
 		color: var(--secondary-foreground);
-		font-weight: 600;
+		font-weight: 500;
 		font-size: 1rem;
 		margin-bottom: 0.75rem;
 	}
@@ -193,23 +129,26 @@
 		display: flex;
 		gap: 0.75rem;
 		align-items: center;
+		height: 2.75rem;
+	}
+	.share-row-el {
+		height: 100%;
+		box-shadow: var(--shadow-xs);
+		border-radius: 0.75rem;
+	}
+	.share-row-el:hover {
+		box-shadow: var(--shadow-xs), var(--shadow-md);
 	}
 
 	.share-input {
 		width: 100%;
-		border: 0.0625rem solid color-mix(in srgb, var(--muted) 75%, transparent);
 		background: var(--back);
-		border-radius: 0.85rem;
-		padding: 0.8rem 0.9rem;
+		border: none;
+		padding: 0 1rem;
 		font-size: 1rem;
 		color: var(--text);
-		box-shadow: var(--shadow-xs);
-	}
-
-	.share-input:focus {
 		outline: none;
-		border-color: color-mix(in srgb, var(--primary) 45%, var(--muted));
-		box-shadow: var(--shadow-md);
+		cursor: default;
 	}
 
 	.icon-btn {
@@ -217,67 +156,21 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		width: 3rem;
-		height: 3rem;
-		border-radius: 0.9rem;
-		border: 0.0625rem solid color-mix(in srgb, var(--muted) 75%, transparent);
+		height: 100%;
+		aspect-ratio: 1/1;
 		background: var(--secondary);
-		box-shadow: var(--shadow-xs);
-		cursor: pointer;
+		padding: 0.5rem;
+		border: none;
+		cursor: default;
+		color: var(--muted-foreground);
 	}
-
-	.icon-btn:hover {
-		box-shadow: var(--shadow-md);
-	}
-
 	.icon-btn:active {
-		transform: translateY(0.0625rem);
+		transform: scale(0.97);
 	}
-
 	.icon {
-		width: 1.4rem;
-		height: 1.4rem;
-	}
-
-	.hint {
-		margin-top: 0.75rem;
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		font-weight: 600;
-		font-size: 0.95rem;
-		padding: 0.45rem 0.7rem;
-		border-radius: 0.85rem;
-		animation: hint-in 0.12s ease-in-out;
-	}
-
-	.hint-icon {
-		width: 1.1rem;
-		height: 1.1rem;
-	}
-
-	.hint.ok {
-		background: var(--accent);
-		color: var(--accent-foreground);
-		border: 0.0625rem solid color-mix(in srgb, var(--accent-foreground) 18%, transparent);
-	}
-
-	.hint.err {
-		background: var(--err-back);
-		color: var(--err-foreground);
-		border: 0.0625rem solid color-mix(in srgb, var(--err-foreground) 22%, transparent);
-		box-shadow: var(--err-shadow);
-	}
-
-	@keyframes hint-in {
-		from {
-			opacity: 0.6;
-			transform: translateY(0.125rem);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
+		height: 100%;
+		aspect-ratio: 1/1;
+		stroke-width: 2;
 	}
 
 	.actions {
@@ -292,7 +185,7 @@
 		align-items: center;
 		justify-content: center;
 		padding: 0.85rem 1.1rem;
-		border-radius: 0.95rem;
+		border-radius: 1rem;
 		font-weight: 700;
 		font-size: 1rem;
 		box-shadow: var(--shadow-md);

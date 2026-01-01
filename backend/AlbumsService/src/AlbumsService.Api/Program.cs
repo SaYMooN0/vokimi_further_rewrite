@@ -17,8 +17,8 @@ public class Program
             options.ValidateScopes = false;
             options.ValidateOnBuild = true;
         });
-        builder.ConfigureLogging();
-
+        
+        builder.Services.AddConfiguredLogging(builder.Configuration);
         builder.Services
             .AddApplication()
             .AddInfrastructure(builder.Configuration, builder.Environment)

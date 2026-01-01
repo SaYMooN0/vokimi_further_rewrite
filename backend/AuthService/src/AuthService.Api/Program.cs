@@ -14,8 +14,9 @@ public class Program
             options.ValidateOnBuild = true;
         });
 
-        builder.ConfigureLogging();
         builder.Services.AddFrontendConfig(builder.Configuration);
+        builder.Services.AddConfiguredLogging(builder.Configuration);
+        
         builder.Services
             .AddApplication()
             .AddInfrastructure(builder.Configuration, builder.Environment)

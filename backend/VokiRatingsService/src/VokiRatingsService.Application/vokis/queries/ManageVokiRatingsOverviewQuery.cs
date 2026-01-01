@@ -8,11 +8,11 @@ namespace VokiRatingsService.Application.vokis.queries;
 
 public sealed record ManageVokiRatingsOverviewQuery(
     VokiId VokiId
-) : IQuery<ManageVokiRatingsOverviewQueryResult>,
+) : IQuery<VokiRatingsDistribution>,
     IWithAuthCheckStep;
 
 internal sealed class ManageVokiRatingsOverviewQueryHandler :
-    IQueryHandler<ManageVokiRatingsOverviewQuery, ManageVokiRatingsOverviewQueryResult>
+    IQueryHandler<ManageVokiRatingsOverviewQuery, VokiRatingsDistribution>
 {
     private readonly IUserContext _userContext;
     private readonly IRatingsRepository _ratingsRepository;
@@ -29,7 +29,7 @@ internal sealed class ManageVokiRatingsOverviewQueryHandler :
     }
 
 
-    public async Task<ErrOr<ManageVokiRatingsOverviewQueryResult>> Handle(
+    public async Task<ErrOr<VokiRatingsDistribution>> Handle(
         ManageVokiRatingsOverviewQuery query, CancellationToken ct
     ) {
         Voki? voki = await _vokisRepository.GetVokiAsNoTrackingById(query.VokiId, ct);
@@ -41,9 +41,6 @@ internal sealed class ManageVokiRatingsOverviewQueryHandler :
             return ErrFactory.NoAccess("To get this data you need to be a Voki manager");
         }
 
-        var distribution = await _ratingsRepository.GetRatingsDistributionForVoki(query.VokiId, ct);
-        return new ManageVokiRatingsOverviewQueryResult(distribution, voki.PublicationDate);
+        return await _ratingsRepository.GetRatingsDistributionForVoki(query.VokiId, ct);
     }
 }
-
-public sealed record ManageVokiRatingsOverviewQueryResult(VokiRatingsDistribution Distribution, DateTime PublicationDate);
