@@ -43,4 +43,23 @@ export namespace DateUtils {
 
 	export const isoDateRegex: RegExp =
 		/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$/;
+
+
+	export function startOfDay(d: Date): Date {
+		return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+	}
+
+	export function addDays(d: Date, days: number): Date {
+		const nd = new Date(d);
+		nd.setDate(nd.getDate() + days);
+		return nd;
+	}
+
+	export function sameDay(a: Date, b: Date): boolean {
+		return (
+			a.getFullYear() === b.getFullYear() &&
+			a.getMonth() === b.getMonth() &&
+			a.getDate() === b.getDate()
+		);
+	}
 }

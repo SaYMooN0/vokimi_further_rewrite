@@ -96,12 +96,12 @@
 <style>
 	.root {
 		display: flex;
+		display: grid;
 		align-items: center;
 		gap: 2rem;
-		display: grid;
-		grid-template-columns: 1fr 10rem;
-		background-color: var(--secondary);
 		border-radius: 1rem;
+		background-color: var(--secondary);
+		grid-template-columns: 1fr 10rem;
 	}
 
 	.chart {
@@ -110,9 +110,10 @@
 		--slice-3: color-mix(in srgb, var(--primary-hov) 60%, var(--secondary));
 		--slice-4: color-mix(in srgb, var(--primary-hov) 40%, var(--secondary));
 		--slice-5: color-mix(in srgb, var(--primary-hov) 20%, var(--secondary));
+
+		display: block;
 		width: 100%;
 		aspect-ratio: 1/1;
-		display: block;
 	}
 
 	.slice {
@@ -123,15 +124,19 @@
 	.slice-1 {
 		fill: var(--slice-1);
 	}
+
 	.slice-2 {
 		fill: var(--slice-2);
 	}
+
 	.slice-3 {
 		fill: var(--slice-3);
 	}
+
 	.slice-4 {
 		fill: var(--slice-4);
 	}
+
 	.slice-5 {
 		fill: var(--slice-5);
 	}
@@ -168,15 +173,19 @@
 	.dot-1 {
 		background: var(--slice-1);
 	}
+
 	.dot-2 {
 		background: var(--slice-2);
 	}
+
 	.dot-3 {
 		background: var(--slice-3);
 	}
+
 	.dot-4 {
 		background: var(--slice-4);
 	}
+
 	.dot-5 {
 		background: var(--slice-5);
 	}
@@ -190,6 +199,7 @@
 		width: 0.8rem;
 		height: 0.8rem;
 	}
+
 	.legend-value {
 		color: var(--muted-foreground);
 		font-size: 0.95rem;

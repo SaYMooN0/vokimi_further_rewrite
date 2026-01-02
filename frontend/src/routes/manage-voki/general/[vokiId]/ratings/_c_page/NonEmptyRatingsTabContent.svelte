@@ -45,36 +45,40 @@
 		grid-template-columns: 1fr auto;
 		gap: 2rem;
 	}
+
 	.fields-part {
-		height: 100%;
 		display: flex;
-		align-items: center;
-		justify-content: center;
 		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
 	}
+
 	.main-field {
 		width: 100%;
 		height: fit-content;
-		padding: 2rem 2rem;
+		padding: 2rem;
 		border-radius: 0.75rem;
 		color: var(--muted-foreground);
-		font-weight: 475;
 		font-size: 2.5rem;
+		font-weight: 475;
 		letter-spacing: 0.25px;
 		white-space: nowrap;
 	}
+
 	.main-field > label {
-		color: var(--primary);
-		font-weight: 500;
 		display: inline-flex;
 		flex-direction: row;
 		align-items: center;
+		color: var(--primary);
+		font-weight: 500;
 	}
+
 	.main-field .star-icon {
 		width: 2.5rem;
 		height: 2.5rem;
-		fill: var(--primary);
-		margin-left: 0.25rem;
 		margin-bottom: 0.25rem;
+		margin-left: 0.25rem;
+		fill: var(--primary);
 	}
 </style>

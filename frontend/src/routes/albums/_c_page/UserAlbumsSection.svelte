@@ -96,31 +96,30 @@
 		flex-direction: column;
 		gap: 0.5rem;
 	}
+
 	.no-albums {
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		position: relative;
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
 		align-items: center;
-		text-align: center;
-		position: relative;
 		margin-top: 2rem;
+		text-align: center;
 	}
 
 	.no-albums h2 {
+		margin-bottom: 0.5rem;
 		color: var(--text);
 		font-size: 1.25rem;
 		font-weight: 600;
-		margin-bottom: 0.5rem;
 	}
 
 	.no-albums p {
+		margin-bottom: 1.25rem;
 		color: var(--muted-foreground);
 		font-size: 1rem;
-		margin-bottom: 1.25rem;
 		font-weight: 450;
-		text-wrap: pretty;
 		line-height: 1.4;
+		text-wrap: pretty;
 	}
 </style>

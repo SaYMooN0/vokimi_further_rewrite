@@ -76,9 +76,9 @@
 
 <style>
 	.no-ratings-message {
-		min-height: 100%;
 		display: flex;
 		flex-direction: column;
+		min-height: 100%;
 		padding: 2rem 4rem;
 	}
 
@@ -86,21 +86,21 @@
 		display: inline-flex;
 		align-items: center;
 		gap: 0.5rem;
-		background: var(--accent);
-		color: var(--accent-foreground);
+		width: fit-content;
 		padding: 0.375rem 1rem;
 		border-radius: 999rem;
-		font-weight: 550;
+		background: var(--accent);
+		color: var(--accent-foreground);
 		font-size: 1rem;
-		width: fit-content;
+		font-weight: 550;
 	}
 
 	.title {
 		margin-top: 1rem;
 		color: var(--text);
 		font-size: 1.875rem;
-		line-height: 1;
 		font-weight: 700;
+		line-height: 1;
 	}
 
 	.subtitle {
@@ -111,62 +111,66 @@
 	}
 
 	.share {
-		margin-top: 2rem;
-		background: var(--secondary);
-		border-radius: 1rem;
 		padding: 1rem;
+		margin-top: 2rem;
+		border-radius: 1rem;
+		background: var(--secondary);
 		box-shadow: var(--shadow-xs);
 	}
 
 	.share-label {
-		color: var(--secondary-foreground);
-		font-weight: 500;
-		font-size: 1rem;
 		margin-bottom: 0.75rem;
+		color: var(--secondary-foreground);
+		font-size: 1rem;
+		font-weight: 500;
 	}
 
 	.share-row {
 		display: flex;
-		gap: 0.75rem;
 		align-items: center;
+		gap: 0.75rem;
 		height: 2.75rem;
 	}
+
 	.share-row-el {
 		height: 100%;
-		box-shadow: var(--shadow-xs);
 		border-radius: 0.75rem;
+		box-shadow: var(--shadow-xs);
 	}
+
 	.share-row-el:hover {
 		box-shadow: var(--shadow-xs), var(--shadow-md);
 	}
 
 	.share-input {
 		width: 100%;
-		background: var(--back);
-		border: none;
 		padding: 0 1rem;
-		font-size: 1rem;
+		border: none;
+		background: var(--back);
 		color: var(--text);
-		outline: none;
+		font-size: 1rem;
 		cursor: default;
+		outline: none;
 	}
 
 	.icon-btn {
-		flex: 0 0 auto;
 		display: inline-flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		height: 100%;
-		aspect-ratio: 1/1;
-		background: var(--secondary);
 		padding: 0.5rem;
 		border: none;
-		cursor: default;
+		background: var(--secondary);
 		color: var(--muted-foreground);
+		cursor: default;
+		flex: 0 0 auto;
+		aspect-ratio: 1/1;
 	}
+
 	.icon-btn:active {
 		transform: scale(0.97);
 	}
+
 	.icon {
 		height: 100%;
 		aspect-ratio: 1/1;
@@ -174,22 +178,22 @@
 	}
 
 	.actions {
-		margin-top: 1.6rem;
 		display: flex;
-		gap: 0.75rem;
 		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin-top: 1.6rem;
 	}
 
 	.btn {
 		display: inline-flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		padding: 0.85rem 1.1rem;
-		border-radius: 1rem;
-		font-weight: 700;
-		font-size: 1rem;
-		box-shadow: var(--shadow-md);
 		border: 0.0625rem solid transparent;
+		border-radius: 1rem;
+		font-size: 1rem;
+		font-weight: 700;
+		box-shadow: var(--shadow-md);
 	}
 
 	.btn.primary {
@@ -202,9 +206,9 @@
 	}
 
 	.btn.secondary {
+		border-color: color-mix(in srgb, var(--muted) 70%, transparent);
 		background: var(--secondary);
 		color: var(--secondary-foreground);
-		border-color: color-mix(in srgb, var(--muted) 70%, transparent);
 		box-shadow: var(--shadow-xs);
 	}
 

@@ -7,9 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\InfrastructureShared.Base\InfrastructureShared.Base.csproj"/>
+        <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj" />
     </ItemGroup>
     <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
         <PackageReference Include="Microsoft.EntityFrameworkCore"/>
     </ItemGroup>
 </Project>

@@ -26,6 +26,7 @@
 <style>
 	.nav-bar {
 		--hor-margin: 2rem;
+
 		display: grid;
 		gap: 1rem;
 		width: calc(100% - (var(--hor-margin) * 2));
@@ -52,6 +53,7 @@
 		background-color: var(--accent);
 		color: var(--accent-foreground);
 	}
+
 	.link:not(.active):active {
 		text-decoration: underline;
 		text-decoration-thickness: 0.125rem;

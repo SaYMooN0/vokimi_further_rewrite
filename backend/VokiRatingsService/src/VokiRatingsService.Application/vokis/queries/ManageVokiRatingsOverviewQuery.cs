@@ -32,12 +32,12 @@ internal sealed class ManageVokiRatingsOverviewQueryHandler :
     public async Task<ErrOr<VokiRatingsDistribution>> Handle(
         ManageVokiRatingsOverviewQuery query, CancellationToken ct
     ) {
-        Voki? voki = await _vokisRepository.GetVokiAsNoTrackingById(query.VokiId, ct);
+        var voki = await _vokisRepository.GetVokiManagerDto(query.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Voki does not exist");
         }
 
-        if (!voki.CanUserManage(_userContext.AuthenticatedUser)) {
+        if (!Voki.CanUserManage(_userContext.AuthenticatedUser, voki.PrimaryAuthorId, voki.ManagersIds)) {
             return ErrFactory.NoAccess("To get this data you need to be a Voki manager");
         }
 
