@@ -1,3 +1,5 @@
+using SharedKernel.exceptions;
+
 namespace VokiRatingsService.Domain.common;
 
 public class VokiRatingsDistribution : ValueObject
@@ -36,8 +38,17 @@ public class VokiRatingsDistribution : ValueObject
         rating4Count: 0,
         rating5Count: 0
     );
-    public static VokiRatingsDistribution FromRatingsArray(RatingValue[] ratings)
-    {
+
+    public static VokiRatingsDistribution FromRating(RatingValue rating) => rating.Value switch {
+        1 => new VokiRatingsDistribution(rating1Count: 1, 0, 0, 0, 0),
+        2 => new VokiRatingsDistribution(rating1Count: 0, 1, 0, 0, 0),
+        3 => new VokiRatingsDistribution(rating1Count: 0, 0, 1, 0, 0),
+        4 => new VokiRatingsDistribution(rating1Count: 0, 0, 0, 1, 0),
+        5 => new VokiRatingsDistribution(rating1Count: 0, 0, 0, 0, 1),
+        _ => throw new ArgumentException($"Invalid rating value: {rating.Value}")
+    };
+
+    public static VokiRatingsDistribution FromRatingsArray(RatingValue[] ratings) {
         if (ratings.Length == 0) {
             return Empty;
         }
@@ -71,5 +82,37 @@ public class VokiRatingsDistribution : ValueObject
             rating4Count: r4,
             rating5Count: r5
         );
+    }
+
+    public VokiRatingsDistribution WithNewRating(RatingValue rating) => rating.Value switch {
+        1 => new VokiRatingsDistribution(Rating1Count + 1, Rating2Count, Rating3Count, Rating4Count, Rating5Count),
+        2 => new VokiRatingsDistribution(Rating1Count, Rating2Count + 1, Rating3Count, Rating4Count, Rating5Count),
+        3 => new VokiRatingsDistribution(Rating1Count, Rating2Count, Rating3Count + 1, Rating4Count, Rating5Count),
+        4 => new VokiRatingsDistribution(Rating1Count, Rating2Count, Rating3Count, Rating4Count + 1, Rating5Count),
+        5 => new VokiRatingsDistribution(Rating1Count, Rating2Count, Rating3Count, Rating4Count, Rating5Count + 1),
+        _ => throw new ArgumentException($"Invalid rating value: {rating.Value}")
+    };
+
+    private Dictionary<ushort, uint> ToDictionary() => new() {
+        [1] = Rating1Count,
+        [2] = Rating2Count,
+        [3] = Rating3Count,
+        [4] = Rating4Count,
+        [5] = Rating5Count,
+    };
+
+    public ErrOr<VokiRatingsDistribution> WithOneUpdatedRating(RatingValue oldRating, RatingValue newRating) {
+        if (oldRating.Value == newRating.Value) {
+            return this;
+        }
+
+        var d = ToDictionary();
+        if (d[oldRating.Value] == 0) {
+           return ErrFactory.Conflict($"Attempted to decrement rating {oldRating.Value} count below zero")
+        }
+
+        d[oldRating.Value] -= 1;
+        d[newRating.Value] += 1;
+        return new VokiRatingsDistribution(d[1], d[2], d[3], d[4], d[5]);
     }
 }

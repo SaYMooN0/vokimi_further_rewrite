@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace SharedKernel.exceptions;
+﻿namespace SharedKernel.exceptions;
 
 using System.Runtime.CompilerServices;
 

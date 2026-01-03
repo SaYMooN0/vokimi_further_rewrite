@@ -17,9 +17,13 @@ public class VokiRatingsSnapshot : AggregateRoot<VokiRatingsSnapshotId>
         Distribution = distribution;
     }
 
-    public static VokiRatingsSnapshot CreateNew(VokiId vokiId, DateTime now, VokiRatingsDistribution distribution) => new(
-        VokiRatingsSnapshotId.CreateNew(), vokiId, now, distribution
-    );
+    public static VokiRatingsSnapshot CreateNew(VokiId vokiId, DateTime now, VokiRatingsDistribution distribution) {
+        VokiRatingsSnapshot sn = new (VokiRatingsSnapshotId.CreateNew(), vokiId, now, distribution);
+        if (sn.Distribution.TotalCount != 0) {
+            sn.AddDomainEvent(new VokiRatingsChangedCount(vokiId, sn.Distribution.TotalCount));
+        }
+        return sn;
+    }
 
     public void Update(DateTime now, VokiRatingsDistribution distribution) {
         var oldRatingsCount = this.Distribution.TotalCount;
@@ -31,4 +35,7 @@ public class VokiRatingsSnapshot : AggregateRoot<VokiRatingsSnapshotId>
             AddDomainEvent(new VokiRatingsChangedCount(VokiId, newRatingsCount));
         }
     }
+
+    public bool IsInSameDayAs(DateTime dateTime) =>
+        DateOnly.FromDateTime(this.Date) == DateOnly.FromDateTime(dateTime.Date);
 }

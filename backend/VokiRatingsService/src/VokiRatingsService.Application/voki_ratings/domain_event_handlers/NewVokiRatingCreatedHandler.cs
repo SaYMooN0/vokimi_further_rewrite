@@ -10,7 +10,6 @@ internal class NewVokiRatingCreatedHandler : IDomainEventHandler<NewVokiRatingCr
 {
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IVokiRatingsSnapshotRepository _vokiRatingsSnapshotRepository;
-
     private readonly IRatingsRepository _ratingsRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
@@ -30,9 +29,10 @@ internal class NewVokiRatingCreatedHandler : IDomainEventHandler<NewVokiRatingCr
         AppUser user = (await _appUsersRepository.GetById(e.UserId, ct))!;
         user.AddRating(e.RatingId);
         await _appUsersRepository.Update(user, ct);
-        
-        await VokiRatingsSnapshotUpsertingHelper.UpsertDailySnapshot(
+
+        await VokiRatingsSnapshotUpsertingHelper.UpsertDailySnapshotOnRatingCreated(
             e.VokiId,
+            e.RatingValue,
             _dateTimeProvider.UtcNow,
             _vokiRatingsSnapshotRepository,
             _ratingsRepository,

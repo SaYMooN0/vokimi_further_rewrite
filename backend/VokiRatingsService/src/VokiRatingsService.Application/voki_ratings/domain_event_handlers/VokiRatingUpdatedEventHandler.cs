@@ -21,7 +21,7 @@ internal class VokiRatingUpdatedHandler : IDomainEventHandler<VokiRatingUpdatedE
     }
 
     public async Task Handle(VokiRatingUpdatedEvent e, CancellationToken ct) {
-        await VokiRatingsSnapshotUpsertingHelper.UpsertDailySnapshot(
+        await VokiRatingsSnapshotUpsertingHelper.UpsertDailySnapshotOnRatingUpdated(
             e.VokiId,
             _dateTimeProvider.UtcNow,
             _vokiRatingsSnapshotRepository,

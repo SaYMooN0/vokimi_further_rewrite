@@ -92,6 +92,7 @@
 	}
 
 	.errs-list {
+		margin-top: 0.5rem;
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -106,24 +107,23 @@
 
 	.clear-errs-btn {
 		position: absolute;
-		top: 0.25rem;
+		top: 0.125rem;
 		right: 0.25rem;
 		width: fit-content;
 		height: 1.25rem;
 		padding: 0.125rem;
-		border-radius: 0.75rem;
-		background-color: var(--back);
-		color: var(--secondary-foreground);
+		color: var(--err-foreground);
 		transition: all 0.04s ease-in;
 		cursor: pointer;
 		aspect-ratio: 1/1;
 		stroke-width: 2.2;
+		border-radius: 1rem;
+
 	}
 
 	.clear-errs-btn:hover {
-		border-radius: 0.5rem;
-		background-color: var(--secondary);
-		color: var(--muted-foreground);
+		background-color: var(--err-foreground);
+		color: var(--err-back);
 	}
 
 	.err-item {

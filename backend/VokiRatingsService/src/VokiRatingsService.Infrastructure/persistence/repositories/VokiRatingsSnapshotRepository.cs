@@ -12,24 +12,13 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
         _db = db;
     }
 
-    public Task<VokiRatingsSnapshot?> GetLastSnapshotForVokiInThisDay(
+    public Task<VokiRatingsSnapshot?> GetLastSnapshotForVoki(
         VokiId vokiId,
-        DateOnly date,
         CancellationToken ct
-    ) {
-        var dayStart = date.ToDateTime(TimeOnly.MinValue);
-        var nextDayStart = dayStart.AddDays(1);
-
-        return _db.VokiRatingsSnapshots
-            .AsNoTracking()
-            .Where(s =>
-                s.VokiId == vokiId &&
-                s.Date >= dayStart &&
-                s.Date < nextDayStart
-            )
-            .OrderByDescending(s => s.Date)
-            .FirstOrDefaultAsync(ct);
-    }
+    ) => _db.VokiRatingsSnapshots
+        .Where(s => s.VokiId == vokiId)
+        .OrderByDescending(s => s.Date)
+        .FirstOrDefaultAsync(ct);
 
 
     public async Task Add(VokiRatingsSnapshot snapshot, CancellationToken ct) {
