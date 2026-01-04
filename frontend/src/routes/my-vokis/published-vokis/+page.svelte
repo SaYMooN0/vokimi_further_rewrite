@@ -23,8 +23,8 @@
 
 		registerPageApi({
 			forceRefetch: () => pageState.forceRefetch(),
-			get isLoading() {
-				return pageState.publishedVokiIds.state === 'loading';
+			invitesPage: {
+				exists: false
 			}
 		});
 	});

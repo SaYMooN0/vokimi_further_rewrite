@@ -1,23 +1,19 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
+	import type { MyVokisPageTabMarker } from '../tab-marker';
 
 	interface Props {
-		content: { icon: Snippet; isIcon: true } | { text: string; isIcon: false };
-		href: string;
-		isCurrent: boolean;
+		text: string;
+		tab: MyVokisPageTabMarker.Tab;
+		currentTab: string;
 	}
-	let { content, href, isCurrent }: Props = $props();
+	let { text, tab, currentTab }: Props = $props();
 </script>
 
 <a
 	data-sveltekit-preload-data="off"
-	{href}
+	href="/my-vokis/{tab}"
 	class="unselectable"
-	class:current={isCurrent}
-	class:icon={content.isIcon}
-	>{#if content.isIcon}{@render content!.icon!()}{:else}
-		{content.text}
-	{/if}</a
+	class:current={currentTab === tab}>{text}</a
 >
 
 <style>
@@ -31,24 +27,12 @@
 		background-color: var(--muted);
 		color: var(--muted-foreground);
 		font-size: 1rem;
-		font-weight: 430;
+		font-weight: 450;
 		text-decoration: none;
-		letter-spacing: 0.2px;
-			box-shadow: var(--shadow-md), var(--shadow);
+		letter-spacing: 0.25px;
+		box-shadow: var(--shadow-md), var(--shadow);
 		transition: transform 0.12s ease;
 		cursor: pointer;
-	}
-
-	a.icon {
-		width: auto;
-		aspect-ratio: 1/1;
-	}
-
-	a.icon > :global(svg) {
-		width: 1.5rem;
-		height: 1.5rem;
-		transition: inherit;
-		stroke-width: 1.5;
 	}
 
 	a:hover {
@@ -60,19 +44,9 @@
 		letter-spacing: 0;
 	}
 
-	a.icon:active > :global(svg) {
-		transform: scale(0.92);
-	}
-
 	a.current {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
-		font-weight: 460;
-
-	}
-
-	a.current.icon > :global(svg) {
-		stroke-width: 1.875;
-		
+		font-weight: 475;
 	}
 </style>

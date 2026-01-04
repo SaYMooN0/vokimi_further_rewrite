@@ -14,8 +14,9 @@
 
 		registerPageApi({
 			forceRefetch: () => pageState.forceRefetch(),
-			get isLoading() {
-				return pageState.draftVokiIds.state === 'loading';
+			invitesPage: {
+				exists: true,
+				path: 'co-author-invites'
 			}
 		});
 	});

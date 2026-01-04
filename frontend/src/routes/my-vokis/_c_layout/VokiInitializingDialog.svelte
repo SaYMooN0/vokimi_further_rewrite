@@ -6,6 +6,7 @@
 
 	let dialog = $state<DialogWithCloseButton>()!;
 	export function open() {
+		dialogState = { state: 'input' };
 		dialog.open();
 	}
 	type DialogState =

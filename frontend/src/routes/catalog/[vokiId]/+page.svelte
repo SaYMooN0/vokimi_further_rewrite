@@ -122,7 +122,7 @@
 <style>
 	.voki-page-container {
 		display: grid;
-		gap: 1rem;
+		gap: var(--sides-padding);
 		width: 100%;
 		min-width: 0;
 		margin-top: 2rem;

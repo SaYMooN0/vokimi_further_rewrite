@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { VokiType } from '$lib/ts/voki-type';
-	import GoToVokiCreationLink from '../../../_c_shared/GoToVokiCreationLink.svelte';
+	import GoToVokiCreationLink from '../../../../_c_shared/GoToVokiCreationLink.svelte';
 
 	interface Props {
 		vokiType: VokiType;

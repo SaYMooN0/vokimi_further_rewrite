@@ -1,25 +1,14 @@
 <script lang="ts">
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { onMount } from 'svelte';
-	import MyVokisPageInitialLoading from '../_c_shared/MyVokisPageInitialLoading.svelte';
-	import MyVokisPageUnexpectedStateAfterLoading from '../_c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
-	import { registerCurrentPageApi } from '../my-vokis-page-context';
 	import { MyVokiInvitesPageState } from './my-voki-invites-page-state.svelte';
 	import InviteForCoAuthorDisplay from './_c_page/InviteForCoAuthorDisplay.svelte';
 	import AcceptInviteConfirmationDialog from './_c_page/AcceptInviteConfirmationDialog.svelte';
 	import DeclineInviteConfirmationDialog from './_c_page/DeclineInviteConfirmationDialog.svelte';
+	import MyVokisPageInitialLoading from '../../_c_shared/MyVokisPageInitialLoading.svelte';
+	import MyVokisPageUnexpectedStateAfterLoading from '../../_c_shared/MyVokisPageUnexpectedStateAfterLoading.svelte';
 
 	const pageState = new MyVokiInvitesPageState();
-	onMount(() => {
-		const registerPageApi = registerCurrentPageApi();
-
-		registerPageApi({
-			forceRefetch: () => pageState.forceRefetch(),
-			get isLoading() {
-				return pageState.loadingState.state === 'loading';
-			}
-		});
-	});
+	
 
 	let acceptInviteDialog = $state<AcceptInviteConfirmationDialog>()!;
 	let declineInviteDialog = $state<DeclineInviteConfirmationDialog>()!;

@@ -32,14 +32,17 @@ export namespace CookieUtils {
     }
 
     export function getCookie(name: string): string | undefined {
-        const map = Object.fromEntries(
-            document.cookie.split('; ')
-                .filter(x=>x)
-                .map(p => {
-                    const i = p.indexOf('=');
-                    return [decodeURIComponent(p.slice(0, i)), decodeURIComponent(p.slice(i + 1))];
-                })
-        );
-        return map[name];
+        if (browser) {
+
+            const map = Object.fromEntries(
+                document.cookie.split('; ')
+                    .filter(x => x)
+                    .map(p => {
+                        const i = p.indexOf('=');
+                        return [decodeURIComponent(p.slice(0, i)), decodeURIComponent(p.slice(i + 1))];
+                    })
+            );
+            return map[name];
+        }
     }
 }

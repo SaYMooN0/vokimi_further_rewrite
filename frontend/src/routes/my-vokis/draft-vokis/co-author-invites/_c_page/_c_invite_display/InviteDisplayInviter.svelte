@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { UsersStore } from '$lib/ts/stores/users-store.svelte';
-	import { getErrsViewDialogOpenFunction } from '../../../../_c_layout/_ts_layout_contexts/errs-view-dialog-context';
+	import { getErrsViewDialogOpenFunction } from '../../../../../_c_layout/_ts_layout_contexts/errs-view-dialog-context';
 
 	interface Props {
 		userId: string;

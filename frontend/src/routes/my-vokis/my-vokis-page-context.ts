@@ -2,7 +2,9 @@ import { getContext, setContext } from "svelte";
 
 export type MyVokiPageApi = {
     forceRefetch: () => void | Promise<void>;
-    readonly isLoading: boolean;
+    readonly invitesPage:
+    | { exists: false }
+    | { exists: true, path: string };
 };
 
 const pageApiRegisterKey = Symbol('my-vokis-page-api-register');

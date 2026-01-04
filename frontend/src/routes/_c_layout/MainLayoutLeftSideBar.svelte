@@ -9,31 +9,17 @@
 	let isCollapsed = $state(false);
 </script>
 
-<div class="sidebar">
-	<div class="links">
-		<ProfileLink {isCollapsed} />
-		<CatalogLink {isCollapsed} />
-		<AuthorsLink {isCollapsed} />
-		<MyVokisLink {isCollapsed} />
-		<AlbumsLink {isCollapsed} />
-		<NotificationsLink {isCollapsed} />
-	</div>
-	<SideBarBottom />
+<div class="links">
+	<ProfileLink {isCollapsed} />
+	<CatalogLink {isCollapsed} />
+	<AuthorsLink {isCollapsed} />
+	<MyVokisLink {isCollapsed} />
+	<AlbumsLink {isCollapsed} />
+	<NotificationsLink {isCollapsed} />
 </div>
+<SideBarBottom />
 
 <style>
-	.sidebar {
-		position: sticky;
-		top: 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		max-width: var(--sidebar-width);
-		height: 100vh;
-		padding: var(--sidebar-links-top-padding) 0 2rem 0;
-		padding-left: 0.25rem;
-	}
-
 	.links {
 		display: flex;
 		flex-direction: column;
