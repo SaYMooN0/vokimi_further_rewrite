@@ -86,7 +86,7 @@
 		padding: 0.75rem 1rem;
 		margin-top: 1rem;
 		border-radius: 0.5rem;
-		background-color: var(--err-back);
+		background-color: var(--red-1);
 		color: var(--err-foreground);
 		font-size: 1.25rem;
 	}

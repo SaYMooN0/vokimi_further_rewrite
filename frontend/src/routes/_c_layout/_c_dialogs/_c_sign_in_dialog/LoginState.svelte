@@ -18,7 +18,7 @@
 	let isLoading = $state(false);
 	let errs: Err[] = $state([]);
 
-	export function clear() {
+	export function clearErrs() {
 		errs = [];
 	}
 	async function confirmLogin() {

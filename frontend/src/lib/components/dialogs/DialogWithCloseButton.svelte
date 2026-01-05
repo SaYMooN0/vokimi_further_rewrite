@@ -8,8 +8,10 @@
 		subheading?: string;
 		dialogId?: string;
 		onBeforeClose?: () => void;
+		closedby?: 'none' | 'closerequest' | 'any';
 	}
-	let { children, subheading, dialogId, onBeforeClose }: Props = $props();
+
+	let { children, subheading, dialogId, onBeforeClose, closedby }: Props = $props();
 
 	let dialog = $state<BaseDialog>()!;
 	export function open() {
@@ -23,7 +25,7 @@
 	}
 </script>
 
-<BaseDialog bind:this={dialog} {dialogId}>
+<BaseDialog bind:this={dialog} {dialogId} {closedby}>
 	{#if !StringUtils.isNullOrWhiteSpace(subheading)}
 		<h1 class="subheading">{subheading}</h1>
 	{/if}

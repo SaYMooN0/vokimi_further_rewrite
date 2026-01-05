@@ -76,7 +76,7 @@
 		position: fixed;
 		top: var(--layout-header-height);
 		width: var(--side-panel-width);
-		height: 100vh;
+		height: calc(100vh - var(--layout-header-height));
 		left: 0;
 		display: flex;
 		flex-direction: column;

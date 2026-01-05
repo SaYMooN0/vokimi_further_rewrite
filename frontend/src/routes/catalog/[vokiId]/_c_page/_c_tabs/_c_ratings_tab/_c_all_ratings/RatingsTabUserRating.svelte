@@ -101,7 +101,7 @@
 		padding: 0.125rem 0.75rem;
 		margin-bottom: 1rem;
 		border-radius: 0.675rem;
-		background-color: var(--err-back);
+		background-color: var(--red-1);
 		box-shadow: var(--err-shadow);
 	}
 
@@ -123,7 +123,7 @@
 
 	.clear-errs-btn:hover {
 		background-color: var(--err-foreground);
-		color: var(--err-back);
+		color: var(--red-1);
 	}
 
 	.err-item {

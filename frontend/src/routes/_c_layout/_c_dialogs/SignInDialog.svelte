@@ -6,24 +6,24 @@
 	import SignUpState from './_c_sign_in_dialog/SignUpState.svelte';
 
 	export function open(state: SignInDialogState | null = null) {
-		signUpStateComponent?.clear();
-		loginStateComponent?.clear();
+		signUpStateComponent?.clearErrs();
+		loginStateComponent?.clearErrs();
 
 		dialog.open();
 		if (state) {
 			dialogState = state;
 		}
 	}
-	let dialogState = $state<SignInDialogState>('login');
+	let dialogState = $state<SignInDialogState>('signup');
 	let dialog = $state<DialogWithCloseButton>()!;
 	let email = $state('');
 	let password = $state('');
 
-	let signUpStateComponent = $state<SignUpState>()!;
-	let loginStateComponent = $state<LoginState>()!;
+	let signUpStateComponent = $state<SignUpState>();
+	let loginStateComponent = $state<LoginState>();
 </script>
 
-<DialogWithCloseButton bind:this={dialog} dialogId="sign-in-dialog">
+<DialogWithCloseButton bind:this={dialog} dialogId="sign-in-dialog" closedby="any">
 	{#if dialogState === 'login'}
 		<LoginState
 			bind:this={loginStateComponent}

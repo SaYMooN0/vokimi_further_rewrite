@@ -65,7 +65,7 @@
 		gap: 0.5rem;
 		padding: 0.75rem;
 		border-radius: 0.75rem;
-		background-color: var(--err-back);
+		background-color: var(--red-1);
 		color: var(--err-foreground);
 		box-shadow: var(--err-shadow);
 	}

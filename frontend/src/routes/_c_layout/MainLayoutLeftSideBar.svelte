@@ -1,5 +1,4 @@
 <script lang="ts">
-	import SideBarBottom from './_c_side_bar/SideBarBottom.svelte';
 	import AlbumsLink from './_c_side_bar/_c_links/AlbumsLink.svelte';
 	import AuthorsLink from './_c_side_bar/_c_links/AuthorsLink.svelte';
 	import CatalogLink from './_c_side_bar/_c_links/CatalogLink.svelte';
@@ -17,7 +16,6 @@
 	<AlbumsLink {isCollapsed} />
 	<NotificationsLink {isCollapsed} />
 </div>
-<SideBarBottom />
 
 <style>
 	.links {

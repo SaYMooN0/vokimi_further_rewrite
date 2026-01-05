@@ -43,7 +43,7 @@
 		box-sizing: border-box;
 		padding: 0.125rem 0.5rem;
 		border-radius: 0.25rem;
-		background-color: var(--err-back);
+		background-color: var(--red-1);
 		color: var(--err-foreground);
 		box-shadow: var(--err-shadow);
 	}

@@ -1,18 +1,27 @@
 <script lang="ts">
+	type ReloadButtonIcon = 'arrow' | 'loading';
+	type ReloadButtonContent =
+		| { icon: ReloadButtonIcon; text: null }
+		| { icon: null; text: string }
+		| { icon: ReloadButtonIcon; text: string };
+
 	interface Props {
-		showIcon?: boolean;
-		text?: string;
+		content: ReloadButtonContent;
 		onclick: () => void;
 		className?: string;
 	}
-	let { showIcon = true, text = 'Reload', onclick, className = '' }: Props = $props();
+	let { content = { icon: null, text: 'Reload' }, onclick, className = '' }: Props = $props();
 </script>
 
 <button class={`reload-btn ${className}`} onclick={() => onclick()}>
-	{#if showIcon}
-		<svg><use href="#common-reload-icon" /></svg>
+	{#if content.icon === 'arrow'}
+		<svg class="reload-arrow"><use href="#common-reload-icon" /></svg>
+	{:else if content.icon === 'loading'}
+		loading
 	{/if}
-	{text}
+	{#if content.text}
+		{content.text}
+	{/if}
 </button>
 
 <style>
@@ -41,7 +50,7 @@
 		stroke-width: 2.23;
 	}
 
-	.reload-btn:hover > svg {
+	.reload-btn:hover > svg.reload-arrow {
 		transform: rotate(60deg);
 	}
 
@@ -49,7 +58,7 @@
 		transform: scale(0.96);
 	}
 
-	.reload-btn:active > svg {
+	.reload-btn:active > svg.reload-arrow {
 		transform: rotate(180deg);
 	}
 </style>

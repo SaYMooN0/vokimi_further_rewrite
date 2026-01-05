@@ -19,7 +19,7 @@
 	let errs: Err[] = $state([]);
 	let isLoading = $state(false);
 
-	export function clear() {
+	export function clearErrs() {
 		errs = [];
 	}
 

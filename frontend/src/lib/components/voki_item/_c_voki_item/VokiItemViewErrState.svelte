@@ -29,7 +29,7 @@
 		width: 100%;
 		padding: 2rem 1rem;
 		border-radius: 0.5rem;
-		background-color: var(--err-back);
+		background-color: var(--red-1);
 		color: var(--err-foreground);
 		place-self: center center;
 		aspect-ratio: var(--voki-cover-aspect-ratio);

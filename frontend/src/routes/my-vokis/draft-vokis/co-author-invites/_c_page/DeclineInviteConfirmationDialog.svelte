@@ -120,7 +120,7 @@ transform: scale(1.05);
 	}	
 
 	.btn-decline {
-		background: var(--err-back);
+		background: var(--red-1);
 		color: var(--err-foreground);
 	}
 
