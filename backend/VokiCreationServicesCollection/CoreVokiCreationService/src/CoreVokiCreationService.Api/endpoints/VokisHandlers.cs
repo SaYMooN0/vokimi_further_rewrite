@@ -6,11 +6,14 @@ namespace CoreVokiCreationService.Api.endpoints;
 
 internal class VokisHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/");
 
         group.MapPost("/brief-info", ListVokisBriefInfo)
             .WithRequestValidation<ListVokisBriefInfoRequest>();
+        
+        return group;
+
     }
 
     private static async Task<IResult> ListVokisBriefInfo(

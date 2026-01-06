@@ -6,7 +6,7 @@ namespace UserProfilesService.Api.endpoints;
 
 internal class UsersHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/users/");
 
         group.MapPost("/preview", GetUserPreviewData)
@@ -14,6 +14,8 @@ internal class UsersHandlers : IEndpointGroup
 
         group.MapGet("/search-to-invite", SearchUsersToInviteByName);
         group.MapGet("/recommended-for-co-author", ListUsersRecommendedForCoAuthor);
+
+        return group;
     }
 
     private static async Task<IResult> GetUserPreviewData(

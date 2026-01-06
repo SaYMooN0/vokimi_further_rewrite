@@ -20,10 +20,11 @@ internal class ExceptionHandlingMiddleware
     private static readonly Err ServerError = new("Server error occurred. Please try again later");
 
     public async Task InvokeAsync(HttpContext context) {
+       
         try {
             await _next(context);
-        }
-        catch (InvalidConstructorArgumentException ex) {
+        }        
+            catch (InvalidConstructorArgumentException ex) {
             _logger.LogCritical(ex.Err.ToStringWithField("Caller", ex.Caller));
             await CustomResults.ErrorResponse(ServerError).ExecuteAsync(context);
             return;

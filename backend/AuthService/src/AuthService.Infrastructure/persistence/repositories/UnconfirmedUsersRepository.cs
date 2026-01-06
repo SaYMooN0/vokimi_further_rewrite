@@ -1,5 +1,6 @@
 ﻿using AuthService.Application.common.repositories;
 using AuthService.Domain.unconfirmed_user_aggregate;
+using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Infrastructure.persistence.repositories;
@@ -13,7 +14,9 @@ internal class UnconfirmedUsersRepository : IUnconfirmedUsersRepository
     }
 
     public Task<UnconfirmedUser?> GetByEmail(Email email, CancellationToken ct) =>
-        _db.UnconfirmedUsers.FirstOrDefaultAsync(u => u.Email == email, cancellationToken: ct);
+        _db.UnconfirmedUsers
+            .ForUpdate()
+            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken: ct);
 
     public async Task Add(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
         await _db.UnconfirmedUsers.AddAsync(unconfirmedUser, ct);

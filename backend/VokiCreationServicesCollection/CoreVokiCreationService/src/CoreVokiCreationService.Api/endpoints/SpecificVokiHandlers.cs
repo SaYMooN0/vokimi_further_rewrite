@@ -10,7 +10,7 @@ namespace CoreVokiCreationService.Api.endpoints;
 
 internal class SpecificVokiHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.MapGet("/brief-info", GetVokiBriefInfo);
@@ -30,6 +30,9 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
         group.MapPatch("/update-expected-managers", UpdateExpectedManagers)
             .WithRequestValidation<UpdateVokiExpectedManagersRequest>();
+        
+        return group;
+
     }
 
     private static async Task<IResult> GetVokiBriefInfo(

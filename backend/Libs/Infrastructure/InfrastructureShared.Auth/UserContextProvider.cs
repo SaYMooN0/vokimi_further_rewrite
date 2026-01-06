@@ -1,9 +1,11 @@
 ﻿using ApplicationShared;
-using InfrastructureShared.Auth;
 using Microsoft.AspNetCore.Http;
 using SharedKernel;
+using SharedKernel.domain.ids;
+using SharedKernel.errs;
+using SharedKernel.errs.utils;
 
-namespace ApiShared;
+namespace InfrastructureShared.Auth;
 
 internal class UserContextProvider : IUserContext
 {

@@ -1,4 +1,5 @@
-﻿using ApplicationShared;
+﻿using ApiShared.EfCore;
+using ApplicationShared;
 using AuthService.Application.app_users.queries;
 using AuthService.Application.unconfirmed_users.commands;
 using InfrastructureShared.Auth;
@@ -8,10 +9,12 @@ namespace AuthService.Api.endpoints;
 
 public class RootHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
-        group.MapPost("/ping", PingAuth);
+        group.MapPost("/ping", PingAuth)
+            .DisableConsistencyFilter();
+        
         group.MapPost("/sign-up", RegisterUser)
             .WithRequestValidation<RegisterUserRequest>();
         group.MapPost("/login", LoginUser)
@@ -19,6 +22,8 @@ public class RootHandlers : IEndpointGroup
         group.MapPost("/confirm-registration", ConfirmUserRegistration)
             .WithRequestValidation<ConfirmRegistrationRequest>();
         group.MapPost("/logout", LogOutUser);
+        
+        return group;
     }
 
     private static async Task<IResult> PingAuth(

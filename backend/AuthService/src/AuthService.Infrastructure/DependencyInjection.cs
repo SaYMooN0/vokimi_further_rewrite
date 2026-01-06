@@ -76,13 +76,8 @@ public static class DependencyInjection
     ) {
         string dbConnectionString = configuration.GetConnectionString("AuthServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-
-        services.AddDbContext<AuthDbContext>(options => {
-                options.UseNpgsql(dbConnectionString);
-                options.ConfigureDevelopmentExclusive(env);
-            }
-        );
-
+        services.AddPgSqlDbContext<AuthDbContext>(env, dbConnectionString);
+        
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IUnconfirmedUsersRepository, UnconfirmedUsersRepository>();
 

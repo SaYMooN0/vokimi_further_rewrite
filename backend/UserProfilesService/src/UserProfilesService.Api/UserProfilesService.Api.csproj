@@ -6,7 +6,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Libs\ApiShared\ApiShared.csproj" />
+        <ProjectReference Include="..\..\..\Libs\ApiShared.EfCore\ApiShared.EfCore.csproj" />
         <ProjectReference Include="..\UserProfilesService.Infrastructure\UserProfilesService.Infrastructure.csproj" />
     </ItemGroup>
 </Project>

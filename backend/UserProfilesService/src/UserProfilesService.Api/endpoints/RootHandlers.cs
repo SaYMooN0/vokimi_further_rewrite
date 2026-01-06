@@ -7,13 +7,15 @@ namespace UserProfilesService.Api.endpoints;
 
 internal  class RootHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/basic-setup-info", GetUserBasicSetupInfo);
 
         group.MapPost("/save-basic-setup", SaveBasicProfileSetup)
             .WithRequestValidation<SaveBasicProfileSetupRequest>();
+        
+        return group;
     }
 
     private static async Task<IResult> GetUserBasicSetupInfo(

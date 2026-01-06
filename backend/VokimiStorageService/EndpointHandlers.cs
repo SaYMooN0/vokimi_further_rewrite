@@ -9,13 +9,15 @@ namespace VokimiStorageService;
 
 internal class EndpointHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/main");
 
         group.MapGet("/{*fileKey}", GetFileFromStorage)
             .DisableAntiforgery();
         group.MapPut("/upload-temp-image", UploadTempImage)
             .DisableAntiforgery();
+        
+        return group;
     }
 
     private static async Task<IResult> GetFileFromStorage(

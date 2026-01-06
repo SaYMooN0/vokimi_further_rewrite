@@ -1,5 +1,6 @@
 ﻿using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
+using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace CoreVokiCreationService.Infrastructure.persistence.repositories;
@@ -53,7 +54,9 @@ internal class DraftVokiRepository : IDraftVokiRepository
             .Where(v => queryVokiIds.Contains(v.Id))
             .ToArrayAsync(cancellationToken: ct);
 
-    public Task<DraftVoki?> GetById(VokiId vokiId, CancellationToken ct) => _db.Vokis
+    public Task<DraftVoki?> GetById(VokiId vokiId, CancellationToken ct) =>
+        _db.Vokis
+        .ForUpdate()
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public async Task Update(DraftVoki voki, CancellationToken ct) {

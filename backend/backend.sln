@@ -166,6 +166,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VokiCreationServicesLib.Api
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfrastructureShared.EfCore", "Libs\Infrastructure\InfrastructureShared.EfCore\InfrastructureShared.EfCore.csproj", "{7EE315FA-6DFC-485D-947D-89AF2970D126}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiShared.EfCore", "Libs\ApiShared.EfCore\ApiShared.EfCore.csproj", "{854F985C-D974-4478-9798-8D81A2BF71F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -242,6 +244,7 @@ Global
 		{53D5C6DF-82DA-49E5-84F9-B326DBAE5064} = {F0A7E74D-1867-4961-A227-12482E2CC6E8}
 		{97ACB115-0BEF-4F29-B9DC-9062F4F63160} = {F0A7E74D-1867-4961-A227-12482E2CC6E8}
 		{7EE315FA-6DFC-485D-947D-89AF2970D126} = {869A7F8D-20E4-447F-B85D-C8232D9F045D}
+		{854F985C-D974-4478-9798-8D81A2BF71F3} = {D19B225D-D1A8-40C2-9DE4-FBFB4BAF9DA0}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2CAB55A2-15A7-401C-94C6-F8B273B50F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -464,5 +467,9 @@ Global
 		{7EE315FA-6DFC-485D-947D-89AF2970D126}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EE315FA-6DFC-485D-947D-89AF2970D126}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EE315FA-6DFC-485D-947D-89AF2970D126}.Release|Any CPU.Build.0 = Release|Any CPU
+		{854F985C-D974-4478-9798-8D81A2BF71F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{854F985C-D974-4478-9798-8D81A2BF71F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{854F985C-D974-4478-9798-8D81A2BF71F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{854F985C-D974-4478-9798-8D81A2BF71F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

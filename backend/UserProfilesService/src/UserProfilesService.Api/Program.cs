@@ -1,7 +1,9 @@
 using System.Reflection;
+using ApiShared.EfCore;
 using InfrastructureShared.Base;
 using UserProfilesService.Application;
 using UserProfilesService.Infrastructure;
+using UserProfilesService.Infrastructure.persistence;
 
 namespace UserProfilesService.Api;
 
@@ -13,6 +15,7 @@ public class Program
             options.ValidateScopes = false;
             options.ValidateOnBuild = true;
         });
+
         builder.Services.AddConfiguredLogging(builder.Configuration);
 
         builder.Services
@@ -23,8 +26,6 @@ public class Program
             ;
 
         var app = builder.Build();
-        app.AddInfrastructureMiddleware();
-
         if (app.Environment.IsDevelopment()) {
             app.MapOpenApi();
         }
@@ -33,9 +34,9 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
+        app.MapAllEndpointWithConsistency<UserProfilesDbContext>();
         app.AllowFrontendCors();
-        app.MapEndpointGroups();
-        
+
         app.Run();
     }
 }

@@ -120,9 +120,9 @@
     <path d="M12 8V12.5" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
     <path d="M12 15.9883V15.9983" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
 </svg>
-<svg id="common-search-icon" viewBox="0 0 24 24" fill="none">
-    <path d="M17.5 17.5L22 22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+<svg id="common-search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17 17L21 21" />
     <path
-        d="M20 11C20 6.02944 15.9706 2 11 2C6.02944 2 2 6.02944 2 11C2 15.9706 6.02944 20 11 20C15.9706 20 20 15.9706 20 11Z"
-        stroke="currentColor" stroke-linejoin="round" />
+        d="M19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19C15.4183 19 19 15.4183 19 11Z" />
 </svg>

@@ -17,7 +17,7 @@
     --font-family: "Rubik", sans-serif;
     --radius: 0.375rem;
 
-    /*red*/
+    /* red */
     --red-1: #ffe9ea;
     --red-2: #ffe0e2;
     --red-3: #fe3f41;
@@ -47,9 +47,9 @@
     --sides-padding: 1rem;
     --layout-header-height: 3.5rem;
     --layout-header-vertical-padding: 0.5rem;
+    --layout-header-search-height: 2.25rem;
 
     /* other */
-    --sidebar-links-top-padding: 4rem;
     --lang-icon-aspect-ratio: 1.4/1;
     --default-fade-in-animation: default-fade-in 0.08s ease-in-out;
 

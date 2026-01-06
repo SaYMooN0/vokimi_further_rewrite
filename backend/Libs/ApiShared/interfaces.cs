@@ -4,7 +4,7 @@ namespace ApiShared;
 
 public interface IEndpointGroup
 {
-    void MapEndpoints(IEndpointRouteBuilder routeBuilder);
+    RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder);
 }
 
 public interface ICreatableResponse<TSource>

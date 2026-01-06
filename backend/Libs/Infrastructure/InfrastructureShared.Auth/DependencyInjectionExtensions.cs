@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ApplicationShared;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace InfrastructureShared.Auth;
@@ -13,6 +14,7 @@ public static class DependencyInjectionExtensions
 
         services.AddSingleton(jwtTokenConfig);
         services.AddScoped<ITokenParser, TokenParser>();
+        services.AddScoped<IUserContext, UserContextProvider>();
         return services;
     }
 }

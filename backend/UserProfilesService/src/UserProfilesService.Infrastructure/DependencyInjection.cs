@@ -61,11 +61,8 @@ public static class DependencyInjection
     ) {
         string dbConnectionString = configuration.GetConnectionString("UserProfilesServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<UserProfilesDbContext>(options => {
-                options.UseNpgsql(dbConnectionString);
-                options.ConfigureDevelopmentExclusive(env);
-            }
-        );
+        
+        services.AddPgSqlDbContext<UserProfilesDbContext>(env, dbConnectionString);
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
 
         return services;

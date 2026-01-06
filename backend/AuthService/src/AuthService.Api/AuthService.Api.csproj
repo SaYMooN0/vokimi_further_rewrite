@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\Libs\ApiShared\ApiShared.csproj" />
+        <ProjectReference Include="..\..\..\Libs\ApiShared.EfCore\ApiShared.EfCore.csproj" />
         <ProjectReference Include="..\AuthService.Infrastructure\AuthService.Infrastructure.csproj" />
     </ItemGroup>
     

@@ -7,12 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App"/>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\SharedKernel\SharedKernel.csproj"/>
+      <ProjectReference Include="..\ApiShared\ApiShared.csproj" />
+      <ProjectReference Include="..\Infrastructure\InfrastructureShared.EfCore\InfrastructureShared.EfCore.csproj" />
     </ItemGroup>
 
 </Project>

@@ -23,6 +23,7 @@ export class MyDraftVokisPageState {
     }
 
     async loadDraftVokis() {
+        console.log('loading draft vokis');
         this.draftVokiIds = { state: 'loading' };
 
         const response = await ApiVokiCreationCore.fetchJsonResponse<{ vokiIds: string[] }>(

@@ -8,13 +8,15 @@ namespace CoreVokiCreationService.Api.endpoints;
 
 internal class RootHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/list-user-voki-ids", ListUserVokiIds);
         group.MapPost("/initialize-new-voki", InitializeNewVoki)
             .WithRequestValidation<InitializeNewVokiRequest>();
         group.MapGet("/list-invites", ListUserInvites);
+        
+        return group;
     }
 
     private static async Task<IResult> ListUserVokiIds(

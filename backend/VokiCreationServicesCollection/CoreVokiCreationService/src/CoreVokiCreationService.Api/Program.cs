@@ -1,6 +1,8 @@
 using System.Reflection;
+using ApiShared.EfCore;
 using CoreVokiCreationService.Application;
 using CoreVokiCreationService.Infrastructure;
+using CoreVokiCreationService.Infrastructure.persistence;
 using InfrastructureShared.Base;
 
 namespace CoreVokiCreationService.Api;
@@ -13,7 +15,7 @@ public class Program
             options.ValidateScopes = false;
             options.ValidateOnBuild = true;
         });
-        
+
         builder.Services.AddConfiguredLogging(builder.Configuration);
         builder.Services
             .AddApplication()
@@ -23,8 +25,6 @@ public class Program
             ;
 
         var app = builder.Build();
-        app.AddInfrastructureMiddleware();
-
         if (app.Environment.IsDevelopment()) {
             app.MapOpenApi();
         }
@@ -33,9 +33,9 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
+        app.MapAllEndpointWithConsistency<CoreVokiCreationDbContext>();
         app.AllowFrontendCors();
-        app.MapEndpointGroups();
-        
+
         app.Run();
     }
 }

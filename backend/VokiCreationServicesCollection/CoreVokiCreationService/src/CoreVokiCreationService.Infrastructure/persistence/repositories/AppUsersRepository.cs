@@ -1,6 +1,7 @@
 ﻿using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.app_user_aggregate;
 using Microsoft.EntityFrameworkCore;
+using InfrastructureShared.EfCore.query_extensions;
 
 namespace CoreVokiCreationService.Infrastructure.persistence.repositories;
 
@@ -18,11 +19,15 @@ internal class AppUsersRepository : IAppUsersRepository
     }
 
     public async Task<AppUser?> GetById(AppUserId id, CancellationToken ct) =>
-        await _db.AppUsers.FindAsync([id], cancellationToken: ct);
+        await _db.AppUsers
+            .ForUpdate()
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: ct);
 
     public Task<AppUser[]> ListWithIds(IEnumerable<AppUserId> userIds, CancellationToken ct) =>
         _db.AppUsers
-            .Where(u => userIds.Contains(u.Id)).ToArrayAsync(cancellationToken: ct);
+            .ForUpdate()
+            .Where(u => userIds.Contains(u.Id))
+            .ToArrayAsync(cancellationToken: ct);
 
     public async Task Update(AppUser user, CancellationToken ct) {
         _db.Update(user);

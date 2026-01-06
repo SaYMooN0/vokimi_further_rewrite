@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using ApplicationShared;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +12,6 @@ public static class ServiceCollectionExtensions
         services.AddFrontendCors(configuration);
         services.AddHttpContextAccessor();
         services.AddOpenApi();
-        services.AddScoped<IUserContext, UserContextProvider>();
         services.ConfigureHttpJsonOptions(options => {
             options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
