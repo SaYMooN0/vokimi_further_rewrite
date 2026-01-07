@@ -14,13 +14,16 @@ internal sealed class TokenGenerator : ITokenGenerator
 {
     private readonly string _issuer;
     private readonly string _audience;
+    private readonly string _userIdClaimKey;
+
     private readonly RsaSecurityKey _privateKey;
     private readonly ILogger<TokenGenerator> _logger;
 
-    public TokenGenerator(JwtTokenConfig options, AuthPrivateKeyConfig privateKeyConfig, ILogger<TokenGenerator> logger) {
-        _issuer = options.Issuer;
-        _audience = options.Audience;
-
+    public TokenGenerator(JwtTokenConfig jwtTokenConfig, AuthPrivateKeyConfig privateKeyConfig, ILogger<TokenGenerator> logger) {
+        _issuer = jwtTokenConfig.Issuer;
+        _audience = jwtTokenConfig.Audience;
+        _userIdClaimKey = jwtTokenConfig.UserIdClaimKey;
+        
         RSA rsa = RSA.Create();
         rsa.ImportFromPem(privateKeyConfig.PrivateKey);
         _privateKey = new RsaSecurityKey(rsa);
@@ -32,7 +35,7 @@ internal sealed class TokenGenerator : ITokenGenerator
     public JwtTokenString CreateToken(AppUser user) {
         try {
             Claim[] claims = [
-                new(ITokenParser.UserIdClaim, user.Id.ToString())
+                new(_userIdClaimKey, user.Id.ToString())
             ];
 
             SigningCredentials creds =

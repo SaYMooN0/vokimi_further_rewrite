@@ -125,7 +125,6 @@
 		gap: var(--sides-padding);
 		width: 100%;
 		min-width: 0;
-		margin-top: 2rem;
 		grid-template-columns: 1fr auto;
 	}
 

@@ -6,9 +6,8 @@ namespace ApplicationShared;
 
 public interface IUserContext
 {
-    public const string TokenCookieKey = "_token";
-    public const string UserIdContextKey = "appUserId";
+ 
     AppUserId AuthenticatedUserId { get; }
-    IAuthenticatedUserContext AuthenticatedUser { get; }
+    AuthenticatedUserContext AuthenticatedUser { get; }
     ErrOr<AppUserId> UserIdFromToken();
 }

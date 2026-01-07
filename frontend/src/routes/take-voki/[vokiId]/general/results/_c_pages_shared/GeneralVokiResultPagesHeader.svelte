@@ -11,7 +11,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		min-height: var(--sidebar-links-top-padding);
 		padding: 0.75rem 2rem;
 		margin: 0;
 		color: var(--secondary-foreground);

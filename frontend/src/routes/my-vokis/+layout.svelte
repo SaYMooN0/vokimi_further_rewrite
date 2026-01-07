@@ -9,7 +9,6 @@
 	import { toast } from 'svelte-sonner';
 	import { setCurrentPage, type MyVokiPageApi } from './my-vokis-page-context';
 	import type { LayoutData } from './$types';
-	import path from 'path';
 
 	let { data, children }: { data: LayoutData; children: Snippet } = $props();
 	let vokiInitializingDialog = $state<VokiInitializingDialog>()!;
@@ -108,11 +107,13 @@
 		grid-template-rows: auto 1fr;
 		animation: loading-fade-in 0.1s ease-in-out;
 	}
+
 	.nav-header {
 		display: grid;
 		grid-template-rows: auto 1.5rem;
 		gap: 0;
 	}
+
 	.tabs-links {
 		display: grid;
 		justify-content: center;
@@ -120,29 +121,31 @@
 		gap: 1.25rem;
 		width: fit-content;
 		box-sizing: border-box;
+		padding: 1.25rem 0 0.75rem;
 		margin: 0 auto;
 		background-color: var(--back);
 		grid-template-columns: 1fr 1fr 1fr;
-		height: var(--sidebar-links-top-padding);
-		padding: 1.25rem 0 0.75rem;
 	}
+
 	.invites-link-container {
-		height: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		height: 100%;
 	}
+
 	.invites-link {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: fit-content;
+		height: 100%;
+		padding: 0.25rem 1rem;
 		background-color: var(--secondary);
 		color: var(--secondary-foreground);
-		height: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
 		font-weight: 425;
-		width: fit-content;
-		padding: 0.25rem 1rem;
 	}
+
 	.my-vokis-page-content {
 		overflow-y: auto;
 		z-index: 1;

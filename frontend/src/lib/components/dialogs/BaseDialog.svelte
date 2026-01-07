@@ -41,16 +41,17 @@
 		padding: 0;
 		border: none;
 		background: none;
-		outline: none;
-		overflow: visible;
-		transform-origin: top left;
 		opacity: 0;
-		transform: scale(1) translate(-50%, -50%);
 		transition:
 			opacity 0.12s ease-out,
 			transform 0.12s ease-out,
 			overlay 0.12s ease-out allow-discrete;
+		transform: scale(1) translate(-50%, -50%);
+		outline: none;
+		overflow: visible;
+		transform-origin: top left;
 	}
+
 	dialog:open {
 		opacity: 1;
 		transform: scaleY(1) translate(-50%, -50%);
@@ -62,6 +63,7 @@
 			transform: scale(0.99) translate(-50%, -50%);
 		}
 	}
+
 	.dialog-content {
 		position: relative;
 		border-radius: 0.875rem;
@@ -89,14 +91,14 @@
 
 	@media (prefers-reduced-motion: reduce) {
 		dialog {
+			opacity: 1;
 			transition: none;
 			transform: translate(-50%, -50%);
-			opacity: 1;
 		}
 
 		dialog::backdrop {
-			transition: none;
 			background-color: rgb(0 0 0 / 15%);
+			transition: none;
 		}
 	}
 </style>

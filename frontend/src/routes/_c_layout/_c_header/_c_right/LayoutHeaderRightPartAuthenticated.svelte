@@ -39,50 +39,55 @@
 
 <style>
 	.authenticated {
-		display: grid;
-		grid-template-columns: 1fr auto;
 		position: relative;
-		height: 100%;
+		display: grid;
 		display: flex;
-		margin-left: auto;
-		padding: 0 0.5rem;
-		border-radius: var(--radius);
-
 		width: fit-content;
+		height: 100%;
+		padding: 0 0.5rem;
+		margin-left: auto;
+		border-radius: var(--radius);
+		grid-template-columns: 1fr auto;
 	}
+
 	.authenticated:not(:has(.ctx-menu:hover)):hover {
 		background-color: var(--muted);
 	}
+
 	.authenticated > :global(.user-display) {
 		background-color: transparent;
+
 		--profile-pic-width: 2.25rem;
 	}
+
 	.ctx-menu {
 		position: absolute;
 		top: calc(100% + 0.125rem);
 		right: 0;
+		display: none;
 		width: 100%;
 		min-width: 7rem;
-
-		border-radius: var(--radius);
 		padding: 0.25rem;
-		display: none;
+		border-radius: var(--radius);
 		background-color: var(--back);
 		box-shadow: var(--shadow-xs), var(--shadow);
 	}
+
 	.ctx-menu.show {
 		display: block;
 	}
+
 	.logout-btn {
 		width: 100%;
-		border-radius: var(--radius);
-		color: var(--red-1);
-		font-weight: 500;
-		background-color: var(--red-3);
-		border: none;
 		padding: 0.25rem 1rem;
+		border: none;
+		border-radius: var(--radius);
+		background-color: var(--red-3);
+		color: var(--red-1);
 		font-size: 1rem;
+		font-weight: 500;
 	}
+
 	.logout-btn:hover {
 		background-color: var(--red-4);
 	}

@@ -1,21 +1,29 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 
 	import { onMount } from 'svelte';
+	import HeaderSearchStartTypingMsg from './_c_search/HeaderSearchStartTypingMsg.svelte';
+	import HeaderSearchInputEmptyMsg from './_c_search/HeaderSearchInputEmptyMsg.svelte';
+	import HeaderSearchSuggestionsList from './_c_search/HeaderSearchSuggestionsList.svelte';
+	import HeaderSearchInputNoSuggestionsMsg from './_c_search/HeaderSearchInputNoSuggestionsMsg.svelte';
 
-	let inputEl: HTMLInputElement;
+	let inputEl = $state<HTMLInputElement>()!;
 	let inputValue = $state('');
 	let isFocused = $state(false);
-
+	let headerSearchContainer = $state<HTMLDivElement>()!;
 	let filteredUsers = $state<any[]>([]);
 	let filteredTags = $state<any[]>([]);
 	let filteredVokis = $state<any[]>([]);
-	let showSuggestions = $derived(isFocused && inputValue.trim().length > 0);
+
+	const dropdownId = StringUtils.rndStrWithPref('header-search-dropdown-');
 
 	function handleKeydown(e: KeyboardEvent) {
 		if ((e.altKey || e.metaKey) && e.code === 'KeyK') {
 			e.preventDefault();
+			if (inputValue.trim().length === 0) {
+				inputValue = '';
+			}
 			inputEl.focus();
 		}
 		if (e.key === 'Enter' && isFocused) {
@@ -24,11 +32,6 @@
 		if (e.key === 'Escape' && isFocused) {
 			inputEl.blur();
 		}
-	}
-
-	function clearInput() {
-		inputValue = '';
-		inputEl.focus();
 	}
 
 	function handleInput() {
@@ -41,50 +44,19 @@
 		}
 
 		const lowerVal = val.toLowerCase();
-
-		if (val.startsWith('@')) {
-			const query = lowerVal.slice(1);
-			filteredUsers = [];
-			filteredTags = [];
-			filteredVokis = [];
-		} else if (val.startsWith('#')) {
-			const query = lowerVal.slice(1);
-			filteredUsers = [];
-			filteredTags = [];
-			filteredVokis = [];
-		} else {
-			filteredUsers = [];
-			filteredTags = [];
-			filteredVokis = [];
-		}
+		// const response =;
 	}
 
 	function submitSearch() {
-		if (!inputValue.trim()) return;
-
-		let type = 'vokis';
-		if (inputValue.startsWith('@')) type = 'users';
-		if (inputValue.startsWith('#')) type = 'tags';
-
+		console.log(inputValue);
+		if (!inputValue.trim()) {
+			return;
+		}
 		const q = inputValue.trim();
-		goto(`/search-results?q=${encodeURIComponent(q)}&tab=${type}`);
+		goto(`/search-results?q=${encodeURIComponent(q)}`);
 		isFocused = false;
 	}
 	let isInputEmpty = $derived(inputValue.trim().length === 0);
-	function navigateToUser(userId: string) {
-		goto(`/authors/${userId}`);
-		isFocused = false;
-	}
-
-	function navigateToTag(t: string) {
-		goto(`/tags/${t}`);
-		isFocused = false;
-	}
-
-	function navigateToVoki(vokiId: string) {
-		goto(`/catalog/${vokiId}`);
-		isFocused = false;
-	}
 
 	onMount(() => {
 		window.addEventListener('keydown', handleKeydown);
@@ -94,7 +66,7 @@
 	});
 </script>
 
-<div class="header-search" class:focused={isFocused}>
+<div class="header-search" bind:this={headerSearchContainer}>
 	<div
 		class="input-wrapper"
 		onclick={() => {
@@ -102,93 +74,76 @@
 		}}
 	>
 		{#if isInputEmpty}
-			<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+			<svg class="search-icon">
 				<use href="#common-search-icon" />
 			</svg>
 		{:else}
-			<button class="icon-btn" onclick={clearInput} aria-label="Clear search">
-				<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-					<path d="M18 6L6 18M6 6l12 12" />
-				</svg>
-			</button>
+			<svg
+				class="cross-icon"
+				onclick={(e: MouseEvent) => {
+					e.stopPropagation();
+					inputValue = '';
+					inputEl.blur();
+				}}
+				aria-label="Clear search"
+			>
+				<use href="#common-cross-icon" />
+			</svg>
 		{/if}
 		<input
 			bind:this={inputEl}
 			bind:value={inputValue}
 			oninput={handleInput}
-			onfocus={() => (isFocused = true)}
-			onblur={() => setTimeout(() => (isFocused = false), 200)}
-			type="text"
+			onblur={() => {
+				isFocused = false;
+			}}
+			onfocus={() => {
+				isFocused = true;
+			}}
 			placeholder="Search Vokis, @users, #tags"
+			name={StringUtils.rndStrWithPref('header-search-input-')}
+			type="text"
+			autocomplete="off"
+			autocorrect="off"
+			spellcheck="false"
+			aria-autocomplete="list"
+			aria-controls={dropdownId}
+			aria-expanded={isFocused}
+			role="combobox"
 		/>
 		{#if !isInputEmpty}
-			<button class="icon-btn arrow-btn" onclick={submitSearch} aria-label="Search">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<path d="M14 12L4 12" />
-					<path
-						d="M18.5859 13.6026L17.6194 14.3639C16.0536 15.5974 15.2707 16.2141 14.6354 15.9328C14 15.6515 14 14.6881 14 12.7613L14 11.2387C14 9.31191 14 8.34853 14.6354 8.06721C15.2707 7.7859 16.0536 8.40264 17.6194 9.63612L18.5858 10.3974C19.5286 11.1401 20 11.5115 20 12C20 12.4885 19.5286 12.8599 18.5859 13.6026Z"
-					/>
-				</svg>
-			</button>
+			<svg class="arrow-btn" onclick={submitSearch} aria-label="Search">
+				<use href="#caret-right-icon" />
+			</svg>
 		{/if}
 	</div>
-
-	{#if showSuggestions}
-		<div class="suggestions-dropdown">
-			{#each filteredUsers as user}
-				<button class="suggestion-item user" onclick={() => navigateToUser(user)}>
-					<BasicUserDisplay userId={user.id} interactionLevel="JustDisplay" />
-				</button>
-			{/each}
-
-			{#each filteredTags as tag}
-				<button class="suggestion-item tag" onclick={() => navigateToTag(tag)}>
-					<span class="tag-hash">#</span>
-					<span class="tag-text">{tag.name}</span>
-					<span class="tag-count">({tag.usageCount} uses)</span>
-				</button>
-			{/each}
-
-			{#each filteredVokis as voki}
-				<button class="suggestion-item voki" onclick={() => navigateToVoki(voki)}>
-					<span class="voki-icon">
-						<svg
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							width="16"
-							height="16"
-						>
-							<rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-						</svg>
-					</span>
-					<span class="voki-text">{voki.title}</span>
-				</button>
-			{/each}
-
-			{#if filteredUsers.length === 0 && filteredTags.length === 0 && filteredVokis.length === 0}
-				<div class="no-results">No suggestions</div>
+	{#if isFocused}
+		<div class="dropdown" id={dropdownId} role="listbox">
+			{#if inputValue.length === 0}
+				<HeaderSearchStartTypingMsg />
+			{:else if inputValue.trim().length === 0}
+				<HeaderSearchInputEmptyMsg />
+			{:else if filteredUsers.length === 0 && filteredTags.length === 0 && filteredVokis.length === 0}
+				<HeaderSearchInputNoSuggestionsMsg />
+			{:else}
+				<HeaderSearchSuggestionsList
+					removeFocus={() => inputEl.blur()}
+					{filteredUsers}
+					{filteredTags}
+					{filteredVokis}
+				/>
 			{/if}
-
-			<button class="see-all-btn" onclick={submitSearch}>
-				See all results for "{inputValue}"
-				<svg
-					width="16"
-					height="16"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-				>
-					<path d="M5 12h14M12 5l7 7-7 7" />
+			<button
+				class="search-page-btn"
+				onmousedown={(e: MouseEvent) => {
+					console.log('click');
+					e.stopPropagation();
+					submitSearch();
+				}}
+			>
+				Go to search page
+				<svg>
+					<use href="#caret-right-icon" />
 				</svg>
 			</button>
 		</div>
@@ -198,182 +153,143 @@
 <style>
 	.header-search {
 		position: relative;
-		width: 100%;
-		height: 100%;
-		max-width: 36rem;
-		margin: 0 auto;
 		display: flex;
 		align-items: center;
+		width: 100%;
+		max-width: 36rem;
+		height: 100%;
+		margin: 0 auto;
 	}
 
 	.input-wrapper {
-		display: flex;
+		display: grid;
 		align-items: center;
 		width: 100%;
-		height: 100%;
-		background-color: var(--secondary);
-		border-radius: 9999px;
-		padding: 0 1rem;
-		transition: all 0.2s ease;
+		height: var(--layout-header-search-height);
+		padding: 0 0.75rem;
+		border: 0.125rem solid transparent;
+		border-radius: 100vw;
+		background-color: var(--back);
+		box-shadow: var(--shadow-xs);
+		transition: border-color 0.08s ease;
+		grid-template-columns: 1.5rem 1fr 1.5rem;
 	}
 
-	.header-search.focused .input-wrapper {
+	.input-wrapper:has(input:focus) {
 		border-color: var(--primary);
-		box-shadow: 0 0 0 2px var(--shadow-color, rgba(0, 0, 0, 0.05));
-		background-color: var(--background);
+		box-shadow: none;
 	}
 
 	input {
-		flex: 1;
-		background: transparent;
-		border: none;
-		outline: none;
-		font-size: 0.9375rem;
-		color: var(--foreground);
-		padding: 0 0.5rem;
 		min-width: 0;
+		padding: 0 0.5rem;
+		border: none;
+		background: transparent;
+		color: var(--text);
+		font-size: 1rem;
+		font-weight: 425;
+		outline: none;
 	}
 
 	input::placeholder {
 		color: var(--muted-foreground);
-	}
-	.search-icon {
-		width: 1rem;
-		height: 1rem;
-	}
-	.icon-btn,
-	.icon-placeholder {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 1.75rem;
-		height: 1.75rem;
-		padding: 0;
-		background: transparent;
-		border: none;
-		color: var(--muted-foreground);
+		font-size: 1rem;
+		font-weight: 400;
 	}
 
-	.icon-btn {
-		cursor: pointer;
+	.input-wrapper svg {
+		width: 100%;
+		aspect-ratio: 1/1;
 		border-radius: 50%;
-		transition:
-			background-color 0.15s,
-			color 0.15s;
+		transition: all 0.08s ease;
 	}
 
-	.icon-btn:hover {
-		background-color: var(--muted);
-		color: var(--foreground);
-	}
-
-	.icon-placeholder {
+	.search-icon {
+		padding: 0.125rem;
+		border-radius: 0 !important;
+		color: var(--primary);
+		stroke-width: 2.75;
 		pointer-events: none;
 	}
 
+	.cross-icon {
+		padding: 0.25rem;
+		color: var(--muted-foreground);
+		stroke-width: 2;
+	}
+
+	.cross-icon:hover {
+		background-color: var(--secondary);
+	}
+
 	.arrow-btn {
+		padding: 0;
 		color: var(--primary);
+		stroke-width: 2.5;
 	}
 
 	.arrow-btn:hover {
+		padding: 0.125rem;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
 	}
 
-	.icon {
-		width: 1.125rem;
-		height: 1.125rem;
-	}
-
-	.suggestions-dropdown {
+	.dropdown {
 		position: absolute;
-		top: calc(100% + 0.5rem);
+		top: calc(100% + 0.25rem);
 		left: 0;
-		width: 100%;
-		background-color: var(--popover);
-		border: 1px solid var(--border);
-		border-radius: 0.75rem;
-		box-shadow: var(--shadow-lg);
-		padding: 0.5rem;
-		z-index: 50;
-		max-height: 20rem;
-		overflow-y: auto;
+		z-index: 9999;
 		display: flex;
 		flex-direction: column;
 		gap: 0.25rem;
-	}
-
-	.suggestion-item {
-		display: flex;
-		align-items: center;
-		gap: 0.75rem;
 		width: 100%;
+		max-height: 20rem;
 		padding: 0.5rem;
-		border: none;
-		background: transparent;
-		border-radius: 0.5rem;
-		text-align: left;
-		font-size: 0.9375rem;
-		cursor: pointer;
-		color: var(--foreground);
-		transition: background-color 0.15s;
+		border-radius: 0.75rem;
+		background-color: var(--back);
+		box-shadow: var(--shadow-xs), var(--shadow-md);
+		overflow-y: auto;
+		animation: dropdown-fade-in 0.1s ease;
 	}
 
-	.suggestion-item:hover {
-		background-color: var(--accent);
-		color: var(--accent-foreground);
-	}
-
-	.tag-hash {
-		color: var(--primary);
-		font-weight: bold;
-	}
-
-	.tag-count {
-		margin-left: auto;
-		font-size: 0.75rem;
-		color: var(--muted-foreground);
-	}
-
-	.voki-icon {
-		color: var(--muted-foreground);
+	.search-page-btn {
 		display: flex;
-		flex-shrink: 0;
-	}
-
-	.voki-text {
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.no-results {
-		padding: 0.75rem;
-		text-align: center;
-		color: var(--muted-foreground);
-		font-size: 0.875rem;
-	}
-
-	.see-all-btn {
+		justify-content: center;
+		align-items: center;
 		width: 100%;
-		padding: 0.75rem 0.5rem;
-		border-top: 1px solid var(--border);
-		margin-top: 0.25rem;
-		background: transparent;
+		padding: 0.375rem 0.5rem;
 		border: none;
-		border-top: 1px solid var(--border);
+		border-radius: 0.5rem;
+		background: transparent;
 		color: var(--primary);
+		font-size: 0.875rem;
 		font-weight: 500;
 		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		font-size: 0.875rem;
-		border-radius: 0 0 0.5rem 0.5rem;
 	}
 
-	.see-all-btn:hover {
+	.search-page-btn:hover {
 		background-color: var(--accent);
+	}
+
+	.search-page-btn > svg {
+		width: 1.25rem;
+		height: 1.25rem;
+		stroke-width: 2;
+	}
+
+	@keyframes dropdown-fade-in {
+		from {
+			transform: scale(0.86);
+		}
+
+		to {
+			transform: scaleX(1);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.dropdown {
+			animation: none;
+		}
 	}
 </style>

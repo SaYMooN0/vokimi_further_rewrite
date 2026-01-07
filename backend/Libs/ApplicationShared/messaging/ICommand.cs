@@ -2,4 +2,4 @@
 
 public interface ICommand;
 
-public interface ICommand<TResponse>;
+public interface ICommand<in TResponse>;

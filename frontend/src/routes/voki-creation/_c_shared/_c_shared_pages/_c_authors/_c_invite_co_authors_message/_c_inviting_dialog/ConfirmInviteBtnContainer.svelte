@@ -59,6 +59,7 @@
 		box-shadow: var(--shadow-xs);
 		transition: background-color 0.12s ease-in;
 		cursor: pointer;
+		font-variant-numeric: tabular-nums;
 	}
 
 	.confirm-btn-container button:hover:not(.loading) {

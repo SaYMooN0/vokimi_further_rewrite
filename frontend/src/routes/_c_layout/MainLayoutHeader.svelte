@@ -28,7 +28,7 @@
 		height: var(--layout-header-height);
 		max-height: var(--layout-header-height);
 		padding: var(--layout-header-vertical-padding) 0;
-		outline: 1px solid blueviolet;
+		z-index: 9999;
 	}
 	.side.left {
 		padding: 0 var(--sides-padding);
@@ -41,8 +41,10 @@
 		width: fit-content;
 	}
 	.middle-part {
-		width: 100%;
+		width: calc(100% - var(--side-panel-width));
 		height: 100%;
+		margin-left: var(--side-panel-width);
+		z-index: 9999;
 	}
 	.side.right {
 		max-height: var(--layout-header-height);

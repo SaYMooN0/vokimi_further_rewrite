@@ -16,19 +16,20 @@ internal class TokenParser : ITokenParser
     private readonly ILogger<TokenParser> _logger;
     private readonly string _issuer;
     private readonly string _audience;
+    private readonly string _userIdClaimKey;
     private readonly RsaSecurityKey _publicKey;
 
-    public TokenParser(JwtTokenConfig options, ILogger<TokenParser> logger) {
+    public TokenParser(JwtTokenConfig jwtTokenConfig, ILogger<TokenParser> logger) {
         _logger = logger;
 
-        _issuer = options.Issuer;
-        _audience = options.Audience;
+        _issuer = jwtTokenConfig.Issuer;
+        _audience = jwtTokenConfig.Audience;
+        _userIdClaimKey = jwtTokenConfig.UserIdClaimKey;
 
         RSA rsa = RSA.Create();
-        rsa.ImportFromPem(options.PublicKey);
+        rsa.ImportFromPem(jwtTokenConfig.PublicKey);
         _publicKey = new RsaSecurityKey(rsa);
     }
-
 
 
     public ErrOr<AppUserId> UserIdFromJwtToken(JwtTokenString token) {
@@ -48,12 +49,12 @@ internal class TokenParser : ITokenParser
                 out _
             );
 
-            Claim? userIdClaim = principal.Claims.FirstOrDefault(c => c.Type == ITokenParser.UserIdClaim);
+            Claim? userIdClaim = principal.Claims.FirstOrDefault(c => c.Type ==_userIdClaimKey);
 
             if (userIdClaim is null) {
                 _logger.LogWarning(
                     "JWT token does not contain '{claimName}' claim. Token: '{token}'.",
-                    ITokenParser.UserIdClaim, token.Value
+                    _userIdClaimKey, token.Value
                 );
 
                 return ErrFactory.IncorrectFormat(
@@ -67,7 +68,7 @@ internal class TokenParser : ITokenParser
             if (string.IsNullOrWhiteSpace(claimValue)) {
                 _logger.LogWarning(
                     "JWT token contains empty '{claimName}' claim. Token: '{token}'.",
-                    ITokenParser.UserIdClaim, token.Value
+                    _userIdClaimKey, token.Value
                 );
 
                 return ErrFactory.NoValue.Common(

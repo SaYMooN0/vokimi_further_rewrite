@@ -6,8 +6,8 @@
 		| { icon: ReloadButtonIcon; text: string };
 
 	interface Props {
-		content: ReloadButtonContent;
 		onclick: () => void;
+		content?: ReloadButtonContent;
 		className?: string;
 	}
 	let { content = { icon: null, text: 'Reload' }, onclick, className = '' }: Props = $props();

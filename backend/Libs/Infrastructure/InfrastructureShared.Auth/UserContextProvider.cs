@@ -1,5 +1,4 @@
-﻿using ApplicationShared;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using SharedKernel;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
@@ -7,8 +6,10 @@ using SharedKernel.errs.utils;
 
 namespace InfrastructureShared.Auth;
 
-internal class UserContextProvider : IUserContext
+public class UserContextProvider 
 {
+    public const string TokenCookieKey = "_token";
+    public const string UserIdContextKey = "appUserId";
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ITokenParser _tokenParser;
 
@@ -20,7 +21,7 @@ internal class UserContextProvider : IUserContext
     public AppUserId AuthenticatedUserId =>
         TryGetUserIdFromContextItems(out var userId) ? userId : UserIdFromToken().AsSuccess();
 
-    public IAuthenticatedUserContext AuthenticatedUser => new AuthenticatedUserContext(AuthenticatedUserId);
+    public AuthenticatedUserContext AuthenticatedUser => new (AuthenticatedUserId);
 
     public ErrOr<AppUserId> UserIdFromToken() {
         if (!TryGetTokenFromCookie(out string? token) || string.IsNullOrEmpty(token)) {
@@ -34,7 +35,7 @@ internal class UserContextProvider : IUserContext
 
         AppUserId userId = errOrId.AsSuccess();
         if (_httpContextAccessor.HttpContext is not null) {
-            _httpContextAccessor.HttpContext.Items[IUserContext.UserIdContextKey] = userId;
+            _httpContextAccessor.HttpContext.Items[UserIdContextKey] = userId;
         }
 
         return userId;
@@ -42,7 +43,7 @@ internal class UserContextProvider : IUserContext
 
     private bool TryGetTokenFromCookie(out string? token) {
         if (_httpContextAccessor.HttpContext is not null) {
-            return _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(IUserContext.TokenCookieKey, out token);
+            return _httpContextAccessor.HttpContext.Request.Cookies.TryGetValue(TokenCookieKey, out token);
         }
 
         token = null;
@@ -52,7 +53,7 @@ internal class UserContextProvider : IUserContext
     private bool TryGetUserIdFromContextItems(out AppUserId userId) {
         if (
             _httpContextAccessor.HttpContext is not null
-            && _httpContextAccessor.HttpContext.Items.TryGetValue(IUserContext.UserIdContextKey, out var userIdObj)
+            && _httpContextAccessor.HttpContext.Items.TryGetValue(UserIdContextKey, out var userIdObj)
             && userIdObj is AppUserId typedId
         ) {
             userId = typedId;

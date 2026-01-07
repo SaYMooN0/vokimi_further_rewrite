@@ -1,6 +1,5 @@
 namespace SharedKernel;
 
-public interface IAuthenticatedUserContext
-{
-    public AppUserId UserId { get; }
-}
+public record AuthenticatedUserContext(
+    AppUserId UserId
+);

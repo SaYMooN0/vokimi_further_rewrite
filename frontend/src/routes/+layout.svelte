@@ -72,20 +72,23 @@
 		padding-top: var(--layout-header-height);
 		padding-left: var(--side-panel-width);
 	}
+
 	.sidebar {
 		position: fixed;
 		top: var(--layout-header-height);
-		width: var(--side-panel-width);
-		height: calc(100vh - var(--layout-header-height));
 		left: 0;
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+		width: var(--side-panel-width);
+		height: calc(100vh - var(--layout-header-height));
 		padding: 0 var(--sides-padding);
 	}
+
 	#page-content {
 		padding-right: var(--sides-padding);
 	}
+
 	#page-content > :global(*) {
 		animation: 0.2s page-fade-in;
 	}

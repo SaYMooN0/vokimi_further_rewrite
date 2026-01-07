@@ -11,8 +11,8 @@
 <div class="sprites">
 	{@html vokiTypesIconsSprite}
 	{@html commonIconsSprite}
-	{@html caretIconsSprite}
 	{@html languagesIconsSprite}
+	{@html caretIconsSprite}
 	{@html albumIconsSprite}
 	{@html imageIconsSprite}
 	{@html contextMenuIconsSprite}

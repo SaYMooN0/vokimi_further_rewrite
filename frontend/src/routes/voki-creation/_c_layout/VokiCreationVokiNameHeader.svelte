@@ -25,7 +25,7 @@
 		</label>
 		<ReloadButton onclick={() => vokiName.reload()} />
 	{:else}
-		Creation of the new
+		Creation of the
 		{#if vokiName.state === 'ok'}
 			<label class="voki-name">{vokiName.value}</label>
 		{:else if vokiName.state === 'loading'}
@@ -40,8 +40,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		height: var(--sidebar-links-top-padding);
-		margin: 0;
+		margin-bottom: 0.75rem;
 		color: var(--secondary-foreground);
 		font-size: 1.25rem;
 		font-weight: 440;

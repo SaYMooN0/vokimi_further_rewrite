@@ -11,7 +11,7 @@ internal sealed class DomainEventsPublisher(IServiceProvider serviceProvider) : 
     private static readonly ConcurrentDictionary<Type, Type> HandlerTypeDictionary = new();
     private static readonly ConcurrentDictionary<Type, Type> WrapperTypeDictionary = new();
 
-    public async Task Publish(IDomainEvent domainEvent, CancellationToken cancellationToken = default) {
+    public async Task Publish(IDomainEvent domainEvent, CancellationToken cancellationToken) {
         using IServiceScope scope = serviceProvider.CreateScope();
 
         Type domainEventType = domainEvent.GetType();
@@ -52,7 +52,8 @@ internal sealed class DomainEventsPublisher(IServiceProvider serviceProvider) : 
         public static HandlerWrapper Create(object handler, Type domainEventType) {
             Type wrapperType = WrapperTypeDictionary.GetOrAdd(
                 domainEventType,
-                et => typeof(HandlerWrapper<>).MakeGenericType(et));
+                et => typeof(HandlerWrapper<>).MakeGenericType(et)
+            );
 
             var instance = Activator.CreateInstance(wrapperType, handler);
             if (instance is null || instance is not HandlerWrapper) {

@@ -92,13 +92,13 @@
 	}
 
 	.errs-list {
-		margin-top: 0.5rem;
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 		width: 100%;
 		padding: 0.125rem 0.75rem;
+		margin-top: 0.5rem;
 		margin-bottom: 1rem;
 		border-radius: 0.675rem;
 		background-color: var(--red-1);
@@ -112,12 +112,12 @@
 		width: fit-content;
 		height: 1.25rem;
 		padding: 0.125rem;
+		border-radius: 1rem;
 		color: var(--err-foreground);
 		transition: all 0.04s ease-in;
 		cursor: pointer;
 		aspect-ratio: 1/1;
 		stroke-width: 2.2;
-		border-radius: 1rem;
 
 	}
 
