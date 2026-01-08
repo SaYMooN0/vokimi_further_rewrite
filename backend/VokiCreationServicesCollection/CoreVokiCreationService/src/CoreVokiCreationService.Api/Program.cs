@@ -1,5 +1,4 @@
 using System.Reflection;
-using ApiShared.EfCore;
 using CoreVokiCreationService.Application;
 using CoreVokiCreationService.Infrastructure;
 using CoreVokiCreationService.Infrastructure.persistence;

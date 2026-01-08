@@ -1,5 +1,6 @@
 ﻿using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 using VokiCommentsService.Application.common.repositories;
 
 namespace VokiCommentsService.Application.app_users.queries;

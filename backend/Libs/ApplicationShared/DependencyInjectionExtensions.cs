@@ -36,13 +36,19 @@ public static class DependencyInjectionExtensions
     }
 
     private static IServiceCollection AddStepHandlers(this IServiceCollection services) {
-        services.TryDecorate(typeof(IQueryHandler<,>), typeof(BasicValidationStepHandler.QueryHandler<,>));
-        services.TryDecorate(typeof(ICommandHandler<,>), typeof(BasicValidationStepHandler.CommandHandler<,>));
-        services.TryDecorate(typeof(ICommandHandler<>), typeof(BasicValidationStepHandler.CommandBaseHandler<>));
+        
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(UnitOfWorkStepHandler.QueryHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>), typeof(UnitOfWorkStepHandler.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkStepHandler.CommandBaseHandler<>));
+        
 
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(AuthCheckStepHandler.QueryHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(AuthCheckStepHandler.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(AuthCheckStepHandler.CommandBaseHandler<>));
+        
+        services.TryDecorate(typeof(IQueryHandler<,>), typeof(BasicValidationStepHandler.QueryHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<,>), typeof(BasicValidationStepHandler.CommandHandler<,>));
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(BasicValidationStepHandler.CommandBaseHandler<>));
 
         return services;
     }

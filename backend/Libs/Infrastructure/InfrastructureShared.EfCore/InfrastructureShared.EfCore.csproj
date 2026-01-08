@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\SharedKernel\SharedKernel.csproj"/>
+        <ProjectReference Include="..\..\ApplicationShared\ApplicationShared.csproj" />
     </ItemGroup>
     <ItemGroup>
         <FrameworkReference Include="Microsoft.AspNetCore.App"/>

@@ -6,13 +6,15 @@ namespace VokisCatalogService.Api.endpoints;
 
 internal class VokiHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/");
 
         group.MapGet("/all", ListAllVokis);
         group.MapGet("/list-user-voki-ids", ListUserVokiIds);
         group.MapPost("/brief-info", ListVokisBriefInfo)
             .WithRequestValidation<ListVokisBriefInfoRequest>();
+
+        return group;
     }
 
     private static async Task<IResult> ListUserVokiIds(

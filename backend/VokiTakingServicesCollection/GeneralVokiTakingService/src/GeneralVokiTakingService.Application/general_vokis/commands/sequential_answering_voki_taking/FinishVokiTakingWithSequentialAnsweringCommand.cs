@@ -7,6 +7,7 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
 
@@ -64,7 +65,7 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
             _dateTimeProvider.UtcNow,
             sessionStartTime: command.SessionStartTime,
             clientSessionFinishedTime: command.ClientSessionFinishTime,
-            _userContext.UserIdFromToken().IsSuccess(out var userId) ? new AuthenticatedUserContext(userId) : null,
+            _userContext.UserIdFromToken().IsSuccess(out var userId) ? new AuthenticatedUserCtx(userId) : null,
             lastQuestionId: command.LastQuestionId,
             lastQuestionOrderInVokiTaking: command.LastQuestionOrderInVokiTaking,
             lastQuestionShownAt: command.LastQuestionShownAt,

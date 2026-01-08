@@ -2,6 +2,7 @@ using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
@@ -30,7 +31,7 @@ internal sealed class UpdateAlbumCommandHandler : ICommandHandler<UpdateAlbumCom
             return ErrFactory.NotFound.Common("Could not update the album because it doesn't exist");
         }
 
-        var res = album.Update(new AuthenticatedUserContext(_userContext.AuthenticatedUserId), command.Name, command.Icon, command.MainColor, command.SecondaryColor);
+        var res = album.Update(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId), command.Name, command.Icon, command.MainColor, command.SecondaryColor);
         if (res.IsErr(out var err)) {
             return err;
         }

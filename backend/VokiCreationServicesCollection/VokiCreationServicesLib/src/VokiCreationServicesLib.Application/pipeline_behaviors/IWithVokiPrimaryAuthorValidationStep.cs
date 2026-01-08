@@ -3,6 +3,7 @@ using ApplicationShared.messaging;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
+using SharedKernel.user_ctx;
 using VokiCreationServicesLib.Application.common;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 

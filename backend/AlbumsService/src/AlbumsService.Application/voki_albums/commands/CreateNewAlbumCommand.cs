@@ -4,6 +4,7 @@ using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
@@ -48,7 +49,7 @@ internal sealed class CreateNewAlbumCommandHandler :
         }
 
         VokiAlbum album = VokiAlbum.CreateNew(
-            new AuthenticatedUserContext(_userContext.AuthenticatedUserId), command.Name, command.Icon,
+            new AuthenticatedUserCtx(_userContext.AuthenticatedUserId), command.Name, command.Icon,
             command.MainColor, command.SecondaryColor, _dateTimeProvider.UtcNow
         );
         var addingRes = user.AddAlbum(album.Id);

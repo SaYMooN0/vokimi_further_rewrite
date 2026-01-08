@@ -12,7 +12,7 @@ namespace AlbumsService.Api.endpoints;
 
 internal class RootHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/all-albums-preview", GetAllUserAlbumsPreview);
@@ -22,6 +22,8 @@ internal class RootHandlers : IEndpointGroup
 
         group.MapPost("/update-auto-albums-appearance", UpdateAutoAlbumsAppearance)
             .WithRequestValidation<UpdateAutoAlbumsAppearanceRequest>();
+
+        return group;
     }
 
     private static async Task<IResult> GetAllUserAlbumsPreview(

@@ -8,6 +8,7 @@ using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
@@ -46,7 +47,7 @@ internal sealed class StartVokiTakingCommandHandler :
         }
 
         AppUserId? vokiTaker = _userContext.UserIdFromToken().IsSuccess(out var id) ? id : null;
-        AuthenticatedUserContext? authenticatedUserContext = vokiTaker is null? null : new AuthenticatedUserContext(vokiTaker);
+        AuthenticatedUserCtx? authenticatedUserContext = vokiTaker is null? null : new AuthenticatedUserCtx(vokiTaker);
         if (voki.CheckUserAccessToTake(authenticatedUserContext).IsErr(out var err)) {
             return err;
         }

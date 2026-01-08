@@ -13,7 +13,7 @@ namespace AlbumsService.Api.endpoints;
 
 internal class SpecificAlbumHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/albums/{albumId}");
 
         group.MapGet("/", GetAlbum);
@@ -28,6 +28,8 @@ internal class SpecificAlbumHandlers : IEndpointGroup
 
         group.MapPatch("/remove-voki", RemoveVokiFromAlbum)
             .WithRequestValidation<RemoveVokiFromAlbumRequest>();
+        
+        return group;
     }
 
     private static async Task<IResult> GetAlbum(

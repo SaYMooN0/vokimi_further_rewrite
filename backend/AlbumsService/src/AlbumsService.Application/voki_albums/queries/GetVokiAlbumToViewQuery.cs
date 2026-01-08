@@ -2,6 +2,7 @@ using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.queries;
 
@@ -15,7 +16,7 @@ internal sealed class GetVokiAlbumToViewQueryHandler : IQueryHandler<GetVokiAlbu
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
     private readonly IUserContext _userContext;
 
-    public GetVokiAlbumToViewQueryHandler(IVokiAlbumsRepository vokiAlbumsRepository, IUserContext userContext) {
+    public GetVokiAlbumToViewQueryHandler(IVokiAlbumsRepository vokiAlbumsRepository, IUserContext userContext)  {
         _vokiAlbumsRepository = vokiAlbumsRepository;
         _userContext = userContext;
     }

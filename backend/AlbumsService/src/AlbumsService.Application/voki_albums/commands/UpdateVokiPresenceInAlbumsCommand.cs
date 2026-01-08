@@ -3,6 +3,7 @@ using AlbumsService.Application.voki_albums.queries;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
@@ -36,7 +37,7 @@ internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
 
         foreach (var (albumId, isChosen) in command.AlbumIdToIsChosen) {
             if (albums.TryGetValue(albumId, out var album)) {
-                ErrOrNothing res = album.SetVokiPresenceTo(new AuthenticatedUserContext(_userContext.AuthenticatedUserId), isChosen, command.VokiId);
+                ErrOrNothing res = album.SetVokiPresenceTo(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId), isChosen, command.VokiId);
                 errs.AddNextIfErr(res);
                 changedAlbumsList.Add(album);
             }

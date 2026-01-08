@@ -2,6 +2,8 @@ using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
@@ -49,7 +51,7 @@ internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler
         }
 
         var albumsToCopyFrom = await _vokiAlbumsRepository.ListByIdsAsNoTracking(command.AlbumIdsToCopyFrom, ct);
-        var copyRes = album.CopyVokisFromAlbums(new AuthenticatedUserContext(_userContext.AuthenticatedUserId),
+        var copyRes = album.CopyVokisFromAlbums(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId),
             albumsToCopyFrom);
         if (copyRes.IsErr(out var err)) {
             return err;

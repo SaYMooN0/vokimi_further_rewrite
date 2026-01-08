@@ -4,6 +4,7 @@ using GeneralVokiTakingService.Domain.app_user_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.queries;
 

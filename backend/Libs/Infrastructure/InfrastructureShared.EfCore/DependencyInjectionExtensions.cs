@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using ApplicationShared;
+using InfrastructureShared.EfCore.unit_of_work;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +22,8 @@ public static class DependencyInjectionExtensions
                 options.ConfigureDevelopmentExclusive(env);
             }
         );
+
+        services.AddScoped<IUnitOfWorkManager, DbTransactionBasedUnitOfWorkManager<T>>();
     }
 
     private static void ConfigureDevelopmentExclusive(this DbContextOptionsBuilder options, IWebHostEnvironment env) {

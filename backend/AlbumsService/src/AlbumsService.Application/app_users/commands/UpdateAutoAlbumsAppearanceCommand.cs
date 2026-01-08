@@ -2,6 +2,7 @@
 using AlbumsService.Domain.app_user_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.app_users.commands;
 

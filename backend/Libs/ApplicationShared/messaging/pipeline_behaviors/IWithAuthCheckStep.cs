@@ -1,7 +1,7 @@
-using SharedKernel;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
+using SharedKernel.user_ctx;
 
 namespace ApplicationShared.messaging.pipeline_behaviors;
 
@@ -67,7 +67,7 @@ public static class AuthCheckStepHandler
         private readonly IUserContext _userContext;
 
 
-        public QueryHandler(IQueryHandler<TQuery, TResponse> innerHandler, IUserContext userContext) {
+        public QueryHandler(IQueryHandler<TQuery, TResponse> innerHandler, IUserContext userContext)  {
             _innerHandler = innerHandler;
             _userContext = userContext;
         }

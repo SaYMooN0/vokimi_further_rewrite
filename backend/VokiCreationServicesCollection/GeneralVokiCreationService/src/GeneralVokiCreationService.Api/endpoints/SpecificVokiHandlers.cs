@@ -12,7 +12,7 @@ namespace GeneralVokiCreationService.Api.endpoints;
 
 internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = base.CreateGroupWithBaseEndpoint(routeBuilder);
 
         group.MapGet("/main-info", GetVokiMainInfo);

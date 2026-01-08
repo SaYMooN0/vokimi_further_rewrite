@@ -7,6 +7,7 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands.free_answering_voki_taking;
 
@@ -61,7 +62,7 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             _dateTimeProvider.UtcNow,
             command.SessionStartTime,
             command.ClientFinishTime,
-            _userContext.UserIdFromToken().IsSuccess(out var userId) ? new AuthenticatedUserContext(userId) : null,
+            _userContext.UserIdFromToken().IsSuccess(out var userId) ? new AuthenticatedUserCtx(userId) : null,
             command.ChosenAnswers,
             (answ) => voki.GetResultIdByChosenAnswers(answ)
         );

@@ -2,6 +2,7 @@
 using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.queries;
 

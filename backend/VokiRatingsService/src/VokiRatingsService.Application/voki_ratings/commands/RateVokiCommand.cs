@@ -1,6 +1,7 @@
 ﻿using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel;
+using SharedKernel.user_ctx;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.app_user_aggregate;
 using VokiRatingsService.Domain.common;
@@ -51,7 +52,7 @@ internal sealed class RateVokiCommandHandler : ICommandHandler<RateVokiCommand, 
 
         var ratingValue = creationRes.AsSuccess();
         VokiRating? rating = await _ratingsRepository.GetUserRatingForVoki(
-            new AuthenticatedUserContext(userId), command.VokiId, ct
+            new AuthenticatedUserCtx(userId), command.VokiId, ct
         );
 
 

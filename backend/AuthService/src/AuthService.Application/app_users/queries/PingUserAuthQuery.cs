@@ -1,11 +1,11 @@
 ﻿using ApplicationShared;
 using AuthService.Application.common.repositories;
 using Microsoft.Extensions.Logging;
+using SharedKernel.user_ctx;
 
 namespace AuthService.Application.app_users.queries;
 
 public sealed record PingUserAuthQuery() : IQuery<PingUserAuthQueryResult>;
-
 internal sealed class PingUserAuthQueryHandler : IQueryHandler<PingUserAuthQuery, PingUserAuthQueryResult>
 {
     private readonly IAppUsersRepository _appUsersRepository;
@@ -37,6 +37,7 @@ internal sealed class PingUserAuthQueryHandler : IQueryHandler<PingUserAuthQuery
 
         return PingUserAuthQueryResult.Authenticated(userId);
     }
+
 }
 
 public sealed class PingUserAuthQueryResult

@@ -1,5 +1,6 @@
 ﻿using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.app_user_aggregate;
 

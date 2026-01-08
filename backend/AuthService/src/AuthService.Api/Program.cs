@@ -1,10 +1,7 @@
 using System.Reflection;
-using ApiShared.EfCore;
 using AuthService.Application;
 using AuthService.Infrastructure;
-using AuthService.Infrastructure.persistence;
 using InfrastructureShared.Base;
-using InfrastructureShared.EfCore;
 
 namespace AuthService.Api;
 
@@ -17,8 +14,8 @@ public class Program
             options.ValidateOnBuild = true;
         });
 
+        builder.AddConfiguredLogging();
         builder.Services.AddFrontendConfig(builder.Configuration);
-        builder.Services.AddConfiguredLogging(builder.Configuration);
 
         builder.Services
             .AddApplication()
@@ -36,7 +33,7 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
-        app.MapAllEndpointWithConsistency<AuthDbContext>();
+        app.MapEndpointGroups();
         app.AllowFrontendCors();
         
         app.Run();

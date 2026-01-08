@@ -3,10 +3,11 @@ using SharedKernel;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
+using SharedKernel.user_ctx;
 
 namespace InfrastructureShared.Auth;
 
-public class UserContextProvider 
+public class UserContextProvider : IUserContext
 {
     public const string TokenCookieKey = "_token";
     public const string UserIdContextKey = "appUserId";
@@ -21,7 +22,7 @@ public class UserContextProvider
     public AppUserId AuthenticatedUserId =>
         TryGetUserIdFromContextItems(out var userId) ? userId : UserIdFromToken().AsSuccess();
 
-    public AuthenticatedUserContext AuthenticatedUser => new (AuthenticatedUserId);
+    public AuthenticatedUserCtx AuthenticatedUser => new(AuthenticatedUserId);
 
     public ErrOr<AppUserId> UserIdFromToken() {
         if (!TryGetTokenFromCookie(out string? token) || string.IsNullOrEmpty(token)) {

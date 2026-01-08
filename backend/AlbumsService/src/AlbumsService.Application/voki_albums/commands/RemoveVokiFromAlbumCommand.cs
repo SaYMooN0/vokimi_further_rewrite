@@ -2,6 +2,7 @@ using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
@@ -28,7 +29,7 @@ internal sealed class RemoveVokiFromAlbumCommandHandler : ICommandHandler<Remove
         }
 
         var res =
-            album.RemoveVoki(new AuthenticatedUserContext(_userContext.AuthenticatedUserId), command.VokiId);
+            album.RemoveVoki(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId), command.VokiId);
         if (res.IsErr(out var err)) {
             return err;
         }

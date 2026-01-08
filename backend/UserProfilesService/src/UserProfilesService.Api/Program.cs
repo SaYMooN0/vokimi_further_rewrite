@@ -1,5 +1,4 @@
 using System.Reflection;
-using ApiShared.EfCore;
 using InfrastructureShared.Base;
 using UserProfilesService.Application;
 using UserProfilesService.Infrastructure;

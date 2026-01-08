@@ -3,6 +3,7 @@ using InfrastructureShared.Base.domain_events_publisher;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Logs;
 using SharedKernel;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -64,7 +65,7 @@ public static class DependencyInjectionExtensions
         return services;
     }
 
-    private static string GetServiceName(IConfiguration configuration) =>
+    internal static string GetServiceName(IConfiguration configuration) =>
         configuration["ServiceName"] ?? throw new(
             $"ServiceName is not provided in the '{Assembly.GetExecutingAssembly().FullName}' assembly'"
         );
@@ -75,19 +76,4 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddDomainEventsPublisher(this IServiceCollection services) =>
         services.AddTransient<IDomainEventsPublisher, DomainEventsPublisher>();
 
-    public static void AddConfiguredLogging(this IServiceCollection services, IConfiguration configuration) {
-        services.AddOpenTelemetry()
-            .ConfigureResource(resource => resource
-                .AddService(GetServiceName(configuration))
-                .AddAttributes([
-                    new("service.entry_assembly_name", Assembly.GetEntryAssembly()!.GetName().Name!)
-                ])
-            )
-            .WithTracing(tracing =>
-                tracing
-                    .AddAspNetCoreInstrumentation()
-                    // .AddNpgsql()
-                    .AddConsoleExporter()
-            );
-    }
 }

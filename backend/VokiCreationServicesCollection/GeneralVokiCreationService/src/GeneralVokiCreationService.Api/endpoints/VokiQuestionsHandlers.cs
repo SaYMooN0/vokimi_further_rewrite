@@ -7,7 +7,7 @@ namespace GeneralVokiCreationService.Api.endpoints;
 
 internal class VokiQuestionsHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/questions/");
 
         group.MapGet("/overview", GetVokiQuestionsOverview);

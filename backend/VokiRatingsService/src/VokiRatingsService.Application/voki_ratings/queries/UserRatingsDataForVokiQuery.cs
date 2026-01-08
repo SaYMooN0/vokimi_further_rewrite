@@ -1,4 +1,5 @@
 ﻿using ApplicationShared;
+using SharedKernel.user_ctx;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.app_user_aggregate;
 using VokiRatingsService.Domain.voki_rating_aggregate;

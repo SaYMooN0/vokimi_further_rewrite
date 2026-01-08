@@ -5,7 +5,7 @@ namespace TagsService.Api.endpoints;
 
 internal  class RootHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/search", SearchTags);

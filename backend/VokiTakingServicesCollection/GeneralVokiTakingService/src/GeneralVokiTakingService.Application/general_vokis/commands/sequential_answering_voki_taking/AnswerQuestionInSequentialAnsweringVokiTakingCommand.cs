@@ -8,6 +8,7 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
 using SharedKernel.common.vokis.general_vokis;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
 

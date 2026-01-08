@@ -8,7 +8,7 @@ namespace GeneralVokiCreationService.Api.endpoints;
 
 internal class SpecificVokiResultsHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/results/{resultId}/");
 
         group.MapGet("/", GetVokiResult);

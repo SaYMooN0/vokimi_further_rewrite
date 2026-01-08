@@ -1,5 +1,6 @@
 ﻿using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_aggregate;

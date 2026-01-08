@@ -1,6 +1,4 @@
-﻿using ApiShared.EfCore;
-using ApplicationShared;
-using AuthService.Application.app_users.queries;
+﻿using AuthService.Application.app_users.queries;
 using AuthService.Application.unconfirmed_users.commands;
 using InfrastructureShared.Auth;
 using SharedKernel;
@@ -12,9 +10,7 @@ public class RootHandlers : IEndpointGroup
     public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/");
 
-        group.MapPost("/ping", PingAuth)
-            .DisableConsistencyFilter();
-        
+        group.MapPost("/ping", PingAuth);
         group.MapPost("/sign-up", RegisterUser)
             .WithRequestValidation<RegisterUserRequest>();
         group.MapPost("/login", LoginUser)

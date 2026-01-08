@@ -6,7 +6,7 @@ namespace VokisCatalogService.Api.endpoints.manage_voki;
 
 public class ManageVokiCatalogPage : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/manage/catalog-page");
 
         group.MapGet("/", GetVokiCatalogPageSettings);

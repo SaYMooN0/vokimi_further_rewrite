@@ -1,5 +1,6 @@
 ﻿using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel.user_ctx;
 using UserProfilesService.Application.common;
 using UserProfilesService.Application.common.repositories;
 using UserProfilesService.Domain.app_user_aggregate;

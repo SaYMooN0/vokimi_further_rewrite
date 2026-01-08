@@ -1,5 +1,11 @@
 ﻿namespace ApplicationShared.messaging;
 
-public interface ICommand;
+public interface ICommand
+{
+    bool RequireTransaction => true;
+}
 
-public interface ICommand<in TResponse>;
+public interface ICommand<in TResponse>
+{
+    bool RequireTransaction => true;
+}

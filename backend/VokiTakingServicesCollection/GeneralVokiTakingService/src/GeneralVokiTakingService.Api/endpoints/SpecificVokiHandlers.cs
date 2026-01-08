@@ -10,7 +10,7 @@ namespace GeneralVokiTakingService.Api.endpoints;
 
 internal class SpecificVokiHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.MapPost("/start-taking", StartVokiTaking);

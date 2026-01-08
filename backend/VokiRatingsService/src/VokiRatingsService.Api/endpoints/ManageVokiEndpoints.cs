@@ -7,7 +7,7 @@ namespace VokiRatingsService.Api.endpoints;
 
 internal class ManageVokiEndpoints : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/manage");
 
         group.MapGet("/overview", ManageVokiRatingsOverview);

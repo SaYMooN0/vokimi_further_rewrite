@@ -1,4 +1,5 @@
 ﻿using SharedKernel;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Domain.voki_album_aggregate;
 
@@ -28,7 +29,7 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
     }
 
     public static VokiAlbum CreateNew(
-        IAuthenticatedUserContext authenticatedUserContext, AlbumName name, AlbumIcon icon,
+        AuthenticatedUserCtx authenticatedUserContext, AlbumName name, AlbumIcon icon,
         HexColor mainColor, HexColor secondaryColor, DateTime creationDate
     ) {
         VokiAlbum album = new(
@@ -42,7 +43,7 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
     public bool HasVoki(VokiId vokiId) => VokiIds.Contains(vokiId);
 
     public ErrOrNothing SetVokiPresenceTo(
-        IAuthenticatedUserContext authenticatedUserContext,
+        AuthenticatedUserCtx authenticatedUserContext,
         bool presence, VokiId voki
     ) {
         if (authenticatedUserContext.UserId != OwnerId) {
@@ -60,10 +61,10 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
     }
 
     public ErrOrNothing Update(
-        IAuthenticatedUserContext authenticatedUserContext, AlbumName name, AlbumIcon icon,
+        AuthenticatedUserCtx authenticatedUserCtx, AlbumName name, AlbumIcon icon,
         HexColor mainColor, HexColor secondaryColor
     ) {
-        if (authenticatedUserContext.UserId != OwnerId) {
+        if (authenticatedUserCtx.UserId != OwnerId) {
             return ErrFactory.NoAccess("Could not update the album because user is not owner");
         }
 
@@ -78,7 +79,7 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
 
 
     public ErrOr<VokisToAlbumFromAlbumsCopied> CopyVokisFromAlbums(
-        IAuthenticatedUserContext authenticatedUserContext,
+        AuthenticatedUserCtx authenticatedUserCtx,
         VokiAlbum[] albumsToCopyFrom
     ) {
         if (albumsToCopyFrom.Length > MaxAlbumsToCopyFrom) {
@@ -94,7 +95,7 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
 
         HashSet<VokiId> albumsToAdd = new(capacity: 16);
         foreach (var a in albumsToCopyFrom) {
-            if (a.OwnerId != authenticatedUserContext.UserId) {
+            if (a.OwnerId != authenticatedUserCtx.UserId) {
                 return ErrFactory.NoAccess(
                     "Users are not allowed to copy Vokis from albums they do not have access to"
                 );
@@ -109,8 +110,8 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
         return new VokisToAlbumFromAlbumsCopied(NewVokisCount: VokiIds.Count, vokisAdded);
     }
 
-    public ErrOrNothing RemoveVoki(IAuthenticatedUserContext authenticatedUserContext, VokiId vokiId) {
-        if (authenticatedUserContext.UserId != OwnerId) {
+    public ErrOrNothing RemoveVoki(AuthenticatedUserCtx authenticatedUserCtx, VokiId vokiId) {
+        if (authenticatedUserCtx.UserId != OwnerId) {
             return ErrFactory.NoAccess("Could not remove voki from album because user is not owner");
         }
         VokiIds = VokiIds.Remove(vokiId);

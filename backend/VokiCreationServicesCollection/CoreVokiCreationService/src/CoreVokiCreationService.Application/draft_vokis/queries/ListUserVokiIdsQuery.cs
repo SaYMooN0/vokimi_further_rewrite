@@ -1,6 +1,7 @@
 ﻿using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
 using CoreVokiCreationService.Application.common.repositories;
+using SharedKernel.user_ctx;
 
 namespace CoreVokiCreationService.Application.draft_vokis.queries;
 

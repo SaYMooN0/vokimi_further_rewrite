@@ -8,7 +8,7 @@ namespace GeneralVokiCreationService.Api.endpoints;
 
 internal class QuestionAnswersHandlers : IEndpointGroup
 {
-    public void MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/questions/{questionId}/answers/");
 
         group.MapPost("/add-new", AddNewAnswerToVokiQuestion)

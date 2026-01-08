@@ -5,6 +5,7 @@ using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using SharedKernel;
 using SharedKernel.common.vokis;
+using SharedKernel.user_ctx;
 
 namespace CoreVokiCreationService.Application.draft_vokis.commands;
 
