@@ -26,7 +26,7 @@ internal sealed class UpdateAlbumCommandHandler : ICommandHandler<UpdateAlbumCom
     }
 
     public async Task<ErrOr<VokiAlbum>> Handle(UpdateAlbumCommand command, CancellationToken ct) {
-        VokiAlbum? album = await _vokiAlbumsRepository.GetById(command.AlbumId, ct);
+        VokiAlbum? album = await _vokiAlbumsRepository.GetByIdForUpdate(command.AlbumId, ct);
         if (album is null) {
             return ErrFactory.NotFound.Common("Could not update the album because it doesn't exist");
         }

@@ -24,7 +24,7 @@ internal sealed class DeleteAlbumCommandHandler : ICommandHandler<DeleteAlbumCom
 
     public async Task<ErrOrNothing> Handle(DeleteAlbumCommand command, CancellationToken ct) {
         AppUserId userId = _userContext.AuthenticatedUserId;
-        AppUser? user = await _appUsersRepository.GetById(userId,ct);
+        AppUser? user = await _appUsersRepository.GetByIdForUpdate(userId,ct);
         if (user is null) {
             return ErrFactory.NotFound.User("Couldn't delete album because the owner was not found");
         }

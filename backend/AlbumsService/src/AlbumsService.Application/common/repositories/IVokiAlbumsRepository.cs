@@ -4,16 +4,16 @@ namespace AlbumsService.Application.common.repositories;
 
 public interface IVokiAlbumsRepository
 {
-    Task<VokiAlbum[]> ListAlbumsForUserAsNoTracking(AppUserId userId, CancellationToken ct);
     Task<VokiAlbum[]> ListAlbumsForUser(AppUserId userId, CancellationToken ct);
-    Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSortedAsNoTracking(AppUserId userId, CancellationToken ct);
+    Task<VokiAlbum[]> ListAlbumsForUserForUpdate(AppUserId userId, CancellationToken ct);
+    Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSorted(AppUserId userId, CancellationToken ct);
     Task Add(VokiAlbum album, CancellationToken ct);
-    Task<VokiAlbum?> GetById(VokiAlbumId albumId, CancellationToken ct);
+    Task<VokiAlbum?> GetByIdForUpdate(VokiAlbumId albumId, CancellationToken ct);
     Task DeleteAlbum(VokiAlbum album, CancellationToken ct);
     Task UpdateRange(IEnumerable<VokiAlbum> albums, CancellationToken ct);
-    Task<VokiAlbum?> GetByIdAsNoTracking(VokiAlbumId albumId, CancellationToken ct);
+    Task<VokiAlbum?> GetById(VokiAlbumId albumId, CancellationToken ct);
     Task Update(VokiAlbum album, CancellationToken ct);
-    Task<VokiAlbum[]> ListByIdsAsNoTracking(IEnumerable<VokiAlbumId> ids, CancellationToken ct);
+    Task<VokiAlbum[]> ListByIds(IEnumerable<VokiAlbumId> ids, CancellationToken ct);
 }
 
 public record VokiAlbumPreviewDto(

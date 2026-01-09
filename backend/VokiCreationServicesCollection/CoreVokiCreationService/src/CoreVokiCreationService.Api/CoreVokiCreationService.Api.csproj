@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\..\Libs\ApiShared\ApiShared.csproj" />
         <ProjectReference Include="..\CoreVokiCreationService.Infrastructure\CoreVokiCreationService.Infrastructure.csproj" />
     </ItemGroup>
 

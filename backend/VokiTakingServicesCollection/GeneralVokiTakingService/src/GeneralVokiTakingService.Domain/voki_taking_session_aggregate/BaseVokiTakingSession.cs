@@ -2,6 +2,7 @@
 using GeneralVokiTakingService.Domain.common.dtos;
 using SharedKernel;
 using SharedKernel.exceptions;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -118,7 +119,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
     }
 
     protected ErrOrNothing ValidateVokiTaker(
-        IAuthenticatedUserContext? authenticatedUserContext,
+        AuthenticatedUserCtx? authenticatedUserContext,
         out AppUserId? resolvedVokiTaker
     ) {
         AppUserId? contextId = authenticatedUserContext?.UserId;

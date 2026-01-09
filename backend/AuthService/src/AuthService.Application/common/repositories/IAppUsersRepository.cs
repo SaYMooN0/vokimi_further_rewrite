@@ -8,5 +8,5 @@ public interface IAppUsersRepository
     Task Add(AppUser user, CancellationToken ct);
     
     Task<bool> AnyUserWithEmail(Email email, CancellationToken ct);
-    Task<AppUser?> GetByEmailAsNoTracking(Email email, CancellationToken ct);
+    Task<AppUser?> GetByEmail(Email email, CancellationToken ct);
 }

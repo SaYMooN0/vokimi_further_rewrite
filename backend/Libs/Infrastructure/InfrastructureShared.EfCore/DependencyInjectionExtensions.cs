@@ -16,9 +16,12 @@ public static class DependencyInjectionExtensions
         string dbConnectionString
     ) where T : DbContext {
         services.AddDbContext<T>(options => {
-                options
-                    .UseNpgsql(dbConnectionString)
-                    .AddInterceptors(new ForUpdateInterceptor());
+                options.UseNpgsql(dbConnectionString);
+                
+                options.AddInterceptors(new ForUpdateInterceptor());
+                
+                options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+                
                 options.ConfigureDevelopmentExclusive(env);
             }
         );

@@ -10,6 +10,8 @@ internal class SpecificVokiHandlers : IEndpointGroup
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
         group.MapGet("/overview", GetVokiOverviewInfo);
+        
+        return group;
     }
 
     private static async Task<IResult> GetVokiOverviewInfo(

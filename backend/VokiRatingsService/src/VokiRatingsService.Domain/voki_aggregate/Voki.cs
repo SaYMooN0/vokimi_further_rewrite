@@ -1,4 +1,5 @@
 ﻿using SharedKernel;
+using SharedKernel.user_ctx;
 
 namespace VokiRatingsService.Domain.voki_aggregate;
 
@@ -16,11 +17,11 @@ public class Voki : AggregateRoot<VokiId>
         PublicationDate = publicationDate;
     }
 
-    public bool CanUserManage(IAuthenticatedUserContext userContext) =>
+    public bool CanUserManage(AuthenticatedUserCtx userContext) =>
         CanUserManage(userContext, PrimaryAuthorId, ManagersSet);
 
     public static bool CanUserManage(
-        IAuthenticatedUserContext userContext,
+        AuthenticatedUserCtx userContext,
         AppUserId primaryAuthorId,
         VokiManagersIdsSet managersSet
     ) {

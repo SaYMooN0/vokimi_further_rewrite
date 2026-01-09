@@ -29,7 +29,7 @@ internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
         UpdateVokiPresenceInAlbumsCommand command, CancellationToken ct
     ) {
         AppUserId userId = _userContext.AuthenticatedUserId;
-        Dictionary<VokiAlbumId, VokiAlbum> albums = (await _vokiAlbumsRepository.ListAlbumsForUser(userId, ct))
+        Dictionary<VokiAlbumId, VokiAlbum> albums = (await _vokiAlbumsRepository.ListAlbumsForUserForUpdate(userId, ct))
             .ToDictionary(a => a.Id, a => a);
         List<VokiAlbum> changedAlbumsList = [];
 

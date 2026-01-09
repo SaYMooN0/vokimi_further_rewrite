@@ -23,6 +23,8 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
         group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
         group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
         group.MapDelete("/delete", DeleteVokiQuestion);
+        
+        return group;
     }
 
     private static async Task<IResult> GetVokiQuestionFullData(

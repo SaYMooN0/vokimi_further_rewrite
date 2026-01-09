@@ -87,7 +87,8 @@ export namespace ErrUtils {
 }
 export namespace ErrCodes {
     export const Unspecified = 0;
-    export const NotImplemented = 1;
+    export const ProgramBug = 1;
+    export const NotImplemented = 2;
 
 
     export namespace NoValue {

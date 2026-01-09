@@ -3,7 +3,8 @@
 public static class ErrCodes
 {
     public const ushort Unspecified = 00_000;
-    public const ushort NotImplemented = 00_001;
+    public const ushort ProgramBug = 00_001;
+    public const ushort NotImplemented = 00_002;
 
     #region Validation (1x_xxx)
 

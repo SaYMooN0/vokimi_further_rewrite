@@ -15,7 +15,8 @@ public class Program
             options.ValidateOnBuild = true;
         });
 
-        builder.Services.AddConfiguredLogging(builder.Configuration);
+        builder.AddConfiguredLogging();
+
         builder.Services
             .AddApplication()
             .AddInfrastructure(builder.Configuration, builder.Environment)
@@ -32,9 +33,9 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
-        app.MapAllEndpointWithConsistency<CoreVokiCreationDbContext>();
+        app.MapEndpointGroups();
         app.AllowFrontendCors();
-
+        
         app.Run();
     }
 }

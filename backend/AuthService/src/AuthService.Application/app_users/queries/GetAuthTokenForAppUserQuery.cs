@@ -26,7 +26,7 @@ internal sealed class GetAuthTokenForAppUserQueryHandler : IQueryHandler<GetAuth
     }
 
     public async Task<ErrOr<JwtTokenString>> Handle(GetAuthTokenForAppUserQuery query, CancellationToken ct) {
-        AppUser? user = await _appUsersRepository.GetByEmailAsNoTracking(query.Email, ct);
+        AppUser? user = await _appUsersRepository.GetByEmail(query.Email, ct);
         if (user is null) {
             return ErrFactory.NotFound.User();
         }

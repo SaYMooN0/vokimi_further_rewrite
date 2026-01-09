@@ -3,10 +3,7 @@ using InfrastructureShared.Base.domain_events_publisher;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using OpenTelemetry.Logs;
 using SharedKernel;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 
 namespace InfrastructureShared.Base;
 

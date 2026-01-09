@@ -23,6 +23,8 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
         group.MapPost("/sequential-answering/answer-question", AnswerQuestionForSequentialAnsweringSession)
             .WithRequestValidation<AnswerQuestionForSequentialAnsweringSessionRequest>();
+        
+        return group;
     }
 
     private static async Task<IResult> StartVokiTaking(

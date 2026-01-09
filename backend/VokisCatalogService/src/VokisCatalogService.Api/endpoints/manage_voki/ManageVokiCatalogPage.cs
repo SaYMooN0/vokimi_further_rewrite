@@ -11,6 +11,8 @@ public class ManageVokiCatalogPage : IEndpointGroup
 
         group.MapGet("/", GetVokiCatalogPageSettings);
         // group.MapPatch("/update-recommendations", UpdateVokiCatalogPageRecommendations);
+        
+        return group;
     }
 
     private static async Task<IResult> GetVokiCatalogPageSettings(

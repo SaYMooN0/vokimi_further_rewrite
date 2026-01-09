@@ -13,7 +13,7 @@ internal class VokiAlbumDeletedDomainEventHandler : IDomainEventHandler<VokiAlbu
     }
 
     public async Task Handle(VokiAlbumDeletedDomainEvent e, CancellationToken ct) {
-        VokiAlbum? album = await _vokiAlbumsRepository.GetById(e.AlbumId, ct);
+        VokiAlbum? album = await _vokiAlbumsRepository.GetByIdForUpdate(e.AlbumId, ct);
         if (album is not null) {
             await _vokiAlbumsRepository.DeleteAlbum(album, ct);
         }

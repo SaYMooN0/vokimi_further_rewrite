@@ -5,7 +5,8 @@ public static class ErrFactory
     // Common 
     public static Err Unspecified(string msg = "Unspecified error", string? details = null) =>
         new(msg, ErrCodes.Unspecified, details);
-
+    public static Err ProgramBug(string msg = "Program bug", string? details = null) =>
+        new(msg, ErrCodes.ProgramBug, details);
     public static Err NotImplemented(string msg = "Not implemented", string? details = null) =>
         new(msg, ErrCodes.NotImplemented, details);
 

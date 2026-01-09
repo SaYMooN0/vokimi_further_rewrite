@@ -4,6 +4,7 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
 using SharedKernel;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -53,7 +54,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,
         DateTime clientSessionFinishedTime,
-        IAuthenticatedUserContext? authenticatedUserContext,
+        AuthenticatedUserCtx? authenticatedUserContext,
         GeneralVokiQuestionId lastQuestionId,
         ushort lastQuestionOrderInVokiTaking,
         ClientServerTimePairDto lastQuestionShownAt,

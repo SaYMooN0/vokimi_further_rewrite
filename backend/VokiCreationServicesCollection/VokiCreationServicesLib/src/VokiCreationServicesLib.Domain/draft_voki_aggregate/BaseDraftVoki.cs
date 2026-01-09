@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using SharedKernel;
 using SharedKernel.common.vokis;
+using SharedKernel.user_ctx;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 using VokimiStorageKeysLib.concrete_keys;
@@ -78,7 +79,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         userId == PrimaryAuthorId || CoAuthors.Contains(userId);
 
     public static bool DoesUserHaveAccess(
-        IAuthenticatedUserContext userContext,
+        AuthenticatedUserCtx userContext,
         AppUserId primaryAuthorId,
         VokiCoAuthorIdsSet coAuthorIds
     ) {

@@ -53,12 +53,7 @@ public static class DependencyInjection
     ) {
         string dbConnectionString = configuration.GetConnectionString("AlbumsServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<AlbumsDbContext>(options => {
-                options.UseNpgsql(dbConnectionString);
-                options.ConfigureDevelopmentExclusive(env);
-            }
-        );
-
+        services.AddPgSqlDbContext<AlbumsDbContext>(env, dbConnectionString);
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IVokiAlbumsRepository, VokiAlbumsRepository>();

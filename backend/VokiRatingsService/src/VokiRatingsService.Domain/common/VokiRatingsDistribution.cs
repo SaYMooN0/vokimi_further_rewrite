@@ -108,7 +108,7 @@ public class VokiRatingsDistribution : ValueObject
 
         var d = ToDictionary();
         if (d[oldRating.Value] == 0) {
-           return ErrFactory.Conflict($"Attempted to decrement rating {oldRating.Value} count below zero")
+            return ErrFactory.Conflict($"Attempted to decrement rating {oldRating.Value} count below zero");
         }
 
         d[oldRating.Value] -= 1;

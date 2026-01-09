@@ -1,26 +1,31 @@
 using System.Data.Common;
+using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace InfrastructureShared.EfCore;
 
 public sealed class ForUpdateInterceptor : DbCommandInterceptor
 {
-    private const string ForUpdateTag = "-- FOR_UPDATE";
-    private const string ForUpdateNoWaitTag = "-- FOR_UPDATE_NOWAIT";
+    private const string ForUpdateTag = $"-- {QueryableForUpdateExtensions.ForUpdateTagValue}";
+    private const string ForUpdateNoWaitTag = $"-- {QueryableForUpdateExtensions.ForUpdateNoWaitTagValue}";
 
     private static void TryApplyForUpdate(DbCommand command) {
-        if (!IsSelect(command))
+        if (!IsSelect(command)) {
             return;
+        }
 
-        if (command.CommandText.Contains("FOR UPDATE", StringComparison.OrdinalIgnoreCase))
+        if (command.CommandText.Contains("FOR UPDATE", StringComparison.OrdinalIgnoreCase)) {
             return;
+        }
 
-        if (command.CommandText.Contains(ForUpdateNoWaitTag, StringComparison.Ordinal)) {
+        if (command.CommandText.Contains(ForUpdateNoWaitTag, StringComparison.Ordinal))
+        {
             command.CommandText += " FOR UPDATE NOWAIT";
             return;
         }
 
-        if (command.CommandText.Contains(ForUpdateTag, StringComparison.Ordinal)) {
+        if (command.CommandText.Contains(ForUpdateTag, StringComparison.Ordinal))
+        {
             command.CommandText += " FOR UPDATE";
         }
     }
@@ -30,8 +35,9 @@ public sealed class ForUpdateInterceptor : DbCommandInterceptor
 
         while (text.StartsWith("--", StringComparison.Ordinal)) {
             var newline = text.IndexOf('\n');
-            if (newline == -1)
+            if (newline == -1) {
                 return false;
+            }
 
             text = text[(newline + 1)..].TrimStart();
         }

@@ -31,7 +31,7 @@ internal sealed class RegisterUserCommandHandler : ICommandHandler<RegisterUserC
             return err;
         }
 
-        UnconfirmedUser? unconfirmedUser = await _unconfirmedUsersRepository.GetByEmail(command.Email, ct);
+        UnconfirmedUser? unconfirmedUser = await _unconfirmedUsersRepository.GetByEmailForUpdate(command.Email, ct);
         if (unconfirmedUser is null) {
             return await CreateNewUnconfirmedUser(command, ct);
         }

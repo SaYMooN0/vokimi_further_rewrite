@@ -45,12 +45,12 @@ internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler
 
     public async Task<ErrOr<VokisToAlbumFromAlbumsCopied>> Handle(CopyVokisFromAlbumsToAlbumCommand command,
         CancellationToken ct) {
-        VokiAlbum? album = await _vokiAlbumsRepository.GetById(command.AlbumId, ct);
+        VokiAlbum? album = await _vokiAlbumsRepository.GetByIdForUpdate(command.AlbumId, ct);
         if (album is null) {
             return ErrFactory.NotFound.Common("Could not copy vokis because destination does not exist");
         }
 
-        var albumsToCopyFrom = await _vokiAlbumsRepository.ListByIdsAsNoTracking(command.AlbumIdsToCopyFrom, ct);
+        var albumsToCopyFrom = await _vokiAlbumsRepository.ListByIds(command.AlbumIdsToCopyFrom, ct);
         var copyRes = album.CopyVokisFromAlbums(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId),
             albumsToCopyFrom);
         if (copyRes.IsErr(out var err)) {

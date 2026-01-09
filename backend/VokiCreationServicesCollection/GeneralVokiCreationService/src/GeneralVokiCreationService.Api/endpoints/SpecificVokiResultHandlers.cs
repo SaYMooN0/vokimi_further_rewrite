@@ -16,6 +16,8 @@ internal class SpecificVokiResultsHandlers : IEndpointGroup
             .WithRequestValidation<UpdateVokiResultRequest>();
 
         group.MapDelete("/delete", DeleteVokiResult);
+        
+        return group;
     }
     private static async Task<IResult> GetVokiResult(
         CancellationToken ct, HttpContext httpContext,

@@ -57,11 +57,8 @@ public static class DependencyInjection
     ) {
         string dbConnectionString = configuration.GetConnectionString("GeneralVokiTakingServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<GeneralVokiTakingDbContext>(options => {
-                options.UseNpgsql(dbConnectionString);
-                options.ConfigureDevelopmentExclusive(env);
-            }
-        );
+        services.AddPgSqlDbContext<GeneralVokiTakingDbContext>(env,dbConnectionString);
+
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         

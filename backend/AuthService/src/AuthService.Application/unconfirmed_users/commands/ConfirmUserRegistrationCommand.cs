@@ -39,7 +39,7 @@ internal sealed class ConfirmUserRegistrationCommandHandler :
             );
         }
 
-        UnconfirmedUser? unconfirmedUser = await _unconfirmedUsersRepository.GetById(command.UserId, ct);
+        UnconfirmedUser? unconfirmedUser = await _unconfirmedUsersRepository.GetByIdForUpdate(command.UserId, ct);
         if (unconfirmedUser is null) {
             return ErrFactory.NotFound.Common(
                 "Couldn't find user to confirm. Maybe this user has already been confirmed or the link has expired"

@@ -15,7 +15,7 @@ public class Program
             options.ValidateOnBuild = true;
         });
 
-        builder.Services.AddConfiguredLogging(builder.Configuration);
+        builder.AddConfiguredLogging();
         builder.Services
             .AddAuth(builder.Configuration)
             .AddS3Storage(builder.Configuration)

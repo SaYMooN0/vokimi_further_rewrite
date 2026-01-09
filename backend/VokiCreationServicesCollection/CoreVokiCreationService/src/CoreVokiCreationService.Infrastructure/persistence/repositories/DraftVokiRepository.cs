@@ -2,6 +2,7 @@
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.user_ctx;
 
 namespace CoreVokiCreationService.Infrastructure.persistence.repositories;
 
@@ -37,7 +38,7 @@ internal class DraftVokiRepository : IDraftVokiRepository
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(
-        IAuthenticatedUserContext userContext, CancellationToken ct
+        AuthenticatedUserCtx userContext, CancellationToken ct
     ) =>
         _db.Vokis
             .FromSqlInterpolated($@"

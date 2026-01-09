@@ -36,7 +36,7 @@ internal sealed class ListAllUserAlbumsPreviewQueryHandler :
             return ErrFactory.NotFound.User();
         }
 
-        VokiAlbumPreviewDto[] albums = await _vokiAlbumsRepository.GetPreviewsForUserSortedAsNoTracking(
+        VokiAlbumPreviewDto[] albums = await _vokiAlbumsRepository.GetPreviewsForUserSorted(
             _userContext.AuthenticatedUserId, ct
         );
         return new ListAllUserAlbumsPreviewQueryResult(albumsAppearance, albums);

@@ -14,6 +14,8 @@ internal class VokiResultsHandlers : IEndpointGroup
         group.MapPost("/add-new", AddNewResultToVoki)
             .WithRequestValidation<AddNewResultToVokiRequest>();
         group.MapGet("/ids-names", GetVokiResultsIdsWithNames);
+        
+        return group;
     }
 
     private static async Task<IResult> GetVokiResultsOverview(

@@ -18,7 +18,7 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration,
         IWebHostEnvironment env
-    )  {
+    ) {
         return services
             .AddDefaultServices()
             .AddPersistence(configuration, env)
@@ -32,7 +32,6 @@ public static class DependencyInjection
         .AddDomainEventsPublisher()
         .AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
 
-  
 
     private static IServiceCollection AddIntegrationEventsPublisher(this IServiceCollection services) {
         services.AddScoped<IIntegrationEventPublisher, IntegrationEventPublisher>();
@@ -54,11 +53,8 @@ public static class DependencyInjection
     ) {
         string dbConnectionString = configuration.GetConnectionString("TagsServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<TagsDbContext>(options => {
-                options.UseNpgsql(dbConnectionString);
-                options.ConfigureDevelopmentExclusive(env);
-            }
-        );
+        services.AddPgSqlDbContext<TagsDbContext>(env, dbConnectionString);
+
         services.AddScoped<IVokiTagsRepository, VokiTagsRepository>();
 
         return services;

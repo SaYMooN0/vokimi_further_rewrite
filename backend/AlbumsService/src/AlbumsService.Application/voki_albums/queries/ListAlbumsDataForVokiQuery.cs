@@ -26,7 +26,7 @@ internal sealed class ListAlbumsDataForVokiQueryHandler :
         ListAlbumsDataForVokiQuery query, CancellationToken ct
     ) {
         AppUserId userId = _userContext.AuthenticatedUserId;
-        VokiAlbum[] albums = await _vokiAlbumsRepository.ListAlbumsForUserAsNoTracking(userId, ct);
+        VokiAlbum[] albums = await _vokiAlbumsRepository.ListAlbumsForUser(userId, ct);
         return albums
             .Select(a => AlbumWithVokiPresenceDto.FromAlbum(a, query.VokiId))
             .ToArray();

@@ -18,6 +18,8 @@ internal class QuestionAnswersHandlers : IEndpointGroup
             .WithRequestValidation<SaveVokiQuestionAnswerRequest>();
 
         group.MapDelete("/{answerId}/delete", DeleteVokiQuestionAnswer);
+
+        return group;
     }
     private static async Task<IResult> AddNewAnswerToVokiQuestion(
         CancellationToken ct, HttpContext httpContext,

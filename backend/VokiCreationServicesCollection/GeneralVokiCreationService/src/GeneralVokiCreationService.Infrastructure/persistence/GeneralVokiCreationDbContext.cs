@@ -27,13 +27,13 @@ public class GeneralVokiCreationDbContext : DbContext
             .SelectMany(e => ((IAggregateRoot)e.Entity).PopAndClearDomainEvents())
             .ToList();
 
-        await PublishDomainEvents(domainEvents);
+        await PublishDomainEvents(domainEvents, cancellationToken);
         return await base.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task PublishDomainEvents(List<IDomainEvent> domainEvents) {
+    private async Task PublishDomainEvents(List<IDomainEvent> domainEvents, CancellationToken ct) {
         foreach (var domainEvent in domainEvents) {
-            await _publisher.Publish(domainEvent);
+            await _publisher.Publish(domainEvent, ct);
         }
     }
 }

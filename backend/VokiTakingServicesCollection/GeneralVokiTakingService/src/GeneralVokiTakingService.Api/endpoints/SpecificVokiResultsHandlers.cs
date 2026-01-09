@@ -14,6 +14,8 @@ internal class SpecificVokiResultsHandlers : IEndpointGroup
         group.MapGet("/all", ViewAllVokiResults);
 
         group.MapGet("/received", ViewVokiReceivedResults);
+        
+        return group;
     }
 
     private static async Task<IResult> ViewSpecificResult(

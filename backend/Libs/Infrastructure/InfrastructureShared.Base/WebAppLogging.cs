@@ -24,7 +24,7 @@ public static class WebAppLogging
                     new("service.entry_assembly_name", Assembly.GetEntryAssembly()!.GetName().Name!)
                 ])
             )
-            .WithLogging(l=>l.AddConsoleExporter())
+            // .WithLogging(l=>l.AddConsoleExporter())
             .WithTracing(tracing =>
                     tracing
                         .AddAspNetCoreInstrumentation()

@@ -22,6 +22,8 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
 
         group.MapPatch("/update-voki-taking-process-settings", UpdateVokiTakingProcessSettings)
             .WithRequestValidation<UpdateVokiTakingProcessSettingsRequest>();
+
+        return group;
     }
 
 

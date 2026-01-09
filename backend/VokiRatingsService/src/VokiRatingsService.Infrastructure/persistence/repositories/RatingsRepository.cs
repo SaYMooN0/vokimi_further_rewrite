@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SharedKernel.user_ctx;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_rating_aggregate;
@@ -15,7 +16,7 @@ internal class RatingsRepository : IRatingsRepository
     }
 
     public Task<VokiRating?> GetUserRatingForVoki(
-        IAuthenticatedUserContext userContext, VokiId vokiId, CancellationToken ct
+        AuthenticatedUserCtx userContext, VokiId vokiId, CancellationToken ct
     ) => _db.Ratings.FirstOrDefaultAsync(r =>
             r.VokiId == vokiId
             && r.UserId == userContext.UserId,
@@ -38,7 +39,7 @@ internal class RatingsRepository : IRatingsRepository
     }
 
     public Task<VokiIdWithCurrentRatingDto[]> ListIdsOfVokiRatedByUser(
-        IAuthenticatedUserContext userContext, CancellationToken ct
+        AuthenticatedUserCtx userContext, CancellationToken ct
     ) =>
         _db.Ratings
             .AsNoTracking()

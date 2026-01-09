@@ -10,6 +10,8 @@ internal  class RootHandlers : IEndpointGroup
 
         group.MapGet("/search", SearchTags);
         group.MapGet("/tags-popular-for-languages", ListTagsPopularForLanguages);
+
+        return group;
     }
     private static async Task<IResult> SearchTags(
         CancellationToken ct,

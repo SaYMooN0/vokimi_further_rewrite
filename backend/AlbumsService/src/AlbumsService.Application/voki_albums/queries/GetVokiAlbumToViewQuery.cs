@@ -22,7 +22,7 @@ internal sealed class GetVokiAlbumToViewQueryHandler : IQueryHandler<GetVokiAlbu
     }
 
     public async Task<ErrOr<VokiAlbum>> Handle(GetVokiAlbumToViewQuery query, CancellationToken ct) {
-        VokiAlbum? album = await _vokiAlbumsRepository.GetByIdAsNoTracking(query.AlbumId, ct);
+        VokiAlbum? album = await _vokiAlbumsRepository.GetById(query.AlbumId, ct);
         if (album is null) {
             return ErrFactory.NotFound.Common("Requested album not found");
         }

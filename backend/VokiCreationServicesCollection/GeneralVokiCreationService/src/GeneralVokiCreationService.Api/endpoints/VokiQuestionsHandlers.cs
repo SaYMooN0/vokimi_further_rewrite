@@ -13,6 +13,8 @@ internal class VokiQuestionsHandlers : IEndpointGroup
         group.MapGet("/overview", GetVokiQuestionsOverview);
         group.MapPost("/add-new", AddNewQuestionToVoki)
             .WithRequestValidation<AddNewQuestionToVokiRequest>();
+        
+        return group;
     }
 
     private static async Task<IResult> GetVokiQuestionsOverview(

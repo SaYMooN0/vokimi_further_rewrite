@@ -3,7 +3,10 @@ using SharedKernel;
 
 namespace AuthService.Application.unconfirmed_users.commands;
 
-public sealed record DeleteExpiredUnconfirmedUsersCommand() : ICommand<int>;
+public sealed record DeleteExpiredUnconfirmedUsersCommand() : ICommand<int>
+{
+    bool ICommand<int>.RequireTransaction => false;
+}
 
 internal sealed class DeleteExpiredUnconfirmedUsersCommandHandler :
     ICommandHandler<DeleteExpiredUnconfirmedUsersCommand, int>

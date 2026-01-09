@@ -1,5 +1,4 @@
 ﻿using ApiShared;
-using ApiShared.extensions;
 using ApplicationShared.messaging;
 using VokiCommentsService.Api.contracts;
 using VokiCommentsService.Application.app_users.queries;
@@ -13,6 +12,8 @@ internal class RootHandlers : IEndpointGroup
         var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/commented-vokis", GetUserCommentedVokis);
+
+        return group;
     }
 
     private static async Task<IResult> GetUserCommentedVokis(

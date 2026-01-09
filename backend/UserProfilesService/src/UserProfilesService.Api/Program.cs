@@ -2,7 +2,6 @@ using System.Reflection;
 using InfrastructureShared.Base;
 using UserProfilesService.Application;
 using UserProfilesService.Infrastructure;
-using UserProfilesService.Infrastructure.persistence;
 
 namespace UserProfilesService.Api;
 
@@ -15,7 +14,7 @@ public class Program
             options.ValidateOnBuild = true;
         });
 
-        builder.Services.AddConfiguredLogging(builder.Configuration);
+        builder.AddConfiguredLogging();
 
         builder.Services
             .AddApplication()
@@ -33,9 +32,9 @@ public class Program
         }
 
         app.AddExceptionHandlingMiddleware();
-        app.MapAllEndpointWithConsistency<UserProfilesDbContext>();
+        app.MapEndpointGroups();
         app.AllowFrontendCors();
-
+        
         app.Run();
     }
 }

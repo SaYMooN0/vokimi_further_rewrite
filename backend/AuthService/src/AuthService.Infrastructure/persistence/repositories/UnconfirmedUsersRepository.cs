@@ -1,44 +1,51 @@
 ﻿using AuthService.Application.common.repositories;
 using AuthService.Domain.unconfirmed_user_aggregate;
+using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthService.Infrastructure.persistence.repositories;
 
-internal class UnconfirmedUsersRepository : IUnconfirmedUsersRepository
+internal sealed class UnconfirmedUsersRepository : IUnconfirmedUsersRepository
 {
-    private AuthDbContext _db;
+    private readonly AuthDbContext _db;
 
     public UnconfirmedUsersRepository(AuthDbContext db) {
         _db = db;
     }
 
-    public Task<UnconfirmedUser?> GetByEmail(Email email, CancellationToken ct) =>
+    public Task<UnconfirmedUser?> GetByEmailForUpdate(Email email, CancellationToken ct) =>
         _db.UnconfirmedUsers
             .ForUpdate()
-            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken: ct);
+            .FirstOrDefaultAsync(u => u.Email == email, ct);
+
+    public Task<UnconfirmedUser?> GetByIdForUpdate(
+        UnconfirmedUserId userId,
+        CancellationToken ct
+    ) =>
+        _db.UnconfirmedUsers
+            .ForUpdate()
+            .FirstOrDefaultAsync(u => u.Id == userId, ct);
 
     public async Task Add(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
         await _db.UnconfirmedUsers.AddAsync(unconfirmedUser, ct);
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task Update(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
+    public async Task Update(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
+        _db.ThrowIfDetached(unconfirmedUser);
         _db.UnconfirmedUsers.Update(unconfirmedUser);
-        return _db.SaveChangesAsync(ct);
+        await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<UnconfirmedUser?> GetById(UnconfirmedUserId userId, CancellationToken ct) =>
-        await _db.UnconfirmedUsers.FindAsync([userId], cancellationToken: ct);
-
-    public Task Delete(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
+    public async Task Delete(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
+        _db.ThrowIfDetached(unconfirmedUser);
         _db.UnconfirmedUsers.Remove(unconfirmedUser);
-        return _db.SaveChangesAsync(ct);
+        await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<int> DeleteAllExpiredUsers(DateTime utcNow, CancellationToken ct) {
-        return await _db.UnconfirmedUsers
-            .Where(u =>  u.ExpiresAt <= utcNow)
+    public Task<int> DeleteAllExpiredUsers(DateTime utcNow, CancellationToken ct) =>
+        _db.UnconfirmedUsers
+            .Where(u => u.ExpiresAt <= utcNow)
             .ExecuteDeleteAsync(ct);
-    }
 }

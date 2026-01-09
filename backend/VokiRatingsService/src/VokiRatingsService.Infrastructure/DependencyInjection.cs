@@ -56,12 +56,8 @@ public static class DependencyInjection
     ) {
         string dbConnectionString = configuration.GetConnectionString("VokiRatingsServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddDbContext<VokiRatingsDbContext>(options => {
-                options.UseNpgsql(dbConnectionString);
-                options.ConfigureDevelopmentExclusive(env);
-            }
-        );
-        
+        services.AddPgSqlDbContext<VokiRatingsDbContext>(env,dbConnectionString);
+
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IVokisRepository, VokisRepository>();
         services.AddScoped<IRatingsRepository, RatingsRepository>();

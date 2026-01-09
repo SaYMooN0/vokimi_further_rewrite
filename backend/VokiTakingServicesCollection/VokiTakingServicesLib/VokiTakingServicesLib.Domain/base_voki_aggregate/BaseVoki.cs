@@ -4,6 +4,7 @@ using SharedKernel.domain;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
+using SharedKernel.user_ctx;
 
 namespace VokiTakingServicesLib.Domain.base_voki_aggregate;
 
@@ -19,7 +20,7 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         ManagersSet = managers;
     }
 
-    public ErrOrNothing CheckUserAccessToTake(IAuthenticatedUserContext? authenticatedUserContext) {
+    public ErrOrNothing CheckUserAccessToTake(AuthenticatedUserCtx? authenticatedUserContext) {
         if (BaseInteractionSettings.SignedInOnlyTaking && authenticatedUserContext is null) {
             return ErrFactory.NoAccess("To take this Voki you need to be signed in");
         }

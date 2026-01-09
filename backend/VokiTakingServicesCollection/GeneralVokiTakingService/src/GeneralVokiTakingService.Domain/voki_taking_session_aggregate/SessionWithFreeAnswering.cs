@@ -3,6 +3,7 @@ using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using SharedKernel;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
@@ -16,7 +17,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,
         DateTime clientFinishedTime,
-        IAuthenticatedUserContext? authenticatedUserContext,
+        AuthenticatedUserCtx? authenticatedUserContext,
         Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers,
         Func<Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>,
             ErrOr<GeneralVokiResultId>> getResultAccordingToAnswers

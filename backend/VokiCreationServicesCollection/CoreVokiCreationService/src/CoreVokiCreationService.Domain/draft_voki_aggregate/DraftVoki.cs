@@ -2,6 +2,7 @@
 using SharedKernel;
 using SharedKernel.common.rules;
 using SharedKernel.common.vokis;
+using SharedKernel.user_ctx;
 using VokimiStorageKeysLib.concrete_keys;
 
 namespace CoreVokiCreationService.Domain.draft_voki_aggregate;
@@ -100,7 +101,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOrNothing AcceptInviteBy(IAuthenticatedUserContext userContext) {
+    public ErrOrNothing AcceptInviteBy(AuthenticatedUserCtx userContext) {
         if (CoAuthorIds.Contains(userContext.UserId)) {
             return ErrOrNothing.Nothing;
         }
@@ -157,7 +158,7 @@ public class DraftVoki : AggregateRoot<VokiId>
         AddDomainEvent(new VokiCoAuthorRemovedEvent(Id, coAuthorId, this.Type, DecideUserIdsToBecomeManagers()));
     }
 
-    public void LeaveVokiCreation(IAuthenticatedUserContext userContext) {
+    public void LeaveVokiCreation(AuthenticatedUserCtx userContext) {
         if (!CoAuthorIds.Contains(userContext.UserId)) {
             return;
         }

@@ -43,7 +43,7 @@ internal sealed class CreateNewAlbumCommandHandler :
         }
 
         var userId = userIdRes.AsSuccess();
-        AppUser? user = await _appUsersRepository.GetById(userId, ct);
+        AppUser? user = await _appUsersRepository.GetByIdForUpdate(userId, ct);
         if (user is null) {
             return ErrFactory.NotFound.User();
         }
