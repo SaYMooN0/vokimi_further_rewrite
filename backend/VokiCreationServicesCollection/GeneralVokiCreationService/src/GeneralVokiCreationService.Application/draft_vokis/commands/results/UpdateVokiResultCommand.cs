@@ -34,7 +34,7 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
     }
 
     public async Task<ErrOr<VokiResult>> Handle(UpdateVokiResultCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResultsForUpdate(command.VokiId, ct))!;
         var imageRes = await HandleImage(command.NewImage, command.VokiId, command.ResultId, ct);
         if (imageRes.IsErr(out var err)) {
             return err;

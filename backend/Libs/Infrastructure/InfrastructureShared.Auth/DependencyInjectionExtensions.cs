@@ -1,6 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using ApplicationShared;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.user_ctx;
 
 namespace InfrastructureShared.Auth;
 
@@ -14,7 +14,7 @@ public static class DependencyInjectionExtensions
 
         services.AddSingleton(jwtTokenConfig);
         services.AddScoped<ITokenParser, TokenParser>();
-        services.AddScoped<IUserContext, UserContextProvider>();
+        services.AddScoped<IUserCtxProvider, UserCtxProvider>();
         return services;
     }
 }

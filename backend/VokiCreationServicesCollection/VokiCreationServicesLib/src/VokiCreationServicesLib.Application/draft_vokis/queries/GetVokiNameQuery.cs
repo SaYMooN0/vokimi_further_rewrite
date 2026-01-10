@@ -18,11 +18,11 @@ public sealed record GetVokiNameQuery(VokiId VokiId) :
 internal sealed class GetVokiNameQueryHandler : IQueryHandler<GetVokiNameQuery, VokiName>
 {
     private readonly IDraftVokiRepository _draftVokiRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public GetVokiNameQueryHandler(IDraftVokiRepository draftVokiRepository, IUserContext userContext) {
+    public GetVokiNameQueryHandler(IDraftVokiRepository draftVokiRepository, IUserCtxProvider userCtxProvider) {
         _draftVokiRepository = draftVokiRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<VokiName>> Handle(GetVokiNameQuery query, CancellationToken ct) {
@@ -32,7 +32,7 @@ internal sealed class GetVokiNameQueryHandler : IQueryHandler<GetVokiNameQuery, 
         }
 
         var (vokiName, primaryAuthorId, coAuthors) = result.Value;
-        if (BaseDraftVoki.DoesUserHaveAccess(_userContext.AuthenticatedUser, primaryAuthorId, coAuthors)) {
+        if (BaseDraftVoki.DoesUserHaveAccess(_userCtxProvider.AuthenticatedUser, primaryAuthorId, coAuthors)) {
             return vokiName;
         }
 

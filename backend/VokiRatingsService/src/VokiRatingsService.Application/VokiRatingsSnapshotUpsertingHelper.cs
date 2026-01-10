@@ -14,7 +14,7 @@ internal static class VokiRatingsSnapshotUpsertingHelper
         IRatingsRepository ratingsRepository,
         CancellationToken ct
     ) {
-        VokiRatingsSnapshot? lastSnapshot = await vokiRatingsSnapshotRepository.GetLastSnapshotForVoki(vokiId, ct);
+        VokiRatingsSnapshot? lastSnapshot = await vokiRatingsSnapshotRepository.GetLastSnapshotForVokiForUpdate(vokiId, ct);
         if (lastSnapshot is null) {
             await CreateFirstSnapshotForVoki(vokiId, newRating, now, vokiRatingsSnapshotRepository, ct);
         }
@@ -36,7 +36,7 @@ internal static class VokiRatingsSnapshotUpsertingHelper
         IRatingsRepository ratingsRepository,
         CancellationToken ct
     ) {
-        VokiRatingsSnapshot? lastSnapshot = await vokiRatingsSnapshotRepository.GetLastSnapshotForVoki(vokiId, ct);
+        VokiRatingsSnapshot? lastSnapshot = await vokiRatingsSnapshotRepository.GetLastSnapshotForVokiForUpdate(vokiId, ct);
         if (lastSnapshot is null) {
             await CreateFirstSnapshotForVoki(vokiId, newValue, now, vokiRatingsSnapshotRepository, ct);
         }

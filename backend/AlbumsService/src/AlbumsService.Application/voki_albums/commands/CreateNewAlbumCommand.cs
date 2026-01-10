@@ -13,45 +13,52 @@ public sealed record CreateNewAlbumCommand(
     AlbumIcon Icon,
     HexColor MainColor,
     HexColor SecondaryColor
-) : 
-    ICommand<VokiAlbum>,
-    IWithAuthCheckStep;
+) :
+    ICommand<VokiAlbum>;
 
 internal sealed class CreateNewAlbumCommandHandler :
     ICommandHandler<CreateNewAlbumCommand, VokiAlbum>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
 
     public CreateNewAlbumCommandHandler(
-        IUserContext userContext, IVokiAlbumsRepository vokiAlbumsRepository,
+        IUserCtxProvider userCtxProvider, IVokiAlbumsRepository vokiAlbumsRepository,
         IAppUsersRepository appUsersRepository, IDateTimeProvider dateTimeProvider
     ) {
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _vokiAlbumsRepository = vokiAlbumsRepository;
         _appUsersRepository = appUsersRepository;
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<ErrOr<VokiAlbum>> Handle(CreateNewAlbumCommand command, CancellationToken ct) {
-        var userIdRes = _userContext.UserIdFromToken();
-        if (userIdRes.IsErr()) {
-            return ErrFactory.AuthRequired("To create albums you need to be logged in");
-        }
+    public Task<ErrOr<VokiAlbum>> Handle(CreateNewAlbumCommand command, CancellationToken ct) {
+        return _userCtxProvider.Current.Match<Task<ErrOr<VokiAlbum>>>(
+            authenticatedFunc: (aCtx) => CreateNewAlbum(aCtx, command, ct),
+            unauthenticatedFunc: _ =>
+                Task.FromResult(ErrOr<VokiAlbum>.Err(
+                    ErrFactory.AuthRequired("To create albums you need to be logged in")
+                ))
+        );
+    }
 
-        var userId = userIdRes.AsSuccess();
-        AppUser? user = await _appUsersRepository.GetByIdForUpdate(userId, ct);
+    private async Task<ErrOr<VokiAlbum>> CreateNewAlbum(
+        AuthenticatedUserCtx aCtx,
+        CreateNewAlbumCommand command,
+        CancellationToken ct
+    ) {
+        AppUser? user = await _appUsersRepository.GetCurrentForUpdate(aCtx, ct);
         if (user is null) {
             return ErrFactory.NotFound.User();
         }
 
         VokiAlbum album = VokiAlbum.CreateNew(
-            new AuthenticatedUserCtx(_userContext.AuthenticatedUserId), command.Name, command.Icon,
-            command.MainColor, command.SecondaryColor, _dateTimeProvider.UtcNow
+            aCtx, command.Name, command.Icon, command.MainColor, command.SecondaryColor, _dateTimeProvider.UtcNow
         );
+
         var addingRes = user.AddAlbum(album.Id);
         if (addingRes.IsErr(out var err)) {
             return err;

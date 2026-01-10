@@ -15,14 +15,14 @@ internal class VokiPublishedEventHandler : IDomainEventHandler<VokiPublishedEven
     public async Task Handle(VokiPublishedEvent e, CancellationToken ct) {
         List<AppUser> usersTpUpdate = [];
 
-        AppUser? initiator = await _appUsersRepository.GetById(e.PrimaryAuthorId, ct);
+        AppUser? initiator = await _appUsersRepository.GetByIdForUpdate(e.PrimaryAuthorId, ct);
         if (initiator is not null) {
             initiator.RemoveInitializedVoki(e.VokiId);
             usersTpUpdate.Add(initiator);
         }
 
         foreach (var coAuthorsId in e.CoAuthorsIds) {
-            AppUser? coauthor = await _appUsersRepository.GetById(coAuthorsId, ct)!;
+            AppUser? coauthor = await _appUsersRepository.GetByIdForUpdate(coAuthorsId, ct)!;
             if (coauthor is not null) {
                 coauthor.RemoveCoAuthoredVoki(e.VokiId);
                 usersTpUpdate.Add(coauthor);

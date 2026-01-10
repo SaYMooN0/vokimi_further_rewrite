@@ -26,7 +26,7 @@ internal sealed class DeleteVokiQuestionAnswerCommandHandler : ICommandHandler<D
     public async Task<ErrOrNothing> Handle(
         DeleteVokiQuestionAnswerCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswers(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersForUpdate(command.VokiId, ct))!;
         bool wasDeleted = voki.DeleteQuestionAnswer(command.QuestionId, command.AnswerId);
         if (wasDeleted) {
             await _draftGeneralVokisRepository.Update(voki, ct);

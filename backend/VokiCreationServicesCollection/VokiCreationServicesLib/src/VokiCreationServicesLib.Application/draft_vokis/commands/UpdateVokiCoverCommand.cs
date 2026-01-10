@@ -32,7 +32,7 @@ internal sealed class UpdateVokiCoverCommandHandler : ICommandHandler<UpdateVoki
 
 
     public async Task<ErrOr<VokiCoverKey>> Handle(UpdateVokiCoverCommand command, CancellationToken ct) {
-        BaseDraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
+        BaseDraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct))!;
         VokiCoverKey destination = VokiCoverKey.CreateWithId(command.VokiId, command.CoverKey.Extension);
         ErrOrNothing copyingRes = await _vokiCreationLibMainStorageBucket.CopyVokiCoverFromTempToStandard(
             command.CoverKey, destination, ct

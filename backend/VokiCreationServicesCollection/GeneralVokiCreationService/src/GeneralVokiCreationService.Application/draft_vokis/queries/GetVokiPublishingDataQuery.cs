@@ -25,7 +25,7 @@ internal sealed class GetVokiPublishingDataQueryHandler :
         CancellationToken ct
     ) {
         DraftGeneralVoki voki = (
-            await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(query.VokiId, ct)
+            await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(query.VokiId, ct)
         )!;
         return new GetVokiPublishingDataQueryResult(
             voki.PrimaryAuthorId,

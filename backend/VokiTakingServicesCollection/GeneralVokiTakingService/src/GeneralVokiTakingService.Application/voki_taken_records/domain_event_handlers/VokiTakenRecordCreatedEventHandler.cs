@@ -19,19 +19,19 @@ internal class VokiTakenRecordCreatedEventHandler : IDomainEventHandler<VokiTake
     }
 
     public async Task Handle(VokiTakenRecordCreatedEvent e, CancellationToken ct) {
-        GeneralVoki voki = (await _generalVokisRepository.GetById(e.VokiId, ct))!;
+        GeneralVoki voki = (await _generalVokisRepository.GetByIdForUpdate(e.VokiId, ct))!;
         voki.AddNewVokiTakenRecord(e.VokiTakenRecordId, e.VokiTakerId);
 
         if (e.VokiTakerId is null) {
             return;
         }
 
-        AppUser? vokiTaker = await _appUsersRepository.GetById(e.VokiTakerId, ct);
+        AppUser? vokiTaker = await _appUsersRepository.GetByIdForUpdate(e.VokiTakerId, ct);
         if (vokiTaker is null) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.NotFound.User("Voki taker not found"));
         }
 
-        vokiTaker!.VokiTaken(e.VokiTakenRecordId, e.ReceivedResultId);
+        vokiTaker!.AddVokiTaken(e.VokiTakenRecordId, e.ReceivedResultId);
         await _appUsersRepository.Update(vokiTaker, ct);
         await _generalVokisRepository.Update(voki, ct);
     }

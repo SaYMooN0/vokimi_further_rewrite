@@ -29,7 +29,7 @@ internal sealed class AddNewResultToVokiCommandHandler :
     public async Task<ErrOr<ImmutableArray<VokiResult>>> Handle(
         AddNewResultToVokiCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResultsForUpdate(command.VokiId, ct))!;
         var res = voki.AddNewResult(command.ResultName, _dateTimeProvider);
         if (res.IsErr(out var err)) {
             return err;

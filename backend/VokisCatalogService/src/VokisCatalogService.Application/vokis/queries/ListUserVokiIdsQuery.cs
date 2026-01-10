@@ -1,5 +1,4 @@
-﻿using ApplicationShared;
-using ApplicationShared.messaging.pipeline_behaviors;
+﻿using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel.user_ctx;
 using VokisCatalogService.Application.common.repositories;
 
@@ -12,15 +11,14 @@ public sealed record ListIdsOfVokiAuthoredByUser() :
 internal sealed class ListIdsOfVokiAuthoredByUserHandler : IQueryHandler<ListIdsOfVokiAuthoredByUser, VokiId[]>
 {
     private readonly IBaseVokisRepository _baseVokisRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtx _userCtx;
 
-    public ListIdsOfVokiAuthoredByUserHandler(IBaseVokisRepository baseVokisRepository, IUserContext userContext) {
+    public ListIdsOfVokiAuthoredByUserHandler(IBaseVokisRepository baseVokisRepository, IUserCtx userCtx) {
         _baseVokisRepository = baseVokisRepository;
-        _userContext = userContext;
+        _userCtx = userCtx;
     }
 
     public async Task<ErrOr<VokiId[]>> Handle(ListIdsOfVokiAuthoredByUser query, CancellationToken ct) {
-        AppUserId userId = _userContext.AuthenticatedUserId;
-        return await _baseVokisRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(userId, ct);
+        return await _baseVokisRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(_userCtx.AuthenticatedUser, ct);
     }
 }

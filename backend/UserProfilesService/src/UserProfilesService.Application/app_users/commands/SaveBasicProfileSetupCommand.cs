@@ -20,21 +20,21 @@ public sealed record SaveBasicProfileSetupCommand(
 internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<SaveBasicProfileSetupCommand>
 {
     private readonly IAppUsersRepository _appUsersRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IMainStorageBucket _mainStorageBucket;
 
     public SaveBasicProfileSetupCommandHandler(
         IAppUsersRepository appUsersRepository,
-        IUserContext userContext,
+        IUserCtxProvider userCtxProvider,
         IMainStorageBucket mainStorageBucket
     ) {
         _appUsersRepository = appUsersRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _mainStorageBucket = mainStorageBucket;
     }
 
     public async Task<ErrOrNothing> Handle(SaveBasicProfileSetupCommand command, CancellationToken ct) {
-        AppUserId userId = _userContext.AuthenticatedUserId;
+        AppUserId userId = _userCtxProvider.AuthenticatedUserId;
         var savedKeyRes = await HandleProfilePicKey(userId, command.ProfilePic, ct);
         if (savedKeyRes.IsErr(out var err)) {
             return err;
@@ -48,7 +48,7 @@ internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<Save
             );
         }
 
-        AppUser? user = await _appUsersRepository.GetById(userId, ct);
+        AppUser? user = await _appUsersRepository.GetByIdForUpdate(userId, ct);
         if (user is null) {
             return ErrFactory.NotFound.User(
                 "User profile was not found", $"There is no user profile with id: {userId}"
@@ -60,7 +60,7 @@ internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<Save
             command.DisplayName,
             command.PreferredLanguages, command.Tags
         );
-        if (savedKeyRes.IsErr(out err)) {
+        if (setupRes.IsErr(out err)) {
             return err;
         }
 

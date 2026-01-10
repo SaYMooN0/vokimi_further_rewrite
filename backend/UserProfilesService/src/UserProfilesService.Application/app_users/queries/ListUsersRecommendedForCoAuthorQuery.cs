@@ -12,11 +12,11 @@ internal sealed class
     UserPreviewWithAllowInvitesSettingDto[]>
 {
     private readonly IAppUsersRepository _appUsersRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public ListUsersRecommendedForCoAuthorQueryHandler(IAppUsersRepository appUsersRepository, IUserContext userContext) {
+    public ListUsersRecommendedForCoAuthorQueryHandler(IAppUsersRepository appUsersRepository, IUserCtxProvider userCtxProvider) {
         _appUsersRepository = appUsersRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
     }
 
 

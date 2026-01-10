@@ -1,5 +1,4 @@
-﻿using ApplicationShared;
-using GeneralVokiTakingService.Application.common.repositories;
+﻿using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
@@ -23,20 +22,20 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
     ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, GeneralVokiResultId>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtx _userCtx;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ISessionsWithFreeAnsweringRepository _sessionsWithFreeAnsweringRepository;
     private readonly IGeneralVokiTakenRecordsRepository _generalVokiTakenRecordsRepository;
 
     public FinishVokiTakingWithFreeAnsweringCommandHandler(
         IGeneralVokisRepository generalVokisRepository,
-        IUserContext userContext,
+        IUserCtx userCtx,
         IDateTimeProvider dateTimeProvider,
         ISessionsWithFreeAnsweringRepository sessionsWithFreeAnsweringRepository,
         IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository
     ) {
         _generalVokisRepository = generalVokisRepository;
-        _userContext = userContext;
+        _userCtx = userCtx;
         _dateTimeProvider = dateTimeProvider;
         _sessionsWithFreeAnsweringRepository = sessionsWithFreeAnsweringRepository;
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
@@ -44,13 +43,12 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
 
     public async Task<ErrOr<GeneralVokiResultId>> Handle(FinishVokiTakingWithFreeAnsweringCommand command,
         CancellationToken ct) {
-        GeneralVoki? voki =
-            await _generalVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(command.VokiId, ct);
+        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
         }
 
-        SessionWithFreeAnswering? session = await _sessionsWithFreeAnsweringRepository.GetById(command.SessionId, ct);
+        SessionWithFreeAnswering? session = await _sessionsWithFreeAnsweringRepository.GetByIdForUpdate(command.SessionId, ct);
         if (session is null) {
             return ErrFactory.NotFound.Common(
                 "Could not finish voki taking because taking session was not started",
@@ -62,7 +60,7 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             _dateTimeProvider.UtcNow,
             command.SessionStartTime,
             command.ClientFinishTime,
-            _userContext.UserIdFromToken().IsSuccess(out var userId) ? new AuthenticatedUserCtx(userId) : null,
+            _userCtx.UserId().IsSuccess(out var userId) ? new AuthenticatedUserCtx(userId) : null,
             command.ChosenAnswers,
             (answ) => voki.GetResultIdByChosenAnswers(answ)
         );

@@ -12,19 +12,19 @@ public sealed record ListUserTakenVokisQuery() :
 
 internal sealed class ListUserTakenVokisQueryHandler : IQueryHandler<ListUserTakenVokisQuery, UserTakenVokisList>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IAppUsersRepository _appUsersRepository;
 
-    public ListUserTakenVokisQueryHandler(IUserContext userContext, IAppUsersRepository appUsersRepository) {
-        _userContext = userContext;
+    public ListUserTakenVokisQueryHandler(IUserCtxProvider userCtxProvider, IAppUsersRepository appUsersRepository) {
+        _userCtxProvider = userCtxProvider;
         _appUsersRepository = appUsersRepository;
     }
 
     public async Task<ErrOr<UserTakenVokisList>> Handle(ListUserTakenVokisQuery query, CancellationToken ct) {
         AppUser? user =
-            await _appUsersRepository.GetUserWithTakenVokisAsNoTracking(_userContext.AuthenticatedUserId, ct);
+            await _appUsersRepository.GetUserWithTakenVokis(_userCtxProvider.AuthenticatedUserId, ct);
         if (user is null) {
-            return ErrFactory.NotFound.User("Cannot find user account", $"User id: {_userContext.AuthenticatedUserId}");
+            return ErrFactory.NotFound.User("Cannot find user account", $"User id: {_userCtxProvider.AuthenticatedUserId}");
         }
 
         return user.TakenVokis;

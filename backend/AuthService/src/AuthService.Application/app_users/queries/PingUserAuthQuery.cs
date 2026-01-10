@@ -10,21 +10,21 @@ public sealed record PingUserAuthQuery() : IQuery<PingUserAuthQueryResult>;
 internal sealed class PingUserAuthQueryHandler : IQueryHandler<PingUserAuthQuery, PingUserAuthQueryResult>
 {
     private readonly IAppUsersRepository _appUsersRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly ILogger<PingUserAuthQueryHandler> _logger;
 
     public PingUserAuthQueryHandler(
         IAppUsersRepository appUsersRepository,
-        IUserContext userContext,
+        IUserCtxProvider userCtxProvider,
         ILogger<PingUserAuthQueryHandler> logger
     ) {
         _appUsersRepository = appUsersRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _logger = logger;
     }
 
     public async Task<ErrOr<PingUserAuthQueryResult>> Handle(PingUserAuthQuery query, CancellationToken ct) {
-        var idFromToken = _userContext.UserIdFromToken();
+        ErrOr<AppUserId> idFromToken = _userCtxProvider.Current.TryGetUserId;
         if (idFromToken.IsErr()) {
             return PingUserAuthQueryResult.Unauthenticated();
         }

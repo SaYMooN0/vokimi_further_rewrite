@@ -14,11 +14,11 @@ public sealed record RemoveVokiFromAlbumCommand(
 
 internal sealed class RemoveVokiFromAlbumCommandHandler : ICommandHandler<RemoveVokiFromAlbumCommand>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
 
-    public RemoveVokiFromAlbumCommandHandler(IUserContext userContext, IVokiAlbumsRepository vokiAlbumsRepository) {
-        _userContext = userContext;
+    public RemoveVokiFromAlbumCommandHandler(IUserCtxProvider userCtxProvider, IVokiAlbumsRepository vokiAlbumsRepository) {
+        _userCtxProvider = userCtxProvider;
         _vokiAlbumsRepository = vokiAlbumsRepository;
     }
 
@@ -28,8 +28,7 @@ internal sealed class RemoveVokiFromAlbumCommandHandler : ICommandHandler<Remove
             return ErrFactory.NotFound.Common("Could not update the album because it doesn't exist");
         }
 
-        var res =
-            album.RemoveVoki(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId), command.VokiId);
+        ErrOrNothing res =album.RemoveVoki(_userCtxProvider.CurrentAsAuthenticated, command.VokiId);
         if (res.IsErr(out var err)) {
             return err;
         }

@@ -33,7 +33,7 @@ internal sealed class AddNewQuestionToVokiCommandHandler :
             return ErrFactory.NotImplemented("Selected type is not implemented yet");
         }
 
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct))!;
         var res = voki.AddNewQuestion(command.AnswersType);
         if (res.IsErr(out var err)) {
             return err;

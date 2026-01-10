@@ -22,7 +22,7 @@ internal sealed class UpdateVokiDetailsCommandHandler : ICommandHandler<UpdateVo
     }
 
     public async Task<ErrOr<VokiDetails>> Handle(UpdateVokiDetailsCommand command, CancellationToken ct) {
-        BaseDraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
+        BaseDraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct))!;
         voki.UpdateDetails(command.NewDetails);
         await _draftVokiRepository.Update(voki, ct);
         return voki.Details;

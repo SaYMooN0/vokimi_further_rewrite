@@ -26,22 +26,22 @@ public static class VokiPrimaryAuthorValidationStepHandler
         where TCommand : ICommand<TResponse>, IWithVokiPrimaryAuthorValidationStep
     {
         private readonly IDraftVokiRepository _draftVokiRepository;
-        private readonly IUserContext _userContext;
+        private readonly IUserCtxProvider _userCtxProvider;
         private readonly ICommandHandler<TCommand, TResponse> _innerHandler;
 
 
         public CommandHandler(
-            IDraftVokiRepository draftVokiRepository, IUserContext userContext,
+            IDraftVokiRepository draftVokiRepository, IUserCtxProvider userCtxProvider,
             ICommandHandler<TCommand, TResponse> innerHandler
         ) {
             _draftVokiRepository = draftVokiRepository;
-            _userContext = userContext;
+            _userCtxProvider = userCtxProvider;
             _innerHandler = innerHandler;
         }
 
         public async Task<ErrOr<TResponse>> Handle(TCommand command, CancellationToken ct) {
-            AppUserId userId = _userContext.AuthenticatedUserId;
-            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId, ct);
+            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
+            BaseDraftVoki? voki = await _draftVokiRepository.GetById(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
@@ -58,22 +58,22 @@ public static class VokiPrimaryAuthorValidationStepHandler
         where TCommand : ICommand, IWithVokiPrimaryAuthorValidationStep
     {
         private readonly IDraftVokiRepository _draftVokiRepository;
-        private readonly IUserContext _userContext;
+        private readonly IUserCtxProvider _userCtxProvider;
         private readonly ICommandHandler<TCommand> _innerHandler;
 
         public CommandBaseHandler(
             IDraftVokiRepository draftVokiRepository,
-            IUserContext userContext,
+            IUserCtxProvider userCtxProvider,
             ICommandHandler<TCommand> innerHandler
         ) {
             _draftVokiRepository = draftVokiRepository;
-            _userContext = userContext;
+            _userCtxProvider = userCtxProvider;
             _innerHandler = innerHandler;
         }
 
         public async Task<ErrOrNothing> Handle(TCommand command, CancellationToken ct) {
-            AppUserId userId = _userContext.AuthenticatedUserId;
-            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(command.VokiId, ct);
+            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
+            BaseDraftVoki? voki = await _draftVokiRepository.GetById(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
@@ -90,22 +90,22 @@ public static class VokiPrimaryAuthorValidationStepHandler
         where TQuery : IQuery<TResponse>, IWithVokiPrimaryAuthorValidationStep
     {
         private readonly IDraftVokiRepository _draftVokiRepository;
-        private readonly IUserContext _userContext;
+        private readonly IUserCtxProvider _userCtxProvider;
         private readonly IQueryHandler<TQuery, TResponse> _innerHandler;
 
         public QueryHandler(
             IDraftVokiRepository draftVokiRepository,
-            IUserContext userContext,
+            IUserCtxProvider userCtxProvider,
             IQueryHandler<TQuery, TResponse> innerHandler
         ) {
             _draftVokiRepository = draftVokiRepository;
-            _userContext = userContext;
+            _userCtxProvider = userCtxProvider;
             _innerHandler = innerHandler;
         }
 
         public async Task<ErrOr<TResponse>> Handle(TQuery query, CancellationToken ct) {
-            AppUserId userId = _userContext.AuthenticatedUserId;
-            BaseDraftVoki? voki = await _draftVokiRepository.GetByIdAsNoTracking(query.VokiId, ct);
+            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
+            BaseDraftVoki? voki = await _draftVokiRepository.GetById(query.VokiId, ct);
             if (voki is null) {
                 return query.VokiNotFoundErr;
             }

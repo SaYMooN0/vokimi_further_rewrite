@@ -25,7 +25,7 @@ public class BaseVokiTakenIntegrationEventHandler : IConsumer<BaseVokiTakenInteg
 
 
     public async Task Consume(ConsumeContext<BaseVokiTakenIntegrationEvent> context) {
-        BaseVoki? voki = await _baseVokisRepository.GetById(context.Message.VokiId, context.CancellationToken);
+        BaseVoki? voki = await _baseVokisRepository.GetByIdForUpdate(context.Message.VokiId, context.CancellationToken);
         if (voki is null) {
             return;
         }
@@ -37,7 +37,7 @@ public class BaseVokiTakenIntegrationEventHandler : IConsumer<BaseVokiTakenInteg
             return;
         }
 
-        AppUser? vokiTaker = await _appUsersRepository.GetUserWithTakenVokis(
+        AppUser? vokiTaker = await _appUsersRepository.GetUserWithTakenVokisForUpdate(
             context.Message.VokiTakerId,
             context.CancellationToken
         );

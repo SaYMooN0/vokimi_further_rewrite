@@ -24,7 +24,7 @@ internal sealed class UpdateExpectedManagersCommandHandler
 
 
     public async Task<ErrOr<VokiExpectedManagersSetting>> Handle(UpdateExpectedManagersCommand command, CancellationToken ct) {
-        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
+        DraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct))!;
         var res = voki.UpdateExpectedManagers(command.NewSettingValue);
         if (res.IsErr(out var err)) {
             return err;

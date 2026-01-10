@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using TagsService.Infrastructure.persistence;
 using UserProfilesService.Infrastructure.persistence;
 using VokiCommentsService.Infrastructure.persistence;
+using VokiRatingsService.Infrastructure.persistence;
 using VokisCatalogService.Infrastructure.persistence;
 
 namespace DbSeeder;
@@ -42,9 +43,9 @@ public static class DbContextsCollection
         DbOptions<GeneralVokiTakingDbContext>(config, "GeneralVokiTakingServiceDb"), FakePublisher.Instance
     );
 
-    // public static VokiRatingsDbContext VokiRatings(IConfiguration config) => new(
-    //     DbOptions<VokiRatingsDbContext>(config, "VokiRatingsServiceDb"), FakePublisher.Instance
-    // );
+    public static VokiRatingsDbContext VokiRatings(IConfiguration config) => new(
+        DbOptions<VokiRatingsDbContext>(config, "VokiRatingsServiceDb"), FakePublisher.Instance
+    );
 
     public static VokiCommentsDbContext VokiComments(IConfiguration config) => new(
         DbOptions<VokiCommentsDbContext>(config, "VokiCommentsServiceDb"), FakePublisher.Instance

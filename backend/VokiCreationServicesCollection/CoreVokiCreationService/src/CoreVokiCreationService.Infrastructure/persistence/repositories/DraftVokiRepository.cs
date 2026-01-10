@@ -1,5 +1,6 @@
 ﻿using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
+using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.user_ctx;
@@ -32,9 +33,8 @@ internal class DraftVokiRepository : IDraftVokiRepository
             .Select(v => v.Id)
             .ToArrayAsync(cancellationToken: ct);
 
-    public Task<DraftVoki?> GetByIdAsNoTracking(VokiId vokiId, CancellationToken ct) =>
+    public Task<DraftVoki?> GetById(VokiId vokiId, CancellationToken ct) =>
         _db.Vokis
-            .AsNoTracking()
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(
@@ -46,26 +46,27 @@ internal class DraftVokiRepository : IDraftVokiRepository
                 FROM ""Vokis""
                 WHERE {userContext.UserId.Value} = ANY(""InvitedForCoAuthorUserIds"")
             ")
-            .AsNoTracking()
             .ToArrayAsync(cancellationToken: ct);
 
 
-    public Task<DraftVoki[]> GetMultipleByIdAsNoTracking(VokiId[] queryVokiIds, CancellationToken ct) =>
-        _db.Vokis.AsNoTracking()
+    public Task<DraftVoki[]> GetMultipleById(VokiId[] queryVokiIds, CancellationToken ct) =>
+        _db.Vokis
             .Where(v => queryVokiIds.Contains(v.Id))
             .ToArrayAsync(cancellationToken: ct);
 
-    public Task<DraftVoki?> GetById(VokiId vokiId, CancellationToken ct) =>
+    public Task<DraftVoki?> GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
         _db.Vokis
-        .ForUpdate()
-        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
+            .ForUpdate()
+            .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public async Task Update(DraftVoki voki, CancellationToken ct) {
+        _db.ThrowIfDetached(voki);
         _db.Vokis.Update(voki);
         await _db.SaveChangesAsync(ct);
     }
 
     public async Task Delete(DraftVoki voki, CancellationToken ct) {
+        _db.ThrowIfDetached(voki);
         _db.Vokis.Remove(voki);
         await _db.SaveChangesAsync(ct);
     }

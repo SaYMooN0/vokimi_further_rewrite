@@ -15,11 +15,11 @@ public sealed record ManageVokiRatingsHistoryQuery(
 internal sealed class ManageVokiRatingsHistoryQueryHandler :
     IQueryHandler<ManageVokiRatingsHistoryQuery, ManageVokiRatingsHistoryQueryResult>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IVokiRatingsSnapshotRepository _ratingsSnapshotRepository;
     private readonly IVokisRepository _vokisRepository;
-    public ManageVokiRatingsHistoryQueryHandler(IUserContext userContext, IVokiRatingsSnapshotRepository ratingsSnapshotRepository, IVokisRepository vokisRepository) {
-        _userContext = userContext;
+    public ManageVokiRatingsHistoryQueryHandler(IUserCtxProvider userCtxProvider, IVokiRatingsSnapshotRepository ratingsSnapshotRepository, IVokisRepository vokisRepository) {
+        _userCtxProvider = userCtxProvider;
         _ratingsSnapshotRepository = ratingsSnapshotRepository;
         _vokisRepository = vokisRepository;
     }
@@ -28,17 +28,17 @@ internal sealed class ManageVokiRatingsHistoryQueryHandler :
     public async Task<ErrOr<ManageVokiRatingsHistoryQueryResult>> Handle(
         ManageVokiRatingsHistoryQuery query, CancellationToken ct
     ) {
-        Voki? voki = await _vokisRepository.GetVokiAsNoTrackingById(query.VokiId, ct);
+        Voki? voki = await _vokisRepository.GetVokiById(query.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Voki does not exist");
         }
 
-        if (!voki.CanUserManage(_userContext.AuthenticatedUser)) {
+        if (!voki.CanUserManage(_userCtxProvider.AuthenticatedUser)) {
             return ErrFactory.NoAccess("To get this data you need to be a Voki manager");
         }
 
         VokiRatingsSnapshot[] snapshots =
-            await _ratingsSnapshotRepository.ListSortedSnapshotsForVokiAsNoTracking(query.VokiId, ct);
+            await _ratingsSnapshotRepository.ListSortedSnapshotsForVoki(query.VokiId, ct);
         
         return new ManageVokiRatingsHistoryQueryResult(snapshots, voki.PublicationDate);
     }

@@ -15,29 +15,29 @@ internal sealed class ListAllUserAlbumsPreviewQueryHandler :
 {
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
     private readonly IAppUsersRepository _appUsersRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
     public ListAllUserAlbumsPreviewQueryHandler(
         IVokiAlbumsRepository vokiAlbumsRepository,
-        IUserContext userContext,
+        IUserCtxProvider userCtxProvider,
         IAppUsersRepository appUsersRepository
     ) {
         _vokiAlbumsRepository = vokiAlbumsRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _appUsersRepository = appUsersRepository;
     }
 
     public async Task<ErrOr<ListAllUserAlbumsPreviewQueryResult>> Handle(
         ListAllUserAlbumsPreviewQuery query, CancellationToken ct
     ) {
-        var userId = _userContext.AuthenticatedUserId;
+        var userId = _userCtxProvider.AuthenticatedUserId;
         UserAutoAlbumsAppearance? albumsAppearance = await _appUsersRepository.GetUsersAutoAlbumsAppearance(userId, ct);
         if (albumsAppearance is null) {
             return ErrFactory.NotFound.User();
         }
 
         VokiAlbumPreviewDto[] albums = await _vokiAlbumsRepository.GetPreviewsForUserSorted(
-            _userContext.AuthenticatedUserId, ct
+            _userCtxProvider.AuthenticatedUserId, ct
         );
         return new ListAllUserAlbumsPreviewQueryResult(albumsAppearance, albums);
     }

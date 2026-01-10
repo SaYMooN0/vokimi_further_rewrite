@@ -16,28 +16,30 @@ public sealed record UpdateVokiPresenceInAlbumsCommand(
 internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
     ICommandHandler<UpdateVokiPresenceInAlbumsCommand, AlbumWithVokiPresenceDto[]>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
 
-    public UpdateVokiPresenceInAlbumsCommandHandler(IUserContext userContext,
+    public UpdateVokiPresenceInAlbumsCommandHandler(IUserCtxProvider userCtxProvider,
         IVokiAlbumsRepository vokiAlbumsRepository) {
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _vokiAlbumsRepository = vokiAlbumsRepository;
     }
 
     public async Task<ErrOr<AlbumWithVokiPresenceDto[]>> Handle(
         UpdateVokiPresenceInAlbumsCommand command, CancellationToken ct
     ) {
-        AppUserId userId = _userContext.AuthenticatedUserId;
-        Dictionary<VokiAlbumId, VokiAlbum> albums = (await _vokiAlbumsRepository.ListAlbumsForUserForUpdate(userId, ct))
-            .ToDictionary(a => a.Id, a => a);
-        List<VokiAlbum> changedAlbumsList = [];
+        var aCtx = _userCtxProvider.CurrentAsAuthenticated;
 
+        Dictionary<VokiAlbumId, VokiAlbum> albums =
+            (await _vokiAlbumsRepository.ListUsersAlbumsForUpdate(aCtx, ct))
+            .ToDictionary(a => a.Id, a => a);
+
+        List<VokiAlbum> changedAlbumsList = [];
         ErrOrNothing errs = ErrOrNothing.Nothing;
 
         foreach (var (albumId, isChosen) in command.AlbumIdToIsChosen) {
             if (albums.TryGetValue(albumId, out var album)) {
-                ErrOrNothing res = album.SetVokiPresenceTo(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId), isChosen, command.VokiId);
+                ErrOrNothing res = album.SetVokiPresenceTo(aCtx, isChosen, command.VokiId);
                 errs.AddNextIfErr(res);
                 changedAlbumsList.Add(album);
             }

@@ -1,5 +1,4 @@
-﻿using ApplicationShared;
-using GeneralVokiTakingService.Application.common.repositories;
+﻿using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.app_user_aggregate;
 using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
@@ -15,18 +14,18 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
 {
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IGeneralVokisRepository _generalVokisRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtx _userCtx;
     private readonly IGeneralVokiTakenRecordsRepository _generalVokiTakenRecordsRepository;
 
 
     public ViewAllVokiResultsQueryHandler(
         IGeneralVokisRepository generalVokisRepository,
-        IUserContext userContext,
+        IUserCtx userCtx,
         IAppUsersRepository appUsersRepository,
         IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository
     ) {
         _generalVokisRepository = generalVokisRepository;
-        _userContext = userContext;
+        _userCtx = userCtx;
         _appUsersRepository = appUsersRepository;
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
     }
@@ -35,7 +34,7 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
     public async Task<ErrOr<ViewAllVokiResultsQueryResult>> Handle(
         ViewAllVokiResultsQuery query, CancellationToken ct
     ) {
-        var voki = await _generalVokisRepository.GetWithResultsByIdAsNoTracking(query.VokiId, ct);
+        var voki = await _generalVokisRepository.GetWithResultsById(query.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.GeneralVoki();
         }
@@ -43,7 +42,7 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
         Dictionary<GeneralVokiResultId, uint> resultIdsToCount = await _generalVokiTakenRecordsRepository
             .GetResultIdsToCountForVoki(voki.Id, ct);
 
-        if (_userContext.UserIdFromToken().IsSuccess(out var userId)) {
+        if (_userCtx.UserId().IsSuccess(out var userId)) {
             AppUser? user = await _appUsersRepository.GetById(userId, ct);
             if (user is null) {
                 return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");

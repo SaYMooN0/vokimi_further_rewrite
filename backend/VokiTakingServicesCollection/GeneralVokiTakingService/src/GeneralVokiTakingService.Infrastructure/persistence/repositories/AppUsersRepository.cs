@@ -1,5 +1,7 @@
 ﻿using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.app_user_aggregate;
+using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories;
@@ -17,14 +19,18 @@ internal class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<AppUser?> GetById(AppUserId id, CancellationToken ct) =>
-        await _db.AppUsers.FindAsync(keyValues: [id], cancellationToken: ct);
+    public async Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
+        await _db.AppUsers
+            .ForUpdate()
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: ct);
 
     public async Task Update(AppUser user, CancellationToken ct) {
+        _db.ThrowIfDetached(user);
         _db.Update(user);
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<AppUser?> GetByIdAsNoTracking(AppUserId userId, CancellationToken ct) =>
-        await _db.AppUsers.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId, ct);
+    public async Task<AppUser?> GetById(AppUserId userId, CancellationToken ct) =>
+        await _db.AppUsers
+            .FirstOrDefaultAsync(u => u.Id == userId, ct);
 }

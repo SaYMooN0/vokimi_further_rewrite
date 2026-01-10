@@ -1,5 +1,7 @@
 ﻿using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Application.common;
@@ -22,24 +24,18 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
     }
 
 
-    public Task<DraftGeneralVoki?> GetByIdAsNoTracking(VokiId vokiId, CancellationToken ct) => _db.Vokis
+    public Task<DraftGeneralVoki?> GetById(VokiId vokiId, CancellationToken ct) => _db.Vokis
         .AsNoTracking()
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-
-    public Task<DraftGeneralVoki?> GetWithQuestionsAsNoTracking(VokiId vokiId, CancellationToken ct) => _db.Vokis
-        .AsNoTracking()
-        .Include(v => EF.Property<List<VokiQuestion>>(v, "_questions"))
-        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public Task<DraftGeneralVoki?> GetWithQuestions(VokiId vokiId, CancellationToken ct) => _db.Vokis
         .Include(v => EF.Property<List<VokiQuestion>>(v, "_questions"))
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public Task<DraftGeneralVoki?> GetWithQuestionAnswersAsNoTracking(VokiId vokiId, CancellationToken ct) => _db.Vokis
-        .AsNoTracking()
+    public Task<DraftGeneralVoki?> GetWithQuestionsForUpdate(VokiId vokiId, CancellationToken ct) => _db.Vokis
+        .ForUpdate()
         .Include(v => EF.Property<List<VokiQuestion>>(v, "_questions"))
-        .ThenInclude(q => EF.Property<List<VokiQuestionAnswer>>(q, "_answers"))
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public Task<DraftGeneralVoki?> GetWithQuestionAnswers(VokiId vokiId, CancellationToken ct) => _db.Vokis
@@ -47,25 +43,31 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
         .ThenInclude(q => EF.Property<List<VokiQuestionAnswer>>(q, "_answers"))
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public Task<DraftGeneralVoki?> GetWithResultsAsNoTracking(VokiId vokiId, CancellationToken ct) => _db.Vokis
-        .AsNoTracking()
-        .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
+    public Task<DraftGeneralVoki?> GetWithQuestionAnswersForUpdate(VokiId vokiId, CancellationToken ct) => _db.Vokis
+        .ForUpdate()
+        .Include(v => EF.Property<List<VokiQuestion>>(v, "_questions"))
+        .ThenInclude(q => EF.Property<List<VokiQuestionAnswer>>(q, "_answers"))
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public Task<DraftGeneralVoki?> GetWithResults(VokiId vokiId, CancellationToken ct) => _db.Vokis
         .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResults(VokiId vokiId, CancellationToken ct) => _db.Vokis
+    public Task<DraftGeneralVoki?> GetWithResultsForUpdate(VokiId vokiId, CancellationToken ct) => _db.Vokis
+        .ForUpdate()
+        .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
+        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
+
+    public Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResultsForUpdate(VokiId vokiId, CancellationToken ct) => _db.Vokis
+        .ForUpdate()
         .Include(v => EF.Property<List<VokiQuestion>>(v, "_questions"))
         .ThenInclude(q => EF.Property<List<VokiQuestionAnswer>>(q, "_answers"))
         .AsSplitQuery()
         .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResultsAsNoTracking(VokiId vokiId, CancellationToken ct) =>
+    public Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResults(VokiId vokiId, CancellationToken ct) =>
         _db.Vokis
-            .AsNoTracking()
             .Include(v => EF.Property<List<VokiQuestion>>(v, "_questions"))
             .ThenInclude(q => EF.Property<List<VokiQuestionAnswer>>(q, "_answers"))
             .AsSplitQuery()
@@ -73,19 +75,22 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public Task Delete(DraftGeneralVoki voki, CancellationToken ct) {
+        _db.ThrowIfDetached(voki);
         _db.Vokis.Remove(voki);
         return _db.SaveChangesAsync(ct);
     }
 
 
-    public Task<DraftGeneralVoki?> GetById(VokiId generalVokiId, CancellationToken ct) => _db.Vokis
+    public Task<DraftGeneralVoki?> GetByIdForUpdate(VokiId generalVokiId, CancellationToken ct) => _db.Vokis
+        .ForUpdate()
         .FirstOrDefaultAsync(v => v.Id == generalVokiId, cancellationToken: ct);
-
+    async Task<BaseDraftVoki?> IDraftVokiRepository.GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
+        await GetByIdForUpdate(generalVokiId: vokiId, ct);
+    
     public async Task<(VokiName, AppUserId PrimaryAuthor, VokiCoAuthorIdsSet CoAuthors)?> GetVokiName(
         VokiId vokiId, CancellationToken ct
     ) {
         var res = await _db.Vokis
-            .AsNoTracking()
             .Select(v => new {
                 v.Id,
                 v.Name,
@@ -100,15 +105,16 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
         return (res.Name, res.PrimaryAuthorId, res.CoAuthors);
     }
 
-    async Task<BaseDraftVoki?> IDraftVokiRepository.GetById(VokiId vokiId, CancellationToken ct) =>
-        await GetById(generalVokiId: vokiId, ct);
+    
 
     public async Task Update(DraftGeneralVoki generalVoki, CancellationToken ct) {
+        _db.ThrowIfDetached(generalVoki);
         _db.Vokis.Update(generalVoki);
         await _db.SaveChangesAsync(ct);
     }
 
     async Task IDraftVokiRepository.Update(BaseDraftVoki voki, CancellationToken ct) {
+        _db.ThrowIfDetached(voki);
         if (voki is not DraftGeneralVoki generalVoki) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Unspecified(
                 $"Unexpected type of voki: {voki.GetType()}. Expected: {typeof(DraftGeneralVoki)}"

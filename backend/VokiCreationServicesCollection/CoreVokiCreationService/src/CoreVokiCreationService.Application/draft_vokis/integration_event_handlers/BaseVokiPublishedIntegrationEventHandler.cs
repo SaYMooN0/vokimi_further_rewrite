@@ -14,7 +14,7 @@ public class BaseVokiPublishedIntegrationEventHandler : IConsumer<BaseVokiPublis
     }
 
     public async Task Consume(ConsumeContext<BaseVokiPublishedIntegrationEvent> context) {
-        DraftVoki? voki = await _draftVokiRepository.GetById(context.Message.VokiId, context.CancellationToken);
+        DraftVoki? voki = await _draftVokiRepository.GetByIdForUpdate(context.Message.VokiId, context.CancellationToken);
         if (voki is null) {
             return;
         }

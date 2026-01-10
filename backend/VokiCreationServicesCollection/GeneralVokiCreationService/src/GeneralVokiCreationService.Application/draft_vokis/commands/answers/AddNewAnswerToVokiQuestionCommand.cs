@@ -40,7 +40,7 @@ internal sealed class AddNewAnswerToVokiQuestionCommandHandler :
             return err;
         }
 
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsForUpdate(command.VokiId, ct))!;
 
         ErrOr<VokiQuestionAnswer> res = voki.AddNewAnswerToQuestion(
             command.QuestionId, answerDataRes.AsSuccess(), command.RelatedResultIds

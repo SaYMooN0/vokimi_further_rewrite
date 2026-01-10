@@ -15,19 +15,17 @@ public sealed record UpdateAutoAlbumsAppearanceCommand(
 internal sealed class UpdateAutoAlbumsAppearanceCommandHandler :
     ICommandHandler<UpdateAutoAlbumsAppearanceCommand, UserAutoAlbumsAppearance>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IAppUsersRepository _appUsersRepository;
 
-    public UpdateAutoAlbumsAppearanceCommandHandler(IUserContext userContext, IAppUsersRepository appUsersRepository) {
-        _userContext = userContext;
+    public UpdateAutoAlbumsAppearanceCommandHandler(IUserCtxProvider userCtxProvider, IAppUsersRepository appUsersRepository) {
+        _userCtxProvider = userCtxProvider;
         _appUsersRepository = appUsersRepository;
     }
 
 
-    public async Task<ErrOr<UserAutoAlbumsAppearance>> Handle(UpdateAutoAlbumsAppearanceCommand command,
-        CancellationToken ct) {
-        AppUserId userId = _userContext.AuthenticatedUserId;
-        AppUser? user = await _appUsersRepository.GetByIdForUpdate(userId, ct);
+    public async Task<ErrOr<UserAutoAlbumsAppearance>> Handle(UpdateAutoAlbumsAppearanceCommand command, CancellationToken ct) {
+        AppUser? user = await _appUsersRepository.GetCurrentForUpdate(command.UserCtx(_userCtxProvider), ct);
         if (user is null) {
             return ErrFactory.NotFound.User("Couldn't find user to update albums appearance");
         }

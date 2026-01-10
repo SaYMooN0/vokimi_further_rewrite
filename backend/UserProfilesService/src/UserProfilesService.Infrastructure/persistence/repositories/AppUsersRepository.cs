@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.query_extensions;
+using Microsoft.EntityFrameworkCore;
+using SharedKernel.user_ctx;
 using UserProfilesService.Application.common.repositories;
 using UserProfilesService.Domain.app_user_aggregate;
 
@@ -17,30 +20,31 @@ internal class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<AppUser?> GetById(AppUserId id, CancellationToken ct) =>
-        await _db.AppUsers.FindAsync([id], cancellationToken: ct);
+    public async Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
+        await _db.AppUsers
+            .ForUpdate()
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: ct);
 
     public async Task Update(AppUser user, CancellationToken ct) {
+        _db.ThrowIfDetached(user);
         _db.Update(user);
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task<AppUser?> GetByIdAsNoTracking(AppUserId userId, CancellationToken ct) => _db.AppUsers
-        .AsNoTracking()
+    public Task<AppUser?> GetById(AppUserId userId, CancellationToken ct) => _db.AppUsers
         .FirstOrDefaultAsync(x => x.Id == userId, ct);
 
-    public Task<UserPreviewDto[]> GetUserNamesWithProfilePics(
-        IEnumerable<AppUserId> userIds,
-        CancellationToken ct
-    ) {
+    public Task<AppUser?> GetCurrentUser(AuthenticatedUserCtx authenticatedUserCtx, CancellationToken ct) =>
+        GetById(authenticatedUserCtx.UserId, ct);
+
+    public Task<UserPreviewDto[]> GetUserNamesWithProfilePics(IEnumerable<AppUserId> userIds, CancellationToken ct) {
         AppUserId[] userIdsArray = userIds as AppUserId[] ?? userIds.ToArray();
 
-        if (!userIdsArray.Any()) {
+        if (userIdsArray.Length == 0) {
             return Task.FromResult(Array.Empty<UserPreviewDto>());
         }
 
         return _db.AppUsers
-            .AsNoTracking()
             .Where(u => userIdsArray.Contains(u.Id))
             .Select(u => new UserPreviewDto(u.Id, u.UniqueName, u.DisplayName, u.ProfilePic))
             .ToArrayAsync(ct);
@@ -48,7 +52,8 @@ internal class AppUsersRepository : IAppUsersRepository
 
 
     public async Task<UserPreviewWithAllowInvitesSettingDto[]> SearchToInviteByNameQuery(
-        string searchValue, int limit, CancellationToken ct) {
+        string searchValue, int limit, CancellationToken ct
+    ) {
         int queryLimit = Math.Min(limit, 100);
         if (string.IsNullOrWhiteSpace(searchValue)) {
             return [];
@@ -64,7 +69,6 @@ internal class AppUsersRepository : IAppUsersRepository
         string exactUniqueLike = $"% {searchWithoutAt}"; // space + unique_name
 
         var query = _db.AppUsers
-            .AsNoTracking()
             .Where(u =>
                 EF.Functions.ILike(EF.Property<string>(u, "SearchableName"), pattern)
             )
@@ -87,7 +91,6 @@ internal class AppUsersRepository : IAppUsersRepository
 
     public Task<UserPreviewWithAllowInvitesSettingDto[]> ListAllUsers(CancellationToken ct) =>
         _db.AppUsers
-            .AsNoTracking()
             .Select(u => new UserPreviewWithAllowInvitesSettingDto(
                 u.Id, u.UniqueName, u.DisplayName,
                 u.ProfilePic, u.Settings.AllowCoAuthorInvites

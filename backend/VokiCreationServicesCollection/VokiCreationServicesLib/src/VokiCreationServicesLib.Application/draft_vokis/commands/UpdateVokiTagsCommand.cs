@@ -23,7 +23,7 @@ internal sealed class UpdateVokiTagsCommandHandler : ICommandHandler<UpdateVokiT
 
 
     public async Task<ErrOr<VokiTagsSet>> Handle(UpdateVokiTagsCommand command, CancellationToken ct) {
-        BaseDraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
+        BaseDraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct))!;
         voki.UpdateTags(command.NewTags);
         await _draftVokiRepository.Update(voki, ct);
         return voki.Tags;

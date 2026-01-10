@@ -16,6 +16,6 @@ internal sealed class ListRatingsForVokiQueryHandler : IQueryHandler<ListRatings
     public async Task<ErrOr<VokiRating[]>> Handle(
         ListRatingsForVokiQuery query, CancellationToken ct
     ) {
-        return await _ratingsRepository.GetForVokiAsNoTracking(query.VokiId, ct);
+        return await _ratingsRepository.ListRatingsForVoki(query.VokiId, ct);
     }
 }

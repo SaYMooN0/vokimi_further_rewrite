@@ -39,9 +39,9 @@ internal class EndpointHandlers : IEndpointGroup
         CancellationToken ct,
         [FromForm] IFormFile file,
         IStorageService storageService,
-        IUserContext userContext
+        IUserCtx userCtx
     ) {
-        if (userContext.UserIdFromToken().IsErr()) {
+        if (userCtx.UserId().IsErr()) {
             return CustomResults.ErrorResponse(ErrFactory.AuthRequired());
         }
 

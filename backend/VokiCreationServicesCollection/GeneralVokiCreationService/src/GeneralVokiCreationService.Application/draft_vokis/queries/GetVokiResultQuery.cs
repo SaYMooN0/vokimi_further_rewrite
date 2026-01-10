@@ -21,7 +21,7 @@ internal sealed class GetVokiResultQueryHandler
     }
 
     public async Task<ErrOr<VokiResult>> Handle(GetVokiResultQuery query, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResultsAsNoTracking(query.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResults(query.VokiId, ct))!;
         return voki.ResultWithId(query.ResultId);
     }
 }

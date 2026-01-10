@@ -15,7 +15,6 @@ internal class VokisRepository : IVokisRepository
 
     public async Task<VokiManagersDto?> GetVokiManagerDto(VokiId vokiId, CancellationToken ct) {
         var res = await _db.Vokis
-            .AsNoTracking()
             .Select(x => new { x.Id, x.PrimaryAuthorId, x.ManagersSet })
             .FirstOrDefaultAsync(x => x.Id == vokiId, ct);
         if (res is null) {
@@ -25,8 +24,7 @@ internal class VokisRepository : IVokisRepository
         return new VokiManagersDto(res.Id, res.PrimaryAuthorId, res.ManagersSet);
     }
 
-    public Task<Voki?> GetVokiAsNoTrackingById(VokiId vokiId, CancellationToken ct) => _db.Vokis
-        .AsNoTracking()
+    public Task<Voki?> GetVokiById(VokiId vokiId, CancellationToken ct) => _db.Vokis
         .FirstOrDefaultAsync(x => x.Id == vokiId, ct);
 
     public async Task Add(Voki voki, CancellationToken ct) {

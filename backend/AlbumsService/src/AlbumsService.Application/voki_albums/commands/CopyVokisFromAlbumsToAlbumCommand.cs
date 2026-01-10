@@ -34,12 +34,12 @@ public sealed record CopyVokisFromAlbumsToAlbumCommand(
 internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler
     : ICommandHandler<CopyVokisFromAlbumsToAlbumCommand, VokisToAlbumFromAlbumsCopied>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
 
-    public CopyVokisFromAlbumsToAlbumCommandHandler(IUserContext userContext,
+    public CopyVokisFromAlbumsToAlbumCommandHandler(IUserCtxProvider userCtxProvider,
         IVokiAlbumsRepository vokiAlbumsRepository) {
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _vokiAlbumsRepository = vokiAlbumsRepository;
     }
 
@@ -51,8 +51,10 @@ internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler
         }
 
         var albumsToCopyFrom = await _vokiAlbumsRepository.ListByIds(command.AlbumIdsToCopyFrom, ct);
-        var copyRes = album.CopyVokisFromAlbums(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId),
-            albumsToCopyFrom);
+        ErrOr<VokisToAlbumFromAlbumsCopied> copyRes = album.CopyVokisFromAlbums(
+            _userCtxProvider.CurrentAsAuthenticated,
+            albumsToCopyFrom
+        );
         if (copyRes.IsErr(out var err)) {
             return err;
         }

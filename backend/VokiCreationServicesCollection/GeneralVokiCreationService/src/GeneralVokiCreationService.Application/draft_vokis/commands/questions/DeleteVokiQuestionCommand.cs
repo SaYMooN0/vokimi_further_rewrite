@@ -23,7 +23,7 @@ internal sealed class DeleteVokiQuestionCommandHandler :
     public async Task<ErrOr<ImmutableArray<VokiQuestion>>> Handle(
         DeleteVokiQuestionCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct))!;
         bool wasDeleted = voki.DeleteQuestion(command.QuestionId);
         if (wasDeleted) {
             await _draftGeneralVokisRepository.Update(voki, ct);

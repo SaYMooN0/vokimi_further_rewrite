@@ -28,7 +28,7 @@ internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
         PublishVokiWithWarningsIgnoredCommand command,
         CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsForUpdate(command.VokiId, ct))!;
         var publishingRes = voki.PublishWithWarningsIgnored(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {
             return err;

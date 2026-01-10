@@ -22,7 +22,7 @@ internal sealed class DeleteVokiResultCommandHandler : ICommandHandler<DeleteVok
     public async Task<ErrOrNothing> Handle(
         DeleteVokiResultCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsForUpdate(command.VokiId, ct))!;
         bool wasDeleted = voki.DeleteResult(command.ResultId);
         if (wasDeleted) {
             await _draftGeneralVokisRepository.Update(voki, ct);

@@ -4,8 +4,8 @@ namespace VokiRatingsService.Application.common.repositories;
 
 public interface IVokiRatingsSnapshotRepository
 {
-    Task<VokiRatingsSnapshot?> GetLastSnapshotForVoki(VokiId vokiId, CancellationToken ct);
+    Task<VokiRatingsSnapshot?> GetLastSnapshotForVokiForUpdate(VokiId vokiId, CancellationToken ct);
     Task Add(VokiRatingsSnapshot snapshot, CancellationToken ct);
     Task Update(VokiRatingsSnapshot snapshot, CancellationToken ct);
-    Task<VokiRatingsSnapshot[]> ListSortedSnapshotsForVokiAsNoTracking(VokiId vokiId, CancellationToken ct);
+    Task<VokiRatingsSnapshot[]> ListSortedSnapshotsForVoki(VokiId vokiId, CancellationToken ct);
 }

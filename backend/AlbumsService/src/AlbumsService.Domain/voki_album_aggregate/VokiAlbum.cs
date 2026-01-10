@@ -6,7 +6,7 @@ namespace AlbumsService.Domain.voki_album_aggregate;
 public class VokiAlbum : AggregateRoot<VokiAlbumId>
 {
     private VokiAlbum() { }
-    public AppUserId OwnerId { get; }
+    private AppUserId OwnerId { get; }
     public AlbumName Name { get; private set; }
     public AlbumIcon Icon { get; private set; }
     public HexColor MainColor { get; private set; }
@@ -42,11 +42,13 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
 
     public bool HasVoki(VokiId vokiId) => VokiIds.Contains(vokiId);
 
-    public ErrOrNothing SetVokiPresenceTo(
-        AuthenticatedUserCtx authenticatedUserContext,
-        bool presence, VokiId voki
-    ) {
-        if (authenticatedUserContext.UserId != OwnerId) {
+    public bool IsUserOwner(IUserCtx ctx) => ctx.Match(
+        authenticatedFunc: aCtx => OwnerId == aCtx.UserId,
+        unauthenticatedFunc: _ => false
+    );
+
+    public ErrOrNothing SetVokiPresenceTo(AuthenticatedUserCtx authenticatedUserCtx, bool presence, VokiId voki) {
+        if (!IsUserOwner(authenticatedUserCtx)) {
             return ErrFactory.NoAccess();
         }
 
@@ -64,7 +66,7 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
         AuthenticatedUserCtx authenticatedUserCtx, AlbumName name, AlbumIcon icon,
         HexColor mainColor, HexColor secondaryColor
     ) {
-        if (authenticatedUserCtx.UserId != OwnerId) {
+        if (!IsUserOwner(authenticatedUserCtx)) {
             return ErrFactory.NoAccess("Could not update the album because user is not owner");
         }
 
@@ -111,12 +113,12 @@ public class VokiAlbum : AggregateRoot<VokiAlbumId>
     }
 
     public ErrOrNothing RemoveVoki(AuthenticatedUserCtx authenticatedUserCtx, VokiId vokiId) {
-        if (authenticatedUserCtx.UserId != OwnerId) {
-            return ErrFactory.NoAccess("Could not remove voki from album because user is not owner");
+        if (IsUserOwner(authenticatedUserCtx)) {
+            VokiIds = VokiIds.Remove(vokiId);
+            return ErrOrNothing.Nothing;
         }
-        VokiIds = VokiIds.Remove(vokiId);
-        return ErrOrNothing.Nothing;
-        
+
+        return ErrFactory.NoAccess("Could not remove voki from album because user is not owner");
     }
 }
 

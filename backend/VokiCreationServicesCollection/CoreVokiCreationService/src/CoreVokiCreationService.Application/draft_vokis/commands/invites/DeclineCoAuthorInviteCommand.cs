@@ -13,16 +13,16 @@ public sealed record DeclineCoAuthorInviteCommand(VokiId VokiId) :
 internal sealed class DeclineCoAuthorInviteCommandHandler : ICommandHandler<DeclineCoAuthorInviteCommand>
 {
     private readonly IAppUsersRepository _appUsersRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public DeclineCoAuthorInviteCommandHandler(IAppUsersRepository appUsersRepository, IUserContext userContext) {
+    public DeclineCoAuthorInviteCommandHandler(IAppUsersRepository appUsersRepository, IUserCtxProvider userCtxProvider) {
         _appUsersRepository = appUsersRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
     }
 
 
     public async Task<ErrOrNothing> Handle(DeclineCoAuthorInviteCommand command, CancellationToken ct) {
-        AppUser user = (await _appUsersRepository.GetById(_userContext.AuthenticatedUserId, ct))!;
+        AppUser user = (await _appUsersRepository.GetByIdForUpdate(_userCtxProvider.AuthenticatedUserId, ct))!;
         user.DeclineCoAuthorInvite(command.VokiId);
         await _appUsersRepository.Update(user, ct);
         return ErrOrNothing.Nothing;

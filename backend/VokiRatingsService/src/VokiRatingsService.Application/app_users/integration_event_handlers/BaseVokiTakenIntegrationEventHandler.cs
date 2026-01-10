@@ -19,7 +19,7 @@ public class BaseVokiTakenIntegrationEventHandler : IConsumer<BaseVokiTakenInteg
             return;
         }
 
-        AppUser? appUser = await _appUsersRepository.GetById(context.Message.VokiTakerId, context.CancellationToken);
+        AppUser? appUser = await _appUsersRepository.GetByIdForUpdate(context.Message.VokiTakerId, context.CancellationToken);
         if (appUser is null) {
             return;
         }

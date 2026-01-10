@@ -18,6 +18,6 @@ internal sealed class GetVokiWithQuestionAnswersAndResultsHandler : IQueryHandle
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
     public async Task<ErrOr<DraftGeneralVoki>> Handle(GetVokiWithQuestionAnswersAndResults query, CancellationToken ct) {
-        return (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(query.VokiId, ct))!; 
+        return (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(query.VokiId, ct))!; 
     }
 }

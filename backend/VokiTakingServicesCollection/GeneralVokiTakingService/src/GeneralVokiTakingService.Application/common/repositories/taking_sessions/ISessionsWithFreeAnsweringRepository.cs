@@ -5,7 +5,7 @@ namespace GeneralVokiTakingService.Application.common.repositories.taking_sessio
 
 public interface ISessionsWithFreeAnsweringRepository
 {
-    Task<SessionWithFreeAnswering?> GetById(VokiTakingSessionId sessionId, CancellationToken ct);
-    Task Delete(SessionWithFreeAnswering question, CancellationToken ct);
+    Task<SessionWithFreeAnswering?> GetByIdForUpdate(VokiTakingSessionId sessionId, CancellationToken ct);
+    Task Delete(SessionWithFreeAnswering session, CancellationToken ct);
 
 }

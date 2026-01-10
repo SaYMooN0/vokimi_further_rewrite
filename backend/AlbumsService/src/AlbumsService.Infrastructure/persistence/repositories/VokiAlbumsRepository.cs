@@ -3,6 +3,7 @@ using AlbumsService.Domain.voki_album_aggregate;
 using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Infrastructure.persistence.repositories;
 
@@ -14,20 +15,20 @@ internal class VokiAlbumsRepository : IVokiAlbumsRepository
         _db = db;
     }
 
-    public Task<VokiAlbum[]> ListAlbumsForUser(AppUserId userId, CancellationToken ct) =>
+    public Task<VokiAlbum[]> ListAlbumsForUser(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.VokiAlbums
-            .Where(a => a.OwnerId == userId)
+            .WhereUserIsOwner(aUserCtx)
             .ToArrayAsync(ct);
 
-    public Task<VokiAlbum[]> ListAlbumsForUserForUpdate(AppUserId userId, CancellationToken ct) =>
+    public Task<VokiAlbum[]> ListUsersAlbumsForUpdate(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.VokiAlbums
             .ForUpdate()
-            .Where(a => a.OwnerId == userId)
+            .WhereUserIsOwner(aUserCtx)
             .ToArrayAsync(ct);
 
-    public Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSorted(AppUserId userId, CancellationToken ct) =>
+    public Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSorted(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.VokiAlbums
-            .Where(a => a.OwnerId == userId)
+            .WhereUserIsOwner(aUserCtx)
             .OrderByDescending(a => a.CreationDate)
             .Select(a => new VokiAlbumPreviewDto(
                 a.Id, a.Name, a.Icon, a.MainColor, a.SecondaryColor,
@@ -72,4 +73,14 @@ internal class VokiAlbumsRepository : IVokiAlbumsRepository
         _db.VokiAlbums
             .Where(a => ids.Contains(a.Id))
             .ToArrayAsync(ct);
+}
+internal static class VokiAlbumQueryableExtensions
+{
+    public static IQueryable<VokiAlbum> WhereUserIsOwner(
+        this IQueryable<VokiAlbum> query,
+        AuthenticatedUserCtx userCtx
+    ) =>
+        query.Where(a =>
+            EF.Property<AppUserId>(a, "OwnerId") == userCtx.UserId
+        );
 }

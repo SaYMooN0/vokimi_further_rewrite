@@ -18,7 +18,7 @@ internal class VokiAlbumsConfiguration : IEntityTypeConfiguration<VokiAlbum>
             .HasGuidBasedIdConversion();
 
         builder
-            .Property(x => x.OwnerId)
+            .Property<AppUserId>("OwnerId")
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
 
@@ -46,6 +46,6 @@ internal class VokiAlbumsConfiguration : IEntityTypeConfiguration<VokiAlbum>
 
         //indexes
 
-        builder.HasIndex(x => x.OwnerId);
+        builder.HasIndex("OwnerId");
     }
 }

@@ -17,18 +17,18 @@ public sealed record InitializeNewVokiCommand(
 
 internal sealed class InitializeNewVokiCommandHandler : ICommandHandler<InitializeNewVokiCommand, DraftVoki>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IDraftVokiRepository _draftVokiRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IMainStorageBucket _mainStorageBucket;
 
     public InitializeNewVokiCommandHandler(
-        IUserContext userContext,
+        IUserCtxProvider userCtxProvider,
         IDraftVokiRepository draftVokiRepository,
         IDateTimeProvider dateTimeProvider,
         IMainStorageBucket mainStorageBucket
     ) {
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _draftVokiRepository = draftVokiRepository;
         _dateTimeProvider = dateTimeProvider;
         _mainStorageBucket = mainStorageBucket;
@@ -41,7 +41,7 @@ internal sealed class InitializeNewVokiCommandHandler : ICommandHandler<Initiali
             return ErrFactory.NotImplemented("Specified voki type is not implemented");
         }
 
-        AppUserId authorId = _userContext.AuthenticatedUserId;
+        AppUserId authorId = _userCtxProvider.AuthenticatedUserId;
         DraftVoki voki = DraftVoki.Create(command.VokiName, command.VokiType, authorId, _dateTimeProvider.UtcNow);
 
         var copyRes = await _mainStorageBucket.CopyDefaultVokiCoverForNewVoki(voki.Cover, ct);

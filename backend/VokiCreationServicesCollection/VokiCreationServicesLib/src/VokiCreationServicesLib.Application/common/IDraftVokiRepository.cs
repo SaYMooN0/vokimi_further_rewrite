@@ -6,8 +6,8 @@ namespace VokiCreationServicesLib.Application.common;
 
 public interface IDraftVokiRepository
 {
-    Task<BaseDraftVoki?> GetByIdAsNoTracking(VokiId vokiId, CancellationToken ct);
     Task<BaseDraftVoki?> GetById(VokiId vokiId, CancellationToken ct);
+    Task<BaseDraftVoki?> GetByIdForUpdate(VokiId vokiId, CancellationToken ct);
     Task<(VokiName, AppUserId PrimaryAuthor, VokiCoAuthorIdsSet CoAuthors )?> GetVokiName(VokiId vokiId, CancellationToken ct);
     Task Update(BaseDraftVoki voki, CancellationToken ct);
 }

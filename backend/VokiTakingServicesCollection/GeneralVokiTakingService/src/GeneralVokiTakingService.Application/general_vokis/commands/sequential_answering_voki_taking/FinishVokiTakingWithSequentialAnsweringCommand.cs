@@ -27,20 +27,20 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
     ICommandHandler<FinishVokiTakingWithSequentialAnsweringCommand, GeneralVokiResultId>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ISessionsWithSequentialAnsweringRepository _sessionsWithSequentialAnsweringRepository;
     private readonly IGeneralVokiTakenRecordsRepository _generalVokiTakenRecordsRepository;
 
     public FinishVokiTakingWithSequentialAnsweringCommandHandler(
         IGeneralVokisRepository generalVokisRepository,
-        IUserContext userContext,
+        IUserCtxProvider userCtxProvider,
         IDateTimeProvider dateTimeProvider,
         ISessionsWithSequentialAnsweringRepository sessionsWithSequentialAnsweringRepository,
         IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository
     ) {
         _generalVokisRepository = generalVokisRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _dateTimeProvider = dateTimeProvider;
         _sessionsWithSequentialAnsweringRepository = sessionsWithSequentialAnsweringRepository;
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
@@ -50,13 +50,13 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
         FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct
     ) {
         GeneralVoki? voki =
-            await _generalVokisRepository.GetWithQuestionAnswersAndResultsAsNoTracking(command.VokiId, ct);
+            await _generalVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
         }
 
         SessionWithSequentialAnswering? session =
-            await _sessionsWithSequentialAnsweringRepository.GetById(command.SessionId, ct);
+            await _sessionsWithSequentialAnsweringRepository.GetByIdForUpdate(command.SessionId, ct);
         if (session is null) {
             return ErrFactory.NotFound.Common("Could not finish voki taking because taking session was not started");
         }
@@ -65,7 +65,7 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
             _dateTimeProvider.UtcNow,
             sessionStartTime: command.SessionStartTime,
             clientSessionFinishedTime: command.ClientSessionFinishTime,
-            _userContext.UserIdFromToken().IsSuccess(out var userId) ? new AuthenticatedUserCtx(userId) : null,
+            _userCtxProvider.UserId().IsSuccess(out var userId) ? new AuthenticatedUserCtx(userId) : null,
             lastQuestionId: command.LastQuestionId,
             lastQuestionOrderInVokiTaking: command.LastQuestionOrderInVokiTaking,
             lastQuestionShownAt: command.LastQuestionShownAt,

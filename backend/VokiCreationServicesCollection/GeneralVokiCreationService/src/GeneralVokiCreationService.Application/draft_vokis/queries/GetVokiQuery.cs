@@ -17,8 +17,9 @@ internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, DraftGen
     public GetVokiQueryHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
     }
+
     public async Task<ErrOr<DraftGeneralVoki>> Handle(GetVokiQuery query, CancellationToken ct) {
-        return (await _draftGeneralVokisRepository.GetByIdAsNoTracking(query.VokiId, ct))!; 
-        // no null check because IWithVokiAccessValidationStep already inculdes it
+        return (await _draftGeneralVokisRepository.GetById(query.VokiId, ct))!;
+        // no null check because IWithVokiAccessValidationStep already includes it
     }
 }

@@ -12,15 +12,15 @@ public sealed record ListUserVokiIdsQuery() :
 internal sealed class ListUserVokiIdsQueryHandler : IQueryHandler<ListUserVokiIdsQuery, ImmutableArray<VokiId>>
 {
     private readonly IDraftVokiRepository _draftVokiRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public ListUserVokiIdsQueryHandler(IDraftVokiRepository draftVokiRepository, IUserContext userContext) {
+    public ListUserVokiIdsQueryHandler(IDraftVokiRepository draftVokiRepository, IUserCtxProvider userCtxProvider) {
         _draftVokiRepository = draftVokiRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<ImmutableArray<VokiId>>> Handle(ListUserVokiIdsQuery query, CancellationToken ct) {
-        AppUserId userId = _userContext.AuthenticatedUserId;
+        AppUserId userId = _userCtxProvider.AuthenticatedUserId;
         return (await _draftVokiRepository.ListVokiAuthoredByUserIdOrderByCreationDate(userId, ct)).ToImmutableArray();
     }
 }

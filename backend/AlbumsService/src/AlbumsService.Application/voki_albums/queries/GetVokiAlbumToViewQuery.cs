@@ -14,11 +14,11 @@ public sealed record GetVokiAlbumToViewQuery(
 internal sealed class GetVokiAlbumToViewQueryHandler : IQueryHandler<GetVokiAlbumToViewQuery, VokiAlbum>
 {
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public GetVokiAlbumToViewQueryHandler(IVokiAlbumsRepository vokiAlbumsRepository, IUserContext userContext)  {
+    public GetVokiAlbumToViewQueryHandler(IVokiAlbumsRepository vokiAlbumsRepository, IUserCtxProvider userCtxProvider) {
         _vokiAlbumsRepository = vokiAlbumsRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<VokiAlbum>> Handle(GetVokiAlbumToViewQuery query, CancellationToken ct) {
@@ -27,7 +27,7 @@ internal sealed class GetVokiAlbumToViewQueryHandler : IQueryHandler<GetVokiAlbu
             return ErrFactory.NotFound.Common("Requested album not found");
         }
 
-        if (album.OwnerId != _userContext.AuthenticatedUserId) {
+        if (!album.IsUserOwner(_userCtxProvider.Current)) {
             return ErrFactory.NoAccess("Cannot access this album because user is not owner");
         }
 

@@ -13,7 +13,7 @@ internal class NewUsersInvitedForCoAuthorEventHandler : IDomainEventHandler<NewU
     }
 
     public async Task Handle(NewUsersInvitedForCoAuthorEvent e, CancellationToken ct) {
-        AppUser[] users = (await _appUsersRepository.ListWithIds(e.NewInvitedUserId, ct));
+        AppUser[] users = (await _appUsersRepository.ListWithIdsForUpdate(e.NewInvitedUserId, ct));
         if (users.Length == 0) {
             return;
         }

@@ -29,28 +29,28 @@ internal sealed class AnswerQuestionInSequentialAnsweringVokiTakingCommandHandle
 {
     private readonly ISessionsWithSequentialAnsweringRepository _sessionsWithSequentialAnsweringRepository;
     private readonly IGeneralVokisRepository _generalVokisRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public AnswerQuestionInSequentialAnsweringVokiTakingCommandHandler(
         ISessionsWithSequentialAnsweringRepository sessionsWithSequentialAnsweringRepository,
-        IGeneralVokisRepository generalVokisRepository, IUserContext userContext, IDateTimeProvider dateTimeProvider
+        IGeneralVokisRepository generalVokisRepository, IUserCtxProvider userCtxProvider, IDateTimeProvider dateTimeProvider
     ) {
         _sessionsWithSequentialAnsweringRepository = sessionsWithSequentialAnsweringRepository;
         _generalVokisRepository = generalVokisRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<ErrOr<AnswerQuestionInSequentialAnsweringVokiTakingCommandResult>> Handle(
         AnswerQuestionInSequentialAnsweringVokiTakingCommand command, CancellationToken ct
     ) {
-        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId, ct);
+        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswers(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot answer the question because requested Voki does not exist");
         }
 
-        SessionWithSequentialAnswering? session = await _sessionsWithSequentialAnsweringRepository.GetById(command.SessionId, ct);
+        SessionWithSequentialAnswering? session = await _sessionsWithSequentialAnsweringRepository.GetByIdForUpdate(command.SessionId, ct);
         if (session is null) {
             return ErrFactory.NotFound.Common(
                 "Cannot answer the question because Voki taking session with sequential answering was not found "

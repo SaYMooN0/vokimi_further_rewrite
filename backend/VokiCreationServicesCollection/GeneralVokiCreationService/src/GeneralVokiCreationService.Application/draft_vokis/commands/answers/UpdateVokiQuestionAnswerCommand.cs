@@ -42,7 +42,7 @@ internal sealed class UpdateVokiQuestionAnswerCommandHandler :
         }
 
         DraftGeneralVoki voki =
-            (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct))!;
+            (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsForUpdate(command.VokiId, ct))!;
         ErrOr<VokiQuestionAnswer> res = voki.UpdateQuestionAnswer(
             command.QuestionId, command.AnswerId, answerDataRes.AsSuccess(), command.NewRelatedResultIds
         );

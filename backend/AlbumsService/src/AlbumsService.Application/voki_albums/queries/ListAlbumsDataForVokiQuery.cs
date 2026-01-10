@@ -15,18 +15,17 @@ internal sealed class ListAlbumsDataForVokiQueryHandler :
     IQueryHandler<ListAlbumsDataForVokiQuery, AlbumWithVokiPresenceDto[]>
 {
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public ListAlbumsDataForVokiQueryHandler(IVokiAlbumsRepository vokiAlbumsRepository, IUserContext userContext) {
+    public ListAlbumsDataForVokiQueryHandler(IVokiAlbumsRepository vokiAlbumsRepository, IUserCtxProvider userCtxProvider) {
         _vokiAlbumsRepository = vokiAlbumsRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<AlbumWithVokiPresenceDto[]>> Handle(
         ListAlbumsDataForVokiQuery query, CancellationToken ct
     ) {
-        AppUserId userId = _userContext.AuthenticatedUserId;
-        VokiAlbum[] albums = await _vokiAlbumsRepository.ListAlbumsForUser(userId, ct);
+        VokiAlbum[] albums = await _vokiAlbumsRepository.ListAlbumsForUser((_userCtxProvider.Current as AuthenticatedUserCtx)!, ct);
         return albums
             .Select(a => AlbumWithVokiPresenceDto.FromAlbum(a, query.VokiId))
             .ToArray();

@@ -1,12 +1,13 @@
 ﻿using AlbumsService.Domain.voki_album_aggregate;
+using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.common.repositories;
 
 public interface IVokiAlbumsRepository
 {
-    Task<VokiAlbum[]> ListAlbumsForUser(AppUserId userId, CancellationToken ct);
-    Task<VokiAlbum[]> ListAlbumsForUserForUpdate(AppUserId userId, CancellationToken ct);
-    Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSorted(AppUserId userId, CancellationToken ct);
+    Task<VokiAlbum[]> ListAlbumsForUser(AuthenticatedUserCtx aUserCtx, CancellationToken ct);
+    Task<VokiAlbum[]> ListUsersAlbumsForUpdate(AuthenticatedUserCtx aUserCtx, CancellationToken ct);
+    Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSorted(AuthenticatedUserCtx aUserCtx, CancellationToken ct);
     Task Add(VokiAlbum album, CancellationToken ct);
     Task<VokiAlbum?> GetByIdForUpdate(VokiAlbumId albumId, CancellationToken ct);
     Task DeleteAlbum(VokiAlbum album, CancellationToken ct);

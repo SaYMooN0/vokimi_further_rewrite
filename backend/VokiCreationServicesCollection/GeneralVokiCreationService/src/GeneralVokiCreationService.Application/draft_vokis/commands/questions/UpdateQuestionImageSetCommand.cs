@@ -48,7 +48,7 @@ internal sealed class UpdateQuestionImageSetCommandHandler :
     }
 
     public async Task<ErrOr<VokiQuestionImagesSet>> Handle(UpdateQuestionImageSetCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct))!;
 
         List<GeneralVokiQuestionImageKey> resultKeys = [..command.SavedKeys];
 

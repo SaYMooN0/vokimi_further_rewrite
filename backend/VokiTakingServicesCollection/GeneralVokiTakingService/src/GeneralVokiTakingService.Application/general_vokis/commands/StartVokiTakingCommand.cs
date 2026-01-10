@@ -19,18 +19,18 @@ internal sealed class StartVokiTakingCommandHandler :
     ICommandHandler<StartVokiTakingCommand, StartVokiTakingCommandResponse>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IBaseTakingSessionsRepository _baseTakingSessionsRepository;
 
     public StartVokiTakingCommandHandler(
         IGeneralVokisRepository generalVokisRepository,
-        IUserContext userContext,
+        IUserCtxProvider userCtxProvider,
         IDateTimeProvider dateTimeProvider,
         IBaseTakingSessionsRepository baseTakingSessionsRepository
     ) {
         _generalVokisRepository = generalVokisRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _dateTimeProvider = dateTimeProvider;
         _baseTakingSessionsRepository = baseTakingSessionsRepository;
     }
@@ -39,14 +39,14 @@ internal sealed class StartVokiTakingCommandHandler :
     public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(
         StartVokiTakingCommand command, CancellationToken ct
     ) {
-        var voki = await _generalVokisRepository.GetWithQuestionAnswersAsNoTracking(command.VokiId, ct);
+        var voki = await _generalVokisRepository.GetWithQuestionAnswers(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki(
                 "Requested Voki was not found", $"Voki with id: {command.VokiId} does not exist"
             );
         }
 
-        AppUserId? vokiTaker = _userContext.UserIdFromToken().IsSuccess(out var id) ? id : null;
+        AppUserId? vokiTaker = _userCtxProvider.UserId().IsSuccess(out var id) ? id : null;
         AuthenticatedUserCtx? authenticatedUserContext = vokiTaker is null? null : new AuthenticatedUserCtx(vokiTaker);
         if (voki.CheckUserAccessToTake(authenticatedUserContext).IsErr(out var err)) {
             return err;

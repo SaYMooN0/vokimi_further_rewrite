@@ -1,3 +1,5 @@
+using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
@@ -12,10 +14,11 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
         _db = db;
     }
 
-    public Task<VokiRatingsSnapshot?> GetLastSnapshotForVoki(
+    public Task<VokiRatingsSnapshot?> GetLastSnapshotForVokiForUpdate(
         VokiId vokiId,
         CancellationToken ct
     ) => _db.VokiRatingsSnapshots
+        .ForUpdate()
         .Where(s => s.VokiId == vokiId)
         .OrderByDescending(s => s.Date)
         .FirstOrDefaultAsync(ct);
@@ -27,16 +30,13 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
     }
 
     public async Task Update(VokiRatingsSnapshot snapshot, CancellationToken ct) {
+        _db.ThrowIfDetached(snapshot);
         _db.VokiRatingsSnapshots.Update(snapshot);
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task<VokiRatingsSnapshot[]> ListSortedSnapshotsForVokiAsNoTracking(
-        VokiId vokiId,
-        CancellationToken ct
-    ) =>
+    public Task<VokiRatingsSnapshot[]> ListSortedSnapshotsForVoki(VokiId vokiId, CancellationToken ct) =>
         _db.VokiRatingsSnapshots
-            .AsNoTracking()
             .Where(s => s.VokiId == vokiId)
             .OrderBy(s => s.Date)
             .ToArrayAsync(ct);

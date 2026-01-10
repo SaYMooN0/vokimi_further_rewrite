@@ -17,7 +17,7 @@ internal sealed class GetUserQueryHandler : IQueryHandler<GetUserQuery, AppUser>
 
 
     public async Task<ErrOr<AppUser>> Handle(GetUserQuery query, CancellationToken ct) {
-        AppUser? user = await _appUsersRepository.GetByIdAsNoTracking(query.UserId, ct);
+        AppUser? user = await _appUsersRepository.GetById(query.UserId, ct);
         if (user is null) {
             return ErrFactory.NotFound.User(
                 "Requested user was not found",

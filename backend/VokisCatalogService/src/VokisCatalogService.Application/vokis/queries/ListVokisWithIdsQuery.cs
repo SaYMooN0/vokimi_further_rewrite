@@ -15,6 +15,6 @@ internal sealed class ListVokisWithIdsQueryHandler : IQueryHandler<ListVokisWith
     }
 
     public async Task<ErrOr<BaseVoki[]>> Handle(ListVokisWithIdsQuery withIdsQuery, CancellationToken ct) {
-        return await _baseVokisRepository.GetMultipleByIdAsNoTracking(withIdsQuery.VokiIds, ct);
+        return await _baseVokisRepository.GetMultipleById(withIdsQuery.VokiIds, ct);
     }
 }

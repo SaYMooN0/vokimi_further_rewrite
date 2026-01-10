@@ -17,17 +17,17 @@ public sealed record ListUserRatedVokisQuery() :
 internal sealed class ListUserRatedVokisQueryHandler :
     IQueryHandler<ListUserRatedVokisQuery, VokiIdWithCurrentRatingDto[]>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IRatingsRepository _ratingsRepository;
 
-    public ListUserRatedVokisQueryHandler(IUserContext userContext, IRatingsRepository ratingsRepository) {
-        _userContext = userContext;
+    public ListUserRatedVokisQueryHandler(IUserCtxProvider userCtxProvider, IRatingsRepository ratingsRepository) {
+        _userCtxProvider = userCtxProvider;
         _ratingsRepository = ratingsRepository;
     }
 
 
     public async Task<ErrOr<VokiIdWithCurrentRatingDto[]>> Handle(ListUserRatedVokisQuery query, CancellationToken ct) {
         return await _ratingsRepository.ListIdsOfVokiRatedByUser(
-            new AuthenticatedUserContext(_userContext.AuthenticatedUserId), ct);
+            new AuthenticatedUserContext(_userCtxProvider.AuthenticatedUserId), ct);
     }
 }

@@ -26,7 +26,7 @@ internal class NewVokiRatingCreatedHandler : IDomainEventHandler<NewVokiRatingCr
     }
 
     public async Task Handle(NewVokiRatingCreatedEvent e, CancellationToken ct) {
-        AppUser user = (await _appUsersRepository.GetById(e.UserId, ct))!;
+        AppUser user = (await _appUsersRepository.GetByIdForUpdate(e.UserId, ct))!;
         user.AddRating(e.RatingId);
         await _appUsersRepository.Update(user, ct);
 

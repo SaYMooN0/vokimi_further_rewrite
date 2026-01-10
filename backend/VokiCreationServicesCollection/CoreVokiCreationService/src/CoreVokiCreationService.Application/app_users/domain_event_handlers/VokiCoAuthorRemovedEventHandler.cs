@@ -13,7 +13,7 @@ internal class VokiCoAuthorRemovedEventHandler : IDomainEventHandler<VokiCoAutho
     }
 
     public async Task Handle(VokiCoAuthorRemovedEvent e, CancellationToken ct) {
-        AppUser user = (await _appUsersRepository.GetById(e.AppUserId, ct))!;
+        AppUser user = (await _appUsersRepository.GetByIdForUpdate(e.AppUserId, ct))!;
         user.RemoveCoAuthoredVoki(e.VokiId);
         await _appUsersRepository.Update(user, ct);
     }

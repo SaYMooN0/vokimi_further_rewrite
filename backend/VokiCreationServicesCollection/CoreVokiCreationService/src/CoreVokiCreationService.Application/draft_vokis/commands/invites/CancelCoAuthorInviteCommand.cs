@@ -20,7 +20,7 @@ internal sealed class CancelCoAuthorInviteCommandHandler : ICommandHandler<Cance
 
 
     public async Task<ErrOr<DraftVoki>> Handle(CancelCoAuthorInviteCommand command, CancellationToken ct) {
-        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
+        DraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct))!;
         voki.CancelCoAuthorInvite(command.NewCoAuthorId);
         await _draftVokiRepository.Update(voki, ct);
         return voki;

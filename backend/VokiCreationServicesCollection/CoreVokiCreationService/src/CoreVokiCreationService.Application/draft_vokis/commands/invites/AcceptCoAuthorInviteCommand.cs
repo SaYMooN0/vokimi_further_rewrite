@@ -14,17 +14,17 @@ public sealed record class AcceptCoAuthorInviteCommand(
 internal sealed class AcceptCoAuthorInviteCommandHandler : ICommandHandler<AcceptCoAuthorInviteCommand>
 {
     private readonly IDraftVokiRepository _draftVokiRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public AcceptCoAuthorInviteCommandHandler(IDraftVokiRepository draftVokiRepository, IUserContext userContext) {
+    public AcceptCoAuthorInviteCommandHandler(IDraftVokiRepository draftVokiRepository, IUserCtxProvider userCtxProvider) {
         _draftVokiRepository = draftVokiRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
     }
 
 
     public async Task<ErrOrNothing> Handle(AcceptCoAuthorInviteCommand command, CancellationToken ct) {
-        DraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
-        ErrOrNothing result = voki.AcceptInviteBy(_userContext.AuthenticatedUser);
+        DraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct))!;
+        ErrOrNothing result = voki.AcceptInviteBy(_userCtxProvider.AuthenticatedUser);
         if (result.IsErr(out var err)) {
             return err;
         }

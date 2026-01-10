@@ -17,11 +17,11 @@ public sealed record UpdateAlbumCommand(
 
 internal sealed class UpdateAlbumCommandHandler : ICommandHandler<UpdateAlbumCommand, VokiAlbum>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IVokiAlbumsRepository _vokiAlbumsRepository;
 
-    public UpdateAlbumCommandHandler(IUserContext userContext, IVokiAlbumsRepository vokiAlbumsRepository) {
-        _userContext = userContext;
+    public UpdateAlbumCommandHandler(IUserCtxProvider userCtxProvider, IVokiAlbumsRepository vokiAlbumsRepository) {
+        _userCtxProvider = userCtxProvider;
         _vokiAlbumsRepository = vokiAlbumsRepository;
     }
 
@@ -31,7 +31,9 @@ internal sealed class UpdateAlbumCommandHandler : ICommandHandler<UpdateAlbumCom
             return ErrFactory.NotFound.Common("Could not update the album because it doesn't exist");
         }
 
-        var res = album.Update(new AuthenticatedUserCtx(_userContext.AuthenticatedUserId), command.Name, command.Icon, command.MainColor, command.SecondaryColor);
+        ErrOrNothing res = album.Update(
+            _userCtxProvider.CurrentAsAuthenticated, command.Name, command.Icon, command.MainColor, command.SecondaryColor
+        );
         if (res.IsErr(out var err)) {
             return err;
         }

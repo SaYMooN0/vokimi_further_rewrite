@@ -12,18 +12,18 @@ public sealed record ListUserCommentedVokiIdsQuery() :
 internal sealed class ListUserCommentedVokiIdsQueryHandler :
     IQueryHandler<ListUserCommentedVokiIdsQuery, VokiIdWithLastCommentedDateDto[]>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly ICommentsRepository _commentsRepository;
 
-    public ListUserCommentedVokiIdsQueryHandler(IUserContext userContext, ICommentsRepository commentsRepository) {
-        _userContext = userContext;
+    public ListUserCommentedVokiIdsQueryHandler(IUserCtxProvider userCtxProvider, ICommentsRepository commentsRepository) {
+        _userCtxProvider = userCtxProvider;
         _commentsRepository = commentsRepository;
     }
 
     public async Task<ErrOr<VokiIdWithLastCommentedDateDto[]>> Handle(
         ListUserCommentedVokiIdsQuery query, CancellationToken ct
     ) {
-        var userIdOrErr = _userContext.UserIdFromToken();
+        var userIdOrErr = _userCtxProvider.UserId();
         if (userIdOrErr.IsErr(out var err)) {
             return ErrFactory.AuthRequired("To see your commented Vokis you need to log into your account");
         }

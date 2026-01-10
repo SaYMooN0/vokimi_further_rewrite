@@ -15,16 +15,16 @@ public sealed record ManageVokiRatingsOverviewQuery(
 internal sealed class ManageVokiRatingsOverviewQueryHandler :
     IQueryHandler<ManageVokiRatingsOverviewQuery, VokiRatingsDistribution>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IRatingsRepository _ratingsRepository;
     private readonly IVokisRepository _vokisRepository;
 
     public ManageVokiRatingsOverviewQueryHandler(
-        IUserContext userContext,
+        IUserCtxProvider userCtxProvider,
         IRatingsRepository ratingsRepository,
         IVokisRepository vokisRepository
     ) {
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
         _ratingsRepository = ratingsRepository;
         _vokisRepository = vokisRepository;
     }
@@ -38,7 +38,7 @@ internal sealed class ManageVokiRatingsOverviewQueryHandler :
             return ErrFactory.NotFound.Voki("Voki does not exist");
         }
 
-        if (!Voki.CanUserManage(_userContext.AuthenticatedUser, voki.PrimaryAuthorId, voki.ManagersIds)) {
+        if (!Voki.CanUserManage(_userCtxProvider.AuthenticatedUser, voki.PrimaryAuthorId, voki.ManagersIds)) {
             return ErrFactory.NoAccess("To get this data you need to be a Voki manager");
         }
 

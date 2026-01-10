@@ -23,7 +23,7 @@ internal sealed class MoveQuestionUpInOrderCommandHandler :
     }
 
     public async Task<ErrOr<ImmutableArray<VokiQuestion>>> Handle(MoveQuestionUpInOrderCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestions(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct))!;
         ErrOrNothing res = voki.MoveQuestionUpInOrder(command.QuestionId);
         if (res.IsErr(out var err)) {
             return err;

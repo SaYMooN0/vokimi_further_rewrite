@@ -15,7 +15,7 @@ public class DraftVokiCoverUpdatedIntegrationEventHandler : IConsumer<DraftVokiC
     }
 
     public async Task Consume(ConsumeContext<DraftVokiCoverUpdatedIntegrationEvent> context) {
-        DraftVoki voki = (await _draftVokiRepository.GetById(context.Message.VokiId, context.CancellationToken))!;
+        DraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(context.Message.VokiId, context.CancellationToken))!;
         var res = voki.UpdateCover(new VokiCoverKey(context.Message.NewVokiCover));
         UnexpectedBehaviourException.ThrowIfErr(res);
         await _draftVokiRepository.Update(voki, context.CancellationToken);

@@ -26,7 +26,7 @@ internal sealed class UpdateVokiNameCommandHandler : ICommandHandler<UpdateVokiN
 
 
     public async Task<ErrOr<VokiName>> Handle(UpdateVokiNameCommand command, CancellationToken ct) {
-        BaseDraftVoki voki = (await _draftVokiRepository.GetById(command.VokiId, ct))!;
+        BaseDraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct))!;
         voki.UpdateName(command.NewVokiName);
         await _draftVokiRepository.Update(voki, ct);
         return voki.Name;

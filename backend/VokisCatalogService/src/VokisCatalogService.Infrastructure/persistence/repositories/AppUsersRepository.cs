@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.query_extensions;
+using Microsoft.EntityFrameworkCore;
 using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.app_user_aggregate;
 
@@ -17,25 +19,33 @@ internal class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<AppUser?> GetById(AppUserId id, CancellationToken ct) =>
-        await _db.AppUsers.FindAsync([id], cancellationToken:ct);
+    public async Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
+        await _db.AppUsers
+            .ForUpdate()
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: ct);
 
     public async Task Update(AppUser user, CancellationToken ct) {
+        _db.ThrowIfDetached(user);
         _db.Update(user);
         await _db.SaveChangesAsync(ct);
     }
 
     public async Task UpdateRange(IEnumerable<AppUser> users, CancellationToken ct) {
-        _db.UpdateRange(users);
+        var materialized = users.ToList();
+
+        _db.ThrowIfDetached(materialized);
+        _db.UpdateRange(materialized);
         await _db.SaveChangesAsync(ct);
     }
-    public Task<AppUser?> GetUserWithTakenVokis(AppUserId userId, CancellationToken ct) =>
+
+    public Task<AppUser?> GetUserWithTakenVokisForUpdate(AppUserId userId, CancellationToken ct) =>
         _db.AppUsers
+            .ForUpdate()
             .Include(u => u.TakenVokis)
             .FirstOrDefaultAsync(u => u.Id == userId, ct);
-    public Task<AppUser?> GetUserWithTakenVokisAsNoTracking(AppUserId userId, CancellationToken ct) =>
+
+    public Task<AppUser?> GetUserWithTakenVokis(AppUserId userId, CancellationToken ct) =>
         _db.AppUsers
-            .AsNoTracking()
             .Include(u => u.TakenVokis)
             .FirstOrDefaultAsync(u => u.Id == userId, ct);
 }

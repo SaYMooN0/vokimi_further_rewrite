@@ -12,22 +12,22 @@ public sealed record LeaveVokiCreationCommand(VokiId VokiId) :
 
 internal sealed class LeaveVokiCreationCommandHandler : ICommandHandler<LeaveVokiCreationCommand>
 {
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
     private readonly IDraftVokiRepository _draftVokiRepository;
 
-    public LeaveVokiCreationCommandHandler(IUserContext userContext, IDraftVokiRepository draftVokiRepository) {
-        _userContext = userContext;
+    public LeaveVokiCreationCommandHandler(IUserCtxProvider userCtxProvider, IDraftVokiRepository draftVokiRepository) {
+        _userCtxProvider = userCtxProvider;
         _draftVokiRepository = draftVokiRepository;
     }
 
 
     public async Task<ErrOrNothing> Handle(LeaveVokiCreationCommand command, CancellationToken ct) {
-        DraftVoki? voki = await _draftVokiRepository.GetById(command.VokiId, ct);
+        DraftVoki? voki = await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Could not leave Voki creation because Voki was not found");
         }
 
-        voki.LeaveVokiCreation(_userContext.AuthenticatedUser);
+        voki.LeaveVokiCreation(_userCtxProvider.AuthenticatedUser);
         await _draftVokiRepository.Update(voki, ct);
         return ErrOrNothing.Nothing;
     }

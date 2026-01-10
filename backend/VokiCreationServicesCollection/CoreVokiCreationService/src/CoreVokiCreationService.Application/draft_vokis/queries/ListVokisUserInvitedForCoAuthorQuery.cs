@@ -14,17 +14,17 @@ internal sealed class ViewVokiAsInvitedForCoAuthorQueryHandler
     : IQueryHandler<ListVokisUserInvitedForCoAuthorQuery, DraftVoki[]>
 {
     private readonly IDraftVokiRepository _draftVokiRepository;
-    private readonly IUserContext _userContext;
+    private readonly IUserCtxProvider _userCtxProvider;
 
     public ViewVokiAsInvitedForCoAuthorQueryHandler(IDraftVokiRepository draftVokiRepository,
-        IUserContext userContext) {
+        IUserCtxProvider userCtxProvider) {
         _draftVokiRepository = draftVokiRepository;
-        _userContext = userContext;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<DraftVoki[]>> Handle(ListVokisUserInvitedForCoAuthorQuery query, CancellationToken ct) {
         return await _draftVokiRepository.ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(
-            _userContext.AuthenticatedUser, ct
+            _userCtxProvider.AuthenticatedUser, ct
         );
     }
 }

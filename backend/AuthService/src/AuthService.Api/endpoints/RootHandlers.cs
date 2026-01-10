@@ -54,7 +54,7 @@ public class RootHandlers : IEndpointGroup
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (token) => {
-            httpContext.Response.Cookies.Append(UserContextProvider.TokenCookieKey, token.Value, AuthCookieOptions());
+            httpContext.Response.Cookies.Append(UserCtxProvider.TokenCookieKey, token.Value, AuthCookieOptions());
             return Results.Ok();
         });
     }
@@ -69,7 +69,7 @@ public class RootHandlers : IEndpointGroup
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (token) => {
-            httpContext.Response.Cookies.Append(UserContextProvider.TokenCookieKey, token.Value, AuthCookieOptions());
+            httpContext.Response.Cookies.Append(UserCtxProvider.TokenCookieKey, token.Value, AuthCookieOptions());
             return Results.Ok();
         });
     }
@@ -82,7 +82,7 @@ public class RootHandlers : IEndpointGroup
             Expires = DateTime.UtcNow.AddDays(-1)
         };
 
-        httpContext.Response.Cookies.Append(UserContextProvider.TokenCookieKey, "", cookieOptions);
+        httpContext.Response.Cookies.Append(UserCtxProvider.TokenCookieKey, "", cookieOptions);
         return Results.Ok();
     }
 
