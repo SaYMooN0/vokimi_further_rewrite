@@ -1,4 +1,5 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
@@ -17,30 +18,28 @@ internal sealed class VokiReceivedResultsQueryHandler :
     IQueryHandler<VokiReceivedResultsQuery, VokiReceivedResultsQueryResult>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
-    private readonly IUserCtx _userCtx;
     private readonly IGeneralVokiTakenRecordsRepository _generalVokiTakenRecordsRepository;
+    private readonly IUserCtxProvider _userCtxProvider;
 
     public VokiReceivedResultsQueryHandler(
         IGeneralVokisRepository generalVokisRepository,
-        IUserCtx userCtx,
-        IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository
+        IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository,
+        IUserCtxProvider userCtxProvider
     ) {
         _generalVokisRepository = generalVokisRepository;
-        _userCtx = userCtx;
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
+        _userCtxProvider = userCtxProvider;
     }
 
-    public async Task<ErrOr<VokiReceivedResultsQueryResult>> Handle(
-        VokiReceivedResultsQuery previewQuery, CancellationToken ct
-    ) {
-        GeneralVoki? voki = await _generalVokisRepository.GetWithResultsById(previewQuery.VokiId, ct);
+    public async Task<ErrOr<VokiReceivedResultsQueryResult>> Handle(VokiReceivedResultsQuery query, CancellationToken ct) {
+        GeneralVoki? voki = await _generalVokisRepository.GetWithResultsById(query.VokiId, ct);
 
         if (voki is null) {
             return ErrFactory.NotFound.GeneralVoki();
         }
 
         GeneralVokiTakenRecord[] records = await _generalVokiTakenRecordsRepository
-            .GetByUserForVoki(previewQuery.VokiId, _userCtx.AuthenticatedUser, ct);
+            .GetByUserForVoki(query.VokiId, query.UserCtx(_userCtxProvider), ct);
 
         if (records.Length == 0) {
             return new VokiReceivedResultsQueryResult(

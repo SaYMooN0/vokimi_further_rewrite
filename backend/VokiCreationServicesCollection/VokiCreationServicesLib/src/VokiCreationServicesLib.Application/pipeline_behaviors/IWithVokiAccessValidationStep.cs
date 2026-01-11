@@ -1,5 +1,6 @@
 ﻿using ApplicationShared;
 using ApplicationShared.messaging;
+using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
@@ -9,7 +10,7 @@ using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 namespace VokiCreationServicesLib.Application.pipeline_behaviors;
 
-public interface IWithVokiAccessValidationStep
+public interface IWithVokiAccessValidationStep : IWithAuthCheckStep
 {
     public VokiId VokiId { get; }
     public virtual Err NoAccessErr => ErrFactory.NoAccess("You do not have access to the requested voki");
@@ -40,17 +41,16 @@ public static class VokiAccessValidationStepHandler
         }
 
         public async Task<ErrOr<TResponse>> Handle(TCommand command, CancellationToken ct) {
-            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
             BaseDraftVoki? voki = await _draftVokiRepository.GetById(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
 
-            if (!voki.HasAccessToEdit(userId)) {
-                return command.NoAccessErr;
+            if (voki.HasAccessToEdit(command.UserCtx(_userCtxProvider).UserId)) {
+                return await _innerHandler.Handle(command, ct);
             }
 
-            return await _innerHandler.Handle(command, ct);
+            return command.NoAccessErr;
         }
     }
 
@@ -73,17 +73,16 @@ public static class VokiAccessValidationStepHandler
         }
 
         public async Task<ErrOrNothing> Handle(TCommand command, CancellationToken ct) {
-            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
             BaseDraftVoki? voki = await _draftVokiRepository.GetById(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
 
-            if (!voki.HasAccessToEdit(userId)) {
-                return command.NoAccessErr;
+            if (voki.HasAccessToEdit(command.UserCtx(_userCtxProvider).UserId)) {
+                return await _innerHandler.Handle(command, ct);
             }
 
-            return await _innerHandler.Handle(command, ct);
+            return command.NoAccessErr;
         }
     }
 
@@ -106,18 +105,17 @@ public static class VokiAccessValidationStepHandler
         }
 
         public async Task<ErrOr<TResponse>> Handle(TQuery query, CancellationToken ct) {
-            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
             BaseDraftVoki? voki = await _draftVokiRepository.GetById(query.VokiId, ct);
-            
+
             if (voki is null) {
                 return query.VokiNotFoundErr;
             }
 
-            if (!voki.HasAccessToEdit(userId)) {
-                return query.NoAccessErr;
+            if (voki.HasAccessToEdit(query.UserCtx(_userCtxProvider).UserId)) {
+                return await _innerHandler.Handle(query, ct);
             }
 
-            return await _innerHandler.Handle(query, ct);
+            return query.NoAccessErr;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AuthService.Application.abstractions;
 using AuthService.Domain.unconfirmed_user_aggregate.events;
+using SharedKernel.domain;
 
 
 namespace AuthService.Application.unconfirmed_users.domain_event_handlers;

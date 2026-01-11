@@ -2,8 +2,6 @@ using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
-using SharedKernel;
-using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
@@ -43,8 +41,9 @@ internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler
         _vokiAlbumsRepository = vokiAlbumsRepository;
     }
 
-    public async Task<ErrOr<VokisToAlbumFromAlbumsCopied>> Handle(CopyVokisFromAlbumsToAlbumCommand command,
-        CancellationToken ct) {
+    public async Task<ErrOr<VokisToAlbumFromAlbumsCopied>> Handle(
+        CopyVokisFromAlbumsToAlbumCommand command, CancellationToken ct
+    ) {
         VokiAlbum? album = await _vokiAlbumsRepository.GetByIdForUpdate(command.AlbumId, ct);
         if (album is null) {
             return ErrFactory.NotFound.Common("Could not copy vokis because destination does not exist");
@@ -52,7 +51,7 @@ internal sealed class CopyVokisFromAlbumsToAlbumCommandHandler
 
         var albumsToCopyFrom = await _vokiAlbumsRepository.ListByIds(command.AlbumIdsToCopyFrom, ct);
         ErrOr<VokisToAlbumFromAlbumsCopied> copyRes = album.CopyVokisFromAlbums(
-            _userCtxProvider.CurrentAsAuthenticated,
+            command.UserCtx(_userCtxProvider),
             albumsToCopyFrom
         );
         if (copyRes.IsErr(out var err)) {

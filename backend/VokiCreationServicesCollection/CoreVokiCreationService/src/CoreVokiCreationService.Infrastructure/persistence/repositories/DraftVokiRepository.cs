@@ -21,13 +21,13 @@ internal class DraftVokiRepository : IDraftVokiRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task<VokiId[]> ListVokiAuthoredByUserIdOrderByCreationDate(AppUserId userId, CancellationToken ct) =>
+    public Task<VokiId[]> ListVokiAuthoredByUserOrderByCreationDate(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.Vokis
             .FromSqlInterpolated($@"
                 SELECT ""Id""
                 FROM ""Vokis""
-                WHERE {userId.Value} = ""PrimaryAuthorId""
-                   OR {userId.Value} = ANY(""CoAuthorIds"")
+                WHERE {aUserCtx.UserId.Value} = ""PrimaryAuthorId""
+                   OR {aUserCtx.UserId.Value} = ANY(""CoAuthorIds"")
                 ORDER BY ""CreationDate"" DESC
             ")
             .Select(v => v.Id)
@@ -37,7 +37,7 @@ internal class DraftVokiRepository : IDraftVokiRepository
         _db.Vokis
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public Task<DraftVoki[]> ListVokisWithUserAsInvitedForCoAuthorAsNoTracking(
+    public Task<DraftVoki[]> ListVokisWithCurrentUserAsInvitedForCoAuthor(
         AuthenticatedUserCtx userContext, CancellationToken ct
     ) =>
         _db.Vokis

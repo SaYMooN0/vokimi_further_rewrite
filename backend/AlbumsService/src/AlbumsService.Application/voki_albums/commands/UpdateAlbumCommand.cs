@@ -32,7 +32,7 @@ internal sealed class UpdateAlbumCommandHandler : ICommandHandler<UpdateAlbumCom
         }
 
         ErrOrNothing res = album.Update(
-            _userCtxProvider.CurrentAsAuthenticated, command.Name, command.Icon, command.MainColor, command.SecondaryColor
+            command.UserCtx(_userCtxProvider), command.Name, command.Icon, command.MainColor, command.SecondaryColor
         );
         if (res.IsErr(out var err)) {
             return err;

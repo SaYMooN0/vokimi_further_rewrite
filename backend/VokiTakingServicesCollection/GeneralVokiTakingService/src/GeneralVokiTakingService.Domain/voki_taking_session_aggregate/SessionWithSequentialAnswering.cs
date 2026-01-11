@@ -22,7 +22,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     }
 
     public static SessionWithSequentialAnswering Create(
-        VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
+        VokiId vokiId, IUserCtx vokiTakerCtx, DateTime startTime,
         IEnumerable<VokiQuestion> vokiQuestions, bool shuffleQuestions
     ) {
         VokiQuestion[] ordered = (
@@ -43,8 +43,9 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             ));
         }
 
+        AppUserId? vokiTakerId = vokiTakerCtx.Match<AppUserId?>(a => a.UserId, _ => null);
         return new SessionWithSequentialAnswering(
-            VokiTakingSessionId.CreateNew(), vokiId, vokiTaker, startTime,
+            VokiTakingSessionId.CreateNew(), vokiId, vokiTakerId, startTime,
             questions: sessionQuestion.ToImmutableArray()
         );
     }
@@ -54,7 +55,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,
         DateTime clientSessionFinishedTime,
-        AuthenticatedUserCtx? authenticatedUserContext,
+        IUserCtx userCtx,
         GeneralVokiQuestionId lastQuestionId,
         ushort lastQuestionOrderInVokiTaking,
         ClientServerTimePairDto lastQuestionShownAt,
@@ -71,7 +72,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             return err;
         }
 
-        if (ValidateVokiTaker(authenticatedUserContext, out var vokiTakerId).IsErr(out err)) {
+        if (ValidateVokiTaker(userCtx, out var vokiTakerId).IsErr(out err)) {
             return err;
         }
 

@@ -16,7 +16,10 @@ internal sealed class ListVokisQueryHandler : IQueryHandler<ListVokisQuery, Draf
     private readonly IDraftVokiRepository _draftVokiRepository;
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IUserCtxProvider _userCtxProvider;
-    public ListVokisQueryHandler(IDraftVokiRepository draftVokiRepository, IAppUsersRepository appUsersRepository, IUserCtxProvider userCtxProvider) {
+
+    public ListVokisQueryHandler(
+        IDraftVokiRepository draftVokiRepository, IAppUsersRepository appUsersRepository, IUserCtxProvider userCtxProvider
+    ) {
         _draftVokiRepository = draftVokiRepository;
         _appUsersRepository = appUsersRepository;
         _userCtxProvider = userCtxProvider;
@@ -25,18 +28,8 @@ internal sealed class ListVokisQueryHandler : IQueryHandler<ListVokisQuery, Draf
     public async Task<ErrOr<DraftVoki[]>> Handle(
         ListVokisQuery query, CancellationToken ct
     ) {
-        AppUserId userId = _userCtxProvider.AuthenticatedUserId;
-        AppUser user = (await _appUsersRepository.GetById(userId, ct))!;
-
-        var allAccessibleVokiIds = user.InitializedVokiIds
-            .Concat(user.CoAuthoredVokiIds)
-            .ToHashSet();
-
-        var hasInaccessible = query.VokiIds.Any(id => !allAccessibleVokiIds.Contains(id));
-        if (hasInaccessible) {
-            return  ErrFactory.NoAccess("You do not have access to one or more of the requested vokis");
-        }
-        
-        return await _draftVokiRepository.GetMultipleById(query.VokiIds, ct);
+        var vokis = await _draftVokiRepository.GetMultipleById(query.VokiIds, ct);
+        var currentUser = query.UserCtx(_userCtxProvider);
+        return vokis.Where(v => v.DoesUserHaveAccess(currentUser)).ToArray();
     }
 }

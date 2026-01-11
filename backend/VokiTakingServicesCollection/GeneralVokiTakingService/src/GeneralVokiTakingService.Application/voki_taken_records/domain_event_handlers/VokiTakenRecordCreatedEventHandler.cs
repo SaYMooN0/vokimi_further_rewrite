@@ -2,6 +2,7 @@
 using GeneralVokiTakingService.Domain.app_user_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate.events;
+using SharedKernel.domain;
 
 namespace GeneralVokiTakingService.Application.voki_taken_records.domain_event_handlers;
 

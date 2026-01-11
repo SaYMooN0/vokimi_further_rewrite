@@ -1,6 +1,7 @@
 ﻿using AlbumsService.Application.common.repositories;
 using AlbumsService.Domain.app_user_aggregate.events;
 using AlbumsService.Domain.voki_album_aggregate;
+using SharedKernel.domain;
 
 namespace AlbumsService.Application.voki_albums.domain_event_handlers;
 

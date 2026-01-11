@@ -1,6 +1,7 @@
 ﻿using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.user_ctx;
 using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.app_user_aggregate;
 
@@ -44,8 +45,8 @@ internal class AppUsersRepository : IAppUsersRepository
             .Include(u => u.TakenVokis)
             .FirstOrDefaultAsync(u => u.Id == userId, ct);
 
-    public Task<AppUser?> GetUserWithTakenVokis(AppUserId userId, CancellationToken ct) =>
+    public Task<AppUser?> GetCurrentUserWithTakenVokis(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.AppUsers
             .Include(u => u.TakenVokis)
-            .FirstOrDefaultAsync(u => u.Id == userId, ct);
+            .FirstOrDefaultAsync(u => u.Id == aUserCtx.UserId, ct);
 }

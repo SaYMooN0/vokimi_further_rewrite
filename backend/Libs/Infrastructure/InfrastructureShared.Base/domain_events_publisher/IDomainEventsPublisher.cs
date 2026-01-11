@@ -1,4 +1,4 @@
-﻿using SharedKernel.domain.events;
+﻿using SharedKernel.domain;
 
 namespace InfrastructureShared.Base.domain_events_publisher;
 

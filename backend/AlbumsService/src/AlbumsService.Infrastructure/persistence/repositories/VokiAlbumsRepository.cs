@@ -26,7 +26,7 @@ internal class VokiAlbumsRepository : IVokiAlbumsRepository
             .WhereUserIsOwner(aUserCtx)
             .ToArrayAsync(ct);
 
-    public Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSorted(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
+    public Task<VokiAlbumPreviewDto[]> GetCurrentUserAlbumPreviewsSorted(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.VokiAlbums
             .WhereUserIsOwner(aUserCtx)
             .OrderByDescending(a => a.CreationDate)

@@ -1,21 +1,22 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using CoreVokiCreationService.Application.common.repositories;
-using CoreVokiCreationService.Application.pipeline_behaviors;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
 
 namespace CoreVokiCreationService.Application.draft_vokis.queries;
 
 public sealed record GetVokiQuery(VokiId VokiId) :
     IQuery<DraftVoki>,
-    IWithAuthCheckStep,
-    IWithVokiAccessValidationStep;
+    IWithAuthCheckStep;
 
 internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, DraftVoki>
 {
     private readonly IDraftVokiRepository _draftVokiRepository;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public GetVokiQueryHandler(IDraftVokiRepository draftVokiRepository) {
+    public GetVokiQueryHandler(IDraftVokiRepository draftVokiRepository, IUserCtxProvider userCtxProvider) {
         _draftVokiRepository = draftVokiRepository;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<DraftVoki>> Handle(GetVokiQuery query, CancellationToken ct) {
@@ -24,6 +25,10 @@ internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, DraftVok
             return ErrFactory.NotFound.Voki(
                 "Requested Voki not found", $"Voki with id {query.VokiId} does not exist"
             );
+        }
+
+        if (voki.DoesUserHaveAccess(query.UserCtx(_userCtxProvider))) {
+            return ErrFactory.NoAccess("You do not have access to this Voki");
         }
 
         return voki;

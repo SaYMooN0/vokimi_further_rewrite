@@ -28,7 +28,7 @@ internal sealed class UpdateVokiPresenceInAlbumsCommandHandler :
     public async Task<ErrOr<AlbumWithVokiPresenceDto[]>> Handle(
         UpdateVokiPresenceInAlbumsCommand command, CancellationToken ct
     ) {
-        var aCtx = _userCtxProvider.CurrentAsAuthenticated;
+        var aCtx = command.UserCtx(_userCtxProvider);
 
         Dictionary<VokiAlbumId, VokiAlbum> albums =
             (await _vokiAlbumsRepository.ListUsersAlbumsForUpdate(aCtx, ct))

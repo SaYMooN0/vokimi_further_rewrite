@@ -33,9 +33,12 @@ internal class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<UserAutoAlbumsAppearance?> GetUsersAutoAlbumsAppearance(AppUserId userId, CancellationToken ct) =>
+    public async Task<UserAutoAlbumsAppearance?> GetCurrentUserAutoAlbumsAppearance(
+        AuthenticatedUserCtx ctx,
+        CancellationToken ct
+    ) =>
         await _db.AppUsers
             .Select(u => new { u.Id, u.AutoAlbumsAppearance })
-            .FirstOrDefaultAsync(u => u.Id == userId, ct)
+            .FirstOrDefaultAsync(u => u.Id == ctx.UserId, ct)
             .Select(u => u?.AutoAlbumsAppearance ?? null);
 }

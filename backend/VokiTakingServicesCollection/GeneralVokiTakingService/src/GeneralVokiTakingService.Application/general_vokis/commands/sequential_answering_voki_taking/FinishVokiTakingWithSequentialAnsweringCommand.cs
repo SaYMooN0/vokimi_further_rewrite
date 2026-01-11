@@ -65,7 +65,7 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
             _dateTimeProvider.UtcNow,
             sessionStartTime: command.SessionStartTime,
             clientSessionFinishedTime: command.ClientSessionFinishTime,
-            _userCtxProvider.UserId().IsSuccess(out var userId) ? new AuthenticatedUserCtx(userId) : null,
+            _userCtxProvider.Current,
             lastQuestionId: command.LastQuestionId,
             lastQuestionOrderInVokiTaking: command.LastQuestionOrderInVokiTaking,
             lastQuestionShownAt: command.LastQuestionShownAt,

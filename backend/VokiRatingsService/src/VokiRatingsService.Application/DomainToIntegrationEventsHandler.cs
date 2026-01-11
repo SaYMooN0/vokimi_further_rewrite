@@ -1,4 +1,5 @@
 ﻿using ApplicationShared;
+using SharedKernel.domain;
 using SharedKernel.integration_events;
 using VokiRatingsService.Domain.voki_ratings_snapshot.events;
 

@@ -27,7 +27,7 @@ internal sealed class LeaveVokiCreationCommandHandler : ICommandHandler<LeaveVok
             return ErrFactory.NotFound.Voki("Could not leave Voki creation because Voki was not found");
         }
 
-        voki.LeaveVokiCreation(_userCtxProvider.AuthenticatedUser);
+        voki.LeaveVokiCreation(command.UserCtx(_userCtxProvider));
         await _draftVokiRepository.Update(voki, ct);
         return ErrOrNothing.Nothing;
     }

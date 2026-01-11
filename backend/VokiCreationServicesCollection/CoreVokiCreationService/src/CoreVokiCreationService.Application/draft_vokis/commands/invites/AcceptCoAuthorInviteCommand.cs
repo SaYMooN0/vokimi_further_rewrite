@@ -24,7 +24,7 @@ internal sealed class AcceptCoAuthorInviteCommandHandler : ICommandHandler<Accep
 
     public async Task<ErrOrNothing> Handle(AcceptCoAuthorInviteCommand command, CancellationToken ct) {
         DraftVoki voki = (await _draftVokiRepository.GetByIdForUpdate(command.VokiId, ct))!;
-        ErrOrNothing result = voki.AcceptInviteBy(_userCtxProvider.AuthenticatedUser);
+        ErrOrNothing result = voki.AcceptInvite(command.UserCtx(_userCtxProvider));
         if (result.IsErr(out var err)) {
             return err;
         }

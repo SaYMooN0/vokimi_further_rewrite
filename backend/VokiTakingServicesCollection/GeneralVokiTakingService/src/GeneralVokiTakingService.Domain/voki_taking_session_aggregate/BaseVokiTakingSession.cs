@@ -119,10 +119,10 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
     }
 
     protected ErrOrNothing ValidateVokiTaker(
-        AuthenticatedUserCtx? authenticatedUserContext,
+        IUserCtx userCtx,
         out AppUserId? resolvedVokiTaker
     ) {
-        AppUserId? contextId = authenticatedUserContext?.UserId;
+        AppUserId? contextId = userCtx.TryGetUserId.IsSuccess(out var id) ? id : null;
         if (
             this.VokiTaker is not null
             && contextId is not null

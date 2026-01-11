@@ -28,7 +28,7 @@ internal sealed class RemoveVokiFromAlbumCommandHandler : ICommandHandler<Remove
             return ErrFactory.NotFound.Common("Could not update the album because it doesn't exist");
         }
 
-        ErrOrNothing res =album.RemoveVoki(_userCtxProvider.CurrentAsAuthenticated, command.VokiId);
+        ErrOrNothing res = album.RemoveVoki(command.UserCtx(_userCtxProvider), command.VokiId);
         if (res.IsErr(out var err)) {
             return err;
         }

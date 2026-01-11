@@ -1,4 +1,5 @@
 ﻿using ApplicationShared;
+using SharedKernel.domain;
 
 namespace VokisCatalogService.Application;
 

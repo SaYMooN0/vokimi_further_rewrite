@@ -1,4 +1,5 @@
-﻿using VokiCommentsService.Application.common.repositories;
+﻿using SharedKernel.user_ctx;
+using VokiCommentsService.Application.common.repositories;
 
 namespace VokiCommentsService.Infrastructure.persistence.repositories;
 
@@ -11,7 +12,7 @@ internal class CommentsRepository : ICommentsRepository
     }
 
     public Task<VokiIdWithLastCommentedDateDto[]> OrderedIdsOfVokiCommentedByUser(
-        AppUserId userId, CancellationToken ct
+        AuthenticatedUserCtx aUserCtx, CancellationToken ct
     ) => Task.FromResult<VokiIdWithLastCommentedDateDto[]>([]);
     // _db.Comments
     // .AsNoTracking()

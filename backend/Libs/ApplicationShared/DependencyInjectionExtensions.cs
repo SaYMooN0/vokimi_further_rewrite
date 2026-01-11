@@ -1,7 +1,7 @@
 ﻿using ApplicationShared.messaging;
 using ApplicationShared.messaging.pipeline_behaviors;
 using Microsoft.Extensions.DependencyInjection;
-using SharedKernel.domain.events;
+using SharedKernel.domain;
 
 namespace ApplicationShared;
 

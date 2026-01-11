@@ -4,7 +4,6 @@ using AlbumsService.Domain.voki_album_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel;
-using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.voki_albums.commands;
 
@@ -14,7 +13,11 @@ public sealed record CreateNewAlbumCommand(
     HexColor MainColor,
     HexColor SecondaryColor
 ) :
-    ICommand<VokiAlbum>;
+    ICommand<VokiAlbum>,
+    IWithAuthCheckStep
+{
+    public Err UnauthenticatedErr => ErrFactory.AuthRequired("To create albums you need to be logged in");
+}
 
 internal sealed class CreateNewAlbumCommandHandler :
     ICommandHandler<CreateNewAlbumCommand, VokiAlbum>
@@ -35,21 +38,9 @@ internal sealed class CreateNewAlbumCommandHandler :
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public Task<ErrOr<VokiAlbum>> Handle(CreateNewAlbumCommand command, CancellationToken ct) {
-        return _userCtxProvider.Current.Match<Task<ErrOr<VokiAlbum>>>(
-            authenticatedFunc: (aCtx) => CreateNewAlbum(aCtx, command, ct),
-            unauthenticatedFunc: _ =>
-                Task.FromResult(ErrOr<VokiAlbum>.Err(
-                    ErrFactory.AuthRequired("To create albums you need to be logged in")
-                ))
-        );
-    }
+    public async Task<ErrOr<VokiAlbum>> Handle(CreateNewAlbumCommand command, CancellationToken ct) {
+        var aCtx = command.UserCtx(_userCtxProvider);
 
-    private async Task<ErrOr<VokiAlbum>> CreateNewAlbum(
-        AuthenticatedUserCtx aCtx,
-        CreateNewAlbumCommand command,
-        CancellationToken ct
-    ) {
         AppUser? user = await _appUsersRepository.GetCurrentForUpdate(aCtx, ct);
         if (user is null) {
             return ErrFactory.NotFound.User();

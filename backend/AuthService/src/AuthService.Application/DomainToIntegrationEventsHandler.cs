@@ -1,5 +1,6 @@
 ﻿using ApplicationShared;
 using AuthService.Domain.app_user_aggregate.events;
+using SharedKernel.domain;
 using SharedKernel.integration_events;
 
 namespace AuthService.Application;

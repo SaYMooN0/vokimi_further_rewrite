@@ -1,6 +1,7 @@
 ﻿using ApplicationShared;
 using GeneralVokiCreationService.Application.domain_to_integration_event_mappers;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.events;
+using SharedKernel.domain;
 using SharedKernel.integration_events.draft_vokis;
 using SharedKernel.integration_events.voki_publishing;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;

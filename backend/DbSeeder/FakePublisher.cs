@@ -1,5 +1,5 @@
 ﻿using InfrastructureShared.Base.domain_events_publisher;
-using SharedKernel.domain.events;
+using SharedKernel.domain;
 
 namespace DbSeeder;
 

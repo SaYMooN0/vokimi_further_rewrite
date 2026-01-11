@@ -46,7 +46,7 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
         GeneralVokiResultId resultId,
         CancellationToken ct
     ) {
-        var idOrErr = _userCtxProvider.UserId();
+        var idOrErr = _userCtxProvider.Current.TryGetUserId;
         if (idOrErr.IsErr(out _)) {
             return ErrFactory.NoAccess("To see this voki results you need to login and take this voki at least once");
         }
@@ -64,7 +64,7 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
         GeneralVokiResultId resultId,
         CancellationToken ct
     ) {
-        var idOrErr = _userCtxProvider.UserId();
+        var idOrErr = _userCtxProvider.Current.TryGetUserId;
         if (idOrErr.IsErr(out _)) {
             return ErrFactory.NoAccess("To see this voki results you need to login and take this voki at least once");
         }

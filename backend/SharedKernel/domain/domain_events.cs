@@ -1,4 +1,4 @@
-namespace SharedKernel.domain.events;
+namespace SharedKernel.domain;
 
 public interface IDomainEvent;
 public interface IDomainEventHandler<in T> where T : IDomainEvent

@@ -1,5 +1,5 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
-using SharedKernel.user_ctx;
+﻿using ApplicationShared;
+using ApplicationShared.messaging.pipeline_behaviors;
 using UserProfilesService.Application.common.repositories;
 using UserProfilesService.Domain.app_user_aggregate;
 
@@ -15,24 +15,25 @@ public sealed record GetCurrentUserQuery() :
 internal sealed class GetCurrentUserQueryHandler : IQueryHandler<GetCurrentUserQuery, AppUser>
 {
     private readonly IAppUsersRepository _appUsersRepository;
-    private readonly IUserCtx _userCtx;
+    private readonly IUserCtxProvider _userCtxProvider;
 
     public GetCurrentUserQueryHandler(
         IAppUsersRepository appUsersRepository,
-        IUserCtx userCtx
+        IUserCtxProvider userCtxProvider
     ) {
         _appUsersRepository = appUsersRepository;
-        _userCtx = userCtx;
+        _userCtxProvider = userCtxProvider;
     }
 
 
     public async Task<ErrOr<AppUser>> Handle(GetCurrentUserQuery query, CancellationToken ct) {
-        AppUser? user = await _appUsersRepository.GetCurrentUser(_userCtx.AuthenticatedUser, ct);
+        var aCtx = query.UserCtx(_userCtxProvider);
+        AppUser? user = await _appUsersRepository.GetCurrentUser(aCtx, ct);
 
         if (user is null) {
             return ErrFactory.NotFound.User(
                 "Current user was not found in the database",
-                $"There is no users with id {_userCtx.AuthenticatedUser.UserId}"
+                $"There is no users with id {aCtx.UserId}"
             );
         }
 

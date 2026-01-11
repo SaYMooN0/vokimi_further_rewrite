@@ -1,5 +1,4 @@
-﻿using SharedKernel.domain.events;
-using VokimiStorageKeysLib.concrete_keys;
+﻿using VokimiStorageKeysLib.concrete_keys;
 
 namespace VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
 

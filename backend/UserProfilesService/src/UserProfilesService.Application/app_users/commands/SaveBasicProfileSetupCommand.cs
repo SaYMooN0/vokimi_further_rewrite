@@ -34,7 +34,7 @@ internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<Save
     }
 
     public async Task<ErrOrNothing> Handle(SaveBasicProfileSetupCommand command, CancellationToken ct) {
-        AppUserId userId = _userCtxProvider.AuthenticatedUserId;
+        var userId = command.UserCtx(_userCtxProvider).UserId;
         var savedKeyRes = await HandleProfilePicKey(userId, command.ProfilePic, ct);
         if (savedKeyRes.IsErr(out var err)) {
             return err;
@@ -68,8 +68,7 @@ internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<Save
         return ErrOrNothing.Nothing;
     }
 
-    private Task<ErrOr<UserProfilePicKey>>
-        HandleProfilePicKey(AppUserId userId, string stringKey, CancellationToken ct) {
+    private Task<ErrOr<UserProfilePicKey>> HandleProfilePicKey(AppUserId userId, string stringKey, CancellationToken ct) {
         if (TempImageKey.FromString(stringKey).IsSuccess(out var tempKey)) {
             return _mainStorageBucket.CopyUserProfilePicFromTemp(tempKey, userId, ct);
         }

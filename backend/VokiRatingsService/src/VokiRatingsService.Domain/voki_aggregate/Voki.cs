@@ -1,5 +1,4 @@
-﻿using SharedKernel;
-using SharedKernel.user_ctx;
+﻿using SharedKernel.user_ctx;
 
 namespace VokiRatingsService.Domain.voki_aggregate;
 

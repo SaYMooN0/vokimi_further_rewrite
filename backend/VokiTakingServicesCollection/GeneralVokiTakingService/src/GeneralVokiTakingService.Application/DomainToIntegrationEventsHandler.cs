@@ -1,5 +1,6 @@
 ﻿using ApplicationShared;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
+using SharedKernel.domain;
 using SharedKernel.integration_events.voki_content_saved;
 using SharedKernel.integration_events.voki_taken;
 

@@ -42,16 +42,16 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
         Dictionary<GeneralVokiResultId, uint> resultIdsToCount = await _generalVokiTakenRecordsRepository
             .GetResultIdsToCountForVoki(voki.Id, ct);
 
-        if (_userCtx.UserId().IsSuccess(out var userId)) {
-            AppUser? user = await _appUsersRepository.GetById(userId, ct);
-            if (user is null) {
-                return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
-            }
+        return await _userCtx.Match<Task<ErrOr<ViewAllVokiResultsQueryResult>>>(authenticatedFunc: async (aUserCtx) => {
+                AppUser? user = await _appUsersRepository.GetById(aUserCtx.UserId, ct);
+                if (user is null) {
+                    return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
+                }
 
-            return AssembleForAuthenticatedUser(voki, resultIdsToCount, user.ReceivedResultIds);
-        }
-
-        return AssembleForNonAuthenticatedUser(voki, resultIdsToCount);
+                return AssembleForAuthenticatedUser(voki, resultIdsToCount, user.ReceivedResultIds);
+            },
+            unauthenticatedFunc: _ => Task.FromResult(AssembleForNonAuthenticatedUser(voki, resultIdsToCount))
+        );
     }
 
     private static ErrOr<ViewAllVokiResultsQueryResult> AssembleForAuthenticatedUser(

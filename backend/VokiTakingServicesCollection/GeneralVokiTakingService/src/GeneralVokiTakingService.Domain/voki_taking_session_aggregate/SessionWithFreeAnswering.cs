@@ -17,7 +17,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,
         DateTime clientFinishedTime,
-        AuthenticatedUserCtx? authenticatedUserContext,
+        IUserCtx userCtx,
         Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers,
         Func<Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>,
             ErrOr<GeneralVokiResultId>> getResultAccordingToAnswers
@@ -33,7 +33,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         }
 
 
-        if (ValidateVokiTaker(authenticatedUserContext, out var vokiTakerId).IsErr(out err)) {
+        if (ValidateVokiTaker(userCtx, out var vokiTakerId).IsErr(out err)) {
             return err;
         }
 
@@ -84,7 +84,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     ) : base(id, vokiId, vokiTaker, startTime, questions) { }
 
     public static SessionWithFreeAnswering Create(
-        VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
+        VokiId vokiId, IUserCtx vokiTakerCtx, DateTime startTime,
         IEnumerable<VokiQuestion> vokiQuestions, bool shuffleQuestions
     ) {
         VokiQuestion[] ordered = (
@@ -105,8 +105,9 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             ));
         }
 
+        AppUserId? vokiTakerId = vokiTakerCtx.Match<AppUserId?>(a => a.UserId, _ => null);
         return new SessionWithFreeAnswering(
-            VokiTakingSessionId.CreateNew(), vokiId, vokiTaker, startTime,
+            VokiTakingSessionId.CreateNew(), vokiId, vokiTakerId, startTime,
             sessionQuestion.ToImmutableArray()
         );
     }

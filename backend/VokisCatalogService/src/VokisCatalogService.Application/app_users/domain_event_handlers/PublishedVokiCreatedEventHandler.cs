@@ -1,4 +1,5 @@
-﻿using VokisCatalogService.Application.common.repositories;
+﻿using SharedKernel.domain;
+using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.app_user_aggregate;
 using VokisCatalogService.Domain.voki_aggregate.events;
 

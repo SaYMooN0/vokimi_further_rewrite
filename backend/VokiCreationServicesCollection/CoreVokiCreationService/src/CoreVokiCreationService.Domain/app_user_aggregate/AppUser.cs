@@ -19,6 +19,7 @@ public class AppUser : AggregateRoot<AppUserId>
         InvitesSetting = AllowCoAuthorInvitesSettingValueExtensions.Default;
     }
 
+   
     public void AddInitializedVoki(VokiId vokiId) {
         InitializedVokiIds = InitializedVokiIds.Add(vokiId);
     }
@@ -69,6 +70,4 @@ public class AppUser : AggregateRoot<AppUserId>
 
     public void RemoveCoAuthoredVoki(VokiId vokiId) =>
         CoAuthoredVokiIds = CoAuthoredVokiIds.Remove(vokiId);
-
-   
 }

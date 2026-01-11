@@ -23,12 +23,6 @@ internal sealed class ListUserCommentedVokiIdsQueryHandler :
     public async Task<ErrOr<VokiIdWithLastCommentedDateDto[]>> Handle(
         ListUserCommentedVokiIdsQuery query, CancellationToken ct
     ) {
-        var userIdOrErr = _userCtxProvider.UserId();
-        if (userIdOrErr.IsErr(out var err)) {
-            return ErrFactory.AuthRequired("To see your commented Vokis you need to log into your account");
-        }
-
-        AppUserId userId = userIdOrErr.AsSuccess();
-        return await _commentsRepository.OrderedIdsOfVokiCommentedByUser(userId, ct);
+        return await _commentsRepository.OrderedIdsOfVokiCommentedByUser(query.UserCtx(_userCtxProvider), ct);
     }
 }

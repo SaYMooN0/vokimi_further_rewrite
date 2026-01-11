@@ -20,8 +20,8 @@ public abstract class BaseVoki : AggregateRoot<VokiId>
         ManagersSet = managers;
     }
 
-    public ErrOrNothing CheckUserAccessToTake(AuthenticatedUserCtx? authenticatedUserContext) {
-        if (BaseInteractionSettings.SignedInOnlyTaking && authenticatedUserContext is null) {
+    public ErrOrNothing CheckUserAccessToTake(IUserCtx userCtx) {
+        if (BaseInteractionSettings.SignedInOnlyTaking && !userCtx.IsAuthenticated) {
             return ErrFactory.NoAccess("To take this Voki you need to be signed in");
         }
 

@@ -16,7 +16,7 @@ internal class EndpointHandlers : IEndpointGroup
             .DisableAntiforgery();
         group.MapPut("/upload-temp-image", UploadTempImage)
             .DisableAntiforgery();
-        
+
         return group;
     }
 
@@ -41,15 +41,15 @@ internal class EndpointHandlers : IEndpointGroup
         IStorageService storageService,
         IUserCtx userCtx
     ) {
-        if (userCtx.UserId().IsErr()) {
-            return CustomResults.ErrorResponse(ErrFactory.AuthRequired());
+        if (userCtx.IsAuthenticated) {
+            FileData fileData = new(file.OpenReadStream(), file.ContentType);
+            ErrOr<TempImageKey> res = await storageService.PutTempImageFile(fileData, ct);
+
+            return CustomResults.FromErrOr(res, (key) => Results.Json(
+                new { TempKey = key.ToString() }
+            ));
         }
 
-        FileData fileData = new(file.OpenReadStream(), file.ContentType);
-        ErrOr<TempImageKey> res = await storageService.PutTempImageFile(fileData, ct);
-
-        return CustomResults.FromErrOr(res, (key) => Results.Json(
-            new { TempKey = key.ToString() }
-        ));
+        return CustomResults.ErrorResponse(ErrFactory.AuthRequired());
     }
 }

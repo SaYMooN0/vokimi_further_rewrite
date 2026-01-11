@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Application.common.repositories;
+﻿using ApplicationShared;
+using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
@@ -22,23 +23,23 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
     ICommandHandler<FinishVokiTakingWithFreeAnsweringCommand, GeneralVokiResultId>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
-    private readonly IUserCtx _userCtx;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ISessionsWithFreeAnsweringRepository _sessionsWithFreeAnsweringRepository;
     private readonly IGeneralVokiTakenRecordsRepository _generalVokiTakenRecordsRepository;
+    private readonly IUserCtxProvider _userCtxProvider;
 
     public FinishVokiTakingWithFreeAnsweringCommandHandler(
         IGeneralVokisRepository generalVokisRepository,
-        IUserCtx userCtx,
         IDateTimeProvider dateTimeProvider,
         ISessionsWithFreeAnsweringRepository sessionsWithFreeAnsweringRepository,
-        IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository
+        IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository,
+        IUserCtxProvider userCtxProvider
     ) {
         _generalVokisRepository = generalVokisRepository;
-        _userCtx = userCtx;
         _dateTimeProvider = dateTimeProvider;
         _sessionsWithFreeAnsweringRepository = sessionsWithFreeAnsweringRepository;
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<GeneralVokiResultId>> Handle(FinishVokiTakingWithFreeAnsweringCommand command,
@@ -60,7 +61,7 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
             _dateTimeProvider.UtcNow,
             command.SessionStartTime,
             command.ClientFinishTime,
-            _userCtx.UserId().IsSuccess(out var userId) ? new AuthenticatedUserCtx(userId) : null,
+            _userCtxProvider.Current,
             command.ChosenAnswers,
             (answ) => voki.GetResultIdByChosenAnswers(answ)
         );

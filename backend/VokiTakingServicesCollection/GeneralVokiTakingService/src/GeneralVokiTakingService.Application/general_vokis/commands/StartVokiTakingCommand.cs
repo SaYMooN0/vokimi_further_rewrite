@@ -39,6 +39,8 @@ internal sealed class StartVokiTakingCommandHandler :
     public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(
         StartVokiTakingCommand command, CancellationToken ct
     ) {
+
+        var vokiTakerCtx = _userCtxProvider.Current;
         var voki = await _generalVokisRepository.GetWithQuestionAnswers(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki(
@@ -46,21 +48,19 @@ internal sealed class StartVokiTakingCommandHandler :
             );
         }
 
-        AppUserId? vokiTaker = _userCtxProvider.UserId().IsSuccess(out var id) ? id : null;
-        AuthenticatedUserCtx? authenticatedUserContext = vokiTaker is null? null : new AuthenticatedUserCtx(vokiTaker);
-        if (voki.CheckUserAccessToTake(authenticatedUserContext).IsErr(out var err)) {
+        if (voki.CheckUserAccessToTake(vokiTakerCtx).IsErr(out var err)) {
             return err;
         }
         
         BaseVokiTakingSession takingSession;
         if (voki.ForceSequentialAnswering) {
             takingSession = SessionWithSequentialAnswering.Create(
-                voki.Id, vokiTaker, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
+                voki.Id, vokiTakerCtx, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
             );
         }
         else {
             takingSession = SessionWithFreeAnswering.Create(
-                voki.Id, vokiTaker, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
+                voki.Id, vokiTakerCtx, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
             );
         }
 

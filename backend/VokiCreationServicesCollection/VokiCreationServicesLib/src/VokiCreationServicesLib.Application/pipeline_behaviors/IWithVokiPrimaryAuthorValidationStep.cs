@@ -1,5 +1,6 @@
 ﻿using ApplicationShared;
 using ApplicationShared.messaging;
+using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel.domain.ids;
 using SharedKernel.errs;
 using SharedKernel.errs.utils;
@@ -9,7 +10,7 @@ using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 namespace VokiCreationServicesLib.Application.pipeline_behaviors;
 
-public interface IWithVokiPrimaryAuthorValidationStep
+public interface IWithVokiPrimaryAuthorValidationStep: IWithAuthCheckStep
 {
     public VokiId VokiId { get; }
     public virtual Err NoAccessErr => ErrFactory.NoAccess("You do not have access to the requested action");
@@ -40,13 +41,12 @@ public static class VokiPrimaryAuthorValidationStepHandler
         }
 
         public async Task<ErrOr<TResponse>> Handle(TCommand command, CancellationToken ct) {
-            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
             BaseDraftVoki? voki = await _draftVokiRepository.GetById(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
 
-            if (voki.PrimaryAuthorId != userId) {
+            if (voki.PrimaryAuthorId != command.UserCtx(_userCtxProvider).UserId) {
                 return command.NoAccessErr;
             }
 
@@ -72,13 +72,12 @@ public static class VokiPrimaryAuthorValidationStepHandler
         }
 
         public async Task<ErrOrNothing> Handle(TCommand command, CancellationToken ct) {
-            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
             BaseDraftVoki? voki = await _draftVokiRepository.GetById(command.VokiId, ct);
             if (voki is null) {
                 return command.VokiNotFoundErr;
             }
 
-            if (voki.PrimaryAuthorId != userId) {
+            if (voki.PrimaryAuthorId != command.UserCtx(_userCtxProvider).UserId) {
                 return command.NoAccessErr;
             }
 
@@ -104,13 +103,12 @@ public static class VokiPrimaryAuthorValidationStepHandler
         }
 
         public async Task<ErrOr<TResponse>> Handle(TQuery query, CancellationToken ct) {
-            AppUserId userId = _userCtxProvider.AuthenticatedUserId;
             BaseDraftVoki? voki = await _draftVokiRepository.GetById(query.VokiId, ct);
             if (voki is null) {
                 return query.VokiNotFoundErr;
             }
 
-            if (voki.PrimaryAuthorId != userId) {
+            if (voki.PrimaryAuthorId != query.UserCtx(_userCtxProvider).UserId) {
                  return query.NoAccessErr;
             }
 

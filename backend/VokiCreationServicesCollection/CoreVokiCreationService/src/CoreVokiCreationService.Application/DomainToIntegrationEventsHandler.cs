@@ -1,6 +1,7 @@
 ﻿using ApplicationShared;
 using CoreVokiCreationService.Domain.draft_voki_aggregate.events;
 using SharedKernel.common.vokis;
+using SharedKernel.domain;
 using SharedKernel.integration_events.draft_vokis;
 using SharedKernel.integration_events.draft_vokis.co_authors;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;

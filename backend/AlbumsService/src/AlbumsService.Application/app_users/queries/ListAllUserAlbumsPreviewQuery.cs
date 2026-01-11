@@ -2,7 +2,6 @@
 using AlbumsService.Domain.app_user_aggregate;
 using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
-using SharedKernel.user_ctx;
 
 namespace AlbumsService.Application.app_users.queries;
 
@@ -30,15 +29,13 @@ internal sealed class ListAllUserAlbumsPreviewQueryHandler :
     public async Task<ErrOr<ListAllUserAlbumsPreviewQueryResult>> Handle(
         ListAllUserAlbumsPreviewQuery query, CancellationToken ct
     ) {
-        var userId = _userCtxProvider.AuthenticatedUserId;
-        UserAutoAlbumsAppearance? albumsAppearance = await _appUsersRepository.GetUsersAutoAlbumsAppearance(userId, ct);
+        var aCtx = query.UserCtx(_userCtxProvider);
+        UserAutoAlbumsAppearance? albumsAppearance = await _appUsersRepository.GetCurrentUserAutoAlbumsAppearance(aCtx, ct);
         if (albumsAppearance is null) {
             return ErrFactory.NotFound.User();
         }
 
-        VokiAlbumPreviewDto[] albums = await _vokiAlbumsRepository.GetPreviewsForUserSorted(
-            _userCtxProvider.AuthenticatedUserId, ct
-        );
+        VokiAlbumPreviewDto[] albums = await _vokiAlbumsRepository.GetCurrentUserAlbumPreviewsSorted(aCtx, ct);
         return new ListAllUserAlbumsPreviewQueryResult(albumsAppearance, albums);
     }
 }

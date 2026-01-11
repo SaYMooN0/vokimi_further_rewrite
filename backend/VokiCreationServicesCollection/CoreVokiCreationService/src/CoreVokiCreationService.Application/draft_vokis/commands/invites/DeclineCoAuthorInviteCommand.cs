@@ -22,7 +22,12 @@ internal sealed class DeclineCoAuthorInviteCommandHandler : ICommandHandler<Decl
 
 
     public async Task<ErrOrNothing> Handle(DeclineCoAuthorInviteCommand command, CancellationToken ct) {
-        AppUser user = (await _appUsersRepository.GetByIdForUpdate(_userCtxProvider.AuthenticatedUserId, ct))!;
+        AuthenticatedUserCtx aUserCtx = command.UserCtx(_userCtxProvider);
+        AppUser? user = await _appUsersRepository.GetByIdForUpdate(aUserCtx.UserId, ct);
+        if (user is null) {
+            return ErrFactory.NotFound.User();
+        }
+
         user.DeclineCoAuthorInvite(command.VokiId);
         await _appUsersRepository.Update(user, ct);
         return ErrOrNothing.Nothing;

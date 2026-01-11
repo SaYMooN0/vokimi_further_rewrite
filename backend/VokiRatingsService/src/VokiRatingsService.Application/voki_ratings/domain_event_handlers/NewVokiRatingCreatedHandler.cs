@@ -1,4 +1,5 @@
 ﻿using SharedKernel;
+using SharedKernel.domain;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.app_user_aggregate;
 using VokiRatingsService.Domain.voki_aggregate;

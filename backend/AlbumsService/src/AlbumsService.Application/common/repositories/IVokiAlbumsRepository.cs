@@ -7,7 +7,7 @@ public interface IVokiAlbumsRepository
 {
     Task<VokiAlbum[]> ListAlbumsForUser(AuthenticatedUserCtx aUserCtx, CancellationToken ct);
     Task<VokiAlbum[]> ListUsersAlbumsForUpdate(AuthenticatedUserCtx aUserCtx, CancellationToken ct);
-    Task<VokiAlbumPreviewDto[]> GetPreviewsForUserSorted(AuthenticatedUserCtx aUserCtx, CancellationToken ct);
+    Task<VokiAlbumPreviewDto[]> GetCurrentUserAlbumPreviewsSorted(AuthenticatedUserCtx aUserCtx, CancellationToken ct);
     Task Add(VokiAlbum album, CancellationToken ct);
     Task<VokiAlbum?> GetByIdForUpdate(VokiAlbumId albumId, CancellationToken ct);
     Task DeleteAlbum(VokiAlbum album, CancellationToken ct);

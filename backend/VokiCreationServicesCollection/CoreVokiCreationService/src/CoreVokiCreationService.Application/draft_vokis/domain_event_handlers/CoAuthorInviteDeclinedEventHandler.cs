@@ -1,6 +1,7 @@
 ﻿using CoreVokiCreationService.Application.common.repositories;
 using CoreVokiCreationService.Domain.app_user_aggregate.events;
 using CoreVokiCreationService.Domain.draft_voki_aggregate;
+using SharedKernel.domain;
 
 namespace CoreVokiCreationService.Application.draft_vokis.domain_event_handlers;
 

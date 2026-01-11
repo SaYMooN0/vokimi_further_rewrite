@@ -41,8 +41,11 @@ internal sealed class InitializeNewVokiCommandHandler : ICommandHandler<Initiali
             return ErrFactory.NotImplemented("Specified voki type is not implemented");
         }
 
-        AppUserId authorId = _userCtxProvider.AuthenticatedUserId;
-        DraftVoki voki = DraftVoki.Create(command.VokiName, command.VokiType, authorId, _dateTimeProvider.UtcNow);
+        DraftVoki voki = DraftVoki.Create(
+            command.VokiName, command.VokiType,
+            aUserCtx: command.UserCtx(_userCtxProvider),
+            creationDate: _dateTimeProvider.UtcNow
+        );
 
         var copyRes = await _mainStorageBucket.CopyDefaultVokiCoverForNewVoki(voki.Cover, ct);
         if (copyRes.IsErr()) {
