@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
-	import type { ResultOverViewData } from '../../types';
+	import type { ResultOverViewData } from '../types';
 	import ResultItemButtons from './ResultItemButtons.svelte';
 	import { getConfirmActionDialogOpenFunction } from '../../../../../../_c_layout/_ts_layout_contexts/confirm-action-dialog-context';
 	import { RJO } from '$lib/ts/backend-communication/backend-services';

@@ -4,7 +4,7 @@
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import type { ResultOverViewData } from '../types';
+	import type { ResultOverViewData } from './types';
 	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	const {

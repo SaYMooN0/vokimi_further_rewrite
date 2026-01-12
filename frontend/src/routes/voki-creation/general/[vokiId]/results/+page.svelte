@@ -5,12 +5,16 @@
 	import type { PageProps } from './$types';
 	import GeneralVokiCreationResultItem from './_c_results_page/GeneralVokiCreationResultItem.svelte';
 	import ResultInitializingDialog from './_c_results_page/ResultInitializingDialog.svelte';
-	import type { ResultOverViewData } from './types';
+	import type { ResultOverViewData } from './_c_results_page/types';
 	import VokiCreationPageLoadingErr from '../../../_c_shared/VokiCreationPageLoadingErr.svelte';
+	import { GeneralVokiCreationResultsPageState } from './general-voki-creation-results-page-state.svelte';
+	import { setVokiCreationCurrentPageState } from '../../../voki-creation-page-context';
 
 	let { data }: PageProps = $props();
 	let resultCreationDialog = $state<ResultInitializingDialog>()!;
 	let results = $state(data.data?.results ?? []);
+
+	setVokiCreationCurrentPageState(new GeneralVokiCreationResultsPageState());
 
 	function updateOnSave(result: ResultOverViewData) {
 		results = results.map((r) => (r.id === result.id ? result : r));

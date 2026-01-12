@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { VokiDailyRatingsSnapshot } from '../../../types';
+
 	interface Props {
 		publicationDate: Date;
 		content: { isLoading: true } | { isLoading: false; snapshots: VokiDailyRatingsSnapshot[] };

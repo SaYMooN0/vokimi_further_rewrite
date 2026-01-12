@@ -4,8 +4,12 @@
 	import type { VokiCreationAuthorsInfo } from '../../../_c_shared/_c_shared_pages/_c_authors/types';
 	import VokiCreationPageLoadingErr from '../../../_c_shared/VokiCreationPageLoadingErr.svelte';
 	import type { PageProps } from './$types';
+	import { GeneralVokiCreationAuthorsPageState } from './general-voki-creation-authors-page-state.svelte';
+	import { setVokiCreationCurrentPageState } from '../../../voki-creation-page-context';
 
 	let { data }: PageProps = $props();
+
+	setVokiCreationCurrentPageState(new GeneralVokiCreationAuthorsPageState());
 
 	function initPageState(vokiId: string, data: VokiCreationAuthorsInfo) {
 		let pageState = new CoAuthorsPageState(

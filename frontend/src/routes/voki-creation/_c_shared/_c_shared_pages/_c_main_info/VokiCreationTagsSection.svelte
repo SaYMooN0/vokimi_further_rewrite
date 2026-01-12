@@ -3,23 +3,20 @@
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
 	import VokiCreationTagsEditingDialog from './_c_tags_section/VokiCreationTagsEditingDialog.svelte';
-
-	let { tags, vokiId }: { tags: string[]; vokiId: string } = $props<{
-		tags: string[];
+	interface Props {
+		tags: Set<string>;
 		vokiId: string;
-	}>();
+		updateTagsOnSave: (newTags: Set<string>) => void;
+	}
+	let { tags, vokiId, updateTagsOnSave }: Props = $props();
 	let dialogElement = $state<VokiCreationTagsEditingDialog>()!;
 </script>
 
-<VokiCreationTagsEditingDialog
-	bind:this={dialogElement}
-	{vokiId}
-	updateParent={(newTags) => (tags = newTags)}
-/>
+<VokiCreationTagsEditingDialog bind:this={dialogElement} {vokiId} {updateTagsOnSave} />
 <div class="voki-tags-section">
 	<p class="tags-list">
 		<VokiCreationFieldName fieldName="Tags:" />
-		{#if tags.length === 0}
+		{#if tags.size === 0}
 			<FieldNotSetLabel text="No tags selected" />
 		{:else}
 			{#each tags as tag}

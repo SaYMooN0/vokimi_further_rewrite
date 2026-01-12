@@ -3,7 +3,7 @@
 	import type { Err } from '$lib/ts/err';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { TextareaAutosize } from 'runed';
-	import type { ResultOverViewData } from '../../types';
+	import type { ResultOverViewData } from '../types';
 	import ResultEditingStateImage from './_c_editing_state/ResultEditingStateImage.svelte';
 	import ResultItemButtons from './ResultItemButtons.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
@@ -57,11 +57,7 @@
 		bind:this={resultTextInput}
 		name={StringUtils.rndStr()}
 	/>
-	<ResultEditingStateImage
-		bind:image={resultEditing.image}
-		bind:errs
-		resultId={result.id}
-	/>
+	<ResultEditingStateImage bind:image={resultEditing.image} bind:errs resultId={result.id} />
 </div>
 {#if errs.length > 0}
 	<DefaultErrBlock errList={errs} />

@@ -7,8 +7,8 @@
 	import { watch } from 'runed';
 	import VokiCreationFieldName from '../../../../../_c_shared/VokiCreationFieldName.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../_c_shared/VokiCreationSaveAndCancelButtons.svelte';
-	import type { GeneralVokiInteractionSettings } from '../../types';
 	import VokiCreationOneOfMultipleChoicesInput from '../../../../../_c_shared/VokiCreationOneOfMultipleChoicesInput.svelte';
+	import type { GeneralVokiInteractionSettings } from '../../types';
 
 	interface Props {
 		vokiId: string;

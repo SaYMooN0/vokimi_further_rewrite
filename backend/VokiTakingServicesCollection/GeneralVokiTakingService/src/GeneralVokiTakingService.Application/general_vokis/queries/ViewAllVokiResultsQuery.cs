@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Application.common.repositories;
+﻿using ApplicationShared;
+using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.app_user_aggregate;
 using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
@@ -14,20 +15,18 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
 {
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IGeneralVokisRepository _generalVokisRepository;
-    private readonly IUserCtx _userCtx;
     private readonly IGeneralVokiTakenRecordsRepository _generalVokiTakenRecordsRepository;
+    private readonly IUserCtxProvider _userCtxProvider;
 
 
     public ViewAllVokiResultsQueryHandler(
-        IGeneralVokisRepository generalVokisRepository,
-        IUserCtx userCtx,
-        IAppUsersRepository appUsersRepository,
-        IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository
+        IGeneralVokisRepository generalVokisRepository, IAppUsersRepository appUsersRepository,
+        IGeneralVokiTakenRecordsRepository generalVokiTakenRecordsRepository, IUserCtxProvider userCtxProvider
     ) {
         _generalVokisRepository = generalVokisRepository;
-        _userCtx = userCtx;
         _appUsersRepository = appUsersRepository;
         _generalVokiTakenRecordsRepository = generalVokiTakenRecordsRepository;
+        _userCtxProvider = userCtxProvider;
     }
 
 
@@ -42,7 +41,8 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
         Dictionary<GeneralVokiResultId, uint> resultIdsToCount = await _generalVokiTakenRecordsRepository
             .GetResultIdsToCountForVoki(voki.Id, ct);
 
-        return await _userCtx.Match<Task<ErrOr<ViewAllVokiResultsQueryResult>>>(authenticatedFunc: async (aUserCtx) => {
+        return await _userCtxProvider.Current.Match<Task<ErrOr<ViewAllVokiResultsQueryResult>>>(
+            authenticatedFunc: async (aUserCtx) => {
                 AppUser? user = await _appUsersRepository.GetById(aUserCtx.UserId, ct);
                 if (user is null) {
                     return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");

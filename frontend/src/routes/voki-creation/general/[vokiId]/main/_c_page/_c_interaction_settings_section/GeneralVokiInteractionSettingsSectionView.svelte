@@ -16,19 +16,19 @@
 </p>
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Results visibility:" />
-		{#if settings.resultsVisibility === 'Anyone'}
-			Anyone
-		{:else if settings.resultsVisibility === 'AfterTaking'}
-			Only after Voki taking
-		{:else if settings.resultsVisibility === 'OnlyReceived'}
-			Only received results
-		{:else}
-			Unknown value
-		{/if}
+	{#if settings.resultsVisibility === 'Anyone'}
+		Anyone
+	{:else if settings.resultsVisibility === 'AfterTaking'}
+		Only after Voki taking
+	{:else if settings.resultsVisibility === 'OnlyReceived'}
+		Only received results
+	{:else}
+		Unknown value
+	{/if}
 </p>
 <p class="field-p">
 	<VokiCreationFieldName fieldName="Results distribution:" />
-		{settings.showResultsDistribution ? 'Show' : 'Hide'}
+	{settings.showResultsDistribution ? 'Show' : 'Hide'}
 </p>
 <VokiCreationDefaultButton text="Edit settings" onclick={() => startEditing()} />
 
@@ -38,11 +38,10 @@
 		flex-direction: row;
 		align-items: center;
 		gap: 0.5rem;
-        width: max-content;
+		width: max-content;
 		margin-top: 1rem;
 		color: var(--text);
 		font-size: 1.25rem;
 		font-weight: 500;
-
 	}
 </style>

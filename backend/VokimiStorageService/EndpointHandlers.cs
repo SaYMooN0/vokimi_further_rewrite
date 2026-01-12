@@ -1,5 +1,6 @@
 ﻿using ApiShared;
 using ApiShared.extensions;
+using ApplicationShared;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel.user_ctx;
 using VokimiStorageService.s3_storage.s3;
@@ -35,13 +36,12 @@ internal class EndpointHandlers : IEndpointGroup
     }
 
     private static async Task<IResult> UploadTempImage(
-        HttpContext httpContext,
         CancellationToken ct,
         [FromForm] IFormFile file,
         IStorageService storageService,
-        IUserCtx userCtx
+        IUserCtxProvider userCtxProvider
     ) {
-        if (userCtx.IsAuthenticated) {
+        if (userCtxProvider.Current.IsAuthenticated) {
             FileData fileData = new(file.OpenReadStream(), file.ContentType);
             ErrOr<TempImageKey> res = await storageService.PutTempImageFile(fileData, ct);
 

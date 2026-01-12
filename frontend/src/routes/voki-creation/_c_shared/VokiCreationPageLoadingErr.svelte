@@ -1,10 +1,8 @@
 <script lang="ts">
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { ApiVokisCatalog } from '$lib/ts/backend-communication/backend-services';
 	import { ErrUtils, type Err } from '$lib/ts/err';
 	import { PublishedVokisStore } from '$lib/ts/stores/published-vokis-store.svelte';
 	import type { PublishedVokiBriefInfo } from '$lib/ts/voki';
-	import type { VokiType } from '$lib/ts/voki-type';
 	import VokiAlreadyPublishedMessage from './_c_page_loading_err/VokiAlreadyPublishedMessage.svelte';
 	import { onMount } from 'svelte';
 

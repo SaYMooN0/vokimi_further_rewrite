@@ -3,7 +3,7 @@
 	import type { Snippet } from 'svelte';
 	import GeneralVokiCreationLayoutNavBar from './_c_layout/GeneralVokiCreationLayoutNavBar.svelte';
 	import { type VokiCreationHeaderVokiName } from '../../_c_layout/VokiCreationVokiNameHeader.svelte';
-	import { setVokiCreationPageContext } from '../../voki-creation-page-context';
+	import { initVokiCreationPageContext } from '../../voki-creation-page-context';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import vokiAnswerTypesIconsSprite from '$lib/icons/general-voki-answer-types-icons.svg?raw';
 	import generalVokiCreationIconsSprite from '$lib/icons/general-voki-creation-icons.svg?raw';
@@ -35,7 +35,7 @@
 		}
 	}
 	fetchAndSetVokiName();
-	setVokiCreationPageContext(ApiVokiCreationGeneral, {
+	initVokiCreationPageContext(ApiVokiCreationGeneral, {
 		get value() {
 			return vokiName.state === 'ok' ? vokiName.value : undefined;
 		},

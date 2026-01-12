@@ -6,32 +6,29 @@
 	import { getVokiCreationPageContext } from '../../../../voki-creation-page-context';
 	import TagOperatingDisplay from './TagOperatingDisplay.svelte';
 	import TagsDialogSearchBar from './TagsDialogSearchBar.svelte';
-
-	let {
-		vokiId,
-		updateParent
-	}: {
+	interface Props {
 		vokiId: string;
-		updateParent: (newTags: string[]) => void;
-	} = $props<{ vokiId: string; updateParent: (newTags: string[]) => void }>();
+		updateTagsOnSave: (newTags: Set<string>) => void;
+	}
+	let { vokiId, updateTagsOnSave }: Props = $props();
 
 	let dialogElement = $state<DialogWithCloseButton>()!;
-	let errs = $state<Err[]>([]);
+	let errs: Err[] = $state([]);
 	let tagsToChooseFrom: string[] = $state([]);
-	let chosenTags = $state<string[]>([]);
+	let chosenTags: string[] = $state([]);
 	const vokiCreationCtx = getVokiCreationPageContext();
 
 	async function saveData() {
 		const response = await vokiCreationCtx.vokiCreationApi.updateVokiTags(vokiId, chosenTags);
 		if (response.isSuccess) {
-			updateParent(response.data.newTags);
+			updateTagsOnSave(new Set(response.data.newTags));
 			dialogElement.close();
 		} else {
 			errs = response.errs;
 		}
 	}
-	export function open(tags: string[]) {
-		chosenTags = tags ?? [];
+	export function open(tags: Set<string>) {
+		chosenTags = Array.from(tags);
 		errs = [];
 		dialogElement.open();
 	}

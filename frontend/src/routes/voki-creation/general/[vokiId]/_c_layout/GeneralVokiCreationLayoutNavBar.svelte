@@ -2,15 +2,26 @@
 	import { page } from '$app/state';
 	import ErrView from '$lib/components/errs/ErrView.svelte';
 	import VokiCreationLayoutNavBar from '../../../_c_layout/VokiCreationLayoutNavBar.svelte';
+	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
 
 	let vokiId: string | undefined = page.params.vokiId;
 	function withBasePath(path: string) {
 		return '/voki-creation/general/' + vokiId + '/' + path;
 	}
+
+	const currentPageContext = getVokiCreationPageContext();
+	function handleBeforeNavigate(): boolean {
+		if (currentPageContext.currentPageState?.hasAnyUnsavedChanges) {
+			...add confirm dialog
+			return true;
+		}
+		return true;
+	}
 </script>
 
 {#if vokiId}
 	<VokiCreationLayoutNavBar
+		onBeforeNavigate={handleBeforeNavigate}
 		links={[
 			{ icon: authorsIcon, name: 'Authors', href: withBasePath('authors') },
 			{ icon: mainIcon, name: 'Main Info', href: withBasePath('main') },

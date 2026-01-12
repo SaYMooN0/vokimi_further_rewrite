@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { ResultOverViewData } from '../types';
+	import type { ResultOverViewData } from './types';
 	import ResultItemEditingState from './_c_result_item/ResultItemEditingState.svelte';
 	import ResultItemViewState from './_c_result_item/ResultItemViewState.svelte';
 
@@ -31,7 +31,12 @@
 			cancelEditing={() => (isEditing = false)}
 		/>
 	{:else}
-		<ResultItemViewState {result} 	{vokiId} {updateParentOnDelete} startEditing={() => (isEditing = true)} />
+		<ResultItemViewState
+			{result}
+			{vokiId}
+			{updateParentOnDelete}
+			startEditing={() => (isEditing = true)}
+		/>
 	{/if}
 </div>
 
