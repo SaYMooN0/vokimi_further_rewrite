@@ -7,7 +7,6 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands;
 
 public sealed record UpdateVokiInteractionSettingsCommand(VokiId VokiId, GeneralVokiInteractionSettings NewSettings) :
     ICommand<GeneralVokiInteractionSettings>,
-    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateVokiInteractionSettingsCommandHandler :
@@ -22,7 +21,7 @@ internal sealed class UpdateVokiInteractionSettingsCommandHandler :
     public async Task<ErrOr<GeneralVokiInteractionSettings>> Handle(
         UpdateVokiInteractionSettingsCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetById(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetByIdForUpdate(command.VokiId, ct))!;
         voki.UpdateInteractionSettings(command.NewSettings);
         await _draftGeneralVokisRepository.Update(voki, ct);
         return voki.InteractionSettings;

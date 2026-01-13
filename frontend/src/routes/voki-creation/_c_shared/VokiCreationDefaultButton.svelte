@@ -7,7 +7,7 @@
 	const { text, onclick, class: className = '' }: Props = $props();
 </script>
 
-<button class="btn {className}" {onclick}>{text}</button>
+<button class="btn unselectable {className}" {onclick}>{text}</button>
 
 <style>
 	.btn {

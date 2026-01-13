@@ -12,9 +12,10 @@
 
 	const { children }: { children: Snippet } = $props();
 
+	let vokiId = page.params.vokiId;
 	let vokiName: VokiCreationHeaderVokiName = $state()!;
 	async function fetchAndSetVokiName() {
-		if (!page.params.vokiId) {
+		if (!vokiId) {
 			vokiName = {
 				state: 'errs',
 				errs: [{ message: 'Voki id is not specified' }],
@@ -23,7 +24,7 @@
 			return;
 		}
 		vokiName = { state: 'loading' };
-		const response = await ApiVokiCreationGeneral.getVokiName(page.params.vokiId);
+		const response = await ApiVokiCreationGeneral.getVokiName(vokiId);
 		if (response.isSuccess) {
 			vokiName = { state: 'ok', value: response.data.vokiName };
 		} else {
@@ -49,7 +50,7 @@
 </div>
 
 <VokiCreationVokiNameHeader {vokiName} vokiType="General" />
-<GeneralVokiCreationLayoutNavBar />
+<GeneralVokiCreationLayoutNavBar {vokiId} />
 
 {#if navigating.type}
 	<div class="loading fade-in-animation">

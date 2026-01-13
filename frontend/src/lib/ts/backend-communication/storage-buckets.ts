@@ -17,7 +17,7 @@ class VokimiStorageBucket {
     }
 
     public fileSrcWithVersion(key: string, version: string | number | undefined = undefined): string {
-        if (!version) {
+        if (version === undefined || version === null) {
             version = StringUtils.rndStr(4);
         }
         return `${this.fileSrc(key)}?v=${version}`;

@@ -6,33 +6,21 @@
 	import VokiCreationFieldName from '../../../VokiCreationFieldName.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
-	import { LanguageUtils } from '$lib/ts/language';
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../VokiCreationSaveAndCancelButtons.svelte';
-	import DefaultLanguageInput from '$lib/components/inputs/DefaultLanguageSelect.svelte';
 	import DefaultLanguageSelect from '$lib/components/inputs/DefaultLanguageSelect.svelte';
-
-	const {
-		vokiId,
-		details,
-		updateParent,
-		cancelEditing
-	}: {
+	interface Props {
 		vokiId: string;
-		details: VokiDetails;
-		updateParent: (details: VokiDetails) => void;
+		savedDetails: VokiDetails;
+		updateSavedDetails: (newDetails: VokiDetails) => void;
 		cancelEditing: () => void;
-	} = $props<{
-		vokiId: string;
-		details: VokiDetails;
-		updateParent: (details: VokiDetails) => void;
-		cancelEditing: () => void;
-	}>();
+	}
+	let { vokiId, savedDetails, updateSavedDetails, cancelEditing }: Props = $props();
 
-	let descriptionTextarea = $state<HTMLTextAreaElement>(null!);
-	let description = $state(details.description);
-	let language = $state(details.language);
-	let hasMatureContent = $state(details.hasMatureContent);
+	let descriptionTextarea = $state<HTMLTextAreaElement>()!;
+	let description = $state(savedDetails.description);
+	let language = $state(savedDetails.language);
+	let hasMatureContent = $state(savedDetails.hasMatureContent);
 	let savingErrs = $state<Err[]>([]);
 	const vokiCreationCtx = getVokiCreationPageContext();
 
@@ -43,7 +31,11 @@
 			hasMatureContent
 		});
 		if (response.isSuccess) {
-			updateParent(response.data);
+			updateSavedDetails({
+				description: response.data.description,
+				language: response.data.language,
+				hasMatureContent: response.data.hasMatureContent
+			});
 			savingErrs = [];
 			cancelEditing();
 		} else {

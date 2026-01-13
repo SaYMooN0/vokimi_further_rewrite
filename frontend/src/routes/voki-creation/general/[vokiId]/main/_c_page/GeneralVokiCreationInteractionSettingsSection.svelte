@@ -4,15 +4,22 @@
 	import GeneralVokiInteractionSettingsSectionView from './_c_interaction_settings_section/GeneralVokiInteractionSettingsSectionView.svelte';
 
 	interface Props {
-		settings: GeneralVokiInteractionSettings;
+		savedInteractionSettings: GeneralVokiInteractionSettings;
 		vokiId: string;
+		isEditing: boolean;
+		updateSavedInteractionSettings: (newSettings: GeneralVokiInteractionSettings) => void;
 	}
-	let { settings: initialSettings, vokiId }: Props = $props();
+	let {
+		savedInteractionSettings,
+		vokiId,
+		isEditing = $bindable(),
+		updateSavedInteractionSettings
+	}: Props = $props();
 
-	let currentInteractionSettings: GeneralVokiInteractionSettings = $state(initialSettings);
-	let isEditing = $state(false);
+	let editingInteractionSettings = $state(savedInteractionSettings);
 
 	function startEditing() {
+		editingInteractionSettings = savedInteractionSettings;
 		isEditing = true;
 	}
 </script>
@@ -21,16 +28,16 @@
 	{#if isEditing}
 		<GeneralVokiInteractionSettingsSectionEditing
 			{vokiId}
-			savedInteractionSettings={currentInteractionSettings}
+			savedInteractionSettings={editingInteractionSettings}
 			cancelEditing={() => (isEditing = false)}
 			updateParent={(newSettings) => {
-				currentInteractionSettings = newSettings;
+				updateSavedInteractionSettings(newSettings);
 				isEditing = false;
 			}}
 		/>
 	{:else}
 		<GeneralVokiInteractionSettingsSectionView
-			settings={currentInteractionSettings}
+			settings={editingInteractionSettings}
 			startEditing={() => startEditing()}
 		/>
 	{/if}

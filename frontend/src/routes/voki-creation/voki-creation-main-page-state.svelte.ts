@@ -2,15 +2,10 @@ import type { VokiDetails } from "$lib/ts/backend-communication/voki-creation-ba
 import type { IVokiCreationPageState } from "./voki-creation-page-context";
 
 export abstract class VokiCreationMainPageState implements IVokiCreationPageState {
-    protected readonly savedName: string;
-    protected readonly savedCover: string;
+    public savedName: string;
+    public savedCover: string;
     public savedTags: Set<string>;
-    protected readonly savedDetails: VokiDetails;
-
-    currentName: string;
-    currentCover: string;
-    currentDetails: VokiDetails;
-
+    public savedDetails: VokiDetails;
     constructor(
         name: string,
         cover: string,
@@ -19,18 +14,11 @@ export abstract class VokiCreationMainPageState implements IVokiCreationPageStat
     ) {
         this.savedName = $state<string>(name);
         this.savedCover = $state<string>(cover);
-        this.savedTags = $state(new Set());
+        this.savedTags = $state(new Set(tags));
         this.savedDetails = $state<VokiDetails>(details);
-
-        this.currentName = $state<string>(name);
-        this.currentCover = $state<string>(cover);
-        this.currentDetails = $state<VokiDetails>(details);
     }
+    public isNameEditing = $state<boolean>(false);
+    public isDetailsEditing = $state<boolean>(false);
+
     abstract get hasAnyUnsavedChanges(): boolean;
-
-    protected detailsAreUnsaved(): boolean {
-        return this.currentDetails!.description !== this.savedDetails.description
-            || this.currentDetails!.language !== this.savedDetails.language
-            || this.currentDetails!.hasMatureContent !== this.savedDetails.hasMatureContent;
-    }
 }

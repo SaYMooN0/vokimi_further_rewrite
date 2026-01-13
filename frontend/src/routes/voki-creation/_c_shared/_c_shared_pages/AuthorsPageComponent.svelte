@@ -34,10 +34,11 @@
 					<VokiManagersSection
 						isViewerPrimaryAuthor={pageState.primaryAuthorId === authState.userId}
 						viewerId={authState.userId}
-						expectedManagers={pageState.expectedManagers}
+						expectedManagers={pageState.savedExpectedManagers}
 						vokiCoAuthors={pageState.coAuthorIds}
-						updateManagersSetting={(newManagers) => (pageState.expectedManagers = newManagers)}
+						updateManagersSetting={(newManagers) => (pageState.savedExpectedManagers = newManagers)}
 						vokiId={pageState.vokiId}
+						bind:isEditing={pageState.isManagerSettinEditing}
 					/>
 				{/if}
 			</div>

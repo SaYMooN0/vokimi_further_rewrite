@@ -1,21 +1,40 @@
 <script lang="ts">
-	import { page } from '$app/state';
 	import ErrView from '$lib/components/errs/ErrView.svelte';
 	import VokiCreationLayoutNavBar from '../../../_c_layout/VokiCreationLayoutNavBar.svelte';
 	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
+	import UnsavedChangesConfirmDialog from './_c_dialogs/UnsavedChangesConfirmDialog.svelte';
+	import { goto } from '$app/navigation';
 
-	let vokiId: string | undefined = page.params.vokiId;
+	interface Props {
+		vokiId: string | undefined;
+	}
+	let { vokiId }: Props = $props();
 	function withBasePath(path: string) {
-		return '/voki-creation/general/' + vokiId + '/' + path;
+		return `/voki-creation/general/${vokiId}/${path}`;
 	}
 
+	let confirmDialog = $state<UnsavedChangesConfirmDialog>()!;
+	let pendingUrl = $state<string>();
+
 	const currentPageContext = getVokiCreationPageContext();
-	function handleBeforeNavigate(): boolean {
+	function handleBeforeNavigate(href: string): boolean {
 		if (currentPageContext.currentPageState?.hasAnyUnsavedChanges) {
-			...add confirm dialog
-			return true;
+			pendingUrl = href;
+			confirmDialog?.open();
+			return false;
 		}
 		return true;
+	}
+
+	function handleConfirm() {
+		if (pendingUrl) {
+			goto(pendingUrl);
+			pendingUrl = undefined;
+		}
+	}
+
+	function handleCancel() {
+		pendingUrl = undefined;
 	}
 </script>
 
@@ -33,6 +52,12 @@
 {:else}
 	<ErrView err={{ message: 'Incorrect link. Voki id is not specified' }} />
 {/if}
+
+<UnsavedChangesConfirmDialog
+	bind:this={confirmDialog}
+	goToPage={handleConfirm}
+	onBeforeCancel={handleCancel}
+/>
 {#snippet authorsIcon()}
 	<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
 		<path

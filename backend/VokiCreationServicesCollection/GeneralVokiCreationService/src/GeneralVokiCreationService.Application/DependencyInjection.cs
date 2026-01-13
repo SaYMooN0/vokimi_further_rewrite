@@ -9,9 +9,9 @@ namespace GeneralVokiCreationService.Application;
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services) {
-        services.AddApplicationMessaging(typeof(DependencyInjection));
         
         services.AddLibMessaging();
+        services.AddApplicationMessaging(typeof(DependencyInjection));
         
         services.AddSingleton<DraftVokiAnswerDataSavingService>();
 

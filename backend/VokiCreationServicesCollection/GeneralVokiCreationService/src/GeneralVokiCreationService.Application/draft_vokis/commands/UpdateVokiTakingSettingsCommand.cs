@@ -22,7 +22,7 @@ internal sealed class UpdateVokiTakingProcessSettingsCommandHandler :
     public async Task<ErrOr<VokiTakingProcessSettings>> Handle(
         UpdateVokiTakingProcessSettingsCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetById(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetByIdForUpdate(command.VokiId, ct))!;
         voki.UpdateTakingProcessSettings(command.NewSettings);
         await _draftGeneralVokisRepository.Update(voki, ct);
         return voki.TakingProcessSettings;

@@ -11,12 +11,13 @@ public static class DbGuard
         this DbContext db,
         IAggregateRoot entity,
         [CallerMemberName] string caller = "",
+        [CallerFilePath] string callerFilePath = "",
         [CallerLineNumber] int callerLineNumber = 0
     ) {
         if (db.Entry(entity).State == EntityState.Detached) {
             UnexpectedBehaviourException.ThrowErr(
                 err: ErrFactory.ProgramBug(
-                    $"Detached entity '{entity.GetType().FullName}' passed to {caller}. Line number: {callerLineNumber}"
+                    $"Detached entity '{entity.GetType().FullName}' passed to '{caller}' method. File: {callerFilePath}. Line number: {callerLineNumber}"
                 ),
                 userMessage: "Something went wrong while processing your request. Please try again late",
                 caller: caller
@@ -28,6 +29,7 @@ public static class DbGuard
         this DbContext db,
         IEnumerable<IAggregateRoot> entities,
         [CallerMemberName] string caller = "",
+        [CallerFilePath] string callerFilePath = "",
         [CallerLineNumber] int callerLineNumber = 0
     ) {
         IList<IAggregateRoot> materialized =
@@ -43,6 +45,7 @@ public static class DbGuard
                 db,
                 errEntity,
                 caller: caller,
+                callerFilePath: callerFilePath,
                 callerLineNumber: callerLineNumber
             );
         }
@@ -54,6 +57,7 @@ public static class DbGuard
         IAggregateRoot entity,
         string userMessage,
         [CallerMemberName] string caller = "",
+        [CallerFilePath] string callerFilePath = "",
         [CallerLineNumber] int callerLineNumber = 0
     ) {
         if (db.Entry(entity).State == EntityState.Detached) {

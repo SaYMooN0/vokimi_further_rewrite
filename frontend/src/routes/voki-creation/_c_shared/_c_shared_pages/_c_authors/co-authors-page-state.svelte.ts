@@ -2,16 +2,23 @@ import { ApiVokiCreationCore, RJO, ApiUserProfiles } from "$lib/ts/backend-commu
 import type { Err } from "$lib/ts/err";
 import { watch } from "runed";
 import type { UserPreviewWithInvitesSettings, UsersRecommendedToInvite, UserInviteState, VokiExpectedManagersSetting } from "./types";
+import type { IVokiCreationPageState } from "../../../voki-creation-page-context";
 
-export class CoAuthorsPageState {
+export class CoAuthorsPageState implements IVokiCreationPageState {
     readonly vokiId: string;
     readonly maxCoAuthorsCount: number;
-
     readonly primaryAuthorId: string;
+
     coAuthorIds: string[];
     invitedForCoAuthorUserIds: string[];
     coAuthorsDialogState: CoAuthorsInviteDialogState;
-    expectedManagers: VokiExpectedManagersSetting;
+    savedExpectedManagers: VokiExpectedManagersSetting;
+
+    public isManagerSettinEditing = $state(false);
+
+    get hasAnyUnsavedChanges(): boolean {
+        return this.isManagerSettinEditing;
+    }
 
     constructor(
         vokiId: string,
@@ -27,7 +34,7 @@ export class CoAuthorsPageState {
         this.primaryAuthorId = primaryAuthorId;
         this.coAuthorIds = $state(coAuthorIds);
         this.invitedForCoAuthorUserIds = $state(invitedForCoAuthorUserIds);
-        this.expectedManagers = $state(expectedManagers);
+        this.savedExpectedManagers = $state(expectedManagers);
 
         this.coAuthorsDialogState = new CoAuthorsInviteDialogState(vokiId);
     }

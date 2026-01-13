@@ -4,8 +4,6 @@ import { MyVokisPageTabMarker } from './tab-marker';
 export const ssr = true;
 export const prerender = true;
 export const load: LayoutServerLoad = async ({ url, cookies }): Promise<{ currentTab: MyVokisPageTabMarker.Tab }> => {
-	console.log(url);
-
 	const currentTab = extractTabFromPathname(url.pathname);
 
 	if (!currentTab) {

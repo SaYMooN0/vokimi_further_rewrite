@@ -7,8 +7,9 @@ namespace GeneralVokiCreationService.Application.common;
 public interface IDraftGeneralVokisRepository : IDraftVokiRepository
 {
     new Task<DraftGeneralVoki?> GetById(VokiId generalVokiId, CancellationToken ct);
+    new Task<DraftGeneralVoki?> GetByIdForUpdate(VokiId generalVokiId, CancellationToken ct);
 
-    async Task<BaseDraftVoki?> IDraftVokiRepository.GetById(VokiId vokiId, CancellationToken ct) =>
+    async Task<BaseDraftVoki?> IDraftVokiRepository.GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
         await GetById(vokiId, ct);
 
     Task Add(DraftGeneralVoki voki, CancellationToken ct );

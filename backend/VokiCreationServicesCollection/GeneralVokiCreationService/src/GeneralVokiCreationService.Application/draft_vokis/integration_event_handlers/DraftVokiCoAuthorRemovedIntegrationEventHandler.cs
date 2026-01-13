@@ -31,7 +31,7 @@ public class DraftVokiCoAuthorRemovedIntegrationEventHandler : IConsumer<DraftVo
             return;
         }
 
-        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetById(msg.VokiId, context.CancellationToken);
+        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetByIdForUpdate(msg.VokiId, context.CancellationToken);
         if (voki is null) {
             _logger.LogWarning(
                 "Received {EventName} but draft voki {VokiId} was not found. Could not remove co-author {AppUserId}",

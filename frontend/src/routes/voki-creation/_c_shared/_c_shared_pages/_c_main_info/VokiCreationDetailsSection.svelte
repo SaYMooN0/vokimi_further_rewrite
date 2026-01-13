@@ -6,38 +6,40 @@
 	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import DetailsSectionEditState from './_c_details_section/DetailsSectionEditState.svelte';
 	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
+
 	interface Props {
-		details: VokiDetails;
+		savedDetails: VokiDetails;
 		vokiId: string;
+		isEditing: boolean;
+		updateSavedVokiDetails: (newDetails: VokiDetails) => void;
 	}
-	let { details, vokiId }: Props = $props();
-	let isEditing = $state(false);
+	let { savedDetails, vokiId, isEditing = $bindable(), updateSavedVokiDetails }: Props = $props();
 </script>
 
 <div class="voki-details-section">
 	{#if isEditing}
 		<DetailsSectionEditState
 			{vokiId}
-			{details}
-			updateParent={(newDetails) => (details = newDetails)}
+			{savedDetails}
+			updateSavedDetails={(newDetails) => (savedDetails = newDetails)}
 			cancelEditing={() => (isEditing = false)}
 		/>
 	{:else}
 		<p class="field">
 			<VokiCreationFieldName fieldName="Description:" />
-			{#if StringUtils.isNullOrWhiteSpace(details.description)}
+			{#if StringUtils.isNullOrWhiteSpace(savedDetails.description)}
 				<FieldNotSetLabel text="No description" class="no-description" />
 			{:else}
-				{details.description}
+				{savedDetails.description}
 			{/if}
 		</p>
 		<p class="field">
 			<VokiCreationFieldName fieldName="Language:" />
-			{LanguageUtils.name(details.language)}
+			{LanguageUtils.name(savedDetails.language)}
 		</p>
 		<p class="field">
 			<VokiCreationFieldName fieldName="Mature content:" />
-			{#if details.hasMatureContent}
+			{#if savedDetails.hasMatureContent}
 				Contains mature content
 			{:else}
 				No mature content

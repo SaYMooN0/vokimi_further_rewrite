@@ -5,8 +5,8 @@ export interface IVokiCreationPageState {
 	get hasAnyUnsavedChanges(): boolean;
 }
 
-
 const key = Symbol("voki-creation-page-api");
+
 type ContextType = {
 	vokiCreationApi: IVokiCreationBackendService,
 	headerVokiName: {
@@ -45,8 +45,4 @@ export function setVokiCreationCurrentPageStateAsUnableToLoad() {
 			return false;
 		}
 	}
-}
-export function getCurrentPageState(): IVokiCreationPageState | undefined {
-	const context = getContext<ContextType>(key);
-	return context.currentPageState;
 }

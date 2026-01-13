@@ -17,13 +17,23 @@
 <div class="main-info-tab-container">
 	<div class="main-section">
 		<VokiCreationBasicHeader header="Voki main info" />
-		<VokiCreationNameSection vokiName={pageState.currentName} {vokiId} />
+		<VokiCreationNameSection
+			savedName={pageState.savedName}
+			bind:isEditing={pageState.isNameEditing}
+			updateSavedVokiName={(newName) => (pageState.savedName = newName)}
+			{vokiId}
+		/>
 		<VokiCreationTagsSection
 			tags={pageState.savedTags}
 			{vokiId}
-			updateTagsOnSave={(newTags) => (pageState.savedTags = newTags)}
+			updateSavedTags={(newTags) => (pageState.savedTags = newTags)}
 		/>
-		<VokiCreationDetailsSection details={pageState.currentDetails} {vokiId} />
+		<VokiCreationDetailsSection
+			savedDetails={pageState.savedDetails}
+			bind:isEditing={pageState.isDetailsEditing}
+			updateSavedVokiDetails={(newDetails) => (pageState.savedDetails = newDetails)}
+			{vokiId}
+		/>
 		<VokiCreationBasicHeader header="Interaction settings" />
 
 		{@render interactionSettingsSection()}
@@ -31,7 +41,11 @@
 	<div class="cover-section">
 		<VokiCreationBasicHeader header="Voki cover" />
 
-		<VokiCreationCoverSection cover={pageState.currentCover} {vokiId} />
+		<VokiCreationCoverSection
+			savedCover={pageState.savedCover}
+			updateSavedVokiCover={(newCover) => (pageState.savedCover = newCover)}
+			{vokiId}
+		/>
 	</div>
 </div>
 

@@ -13,6 +13,7 @@
 		updateManagersSetting: (setting: VokiExpectedManagersSetting) => void;
 		vokiCoAuthors: string[];
 		vokiId: string;
+		isEditing: boolean;
 	}
 	let {
 		isViewerPrimaryAuthor,
@@ -20,10 +21,9 @@
 		expectedManagers,
 		updateManagersSetting,
 		vokiCoAuthors,
-		vokiId
+		vokiId,
+		isEditing = $bindable()
 	}: Props = $props();
-
-	let isEditing = $state(false);
 
 	function startEditing() {
 		isEditing = true;
@@ -63,6 +63,5 @@
 		padding: 1rem;
 		border-radius: 0.5rem;
 		box-shadow: var(--shadow-xs);
-
 	}
 </style>

@@ -62,7 +62,6 @@
 		}
 		return VokiUtils.canUserManageVoki(data.response.data, uId);
 	}
-	console.log(data);
 </script>
 
 {#if !data.response.isSuccess}

@@ -81,12 +81,16 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
     }
 
 
+     async Task<BaseDraftVoki?> IDraftVokiRepository.GetById(VokiId vokiId, CancellationToken ct) => await _db.Vokis
+        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
+
     public Task<DraftGeneralVoki?> GetByIdForUpdate(VokiId generalVokiId, CancellationToken ct) => _db.Vokis
         .ForUpdate()
         .FirstOrDefaultAsync(v => v.Id == generalVokiId, cancellationToken: ct);
+
     async Task<BaseDraftVoki?> IDraftVokiRepository.GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
         await GetByIdForUpdate(generalVokiId: vokiId, ct);
-    
+
     public async Task<(VokiName, AppUserId PrimaryAuthor, VokiCoAuthorIdsSet CoAuthors)?> GetVokiName(
         VokiId vokiId, CancellationToken ct
     ) {
@@ -105,7 +109,6 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
         return (res.Name, res.PrimaryAuthorId, res.CoAuthors);
     }
 
-    
 
     public async Task Update(DraftGeneralVoki generalVoki, CancellationToken ct) {
         _db.ThrowIfDetached(generalVoki);

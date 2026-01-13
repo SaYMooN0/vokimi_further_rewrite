@@ -28,9 +28,9 @@ internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, DraftVok
         }
 
         if (voki.DoesUserHaveAccess(query.UserCtx(_userCtxProvider))) {
-            return ErrFactory.NoAccess("You do not have access to this Voki");
+            return voki;
         }
 
-        return voki;
+        return ErrFactory.NoAccess("You do not have access to this Voki");
     }
 }

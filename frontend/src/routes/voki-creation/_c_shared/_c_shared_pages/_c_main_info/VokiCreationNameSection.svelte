@@ -7,39 +7,36 @@
 	import type { Err } from '$lib/ts/err';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../VokiCreationSaveAndCancelButtons.svelte';
-
-	let { vokiName, vokiId }: { vokiName: string; vokiId: string } = $props<{
-		vokiName: string;
+	interface Props {
+		savedName: string;
 		vokiId: string;
-	}>();
+		isEditing: boolean;
+		updateSavedVokiName: (newName: string) => void;
+	}
+	let { savedName, vokiId, isEditing = $bindable(), updateSavedVokiName }: Props = $props();
 
 	let textarea = $state<HTMLTextAreaElement>()!;
-	let newName = $state(vokiName);
-	let isEditing = $state(false);
+	let nameEditingValue = $state(savedName);
 	let savingErrs = $state<Err[]>([]);
 	const { vokiCreationApi, headerVokiName } = getVokiCreationPageContext();
 
-	new TextareaAutosize({ element: () => textarea, input: () => newName });
+	new TextareaAutosize({ element: () => textarea, input: () => nameEditingValue });
 
 	function startEditing() {
-		newName = vokiName;
+		nameEditingValue = savedName;
 		isEditing = true;
 		savingErrs = [];
 	}
 	async function saveChanges() {
-		const response = await vokiCreationApi.updateVokiName(vokiId, newName);
+		const response = await vokiCreationApi.updateVokiName(vokiId, nameEditingValue);
 		if (response.isSuccess) {
-			vokiName = newName;
+			updateSavedVokiName(response.data.newName);
 			isEditing = false;
 			savingErrs = [];
 			headerVokiName.invalidate();
 		} else {
 			savingErrs = response.errs;
 		}
-	}
-	if (vokiName != headerVokiName.value) {
-		console.log('vokiName != headerVokiName.value', vokiName, headerVokiName.value);
-		// headerVokiName.invalidate();
 	}
 </script>
 
@@ -50,7 +47,7 @@
 		<textarea
 			class="name-input"
 			bind:this={textarea}
-			bind:value={newName}
+			bind:value={nameEditingValue}
 			name={StringUtils.rndStr()}
 		/>
 		{#if savingErrs.length > 0}
@@ -63,7 +60,7 @@
 	{:else}
 		<p class="voki-name-p">
 			<VokiCreationFieldName fieldName="Voki name:" />
-			<label class="voki-name-value">{vokiName}</label>
+			<label class="voki-name-value">{savedName}</label>
 		</p>
 		<VokiCreationDefaultButton text="Edit name" onclick={startEditing} />
 	{/if}

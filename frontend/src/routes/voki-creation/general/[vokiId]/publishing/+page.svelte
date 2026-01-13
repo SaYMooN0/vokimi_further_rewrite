@@ -6,8 +6,6 @@
 	import { setVokiCreationCurrentPageState } from '../../../voki-creation-page-context';
 
 	let { data }: PageProps = $props();
-	console.log(data);
-
 	setVokiCreationCurrentPageState(new GeneralVokiCreationPublishingPageState());
 </script>
 

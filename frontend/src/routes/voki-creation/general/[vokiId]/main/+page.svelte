@@ -28,13 +28,22 @@
 
 {#if !data.isSuccess}
 	<VokiCreationPageLoadingErr vokiId={data.vokiId!} errs={data.errs} />
-{:else}
-	<MainInfoPageComponent pageState={pageState!} vokiId={data.vokiId!}>
+{:else if pageState}
+	<MainInfoPageComponent {pageState} vokiId={data.vokiId!}>
 		{#snippet interactionSettingsSection()}
 			<GeneralVokiCreationInteractionSettingsSection
-				settings={data.data.interactionSettings}
+				savedInteractionSettings={pageState.savedInteractionSettings}
+				bind:isEditing={pageState.isInteractionSettingsEditing}
+				updateSavedInteractionSettings={(newSettings) => {
+					pageState.savedInteractionSettings = newSettings;
+				}}
 				vokiId={data.vokiId!}
 			/>
 		{/snippet}
 	</MainInfoPageComponent>
+{:else}
+	<VokiCreationPageLoadingErr
+		vokiId={data.vokiId!}
+		errs={[{ message: 'Could not initialize page state' }]}
+	/>
 {/if}

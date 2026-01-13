@@ -4,11 +4,12 @@
 	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import CoverChangingDialog from './_c_cover_section/CoverChangingDialog.svelte';
-
-	let { cover, vokiId }: { cover: string; vokiId: string } = $props<{
-		cover: string;
+	interface Props {
+		savedCover: string;
 		vokiId: string;
-	}>();
+		updateSavedVokiCover: (newCover: string) => void;
+	}
+	let { savedCover, vokiId, updateSavedVokiCover }: Props = $props();
 	const vokiCreationCtx = getVokiCreationPageContext();
 	let version = $state(0);
 	let isLoading = $state(false);
@@ -17,7 +18,7 @@
 		isLoading = true;
 		const response = await vokiCreationCtx.vokiCreationApi.setVokiCoverToDefault(vokiId);
 		if (response.isSuccess) {
-			cover = response.data.newCover;
+			updateSavedVokiCover(response.data.newCover);
 		} else {
 			toast.error("Couldn't set voki cover to default");
 		}
@@ -27,7 +28,7 @@
 		isLoading = true;
 		const response = await vokiCreationCtx.vokiCreationApi.updateVokiCover(vokiId, newCover);
 		if (response.isSuccess) {
-			cover = response.data.newCover;
+			updateSavedVokiCover(response.data.newCover);
 			version++;
 		} else {
 			toast.error("Couldn't update voki cover");
@@ -47,7 +48,7 @@
 			<label>Updating Voki cover</label>
 		</div>
 	{:else}
-		<img src={StorageBucketMain.fileSrcWithVersion(cover, version)} alt="voki cover" />
+		<img src={StorageBucketMain.fileSrcWithVersion(savedCover, version)} alt="voki cover" />
 		<button class="img-btn change-btn" onclick={() => changeCoverDialog.open()}>Change cover</button
 		>
 

@@ -6,13 +6,17 @@
 	interface Props {
 		tags: Set<string>;
 		vokiId: string;
-		updateTagsOnSave: (newTags: Set<string>) => void;
+		updateSavedTags: (newTags: Set<string>) => void;
 	}
-	let { tags, vokiId, updateTagsOnSave }: Props = $props();
+	let { tags, vokiId, updateSavedTags }: Props = $props();
 	let dialogElement = $state<VokiCreationTagsEditingDialog>()!;
 </script>
 
-<VokiCreationTagsEditingDialog bind:this={dialogElement} {vokiId} {updateTagsOnSave} />
+<VokiCreationTagsEditingDialog
+	bind:this={dialogElement}
+	{vokiId}
+	updateTagsOnSave={updateSavedTags}
+/>
 <div class="voki-tags-section">
 	<p class="tags-list">
 		<VokiCreationFieldName fieldName="Tags:" />

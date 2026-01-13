@@ -13,7 +13,6 @@
 	const { links, onBeforeNavigate }: Props = $props();
 
 	function handleLinkClick(event: MouseEvent, href: string) {
-		console.log('handleLinkClick', href);
 		// Allow middle mouse button click (open in new tab)
 		if (event.button === 1) {
 			return;
@@ -21,14 +20,8 @@
 
 		// Only intercept left mouse button clicks
 		if (event.button === 0 && onBeforeNavigate) {
-			console.log('1', href);
-
 			const shouldNavigate = onBeforeNavigate(href);
-			console.log(shouldNavigate, href);
-
 			if (!shouldNavigate) {
-				console.log('3', href);
-
 				event.preventDefault();
 			}
 		}
