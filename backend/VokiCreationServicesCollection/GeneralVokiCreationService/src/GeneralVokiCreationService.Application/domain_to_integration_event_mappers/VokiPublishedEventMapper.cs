@@ -1,5 +1,4 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.events;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.events;
 using SharedKernel.integration_events.voki_publishing;
 using static SharedKernel.integration_events.voki_publishing.GeneralVokiAnswerTypeDataIntegrationEventDto;
 

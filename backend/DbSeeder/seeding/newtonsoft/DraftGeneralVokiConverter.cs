@@ -2,7 +2,6 @@ using System.Collections.Immutable;
 using System.Reflection;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using Newtonsoft.Json;

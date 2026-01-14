@@ -1,5 +1,4 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers.type_specific_data;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
@@ -14,11 +13,8 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     private VokiQuestion() { }
     public VokiQuestionText Text { get; private set; }
     public VokiQuestionImagesSet ImageSet { get; private set; }
-    public GeneralVokiAnswerType AnswersType { get; }
     public ushort OrderInVoki { get; private set; }
-    private readonly List<VokiQuestionAnswer> _answers;
-    public ImmutableArray<VokiQuestionAnswer> Answers => _answers.ToImmutableArray();
-
+    public BaseQuestionTypeSpecificContent Content { get; private set; }
     public bool ShuffleAnswers { get; private set; }
     public QuestionAnswersCountLimit AnswersCountLimit { get; private set; }
 
@@ -33,17 +29,13 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         Id = id;
         Text = text;
         ImageSet = imageSet;
-        AnswersType = answersType;
+        Content = BaseQuestionTypeSpecificContent.Empty(answersType);
         OrderInVoki = orderInVoki;
-        _answers = [];
         AnswersCountLimit = answersCountLimit;
         ShuffleAnswers = false;
     }
 
-    public static VokiQuestion CreateNew(
-        ushort orderInVoki,
-        GeneralVokiAnswerType answersType
-    ) => new(
+    public static VokiQuestion CreateNew(ushort orderInVoki, GeneralVokiAnswerType answersType) => new(
         GeneralVokiQuestionId.CreateNew(),
         GeneralVokiPresets.GetRandomQuestionText(),
         VokiQuestionImagesSet.Default,

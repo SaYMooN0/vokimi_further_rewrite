@@ -17,13 +17,9 @@ public interface IDraftGeneralVokisRepository : IDraftVokiRepository
     Task<DraftGeneralVoki?> GetWithQuestionsForUpdate(VokiId vokiId, CancellationToken ct );
     Task<DraftGeneralVoki?> GetWithQuestions(VokiId vokiId, CancellationToken ct );
 
-    Task<DraftGeneralVoki?> GetWithQuestionAnswersForUpdate(VokiId vokiId, CancellationToken ct );
-    Task<DraftGeneralVoki?> GetWithQuestionAnswers(VokiId vokiId, CancellationToken ct );
 
     Task<DraftGeneralVoki?> GetWithResultsForUpdate(VokiId vokiId, CancellationToken ct );
     Task<DraftGeneralVoki?> GetWithResults(VokiId vokiId, CancellationToken ct );
 
-    Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResultsForUpdate(VokiId vokiId, CancellationToken ct );
-    Task<DraftGeneralVoki?> GetWithQuestionAnswersAndResults(VokiId vokiId, CancellationToken ct );
     Task Delete(DraftGeneralVoki voki, CancellationToken ct );
 }
