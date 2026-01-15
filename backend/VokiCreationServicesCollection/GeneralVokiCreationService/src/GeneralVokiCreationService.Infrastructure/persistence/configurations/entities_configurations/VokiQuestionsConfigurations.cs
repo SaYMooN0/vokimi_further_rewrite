@@ -15,9 +15,6 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .Property(x => x.Id)
             .ValueGeneratedNever()
             .HasGuidBasedIdConversion();
-
-        builder
-            .Property(x => x.AnswersType);
         
         builder
             .Property(x => x.Text)
@@ -27,13 +24,10 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .Property(x => x.ImageSet)
             .HasConversion<VokiQuestionImagesSetConverter>();
 
-        builder.Ignore(x => x.Answers);
+        
         builder
-            .HasMany<VokiQuestionAnswer>("_answers")
-            .WithOne()
-            .HasForeignKey("QuestionId")
-            .IsRequired()            
-            .OnDelete(DeleteBehavior.Cascade);
+            .Property(x => x.Content)
+            .HasConversion<VokiQuestionTypeSpecificContentConverter>();
 
         builder
             .Property(x => x.AnswersCountLimit)

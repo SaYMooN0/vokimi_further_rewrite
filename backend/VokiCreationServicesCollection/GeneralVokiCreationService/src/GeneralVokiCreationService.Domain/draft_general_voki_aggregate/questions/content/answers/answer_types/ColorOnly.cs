@@ -7,7 +7,7 @@ public abstract partial record BaseQuestionAnswer
     public sealed record ColorOnly(
         HexColor Color,
         AnswerOrderInQuestion Order,
-        ImmutableHashSet<GeneralVokiResultId> RelatedResultIds
+        AnswerRelatedResultIdsSet RelatedResultIds
     ) : BaseQuestionAnswer(Order, RelatedResultIds)
     {
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.TextOnly;

@@ -76,7 +76,7 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (imgsSet) => Results.Json(new {
-            NewKeys = imgsSet.Keys.Select(s => s.ToString()).ToArray(),
+            NewKeys = ImmutableArrayExtensions.Select(imgsSet.Keys, s => s.ToString()).ToArray(),
             NewWidth = imgsSet.AspectRatio.Width,
             NewHeight = imgsSet.AspectRatio.Height
         }));

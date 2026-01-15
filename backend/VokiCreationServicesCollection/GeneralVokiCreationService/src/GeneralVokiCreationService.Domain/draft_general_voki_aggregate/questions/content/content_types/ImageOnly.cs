@@ -1,0 +1,29 @@
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
+using SharedKernel.common.vokis.general_vokis;
+
+namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
+
+
+public abstract partial record BaseQuestionTypeSpecificContent
+{
+    public sealed record ImageOnly(
+        QuestionAnswersList<BaseQuestionAnswer.ImageOnly> Answers
+    ) : BaseQuestionTypeSpecificContent, IContentWithStorageKey
+    {
+        public override GeneralVokiAnswerType AnswersType => GeneralVokiAnswerType.ImageOnly;
+        public override IEnumerable<BaseQuestionAnswer> BaseAnswers => Answers.AsIEnumerable;
+
+
+        public override BaseQuestionTypeSpecificContent RemoveResult(GeneralVokiResultId resultId) => new ImageOnly(
+            Answers: Answers.ApplyForEach(a => (BaseQuestionAnswer.ImageOnly)a.RemoveRelatedResult(resultId))
+        );
+
+        public static ImageOnly Empty() => new(
+            Answers: QuestionAnswersList<BaseQuestionAnswer.ImageOnly>.Empty()
+        );
+
+        public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
+            Answers.All(a => a.IsForCorrectVokiQuestion(vokiId, questionId));
+    }
+    
+}

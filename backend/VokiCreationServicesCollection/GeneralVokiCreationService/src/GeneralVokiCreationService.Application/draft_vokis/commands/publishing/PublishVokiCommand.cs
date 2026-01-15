@@ -29,7 +29,7 @@ internal sealed class PublishVokiWithNoIssuesCommandHandler :
     public async Task<ErrOr<VokiSuccessfullyPublishedResult>> Handle(
         PublishVokiWithNoIssuesCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionAnswersAndResultsForUpdate(command.VokiId, ct))!;
+        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsAndResultsForUpdate(command.VokiId, ct))!;
 
         var publishingRes = voki.PublishWithNoIssues(_dateTimeProvider);
         if (publishingRes.IsErr(out var err)) {

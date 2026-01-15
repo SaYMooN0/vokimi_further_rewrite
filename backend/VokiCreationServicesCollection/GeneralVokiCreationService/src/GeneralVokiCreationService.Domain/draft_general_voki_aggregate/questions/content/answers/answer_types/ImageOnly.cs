@@ -8,8 +8,8 @@ public abstract partial record BaseQuestionAnswer
     public sealed record ImageOnly(
         GeneralVokiAnswerImageKey Image,
         AnswerOrderInQuestion Order,
-        ImmutableHashSet<GeneralVokiResultId> RelatedResultIds
-    ) : BaseQuestionAnswer(Order, RelatedResultIds), IVokiAnswerTypeDataWithStorageKey
+        AnswerRelatedResultIdsSet RelatedResultIds
+    ) : BaseQuestionAnswer(Order, RelatedResultIds), IAnswerWithStorageKey
     {
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.ImageOnly;
 

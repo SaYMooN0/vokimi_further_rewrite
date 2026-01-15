@@ -1,6 +1,6 @@
 ﻿using SharedKernel.exceptions;
 
-namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
+namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers;
 
 public sealed class GeneralVokiAnswerText : ValueObject
 {

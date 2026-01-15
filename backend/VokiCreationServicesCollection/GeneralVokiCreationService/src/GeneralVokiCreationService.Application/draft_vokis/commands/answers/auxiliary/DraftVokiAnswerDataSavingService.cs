@@ -1,5 +1,5 @@
 ﻿using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 using VokimiStorageKeysLib;
@@ -90,8 +90,7 @@ public class DraftVokiAnswerDataSavingService
         TempImageKey tempKey = tempKeyCreationRes.AsSuccess();
         ImageFileExtension ext = tempKey.Extension;
         var destination = GeneralVokiAnswerImageKey.CreateForAnswer(vokiId, questionId, ext);
-        ErrOrNothing copyingRes =
-            await _mainStorageBucket.CopyVokiAnswerImageFromTempToStandard(tempKey, destination, ct);
+        ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiAnswerImageFromTempToStandard(tempKey, destination, ct);
         if (copyingRes.IsErr(out err)) {
             return ErrFactory.Unspecified("Couldn't save answer image", details: err.Message);
         }

@@ -1,6 +1,4 @@
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
 using SharedKernel.common.vokis.general_vokis;
-using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
 
@@ -9,7 +7,7 @@ public abstract partial record BaseQuestionAnswer
     public sealed record TextOnly(
         GeneralVokiAnswerText Text,
         AnswerOrderInQuestion Order,
-        ImmutableHashSet<GeneralVokiResultId> RelatedResultIds
+        AnswerRelatedResultIdsSet RelatedResultIds
     ) : BaseQuestionAnswer(Order, RelatedResultIds)
     {
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.TextOnly;

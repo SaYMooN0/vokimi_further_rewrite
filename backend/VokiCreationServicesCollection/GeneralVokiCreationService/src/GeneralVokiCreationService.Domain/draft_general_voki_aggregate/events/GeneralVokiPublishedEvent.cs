@@ -1,4 +1,5 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
@@ -29,18 +30,10 @@ public record QuestionDomainEventDto(
     GeneralVokiQuestionId Id,
     VokiQuestionText Text,
     VokiQuestionImagesSet ImageSet,
-    GeneralVokiAnswerType AnswersType,
     ushort OrderInVoki,
-    AnswerDomainEventDto[] Answers,
     bool ShuffleAnswers,
-    QuestionAnswersCountLimit AnswersCountLimit
-);
-
-public record AnswerDomainEventDto(
-    GeneralVokiAnswerId Id,
-    ushort OrderInQuestion,
-    BaseVokiAnswerTypeData TypeData,
-    GeneralVokiResultId[] RelatedResultIds
+    QuestionAnswersCountLimit AnswersCountLimit,
+    BaseQuestionTypeSpecificContent Content
 );
 
 public record ResultDomainEventDto(

@@ -4,7 +4,7 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questio
 
 public sealed class QuestionAnswersList<T> : ValueObject where T : BaseQuestionAnswer
 {
-    public ImmutableArray<T> Items { get; }
+    private ImmutableArray<T> Items { get; }
 
     private QuestionAnswersList(ImmutableArray<T> items) {
         Items = items;
@@ -26,4 +26,11 @@ public sealed class QuestionAnswersList<T> : ValueObject where T : BaseQuestionA
     public static QuestionAnswersList<T> Empty() => new([]);
 
     public override IEnumerable<object> GetEqualityComponents() => Items;
+
+    public QuestionAnswersList<T> ApplyForEach(Func<T, T> func) =>
+        new(Items.Select(func).ToImmutableArray());
+
+    public IEnumerable<TOutput> Select<TOutput>(Func<T, TOutput> func) => Items.Select(func);
+    public IEnumerable<BaseQuestionAnswer> AsIEnumerable => Items.Select(a => (BaseQuestionAnswer)a);
+    public bool All(Func<T, bool> func) => Items.All(func);
 }

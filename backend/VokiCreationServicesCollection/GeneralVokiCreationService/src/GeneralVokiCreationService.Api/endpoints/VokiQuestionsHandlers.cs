@@ -23,7 +23,7 @@ internal class VokiQuestionsHandlers : IEndpointGroup
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
-        GetVokiWithQuestionsQuery query = new(id);
+        GetVokiQuestionsOverviewQuery query = new(id);
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (voki) => Results.Json(

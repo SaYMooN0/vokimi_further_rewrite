@@ -4,14 +4,17 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questio
 
 public abstract partial record BaseQuestionAnswer(
     AnswerOrderInQuestion Order,
-    ImmutableHashSet<GeneralVokiResultId> RelatedResultIds
+    AnswerRelatedResultIdsSet RelatedResultIds
 )
 {
-    public const int MaxRelatedResultsForAnswerCount = 30;
     public abstract GeneralVokiAnswerType MatchingEnum { get; }
-  
+
+    [Pure]
+    public BaseQuestionAnswer RemoveRelatedResult(GeneralVokiResultId id) =>
+        this with { RelatedResultIds = RelatedResultIds.Remove(id) };
 }
-public interface IVokiAnswerTypeDataWithStorageKey
+
+public interface IAnswerWithStorageKey
 {
     public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId);
 }

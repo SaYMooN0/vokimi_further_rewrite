@@ -1,4 +1,3 @@
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.answers;
 using SharedKernel.common.vokis.general_vokis;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 
@@ -10,8 +9,8 @@ public abstract partial record BaseQuestionAnswer
         GeneralVokiAnswerText Text,
         GeneralVokiAnswerAudioKey Audio,
         AnswerOrderInQuestion Order,
-        ImmutableHashSet<GeneralVokiResultId> RelatedResultIds
-    ) : BaseQuestionAnswer(Order, RelatedResultIds), IVokiAnswerTypeDataWithStorageKey
+        AnswerRelatedResultIdsSet RelatedResultIds
+    ) : BaseQuestionAnswer(Order, RelatedResultIds), IAnswerWithStorageKey
     {
         public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.AudioAndText;
 

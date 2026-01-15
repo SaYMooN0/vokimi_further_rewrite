@@ -93,7 +93,7 @@ internal abstract class Program
         };
 
         settings.Converters.Add(new DraftVokiConverter());
-        settings.Converters.Add(new DraftGeneralVokiConverter());
+        // settings.Converters.Add(new DraftGeneralVokiConverter());
 
         DraftGeneralVoki vokiGen = JsonConvert.DeserializeObject<DraftGeneralVoki>(filledJson, settings)!;
         DraftVoki vokiCore = JsonConvert.DeserializeObject<DraftVoki>(filledJson, settings)!;

@@ -1,4 +1,5 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
@@ -29,7 +30,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         Id = id;
         Text = text;
         ImageSet = imageSet;
-        Content = BaseQuestionTypeSpecificContent.Empty(answersType);
+        Content = BaseQuestionTypeSpecificContent.CreateEmpty(answersType);
         OrderInVoki = orderInVoki;
         AnswersCountLimit = answersCountLimit;
         ShuffleAnswers = false;
@@ -78,76 +79,8 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOr<VokiQuestionAnswer> AddNewAnswer(
-        BaseVokiAnswerTypeData answerData,
-        ImmutableHashSet<GeneralVokiResultId> relatedResultIds
-    ) {
-        if (_answers.Count >= MaxAnswersCount) {
-            return ErrFactory.LimitExceeded(
-                "Answer count limit exceeded",
-                $"Maximum allowed answers count is {MaxAnswersCount}. Current answers count is {_answers.Count}"
-            );
-        }
-
-        if (answerData.MatchingEnum != this.AnswersType) {
-            return ErrFactory.Conflict(
-                "Given answer type does not correspond with the question answers type",
-                $"Answers data type: {answerData.MatchingEnum}. Question answers type: {this.AnswersType}"
-            );
-        }
-
-        var creationRes = VokiQuestionAnswer.CreateNew(
-            answerData, (ushort)_answers.Count, relatedResultIds
-        );
-
-        if (creationRes.IsErr(out var err)) {
-            return err;
-        }
-
-        var answer = creationRes.AsSuccess();
-        _answers.Add(answer);
-        return answer;
-    }
-
-    public ErrOr<VokiQuestionAnswer> UpdateAnswer(
-        GeneralVokiAnswerId answerId,
-        BaseVokiAnswerTypeData newAnswerData,
-        ImmutableHashSet<GeneralVokiResultId> newRelatedResultIds
-    ) {
-        if (newAnswerData.MatchingEnum != this.AnswersType) {
-            return ErrFactory.Conflict(
-                "Given answer type does not correspond with the question answers type",
-                $"Answers data type: {newAnswerData.MatchingEnum}. Question answers type: {this.AnswersType}"
-            );
-        }
-
-        VokiQuestionAnswer? answer = _answers.FirstOrDefault(a => a.Id == answerId);
-        if (answer is null) {
-            return ErrFactory.NotFound.Common("Cannot add update question answer because answer doesn't exist");
-        }
-
-        var updateRes = answer.Update(newAnswerData, newRelatedResultIds);
-        if (updateRes.IsErr(out var err)) {
-            return err;
-        }
-
-        return answer;
-    }
-
-    public bool DeleteAnswer(GeneralVokiAnswerId answerId) {
-        VokiQuestionAnswer? answer = _answers.FirstOrDefault(a => a.Id == answerId);
-        if (answer is null) {
-            return false;
-        }
-
-        return _answers.Remove(answer);
-    }
-
-    public void RemoveRelatedResultInAnswers(GeneralVokiResultId resultId) {
-        foreach (var a in _answers) {
-            a.RemoveRelatedResult(resultId);
-        }
-    }
+    public void RemoveRelatedResultInAnswers(GeneralVokiResultId resultId) =>
+        Content = Content.RemoveResult(resultId);
 
     public List<VokiPublishingIssue> CheckForPublishingIssues() {
         string questionText = Text.ToString();
@@ -155,54 +88,56 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
             ? questionText[..15] + "..."
             : questionText;
 
-        if (_answers.Count < MinAnswersCount) {
+        if (Content.BaseAnswers.Count() < MinAnswersCount) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
-                    $"[\"{preview}\"] question has too few answers ({_answers.Count}). Minimum required is {MinAnswersCount}",
+                    $"[\"{preview}\"] question has too few answers ({Content.BaseAnswers.Count()}). Minimum required is {MinAnswersCount}",
                     source: "Question answers",
-                    fixRecommendation: $"Add at least {MinAnswersCount - _answers.Count} more answer(s)"
+                    fixRecommendation: $"Add at least {MinAnswersCount - Content.BaseAnswers.Count()} more answer(s)"
                 )
             ];
         }
 
-        if (_answers.Count > MaxAnswersCount) {
+        if (Content.BaseAnswers.Count() > MaxAnswersCount) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
-                    $"[\"{preview}\"] question has too many answers ({_answers.Count}). Maximum allowed is {MaxAnswersCount}",
+                    $"[\"{preview}\"] question has too many answers ({Content.BaseAnswers.Count()}). Maximum allowed is {MaxAnswersCount}",
                     source: "Question answers",
-                    fixRecommendation: $"Remove {_answers.Count - MaxAnswersCount} answer(s) to meet the limit"
+                    fixRecommendation: $"Remove {Content.BaseAnswers.Count() - MaxAnswersCount} answer(s) to meet the limit"
                 )
             ];
         }
 
-        if (_answers.Count < AnswersCountLimit.MinAnswers) {
+        if (Content.BaseAnswers.Count() < AnswersCountLimit.MinAnswers) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
                     $"[\"{preview}\"] question's answer count is below the configured minimum ({AnswersCountLimit.MinAnswers})",
                     source: "Question answers",
                     fixRecommendation:
-                    $"Decrease the minimum limit or add at least {AnswersCountLimit.MinAnswers - _answers.Count} more answer(s)"
+                    $"Decrease the minimum limit or add at least {AnswersCountLimit.MinAnswers - Content.BaseAnswers.Count()} more answer(s)"
                 )
             ];
         }
 
-        if (_answers.Count < AnswersCountLimit.MaxAnswers) {
+        if (Content.BaseAnswers.Count() < AnswersCountLimit.MaxAnswers) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
                     $"[\"{preview}\"] question's answer count is below the configured maximum({AnswersCountLimit.MaxAnswers})",
                     source: "Question answers",
                     fixRecommendation:
-                    $"Decrease the maximum limit or add at least {AnswersCountLimit.MaxAnswers - _answers.Count} answer(s)"
+                    $"Decrease the maximum limit or add at least {AnswersCountLimit.MaxAnswers - Content.BaseAnswers.Count()} answer(s)"
                 )
             ];
         }
 
-        if (AnswersCountLimit.MinAnswers == AnswersCountLimit.MaxAnswers &&
-            _answers.Count == AnswersCountLimit.MinAnswers) {
+        if (
+            AnswersCountLimit.MinAnswers == AnswersCountLimit.MaxAnswers
+            && Content.BaseAnswers.Count() == AnswersCountLimit.MinAnswers
+        ) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
@@ -215,4 +150,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
 
         return [];
     }
+
+    public void UpdateContent(BaseQuestionTypeSpecificContent newContent) =>
+        this.Content = newContent;
 }

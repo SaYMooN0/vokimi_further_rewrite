@@ -3,7 +3,7 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questio
 public sealed class AnswerRelatedResultIdsSet : ValueObject
 {
     public const int MaxRelatedResultsForAnswerCount = 30;
-    public ImmutableHashSet<GeneralVokiResultId> ResultIds { get; }
+    private ImmutableHashSet<GeneralVokiResultId> ResultIds { get; }
 
     public bool IsEmpty => ResultIds.Count == 0;
 
@@ -28,6 +28,11 @@ public sealed class AnswerRelatedResultIdsSet : ValueObject
         return new AnswerRelatedResultIdsSet(resultIds);
     }
 
-
+    public int Count => ResultIds.Count;
     public override IEnumerable<object> GetEqualityComponents() => [..ResultIds];
+
+    public AnswerRelatedResultIdsSet Remove(GeneralVokiResultId id) => new(ResultIds.Remove(id));
+
+    public IEnumerable<T> Select<T>(Func<GeneralVokiResultId, T> func) => ResultIds.Select(func);
+    public GeneralVokiResultId[] ToArray() => ResultIds.ToArray();
 }
