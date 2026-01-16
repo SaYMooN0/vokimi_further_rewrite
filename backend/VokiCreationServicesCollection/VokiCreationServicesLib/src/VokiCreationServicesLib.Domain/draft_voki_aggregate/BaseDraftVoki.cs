@@ -18,7 +18,6 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     public VokiCoverKey Cover { get; private set; }
     public VokiDetails Details { get; private set; }
     public VokiTagsSet Tags { get; private set; }
-    protected abstract IVokiInteractionSettings BaseInteractionSettings { get; }
     public DateTime CreationDate { get; }
 
     protected BaseDraftVoki(
@@ -75,10 +74,10 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     private ImmutableHashSet<AppUserId> NormalizeUsersToBecomeManagers(ImmutableHashSet<AppUserId> candidateManagers) =>
         candidateManagers.Intersect(CoAuthors.ToImmutableHashSet());
 
-    public bool HasAccessToEdit(AppUserId userId) =>
-        userId == PrimaryAuthorId || CoAuthors.Contains(userId);
+    public bool HasUserAccess(AuthenticatedUserCtx aUserCtx) =>
+        aUserCtx.UserId == PrimaryAuthorId || CoAuthors.Contains(aUserCtx.UserId);
 
-    public static bool DoesUserHaveAccess(
+    public static bool HasUserAccess(
         AuthenticatedUserCtx userContext,
         AppUserId primaryAuthorId,
         VokiCoAuthorIdsSet coAuthorIds

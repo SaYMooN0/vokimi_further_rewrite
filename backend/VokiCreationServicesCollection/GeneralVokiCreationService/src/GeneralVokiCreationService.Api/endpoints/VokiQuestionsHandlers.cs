@@ -13,22 +13,20 @@ internal class VokiQuestionsHandlers : IEndpointGroup
         group.MapGet("/overview", GetVokiQuestionsOverview);
         group.MapPost("/add-new", AddNewQuestionToVoki)
             .WithRequestValidation<AddNewQuestionToVokiRequest>();
-        
+
         return group;
     }
 
     private static async Task<IResult> GetVokiQuestionsOverview(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<GetVokiWithQuestionsQuery, DraftGeneralVoki> handler
+        IQueryHandler<GetVokiQuestionsOverviewQuery, GetVokiQuestionsOverviewQueryResult> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
         GetVokiQuestionsOverviewQuery query = new(id);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOr(result, (voki) => Results.Json(
-            VokiQuestionsOverviewResponse.Create(voki)
-        ));
+        return CustomResults.FromErrOrToJson<GetVokiQuestionsOverviewQueryResult, VokiQuestionsOverviewResponse>(result);
     }
 
     private static async Task<IResult> AddNewQuestionToVoki(

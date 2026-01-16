@@ -25,12 +25,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     private DraftGeneralVoki() { }
     public VokiTakingProcessSettings TakingProcessSettings { get; private set; }
     public GeneralVokiInteractionSettings InteractionSettings { get; private set; }
-    protected override IVokiInteractionSettings BaseInteractionSettings => InteractionSettings;
 
     private readonly List<VokiQuestion> _questions;
-    public ImmutableArray<VokiQuestion> Questions => _questions.ToImmutableArray();
     private readonly List<VokiResult> _results;
-    public ImmutableArray<VokiResult> Results => _results.ToImmutableArray();
 
     private DraftGeneralVoki(
         VokiId vokiId, AppUserId primaryAuthorId,
@@ -68,6 +65,22 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         InteractionSettings = newSettings;
     }
 
+    public ErrOr<ImmutableArray<VokiQuestion>> GetQuestions(AuthenticatedUserCtx aUserCtx) {
+        if (HasUserAccess(aUserCtx)) {
+            return _questions.ToImmutableArray();
+        }
+
+        return ErrFactory.NoAccess("To access Voki questions user must have access to Voki");
+    }
+
+    public ErrOr<ImmutableArray<VokiResult>> GetResults(AuthenticatedUserCtx aUserCtx) {
+        if (HasUserAccess(aUserCtx)) {
+            return _results.ToImmutableArray();
+        }
+
+        return ErrFactory.NoAccess("To access Voki results user must have access to Voki");
+    }
+
     public ErrOr<GeneralVokiQuestionId> AddNewQuestion(GeneralVokiAnswerType answersType) {
         if (_questions.Count >= MaxQuestionsCount) {
             return ErrFactory.LimitExceeded(
@@ -80,7 +93,8 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return question.Id;
     }
 
-    public ErrOr<VokiQuestion> QuestionWithId(GeneralVokiQuestionId questionId) {
+    public ErrOr<VokiQuestion> QuestionWithId(AuthenticatedUserCtx aUserCtx, GeneralVokiQuestionId questionId) {
+        if (this.HasUserAccess() aUserCtx)
         VokiQuestion? requestedQuestion = _questions.FirstOrDefault(q => q.Id == questionId);
         if (requestedQuestion is null) {
             return ErrFactory.NotFound.Common(
@@ -251,7 +265,13 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
 
-    public ErrOrNothing AddNewResult(VokiResultName resultName, IDateTimeProvider dateTimeProvider) {
+    public ErrOr<ImmutableArray<VokiResult>> AddNewResult(
+        AuthenticatedUserCtx aUserCtx, VokiResultName resultName, DateTime now
+    ) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To add result you must have access to the Voki");
+        }
+
         if (_results.Count >= MaxResultsCount) {
             return ErrFactory.LimitExceeded(
                 $"General voki cannot have more than {MaxResultsCount} results. Current count: {_results.Count}"
@@ -263,9 +283,9 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             return ErrFactory.Conflict("Result with this name already exists in this Voki. Result name must be unique");
         }
 
-        VokiResult result = VokiResult.CreateNew(resultName, dateTimeProvider.UtcNow);
+        VokiResult result = VokiResult.CreateNew(resultName, now);
         _results.Add(result);
-        return ErrOrNothing.Nothing;
+        return _results.ToImmutableArray();
     }
 
     public ErrOr<VokiResult> UpdateResult(
@@ -435,13 +455,20 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
 
-    public ImmutableArray<VokiPublishingIssue> GatherAllPublishingIssues() => [
-        ..base.CheckCoverForPublishingIssues(),
-        ..base.CheckTagsForPublishingIssues(),
-        ..base.CheckDetailsForPublishingIssues(),
-        ..CheckQuestionsForPublishingIssues(),
-        ..CheckResultsForPublishingIssues()
-    ];
+    public ErrOr<ImmutableArray<VokiPublishingIssue>> GatherAllPublishingIssues(AuthenticatedUserCtx aUserCtx) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("Too see Voki publishing issues you need to have access to this Voki");
+        }
+
+        return ErrOr<ImmutableArray<VokiPublishingIssue>>.Success([
+            ..base.CheckCoverForPublishingIssues(),
+            ..base.CheckTagsForPublishingIssues(),
+            ..base.CheckDetailsForPublishingIssues(),
+            ..CheckQuestionsForPublishingIssues(),
+            ..CheckResultsForPublishingIssues()
+        ]);
+    }
+
 
     public ErrOrNothing PublishWithWarningsIgnored(IDateTimeProvider dateTimeProvider) {
         var issues = GatherAllPublishingIssues();

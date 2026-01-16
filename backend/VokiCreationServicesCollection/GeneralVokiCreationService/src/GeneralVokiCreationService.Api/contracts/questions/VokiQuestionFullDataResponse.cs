@@ -1,4 +1,5 @@
 ﻿using GeneralVokiCreationService.Api.contracts.results;
+using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using SharedKernel.common.vokis;
@@ -15,22 +16,27 @@ internal record class VokiQuestionFullDataResponse(
     bool ShuffleAnswers,
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
-    VokiResultIdWithNameResponse[] Results
-)
+    Dictionary<string, string> ResultsIdToName
+) : ICreatableResponse<GetVokiQuestionWithAnswersAndResultsQueryResult>
 {
-    public static VokiQuestionFullDataResponse Create(VokiQuestion question, ImmutableArray<VokiResult> results) => new(
-        question.Id.ToString(),
-        question.Text.ToString(),
-        QuestionImageSetResponse.Create(question.ImageSet),
-        question.AnswersType,
-        question.Answers
+    public static ICreatableResponse<GetVokiQuestionWithAnswersAndResultsQueryResult> Create(
+        GetVokiQuestionWithAnswersAndResultsQueryResult queryRes
+    ) => new VokiQuestionFullDataResponse(
+        queryRes.Question.Id.ToString(),
+        queryRes.Question.Text.ToString(),
+        QuestionImageSetResponse.Create(queryRes.Question.ImageSet),
+        queryRes.Question.Content.AnswersType,
+        queryRes.Question.Answers
             .Select(VokiQuestionAnswerResponse.FromAnswer)
             .OrderBy(a => a.Order)
             .ToArray(),
-        question.ShuffleAnswers,
-        question.AnswersCountLimit.MinAnswers,
-        question.AnswersCountLimit.MaxAnswers,
-        results.Select(VokiResultIdWithNameResponse.Create).ToArray()
+        queryRes.Question.ShuffleAnswers,
+        queryRes.Question.AnswersCountLimit.MinAnswers,
+        queryRes.Question.AnswersCountLimit.MaxAnswers,
+        queryRes.ResultsIdToName.ToDictionary(
+            r => r.Key.ToString(),
+            r => r.Value.ToString()
+        )
     );
 }
 

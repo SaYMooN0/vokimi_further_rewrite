@@ -20,11 +20,11 @@ internal class VokiResultsHandlers : IEndpointGroup
 
     private static async Task<IResult> GetVokiResultsOverview(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<GetVokiWithResultsQuery, DraftGeneralVoki> handler
+        IQueryHandler<ListVokiResultsQuery, ImmutableArray<VokiResult>> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
-        GetVokiWithResultsQuery query = new(id);
+        ListVokiResultsQuery query = new(id);
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOr(result, (voki) => Results.Json(

@@ -66,7 +66,6 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
 
         builder.HasInteractionSettingsAsComplexProperty(x => x.InteractionSettings);
 
-        builder.Ignore(x => x.Questions);
         builder
             .HasMany<VokiQuestion>("_questions")
             .WithOne()
@@ -74,7 +73,6 @@ public class DraftGeneralVokisConfigurations : IEntityTypeConfiguration<DraftGen
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Ignore(x => x.Results);
         builder
             .HasMany<VokiResult>("_results")
             .WithOne()

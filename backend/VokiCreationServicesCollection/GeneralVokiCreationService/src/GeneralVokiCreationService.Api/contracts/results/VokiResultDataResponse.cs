@@ -7,12 +7,14 @@ public record class VokiResultDataResponse(
     string Name,
     string Text,
     string? Image
-)
+) : ICreatableResponse<VokiResult>
 {
-    public static VokiResultDataResponse Create(VokiResult result) => new(
+    public static VokiResultDataResponse FromResult(VokiResult result) => new(
         result.Id.ToString(),
         result.Name.ToString(),
         result.Text.ToString(),
         result.Image?.ToString() ?? null
     );
+
+    public static ICreatableResponse<VokiResult> Create(VokiResult result) => FromResult(result);
 }

@@ -32,7 +32,7 @@ internal sealed class GetVokiNameQueryHandler : IQueryHandler<GetVokiNameQuery, 
         }
 
         var (vokiName, primaryAuthorId, coAuthors) = result.Value;
-        if (BaseDraftVoki.DoesUserHaveAccess(query.UserCtx(_userCtxProvider), primaryAuthorId, coAuthors)) {
+        if (BaseDraftVoki.HasUserAccess(query.UserCtx(_userCtxProvider), primaryAuthorId, coAuthors)) {
             return vokiName;
         }
 

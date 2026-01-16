@@ -1,7 +1,6 @@
 ﻿using GeneralVokiCreationService.Api.contracts.results;
 using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.results;
-using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 namespace GeneralVokiCreationService.Api.endpoints;
@@ -11,27 +10,12 @@ internal class SpecificVokiResultsHandlers : IEndpointGroup
     public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/results/{resultId}/");
 
-        group.MapGet("/", GetVokiResult);
         group.MapPut("/update", UpdateVokiResult)
             .WithRequestValidation<UpdateVokiResultRequest>();
 
         group.MapDelete("/delete", DeleteVokiResult);
-        
+
         return group;
-    }
-    private static async Task<IResult> GetVokiResult(
-        CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<GetVokiResultQuery, VokiResult> handler
-    ) {
-        VokiId vokiId = httpContext.GetVokiIdFromRoute();
-        GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
-
-        GetVokiResultQuery query = new(vokiId, resultId);
-        var result = await handler.Handle(query, ct);
-
-        return CustomResults.FromErrOr(result, (vokiResult) => Results.Json(
-            VokiResultDataResponse.Create(vokiResult)
-        ));
     }
 
     private static async Task<IResult> UpdateVokiResult(
@@ -42,14 +26,10 @@ internal class SpecificVokiResultsHandlers : IEndpointGroup
         GeneralVokiResultId resultId = httpContext.GetResultIdFromRoute();
         var request = httpContext.GetValidatedRequest<UpdateVokiResultRequest>();
 
-        UpdateVokiResultCommand command = new(
-            id, resultId,request.ParsedName, request.ParsedText, request.NewImage
-        );
+        UpdateVokiResultCommand command = new(id, resultId, request.ParsedName, request.ParsedText, request.NewImage);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOr(result, (voki) =>
-            Results.Json(VokiResultDataResponse.Create(voki))
-        );
+        return CustomResults.FromErrOrToJson<VokiResult, VokiResultDataResponse>(result);
     }
 
     private static async Task<IResult> DeleteVokiResult(
@@ -64,6 +44,4 @@ internal class SpecificVokiResultsHandlers : IEndpointGroup
 
         return CustomResults.FromErrOrNothing(result, CustomResults.Deleted);
     }
-
-   
 }

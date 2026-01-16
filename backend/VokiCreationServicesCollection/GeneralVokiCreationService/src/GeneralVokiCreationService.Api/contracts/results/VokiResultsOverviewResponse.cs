@@ -4,12 +4,13 @@ namespace GeneralVokiCreationService.Api.contracts.results;
 
 public record class VokiResultsOverviewResponse(
     VokiResultDataResponse[] Results
-)
+) : ICreatableResponse<ImmutableArray<VokiResult>>
 {
-    public static VokiResultsOverviewResponse Create(ImmutableArray<VokiResult> results) => new(
-        results
-            .OrderBy(r => r.CreationDate)
-            .Select(VokiResultDataResponse.Create)
-            .ToArray()
-    );
+    public static ICreatableResponse<ImmutableArray<VokiResult>> Create(ImmutableArray<VokiResult> results) =>
+        new VokiResultsOverviewResponse(
+            results
+                .OrderBy(r => r.CreationDate)
+                .Select(VokiResultDataResponse.FromResult)
+                .ToArray()
+        );
 }

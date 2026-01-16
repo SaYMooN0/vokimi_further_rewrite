@@ -29,15 +29,14 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
 
     private static async Task<IResult> GetVokiQuestionFullData(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<GetVokiWithQuestionAnswersAndResults, DraftGeneralVoki> handler
+        IQueryHandler<GetVokiQuestionWithResultsDataQuery, GetVokiQuestionWithAnswersAndResultsQueryResult> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
 
-        GetVokiWithQuestionAnswersAndResults query = new(vokiId);
-        var result = await handler.Handle(query, ct);
+        GetVokiQuestionWithResultsDataQuery dataQuery = new(vokiId, questionId);
+        var result = await handler.Handle(dataQuery, ct);
 
-        var questionOrErr = result.Bind(v => v.QuestionWithId(questionId));
         return CustomResults.FromErrOr(questionOrErr, (question) => Results.Json(
             VokiQuestionFullDataResponse.Create(
                 question,

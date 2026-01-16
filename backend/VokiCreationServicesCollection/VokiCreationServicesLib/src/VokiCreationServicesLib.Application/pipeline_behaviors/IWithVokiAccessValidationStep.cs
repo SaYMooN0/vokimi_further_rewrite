@@ -46,7 +46,7 @@ public static class VokiAccessValidationStepHandler
                 return command.VokiNotFoundErr;
             }
 
-            if (voki.HasAccessToEdit(command.UserCtx(_userCtxProvider).UserId)) {
+            if (voki.HasUserAccess(command.UserCtx(_userCtxProvider))) {
                 return await _innerHandler.Handle(command, ct);
             }
 
@@ -78,7 +78,7 @@ public static class VokiAccessValidationStepHandler
                 return command.VokiNotFoundErr;
             }
 
-            if (voki.HasAccessToEdit(command.UserCtx(_userCtxProvider).UserId)) {
+            if (voki.HasUserAccess(command.UserCtx(_userCtxProvider))) {
                 return await _innerHandler.Handle(command, ct);
             }
 
@@ -111,7 +111,7 @@ public static class VokiAccessValidationStepHandler
                 return query.VokiNotFoundErr;
             }
 
-            if (voki.HasAccessToEdit(query.UserCtx(_userCtxProvider).UserId)) {
+            if (voki.HasUserAccess(query.UserCtx(_userCtxProvider))) {
                 return await _innerHandler.Handle(query, ct);
             }
 
