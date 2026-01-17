@@ -1,4 +1,4 @@
-import type { IVokiCreationPageState } from "../../../ivoki-creation-page-state";
+import type { IVokiCreationPageState } from "../../../voki-creation-page-context";
 
 export class GeneralVokiCreationQuestionsPageState implements IVokiCreationPageState {
     get hasAnyUnsavedChanges(): boolean {

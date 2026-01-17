@@ -1,29 +1,28 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+﻿
 using SharedKernel;
 using VokiCreationServicesLib.Application;
-using VokiCreationServicesLib.Application.pipeline_behaviors;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.publishing;
 
 public record class PublishVokiWithNoIssuesCommand(VokiId VokiId) :
     ICommand<VokiSuccessfullyPublishedResult>,
-    IWithAuthCheckStep,
-    IWithVokiPrimaryAuthorValidationStep;
+    IWithAuthCheckStep;
 
 internal sealed class PublishVokiWithNoIssuesCommandHandler :
     ICommandHandler<PublishVokiWithNoIssuesCommand, VokiSuccessfullyPublishedResult>
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IUserCtxProvider _userCtxProvider;
 
     public PublishVokiWithNoIssuesCommandHandler(
         IDraftGeneralVokisRepository draftGeneralVokisRepository,
-        IDateTimeProvider dateTimeProvider
+        IDateTimeProvider dateTimeProvider,
+        IUserCtxProvider userCtxProvider
     ) {
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _dateTimeProvider = dateTimeProvider;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<VokiSuccessfullyPublishedResult>> Handle(
@@ -31,7 +30,7 @@ internal sealed class PublishVokiWithNoIssuesCommandHandler :
     ) {
         DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsAndResultsForUpdate(command.VokiId, ct))!;
 
-        var publishingRes = voki.PublishWithNoIssues(_dateTimeProvider);
+        var publishingRes = voki.PublishWithNoIssues(command.UserCtx(_userCtxProvider), _dateTimeProvider.UtcNow);
         if (publishingRes.IsErr(out var err)) {
             return err;
         }

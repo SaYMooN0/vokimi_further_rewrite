@@ -16,6 +16,8 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
         group.MapPatch("/rate", RateVoki)
             .WithRequestValidation<RateVokiRequest>();
+        
+        return group;
     }
 
     private static async Task<IResult> GetVokiRatingsData(

@@ -7,19 +7,21 @@
 		result,
 		vokiId,
 		updateParentOnSave,
-		updateParentOnDelete
+		updateParentOnDelete,
+		isEditing = $bindable()
 	}: {
 		result: ResultOverViewData;
 		vokiId: string;
 		updateParentOnSave: (result: ResultOverViewData) => void;
 		updateParentOnDelete: (resultId: string) => void;
+		isEditing?: boolean;
 	} = $props<{
 		result: ResultOverViewData;
 		vokiId: string;
 		updateParentOnSave: (result: ResultOverViewData) => void;
 		updateParentOnDelete: (resultId: string) => void;
+		isEditing?: boolean;
 	}>();
-	let isEditing = $state(false);
 </script>
 
 <div class="result" class:editing={isEditing}>

@@ -23,7 +23,7 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
         group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
         group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
         group.MapDelete("/delete", DeleteVokiQuestion);
-        
+
         return group;
     }
 
@@ -37,12 +37,10 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
         GetVokiQuestionWithResultsDataQuery dataQuery = new(vokiId, questionId);
         var result = await handler.Handle(dataQuery, ct);
 
-        return CustomResults.FromErrOr(questionOrErr, (question) => Results.Json(
-            VokiQuestionFullDataResponse.Create(
-                question,
-                result.AsSuccess().Results //because if question is not err than result is definitely not err
-            )
-        ));
+        return CustomResults.FromErrOrToJson<
+            GetVokiQuestionWithAnswersAndResultsQueryResult,
+            VokiQuestionFullDataResponse
+        >(result);
     }
 
     private static async Task<IResult> UpdateQuestionText(

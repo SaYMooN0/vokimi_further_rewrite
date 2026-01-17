@@ -1,6 +1,7 @@
 ﻿using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.user_ctx;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.app_user_aggregate;
 
@@ -24,8 +25,13 @@ internal class AppUsersRepository : IAppUsersRepository
             .ForUpdate()
             .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken: ct);
 
-    public Task<AppUser?> GetById(AppUserId userId, CancellationToken ct) => _db.AppUsers
-        .FirstOrDefaultAsync(u => u.Id == userId, ct);
+    public async Task<AppUser?> GetCurrentForUpdate(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
+        await _db.AppUsers
+            .ForUpdate()
+            .FirstOrDefaultAsync(u => u.Id == aUserCtx.UserId, cancellationToken: ct);
+
+    public Task<AppUser?> GetCurrent(AuthenticatedUserCtx aUserCtx, CancellationToken ct) => _db.AppUsers
+        .FirstOrDefaultAsync(u => u.Id == aUserCtx.UserId, ct);
 
     public async Task Update(AppUser appUser, CancellationToken ct) {
         _db.ThrowIfDetached(appUser);

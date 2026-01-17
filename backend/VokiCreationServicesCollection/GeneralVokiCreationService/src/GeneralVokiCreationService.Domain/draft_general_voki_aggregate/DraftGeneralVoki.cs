@@ -94,7 +94,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
     public ErrOr<VokiQuestion> QuestionWithId(AuthenticatedUserCtx aUserCtx, GeneralVokiQuestionId questionId) {
-        if (this.HasUserAccess() aUserCtx)
+        if (!this.HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess();
+        }
+
         VokiQuestion? requestedQuestion = _questions.FirstOrDefault(q => q.Id == questionId);
         if (requestedQuestion is null) {
             return ErrFactory.NotFound.Common(
@@ -172,7 +175,12 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return questionToUpdate;
     }
 
-    public ErrOrNothing MoveQuestionUpInOrder(GeneralVokiQuestionId questionId) {
+    public ErrOr<ImmutableArray<VokiQuestion>> MoveQuestionUpInOrder(AuthenticatedUserCtx aUserCtx,
+        GeneralVokiQuestionId questionId) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To move question up you must have access to the Voki");
+        }
+
         var question = _questions.FirstOrDefault(q => q.Id == questionId);
         if (question is null) {
             return ErrFactory.NotFound.VokiContent(
@@ -182,7 +190,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         if (question.OrderInVoki == 0) {
-            return ErrOrNothing.Nothing;
+            return _questions.ToImmutableArray();
         }
 
         var neighbor = _questions.FirstOrDefault(q => q.OrderInVoki == question.OrderInVoki - 1);
@@ -196,10 +204,15 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         question.MoveOrderUp();
         neighbor.MoveOrderDown();
 
-        return ErrOrNothing.Nothing;
+        return _questions.ToImmutableArray();
     }
 
-    public ErrOrNothing MoveQuestionDownInOrder(GeneralVokiQuestionId questionId) {
+    public ErrOr<ImmutableArray<VokiQuestion>> MoveQuestionDownInOrder(AuthenticatedUserCtx aUserCtx,
+        GeneralVokiQuestionId questionId) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To move question down you must have access to the Voki");
+        }
+
         var question = _questions.FirstOrDefault(q => q.Id == questionId);
         if (question is null) {
             return ErrFactory.NotFound.VokiContent(
@@ -209,7 +222,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         if (question.OrderInVoki == _questions.Count - 1) {
-            return ErrOrNothing.Nothing;
+            return _questions.ToImmutableArray();
         }
 
         var neighbor = _questions.FirstOrDefault(q => q.OrderInVoki == question.OrderInVoki + 1);
@@ -223,13 +236,20 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         question.MoveOrderDown();
         neighbor.MoveOrderUp();
 
-        return ErrOrNothing.Nothing;
+        return _questions.ToImmutableArray();
     }
 
-    public bool DeleteQuestion(GeneralVokiQuestionId questionId) {
+    public ErrOr<ImmutableArray<VokiQuestion>> DeleteQuestion(AuthenticatedUserCtx aUserCtx, GeneralVokiQuestionId questionId) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To delete question you must have access to the Voki");
+        }
+
         var question = _questions.FirstOrDefault(q => q.Id == questionId);
         if (question is null) {
-            return false;
+            return ErrFactory.NotFound.VokiContent(
+                "Could not find question to delete",
+                $"Voki with id {Id} doesn't have a question with id {questionId}"
+            );
         }
 
         var order = question.OrderInVoki;
@@ -239,7 +259,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             q.MoveOrderUp();
         }
 
-        return true;
+        return _questions.ToImmutableArray();
     }
 
     public ErrOr<VokiQuestion> UpdateQuestionTypeSpecificContent(
@@ -470,25 +490,36 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
 
-    public ErrOrNothing PublishWithWarningsIgnored(IDateTimeProvider dateTimeProvider) {
-        var issues = GatherAllPublishingIssues();
+    public ErrOrNothing PublishWithWarningsIgnored(AuthenticatedUserCtx aUserCtx, DateTime now) {
+        ErrOr<ImmutableArray<VokiPublishingIssue>> issuesRes = GatherAllPublishingIssues(aUserCtx);
+        if (issuesRes.IsErr(out var err)) {
+            return err;
+        }
+
+        var issues = issuesRes.AsSuccess();
         bool anyProblems = issues.Any(i => i.Type == PublishingIssueType.Problem);
         if (anyProblems) {
             return ErrFactory.Conflict("Cannot publish Voki because of an unresolved problem");
         }
 
-        AddVokiPublishedDomainEvent(dateTimeProvider.UtcNow);
+        AddVokiPublishedDomainEvent(now);
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOrNothing PublishWithNoIssues(IDateTimeProvider dateTimeProvider) {
-        if (GatherAllPublishingIssues().Length > 0) {
+    public ErrOrNothing PublishWithNoIssues(AuthenticatedUserCtx aUserCtx, DateTime now) {
+        ErrOr<ImmutableArray<VokiPublishingIssue>> issuesRes = GatherAllPublishingIssues(aUserCtx);
+        if (issuesRes.IsErr(out var err)) {
+            return err;
+        }
+
+        var issues = issuesRes.AsSuccess();
+        if (issues.Length > 0) {
             return ErrFactory.Conflict(
                 "Could not publish voki because new publishing issues were found. Please check them"
             );
         }
 
-        AddVokiPublishedDomainEvent(dateTimeProvider.UtcNow);
+        AddVokiPublishedDomainEvent(now);
         return ErrOrNothing.Nothing;
     }
 

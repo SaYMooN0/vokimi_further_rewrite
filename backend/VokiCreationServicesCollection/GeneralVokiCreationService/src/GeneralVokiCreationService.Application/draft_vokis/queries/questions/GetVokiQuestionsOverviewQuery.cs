@@ -1,8 +1,4 @@
-﻿using ApplicationShared;
-using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-
-namespace GeneralVokiCreationService.Application.draft_vokis.queries;
+﻿namespace GeneralVokiCreationService.Application.draft_vokis.queries.questions;
 
 public sealed record GetVokiQuestionsOverviewQuery(VokiId VokiId) :
     IQuery<GetVokiQuestionsOverviewQueryResult>,

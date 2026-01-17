@@ -10,6 +10,8 @@ internal class RootHandlers : IEndpointGroup
         var group = routeBuilder.MapGroup("/");
 
         group.MapGet("/rated-vokis", GetUserRatedVokis);
+        
+        return group;
     }
 
     private static async Task<IResult> GetUserRatedVokis(

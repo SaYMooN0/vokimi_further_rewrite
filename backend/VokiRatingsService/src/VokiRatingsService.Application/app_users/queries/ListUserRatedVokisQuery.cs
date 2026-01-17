@@ -27,7 +27,6 @@ internal sealed class ListUserRatedVokisQueryHandler :
 
 
     public async Task<ErrOr<VokiIdWithCurrentRatingDto[]>> Handle(ListUserRatedVokisQuery query, CancellationToken ct) {
-        return await _ratingsRepository.ListIdsOfVokiRatedByUser(
-            new AuthenticatedUserContext(_userCtxProvider.AuthenticatedUserId), ct);
+        return await _ratingsRepository.ListIdsOfVokiRatedByUser(query.UserCtx(_userCtxProvider), ct);
     }
 }

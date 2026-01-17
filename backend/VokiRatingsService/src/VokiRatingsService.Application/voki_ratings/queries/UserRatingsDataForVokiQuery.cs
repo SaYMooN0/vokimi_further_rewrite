@@ -30,23 +30,23 @@ internal sealed class UserRatingsDataForVokiQueryHandler :
     public Task<ErrOr<UserRatingsDataForVokiQueryResult>> Handle(
         UserRatingsDataForVokiQuery query, CancellationToken ct
     ) =>
-        _userCtxProvider.UserId().Match(
-            successFunc: userId => GetRatingsDataForAuthenticatedUser(userId, query.VokiId, ct),
-            errorFunc: _ => GetRatingsDataForNotAuthenticatedUser(query.VokiId, ct)
+        _userCtxProvider.Current.Match(
+            authenticatedFunc: aUserCtx => GetRatingsDataForAuthenticatedUser(aUserCtx, query.VokiId, ct),
+            unauthenticatedFunc: _ => GetRatingsDataForNotAuthenticatedUser(query.VokiId, ct)
         );
 
     private async Task<ErrOr<UserRatingsDataForVokiQueryResult>> GetRatingsDataForAuthenticatedUser(
-        AppUserId userId, VokiId vokiId, CancellationToken ct
+        AuthenticatedUserCtx aUserCtx, VokiId vokiId, CancellationToken ct
     ) {
         VokiRating[] ratings = (await _ratingsRepository.ListRatingsForVoki(vokiId, ct));
-        VokiRating? userRating = ratings.SingleOrDefault(r => r.UserId == userId);
+        VokiRating? userRating = ratings.SingleOrDefault(r => r.UserId == aUserCtx.UserId);
         bool hasTaken = false;
 
         if (userRating is not null) {
             hasTaken = true;
         }
         else {
-            AppUser user = (await _appUsersRepository.GetById(userId, ct))!;
+            AppUser user = (await _appUsersRepository.GetCurrent(aUserCtx, ct))!;
             hasTaken = user.HasTaken(vokiId);
         }
 

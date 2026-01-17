@@ -7,20 +7,23 @@
 	import ResultInitializingDialog from './_c_results_page/ResultInitializingDialog.svelte';
 	import type { ResultOverViewData } from './_c_results_page/types';
 	import VokiCreationPageLoadingErr from '../../../_c_shared/VokiCreationPageLoadingErr.svelte';
-	import { GeneralVokiCreationResultsPageState } from './general-voki-creation-results-page-state.svelte';
+	import {
+		GeneralVokiCreationResultsPageState,
+		ResultItemState
+	} from './general-voki-creation-results-page-state.svelte';
 	import { setVokiCreationCurrentPageState } from '../../../voki-creation-page-context';
 
 	let { data }: PageProps = $props();
 	let resultCreationDialog = $state<ResultInitializingDialog>()!;
-	let results = $state(data.data?.results ?? []);
+	let pageState = new GeneralVokiCreationResultsPageState(data.data?.results ?? []);
 
-	setVokiCreationCurrentPageState(new GeneralVokiCreationResultsPageState());
+	setVokiCreationCurrentPageState(pageState);
 
 	function updateOnSave(result: ResultOverViewData) {
-		results = results.map((r) => (r.id === result.id ? result : r));
+		pageState.updateResult(result);
 	}
 	function updateOnDelete(resultId: string) {
-		results = results.filter((r) => r.id !== resultId);
+		pageState.deleteResult(resultId);
 	}
 	const maxResultsCount = 60;
 </script>
@@ -31,28 +34,30 @@
 	<ResultInitializingDialog
 		bind:this={resultCreationDialog}
 		vokiId={data.vokiId!}
-		updateParentResults={(newResults) => (results = newResults)}
+		updateParentResults={(newResults) =>
+			(pageState.results = newResults.map((r) => new ResultItemState(r)))}
 	/>
 
-	{#if results.length === 0}
+	{#if pageState.results.length === 0}
 		<ListEmptyMessage
 			messageText="This voki doesn't have any results yet"
 			btnText="Create first result"
 			onBtnClick={() => resultCreationDialog.open()}
 		/>
 	{:else}
-		<VokiCreationBasicHeader header={`Voki results (${results.length})`} />
+		<VokiCreationBasicHeader header={`Voki results (${pageState.results.length})`} />
 		<div class="results">
-			{#each results as result}
+			{#each pageState.results as resultItem (resultItem.data.id)}
 				<GeneralVokiCreationResultItem
 					vokiId={data.vokiId!}
-					{result}
+					result={resultItem.data}
 					updateParentOnSave={updateOnSave}
 					updateParentOnDelete={updateOnDelete}
+					bind:isEditing={resultItem.isEditing}
 				/>
 			{/each}
 		</div>
-		{#if results.length < maxResultsCount}
+		{#if pageState.results.length < maxResultsCount}
 			<div class="add-new-result-btn-container">
 				<PrimaryButton onclick={() => resultCreationDialog.open()}>Add new result</PrimaryButton>
 			</div>

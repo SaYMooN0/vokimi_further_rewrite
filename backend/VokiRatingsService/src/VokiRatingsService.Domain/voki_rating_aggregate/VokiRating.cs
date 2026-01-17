@@ -29,7 +29,7 @@ public class VokiRating : AggregateRoot<VokiRatingId>
 
     public static VokiRating CreateNew(AppUserId userId, VokiId vokiId, RatingValue value, DateTime now) {
         VokiRating rating = new(VokiRatingId.CreateNew(), userId, vokiId, value, now);
-        rating.AddDomainEvent(new NewVokiRatingCreatedEvent(rating.Id, vokiId, userId));
+        rating.AddDomainEvent(new NewVokiRatingCreatedEvent(rating.Id, vokiId, userId, rating.CurrentValue));
         return rating;
     }
 

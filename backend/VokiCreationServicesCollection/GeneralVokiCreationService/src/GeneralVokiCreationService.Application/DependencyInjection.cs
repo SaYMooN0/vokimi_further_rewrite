@@ -1,8 +1,5 @@
-﻿using ApplicationShared;
-using GeneralVokiCreationService.Application.draft_vokis.commands.answers.auxiliary;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using VokiCreationServicesLib.Application;
-using VokiCreationServicesLib.Application.pipeline_behaviors;
 
 namespace GeneralVokiCreationService.Application;
 
@@ -13,8 +10,6 @@ public static class DependencyInjection
         services.AddLibMessaging();
         services.AddApplicationMessaging(typeof(DependencyInjection));
         
-        services.AddSingleton<DraftVokiAnswerDataSavingService>();
-
         return services;
     }
 }

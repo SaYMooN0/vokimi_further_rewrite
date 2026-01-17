@@ -12,10 +12,6 @@ public static class DependencyInjection
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(VokiAccessValidationStepHandler.QueryHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(VokiAccessValidationStepHandler.CommandHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<>), typeof(VokiAccessValidationStepHandler.CommandBaseHandler<>));
-
-        services.TryDecorate(typeof(IQueryHandler<,>), typeof(VokiPrimaryAuthorValidationStepHandler.QueryHandler<,>));
-        services.TryDecorate(typeof(ICommandHandler<,>), typeof(VokiPrimaryAuthorValidationStepHandler.CommandHandler<,>));
-        services.TryDecorate(typeof(ICommandHandler<>), typeof(VokiPrimaryAuthorValidationStepHandler.CommandBaseHandler<>));
         
         return services.AddApplicationMessaging(typeof(DependencyInjection));
     }

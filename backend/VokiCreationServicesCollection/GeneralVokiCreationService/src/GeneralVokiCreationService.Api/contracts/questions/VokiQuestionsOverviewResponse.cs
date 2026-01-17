@@ -1,4 +1,4 @@
-﻿using GeneralVokiCreationService.Application.draft_vokis.queries;
+﻿using GeneralVokiCreationService.Application.draft_vokis.queries.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 namespace GeneralVokiCreationService.Api.contracts.questions;
@@ -15,6 +15,6 @@ public record class VokiQuestionsOverviewResponse(
             .Select(VokiQuestionBriefDataResponse.Create)
             .OrderBy(a => a.OrderInVoki)
             .ToArray(),
-        voki.TakingProcessSettings
+        voki.Settings
     );
 }

@@ -12,6 +12,8 @@ internal class ManageVokiEndpoints : IEndpointGroup
 
         group.MapGet("/overview", ManageVokiRatingsOverview);
         group.MapGet("/history", ManageVokiRatingsHistory);
+        
+        return group;
     }
 
     private static async Task<IResult> ManageVokiRatingsOverview(

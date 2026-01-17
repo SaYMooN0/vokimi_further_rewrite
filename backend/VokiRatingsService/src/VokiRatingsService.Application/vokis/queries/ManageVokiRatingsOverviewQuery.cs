@@ -38,7 +38,7 @@ internal sealed class ManageVokiRatingsOverviewQueryHandler :
             return ErrFactory.NotFound.Voki("Voki does not exist");
         }
 
-        if (!Voki.CanUserManage(_userCtxProvider.AuthenticatedUser, voki.PrimaryAuthorId, voki.ManagersIds)) {
+        if (!Voki.CanUserManage(query.UserCtx(_userCtxProvider), voki.PrimaryAuthorId, voki.ManagersIds)) {
             return ErrFactory.NoAccess("To get this data you need to be a Voki manager");
         }
 

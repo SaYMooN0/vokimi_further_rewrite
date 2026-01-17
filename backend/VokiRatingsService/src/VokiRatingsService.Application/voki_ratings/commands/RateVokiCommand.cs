@@ -35,8 +35,8 @@ internal sealed class RateVokiCommandHandler : ICommandHandler<RateVokiCommand, 
     }
 
     public async Task<ErrOr<VokiRating>> Handle(RateVokiCommand command, CancellationToken ct) {
-        AppUserId userId = _userCtxProvider.AuthenticatedUserId;
-        AppUser user = (await _appUsersRepository.GetByIdForUpdate(userId, ct))!;
+        var aUserCtx = command.UserCtx(_userCtxProvider);
+        AppUser user = (await _appUsersRepository.GetCurrentForUpdate(aUserCtx, ct))!;
         if (!user.HasTaken(command.VokiId)) {
             return ErrFactory.NoAccess(
                 "You cannot rate this Voki because you have not taken it yet",
@@ -51,13 +51,12 @@ internal sealed class RateVokiCommandHandler : ICommandHandler<RateVokiCommand, 
         }
 
         var ratingValue = creationRes.AsSuccess();
-        VokiRating? rating = await _ratingsRepository.GetUserRatingForVokiForUpdate(
-            new AuthenticatedUserCtx(userId), command.VokiId, ct
+        VokiRating? rating = await _ratingsRepository.GetUserRatingForVokiForUpdate(aUserCtx, command.VokiId, ct
         );
 
 
         if (rating is null) {
-            rating = VokiRating.CreateNew(userId, command.VokiId, ratingValue, _dateTimeProvider.UtcNow);
+            rating = VokiRating.CreateNew(aUserCtx.UserId, command.VokiId, ratingValue, _dateTimeProvider.UtcNow);
             await _ratingsRepository.Add(rating, ct);
         }
         else {

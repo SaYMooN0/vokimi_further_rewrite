@@ -1,4 +1,5 @@
 ﻿using ApplicationShared.messaging.pipeline_behaviors;
+using SharedKernel;
 using GeneralVokiCreationService.Application.common;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using VokiCreationServicesLib.Application.pipeline_behaviors;
@@ -7,16 +8,20 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 
 public sealed record DeleteVokiQuestionCommand(VokiId VokiId, GeneralVokiQuestionId QuestionId) :
     ICommand<ImmutableArray<VokiQuestion>>,   
-    IWithAuthCheckStep,
-    IWithVokiAccessValidationStep;
+    IWithAuthCheckStep;
 
 internal sealed class DeleteVokiQuestionCommandHandler :
     ICommandHandler<DeleteVokiQuestionCommand, ImmutableArray<VokiQuestion>>
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public DeleteVokiQuestionCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+    public DeleteVokiQuestionCommandHandler(
+        IDraftGeneralVokisRepository draftGeneralVokisRepository,
+        IUserCtxProvider userCtxProvider
+    ) {
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
+        _userCtxProvider = userCtxProvider;
     }
 
 
@@ -24,11 +29,14 @@ internal sealed class DeleteVokiQuestionCommandHandler :
         DeleteVokiQuestionCommand command, CancellationToken ct
     ) {
         DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct))!;
-        bool wasDeleted = voki.DeleteQuestion(command.QuestionId);
-        if (wasDeleted) {
-            await _draftGeneralVokisRepository.Update(voki, ct);
+        
+        var aUserCtx = command.UserCtx(_userCtxProvider);
+        ErrOr<ImmutableArray<VokiQuestion>> res = voki.DeleteQuestion(aUserCtx, command.QuestionId);
+        if (res.IsErr(out var err)) {
+            return err;
         }
 
-        return voki.Questions;
+        await _draftGeneralVokisRepository.Update(voki, ct);
+        return res.AsSuccess();
     }
 }

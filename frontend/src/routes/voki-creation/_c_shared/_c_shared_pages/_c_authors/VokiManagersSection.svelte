@@ -1,7 +1,4 @@
 <script lang="ts">
-	import BasicUserDisplay from '$lib/components/BasicUserDisplay.svelte';
-	import VokiCreationDefaultButton from '../../VokiCreationDefaultButton.svelte';
-	import VokiCreationFieldName from '../../VokiCreationFieldName.svelte';
 	import VokiManagersViewState from './_c_managers_section/VokiManagersViewState.svelte';
 	import VokiManagersEditingState from './_c_managers_section/VokiManagersEditingState.svelte';
 	import type { VokiExpectedManagersSetting } from './types';

@@ -21,13 +21,14 @@ internal class VokiRatingUpdatedHandler : IDomainEventHandler<VokiRatingUpdatedE
         _ratingsRepository = ratingsRepository;
     }
 
-    public async Task Handle(VokiRatingUpdatedEvent e, CancellationToken ct) {
-        await VokiRatingsSnapshotUpsertingHelper.UpsertDailySnapshotOnRatingUpdated(
-            e.VokiId,
-            _dateTimeProvider.UtcNow,
-            _vokiRatingsSnapshotRepository,
-            _ratingsRepository,
-            ct
-        );
+    public Task Handle(VokiRatingUpdatedEvent e, CancellationToken ct) {
+        throw new();
+        // await VokiRatingsSnapshotUpsertingHelper.UpsertDailySnapshotOnRatingUpdated(
+        //     e.VokiId,
+        //     _dateTimeProvider.UtcNow,
+        //     _vokiRatingsSnapshotRepository,
+        //     _ratingsRepository,
+        //     ct
+        // );
     }
 }

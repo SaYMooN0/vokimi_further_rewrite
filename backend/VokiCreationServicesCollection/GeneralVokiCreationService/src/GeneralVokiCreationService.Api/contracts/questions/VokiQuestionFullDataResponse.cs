@@ -1,8 +1,6 @@
-﻿using GeneralVokiCreationService.Api.contracts.results;
-using GeneralVokiCreationService.Application.draft_vokis.queries;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+﻿using GeneralVokiCreationService.Application.draft_vokis.queries;
+using GeneralVokiCreationService.Application.dtos;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
-using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiCreationService.Api.contracts.questions;
@@ -12,7 +10,7 @@ internal record class VokiQuestionFullDataResponse(
     string Text,
     QuestionImageSetResponse ImageSet,
     GeneralVokiAnswerType AnswersType,
-    VokiQuestionAnswerResponse[] Answers,
+    IQuestionContentPrimitiveDto Content,
     bool ShuffleAnswers,
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
@@ -26,10 +24,7 @@ internal record class VokiQuestionFullDataResponse(
         queryRes.Question.Text.ToString(),
         QuestionImageSetResponse.Create(queryRes.Question.ImageSet),
         queryRes.Question.Content.AnswersType,
-        queryRes.Question.Answers
-            .Select(VokiQuestionAnswerResponse.FromAnswer)
-            .OrderBy(a => a.Order)
-            .ToArray(),
+        IQuestionContentPrimitiveDto.FromQuestionContent(queryRes.Question.Content),
         queryRes.Question.ShuffleAnswers,
         queryRes.Question.AnswersCountLimit.MinAnswers,
         queryRes.Question.AnswersCountLimit.MaxAnswers,

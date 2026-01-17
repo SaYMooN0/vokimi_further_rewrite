@@ -116,17 +116,17 @@ internal abstract class Program
         JsonUtil.SetProperty(vokiCore, "CreationDate", nowUtc);
 
 
-        foreach (var q in vokiGen.Questions) {
-            JsonUtil.SetProperty(q, "Id", GeneralVokiQuestionId.CreateNew());
-
-            foreach (var a in q.Answers) {
-                JsonUtil.SetProperty(a, "Id", GeneralVokiAnswerId.CreateNew());
-            }
-        }
-
-        foreach (var r in vokiGen.Results) {
-            JsonUtil.SetProperty(r, "CreationDate", DateTime.UtcNow);
-        }
+        // foreach (var q in vokiGen.Questions) {
+        //     JsonUtil.SetProperty(q, "Id", GeneralVokiQuestionId.CreateNew());
+        //
+        //     foreach (var a in q.Answers) {
+        //         JsonUtil.SetProperty(a, "Id", GeneralVokiAnswerId.CreateNew());
+        //     }
+        // }
+        //
+        // foreach (var r in vokiGen.Results) {
+        //     JsonUtil.SetProperty(r, "CreationDate", DateTime.UtcNow);
+        // }
 
         return (vokiCore, vokiGen);
     }

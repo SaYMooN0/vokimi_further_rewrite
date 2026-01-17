@@ -33,12 +33,11 @@ internal sealed class ManageVokiRatingsHistoryQueryHandler :
             return ErrFactory.NotFound.Voki("Voki does not exist");
         }
 
-        if (!voki.CanUserManage(_userCtxProvider.AuthenticatedUser)) {
+        if (!voki.CanUserManage(query.UserCtx(_userCtxProvider))) {
             return ErrFactory.NoAccess("To get this data you need to be a Voki manager");
         }
 
-        VokiRatingsSnapshot[] snapshots =
-            await _ratingsSnapshotRepository.ListSortedSnapshotsForVoki(query.VokiId, ct);
+        VokiRatingsSnapshot[] snapshots =await _ratingsSnapshotRepository.ListSortedSnapshotsForVoki(query.VokiId, ct);
         
         return new ManageVokiRatingsHistoryQueryResult(snapshots, voki.PublicationDate);
     }

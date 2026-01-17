@@ -1,7 +1,6 @@
 ﻿using GeneralVokiCreationService.Api.contracts.questions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
-using GeneralVokiCreationService.Application.draft_vokis.queries;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
+using GeneralVokiCreationService.Application.draft_vokis.queries.questions;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
