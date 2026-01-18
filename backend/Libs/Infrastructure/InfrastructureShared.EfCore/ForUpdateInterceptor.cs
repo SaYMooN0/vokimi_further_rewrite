@@ -6,8 +6,7 @@ namespace InfrastructureShared.EfCore;
 
 public sealed class ForUpdateInterceptor : DbCommandInterceptor
 {
-    private const string ForUpdateTag = $"-- {QueryableForUpdateExtensions.ForUpdateTagValue}";
-    private const string ForUpdateNoWaitTag = $"-- {QueryableForUpdateExtensions.ForUpdateNoWaitTagValue}";
+    private const string ForUpdateTag = $"-- {DbContextLockExtensions.ForUpdateTagValue}";
 
     private static void TryApplyForUpdate(DbCommand command) {
         if (!IsSelect(command)) {
@@ -18,11 +17,6 @@ public sealed class ForUpdateInterceptor : DbCommandInterceptor
             return;
         }
 
-        if (command.CommandText.Contains(ForUpdateNoWaitTag, StringComparison.Ordinal))
-        {
-            command.CommandText += " FOR UPDATE NOWAIT";
-            return;
-        }
 
         if (command.CommandText.Contains(ForUpdateTag, StringComparison.Ordinal))
         {

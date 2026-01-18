@@ -15,10 +15,8 @@ internal class AppUsersRepository : IAppUsersRepository
         _db = db;
     }
 
-    public async Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
-        await _db.AppUsers
-            .ForUpdate()
-            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: ct);
+    public Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<AppUser, AppUserId>(id, ct);
 
     public Task<AppUser[]> ListWithIdsForUpdate(IEnumerable<AppUserId> userIds, CancellationToken ct) =>
         _db.AppUsers

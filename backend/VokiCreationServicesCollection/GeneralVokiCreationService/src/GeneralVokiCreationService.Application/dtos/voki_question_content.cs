@@ -1,11 +1,19 @@
+using System.Text.Json.Serialization;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 
 namespace GeneralVokiCreationService.Application.dtos;
 
+[JsonDerivedType(typeof(TextOnlyQuestionContentPrimitiveDto), typeDiscriminator: "textOnly")]
+[JsonDerivedType(typeof(ImageOnlyQuestionContentPrimitiveDto), typeDiscriminator: "imageOnly")]
+[JsonDerivedType(typeof(ImageAndTextQuestionContentPrimitiveDto), typeDiscriminator: "imageAndText")]
+[JsonDerivedType(typeof(ColorOnlyQuestionContentPrimitiveDto), typeDiscriminator: "colorOnly")]
+[JsonDerivedType(typeof(ColorAndTextQuestionContentPrimitiveDto), typeDiscriminator: "colorAndText")]
+[JsonDerivedType(typeof(AudioOnlyQuestionContentPrimitiveDto), typeDiscriminator: "audioOnly")]
+[JsonDerivedType(typeof(AudioAndTextQuestionContentPrimitiveDto), typeDiscriminator: "audioAndText")]
 public interface IQuestionContentPrimitiveDto
 {
-    public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers { get; }
+    [JsonIgnore] public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers { get; }
 
     public static IQuestionContentPrimitiveDto FromQuestionContent(BaseQuestionTypeSpecificContent content) =>
         content.Match<IQuestionContentPrimitiveDto>(
@@ -43,6 +51,7 @@ public sealed record TextOnlyQuestionContentPrimitiveDto(
     TextOnlyAnswerPrimitiveDto[] Answers
 ) : IQuestionContentPrimitiveDto
 {
+    [JsonIgnore]
     public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers => Answers;
 }
 
@@ -63,6 +72,7 @@ public sealed record ImageOnlyQuestionContentPrimitiveDto(
     ImageOnlyAnswerPrimitiveDto[] Answers
 ) : IQuestionContentPrimitiveDto
 {
+    [JsonIgnore]
     public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers => Answers;
 }
 
@@ -83,6 +93,7 @@ public sealed record ImageAndTextQuestionContentPrimitiveDto(
     ImageAndTextAnswerPrimitiveDto[] Answers
 ) : IQuestionContentPrimitiveDto
 {
+    [JsonIgnore]
     public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers => Answers;
 }
 
@@ -105,6 +116,7 @@ public sealed record ColorOnlyQuestionContentPrimitiveDto(
     ColorOnlyAnswerPrimitiveDto[] Answers
 ) : IQuestionContentPrimitiveDto
 {
+    [JsonIgnore]
     public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers => Answers;
 }
 
@@ -125,6 +137,7 @@ public sealed record ColorAndTextQuestionContentPrimitiveDto(
     ColorAndTextAnswerPrimitiveDto[] Answers
 ) : IQuestionContentPrimitiveDto
 {
+    [JsonIgnore]
     public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers => Answers;
 }
 
@@ -147,6 +160,7 @@ public sealed record AudioOnlyQuestionContentPrimitiveDto(
     AudioOnlyAnswerPrimitiveDto[] Answers
 ) : IQuestionContentPrimitiveDto
 {
+    [JsonIgnore]
     public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers => Answers;
 }
 
@@ -167,6 +181,7 @@ public sealed record AudioAndTextQuestionContentPrimitiveDto(
     AudioAndTextAnswerPrimitiveDto[] Answers
 ) : IQuestionContentPrimitiveDto
 {
+    [JsonIgnore]
     public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers => Answers;
 }
 

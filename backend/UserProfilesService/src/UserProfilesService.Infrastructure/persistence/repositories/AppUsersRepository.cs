@@ -20,10 +20,8 @@ internal class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
-        await _db.AppUsers
-            .ForUpdate()
-            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: ct);
+    public Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<AppUser, AppUserId>(id, ct);
 
     public async Task Update(AppUser user, CancellationToken ct) {
         _db.ThrowIfDetached(user);

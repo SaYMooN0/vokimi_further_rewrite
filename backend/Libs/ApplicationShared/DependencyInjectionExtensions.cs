@@ -23,19 +23,20 @@ public static class DependencyInjectionExtensions
             .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>)), publicOnly: false)
             .AsImplementedInterfaces()
             .WithScopedLifetime()
+        );
 
-            // domain events
+        return services;
+    }
+    public static IServiceCollection AddApplicationDomainEventHandlers(this IServiceCollection services, Type assemblyType) {
+        services.Scan(scan => scan.FromAssembliesOf(assemblyType)
             .AddClasses(classes => classes.AssignableTo(typeof(IDomainEventHandler<>)), publicOnly: false)
             .AsImplementedInterfaces()
             .WithScopedLifetime()
         );
 
-        services.AddStepHandlers();
-
         return services;
     }
-
-    private static IServiceCollection AddStepHandlers(this IServiceCollection services) {
+    public static IServiceCollection AddApplicationStepHandlers(this IServiceCollection services) {
         
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(UnitOfWorkStepHandler.QueryHandler<,>));
         services.TryDecorate(typeof(ICommandHandler<,>), typeof(UnitOfWorkStepHandler.CommandHandler<,>));

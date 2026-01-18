@@ -22,7 +22,7 @@ internal class VokiAlbumsRepository : IVokiAlbumsRepository
 
     public Task<VokiAlbum[]> ListUsersAlbumsForUpdate(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.VokiAlbums
-            .ForUpdate()
+            .AsTracking()
             .WhereUserIsOwner(aUserCtx)
             .ToArrayAsync(ct);
 
@@ -41,10 +41,8 @@ internal class VokiAlbumsRepository : IVokiAlbumsRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<VokiAlbum?> GetByIdForUpdate(VokiAlbumId albumId, CancellationToken ct) =>
-        await _db.VokiAlbums
-            .ForUpdate()
-            .FirstOrDefaultAsync(a => a.Id == albumId, cancellationToken: ct);
+    public Task<VokiAlbum?> GetByIdForUpdate(VokiAlbumId albumId, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<VokiAlbum, VokiAlbumId>(albumId, ct);
 
     public async Task DeleteAlbum(VokiAlbum album, CancellationToken ct) {
         _db.ThrowIfDetached(album);

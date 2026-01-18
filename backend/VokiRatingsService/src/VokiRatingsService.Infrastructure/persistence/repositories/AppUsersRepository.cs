@@ -21,14 +21,10 @@ internal class AppUsersRepository : IAppUsersRepository
     }
 
     public async Task<AppUser?> GetByIdForUpdate(AppUserId userId, CancellationToken ct) =>
-        await _db.AppUsers
-            .ForUpdate()
-            .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken: ct);
+        await _db.FindByIdForUpdateAsync<AppUser, AppUserId>(userId, ct);
 
-    public async Task<AppUser?> GetCurrentForUpdate(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
-        await _db.AppUsers
-            .ForUpdate()
-            .FirstOrDefaultAsync(u => u.Id == aUserCtx.UserId, cancellationToken: ct);
+    public Task<AppUser?> GetCurrentForUpdate(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<AppUser, AppUserId>(aUserCtx.UserId, ct);
 
     public Task<AppUser?> GetCurrent(AuthenticatedUserCtx aUserCtx, CancellationToken ct) => _db.AppUsers
         .FirstOrDefaultAsync(u => u.Id == aUserCtx.UserId, ct);

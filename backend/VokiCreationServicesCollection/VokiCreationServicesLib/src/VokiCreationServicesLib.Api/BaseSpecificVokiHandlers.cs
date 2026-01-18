@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Api.contracts;
@@ -41,7 +42,7 @@ public abstract class BaseSpecificVokiHandlers
 
     private static async Task<IResult> GetVokiName(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<GetVokiNameQuery, VokiName> handler
+        [FromServices] IQueryHandler<GetVokiNameQuery, VokiName> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
         var result = await handler.Handle(new GetVokiNameQuery(id), ct);

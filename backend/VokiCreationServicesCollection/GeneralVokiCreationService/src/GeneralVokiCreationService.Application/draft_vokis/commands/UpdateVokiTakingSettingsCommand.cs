@@ -7,7 +7,6 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands;
 
 public sealed record UpdateVokiTakingProcessSettingsCommand(VokiId VokiId, VokiTakingProcessSettings NewSettings) :
     ICommand<VokiTakingProcessSettings>,   
-    IWithAuthCheckStep,
     IWithVokiAccessValidationStep;
 
 internal sealed class UpdateVokiTakingProcessSettingsCommandHandler :

@@ -18,7 +18,7 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
         VokiId vokiId,
         CancellationToken ct
     ) => _db.VokiRatingsSnapshots
-        .ForUpdate()
+        .AsTracking()
         .Where(s => s.VokiId == vokiId)
         .OrderByDescending(s => s.Date)
         .FirstOrDefaultAsync(ct);

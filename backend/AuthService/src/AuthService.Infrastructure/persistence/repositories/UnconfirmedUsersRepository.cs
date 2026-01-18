@@ -16,16 +16,14 @@ internal sealed class UnconfirmedUsersRepository : IUnconfirmedUsersRepository
 
     public Task<UnconfirmedUser?> GetByEmailForUpdate(Email email, CancellationToken ct) =>
         _db.UnconfirmedUsers
-            .ForUpdate()
+            .AsTracking()
             .FirstOrDefaultAsync(u => u.Email == email, ct);
 
     public Task<UnconfirmedUser?> GetByIdForUpdate(
         UnconfirmedUserId userId,
         CancellationToken ct
     ) =>
-        _db.UnconfirmedUsers
-            .ForUpdate()
-            .FirstOrDefaultAsync(u => u.Id == userId, ct);
+        _db.FindByIdForUpdateAsync<UnconfirmedUser, UnconfirmedUserId>(userId, ct);
 
     public async Task Add(UnconfirmedUser unconfirmedUser, CancellationToken ct) {
         await _db.UnconfirmedUsers.AddAsync(unconfirmedUser, ct);

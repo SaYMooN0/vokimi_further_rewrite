@@ -22,10 +22,8 @@ internal class AppUsersRepository : IAppUsersRepository
     }
 
 
-    public async Task<AppUser?> GetCurrentForUpdate(AuthenticatedUserCtx ctx, CancellationToken ct) =>
-        await _db.AppUsers
-            .ForUpdate()
-            .FirstOrDefaultAsync(u => u.Id == ctx.UserId, cancellationToken: ct);
+    public Task<AppUser?> GetCurrentForUpdate(AuthenticatedUserCtx ctx, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<AppUser, AppUserId>(ctx.UserId, ct);
 
     public async Task Update(AppUser user, CancellationToken ct) {
         _db.ThrowIfDetached(user);

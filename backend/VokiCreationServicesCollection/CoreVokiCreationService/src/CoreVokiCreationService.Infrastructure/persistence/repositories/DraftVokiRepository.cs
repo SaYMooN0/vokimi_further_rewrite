@@ -55,9 +55,7 @@ internal class DraftVokiRepository : IDraftVokiRepository
             .ToArrayAsync(cancellationToken: ct);
 
     public Task<DraftVoki?> GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
-        _db.Vokis
-            .ForUpdate()
-            .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
+        _db.FindByIdForUpdateAsync<DraftVoki, VokiId>(vokiId, ct);
 
     public async Task Update(DraftVoki voki, CancellationToken ct) {
         _db.ThrowIfDetached(voki);

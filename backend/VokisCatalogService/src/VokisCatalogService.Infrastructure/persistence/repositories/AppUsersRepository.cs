@@ -20,10 +20,8 @@ internal class AppUsersRepository : IAppUsersRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
-        await _db.AppUsers
-            .ForUpdate()
-            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken: ct);
+    public Task<AppUser?> GetByIdForUpdate(AppUserId id, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<AppUser, AppUserId>(id, ct);
 
     public async Task Update(AppUser user, CancellationToken ct) {
         _db.ThrowIfDetached(user);
@@ -40,10 +38,7 @@ internal class AppUsersRepository : IAppUsersRepository
     }
 
     public Task<AppUser?> GetUserWithTakenVokisForUpdate(AppUserId userId, CancellationToken ct) =>
-        _db.AppUsers
-            .ForUpdate()
-            .Include(u => u.TakenVokis)
-            .FirstOrDefaultAsync(u => u.Id == userId, ct);
+        _db.FindByIdForUpdateAsync<AppUser, AppUserId>(q => q.Include(u => u.TakenVokis), userId, ct);
 
     public Task<AppUser?> GetCurrentUserWithTakenVokis(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.AppUsers

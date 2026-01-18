@@ -1,5 +1,4 @@
-﻿using SharedKernel.common.vokis;
-using SharedKernel.common.vokis.general_vokis;
+﻿using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiCreationService.Api.contracts.questions;
 

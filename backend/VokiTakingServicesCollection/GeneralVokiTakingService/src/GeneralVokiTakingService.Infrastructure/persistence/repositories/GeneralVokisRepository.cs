@@ -33,10 +33,8 @@ internal class GeneralVokisRepository : IGeneralVokisRepository
             .Include(v => EF.Property<List<VokiResult>>(v, "_results"))
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public async Task<GeneralVoki?> GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
-        await _db.Vokis
-            .ForUpdate()
-            .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
+    public Task<GeneralVoki?> GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<GeneralVoki, VokiId>(vokiId, ct);
 
     public async Task Update(GeneralVoki voki, CancellationToken ct) {
         _db.ThrowIfDetached(voki);

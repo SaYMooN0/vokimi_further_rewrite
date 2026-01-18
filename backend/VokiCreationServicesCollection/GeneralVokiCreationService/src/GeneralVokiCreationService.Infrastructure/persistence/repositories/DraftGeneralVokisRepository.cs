@@ -34,10 +34,8 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
 
-    public Task<DraftGeneralVoki?> GetWithQuestionsForUpdate(VokiId vokiId, CancellationToken ct) => _db.Vokis
-        .ForUpdate()
-        .WithQuestions()
-        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
+    public Task<DraftGeneralVoki?> GetWithQuestionsForUpdate(VokiId vokiId, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<DraftGeneralVoki, VokiId>(q => q.WithQuestions(), vokiId, ct);
 
 
     public Task<DraftGeneralVoki?> GetWithResults(VokiId vokiId, CancellationToken ct) => _db.Vokis
@@ -45,20 +43,16 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
 
-    public Task<DraftGeneralVoki?> GetWithResultsForUpdate(VokiId vokiId, CancellationToken ct) => _db.Vokis
-        .ForUpdate()
-        .WithResults()
-        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
+    public Task<DraftGeneralVoki?> GetWithResultsForUpdate(VokiId vokiId, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<DraftGeneralVoki, VokiId>(q => q.WithResults(), vokiId, ct);
 
 
     public Task<DraftGeneralVoki?> GetWithQuestionsAndResultsForUpdate(
         VokiId vokiId, CancellationToken ct
-    ) => _db.Vokis
-        .ForUpdate()
-        .WithQuestions()
-        .AsSplitQuery()
-        .WithResults()
-        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
+    ) => _db.FindByIdForUpdateAsync<DraftGeneralVoki, VokiId>(
+        q => q.WithQuestions().AsSplitQuery().WithResults(),
+        vokiId, ct
+    );
 
 
     public Task<DraftGeneralVoki?> GetWithQuestionsAndResults(
@@ -78,7 +72,7 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
     }
 
 
-     async Task<BaseDraftVoki?> IDraftVokiRepository.GetById(
+    async Task<BaseDraftVoki?> IDraftVokiRepository.GetById(
         VokiId vokiId, CancellationToken ct
     ) => await _db.Vokis
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
@@ -86,9 +80,8 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
 
     public Task<DraftGeneralVoki?> GetByIdForUpdate(
         VokiId generalVokiId, CancellationToken ct
-    ) => _db.Vokis
-        .ForUpdate()
-        .FirstOrDefaultAsync(v => v.Id == generalVokiId, cancellationToken: ct);
+    ) =>
+        _db.FindByIdForUpdateAsync<DraftGeneralVoki, VokiId>(generalVokiId, ct);
 
 
     async Task<BaseDraftVoki?> IDraftVokiRepository.GetByIdForUpdate(
@@ -139,7 +132,6 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
         await Update(generalVoki: generalVoki, ct);
     }
 }
-
 
 file static class DraftGeneralVokiQueryExtensions
 {

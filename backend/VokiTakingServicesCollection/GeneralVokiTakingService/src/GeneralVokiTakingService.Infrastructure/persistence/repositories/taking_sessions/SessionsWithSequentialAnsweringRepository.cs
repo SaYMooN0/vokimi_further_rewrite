@@ -15,10 +15,8 @@ internal class SessionsWithSequentialAnsweringRepository : ISessionsWithSequenti
         _db = db;
     }
 
-    public async Task<SessionWithSequentialAnswering?> GetByIdForUpdate(VokiTakingSessionId sessionId, CancellationToken ct) =>
-        await _db.VokiTakingSessionsWithSequentialAnswering
-            .ForUpdate()
-            .FirstOrDefaultAsync(s => s.Id == sessionId, cancellationToken: ct);
+    public Task<SessionWithSequentialAnswering?> GetByIdForUpdate(VokiTakingSessionId sessionId, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<SessionWithSequentialAnswering, VokiTakingSessionId>(sessionId, ct);
 
     public async Task Delete(SessionWithSequentialAnswering session, CancellationToken ct) {
         _db.ThrowIfDetached(session);

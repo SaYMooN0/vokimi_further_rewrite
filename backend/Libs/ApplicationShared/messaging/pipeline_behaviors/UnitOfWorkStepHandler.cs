@@ -4,7 +4,7 @@ using SharedKernel.errs.utils;
 
 namespace ApplicationShared.messaging.pipeline_behaviors;
 
-public static class UnitOfWorkStepHandler
+internal static class UnitOfWorkStepHandler
 {
     private static async Task<TOut> HandleWithUnitOfWork<TOut, TIn>(
         TIn msg,

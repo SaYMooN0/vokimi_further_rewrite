@@ -15,10 +15,8 @@ internal class SessionsWithFreeAnsweringRepository : ISessionsWithFreeAnsweringR
         _db = db;
     }
 
-    public async Task<SessionWithFreeAnswering?> GetByIdForUpdate(VokiTakingSessionId sessionId, CancellationToken ct) =>
-        await _db.VokiTakingSessionsWithFreeAnswering
-            .ForUpdate()
-            .FirstOrDefaultAsync(s => s.Id == sessionId, cancellationToken: ct);
+    public Task<SessionWithFreeAnswering?> GetByIdForUpdate(VokiTakingSessionId sessionId, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<SessionWithFreeAnswering, VokiTakingSessionId>(sessionId, ct);
 
     public async Task Delete(SessionWithFreeAnswering session, CancellationToken ct) {
         _db.ThrowIfDetached(session);

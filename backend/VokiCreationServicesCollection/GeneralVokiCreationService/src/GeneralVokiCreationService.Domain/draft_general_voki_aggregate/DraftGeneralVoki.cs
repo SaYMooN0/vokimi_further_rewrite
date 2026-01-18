@@ -491,6 +491,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
 
     public ErrOrNothing PublishWithWarningsIgnored(AuthenticatedUserCtx aUserCtx, DateTime now) {
+        if (aUserCtx.UserId != this.PrimaryAuthorId) {
+            return ErrFactory.NoAccess("Only primary author can publish Voki");
+        }
+
         ErrOr<ImmutableArray<VokiPublishingIssue>> issuesRes = GatherAllPublishingIssues(aUserCtx);
         if (issuesRes.IsErr(out var err)) {
             return err;
@@ -507,6 +511,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
     public ErrOrNothing PublishWithNoIssues(AuthenticatedUserCtx aUserCtx, DateTime now) {
+        if (aUserCtx.UserId != this.PrimaryAuthorId) {
+            return ErrFactory.NoAccess("Only primary author can publish Voki");
+        }
+
         ErrOr<ImmutableArray<VokiPublishingIssue>> issuesRes = GatherAllPublishingIssues(aUserCtx);
         if (issuesRes.IsErr(out var err)) {
             return err;
