@@ -1,9 +1,4 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
-using VokiCreationServicesLib.Application.pipeline_behaviors;
-using VokimiStorageKeysLib;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 using VokimiStorageKeysLib.temp_keys;
 
@@ -16,31 +11,43 @@ public sealed record UpdateVokiResultCommand(
     VokiResultText NewText,
     string? NewImage
 ) :
-    ICommand<VokiResult>,   
-    IWithAuthCheckStep,
-    IWithVokiAccessValidationStep;
+    ICommand<VokiResult>,
+    IWithAuthCheckStep;
 
 internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVokiResultCommand, VokiResult>
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IMainStorageBucket _mainStorageBucket;
+    private readonly IUserCtxProvider _userCtxProvider;
 
     public UpdateResultTextCommandHandler(
         IDraftGeneralVokisRepository draftGeneralVokisRepository,
-        IMainStorageBucket mainStorageBucket
+        IMainStorageBucket mainStorageBucket,
+        IUserCtxProvider userCtxProvider
     ) {
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _mainStorageBucket = mainStorageBucket;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<VokiResult>> Handle(UpdateVokiResultCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithResultsForUpdate(command.VokiId, ct))!;
+        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetWithResultsForUpdate(command.VokiId, ct);
+        if (voki is null) {
+            return ErrFactory.NotFound.Voki();
+        }
+
+        var aUserCtx = command.UserCtx(_userCtxProvider);
+        if (!voki.HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("You do not have access to this Voki");
+        }
+
         var imageRes = await HandleImage(command.NewImage, command.VokiId, command.ResultId, ct);
         if (imageRes.IsErr(out var err)) {
             return err;
         }
 
-        var res = voki.UpdateResult(command.ResultId, command.NewName, command.NewText, imageRes.AsSuccess());
+        var imageKey = imageRes.AsSuccess();
+        ErrOr<VokiResult> res = voki.UpdateResult(aUserCtx, command.ResultId, command.NewName, command.NewText, imageKey);
         if (res.IsErr(out err)) {
             return err;
         }

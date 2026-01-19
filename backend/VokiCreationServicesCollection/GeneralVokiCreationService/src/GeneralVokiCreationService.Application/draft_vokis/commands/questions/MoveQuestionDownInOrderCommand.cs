@@ -1,10 +1,4 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
-using SharedKernel;
-using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using VokiCreationServicesLib.Application.pipeline_behaviors;
-
-namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
+﻿namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 
 public sealed record MoveQuestionDownInOrderCommand(
     VokiId VokiId,

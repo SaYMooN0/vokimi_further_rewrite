@@ -1,8 +1,4 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
-using VokiCreationServicesLib.Application.pipeline_behaviors;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 using VokimiStorageKeysLib.temp_keys;
 
@@ -15,10 +11,9 @@ public sealed record UpdateQuestionImageSetCommand(
     HashSet<GeneralVokiQuestionImageKey> SavedKeys,
     VokiQuestionImagesAspectRatio ImagesAspectRatio
 ) :
-    ICommand<VokiQuestionImagesSet>,   
+    ICommand<VokiQuestionImagesSet>,
     IWithAuthCheckStep,
-    IWithBasicValidationStep,
-    IWithVokiAccessValidationStep
+    IWithBasicValidationStep
 {
     public ErrOrNothing Validate() {
         int totalCount = TempKeys.Count + SavedKeys.Count;
@@ -39,12 +34,17 @@ internal sealed class UpdateQuestionImageSetCommandHandler :
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
     private readonly IMainStorageBucket _mainStorageBucket;
+    private readonly IUserCtxProvider _userCtxProvider;
+
 
     public UpdateQuestionImageSetCommandHandler(
-        IDraftGeneralVokisRepository draftGeneralVokisRepository, IMainStorageBucket mainStorageBucket
+        IDraftGeneralVokisRepository draftGeneralVokisRepository,
+        IMainStorageBucket mainStorageBucket,
+        IUserCtxProvider userCtxProvider
     ) {
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
         _mainStorageBucket = mainStorageBucket;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<VokiQuestionImagesSet>> Handle(UpdateQuestionImageSetCommand command, CancellationToken ct) {
@@ -72,14 +72,16 @@ internal sealed class UpdateQuestionImageSetCommandHandler :
             return err;
         }
 
-        VokiQuestionImagesSet imagesSet = imagesSetRes.AsSuccess();
-        ErrOr<VokiQuestion> updateRes = voki.UpdateQuestionImages(command.QuestionId, imagesSet);
+        ErrOr<VokiQuestionImagesSet> updateRes = voki.UpdateQuestionImages(
+            command.UserCtx(_userCtxProvider),
+            command.QuestionId,
+            imagesSetRes.AsSuccess()
+        );
         if (updateRes.IsErr(out err)) {
             return err;
         }
 
         await _draftGeneralVokisRepository.Update(voki, ct);
-
-        return imagesSet;
+        return updateRes.AsSuccess();
     }
 }

@@ -18,12 +18,12 @@ internal class RatingsRepository : IRatingsRepository
 
     public Task<VokiRating?> GetUserRatingForVokiForUpdate(
         AuthenticatedUserCtx userContext, VokiId vokiId, CancellationToken ct
-    ) => _db.Ratings
-        .ForUpdate()
-        .FirstOrDefaultAsync(r =>
+    ) =>
+        _db.FindForUpdateAsync<VokiRating>(
+            r =>
                 r.VokiId == vokiId
                 && r.UserId == userContext.UserId,
-            cancellationToken: ct
+            ct
         );
 
     public Task<VokiRating[]> ListRatingsForVoki(VokiId vokiId, CancellationToken ct) => _db.Ratings

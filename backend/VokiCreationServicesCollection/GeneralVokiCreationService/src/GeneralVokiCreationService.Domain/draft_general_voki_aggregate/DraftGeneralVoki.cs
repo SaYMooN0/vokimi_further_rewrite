@@ -2,7 +2,6 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
-using SharedKernel;
 using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.events;
@@ -57,12 +56,22 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return newGeneralVoki;
     }
 
-    public void UpdateTakingProcessSettings(VokiTakingProcessSettings newSettings) {
+    public ErrOrNothing UpdateTakingProcessSettings(AuthenticatedUserCtx aUserCtx, VokiTakingProcessSettings newSettings) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To update Voki taking process settings you need to be the Voki author");
+        }
+
         TakingProcessSettings = newSettings;
+        return ErrOrNothing.Nothing;
     }
 
-    public void UpdateInteractionSettings(GeneralVokiInteractionSettings newSettings) {
+    public ErrOrNothing UpdateInteractionSettings(AuthenticatedUserCtx aUserCtx, GeneralVokiInteractionSettings newSettings) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To update Voki interaction settings you need to be the Voki author");
+        }
+
         InteractionSettings = newSettings;
+        return ErrOrNothing.Nothing;
     }
 
     public ErrOr<ImmutableArray<VokiQuestion>> GetQuestions(AuthenticatedUserCtx aUserCtx) {
@@ -81,7 +90,23 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return ErrFactory.NoAccess("To access Voki results user must have access to Voki");
     }
 
-    public ErrOr<GeneralVokiQuestionId> AddNewQuestion(GeneralVokiAnswerType answersType) {
+    public ErrOr<GeneralVokiQuestionId> AddNewQuestion(AuthenticatedUserCtx aUserCtx, GeneralVokiAnswerType answersType) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To modify Voki you must be its author");
+        }
+
+        GeneralVokiAnswerType[] supportedTyped = [
+            GeneralVokiAnswerType.TextOnly,
+            GeneralVokiAnswerType.ColorOnly,
+            GeneralVokiAnswerType.ColorAndText,
+            GeneralVokiAnswerType.ImageOnly,
+            GeneralVokiAnswerType.ImageAndText,
+        ];
+
+        if (!supportedTyped.Contains(answersType)) {
+            return ErrFactory.NotImplemented("Selected type is not implemented yet");
+        }
+
         if (_questions.Count >= MaxQuestionsCount) {
             return ErrFactory.LimitExceeded(
                 $"General voki cannot have more than {MaxQuestionsCount} questions. Current count: {_questions.Count}"
@@ -109,7 +134,13 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return requestedQuestion;
     }
 
-    public ErrOr<VokiQuestion> UpdateQuestionText(GeneralVokiQuestionId questionId, VokiQuestionText newText) {
+    public ErrOr<VokiQuestion> UpdateQuestionText(
+        AuthenticatedUserCtx aUserCtx, GeneralVokiQuestionId questionId, VokiQuestionText newText
+    ) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To modify Voki question you must be the Voki author");
+        }
+
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
             return ErrFactory.NotFound.Common(
@@ -122,9 +153,16 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return questionToUpdate;
     }
 
-    public ErrOr<VokiQuestion> UpdateQuestionImages(
-        GeneralVokiQuestionId questionId, VokiQuestionImagesSet newImageSet
+    public ErrOr<VokiQuestionImagesSet> UpdateQuestionImages(
+        AuthenticatedUserCtx aUserCtx,
+        GeneralVokiQuestionId questionId,
+        VokiQuestionImagesSet newImageSet
     ) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To modify Voki question you must be the Voki author");
+        }
+
+
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
             return ErrFactory.NotFound.VokiContent(
@@ -144,21 +182,24 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        var oldImages = questionToUpdate.ImageSet;
-
-        var res = questionToUpdate.UpdateImages(newImageSet);
+        ErrOrNothing res = questionToUpdate.UpdateImages(newImageSet);
         if (res.IsErr(out var err)) {
             return err;
         }
 
-        return questionToUpdate;
+        return questionToUpdate.ImageSet;
     }
 
     public ErrOr<VokiQuestion> UpdateQuestionAnswerSettings(
+        AuthenticatedUserCtx aUserCtx,
         GeneralVokiQuestionId questionId,
         QuestionAnswersCountLimit newCountLimit,
         bool shuffleAnswers
     ) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To modify Voki question you must be the Voki author");
+        }
+
         VokiQuestion? questionToUpdate = _questions.FirstOrDefault(q => q.Id == questionId);
         if (questionToUpdate is null) {
             return ErrFactory.NotFound.VokiContent(
@@ -309,11 +350,16 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
     public ErrOr<VokiResult> UpdateResult(
+        AuthenticatedUserCtx aUserCtx,
         GeneralVokiResultId resultId,
         VokiResultName newName,
         VokiResultText newText,
         GeneralVokiResultImageKey? newImage
     ) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To update Voki result you need to be the author of this Voki");
+        }
+
         VokiResult? resultToUpdate = _results.FirstOrDefault(q => q.Id == resultId);
         if (resultToUpdate is null) {
             return ErrFactory.NotFound.VokiContent(
@@ -338,10 +384,14 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
 
-    public bool DeleteResult(GeneralVokiResultId resultId) {
+    public ErrOrNothing DeleteResult(AuthenticatedUserCtx aUserCtx, GeneralVokiResultId resultId) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To delete Voki result you need to be the author of this Voki");
+        }
+
         VokiResult? result = _results.FirstOrDefault(q => q.Id == resultId);
         if (result is null) {
-            return false;
+            return ErrOrNothing.Nothing;
         }
 
         foreach (var q in _questions) {
@@ -349,7 +399,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         _results.Remove(result);
-        return true;
+        return ErrOrNothing.Nothing;
     }
 
     private ErrOrNothing CheckIfAnswerDataBelongs(GeneralVokiQuestionId questionId, BaseQuestionTypeSpecificContent content) {

@@ -1,8 +1,4 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
-using VokiCreationServicesLib.Application.pipeline_behaviors;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 
@@ -11,21 +7,33 @@ public sealed record UpdateQuestionTextCommand(
     GeneralVokiQuestionId QuestionId,
     VokiQuestionText NewQuestionText
 ) :
-    ICommand<VokiQuestionText>,   
-    IWithAuthCheckStep,
-    IWithVokiAccessValidationStep;
+    ICommand<VokiQuestionText>,
+    IWithAuthCheckStep;
 
 internal sealed class UpdateQuestionTextCommandHandler : ICommandHandler<UpdateQuestionTextCommand, VokiQuestionText>
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public UpdateQuestionTextCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+    public UpdateQuestionTextCommandHandler(
+        IDraftGeneralVokisRepository draftGeneralVokisRepository,
+        IUserCtxProvider userCtxProvider
+    ) {
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<VokiQuestionText>> Handle(UpdateQuestionTextCommand command, CancellationToken ct) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct))!;
-        var res = voki.UpdateQuestionText(command.QuestionId, command.NewQuestionText);
+        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct);
+        if (voki is null) {
+            return ErrFactory.NotFound.Voki();
+        }
+
+        ErrOr<VokiQuestion> res = voki.UpdateQuestionText(
+            command.UserCtx(_userCtxProvider),
+            command.QuestionId,
+            command.NewQuestionText
+        );
         if (res.IsErr(out var err)) {
             return err;
         }

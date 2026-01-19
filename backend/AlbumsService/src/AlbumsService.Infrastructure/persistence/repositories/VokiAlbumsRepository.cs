@@ -42,7 +42,7 @@ internal class VokiAlbumsRepository : IVokiAlbumsRepository
     }
 
     public Task<VokiAlbum?> GetByIdForUpdate(VokiAlbumId albumId, CancellationToken ct) =>
-        _db.FindByIdForUpdateAsync<VokiAlbum, VokiAlbumId>(albumId, ct);
+        _db.FindForUpdateAsync<VokiAlbum>((a) => a.Id == albumId, ct);
 
     public async Task DeleteAlbum(VokiAlbum album, CancellationToken ct) {
         _db.ThrowIfDetached(album);
@@ -72,6 +72,7 @@ internal class VokiAlbumsRepository : IVokiAlbumsRepository
             .Where(a => ids.Contains(a.Id))
             .ToArrayAsync(ct);
 }
+
 internal static class VokiAlbumQueryableExtensions
 {
     public static IQueryable<VokiAlbum> WhereUserIsOwner(

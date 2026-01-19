@@ -19,10 +19,7 @@ internal class AppUsersRepository : IAppUsersRepository
         _db.FindByIdForUpdateAsync<AppUser, AppUserId>(id, ct);
 
     public Task<AppUser[]> ListWithIdsForUpdate(IEnumerable<AppUserId> userIds, CancellationToken ct) =>
-        _db.AppUsers
-            .ForUpdate()
-            .Where(u => userIds.Contains(u.Id))
-            .ToArrayAsync(cancellationToken: ct);
+        _db.ListForUpdateAsync<AppUser>(u => userIds.Contains(u.Id), ct);
 
     public async Task Add(AppUser user, CancellationToken ct) {
         await _db.AppUsers.AddAsync(user, ct);

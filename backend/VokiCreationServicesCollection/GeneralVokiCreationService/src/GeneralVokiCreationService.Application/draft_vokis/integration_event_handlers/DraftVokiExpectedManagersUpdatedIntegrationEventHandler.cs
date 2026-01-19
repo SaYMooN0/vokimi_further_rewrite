@@ -1,5 +1,3 @@
-using System.Text;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 using SharedKernel.common.vokis;

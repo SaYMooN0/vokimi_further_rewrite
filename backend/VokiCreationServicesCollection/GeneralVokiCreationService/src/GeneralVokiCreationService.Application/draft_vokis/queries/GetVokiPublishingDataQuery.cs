@@ -1,8 +1,4 @@
-﻿using ApplicationShared;
-using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using VokiCreationServicesLib.Application.pipeline_behaviors;
-using VokiCreationServicesLib.Domain.draft_voki_aggregate;
+﻿using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.queries;
@@ -25,21 +21,13 @@ internal sealed class GetVokiPublishingDataQueryHandler :
         _userCtxProvider = userCtxProvider;
     }
 
-    public async Task<ErrOr<GetVokiPublishingDataQueryResult>> Handle(
-        GetVokiPublishingDataQuery query,
-        CancellationToken ct
-    ) {
+    public async Task<ErrOr<GetVokiPublishingDataQueryResult>> Handle(GetVokiPublishingDataQuery query, CancellationToken ct) {
         DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetWithQuestionsAndResults(query.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki();
         }
 
-        var aUserCtx = query.UserCtx(_userCtxProvider);
-        if (!voki.HasUserAccess(aUserCtx)) {
-            return ErrFactory.NotFound.Voki("You don't have access to this Voki");
-        }
-
-        var issuesOrErr = voki.GatherAllPublishingIssues(aUserCtx);
+        var issuesOrErr = voki.GatherAllPublishingIssues(query.UserCtx(_userCtxProvider));
         if (issuesOrErr.IsErr(out var err)) {
             return err;
         }

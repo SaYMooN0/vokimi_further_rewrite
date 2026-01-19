@@ -85,12 +85,20 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         return userContext.UserId == primaryAuthorId || coAuthorIds.Contains(userContext.UserId);
     }
 
-    public void UpdateName(VokiName newVokiName) {
+    public ErrOrNothing UpdateName(AuthenticatedUserCtx aUserCtx, VokiName newVokiName) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To update Voki name you need to be the Voki author");
+        }
         Name = newVokiName;
         AddDomainEvent(new VokiNameUpdatedEvent(Id, Name));
+        return ErrOrNothing.Nothing;
     }
 
-    public ErrOrNothing UpdateCover(VokiCoverKey newCover) {
+    public ErrOrNothing UpdateCover(AuthenticatedUserCtx aUserCtx, VokiCoverKey newCover) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To update Voki cover you need to be the Voki author");
+        }
+
         if (!newCover.IsWithId(this.Id)) {
             return ErrFactory.Conflict(
                 "This cover does not belong to this Voki", $"Voki id: {Id}, cover voki id: {newCover.VokiId}"
@@ -103,12 +111,22 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         return ErrOrNothing.Nothing;
     }
 
-    public void UpdateDetails(VokiDetails newDetails) {
+    public ErrOrNothing UpdateDetails(AuthenticatedUserCtx aUserCtx, VokiDetails newDetails) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To update Voki details you need to be the Voki author");
+        }
         this.Details = newDetails;
+        return ErrOrNothing.Nothing;
+
     }
 
-    public void UpdateTags(VokiTagsSet newTags) {
+    public ErrOrNothing UpdateTags(AuthenticatedUserCtx aUserCtx, VokiTagsSet newTags) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To update Voki tags you need to be the Voki author");
+        }
         this.Tags = newTags;
+        return ErrOrNothing.Nothing;
+
     }
 
     protected List<VokiPublishingIssue> CheckCoverForPublishingIssues() {

@@ -1,7 +1,4 @@
-﻿using System.Text;
-using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using MassTransit;
+﻿using MassTransit;
 using Microsoft.Extensions.Logging;
 using SharedKernel.common.vokis;
 using SharedKernel.integration_events.draft_vokis.co_authors;

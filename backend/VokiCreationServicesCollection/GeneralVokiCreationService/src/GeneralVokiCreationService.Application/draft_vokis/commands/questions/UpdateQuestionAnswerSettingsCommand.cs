@@ -1,8 +1,4 @@
-﻿using ApplicationShared.messaging.pipeline_behaviors;
-using GeneralVokiCreationService.Application.common;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
-using VokiCreationServicesLib.Application.pipeline_behaviors;
+﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 
@@ -12,22 +8,28 @@ public sealed record UpdateQuestionAnswerSettingsCommand(
     QuestionAnswersCountLimit NewCountLimit,
     bool ShuffleAnswers
 ) :
-    ICommand<VokiQuestion>,   
-    IWithAuthCheckStep,
-    IWithVokiAccessValidationStep;
+    ICommand<VokiQuestion>,
+    IWithAuthCheckStep;
 
 internal sealed class UpdateQuestionAnswerSettingsCommandHandler :
     ICommandHandler<UpdateQuestionAnswerSettingsCommand, VokiQuestion>
 {
     private readonly IDraftGeneralVokisRepository _draftGeneralVokisRepository;
+    private readonly IUserCtxProvider _userCtxProvider;
 
-    public UpdateQuestionAnswerSettingsCommandHandler(IDraftGeneralVokisRepository draftGeneralVokisRepository) {
+
+    public UpdateQuestionAnswerSettingsCommandHandler(
+        IDraftGeneralVokisRepository draftGeneralVokisRepository,
+        IUserCtxProvider userCtxProvider
+    ) {
         _draftGeneralVokisRepository = draftGeneralVokisRepository;
+        _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<VokiQuestion>> Handle(UpdateQuestionAnswerSettingsCommand command, CancellationToken ct) {
         DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct))!;
         var res = voki.UpdateQuestionAnswerSettings(
+            command.UserCtx(_userCtxProvider),
             command.QuestionId, command.NewCountLimit, command.ShuffleAnswers
         );
         if (res.IsErr(out var err)) {

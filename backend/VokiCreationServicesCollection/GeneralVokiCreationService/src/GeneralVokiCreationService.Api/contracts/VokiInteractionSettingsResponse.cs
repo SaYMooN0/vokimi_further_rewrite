@@ -1,4 +1,3 @@
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiCreationService.Api.contracts;
