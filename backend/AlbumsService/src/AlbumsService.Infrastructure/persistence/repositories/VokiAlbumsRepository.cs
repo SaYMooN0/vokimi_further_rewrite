@@ -21,10 +21,7 @@ internal class VokiAlbumsRepository : IVokiAlbumsRepository
             .ToArrayAsync(ct);
 
     public Task<VokiAlbum[]> ListUsersAlbumsForUpdate(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
-        _db.VokiAlbums
-            .AsTracking()
-            .WhereUserIsOwner(aUserCtx)
-            .ToArrayAsync(ct);
+        _db.ListForUpdateAsync<VokiAlbum>(a => EF.Property<AppUserId>(a, "OwnerId") == aUserCtx.UserId, ct);
 
     public Task<VokiAlbumPreviewDto[]> GetCurrentUserAlbumPreviewsSorted(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.VokiAlbums

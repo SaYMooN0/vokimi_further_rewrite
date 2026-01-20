@@ -6,14 +6,12 @@
 	import ListEmptyMessage from '../../../_c_shared/ListEmptyMessage.svelte';
 	import GeneralVokiCreationQuestionsList from './_c_questions_page/GeneralVokiCreationQuestionsList.svelte';
 	import VokiCreationPageLoadingErr from '../../../_c_shared/VokiCreationPageLoadingErr.svelte';
-	import { GeneralVokiCreationQuestionsPageState } from './general-voki-creation-questions-page-state.svelte';
+	import { GeneralVokiCreationAllQuestionsPageState } from './general-voki-creation-all-questions-page-state.svelte';
 	import { setVokiCreationCurrentPageState } from '../../../voki-creation-page-context';
 
 	let { data }: PageProps = $props();
 	let questionInitializingDialog = $state<QuestionInitializingDialog>()!;
-	const maxQuestionsCount = 100;
-
-	setVokiCreationCurrentPageState(new GeneralVokiCreationQuestionsPageState());
+	setVokiCreationCurrentPageState(new GeneralVokiCreationAllQuestionsPageState());
 </script>
 
 {#if !data.isSuccess}
@@ -29,7 +27,7 @@
 	{:else}
 		<VokiTakingProcessSettingsSection vokiId={data.vokiId!} settings={data.data.settings} />
 		<GeneralVokiCreationQuestionsList questionsProps={data.data.questions} vokiId={data.vokiId!} />
-		{#if data.data.questions.length < maxQuestionsCount}
+		{#if data.data.questions.length < pageState.maxQuestionsCount}
 			<div class="add-new-question-btn-container">
 				<PrimaryButton onclick={() => questionInitializingDialog.open()}
 					>Add new question</PrimaryButton

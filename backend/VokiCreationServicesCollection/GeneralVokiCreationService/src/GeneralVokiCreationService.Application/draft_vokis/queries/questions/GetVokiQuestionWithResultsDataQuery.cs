@@ -1,6 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 
-namespace GeneralVokiCreationService.Application.draft_vokis.queries;
+namespace GeneralVokiCreationService.Application.draft_vokis.queries.questions;
 
 public sealed record GetVokiQuestionWithResultsDataQuery(
     VokiId VokiId,

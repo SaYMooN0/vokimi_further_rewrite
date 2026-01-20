@@ -35,7 +35,10 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
 
 
     public Task<DraftGeneralVoki?> GetWithQuestionsForUpdate(VokiId vokiId, CancellationToken ct) =>
-        _db.FindByIdForUpdateAsync<DraftGeneralVoki, VokiId>(q => q.WithQuestions(), vokiId, ct);
+        _db.FindWithIncludesForUpdateAsync<DraftGeneralVoki, VokiId>(
+            includes: q => q.WithQuestions(),
+            vokiId, ct
+        );
 
 
     public Task<DraftGeneralVoki?> GetWithResults(VokiId vokiId, CancellationToken ct) => _db.Vokis
@@ -44,12 +47,12 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
 
 
     public Task<DraftGeneralVoki?> GetWithResultsForUpdate(VokiId vokiId, CancellationToken ct) =>
-        _db.FindByIdForUpdateAsync<DraftGeneralVoki, VokiId>(q => q.WithResults(), vokiId, ct);
+        _db.FindWithIncludesForUpdateAsync<DraftGeneralVoki, VokiId>(q => q.WithResults(), vokiId, ct);
 
 
     public Task<DraftGeneralVoki?> GetWithQuestionsAndResultsForUpdate(
         VokiId vokiId, CancellationToken ct
-    ) => _db.FindByIdForUpdateAsync<DraftGeneralVoki, VokiId>(
+    ) => _db.FindWithIncludesForUpdateAsync<DraftGeneralVoki, VokiId>(
         q => q.WithQuestions().AsSplitQuery().WithResults(),
         vokiId, ct
     );

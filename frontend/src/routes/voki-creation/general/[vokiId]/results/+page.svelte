@@ -15,7 +15,10 @@
 
 	let { data }: PageProps = $props();
 	let resultCreationDialog = $state<ResultInitializingDialog>()!;
-	let pageState = new GeneralVokiCreationResultsPageState(data.data?.results ?? []);
+	let pageState = new GeneralVokiCreationResultsPageState(
+		data.data?.results ?? [],
+		data.data?.maxVokiResultsCount ?? 0
+	);
 
 	setVokiCreationCurrentPageState(pageState);
 
@@ -25,7 +28,6 @@
 	function updateOnDelete(resultId: string) {
 		pageState.deleteResult(resultId);
 	}
-	const maxResultsCount = 60;
 </script>
 
 {#if !data.isSuccess}
@@ -57,7 +59,7 @@
 				/>
 			{/each}
 		</div>
-		{#if pageState.results.length < maxResultsCount}
+		{#if pageState.results.length < pageState.maxResultsCount}
 			<div class="add-new-result-btn-container">
 				<PrimaryButton onclick={() => resultCreationDialog.open()}>Add new result</PrimaryButton>
 			</div>

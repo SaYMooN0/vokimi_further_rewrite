@@ -1,5 +1,4 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using MassTransit;
+﻿using MassTransit;
 using SharedKernel.common.vokis;
 using SharedKernel.integration_events.draft_vokis.new_voki_initialized;
 using VokimiStorageKeysLib.concrete_keys;

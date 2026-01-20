@@ -68,6 +68,7 @@ export class BackendService {
             if (response.ok) {
                 const text = await response.text();
                 const data = BackendService.parseWithDates<T>(text);
+                console.log(data);
                 return { isSuccess: true, data };
             }
 

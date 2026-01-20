@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using InfrastructureShared.EfCore.query_extensions.expression_visitors;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.domain;
 
@@ -7,6 +9,7 @@ namespace InfrastructureShared.EfCore.query_extensions;
 public static class DbContextLockExtensions
 {
     internal const string ForUpdateTagValue = "FOR_UPDATE";
+
     public static async Task<T?> FindByIdForUpdateAsync<T, TId>(
         this DbContext db,
         TId id,
@@ -21,37 +24,53 @@ public static class DbContextLockExtensions
     }
 
 
-    public static async Task<T?> FindByIdForUpdateAsync<T, TId>(
+    public static async Task<T?> FindWithIncludesForUpdateAsync<T, TId>(
         this DbContext db,
         Func<IQueryable<T>, IQueryable<T>> includes,
         TId id,
-        CancellationToken ct
+        CancellationToken ct,
+        [CallerMemberName] string caller = "",
+        [CallerFilePath] string callerFilePath = "",
+        [CallerLineNumber] int callerLineNumber = 0
     )
         where T : AggregateRoot<TId>
         where TId : ValueObject, IEntityId {
-        // includes will cause joins so we first need to lock root with no includes
+        IQueryable<T> q = includes(db.Set<T>());
+        OnlyIncludesVisitor.EnsureOnlyIncludes(
+            q, caller: caller,
+            callerFilePath: callerFilePath, callerLineNumber: callerLineNumber
+        );
+
         await db.Set<T>()
             .TagWith(ForUpdateTagValue)
             .Where(e => e.Id == id)
             .Select(_ => 1)
             .FirstOrDefaultAsync(ct);
 
-        var dbSetWithIncludes = includes(db.Set<T>());
-        return await dbSetWithIncludes
+        return await q
             .AsTracking()
             .FirstOrDefaultAsync(x => x.Id == id, ct);
     }
 
-    public static async Task<T?> FindForUpdateAsync<T>(
+
+    public static Task<T?> FindForUpdateAsync<T>(
         this DbContext db,
         Expression<Func<T, bool>> predicate,
-        CancellationToken ct
+        CancellationToken ct,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null
     ) where T : class, IAggregateRoot {
-        return await db.Set<T>()
-            .TagWith(ForUpdateTagValue)
+        IQueryable<T> q = db.Set<T>();
+
+        if (orderBy is not null) {
+            q = orderBy(q);
+        }
+
+        return q.TagWith(ForUpdateTagValue)
             .AsTracking()
-            .FirstOrDefaultAsync(predicate, cancellationToken: ct);
+            .FirstOrDefaultAsync(predicate, ct);
     }
+
+
     public static async Task<T[]> ListForUpdateAsync<T>(
         this DbContext db,
         Expression<Func<T, bool>> predicate,

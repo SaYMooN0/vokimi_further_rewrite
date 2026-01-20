@@ -3,7 +3,8 @@
 namespace GeneralVokiCreationService.Api.contracts.results;
 
 public record class VokiResultsOverviewResponse(
-    VokiResultDataResponse[] Results
+    VokiResultDataResponse[] Results,
+    int MaxVokiResultsCount
 ) : ICreatableResponse<ImmutableArray<VokiResult>>
 {
     public static ICreatableResponse<ImmutableArray<VokiResult>> Create(ImmutableArray<VokiResult> results) =>
@@ -11,6 +12,7 @@ public record class VokiResultsOverviewResponse(
             results
                 .OrderBy(r => r.CreationDate)
                 .Select(VokiResultDataResponse.FromResult)
-                .ToArray()
+                .ToArray(),
+            DraftGeneralVoki.MaxResultsCount
         );
 }

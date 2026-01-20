@@ -1,17 +1,12 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import UnableToLoad from '../../../../_c_shared/VokiCreationPageLoadingErr.svelte';
 	import QuestionTextSection from './_c_page/QuestionTextSection.svelte';
 	import VokiCreationBasicHeader from '../../../../_c_shared/VokiCreationBasicHeader.svelte';
 	import QuestionImagesSection from './_c_page/QuestionImagesSection.svelte';
 	import QuestionAnswerSettingsSection from './_c_page/QuestionAnswerSettingsSection.svelte';
-	import QuestionAnswersSection from './_c_page/QuestionAnswersSection.svelte';
-	import { setQuestionPageContext } from './question-page-context.svelte';
 	import VokiCreationPageLoadingErr from '../../../../_c_shared/VokiCreationPageLoadingErr.svelte';
 
 	let { data }: PageProps = $props();
-	let questionAnswers = $state(data.data?.answers.sort((a, b) => a.order - b.order) ?? []);
-	setQuestionPageContext(data.data?.results ?? []);
 </script>
 
 {#if !data.isSuccess}
@@ -36,12 +31,7 @@
 			questionId={data.questionId!}
 			vokiId={data.vokiId!}
 		/>
-		<QuestionAnswersSection
-			bind:answers={questionAnswers}
-			questionId={data.questionId!}
-			vokiId={data.vokiId!}
-			answersType={data.data.answersType}
-		/>
+		type specific content
 	</div>
 {/if}
 

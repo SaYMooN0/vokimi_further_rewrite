@@ -1,4 +1,5 @@
 ﻿using GeneralVokiCreationService.Application.draft_vokis.queries;
+using GeneralVokiCreationService.Application.draft_vokis.queries.questions;
 using GeneralVokiCreationService.Application.dtos;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using SharedKernel.common.vokis.general_vokis;
@@ -9,7 +10,6 @@ internal record class VokiQuestionFullDataResponse(
     string Id,
     string Text,
     QuestionImageSetResponse ImageSet,
-    GeneralVokiAnswerType AnswersType,
     IQuestionContentPrimitiveDto Content,
     bool ShuffleAnswers,
     ushort MinAnswersCount,
@@ -23,7 +23,6 @@ internal record class VokiQuestionFullDataResponse(
         queryRes.Question.Id.ToString(),
         queryRes.Question.Text.ToString(),
         QuestionImageSetResponse.Create(queryRes.Question.ImageSet),
-        queryRes.Question.Content.AnswersType,
         IQuestionContentPrimitiveDto.FromQuestionContent(queryRes.Question.Content),
         queryRes.Question.ShuffleAnswers,
         queryRes.Question.AnswersCountLimit.MinAnswers,

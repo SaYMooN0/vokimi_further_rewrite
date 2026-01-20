@@ -15,9 +15,7 @@ internal sealed class UnconfirmedUsersRepository : IUnconfirmedUsersRepository
     }
 
     public Task<UnconfirmedUser?> GetByEmailForUpdate(Email email, CancellationToken ct) =>
-        _db.UnconfirmedUsers
-            .AsTracking()
-            .FirstOrDefaultAsync(u => u.Email == email, ct);
+        _db.FindForUpdateAsync<UnconfirmedUser>(u => u.Email == email, ct: ct);
 
     public Task<UnconfirmedUser?> GetByIdForUpdate(
         UnconfirmedUserId userId,

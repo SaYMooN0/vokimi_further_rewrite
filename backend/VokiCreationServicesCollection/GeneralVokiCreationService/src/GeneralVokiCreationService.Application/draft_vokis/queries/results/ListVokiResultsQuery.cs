@@ -1,4 +1,4 @@
-namespace GeneralVokiCreationService.Application.draft_vokis.queries;
+namespace GeneralVokiCreationService.Application.draft_vokis.queries.results;
 
 public sealed record ListVokiResultsQuery(
     VokiId VokiId

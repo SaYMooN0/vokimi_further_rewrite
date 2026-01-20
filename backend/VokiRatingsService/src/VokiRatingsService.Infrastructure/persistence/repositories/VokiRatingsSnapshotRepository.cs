@@ -17,11 +17,12 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
     public Task<VokiRatingsSnapshot?> GetLastSnapshotForVokiForUpdate(
         VokiId vokiId,
         CancellationToken ct
-    ) => _db.VokiRatingsSnapshots
-        .AsTracking()
-        .Where(s => s.VokiId == vokiId)
-        .OrderByDescending(s => s.Date)
-        .FirstOrDefaultAsync(ct);
+    ) => _db.FindForUpdateAsync<VokiRatingsSnapshot>(
+        predicate: s => s.VokiId == vokiId,
+        ct,
+        orderBy: q => q.OrderByDescending(s => s.Date)
+    );
+
 
 
     public async Task Add(VokiRatingsSnapshot snapshot, CancellationToken ct) {

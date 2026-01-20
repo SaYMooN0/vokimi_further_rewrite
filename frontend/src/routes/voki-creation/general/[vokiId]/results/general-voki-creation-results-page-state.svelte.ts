@@ -4,7 +4,6 @@ import type { ResultOverViewData } from "./_c_results_page/types";
 export class ResultItemState {
     public isEditing = $state(false);
     public data: ResultOverViewData = $state()!;
-
     constructor(data: ResultOverViewData) {
         this.data = data;
     }
@@ -12,9 +11,10 @@ export class ResultItemState {
 
 export class GeneralVokiCreationResultsPageState implements IVokiCreationPageState {
     public results: ResultItemState[] = $state([]);
-
-    constructor(initialResults: ResultOverViewData[]) {
+    public readonly maxResultsCount: number;
+    constructor(initialResults: ResultOverViewData[], maxResultsCount: number) {
         this.results = initialResults.map(r => new ResultItemState(r));
+        this.maxResultsCount = maxResultsCount;
     }
 
     get hasAnyUnsavedChanges(): boolean {

@@ -5,16 +5,17 @@ namespace GeneralVokiCreationService.Api.contracts.questions;
 
 public record class VokiQuestionsOverviewResponse(
     VokiQuestionBriefDataResponse[] Questions,
-    VokiTakingProcessSettings Settings
+    VokiTakingProcessSettings Settings,
+    int MaxVokiQuestionsCount
 ) : ICreatableResponse<GetVokiQuestionsOverviewQueryResult>
 {
-
     public static ICreatableResponse<GetVokiQuestionsOverviewQueryResult> Create(GetVokiQuestionsOverviewQueryResult voki) =>
         new VokiQuestionsOverviewResponse(
-        voki.Questions
-            .Select(VokiQuestionBriefDataResponse.Create)
-            .OrderBy(a => a.OrderInVoki)
-            .ToArray(),
-        voki.Settings
-    );
+            voki.Questions
+                .Select(VokiQuestionBriefDataResponse.Create)
+                .OrderBy(a => a.OrderInVoki)
+                .ToArray(),
+            voki.Settings,
+            DraftGeneralVoki.MaxQuestionsCount
+        );
 }

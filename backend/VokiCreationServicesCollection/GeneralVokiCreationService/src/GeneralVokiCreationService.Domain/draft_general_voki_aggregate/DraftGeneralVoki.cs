@@ -1,6 +1,5 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.events;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
@@ -13,11 +12,11 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 
 public sealed class DraftGeneralVoki : BaseDraftVoki
 {
-    private const int
+    public const int
         MinQuestionsCount = 2,
         MaxQuestionsCount = 100;
 
-    private const int
+    public const int
         MinResultsCount = 2,
         MaxResultsCount = 60;
 
@@ -303,28 +302,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return _questions.ToImmutableArray();
     }
 
-    public ErrOr<VokiQuestion> UpdateQuestionTypeSpecificContent(
-        GeneralVokiQuestionId questionId,
-        BaseQuestionTypeSpecificContent content
-    ) {
-        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
-        if (question is null) {
-            return ErrFactory.NotFound.VokiContent(
-                "Cannot add update question type specific content because question doesn't exist"
-            );
-        }
-
-        if (
-            CheckIfAnswerDataBelongs(questionId, content).IsErr(out var err)
-            || CheckIfAllRelatedResultsExist(content).IsErr(out err)
-        ) {
-            return err;
-        }
-
-        question.UpdateContent(content);
-        return question;
-    }
-
 
     public ErrOr<ImmutableArray<VokiResult>> AddNewResult(
         AuthenticatedUserCtx aUserCtx, VokiResultName resultName, DateTime now
@@ -402,34 +379,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return ErrOrNothing.Nothing;
     }
 
-    private ErrOrNothing CheckIfAnswerDataBelongs(GeneralVokiQuestionId questionId, BaseQuestionTypeSpecificContent content) {
-        if (content is IContentWithStorageKey key && !key.IsForCorrectVokiQuestion(Id, questionId)) {
-            return ErrFactory.Conflict("Certain answer data does not belong to this question");
-        }
-
-        return ErrOrNothing.Nothing;
-    }
-
-    private ErrOrNothing CheckIfAllRelatedResultsExist(BaseQuestionTypeSpecificContent content) {
-        ImmutableHashSet<GeneralVokiResultId> mentionedResultIds = content.BaseAnswers
-            .SelectMany(a => a.RelatedResultIds.ToArray())
-            .ToImmutableHashSet();
-        var existingResults = _results.Select(r => r.Id).ToHashSet();
-        var incorrectRelatedResultIds = mentionedResultIds
-            .Where(r => !existingResults.Contains(r))
-            .Select(id => id.ToString())
-            .ToArray();
-        if (incorrectRelatedResultIds.Length > 0) {
-            return ErrFactory.Conflict(
-                "Some of the provided results specified as related does not exist in this Voki",
-                $"Voki id: {Id}, incorrect result ids: {string.Join(", ", incorrectRelatedResultIds)}"
-            );
-        }
-
-        return ErrOrNothing.Nothing;
-    }
-
-
     private List<VokiPublishingIssue> CheckQuestionsForPublishingIssues() {
         if (_questions.Count < MinQuestionsCount) {
             return [
@@ -468,7 +417,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
         return _questions.SelectMany(q => q.CheckForPublishingIssues()).ToList();
     }
-
 
     private List<VokiPublishingIssue> CheckResultsForPublishingIssues() {
         List<VokiPublishingIssue> issues = [];
@@ -538,7 +486,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             ..CheckResultsForPublishingIssues()
         ]);
     }
-
 
     public ErrOrNothing PublishWithWarningsIgnored(AuthenticatedUserCtx aUserCtx, DateTime now) {
         if (aUserCtx.UserId != this.PrimaryAuthorId) {

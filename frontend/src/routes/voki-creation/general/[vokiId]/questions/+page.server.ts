@@ -5,7 +5,8 @@ import type { GeneralVokiTakingProcessSettings, QuestionBriefInfo } from "./type
 export const load: ServerLoad = async ({ params, fetch }) => {
     const response = await ApiVokiCreationGeneral.serverFetchJsonResponse<{
         questions: QuestionBriefInfo[],
-        settings: GeneralVokiTakingProcessSettings
+        settings: GeneralVokiTakingProcessSettings,
+        maxVokiQuestionsCount: number
     }>(
         fetch, `/vokis/${params.vokiId}/questions/overview`, { method: 'GET' }
     );

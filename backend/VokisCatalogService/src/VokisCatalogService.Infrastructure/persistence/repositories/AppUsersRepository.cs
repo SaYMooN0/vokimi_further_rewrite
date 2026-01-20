@@ -38,7 +38,7 @@ internal class AppUsersRepository : IAppUsersRepository
     }
 
     public Task<AppUser?> GetUserWithTakenVokisForUpdate(AppUserId userId, CancellationToken ct) =>
-        _db.FindByIdForUpdateAsync<AppUser, AppUserId>(q => q.Include(u => u.TakenVokis), userId, ct);
+        _db.FindWithIncludesForUpdateAsync<AppUser, AppUserId>(q => q.Include(u => u.TakenVokis), userId, ct);
 
     public Task<AppUser?> GetCurrentUserWithTakenVokis(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
         _db.AppUsers
