@@ -1,4 +1,3 @@
-import type { GeneralVokiAnswerType } from "$lib/ts/voki";
 
 export type QuestionFullInfo = {
     id: string;
@@ -19,7 +18,11 @@ export type GeneralVokiCreationQuestionContent =
     | { '$type': 'AudioOnly', answers: AnswerDataAudioOnly[] }
     | { '$type': 'AudioAndText', answers: AnswerDataAudioAndText[] };
 
-
+export type QuestionAnswersSettings = {
+    shuffleAnswers: boolean;
+    minAnswersCount: number;
+    maxAnswersCount: number;
+}
 
 export type GeneralVokiCreationQuestionImageSet = {
     width: number;

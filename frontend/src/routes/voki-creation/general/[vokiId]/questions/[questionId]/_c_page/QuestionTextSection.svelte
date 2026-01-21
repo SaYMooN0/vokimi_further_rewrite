@@ -9,29 +9,22 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
-	let {
-		text,
-		questionId,
-		vokiId
-	}: {
-		text: string;
+	interface Props {
+		savedText: string;
 		questionId: string;
 		vokiId: string;
-	} = $props<{
-		text: string;
-		questionId: string;
-		vokiId: string;
-	}>();
-
-	let textarea = $state<HTMLTextAreaElement>(null!);
-	let newText = $state(text);
-	let isEditing = $state(false);
+		isEditing: boolean;
+		updateSavedText: (newText: string) => void;
+	}
+	let { savedText, questionId, vokiId, isEditing = $bindable(), updateSavedText }: Props = $props();
+	let textarea = $state<HTMLTextAreaElement>()!;
+	let newText = $state(savedText);
 	let savingErrs = $state<Err[]>([]);
 
 	new TextareaAutosize({ element: () => textarea, input: () => newText });
 
 	function startEditing() {
-		newText = text;
+		newText = savedText;
 		isEditing = true;
 		savingErrs = [];
 	}
@@ -41,7 +34,7 @@
 			RJO.PATCH({ newText: newText })
 		);
 		if (response.isSuccess) {
-			text = response.data.newText;
+			updateSavedText(response.data.newText);
 			isEditing = false;
 			savingErrs = [];
 		} else {
@@ -69,7 +62,7 @@
 {:else}
 	<p class="question-text-p">
 		<VokiCreationFieldName fieldName="Question text:" />
-		<label class="question-text-value">{text}</label>
+		<label class="question-text-value">{savedText}</label>
 	</p>
 	<VokiCreationDefaultButton text="Edit text" onclick={startEditing} />
 {/if}

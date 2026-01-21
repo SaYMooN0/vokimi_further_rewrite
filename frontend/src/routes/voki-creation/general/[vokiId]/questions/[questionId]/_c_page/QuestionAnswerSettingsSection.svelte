@@ -3,49 +3,43 @@
 	import VokiCreationFieldName from '../../../../../_c_shared/VokiCreationFieldName.svelte';
 	import QuestionSettingsEditingState from './_c_settings_section/QuestionSettingsEditingState.svelte';
 	import QuestionSettingsFieldValue from './_c_settings_section/QuestionSettingsFieldValue.svelte';
+	import type { QuestionAnswersSettings } from '../types';
 
+	interface Props {
+		isEditing: boolean;
+		savedAnswerSettings: QuestionAnswersSettings;
+		questionId: string;
+		vokiId: string;
+		updateSavedAnswerSettings: (newSettings: QuestionAnswersSettings) => void;
+	}
 	let {
-		shuffleAnswers,
-		minAnswers,
-		maxAnswers,
+		isEditing = $bindable(),
+		savedAnswerSettings,
 		questionId,
-		vokiId
-	}: {
-		shuffleAnswers: boolean;
-		minAnswers: number;
-		maxAnswers: number;
-		questionId: string;
-		vokiId: string;
-	} = $props<{
-		shuffleAnswers: boolean;
-		minAnswers: number;
-		maxAnswers: number;
-		questionId: string;
-		vokiId: string;
-	}>();
-	let isSingleChoice = $derived(minAnswers === 1 && maxAnswers === 1);
-	let isEditingState = $state(false);
+		vokiId,
+		updateSavedAnswerSettings
+	}: Props = $props();
+	let isSingleChoice = $derived(
+		savedAnswerSettings.minAnswersCount === 1 && savedAnswerSettings.maxAnswersCount === 1
+	);
 </script>
 
-{#if isEditingState}
+{#if isEditing}
 	<QuestionSettingsEditingState
-		{shuffleAnswers}
-		{minAnswers}
-		{maxAnswers}
+		savedSettings={savedAnswerSettings}
 		{questionId}
 		{vokiId}
-		cancelEditing={() => (isEditingState = false)}
+		cancelEditing={() => (isEditing = false)}
 		updateParent={(newSettings) => {
-			shuffleAnswers = newSettings.shuffleAnswers;
-			minAnswers = newSettings.minAnswers;
-			maxAnswers = newSettings.maxAnswers;
+			updateSavedAnswerSettings(newSettings);
+			isEditing = false;
 		}}
 	/>
 {:else}
 	<div class="field">
 		<VokiCreationFieldName fieldName="Answers order:" />
 		<QuestionSettingsFieldValue>
-			{#if shuffleAnswers}
+			{#if savedAnswerSettings.shuffleAnswers}
 				Shuffled
 			{:else}
 				Ordered
@@ -58,14 +52,14 @@
 			{#if isSingleChoice}
 				Single choice
 			{:else}
-				Multiple choice (from {minAnswers} to {maxAnswers})
+				Multiple choice (from {savedAnswerSettings.minAnswersCount} to {savedAnswerSettings.maxAnswersCount})
 			{/if}
 		</QuestionSettingsFieldValue>
 	</div>
 	<VokiCreationDefaultButton
 		text="Edit answer settings"
 		class="edit-settings-button"
-		onclick={() => (isEditingState = true)}
+		onclick={() => (isEditing = true)}
 	/>
 {/if}
 

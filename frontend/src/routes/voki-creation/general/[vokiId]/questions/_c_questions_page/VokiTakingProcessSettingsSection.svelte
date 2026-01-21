@@ -5,28 +5,31 @@
 	import type { GeneralVokiTakingProcessSettings } from '../types';
 	import TakingProcessSettingsEditingState from './_c_settings_section/TakingProcessSettingsEditingState.svelte';
 	import TakingProcessSettingsFieldValue from './_c_settings_section/TakingProcessSettingsFieldValue.svelte';
-
-	let { settings, vokiId }: { settings: GeneralVokiTakingProcessSettings; vokiId: string } =
-		$props<{
-			settings: GeneralVokiTakingProcessSettings;
-			vokiId: string;
-		}>();
-	let isEditingState = $state(false);
+	interface Props {
+		savedSettings: GeneralVokiTakingProcessSettings;
+		vokiId: string;
+		isEditing: boolean;
+		updateSavedSettings: (newSettings: GeneralVokiTakingProcessSettings) => void;
+	}
+	let { savedSettings, vokiId, isEditing = $bindable(), updateSavedSettings }: Props = $props();
 </script>
 
 <VokiCreationBasicHeader header="Voki taking process settings" />
-{#if isEditingState}
+{#if isEditing}
 	<TakingProcessSettingsEditingState
 		{vokiId}
-		{settings}
-		updateParent={(newSettings) => (settings = newSettings)}
-		cancelEditing={() => (isEditingState = false)}
+		settings={savedSettings}
+		updateParent={(newSettings) => {
+			updateSavedSettings(newSettings);
+			isEditing = false;
+		}}
+		cancelEditing={() => (isEditing = false)}
 	/>
 {:else}
 	<div class="settings-section">
 		<div class="field first-filed">
 			<VokiCreationFieldName fieldName="Questions order:" />
-			{#if settings.shuffleQuestions}
+			{#if savedSettings.shuffleQuestions}
 				<TakingProcessSettingsFieldValue text="Shuffled" iconId="#common-shuffle-icon" />
 			{:else}
 				<TakingProcessSettingsFieldValue text="Ordered" iconId="#common-order-icon" />
@@ -34,7 +37,7 @@
 		</div>
 		<div class="field">
 			<VokiCreationFieldName fieldName="Answering flow:" />
-			{#if settings.forceSequentialAnswering}
+			{#if savedSettings.forceSequentialAnswering}
 				<TakingProcessSettingsFieldValue
 					text="Sequential"
 					iconId="#general-voki-taking-process-settings-force-sequential-flow-icon"
@@ -46,7 +49,7 @@
 				/>
 			{/if}
 		</div>
-		<VokiCreationDefaultButton text="Edit settings" onclick={() => (isEditingState = true)} />
+		<VokiCreationDefaultButton text="Edit settings" onclick={() => (isEditing = true)} />
 	</div>
 {/if}
 

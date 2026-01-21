@@ -7,11 +7,19 @@
 	import QuestionImagesEditingDialog from './_c_images_section/QuestionImagesEditingDialog.svelte';
 
 	interface Props {
-		imageSet: GeneralVokiCreationQuestionImageSet;
+		savedImageSet: GeneralVokiCreationQuestionImageSet;
 		questionId: string;
 		vokiId: string;
+		isEditing: boolean;
+		updateSavedImageSet: (newImageSet: GeneralVokiCreationQuestionImageSet) => void;
 	}
-	let { imageSet, questionId, vokiId }: Props = $props();
+	let {
+		savedImageSet,
+		questionId,
+		vokiId,
+		isEditing = $bindable(),
+		updateSavedImageSet
+	}: Props = $props();
 	let dialogElement = $state<QuestionImagesEditingDialog>()!;
 </script>
 
@@ -19,9 +27,9 @@
 	bind:this={dialogElement}
 	{questionId}
 	{vokiId}
-	updateParent={(newImageSet) => (imageSet = newImageSet)}
+	updateParent={(newImageSet) => updateSavedImageSet(newImageSet)}
 />
-{#if imageSet.keys.length === 0}
+{#if savedImageSet.keys.length === 0}
 	<div class="field">
 		<VokiCreationFieldName fieldName="Images:" />
 		<FieldNotSetLabel text="No images selected" />
@@ -29,20 +37,20 @@
 {:else}
 	<div class="field"><VokiCreationFieldName fieldName="Images:" /></div>
 	<div class="images-container">
-		{#each imageSet.keys as image}
+		{#each savedImageSet.keys as image}
 			<img
 				src={StorageBucketMain.fileSrc(image)}
 				alt="question-img"
-				style="aspect-ratio: {imageSet.width} / {imageSet.height};"
+				style="aspect-ratio: {savedImageSet.width} / {savedImageSet.height};"
 			/>
 		{/each}
 	</div>
 	<div class="field aspect-ratio">
 		<VokiCreationFieldName fieldName="Images aspect ratio:" />
-		<label>{imageSet.width} : {imageSet.height}</label>
+		<label>{savedImageSet.width} : {savedImageSet.height}</label>
 	</div>
 {/if}
-<VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open(imageSet)} />
+<VokiCreationDefaultButton text="Edit images" onclick={() => dialogElement.open(savedImageSet)} />
 
 <style>
 	.field {

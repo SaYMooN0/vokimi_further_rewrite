@@ -13,7 +13,7 @@ export class GeneralVokiCreationMainPageState extends VokiCreationMainPageState 
         interactionSettings: GeneralVokiInteractionSettings,
     ) {
         super(name, cover, tags, details);
-        this.savedInteractionSettings = $state(interactionSettings);
+        this.savedInteractionSettings = interactionSettings;
     }
     public isInteractionSettingsEditing = $state<boolean>(false);
 

@@ -2,20 +2,20 @@ import type { VokiDetails } from "$lib/ts/backend-communication/voki-creation-ba
 import type { IVokiCreationPageState } from "./voki-creation-page-context";
 
 export abstract class VokiCreationMainPageState implements IVokiCreationPageState {
-    public savedName: string;
-    public savedCover: string;
-    public savedTags: Set<string>;
-    public savedDetails: VokiDetails;
+    public savedName: string = $state()!;
+    public savedCover: string = $state()!;
+    public savedTags: Set<string> = $state()!;
+    public savedDetails: VokiDetails = $state()!;
     constructor(
         name: string,
         cover: string,
         tags: string[],
         details: VokiDetails,
     ) {
-        this.savedName = $state<string>(name);
-        this.savedCover = $state<string>(cover);
-        this.savedTags = $state(new Set(tags));
-        this.savedDetails = $state<VokiDetails>(details);
+        this.savedName = name;
+        this.savedCover = cover;
+        this.savedTags = new Set(tags);
+        this.savedDetails = details;
     }
     public isNameEditing = $state<boolean>(false);
     public isDetailsEditing = $state<boolean>(false);

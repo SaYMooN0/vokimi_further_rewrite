@@ -11,7 +11,11 @@
 
 	let { data }: PageProps = $props();
 	let questionInitializingDialog = $state<QuestionInitializingDialog>()!;
-	setVokiCreationCurrentPageState(new GeneralVokiCreationAllQuestionsPageState());
+	const pageState = new GeneralVokiCreationAllQuestionsPageState(
+		data.data?.settings!,
+		data.data?.maxVokiQuestionsCount!
+	);
+	setVokiCreationCurrentPageState(pageState);
 </script>
 
 {#if !data.isSuccess}
@@ -25,7 +29,12 @@
 			onBtnClick={() => questionInitializingDialog.open()}
 		/>
 	{:else}
-		<VokiTakingProcessSettingsSection vokiId={data.vokiId!} settings={data.data.settings} />
+		<VokiTakingProcessSettingsSection
+			vokiId={data.vokiId!}
+			savedSettings={pageState.savedSettings}
+			updateSavedSettings={(newSettings) => (pageState.savedSettings = newSettings)}
+			bind:isEditing={pageState.isEditingVokiTakingProcessSettings}
+		/>
 		<GeneralVokiCreationQuestionsList questionsProps={data.data.questions} vokiId={data.vokiId!} />
 		{#if data.data.questions.length < pageState.maxQuestionsCount}
 			<div class="add-new-question-btn-container">

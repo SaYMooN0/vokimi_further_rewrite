@@ -6,31 +6,21 @@
 	import type { Err } from '$lib/ts/err';
 	import VokiCreationFieldName from '../../../../../../_c_shared/VokiCreationFieldName.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../../../../_c_shared/VokiCreationSaveAndCancelButtons.svelte';
+	import type { QuestionAnswersSettings } from '../../types';
 
 	interface Props {
-		shuffleAnswers: boolean;
-		minAnswers: number;
-		maxAnswers: number;
+		savedSettings: QuestionAnswersSettings;
 		questionId: string;
 		vokiId: string;
 		cancelEditing: () => void;
-		updateParent: (newSettings: {
-			shuffleAnswers: boolean;
-			minAnswers: number;
-			maxAnswers: number;
-		}) => void;
+		updateParent: (newSettings: QuestionAnswersSettings) => void;
 	}
-	let {
-		shuffleAnswers,
-		minAnswers,
-		maxAnswers,
-		questionId,
-		vokiId,
-		cancelEditing,
-		updateParent
-	}: Props = $props();
+	let { savedSettings, questionId, vokiId, cancelEditing, updateParent }: Props = $props();
+	let minAnswers = $state(savedSettings.minAnswersCount);
+	let maxAnswers = $state(savedSettings.maxAnswersCount);
+	let shuffleAnswers = $state(savedSettings.shuffleAnswers);
 
-	let isMultipleChoice = $state(minAnswers > 1 || maxAnswers > 1);
+	let isMultipleChoice = $derived(minAnswers > 1 || maxAnswers > 1);
 	let savingErrs = $state<Err[]>([]);
 	async function saveChanges() {
 		if (minAnswers > maxAnswers) {
@@ -58,8 +48,8 @@
 		if (response.isSuccess) {
 			updateParent({
 				shuffleAnswers: response.data.shuffleAnswers,
-				minAnswers: response.data.minAnswers,
-				maxAnswers: response.data.maxAnswers
+				minAnswersCount: response.data.minAnswers,
+				maxAnswersCount: response.data.maxAnswers
 			});
 			cancelEditing();
 		} else {

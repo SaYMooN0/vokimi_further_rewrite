@@ -4,10 +4,10 @@
 	import GeneralVokiInteractionSettingsSectionView from './_c_interaction_settings_section/GeneralVokiInteractionSettingsSectionView.svelte';
 
 	interface Props {
-		savedInteractionSettings: GeneralVokiInteractionSettings;
 		vokiId: string;
 		isEditing: boolean;
 		updateSavedInteractionSettings: (newSettings: GeneralVokiInteractionSettings) => void;
+		savedInteractionSettings: GeneralVokiInteractionSettings;
 	}
 	let {
 		savedInteractionSettings,

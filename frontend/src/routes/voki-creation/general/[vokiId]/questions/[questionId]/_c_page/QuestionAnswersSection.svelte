@@ -1,9 +1,8 @@
 <script lang="ts">
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import type {GeneralVokiAnswerType } from '$lib/ts/voki';
+	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
 	import ListEmptyMessage from '../../../../../_c_shared/ListEmptyMessage.svelte';
 	import VokiCreationBasicHeader from '../../../../../_c_shared/VokiCreationBasicHeader.svelte';
-	import { type GeneralVokiCreationAnswerData, type QuestionAnswerData, createEmptyGeneralVokiAnswerTypeData } from '../types';
 	import AnswerRelatedResultsSelectingDialog from './_c_answers_section/AnswerRelatedResultsSelectingDialog.svelte';
 	import GeneralVokiCreationNewAnswerDisplay from './_c_answers_section/_c_answer_displays/GeneralVokiCreationNewAnswerDisplay.svelte';
 	import GeneralVokiCreationSavedAnswerDisplay from './_c_answers_section/_c_answer_displays/GeneralVokiCreationSavedAnswerDisplay.svelte';
