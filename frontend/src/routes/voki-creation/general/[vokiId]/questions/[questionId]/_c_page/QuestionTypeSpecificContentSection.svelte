@@ -1,39 +1,49 @@
 <script lang="ts">
-	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
-	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
-	import ListEmptyMessage from '../../../../../_c_shared/ListEmptyMessage.svelte';
 	import VokiCreationBasicHeader from '../../../../../_c_shared/VokiCreationBasicHeader.svelte';
-	import AnswerRelatedResultsSelectingDialog from './_c_answers_section/AnswerRelatedResultsSelectingDialog.svelte';
-	import GeneralVokiCreationNewAnswerDisplay from './_c_answers_section/_c_answer_displays/GeneralVokiCreationNewAnswerDisplay.svelte';
-	import GeneralVokiCreationSavedAnswerDisplay from './_c_answers_section/_c_answer_displays/GeneralVokiCreationSavedAnswerDisplay.svelte';
+	import type { GeneralVokiCreationQuestionContent } from '../types';
+	import QuestionContentEditingState from './_c_content_section/QuestionContentEditingState.svelte';
+	import QuestionContentViewState from './_c_content_section/QuestionContentViewState.svelte';
 
 	interface Props {
+		savedTypeSpecificContent: GeneralVokiCreationQuestionContent;
 		questionId: string;
 		vokiId: string;
-		answers: QuestionAnswerData[];
-		answersType: GeneralVokiAnswerType;
+		updateSavedTypeSpecificContent: (
+			newTypeSpecificContent: GeneralVokiCreationQuestionContent
+		) => void;
+		isEditing: boolean;
+		resultsIdToName: Record<string, string>;
 	}
-	let { questionId, vokiId, answers = $bindable(), answersType }: Props = $props();
-	const maxAnswersForQuestionCount = 60;
-	let unsavedAnswers = $state<GeneralVokiCreationAnswerData[]>([]);
-	let resultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
-
-	function addNewUnsavedAnswer() {
-		unsavedAnswers.push(createEmptyGeneralVokiAnswerTypeData(answersType));
-	}
-	function addNewSavedAnswer(answer: QuestionAnswerData) {
-		answers.push(answer);
-		answers.sort((a, b) => a.order - b.order);
-	}
-	function updateAnswerOnSave(newAnswer: QuestionAnswerData) {
-		answers = answers.map((a) => (a.id === newAnswer.id ? newAnswer : a));
-		answers.sort((a, b) => a.order - b.order);
-	}
-	function updateOnAnswerDelete(answerId: string) {
-		answers = answers.filter((a) => a.id !== answerId);
-	}
+	let {
+		savedTypeSpecificContent,
+		questionId,
+		vokiId,
+		updateSavedTypeSpecificContent,
+		isEditing = $bindable(),
+		resultsIdToName
+	}: Props = $props();
 </script>
 
+<VokiCreationBasicHeader header="Question content" />
+{#if isEditing}
+	<QuestionContentEditingState
+		savedContent={savedTypeSpecificContent}
+		{questionId}
+		{vokiId}
+		cancelEditing={() => (isEditing = false)}
+		updateParent={(newContent) => {
+			updateSavedTypeSpecificContent(newContent);
+			isEditing = false;
+		}}
+	/>
+{:else}
+	<QuestionContentViewState
+		{savedTypeSpecificContent}
+		startEditing={() => (isEditing = true)}
+		{resultsIdToName}
+	/>
+{/if}
+<!--
 <AnswerRelatedResultsSelectingDialog bind:this={resultsSelectingDialog} {vokiId} />
 {#if answers.length + unsavedAnswers.length === 0}
 	<ListEmptyMessage
@@ -42,11 +52,7 @@
 		btnText="Add first answer"
 	/>
 {:else}
-	<VokiCreationBasicHeader
-		header="Question answers ({answers.length}{unsavedAnswers.length != 0
-			? ` + ${unsavedAnswers.length}*`
-			: ''})"
-	/>
+	
 	{#each answers as answer}
 		<GeneralVokiCreationSavedAnswerDisplay
 			{answer}
@@ -117,4 +123,4 @@
 		margin: 1.5rem;
 		align-self: center;
 	}
-</style>
+</style> -->

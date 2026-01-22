@@ -10,16 +10,9 @@
 		savedImageSet: GeneralVokiCreationQuestionImageSet;
 		questionId: string;
 		vokiId: string;
-		isEditing: boolean;
 		updateSavedImageSet: (newImageSet: GeneralVokiCreationQuestionImageSet) => void;
 	}
-	let {
-		savedImageSet,
-		questionId,
-		vokiId,
-		isEditing = $bindable(),
-		updateSavedImageSet
-	}: Props = $props();
+	let { savedImageSet, questionId, vokiId, updateSavedImageSet }: Props = $props();
 	let dialogElement = $state<QuestionImagesEditingDialog>()!;
 </script>
 

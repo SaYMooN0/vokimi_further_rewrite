@@ -10,6 +10,7 @@
 		setVokiCreationCurrentPageState,
 		setVokiCreationCurrentPageStateAsUnableToLoad
 	} from '../../../../voki-creation-page-context';
+	import QuestionTypeSpecificContentSection from './_c_page/QuestionTypeSpecificContentSection.svelte';
 
 	let { data }: PageProps = $props();
 
@@ -22,7 +23,9 @@
 				shuffleAnswers: data.data.shuffleAnswers,
 				minAnswersCount: data.data.minAnswersCount,
 				maxAnswersCount: data.data.maxAnswersCount
-			}
+			},
+			data.data.content,
+			data.data.resultsIdToName
 		);
 		// svelte-ignore state_referenced_locally
 		setVokiCreationCurrentPageState(pageState);
@@ -48,7 +51,6 @@
 			questionId={data.questionId!}
 			vokiId={data.vokiId!}
 			updateSavedImageSet={(newImageSet) => (pageState.savedImageSet = newImageSet)}
-			bind:isEditing={pageState.isEditingQuestionImages}
 		/>
 		<QuestionAnswerSettingsSection
 			savedAnswerSettings={pageState.savedAnswerSettings}
@@ -61,7 +63,15 @@
 			}}
 			bind:isEditing={pageState.isEditingQuestionAnswerSettings}
 		/>
-		type specific content
+		<QuestionTypeSpecificContentSection
+			savedTypeSpecificContent={pageState.savedTypeSpecificContent}
+			questionId={data.questionId!}
+			vokiId={data.vokiId!}
+			updateSavedTypeSpecificContent={(newTypeSpecificContent) =>
+				(pageState.savedTypeSpecificContent = newTypeSpecificContent)}
+			bind:isEditing={pageState.isEditingQuestionTypeSpecificContent}
+			resultsIdToName={pageState.resultsIdToName}
+		/>
 	</div>
 {:else}
 	<VokiCreationPageLoadingErr
