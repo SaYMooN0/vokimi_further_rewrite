@@ -7,6 +7,8 @@ export type QuestionFullInfo = {
     shuffleAnswers: boolean;
     minAnswersCount: number;
     maxAnswersCount: number;
+    maxAnswersForQuestionCount: number;
+    maxResultsForAnswerCount: number;
 }
 
 export type GeneralVokiCreationQuestionContent =
@@ -45,4 +47,5 @@ export type AnswerDataColorAndText = { color: string; text: string }
     & BaseGeneralVokiAnswerData
 export type AnswerDataAudioOnly = { audio: string }
     & BaseGeneralVokiAnswerData
-export type AnswerDataAudioAndText = { audio: string; text: string } & BaseGeneralVokiAnswerData;
+export type AnswerDataAudioAndText = { audio: string; text: string }
+    & BaseGeneralVokiAnswerData;

@@ -10,14 +10,14 @@
 	let { content, resultsIdToName }: Props = $props();
 </script>
 
-<div class="answer-content">
+<div class="question-content">
 	<QuestionContentViewAnswersList
 		answers={content.answers}
 		{resultsIdToName}
-		createSnippet={answerContent}
+		{answerContentSnippet}
 	/>
 </div>
-{#snippet answerContent(answer: AnswerDataTextOnly)}
+{#snippet answerContentSnippet(answer: AnswerDataTextOnly)}
 	<div class="answer-content">
 		<AnswersViewTextDisplay text={answer.text} />
 	</div>

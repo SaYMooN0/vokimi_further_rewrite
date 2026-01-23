@@ -25,6 +25,7 @@
 				maxAnswersCount: data.data.maxAnswersCount
 			},
 			data.data.content,
+			data.vokiId!,
 			data.data.resultsIdToName
 		);
 		// svelte-ignore state_referenced_locally
@@ -71,6 +72,9 @@
 				(pageState.savedTypeSpecificContent = newTypeSpecificContent)}
 			bind:isEditing={pageState.isEditingQuestionTypeSpecificContent}
 			resultsIdToName={pageState.resultsIdToName}
+			maxResultsForAnswerCount={data.data.maxResultsForAnswerCount}
+			maxAnswersForQuestionCount={data.data.maxAnswersForQuestionCount}
+			fetchResultNames={() => pageState.fetchResultNames()}
 		/>
 	</div>
 {:else}

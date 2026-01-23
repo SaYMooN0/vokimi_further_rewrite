@@ -2,14 +2,14 @@
 	import type { Snippet } from 'svelte';
 	import type { BaseGeneralVokiAnswerData } from '../../../../types';
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
-	import AnswerDisplayVerticalSep from '../../_c_shared/AnswerDisplayVerticalSep.svelte';
+	import SingleAnswerWrapper from '../../_c_shared/SingleAnswerWrapper.svelte';
 
 	interface Props {
 		answers: T[];
-		createSnippet: Snippet<[T]>;
+		answerContentSnippet: Snippet<[T]>;
 		resultsIdToName: Record<string, string>;
 	}
-	let { answers, createSnippet, resultsIdToName }: Props = $props();
+	let { answers, answerContentSnippet, resultsIdToName }: Props = $props();
 </script>
 
 {#if answers.length === 0}
@@ -17,24 +17,27 @@
 {:else}
 	<div class="answer-list">
 		{#each answers as answer}
-			<div class="answer">
-				<div class="related-results">
-					<label class="related-results-label"
-						>Related results ({answer.relatedResultIds.length})</label
-					>
-					{#if answer.relatedResultIds.length === 0}
-						<FieldNotSetLabel text="related results" class="no-related-results" />
-					{:else}
-						{#each answer.relatedResultIds as result}
-							<div class="result" class:err={!resultsIdToName[result]}>
-								{resultsIdToName[result] ?? 'error'}
-							</div>
-						{/each}
-					{/if}
-				</div>
-				<AnswerDisplayVerticalSep />
-				{@render createSnippet(answer)}
-			</div>
+			<SingleAnswerWrapper>
+				{#snippet results()}
+					<div class="related-results">
+						<label class="related-results-label"
+							>Related results ({answer.relatedResultIds.length})</label
+						>
+						{#if answer.relatedResultIds.length === 0}
+							<FieldNotSetLabel text="related results" class="no-related-results" />
+						{:else}
+							{#each answer.relatedResultIds as result}
+								<div class="result" class:err={!resultsIdToName[result]}>
+									{resultsIdToName[result] ?? 'error'}
+								</div>
+							{/each}
+						{/if}
+					</div>
+				{/snippet}
+				{#snippet answerContent()}
+					{@render answerContentSnippet(answer)}
+				{/snippet}
+			</SingleAnswerWrapper>
 		{/each}
 	</div>
 {/if}
