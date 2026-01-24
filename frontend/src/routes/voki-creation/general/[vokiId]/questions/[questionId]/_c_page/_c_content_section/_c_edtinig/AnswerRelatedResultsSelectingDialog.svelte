@@ -1,26 +1,38 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import DefaultCheckBox from '$lib/components/inputs/DefaultCheckBox.svelte';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import type { Err } from '$lib/ts/err';
-	import ListEmptyMessage from '../../../../../../../_c_shared/ListEmptyMessage.svelte';
+	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
+	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
+	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
+	import { watch } from 'runed';
+
 	interface Props {
-		allResults: Record<string, string>;
+		allResults: QuestionPageResultsState;
 		fetchResultNames: () => void;
 	}
 	let { allResults, fetchResultNames }: Props = $props();
 	let dialog = $state<DialogWithCloseButton>()!;
 	let errs: Err[] = $state([]);
+	let currentResultSelectedIds: string[] = $state([]);
 	let resultsWithIsSelected = $state<Record<string, boolean>>({}); // id - isSelected
+	watch(
+		() => currentResultSelectedIds,
+		() => {
+			const selectedMap: Record<string, boolean> = {};
+			if (allResults.state === 'ok') {
+				for (const resultId of Object.keys(allResults.resultsIdToName)) {
+					selectedMap[resultId] = currentResultSelectedIds.includes(resultId);
+				}
+			}
+			resultsWithIsSelected = selectedMap;
+		}
+	);
 	let onSubmit: () => void = $state(() => {});
 	export function open(selectedResultIds: string[], setSelected: (selected: string[]) => void) {
 		errs = [];
-		const selectedMap: Record<string, boolean> = {};
-		for (const resultId of Object.keys(allResults)) {
-			selectedMap[resultId] = selectedResultIds.includes(resultId);
-		}
-		resultsWithIsSelected = selectedMap;
+		currentResultSelectedIds = selectedResultIds;
 		dialog.open();
 		onSubmit = () => {
 			setSelected(Object.keys(resultsWithIsSelected).filter((id) => resultsWithIsSelected[id]));
@@ -33,24 +45,24 @@
 	bind:this={dialog}
 	subheading="Select related results"
 >
-	<!-- {#if isLoading}
+	{#if allResults.state === 'loading'}
 		<div class="loader">
 			<CubesLoader sizeRem={5} color="var(--primary)" />
 			<p>Loading...</p>
 		</div>
-	{:else if errs.length > 0}
+	{:else if allResults.state === 'error'}
 		<div class="error">
 			<h1>Error during fetching results</h1>
-			<DefaultErrBlock errList={errs} />
+			<DefaultErrBlock errList={allResults.errs} />
 		</div>
-		<PrimaryButton onclick={() => fetchResultNames()} class="refetch">Refetch</PrimaryButton> -->
-	{#if Object.keys(allResults).length === 0}
+		<PrimaryButton onclick={() => fetchResultNames()} class="refetch">Refetch</PrimaryButton>
+	{:else if Object.keys(allResults.resultsIdToName).length === 0}
 		<div>This Voki has no results</div>
 		<div>Please save changes and go to results page to create new results</div>
 		<PrimaryButton onclick={() => fetchResultNames()} class="refetch">Refetch</PrimaryButton>
 	{:else}
 		<div class="results">
-			{#each Object.entries(allResults) as [resultId, resultName]}
+			{#each Object.entries(allResults.resultsIdToName) as [resultId, resultName]}
 				<label class="result">
 					<DefaultCheckBox bind:checked={resultsWithIsSelected[resultId]} />
 					<p>{resultName}</p>

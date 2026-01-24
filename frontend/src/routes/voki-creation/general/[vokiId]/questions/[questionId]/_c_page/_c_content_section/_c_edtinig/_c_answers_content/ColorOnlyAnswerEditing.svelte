@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { ColorUtils } from '$lib/ts/utils/color-utils';
-	import type { AnswerDataColorOnly } from '../../../../../../types';
+	import type { AnswerDataColorOnly } from '../../../../types';
 	import AnswerEditingBasicColorInput from './_c_shared/AnswerEditingBasicColorInput.svelte';
-
-	let { answer = $bindable() }: { answer: AnswerDataColorOnly } = $props<{
+	interface Props {
 		answer: AnswerDataColorOnly;
-	}>();
+	}
+	let { answer = $bindable() }: Props = $props();
 
 	function normalizeForShades(v: string): string {
 		let t = (v ?? '').trim();
@@ -28,20 +28,15 @@
 	<AnswerEditingBasicColorInput bind:color={answer.color} />
 	<div class="shades">
 		{#each shades as shade}
-			<div class="shade" style="
-
---shade:{shade}" onclick={() => (answer.color = shade)}></div>
+			<div class="shade" style="--shade:{shade}" onclick={() => (answer.color = shade)}></div>
 		{/each}
 	</div>
 	<div class="divider"></div>
-
 	<div class="presets">
 		Choose from presets
 		<div class="presets-list">
 			{#each ColorUtils.colorPresets as p}
-				<div class="preset" style="
-
---preset:{p}" onclick={() => (answer.color = p)}></div>
+				<div class="preset" style="--preset:{p}" onclick={() => (answer.color = p)}></div>
 			{/each}
 		</div>
 	</div>

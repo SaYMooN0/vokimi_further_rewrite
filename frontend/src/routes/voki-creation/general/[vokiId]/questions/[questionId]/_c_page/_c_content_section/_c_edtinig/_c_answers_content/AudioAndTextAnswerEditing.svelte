@@ -1,13 +1,14 @@
 <script lang="ts">
-	import type { AnswerDataAudioOnly } from '../../../../../../types';
+	import type { AnswerDataAudioAndText } from '../../../../types';
+
 	interface Props {
-		answer: AnswerDataAudioOnly;
+		answer: AnswerDataAudioAndText;
 	}
 	let { answer = $bindable() }: Props = $props();
 </script>
 
 <div class="answer-content">
-	AudioOnly: {JSON.stringify(answer)}
+	AudioAndText: {JSON.stringify(answer)}
 </div>
 
 <style>

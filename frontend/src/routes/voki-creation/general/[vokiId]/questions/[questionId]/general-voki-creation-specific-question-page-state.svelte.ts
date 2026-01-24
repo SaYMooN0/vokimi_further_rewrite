@@ -2,9 +2,10 @@ import type { GeneralVokiCreationQuestionContent, GeneralVokiCreationQuestionIma
 import type { IVokiCreationPageState } from "../../../../voki-creation-page-context";
 import type { QuestionAnswersSettings } from "./types";
 import { ApiVokiCreationGeneral } from "$lib/ts/backend-communication/voki-creation-backend-service";
+import type { Err } from "$lib/ts/err";
 
 export class GeneralVokiCreationSpecificQuestionPageState implements IVokiCreationPageState {
-    public resultsIdToName: Record<string, string> = $state()!;
+    public resultsIdToName: QuestionPageResultsState = $state()!;
     public readonly vokiId: string;
 
     public savedText: string = $state()!;
@@ -29,7 +30,7 @@ export class GeneralVokiCreationSpecificQuestionPageState implements IVokiCreati
         this.savedAnswerSettings = answerSettings;
         this.savedTypeSpecificContent = typeSpecificContent;
         this.vokiId = vokiId;
-        this.resultsIdToName = resultsIdToName;
+        this.resultsIdToName = { state: 'ok', resultsIdToName };
     }
 
     get hasAnyUnsavedChanges(): boolean {
@@ -38,15 +39,20 @@ export class GeneralVokiCreationSpecificQuestionPageState implements IVokiCreati
             || this.isEditingQuestionTypeSpecificContent;
     }
     async fetchResultNames() {
-        // allResults = {state: 'loading'};
+        this.resultsIdToName = { state: 'loading' };
         const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
             results: Record<string, string>;
         }>(`/vokis/${this.vokiId}/results/ids-names`, { method: 'GET' });
 
         if (response.isSuccess) {
-            this.resultsIdToName = response.data.results;
+            this.resultsIdToName = { state: 'ok', resultsIdToName: response.data.results };
         } else {
-            // errs = response.errs;
+            this.resultsIdToName = { state: 'error', errs: response.errs };
         }
     }
 }
+
+export type QuestionPageResultsState =
+    | { state: 'ok', resultsIdToName: Record<string, string> }
+    | { state: 'loading' }
+    | { state: 'error', errs: Err[] };

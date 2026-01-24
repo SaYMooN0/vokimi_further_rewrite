@@ -3,7 +3,7 @@
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { Err } from '$lib/ts/err';
-	import type { AnswerDataImageOnly } from '../../../../../../types';
+	import type { AnswerDataImageOnly } from '../../../../types';
 	import GeneralVokiCreationAnswerDisplayImage from '../../_c_shared/GeneralVokiCreationAnswerDisplayImage.svelte';
 
 	interface Props {
@@ -61,7 +61,7 @@
 <div class="answer-content">
 	{#if isLoading}
 		<div class="loading">
-			<CubesLoader sizeRem={4}  color= 'var(--primary)'/>
+			<CubesLoader sizeRem={4} color="var(--primary)" />
 		</div>
 	{:else if answer.image}
 		<div class="img-selected">

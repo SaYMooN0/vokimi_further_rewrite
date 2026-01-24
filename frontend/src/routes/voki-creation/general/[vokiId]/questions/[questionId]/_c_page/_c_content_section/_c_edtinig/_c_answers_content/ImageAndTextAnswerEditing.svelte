@@ -4,8 +4,8 @@
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { Err } from '$lib/ts/err';
 	import type { AnswerDataImageAndText } from '../../../../types';
-	import GeneralVokiCreationAnswerDisplayImage from '../../../_c_answers_section/_c_answer_displays/_c_answer_display_contents/_c_shared/GeneralVokiCreationAnswerDisplayImage.svelte';
-	import AnswerEditingTextArea from '../_c_shared/AnswerEditingTextArea.svelte';
+	import GeneralVokiCreationAnswerDisplayImage from '../../_c_shared/GeneralVokiCreationAnswerDisplayImage.svelte';
+	import AnswerEditingTextArea from './_c_shared/AnswerEditingTextArea.svelte';
 
 	interface Props {
 		answer: AnswerDataImageAndText;

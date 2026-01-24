@@ -3,11 +3,12 @@
 	import type { BaseGeneralVokiAnswerData } from '../../../../types';
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
 	import SingleAnswerWrapper from '../../_c_shared/SingleAnswerWrapper.svelte';
+	import type { QuestionPageResultsState } from '../../../../general-voki-creation-specific-question-page-state.svelte';
 
 	interface Props {
 		answers: T[];
 		answerContentSnippet: Snippet<[T]>;
-		resultsIdToName: Record<string, string>;
+		resultsIdToName: QuestionPageResultsState;
 	}
 	let { answers, answerContentSnippet, resultsIdToName }: Props = $props();
 </script>
@@ -27,8 +28,18 @@
 							<FieldNotSetLabel text="related results" class="no-related-results" />
 						{:else}
 							{#each answer.relatedResultIds as result}
-								<div class="result" class:err={!resultsIdToName[result]}>
-									{resultsIdToName[result] ?? 'error'}
+								<div
+									class="result"
+									class:err={resultsIdToName.state === 'ok' &&
+										!resultsIdToName.resultsIdToName[result]}
+								>
+									{#if resultsIdToName.state === 'ok'}
+										{resultsIdToName.resultsIdToName[result] ?? 'error'}
+									{:else if resultsIdToName.state === 'loading'}
+										Loading...
+									{:else}
+										Error
+									{/if}
 								</div>
 							{/each}
 						{/if}

@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { AnswerDataTextOnly, GeneralVokiCreationQuestionContent } from '../../../types';
-	import AnswerEditingTextArea from './_c_shared/AnswerEditingTextArea.svelte';
+	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
 	import QuestionContentEditingAnswersList from './_c_shared/QuestionContentEditingAnswersList.svelte';
-
+	import TextOnlyAnswerEditing from './_c_answers_content/TextOnlyAnswerEditing.svelte';
 	interface Props {
 		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'TextOnly' }>;
 		maxAnswersForQuestionCount: number;
-		resultsIdToName: Record<string, string>;
+		resultsIdToName: QuestionPageResultsState;
 		maxResultsForAnswerCount: number;
 		openRelatedResultsSelectingDialog: (
 			selectedResultIds: string[],
@@ -29,10 +29,11 @@
 	}
 </script>
 
-{#snippet answerContentSnippet(answer: AnswerDataTextOnly)}
-	<div class="answer-content">
-		<AnswerEditingTextArea bind:text={answer.text} />
-	</div>
+{#snippet answerContentSnippet(
+	answer: AnswerDataTextOnly,
+	updateOnChange: (newAnswer: AnswerDataTextOnly) => void
+)}
+	<TextOnlyAnswerEditing {answer} {updateOnChange} />
 {/snippet}
 <div class="question-content">
 	<QuestionContentEditingAnswersList
@@ -47,11 +48,9 @@
 </div>
 
 <style>
-	.answer-content {
+	.question-content {
 		display: flex;
 		flex-direction: column;
-		place-items: center center;
 		width: 100%;
-		height: 100%;
 	}
 </style>

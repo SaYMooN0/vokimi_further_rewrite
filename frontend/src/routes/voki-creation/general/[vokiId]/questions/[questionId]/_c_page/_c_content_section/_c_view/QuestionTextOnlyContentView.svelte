@@ -1,11 +1,12 @@
 <script lang="ts">
 	import type { AnswerDataTextOnly, GeneralVokiCreationQuestionContent } from '../../../types';
+	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
 	import AnswersViewTextDisplay from './_c_shared/AnswersViewTextDisplay.svelte';
 	import QuestionContentViewAnswersList from './_c_shared/QuestionContentViewAnswersList.svelte';
 
 	interface Props {
 		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'TextOnly' }>;
-		resultsIdToName: Record<string, string>;
+		resultsIdToName: QuestionPageResultsState;
 	}
 	let { content, resultsIdToName }: Props = $props();
 </script>

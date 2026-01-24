@@ -3,9 +3,13 @@
 	import type { Err } from '$lib/ts/err';
 	import VokiCreationSaveAndCancelButtons from '../../../../../../_c_shared/VokiCreationSaveAndCancelButtons.svelte';
 	import type { GeneralVokiCreationQuestionContent } from '../../types';
+	import type { QuestionPageResultsState } from '../../general-voki-creation-specific-question-page-state.svelte';
 	import AnswerRelatedResultsSelectingDialog from './_c_edtinig/AnswerRelatedResultsSelectingDialog.svelte';
 	import QuestionImageAndTextContentEditing from './_c_edtinig/QuestionImageAndTextContentEditing.svelte';
 	import QuestionTextOnlyContentEditing from './_c_edtinig/QuestionTextOnlyContentEditing.svelte';
+	import QuestionImageOnlyContentEditing from './_c_edtinig/QuestionImageOnlyContentEditing.svelte';
+	import QuestionColorOnlyContentEditing from './_c_edtinig/QuestionColorOnlyContentEditing.svelte';
+	import QuestionColorAndTextContentEditing from './_c_edtinig/QuestionColorAndTextContentEditing.svelte';
 	import IncorrectContentTypeMessage from './_c_shared/IncorrectContentTypeMessage.svelte';
 
 	interface Props {
@@ -13,18 +17,18 @@
 		questionId: string;
 		vokiId: string;
 		cancelEditing: () => void;
-		updateParent: (newContent: GeneralVokiCreationQuestionContent) => void;
+		updateParentOnSave: (newContent: GeneralVokiCreationQuestionContent) => void;
 		maxAnswersForQuestionCount: number;
-		resultsIdToName: Record<string, string>;
+		resultsIdToName: QuestionPageResultsState;
 		maxResultsForAnswerCount: number;
 		fetchResultNames: () => void;
 	}
 	let {
-		content = $bindable(),
+		content,
 		questionId,
 		vokiId,
 		cancelEditing,
-		updateParent,
+		updateParentOnSave,
 		maxAnswersForQuestionCount,
 		resultsIdToName,
 		maxResultsForAnswerCount,
@@ -33,10 +37,11 @@
 	let savingErrs = $state<Err[]>([]);
 	let answerRelatedResultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
 	async function saveChanges() {
-		console.log(content);
+		console.log('saving');
 	}
 </script>
 
+{JSON.stringify(content)}
 <AnswerRelatedResultsSelectingDialog
 	bind:this={answerRelatedResultsSelectingDialog}
 	allResults={resultsIdToName}
@@ -53,8 +58,16 @@
 			answerRelatedResultsSelectingDialog.open(selectedResultIds, setSelected);
 		}}
 	/>
-	<!-- {:else if answer.type === 'ImageOnly'}
-	<ImageOnlyAnswerView {answer} />-->
+{:else if content.$type === 'ImageOnly'}
+	<QuestionImageOnlyContentEditing
+		bind:content
+		{resultsIdToName}
+		{maxResultsForAnswerCount}
+		{maxAnswersForQuestionCount}
+		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
+			answerRelatedResultsSelectingDialog.open(selectedResultIds, setSelected);
+		}}
+	/>
 {:else if content.$type === 'ImageAndText'}
 	<QuestionImageAndTextContentEditing
 		bind:content
@@ -65,11 +78,27 @@
 			answerRelatedResultsSelectingDialog.open(selectedResultIds, setSelected);
 		}}
 	/>
-	<!--{:else if answer.type === 'ColorOnly'}
-	<ColorOnlyAnswerView {answer} />
-{:else if answer.type === 'ColorAndText'}
-	<ColorAndTextAnswerView {answer} />
-{:else if answer.type === 'AudioOnly'}
+{:else if content.$type === 'ColorOnly'}
+	<QuestionColorOnlyContentEditing
+		bind:content
+		{resultsIdToName}
+		{maxResultsForAnswerCount}
+		{maxAnswersForQuestionCount}
+		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
+			answerRelatedResultsSelectingDialog.open(selectedResultIds, setSelected);
+		}}
+	/>
+{:else if content.$type === 'ColorAndText'}
+	<QuestionColorAndTextContentEditing
+		bind:content
+		{resultsIdToName}
+		{maxResultsForAnswerCount}
+		{maxAnswersForQuestionCount}
+		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
+			answerRelatedResultsSelectingDialog.open(selectedResultIds, setSelected);
+		}}
+	/>
+	<!--{:else if answer.type === 'AudioOnly'}
 	<AudioOnlyAnswerView {answer} />
 {:else if answer.type === 'AudioAndText'}
 	<AudioAndTextAnswerView {answer} /> -->

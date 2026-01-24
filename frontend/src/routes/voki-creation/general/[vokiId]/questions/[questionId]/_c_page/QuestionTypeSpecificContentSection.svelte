@@ -2,6 +2,7 @@
 	import VokiCreationBasicHeader from '../../../../../_c_shared/VokiCreationBasicHeader.svelte';
 	import type { GeneralVokiCreationQuestionContent } from '../types';
 	import QuestionContentEditingState from './_c_content_section/QuestionContentEditingState.svelte';
+	import type { QuestionPageResultsState } from '../general-voki-creation-specific-question-page-state.svelte';
 	import QuestionContentViewState from './_c_content_section/QuestionContentViewState.svelte';
 
 	interface Props {
@@ -12,7 +13,7 @@
 			newTypeSpecificContent: GeneralVokiCreationQuestionContent
 		) => void;
 		isEditing: boolean;
-		resultsIdToName: Record<string, string>;
+		resultsIdToName: QuestionPageResultsState;
 		maxResultsForAnswerCount: number;
 		maxAnswersForQuestionCount: number;
 		fetchResultNames: () => void;
@@ -29,23 +30,28 @@
 		fetchResultNames
 	}: Props = $props();
 	function startEditing() {
-		editingContent = savedTypeSpecificContent;
+		// editingContent = savedTypeSpecificContent;
 		isEditing = true;
 	}
-	let editingContent = $state<GeneralVokiCreationQuestionContent>(savedTypeSpecificContent);
+	function cancelEditing() {
+		isEditing = false;
+	}
+	function updateParentOnSave(newContent: GeneralVokiCreationQuestionContent) {
+		updateSavedTypeSpecificContent(newContent);
+		isEditing = false;
+	}
 </script>
 
 <VokiCreationBasicHeader header="{isEditing ? '*' : ''}Question type specific content" />
+{JSON.stringify(savedTypeSpecificContent)}
+<br />
 {#if isEditing}
 	<QuestionContentEditingState
-		bind:content={editingContent}
+		content={savedTypeSpecificContent}
 		{questionId}
 		{vokiId}
-		cancelEditing={() => (isEditing = false)}
-		updateParent={(newContent) => {
-			updateSavedTypeSpecificContent(newContent);
-			isEditing = false;
-		}}
+		{cancelEditing}
+		{updateParentOnSave}
 		{maxAnswersForQuestionCount}
 		{resultsIdToName}
 		{maxResultsForAnswerCount}

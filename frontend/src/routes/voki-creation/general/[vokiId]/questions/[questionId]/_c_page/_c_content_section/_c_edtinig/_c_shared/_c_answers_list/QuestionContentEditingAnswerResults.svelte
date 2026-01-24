@@ -1,11 +1,12 @@
 <script lang="ts">
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
+	import type { QuestionPageResultsState } from '../../../../../general-voki-creation-specific-question-page-state.svelte';
 
 	interface Props {
 		answerResults: string[];
 		setAnswerResults: (results: string[]) => void;
 		removeResultFromAnswer: (resultId: string) => void;
-		resultsIdToName: Record<string, string>;
+		resultsIdToName: QuestionPageResultsState;
 		maxResultsForAnswerCount: number;
 		openRelatedResultsSelectingDialog: (
 			selectedResultIds: string[],
@@ -28,14 +29,20 @@
 	{:else}
 		<label class="related-results-label">Related results ({answerResults.length})</label>
 		{#each answerResults as id}
-			<div class="result" class:err={resultsIdToName[id] === undefined}>
-				{#if resultsIdToName[id]}
+			<div
+				class="result"
+				class:err={resultsIdToName.state === 'ok' &&
+					resultsIdToName.resultsIdToName[id] === undefined}
+			>
+				{#if resultsIdToName.state === 'ok' && resultsIdToName.resultsIdToName[id]}
 					<label>
-						{resultsIdToName[id]}
+						{resultsIdToName.resultsIdToName[id]}
 					</label>
 					<svg class="remove-result-btn" onclick={() => removeResultFromAnswer(id)}
 						><use href="#common-minus-icon" /></svg
 					>
+				{:else if resultsIdToName.state === 'loading'}
+					<label>Loading...</label>
 				{:else}
 					<label>Error</label>
 				{/if}

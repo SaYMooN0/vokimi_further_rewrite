@@ -1,13 +1,14 @@
 <script lang="ts">
 	import VokiCreationDefaultButton from '../../../../../../_c_shared/VokiCreationDefaultButton.svelte';
 	import type { GeneralVokiCreationQuestionContent } from '../../types';
+	import type { QuestionPageResultsState } from '../../general-voki-creation-specific-question-page-state.svelte';
 	import IncorrectContentTypeMessage from './_c_shared/IncorrectContentTypeMessage.svelte';
 	import QuestionTextOnlyContentView from './_c_view/QuestionTextOnlyContentView.svelte';
 
 	interface Props {
 		savedTypeSpecificContent: GeneralVokiCreationQuestionContent;
 		startEditing: () => void;
-		resultsIdToName: Record<string, string>;
+		resultsIdToName: QuestionPageResultsState;
 	}
 	let { savedTypeSpecificContent, startEditing, resultsIdToName }: Props = $props();
 </script>

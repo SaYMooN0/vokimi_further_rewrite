@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { AnswerDataImageAndText, GeneralVokiCreationQuestionContent } from '../../../types';
+	import type { AnswerDataColorAndText, GeneralVokiCreationQuestionContent } from '../../../types';
 	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
 	import QuestionContentEditingAnswersList from './_c_shared/QuestionContentEditingAnswersList.svelte';
-	import ImageAndTextAnswerEditing from './_c_answers_content/ImageAndTextAnswerEditing.svelte';
+	import ColorAndTextAnswerEditing from './_c_answers_content/ColorAndTextAnswerEditing.svelte';
 
 	interface Props {
-		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'ImageAndText' }>;
+		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'ColorAndText' }>;
 		maxAnswersForQuestionCount: number;
 		resultsIdToName: QuestionPageResultsState;
 		maxResultsForAnswerCount: number;
@@ -23,16 +23,16 @@
 	}: Props = $props();
 	function addNewAnswer() {
 		content.answers.push({
+			color: '#000000',
 			text: '',
-			image: '',
 			relatedResultIds: [],
 			order: content.answers.length
 		});
 	}
 </script>
 
-{#snippet answerContentSnippet(answer: AnswerDataImageAndText)}
-	<ImageAndTextAnswerEditing {answer} />
+{#snippet answerContentSnippet(answer: AnswerDataColorAndText)}
+	<ColorAndTextAnswerEditing {answer} />
 {/snippet}
 <div class="question-content">
 	<QuestionContentEditingAnswersList

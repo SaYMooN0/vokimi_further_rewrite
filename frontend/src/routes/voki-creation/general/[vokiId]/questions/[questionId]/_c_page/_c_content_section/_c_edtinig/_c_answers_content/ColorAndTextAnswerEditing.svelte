@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { TextareaAutosize } from 'runed';
-	import type { AnswerDataColorAndText } from '../../../../../../types';
+	import type { AnswerDataColorAndText } from '../../../../types';
 	import AnswerEditingTextArea from './_c_shared/AnswerEditingTextArea.svelte';
 	import AnswerEditingBasicColorInput from './_c_shared/AnswerEditingBasicColorInput.svelte';
-
-	let { answer = $bindable() }: { answer: AnswerDataColorAndText } = $props<{
+	interface Props {
 		answer: AnswerDataColorAndText;
-	}>();
+	}
+	let { answer = $bindable() }: Props = $props();
 
 	let textarea = $state<HTMLTextAreaElement>(null!);
 	new TextareaAutosize({ element: () => textarea, input: () => answer.text });
@@ -26,6 +26,5 @@
 		height: 100%;
 		padding: 0.5rem 0 0;
 		grid-template-columns: 1fr auto;
-
 	}
 </style>
