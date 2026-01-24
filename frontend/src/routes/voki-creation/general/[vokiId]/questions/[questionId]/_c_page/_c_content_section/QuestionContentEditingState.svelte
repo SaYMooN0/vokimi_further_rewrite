@@ -13,45 +13,48 @@
 	import IncorrectContentTypeMessage from './_c_shared/IncorrectContentTypeMessage.svelte';
 
 	interface Props {
-		content: GeneralVokiCreationQuestionContent;
+		savedContent: GeneralVokiCreationQuestionContent;
 		questionId: string;
 		vokiId: string;
 		cancelEditing: () => void;
 		updateParentOnSave: (newContent: GeneralVokiCreationQuestionContent) => void;
 		maxAnswersForQuestionCount: number;
-		resultsIdToName: QuestionPageResultsState;
+		resultsIdToNameState: QuestionPageResultsState;
 		maxResultsForAnswerCount: number;
 		fetchResultNames: () => void;
 	}
 	let {
-		content,
+		savedContent,
 		questionId,
 		vokiId,
 		cancelEditing,
 		updateParentOnSave,
 		maxAnswersForQuestionCount,
-		resultsIdToName,
+		resultsIdToNameState,
 		maxResultsForAnswerCount,
 		fetchResultNames
 	}: Props = $props();
 	let savingErrs = $state<Err[]>([]);
 	let answerRelatedResultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
 	async function saveChanges() {
-		console.log('saving');
+		updateParentOnSave({
+			$type: 'TextOnly',
+			answers: [{ text: 'test', relatedResultIds: [], order: 0 }]
+		});
 	}
+	let content = $state(savedContent);
 </script>
 
-{JSON.stringify(content)}
 <AnswerRelatedResultsSelectingDialog
 	bind:this={answerRelatedResultsSelectingDialog}
-	allResults={resultsIdToName}
+	allResults={resultsIdToNameState}
 	{fetchResultNames}
 />
 
 {#if content.$type === 'TextOnly'}
 	<QuestionTextOnlyContentEditing
 		bind:content
-		{resultsIdToName}
+		{resultsIdToNameState}
 		{maxResultsForAnswerCount}
 		{maxAnswersForQuestionCount}
 		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
@@ -61,7 +64,7 @@
 {:else if content.$type === 'ImageOnly'}
 	<QuestionImageOnlyContentEditing
 		bind:content
-		{resultsIdToName}
+		{resultsIdToNameState}
 		{maxResultsForAnswerCount}
 		{maxAnswersForQuestionCount}
 		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
@@ -71,7 +74,7 @@
 {:else if content.$type === 'ImageAndText'}
 	<QuestionImageAndTextContentEditing
 		bind:content
-		{resultsIdToName}
+		{resultsIdToNameState}
 		{maxResultsForAnswerCount}
 		{maxAnswersForQuestionCount}
 		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
@@ -81,7 +84,7 @@
 {:else if content.$type === 'ColorOnly'}
 	<QuestionColorOnlyContentEditing
 		bind:content
-		{resultsIdToName}
+		{resultsIdToNameState}
 		{maxResultsForAnswerCount}
 		{maxAnswersForQuestionCount}
 		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
@@ -91,7 +94,7 @@
 {:else if content.$type === 'ColorAndText'}
 	<QuestionColorAndTextContentEditing
 		bind:content
-		{resultsIdToName}
+		{resultsIdToNameState}
 		{maxResultsForAnswerCount}
 		{maxAnswersForQuestionCount}
 		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {

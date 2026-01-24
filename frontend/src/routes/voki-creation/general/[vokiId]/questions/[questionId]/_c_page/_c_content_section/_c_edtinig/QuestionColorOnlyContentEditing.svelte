@@ -7,7 +7,7 @@
 	interface Props {
 		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'ColorOnly' }>;
 		maxAnswersForQuestionCount: number;
-		resultsIdToName: QuestionPageResultsState;
+		resultsIdToNameState: QuestionPageResultsState;
 		maxResultsForAnswerCount: number;
 		openRelatedResultsSelectingDialog: (
 			selectedResultIds: string[],
@@ -17,7 +17,7 @@
 	let {
 		content = $bindable(),
 		maxAnswersForQuestionCount,
-		resultsIdToName,
+		resultsIdToNameState,
 		maxResultsForAnswerCount,
 		openRelatedResultsSelectingDialog
 	}: Props = $props();
@@ -30,14 +30,17 @@
 	}
 </script>
 
-{#snippet answerContentSnippet(answer: AnswerDataColorOnly)}
-	<ColorOnlyAnswerEditing {answer} />
+{#snippet answerMainContent(
+	answer: AnswerDataColorOnly,
+	updateOnChange: (newAnswer: AnswerDataColorOnly) => void
+)}
+	<ColorOnlyAnswerEditing {answer} {updateOnChange} />
 {/snippet}
 <div class="question-content">
 	<QuestionContentEditingAnswersList
 		bind:answers={content.answers}
-		{resultsIdToName}
-		{answerContentSnippet}
+		{resultsIdToNameState}
+		{answerMainContent}
 		{maxAnswersForQuestionCount}
 		{maxResultsForAnswerCount}
 		{openRelatedResultsSelectingDialog}

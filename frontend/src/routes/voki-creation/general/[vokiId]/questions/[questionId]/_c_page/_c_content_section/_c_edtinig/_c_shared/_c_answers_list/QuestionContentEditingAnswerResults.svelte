@@ -1,12 +1,9 @@
 <script lang="ts">
-	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
-	import type { QuestionPageResultsState } from '../../../../../general-voki-creation-specific-question-page-state.svelte';
-
 	interface Props {
 		answerResults: string[];
 		setAnswerResults: (results: string[]) => void;
 		removeResultFromAnswer: (resultId: string) => void;
-		resultsIdToName: QuestionPageResultsState;
+		resultsIdToName: Record<string, string>;
 		maxResultsForAnswerCount: number;
 		openRelatedResultsSelectingDialog: (
 			selectedResultIds: string[],
@@ -24,31 +21,22 @@
 </script>
 
 <div class="related-results">
-	{#if answerResults.length === 0}
-		<FieldNotSetLabel text="related results" class="no-related-results" />
-	{:else}
-		<label class="related-results-label">Related results ({answerResults.length})</label>
-		{#each answerResults as id}
-			<div
-				class="result"
-				class:err={resultsIdToName.state === 'ok' &&
-					resultsIdToName.resultsIdToName[id] === undefined}
-			>
-				{#if resultsIdToName.state === 'ok' && resultsIdToName.resultsIdToName[id]}
-					<label>
-						{resultsIdToName.resultsIdToName[id]}
-					</label>
-					<svg class="remove-result-btn" onclick={() => removeResultFromAnswer(id)}
-						><use href="#common-minus-icon" /></svg
-					>
-				{:else if resultsIdToName.state === 'loading'}
-					<label>Loading...</label>
-				{:else}
-					<label>Error</label>
-				{/if}
+	{#each answerResults as id}
+		{#if resultsIdToName[id]}
+			<div class="result">
+				<label>
+					{resultsIdToName[id]}
+				</label>
+				<svg class="remove-result-btn" onclick={() => removeResultFromAnswer(id)}
+					><use href="#common-minus-icon" /></svg
+				>
 			</div>
-		{/each}
-	{/if}
+		{:else}
+			<div class="result err">
+				<label>Result not found</label>
+			</div>
+		{/if}
+	{/each}
 	{#if answerResults.length < maxResultsForAnswerCount}
 		<button
 			class="add-btn unselectable"
@@ -76,16 +64,6 @@
 		margin: 0;
 		font-weight: 450;
 	}
-
-	.related-results-label {
-		margin-bottom: 0.25rem;
-		color: var(--secondary-foreground);
-		font-size: 1.125rem;
-		font-weight: 450;
-		text-decoration: underline;
-		text-decoration-thickness: 0.125rem;
-	}
-
 	.result {
 		display: grid;
 		gap: 0.25rem;

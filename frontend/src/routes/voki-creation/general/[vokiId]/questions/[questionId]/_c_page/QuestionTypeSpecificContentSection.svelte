@@ -30,33 +30,30 @@
 		fetchResultNames
 	}: Props = $props();
 	function startEditing() {
-		// editingContent = savedTypeSpecificContent;
 		isEditing = true;
 	}
 	function cancelEditing() {
 		isEditing = false;
 	}
 	function updateParentOnSave(newContent: GeneralVokiCreationQuestionContent) {
-		updateSavedTypeSpecificContent(newContent);
+		savedTypeSpecificContent = newContent;
 		isEditing = false;
 	}
 </script>
 
 <VokiCreationBasicHeader header="{isEditing ? '*' : ''}Question type specific content" />
-{JSON.stringify(savedTypeSpecificContent)}
-<br />
 {#if isEditing}
 	<QuestionContentEditingState
-		content={savedTypeSpecificContent}
+		savedContent={savedTypeSpecificContent}
 		{questionId}
 		{vokiId}
 		{cancelEditing}
 		{updateParentOnSave}
 		{maxAnswersForQuestionCount}
-		{resultsIdToName}
+		resultsIdToNameState={resultsIdToName}
 		{maxResultsForAnswerCount}
 		{fetchResultNames}
 	/>
 {:else}
-	<QuestionContentViewState {savedTypeSpecificContent} {startEditing} {resultsIdToName} />
+	<QuestionContentViewState content={savedTypeSpecificContent} {startEditing} {resultsIdToName} />
 {/if}

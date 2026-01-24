@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { watch } from 'runed';
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import CubesLoader from '$lib/components/loaders/CubesLoader.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
@@ -9,8 +10,17 @@
 
 	interface Props {
 		answer: AnswerDataImageAndText;
+		updateOnChange: (newAnswer: AnswerDataImageAndText) => void;
 	}
-	let { answer = $bindable() }: Props = $props();
+	let { answer, updateOnChange }: Props = $props();
+	let text = $state(answer.text);
+	let image = $state(answer.image);
+	watch(
+		() => [text, image],
+		() => {
+			updateOnChange({ ...answer, text, image });
+		}
+	);
 	let uploadingErrs = $state<Err[]>([]);
 	let isLoading = $state(false);
 
@@ -31,7 +41,7 @@
 		formData.append('file', file);
 		const response = await StorageBucketMain.uploadTempImage(file);
 		if (response.isSuccess) {
-			answer.image = response.data;
+			image = response.data;
 		} else {
 			uploadingErrs = response.errs;
 		}
@@ -41,12 +51,12 @@
 
 <div class="answer-content">
 	<div class="main">
-		<AnswerEditingTextArea bind:text={answer.text} />
+		<AnswerEditingTextArea bind:text />
 		<div class="image-part">
 			{#if isLoading}
 				<CubesLoader sizeRem={4} color="var(--primary)" />
-			{:else if answer.image}
-				<GeneralVokiCreationAnswerDisplayImage src={answer.image} maxWidth={20} />
+			{:else if image}
+				<GeneralVokiCreationAnswerDisplayImage src={image} maxWidth={20} />
 				<label class="img-button unselectable">
 					<span>Change image</span>
 					<input type="file" accept="image/*" onchange={handleInputChange} hidden />

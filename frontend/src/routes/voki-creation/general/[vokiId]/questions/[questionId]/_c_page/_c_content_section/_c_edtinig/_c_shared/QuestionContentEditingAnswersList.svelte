@@ -8,10 +8,10 @@
 
 	interface Props {
 		answers: T[];
-		answerContentSnippet: Snippet<[T, (newAnswer: T) => void]>;
+		answerMainContent: Snippet<[T, (newAnswer: T) => void]>;
 		maxAnswersForQuestionCount: number;
 		addNewAnswer: () => void;
-		resultsIdToName: QuestionPageResultsState;
+		resultsIdToNameState: QuestionPageResultsState;
 		maxResultsForAnswerCount: number;
 		openRelatedResultsSelectingDialog: (
 			selectedResultIds: string[],
@@ -20,10 +20,10 @@
 	}
 	let {
 		answers = $bindable(),
-		answerContentSnippet,
+		answerMainContent,
 		maxAnswersForQuestionCount,
 		addNewAnswer,
-		resultsIdToName,
+		resultsIdToNameState,
 		maxResultsForAnswerCount,
 		openRelatedResultsSelectingDialog
 	}: Props = $props();
@@ -37,19 +37,22 @@
 {:else}
 	<div class="answer-list">
 		{#each answers as answer, answerKey}
-			<SingleAnswerWrapper>
-				{#snippet results()}
+			<SingleAnswerWrapper
+				resultsIdToName={resultsIdToNameState}
+				answerRelatedResultsCount={answer.relatedResultIds.length}
+			>
+				{#snippet resultsViewSnippet(idToName)}
 					<QuestionContentEditingAnswerResults
 						answerResults={answer.relatedResultIds}
 						setAnswerResults={(results) => (answer.relatedResultIds = results)}
 						removeResultFromAnswer={(resId) => removeResultFromAnswer(answer, resId)}
-						{resultsIdToName}
+						resultsIdToName={idToName}
 						{maxResultsForAnswerCount}
 						{openRelatedResultsSelectingDialog}
 					/>
 				{/snippet}
-				{#snippet answerContent()}
-					{@render answerContentSnippet(answer, (newAnswer) => {
+				{#snippet answerContentSnippet()}
+					{@render answerMainContent(answer, (newAnswer) => {
 						answers[answerKey] = newAnswer;
 					})}
 				{/snippet}

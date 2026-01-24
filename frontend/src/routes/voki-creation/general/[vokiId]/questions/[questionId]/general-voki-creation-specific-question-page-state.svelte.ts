@@ -8,14 +8,15 @@ export class GeneralVokiCreationSpecificQuestionPageState implements IVokiCreati
     public resultsIdToName: QuestionPageResultsState = $state()!;
     public readonly vokiId: string;
 
-    public savedText: string = $state()!;
-    public savedImageSet: GeneralVokiCreationQuestionImageSet = $state()!;
-    public savedAnswerSettings: QuestionAnswersSettings = $state()!;
-    public savedTypeSpecificContent: GeneralVokiCreationQuestionContent = $state()!;
 
     public isEditingQuestionText = $state(false);
     public isEditingQuestionAnswerSettings = $state(false);
     public isEditingQuestionTypeSpecificContent = $state(false);
+
+    public savedText: string;
+    public savedImageSet: GeneralVokiCreationQuestionImageSet;
+    public savedAnswerSettings: QuestionAnswersSettings;
+    public savedTypeSpecificContent: GeneralVokiCreationQuestionContent;
 
     constructor(
         text: string,

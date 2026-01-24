@@ -1,5 +1,8 @@
 <script lang="ts">
-	let { text }: { text: string } = $props<{ text: string }>();
+	interface Props {
+		text: string;
+	}
+	let { text }: Props = $props();
 </script>
 
 <p>{text}</p>

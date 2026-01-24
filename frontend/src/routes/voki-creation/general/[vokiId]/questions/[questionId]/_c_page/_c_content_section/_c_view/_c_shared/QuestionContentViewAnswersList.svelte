@@ -7,10 +7,10 @@
 
 	interface Props {
 		answers: T[];
-		answerContentSnippet: Snippet<[T]>;
-		resultsIdToName: QuestionPageResultsState;
+		answerMainContent: Snippet<[T]>;
+		resultsIdToNameState: QuestionPageResultsState;
 	}
-	let { answers, answerContentSnippet, resultsIdToName }: Props = $props();
+	let { answers, answerMainContent, resultsIdToNameState }: Props = $props();
 </script>
 
 {#if answers.length === 0}
@@ -18,35 +18,29 @@
 {:else}
 	<div class="answer-list">
 		{#each answers as answer}
-			<SingleAnswerWrapper>
-				{#snippet results()}
+			<SingleAnswerWrapper
+				resultsIdToName={resultsIdToNameState}
+				answerRelatedResultsCount={answer.relatedResultIds.length}
+			>
+				{#snippet resultsViewSnippet(idToName)}
 					<div class="related-results">
-						<label class="related-results-label"
-							>Related results ({answer.relatedResultIds.length})</label
-						>
 						{#if answer.relatedResultIds.length === 0}
-							<FieldNotSetLabel text="related results" class="no-related-results" />
+							<FieldNotSetLabel text="no results selected" class="no-related-results" />
 						{:else}
 							{#each answer.relatedResultIds as result}
-								<div
-									class="result"
-									class:err={resultsIdToName.state === 'ok' &&
-										!resultsIdToName.resultsIdToName[result]}
-								>
-									{#if resultsIdToName.state === 'ok'}
-										{resultsIdToName.resultsIdToName[result] ?? 'error'}
-									{:else if resultsIdToName.state === 'loading'}
-										Loading...
-									{:else}
-										Error
-									{/if}
-								</div>
+								{#if idToName[result]}
+									<div class="result">
+										{idToName[result]}
+									</div>
+								{:else}
+									<div class="result err">( unknown result )</div>
+								{/if}
 							{/each}
 						{/if}
 					</div>
 				{/snippet}
-				{#snippet answerContent()}
-					{@render answerContentSnippet(answer)}
+				{#snippet answerContentSnippet()}
+					{@render answerMainContent(answer)}
 				{/snippet}
 			</SingleAnswerWrapper>
 		{/each}
@@ -74,16 +68,6 @@
 		margin: 0;
 		font-weight: 450;
 	}
-
-	.related-results-label {
-		margin-bottom: 0.25rem;
-		color: var(--secondary-foreground);
-		font-size: 1.125rem;
-		font-weight: 450;
-		text-decoration: underline;
-		text-decoration-thickness: 0.125rem;
-	}
-
 	.result {
 		display: block;
 		width: 100%;

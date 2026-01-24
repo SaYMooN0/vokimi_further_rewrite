@@ -1,17 +1,34 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
+	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
 
 	interface Props {
-		results: Snippet;
-		answerContent: Snippet;
+		resultsViewSnippet: Snippet<[Record<string, string>]>;
+		answerContentSnippet: Snippet;
+		answerRelatedResultsCount: number;
+		resultsIdToName: QuestionPageResultsState;
 	}
-	let { results, answerContent }: Props = $props();
+	let {
+		resultsViewSnippet,
+		answerContentSnippet,
+		resultsIdToName,
+		answerRelatedResultsCount
+	}: Props = $props();
 </script>
 
 <div class="answer">
-	{@render results?.()}
+	{#if resultsIdToName.state === 'error'}
+		<div class="error">error</div>
+	{:else if resultsIdToName.state === 'loading'}
+		<div class="loading">loading</div>
+	{:else if resultsIdToName.state === 'ok'}
+		<div class="results">
+			<label class="related-results-label">Related results ({answerRelatedResultsCount})</label>
+			{@render resultsViewSnippet?.(resultsIdToName.resultsIdToName)}
+		</div>
+	{/if}
 	<div class="sep" />
-	{@render answerContent?.()}
+	{@render answerContentSnippet?.()}
 </div>
 
 <style>
@@ -33,5 +50,19 @@
 		margin-top: 1rem;
 		border-radius: 0.75rem;
 		box-shadow: rgb(0 0 0 / 5%) 0 0 0 1px;
+	}
+	.results {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+	}
+	.related-results-label {
+		margin-bottom: 0.25rem;
+		color: var(--secondary-foreground);
+		font-size: 1.125rem;
+		font-weight: 425;
+		text-decoration: underline;
+		text-decoration-thickness: 0.125rem;
+		text-align: center;
 	}
 </style>

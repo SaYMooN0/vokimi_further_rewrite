@@ -68,8 +68,8 @@
 			savedTypeSpecificContent={pageState.savedTypeSpecificContent}
 			questionId={data.questionId!}
 			vokiId={data.vokiId!}
-			updateSavedTypeSpecificContent={(newTypeSpecificContent) =>
-				(pageState.savedTypeSpecificContent = newTypeSpecificContent)}
+			updateSavedTypeSpecificContent={(newContent) =>
+				(pageState.savedTypeSpecificContent = newContent)}
 			bind:isEditing={pageState.isEditingQuestionTypeSpecificContent}
 			resultsIdToName={pageState.resultsIdToName}
 			maxResultsForAnswerCount={data.data.maxResultsForAnswerCount}
