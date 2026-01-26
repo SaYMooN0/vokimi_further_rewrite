@@ -1,5 +1,6 @@
 ﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.events;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.results;
 using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
@@ -213,6 +214,58 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         }
 
         return questionToUpdate;
+    }
+
+    public ErrOr<BaseQuestionTypeSpecificContent> UpdateQuestionTypeSpecificContent(
+        AuthenticatedUserCtx aUserCtx, GeneralVokiQuestionId questionId, BaseQuestionTypeSpecificContent content
+    ) {
+        if (!HasUserAccess(aUserCtx)) {
+            return ErrFactory.NoAccess("To modify Voki question you must be the Voki author");
+        }
+
+        VokiQuestion? question = _questions.FirstOrDefault(q => q.Id == questionId);
+        if (question is null) {
+            return ErrFactory.NotFound.VokiContent(
+                "Cannot add update question type specific content because question doesn't exist"
+            );
+        }
+
+        if (
+            CheckIfAnswerDataBelongs(questionId, content).IsErr(out var err)
+            || CheckIfAllRelatedResultsExist(content).IsErr(out err)
+        ) {
+            return err;
+        }
+
+        question.UpdateContent(content);
+        return question.Content;
+    }
+
+    private ErrOrNothing CheckIfAnswerDataBelongs(GeneralVokiQuestionId questionId, BaseQuestionTypeSpecificContent content) {
+        if (content is IContentWithStorageKeys key && !key.IsAllForCorrectVokiQuestion(Id, questionId)) {
+            return ErrFactory.Conflict("Certain answer data does not belong to this question");
+        }
+
+        return ErrOrNothing.Nothing;
+    }
+
+    private ErrOrNothing CheckIfAllRelatedResultsExist(BaseQuestionTypeSpecificContent content) {
+        ImmutableHashSet<GeneralVokiResultId> mentionedResultIds = content.BaseAnswers
+            .SelectMany(a => a.RelatedResultIds.ToArray())
+            .ToImmutableHashSet();
+        var existingResults = _results.Select(r => r.Id).ToHashSet();
+        var incorrectRelatedResultIds = mentionedResultIds
+            .Where(r => !existingResults.Contains(r))
+            .Select(id => id.ToString())
+            .ToArray();
+        if (incorrectRelatedResultIds.Length > 0) {
+            return ErrFactory.Conflict(
+                "Some of the provided results specified as related does not exist in this Voki",
+                $"Voki id: {Id}, incorrect result ids: {string.Join(", ", incorrectRelatedResultIds)}"
+            );
+        }
+
+        return ErrOrNothing.Nothing;
     }
 
     public ErrOr<ImmutableArray<VokiQuestion>> MoveQuestionUpInOrder(AuthenticatedUserCtx aUserCtx,

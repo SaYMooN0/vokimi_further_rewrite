@@ -1,0 +1,111 @@
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
+using SharedKernel.common;
+using SharedKernel.common.vokis.general_vokis;
+
+namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions.update_question_content;
+
+public abstract record BaseUnsavedQuestionContentDto(GeneralVokiAnswerType Type)
+{
+    public TResult Match<TResult>(
+        Func<TextOnlyUnsavedQuestionContentDto, TResult> textOnly,
+        Func<ImageOnlyUnsavedQuestionContentDto, TResult> imageOnly,
+        Func<ImageAndTextUnsavedQuestionContentDto, TResult> imageAndText,
+        Func<ColorOnlyUnsavedQuestionContentDto, TResult> colorOnly,
+        Func<ColorAndTextUnsavedQuestionContentDto, TResult> colorAndText,
+        Func<AudioOnlyUnsavedQuestionContentDto, TResult> audioOnly,
+        Func<AudioAndTextUnsavedQuestionContentDto, TResult> audioAndText
+    ) => Type.Match(
+        textOnly: () => textOnly((TextOnlyUnsavedQuestionContentDto)this),
+        imageOnly: () => imageOnly((ImageOnlyUnsavedQuestionContentDto)this),
+        imageAndText: () => imageAndText((ImageAndTextUnsavedQuestionContentDto)this),
+        colorOnly: () => colorOnly((ColorOnlyUnsavedQuestionContentDto)this),
+        colorAndText: () => colorAndText((ColorAndTextUnsavedQuestionContentDto)this),
+        audioOnly: () => audioOnly((AudioOnlyUnsavedQuestionContentDto)this),
+        audioAndText: () => audioAndText((AudioAndTextUnsavedQuestionContentDto)this)
+    );
+}
+
+public sealed record TextOnlyUnsavedQuestionContentDto(
+    TextOnlyUnsavedQuestionContentDto.Answer[] Answers
+) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.TextOnly)
+{
+    public sealed record Answer(
+        GeneralVokiAnswerText Text,
+        AnswerOrderInQuestion Order,
+        AnswerRelatedResultIdsSet RelatedResultIds
+    );
+
+    public ErrOr<BaseQuestionTypeSpecificContent.TextOnly> ToSavedContent() =>
+        QuestionAnswersList<BaseQuestionAnswer.TextOnly>
+            .Create(Answers.Select(a => new BaseQuestionAnswer.TextOnly(a.Text, a.Order, a.RelatedResultIds)))
+            .Bind<BaseQuestionTypeSpecificContent.TextOnly>(answersList =>
+                new BaseQuestionTypeSpecificContent.TextOnly(answersList)
+            );
+}
+
+public record ImageOnlyUnsavedQuestionContentDto(
+    ImageOnlyUnsavedQuestionContentDto.Answer[] Answers
+) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.ImageOnly)
+{
+    public sealed record Answer(
+        string ImageKey,
+        AnswerOrderInQuestion Order,
+        AnswerRelatedResultIdsSet RelatedResultIds
+    );
+}
+
+public record ImageAndTextUnsavedQuestionContentDto(
+    ImageAndTextUnsavedQuestionContentDto.Answer[] Answers
+) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.ImageAndText)
+{
+    public sealed record Answer(
+        GeneralVokiAnswerText Text,
+        string ImageKey,
+        AnswerOrderInQuestion Order,
+        AnswerRelatedResultIdsSet RelatedResultIds
+    );
+}
+
+public record ColorOnlyUnsavedQuestionContentDto(
+    ColorOnlyUnsavedQuestionContentDto.Answer[] Answers
+) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.ColorOnly)
+{
+    public sealed record Answer(
+        HexColor Color,
+        AnswerOrderInQuestion Order,
+        AnswerRelatedResultIdsSet RelatedResultIds
+    );
+
+    public ErrOr<BaseQuestionTypeSpecificContent.ColorOnly> ToSavedContent() =>
+        QuestionAnswersList<BaseQuestionAnswer.ColorOnly>
+            .Create(Answers.Select(a => new BaseQuestionAnswer.ColorOnly(a.Color, a.Order, a.RelatedResultIds)))
+            .Bind<BaseQuestionTypeSpecificContent.ColorOnly>(answersList =>
+                new BaseQuestionTypeSpecificContent.ColorOnly(answersList)
+            );
+}
+
+public record ColorAndTextUnsavedQuestionContentDto(
+    ColorAndTextUnsavedQuestionContentDto.Answer[] Answers
+) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.ColorAndText)
+{
+    public sealed record Answer(
+        GeneralVokiAnswerText Text,
+        HexColor Color,
+        AnswerOrderInQuestion Order,
+        AnswerRelatedResultIdsSet RelatedResultIds
+    );
+
+    public ErrOr<BaseQuestionTypeSpecificContent.ColorAndText> ToSavedContent() =>
+        QuestionAnswersList<BaseQuestionAnswer.ColorAndText>
+            .Create(Answers.Select(a => new BaseQuestionAnswer.ColorAndText(a.Text, a.Color, a.Order, a.RelatedResultIds)))
+            .Bind<BaseQuestionTypeSpecificContent.ColorAndText>(answersList =>
+                new BaseQuestionTypeSpecificContent.ColorAndText(answersList)
+            );
+}
+
+public record AudioOnlyUnsavedQuestionContentDto() : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.AudioOnly);
+
+public record AudioAndTextUnsavedQuestionContentDto() : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.AudioAndText);

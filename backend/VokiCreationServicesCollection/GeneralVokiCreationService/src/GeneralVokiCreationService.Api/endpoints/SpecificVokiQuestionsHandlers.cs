@@ -2,10 +2,13 @@
 using GeneralVokiCreationService.Api.contracts.questions.update_question;
 using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
+using GeneralVokiCreationService.Application.draft_vokis.commands.questions.update_question_content;
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using GeneralVokiCreationService.Application.draft_vokis.queries.questions;
+using GeneralVokiCreationService.Application.dtos;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 
 namespace GeneralVokiCreationService.Api.endpoints;
 
@@ -21,6 +24,8 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
             .WithRequestValidation<UpdateQuestionImagesRequest>();
         group.MapPatch("/update-answer-settings", UpdateQuestionAnswerSettings)
             .WithRequestValidation<UpdateQuestionAnswerSettingsRequest>();
+        group.MapPatch("/update-content", UpdateQuestionContent)
+            .WithRequestValidation<IUpdateQuestionContentRequest>();
         group.MapPatch("/move-up-in-order", MoveQuestionUpInOrder);
         group.MapPatch("/move-down-in-order", MoveQuestionDownInOrder);
         group.MapDelete("/delete", DeleteVokiQuestion);
@@ -98,6 +103,24 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
             MaxAnswers = question.AnswersCountLimit.MaxAnswers,
             ShuffleAnswers = question.ShuffleAnswers
         }));
+    }
+
+    private static async Task<IResult> UpdateQuestionContent(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<UpdateQuestionContentCommand, BaseQuestionTypeSpecificContent> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+        GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
+        var request = httpContext.GetValidatedRequest<IUpdateQuestionContentRequest>();
+
+        UpdateQuestionContentCommand command = new(
+            id, questionId, request.ParsedAnswersCountLimit, request.ShuffleAnswers
+        );
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOr(result,
+            content => Results.Json(IQuestionContentPrimitiveDto.FromQuestionContent(content))
+        );
     }
 
     private static async Task<IResult> MoveQuestionUpInOrder(

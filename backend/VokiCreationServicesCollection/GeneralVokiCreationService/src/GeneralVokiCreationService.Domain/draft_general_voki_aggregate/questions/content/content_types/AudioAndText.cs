@@ -8,7 +8,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
     public sealed record AudioAndText(
         QuestionAnswersList<BaseQuestionAnswer.AudioAndText> Answers
     )
-        : BaseQuestionTypeSpecificContent
+        : BaseQuestionTypeSpecificContent, IContentWithStorageKeys
     {
         public override GeneralVokiAnswerType AnswersType => GeneralVokiAnswerType.AudioAndText;
         public override IEnumerable<BaseQuestionAnswer> BaseAnswers => Answers.AsIEnumerable;
@@ -20,5 +20,8 @@ public abstract partial record BaseQuestionTypeSpecificContent
         public static AudioAndText Empty() => new(
             Answers: QuestionAnswersList<BaseQuestionAnswer.AudioAndText>.Empty()
         );
+
+        public bool IsAllForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
+             Answers.All(a => a.IsForCorrectVokiQuestion(vokiId, questionId));
     }
 }

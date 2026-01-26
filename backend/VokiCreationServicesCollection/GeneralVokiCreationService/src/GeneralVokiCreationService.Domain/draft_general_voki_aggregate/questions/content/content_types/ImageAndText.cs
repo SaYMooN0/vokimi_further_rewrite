@@ -8,7 +8,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
 {
     public sealed record ImageAndText(
         QuestionAnswersList<BaseQuestionAnswer.ImageAndText> Answers
-    ) : BaseQuestionTypeSpecificContent
+    ) : BaseQuestionTypeSpecificContent, IContentWithStorageKeys
     {
         public override GeneralVokiAnswerType AnswersType => GeneralVokiAnswerType.ImageAndText;
         public override IEnumerable<BaseQuestionAnswer> BaseAnswers => Answers.AsIEnumerable;
@@ -16,10 +16,11 @@ public abstract partial record BaseQuestionTypeSpecificContent
         public override BaseQuestionTypeSpecificContent RemoveResult(GeneralVokiResultId resultId) => new ImageAndText(
             Answers: Answers.ApplyForEach(a => (BaseQuestionAnswer.ImageAndText)a.RemoveRelatedResult(resultId))
         );
-
         public static ImageAndText Empty() => new(
             Answers: QuestionAnswersList<BaseQuestionAnswer.ImageAndText>.Empty()
         );
+        public bool IsAllForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
+            Answers.All(a => a.IsForCorrectVokiQuestion(vokiId, questionId));
     }
-    
+
 }

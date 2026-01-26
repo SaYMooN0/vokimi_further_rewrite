@@ -22,81 +22,10 @@
 //         GeneralVokiQuestionId questionId,
 //         VokiAnswerTypeDataDto d,
 //         CancellationToken ct
-//     ) => d.Type.Match(
-//         textOnly: () => Task.FromResult(
-//             d.GetText().Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.TextOnly(text))
-//         ),
-//         imageOnly: () => CreateImageOnlyAnswerData(vokiId, questionId, d, ct),
-//         imageAndText: () => CreateImageAndTextAnswerData(vokiId, questionId, d, ct),
-//         colorOnly: () => Task.FromResult(
-//             d.GetColor().Bind<BaseVokiAnswerTypeData>(color => new BaseVokiAnswerTypeData.ColorOnly(color))),
-//         colorAndText: () => Task.FromResult(
-//             d.GetText().Bind<BaseVokiAnswerTypeData>(text =>
-//                 d.GetColor().Bind<BaseVokiAnswerTypeData>(color => new BaseVokiAnswerTypeData.ColorAndText(text, color))
-//             )),
-//         audioOnly: () => CreateAudioOnlyAnswerData(vokiId, questionId, d, ct),
-//         audioAndText: () => CreateAudioAndTextAnswerData(vokiId, questionId, d, ct)
-//     );
+//     ) => 
 //
 //
-//     private async Task<ErrOr<BaseVokiAnswerTypeData>> CreateImageOnlyAnswerData(
-//         VokiId vokiId,
-//         GeneralVokiQuestionId questionId,
-//         VokiAnswerTypeDataDto answer,
-//         CancellationToken ct
-//     ) => (
-//         await HandleAnswerImageKey(vokiId, questionId, answer.Image, ct)
-//     ).Bind<BaseVokiAnswerTypeData>(savedKey => new BaseVokiAnswerTypeData.ImageOnly(savedKey));
-//
-//     private async Task<ErrOr<BaseVokiAnswerTypeData>> CreateImageAndTextAnswerData(
-//         VokiId vokiId,
-//         GeneralVokiQuestionId questionId,
-//         VokiAnswerTypeDataDto answer,
-//         CancellationToken ct
-//     ) {
-//         ErrOr<GeneralVokiAnswerText> textRes = answer.GetText();
-//         if (textRes.IsErr(out var err)) {
-//             return err;
-//         }
-//
-//         ErrOr<GeneralVokiAnswerImageKey> keyRes = await HandleAnswerImageKey(vokiId, questionId, answer.Image, ct);
-//         if (keyRes.IsErr(out err)) {
-//             return err;
-//         }
-//
-//         return new BaseVokiAnswerTypeData.ImageAndText(textRes.AsSuccess(), keyRes.AsSuccess());
-//     }
-//
-//
-//     private async Task<ErrOr<GeneralVokiAnswerImageKey>> HandleAnswerImageKey(
-//         VokiId vokiId,
-//         GeneralVokiQuestionId questionId,
-//         string? image,
-//         CancellationToken ct
-//     ) {
-//         if (image is null) {
-//             return ErrFactory.NoValue.Common("Image value is not provided");
-//         }
-//
-//         if (GeneralVokiAnswerImageKey.FromString(image).IsSuccess(out var savedKey)) {
-//             return savedKey;
-//         }
-//
-//         ErrOr<TempImageKey> tempKeyCreationRes = TempImageKey.FromString(image);
-//         if (tempKeyCreationRes.IsErr(out var err)) {
-//             return err;
-//         }
-//
-//         TempImageKey tempKey = tempKeyCreationRes.AsSuccess();
-//         ImageFileExtension ext = tempKey.Extension;
-//         var destination = GeneralVokiAnswerImageKey.CreateForAnswer(vokiId, questionId, ext);
-//         ErrOrNothing copyingRes = await _mainStorageBucket.CopyVokiAnswerImageFromTempToStandard(tempKey, destination, ct);
-//         if (copyingRes.IsErr(out err)) {
-//             return ErrFactory.Unspecified("Couldn't save answer image", details: err.Message);
-//         }
-//
-//         return destination;
-//     }
+
 //
 //
 //     private async Task<ErrOr<BaseVokiAnswerTypeData>> CreateAudioOnlyAnswerData(

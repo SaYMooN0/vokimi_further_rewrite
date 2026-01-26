@@ -137,12 +137,9 @@ public sealed class VokiQuestionTypeSpecificContentConverter
 
 
     private static QuestionAnswersList<TOut> CreateAnswers<TIn, TOut>(
-        TIn[] source,
-        Func<TIn, TOut> func
+        TIn[] source, Func<TIn, TOut> func
     ) where TOut : BaseQuestionAnswer =>
-        QuestionAnswersList<TOut>.Create(
-            answers: source.Select(func).ToImmutableArray()
-        ).AsSuccess();
+        QuestionAnswersList<TOut>.Create(answers: source.Select(func)).AsSuccess();
 
     private static AnswerOrderInQuestion CreateOrder(ushort order) =>
         AnswerOrderInQuestion.Create(order).AsSuccess();

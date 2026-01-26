@@ -11,15 +11,16 @@ public sealed class QuestionAnswersList<T> : ValueObject where T : BaseQuestionA
     }
 
 
-    public static ErrOr<QuestionAnswersList<T>> Create(ImmutableArray<T> answers) {
-        if (answers.Length > VokiQuestion.MaxAnswersCount) {
+    public static ErrOr<QuestionAnswersList<T>> Create(IEnumerable<T> answers) {
+        var answersArray = answers as T[] ?? answers.ToArray();
+        if (answersArray.Length > VokiQuestion.MaxAnswersCount) {
             return ErrFactory.LimitExceeded(
                 $"Answer count limit exceeded. Maximum allowed answers count is {VokiQuestion.MaxAnswersCount}",
-                $"Current answers count is {answers.Length}"
+                $"Current answers count is {answersArray.Length}"
             );
         }
 
-        return new QuestionAnswersList<T>(answers);
+        return new QuestionAnswersList<T>([..answersArray]);
     }
 
     public int Count => Items.Length;

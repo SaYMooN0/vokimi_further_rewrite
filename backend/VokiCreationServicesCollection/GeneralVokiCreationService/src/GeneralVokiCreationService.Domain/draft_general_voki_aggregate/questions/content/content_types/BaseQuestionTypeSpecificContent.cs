@@ -9,7 +9,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
     public abstract IEnumerable<BaseQuestionAnswer> BaseAnswers { get; }
     [Pure]
     public abstract BaseQuestionTypeSpecificContent RemoveResult(GeneralVokiResultId resultId);
-    public TResult Match<TResult>(
+    public  TResult Match<TResult>(
         Func<TextOnly, TResult> textOnly,
         Func<ImageOnly, TResult> imageOnly,
         Func<ImageAndText, TResult> imageAndText,
@@ -39,7 +39,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
         );
 }
 
-public interface IContentWithStorageKey
+public interface IContentWithStorageKeys
 {
-    public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId);
+    public bool IsAllForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId);
 }

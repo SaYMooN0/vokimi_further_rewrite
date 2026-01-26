@@ -4,8 +4,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ApiShared;
 
-internal class RequestValidationRequiredEndpointFilter<T> : IEndpointFilter
-    where T : class, IRequestWithValidationNeeded
+internal class RequestValidationRequiredEndpointFilter<T> : IEndpointFilter where T : IRequestWithValidationNeeded
 {
     private readonly ILogger<RequestValidationRequiredEndpointFilter<T>> _logger;
 
@@ -35,7 +34,7 @@ internal class RequestValidationRequiredEndpointFilter<T> : IEndpointFilter
             ));
         }
 
-        T? request = null;
+        T? request;
 
         try {
             request = await httpContext.Request.ReadFromJsonAsync<T>();
