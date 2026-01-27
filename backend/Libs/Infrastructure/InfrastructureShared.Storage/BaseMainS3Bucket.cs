@@ -20,7 +20,7 @@ public abstract class BaseMainS3Bucket
     protected Task<ErrOrNothing> CopyTempToStandard(
         ITempKey source,
         BaseStorageKey destination,
-        CancellationToken ct 
+        CancellationToken ct
     ) => BaseCopy(
         new FileCopyDto(source.Value, source.Extension.Value),
         new FileCopyDto(destination.ToString(), destination.Extension.Value),
@@ -43,7 +43,7 @@ public abstract class BaseMainS3Bucket
     protected Task<ErrOrNothing> CopyStandardToStandard(
         BaseStorageKey source,
         BaseStorageKey destination,
-        CancellationToken ct 
+        CancellationToken ct
     ) => BaseCopy(
         new FileCopyDto(source.ToString(), source.Extension.Value),
         new FileCopyDto(destination.ToString(), destination.Extension.Value),
@@ -100,14 +100,15 @@ public abstract class BaseMainS3Bucket
     }
 
     private const int MaxBatchCopyCount = 100;
+    const int MaxParallelForMultipleCopy = 10;
 
     private async Task<ErrOrNothing> BaseCopyMultipleFailFast(
         IEnumerable<(FileCopyDto Src, FileCopyDto Dst)> items,
         string logsString,
         CancellationToken ct
     ) {
-        var pairs = items.ToList();
-        var count = pairs.Count;
+        List<(FileCopyDto Src, FileCopyDto Dst)> pairs = items .ToList();
+        int count = pairs.Count;
 
         if (count == 0) {
             _logger.LogInformation("{Log} nothing to copy", logsString);
@@ -160,7 +161,7 @@ public abstract class BaseMainS3Bucket
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         CancellationToken listCt = cts.Token;
 
-        var inFlight = new List<Task<ErrOrNothing>>();
+        List<Task<ErrOrNothing>> inFlight = [];
 
         async Task<ErrOrNothing> CopyOneAsync(FileCopyDto src, FileCopyDto dest, CancellationToken token) {
             try {
@@ -199,8 +200,7 @@ public abstract class BaseMainS3Bucket
         }
 
         using var enumerator = pairs.GetEnumerator();
-
-        if (enumerator.MoveNext()) {
+        if ( inFlight.Count < MaxParallelForMultipleCopy && enumerator.MoveNext()) {
             var (s, d) = enumerator.Current;
             inFlight.Add(CopyOneAsync(s, d, listCt));
         }

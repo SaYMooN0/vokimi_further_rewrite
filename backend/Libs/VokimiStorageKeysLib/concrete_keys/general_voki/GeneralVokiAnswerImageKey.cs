@@ -1,5 +1,6 @@
 ﻿using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.extension;
+using VokimiStorageKeysLib.temp_keys;
 
 namespace VokimiStorageKeysLib.concrete_keys.general_voki;
 
@@ -22,9 +23,9 @@ public class GeneralVokiAnswerImageKey : BaseStorageImageKey
         Value = value;
     }
 
-    public static GeneralVokiAnswerImageKey CreateForAnswer(
-        VokiId vokiId, GeneralVokiQuestionId questionId, ImageFileExtension extension
-    ) => new($"{KeyConsts.VokisFolder}/{vokiId}/questions/{questionId}/answer_images/{Guid.NewGuid()}.{extension.Value}");
+    public static GeneralVokiAnswerImageKey CreateForAnswerFromTemp(
+        VokiId vokiId, GeneralVokiQuestionId questionId, TempImageKey tempKey
+    ) => new($"{KeyConsts.VokisFolder}/{vokiId}/questions/{questionId}/answer_images/{Guid.NewGuid()}.{tempKey.Extension.Value}");
 
     public static ErrOr<GeneralVokiAnswerImageKey> FromString(string value) {
         if (Scheme.IsKeyValid(value, out _, out _, out _).IsErr(out var err)) {

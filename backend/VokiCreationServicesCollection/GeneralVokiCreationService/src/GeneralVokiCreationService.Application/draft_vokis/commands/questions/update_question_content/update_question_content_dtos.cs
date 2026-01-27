@@ -2,7 +2,6 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.c
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
-using SharedKernel.common;
 using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions.update_question_content;
@@ -106,6 +105,25 @@ public record ColorAndTextUnsavedQuestionContentDto(
             );
 }
 
-public record AudioOnlyUnsavedQuestionContentDto() : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.AudioOnly);
+public record AudioOnlyUnsavedQuestionContentDto(
+    AudioOnlyUnsavedQuestionContentDto.Answer[] Answers
+) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.AudioOnly)
+{
+    public sealed record Answer(
+        string AudioKey,
+        AnswerOrderInQuestion Order,
+        AnswerRelatedResultIdsSet RelatedResultIds
+    );
+}
 
-public record AudioAndTextUnsavedQuestionContentDto() : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.AudioAndText);
+public record AudioAndTextUnsavedQuestionContentDto(
+    AudioAndTextUnsavedQuestionContentDto.Answer[] Answers
+) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.AudioAndText)
+{
+    public sealed record Answer(
+        GeneralVokiAnswerText Text,
+        string AudioKey,
+        AnswerOrderInQuestion Order,
+        AnswerRelatedResultIdsSet RelatedResultIds
+    );
+}

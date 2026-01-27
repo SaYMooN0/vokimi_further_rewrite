@@ -20,15 +20,13 @@ public interface IMainStorageBucket
         CancellationToken ct
     );
 
-    Task<ErrOrNothing> CopyVokiAnswerImageFromTempToStandard(
-        TempImageKey temp,
-        GeneralVokiAnswerImageKey destination,
+    Task<ErrOrNothing> CopyVokiAnswerImageKeysFromTempToStandard(
+        Dictionary<TempImageKey,GeneralVokiAnswerImageKey>  sourcesToDestinations,
         CancellationToken ct
     );
 
-    Task<ErrOrNothing> CopyVokiAnswerAudioFromTempToStandard(
-        TempAudioKey temp,
-        GeneralVokiAnswerAudioKey destination,
+    Task<ErrOrNothing> CopyVokiAnswerAudioKeysFromTempToStandard(
+        Dictionary<TempAudioKey,GeneralVokiAnswerAudioKey>  sourcesToDestinations,
         CancellationToken ct
     );
 }

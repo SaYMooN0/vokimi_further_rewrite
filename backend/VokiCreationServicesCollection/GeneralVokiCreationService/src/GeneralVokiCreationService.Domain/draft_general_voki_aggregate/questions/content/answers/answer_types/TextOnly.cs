@@ -10,6 +10,5 @@ public abstract partial record BaseQuestionAnswer
         AnswerRelatedResultIdsSet RelatedResultIds
     ) : BaseQuestionAnswer(Order, RelatedResultIds)
     {
-        public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.TextOnly;
     }
 }

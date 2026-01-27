@@ -12,8 +12,6 @@ public abstract partial record BaseQuestionAnswer
         AnswerRelatedResultIdsSet RelatedResultIds
     ) : BaseQuestionAnswer(Order, RelatedResultIds), IAnswerWithStorageKey
     {
-        public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.ImageAndText;
-
         public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
             Image.IsWithIds(vokiId, questionId);
     }

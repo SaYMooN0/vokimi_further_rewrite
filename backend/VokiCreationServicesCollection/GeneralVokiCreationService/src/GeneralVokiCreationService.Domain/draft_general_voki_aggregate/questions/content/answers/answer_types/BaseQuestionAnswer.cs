@@ -7,8 +7,6 @@ public abstract partial record BaseQuestionAnswer(
     AnswerRelatedResultIdsSet RelatedResultIds
 )
 {
-    public abstract GeneralVokiAnswerType MatchingEnum { get; }
-
     [Pure]
     public BaseQuestionAnswer RemoveRelatedResult(GeneralVokiResultId id) =>
         this with { RelatedResultIds = RelatedResultIds.Remove(id) };

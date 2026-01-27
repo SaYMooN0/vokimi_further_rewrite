@@ -11,8 +11,6 @@ public abstract partial record BaseQuestionAnswer
         AnswerRelatedResultIdsSet RelatedResultIds
     ) : BaseQuestionAnswer(Order, RelatedResultIds), IAnswerWithStorageKey
     {
-        public override GeneralVokiAnswerType MatchingEnum => GeneralVokiAnswerType.AudioOnly;
-
         public bool IsForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
             Audio.IsWithIds(vokiId, questionId);
     }

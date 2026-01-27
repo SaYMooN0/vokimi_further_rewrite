@@ -1,5 +1,6 @@
 ﻿using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.extension;
+using VokimiStorageKeysLib.temp_keys;
 
 namespace VokimiStorageKeysLib.concrete_keys.general_voki;
 
@@ -22,9 +23,9 @@ public class GeneralVokiAnswerAudioKey : BaseStorageAudioKey
         Value = value;
     }
 
-    public static GeneralVokiAnswerAudioKey CreateForAnswer(
-        VokiId vokiId, GeneralVokiQuestionId questionId, AudioFileExtension extension
-    ) => new($"{KeyConsts.VokisFolder}/{vokiId}/questions/{questionId}/answer_audios/{Guid.NewGuid()}.{extension.Value}");
+    public static GeneralVokiAnswerAudioKey CreateForAnswerFromTemp(
+        VokiId vokiId, GeneralVokiQuestionId questionId, TempAudioKey tempKey
+    ) => new($"{KeyConsts.VokisFolder}/{vokiId}/questions/{questionId}/answer_audios/{Guid.NewGuid()}.{tempKey.Extension.Value}");
 
     public static ErrOr<GeneralVokiAnswerAudioKey> FromString(string value) {
         if (Scheme.IsKeyValid(value, out _, out _, out _).IsErr(out var err)) {
