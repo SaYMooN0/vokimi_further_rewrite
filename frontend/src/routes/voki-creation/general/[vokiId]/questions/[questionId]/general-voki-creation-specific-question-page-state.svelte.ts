@@ -42,11 +42,10 @@ export class GeneralVokiCreationSpecificQuestionPageState implements IVokiCreati
     async fetchResultNames() {
         this.resultsIdToName = { state: 'loading' };
         const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
-            results: Record<string, string>;
+            resultsIdsToName: Record<string, string>;
         }>(`/vokis/${this.vokiId}/results/ids-names`, { method: 'GET' });
-
         if (response.isSuccess) {
-            this.resultsIdToName = { state: 'ok', resultsIdToName: response.data.results };
+            this.resultsIdToName = { state: 'ok', resultsIdToName: response.data.resultsIdsToName };
         } else {
             this.resultsIdToName = { state: 'error', errs: response.errs };
         }

@@ -12,27 +12,29 @@ public class VokiTagId : ValueObject, IEntityId
     public static bool IsStringValidTag(string tag) => TagRegex.IsMatch(tag);
     public string Value { get; }
 
-    public VokiTagId(string value) {
-        if (!IsStringValidTag(value)) {
-            InvalidConstructorArgumentException.ThrowErr(this,
-                ErrFactory.IncorrectFormat($"'{value}' is not a valid tag")
-            );
-        }
-
+    public VokiTagId(string value)
+    {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(value));
         Value = value;
-    }   
+    }
 
-    public static ErrOr<VokiTagId> Create(string value) {
-        if (!IsStringValidTag(value)) {
-            return ErrFactory.IncorrectFormat($"'{value}' is not a valid tag");
+    public static ErrOrNothing CheckForErr(string tag)
+    {
+        if (!IsStringValidTag(tag))
+        {
+            return ErrFactory.IncorrectFormat($"'{tag}' is not a valid tag");
         }
 
-        return new VokiTagId(value);
+        return ErrOrNothing.Nothing;
     }
+
+    public static ErrOr<VokiTagId> Create(string value) =>
+        CheckForErr(value).IsErr(out var err) ? err : new VokiTagId(value);
 
     public override string ToString() => Value;
 
-    public int CompareTo(object? obj) => obj switch {
+    public int CompareTo(object? obj) => obj switch
+    {
         IEntityId ed => ToString().CompareTo(ed.ToString()),
         _ => -1
     };

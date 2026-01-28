@@ -36,8 +36,9 @@
 	<ResultInitializingDialog
 		bind:this={resultCreationDialog}
 		vokiId={data.vokiId!}
-		updateParentResults={(newResults) =>
-			(pageState.results = newResults.map((r) => new ResultItemState(r)))}
+		updateParentResults={(newResults) => {
+			pageState.results = newResults.map((r) => new ResultItemState(r));
+		}}
 	/>
 
 	{#if pageState.results.length === 0}

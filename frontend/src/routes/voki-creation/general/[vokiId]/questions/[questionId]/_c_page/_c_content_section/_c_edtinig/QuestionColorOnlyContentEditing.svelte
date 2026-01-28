@@ -25,7 +25,7 @@
 		content.answers.push({
 			color: '#000000',
 			relatedResultIds: [],
-			order: content.answers.length
+			order: content.answers.length + 1
 		});
 	}
 </script>

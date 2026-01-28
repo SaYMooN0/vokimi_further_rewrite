@@ -29,7 +29,9 @@
 		<GeneralVokiInteractionSettingsSectionEditing
 			{vokiId}
 			savedInteractionSettings={editingInteractionSettings}
-			cancelEditing={() => (isEditing = false)}
+			cancelEditing={() => {
+				isEditing = false;
+			}}
 			updateParent={(newSettings) => {
 				updateSavedInteractionSettings(newSettings);
 				isEditing = false;

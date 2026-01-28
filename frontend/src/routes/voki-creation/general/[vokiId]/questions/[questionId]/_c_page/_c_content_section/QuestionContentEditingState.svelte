@@ -11,6 +11,8 @@
 	import QuestionColorOnlyContentEditing from './_c_edtinig/QuestionColorOnlyContentEditing.svelte';
 	import QuestionColorAndTextContentEditing from './_c_edtinig/QuestionColorAndTextContentEditing.svelte';
 	import IncorrectContentTypeMessage from './_c_shared/IncorrectContentTypeMessage.svelte';
+	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
+	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
 	interface Props {
 		savedContent: GeneralVokiCreationQuestionContent;
@@ -37,10 +39,16 @@
 	let savingErrs = $state<Err[]>([]);
 	let answerRelatedResultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
 	async function saveChanges() {
-		updateParentOnSave({
-			$type: 'TextOnly',
-			answers: [{ text: 'test', relatedResultIds: [], order: 0 }]
-		});
+		const response =
+			await ApiVokiCreationGeneral.fetchJsonResponse<GeneralVokiCreationQuestionContent>(
+				`vokis/${vokiId}/questions/${questionId}/update-content`,
+				RJO.PATCH(content)
+			);
+		if (response.isSuccess) {
+			updateParentOnSave(response.data);
+		} else {
+			savingErrs = response.errs;
+		}
 	}
 	let content = $state(savedContent);
 </script>

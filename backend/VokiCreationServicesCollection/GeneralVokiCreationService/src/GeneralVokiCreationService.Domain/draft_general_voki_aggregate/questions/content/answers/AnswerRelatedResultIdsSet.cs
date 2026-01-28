@@ -1,3 +1,5 @@
+using SharedKernel.exceptions;
+
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers;
 
 public sealed class AnswerRelatedResultIdsSet : ValueObject
@@ -8,6 +10,7 @@ public sealed class AnswerRelatedResultIdsSet : ValueObject
     public bool IsEmpty => ResultIds.Count == 0;
 
     private AnswerRelatedResultIdsSet(ImmutableHashSet<GeneralVokiResultId> resultIds) {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(resultIds));
         ResultIds = resultIds;
     }
 
@@ -15,18 +18,23 @@ public sealed class AnswerRelatedResultIdsSet : ValueObject
         ImmutableHashSet<GeneralVokiResultId>? resultIds
     ) {
         if (resultIds is null) {
-            return ErrFactory.NoValue.Common("Related result ids are required");
+            return new AnswerRelatedResultIdsSet([]);
         }
 
-        if (resultIds.Count > MaxRelatedResultsForAnswerCount) {
-            return ErrFactory.LimitExceeded(
-                "Too many related results for answer selected",
-                $"Maximum allowed count: {MaxRelatedResultsForAnswerCount}. Selected : {resultIds.Count}"
-            );
+        if (CheckForErr(resultIds).IsErr(out var err)) {
+            return err;
         }
 
         return new AnswerRelatedResultIdsSet(resultIds);
     }
+
+    private static ErrOrNothing CheckForErr(ImmutableHashSet<GeneralVokiResultId> resultIds) =>
+        resultIds.Count > MaxRelatedResultsForAnswerCount
+            ? ErrFactory.LimitExceeded(
+                "Too many related results for answer selected",
+                $"Maximum allowed count: {MaxRelatedResultsForAnswerCount}. Selected : {resultIds.Count}"
+            )
+            : ErrOrNothing.Nothing;
 
     public int Count => ResultIds.Count;
     public override IEnumerable<object> GetEqualityComponents() => [..ResultIds];

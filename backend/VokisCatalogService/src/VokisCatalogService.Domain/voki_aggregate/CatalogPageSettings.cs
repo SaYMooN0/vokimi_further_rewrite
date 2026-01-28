@@ -1,3 +1,8 @@
+using System.Collections.Immutable;
+using SharedKernel.domain;
+using SharedKernel.domain.ids;
+using SharedKernel.exceptions;
+
 namespace VokisCatalogService.Domain.voki_aggregate;
 
 public class CatalogPageSettings : ValueObject
@@ -24,11 +29,33 @@ public class CatalogPageSettings : ValueObject
         ImmutableHashSet<VokiId> vokiIdsRecommendedByPrimaryAuthor,
         bool showSimilarVokis,
         bool showVokisByTheSameAuthors
-    ) {
+    )
+    {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(
+            showVokisRecommendedByPrimaryAuthor,
+            vokiIdsRecommendedByPrimaryAuthor,
+            showSimilarVokis,
+            showVokisByTheSameAuthors
+        ));
         ShowVokisRecommendedByPrimaryAuthor = showVokisRecommendedByPrimaryAuthor;
         VokiIdsRecommendedByPrimaryAuthor = vokiIdsRecommendedByPrimaryAuthor;
         ShowSimilarVokis = showSimilarVokis;
         ShowVokisByTheSameAuthors = showVokisByTheSameAuthors;
+    }
+
+    public static ErrOrNothing CheckForErr(
+        bool showVokisRecommendedByPrimaryAuthor,
+        ImmutableHashSet<VokiId> vokiIdsRecommendedByPrimaryAuthor,
+        bool showSimilarVokis,
+        bool showVokisByTheSameAuthors
+    )
+    {
+        if (showVokisRecommendedByPrimaryAuthor && vokiIdsRecommendedByPrimaryAuthor.IsEmpty)
+        {
+            return ErrFactory.IncorrectFormat("Recommended Vokis list cannot be empty if ShowVokisRecommendedByPrimaryAuthor is true");
+        }
+
+        return ErrOrNothing.Nothing;
     }
 
     public static CatalogPageSettings Default => new(

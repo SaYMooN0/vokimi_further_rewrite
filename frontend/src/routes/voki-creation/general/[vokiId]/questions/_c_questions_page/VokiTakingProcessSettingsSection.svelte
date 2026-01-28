@@ -23,7 +23,9 @@
 			updateSavedSettings(newSettings);
 			isEditing = false;
 		}}
-		cancelEditing={() => (isEditing = false)}
+		cancelEditing={() => {
+			isEditing = false;
+		}}
 	/>
 {:else}
 	<div class="settings-section">
@@ -49,7 +51,12 @@
 				/>
 			{/if}
 		</div>
-		<VokiCreationDefaultButton text="Edit settings" onclick={() => (isEditing = true)} />
+		<VokiCreationDefaultButton
+			text="Edit settings"
+			onclick={() => {
+				isEditing = true;
+			}}
+		/>
 	</div>
 {/if}
 

@@ -71,7 +71,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
 
     public ErrOrNothing UpdateAnswerSettings(QuestionAnswersCountLimit newCountLimit, bool shuffleAnswers) {
         if (newCountLimit.MaxAnswers > MaxAnswersCount) {
-            return ErrFactory.LimitExceeded($"Maximum answers count cannot be greater than {MaxAnswersCount}");
+                return ErrFactory.LimitExceeded($"Maximum answers count cannot be greater than {MaxAnswersCount}");
         }
 
         AnswersCountLimit = newCountLimit;

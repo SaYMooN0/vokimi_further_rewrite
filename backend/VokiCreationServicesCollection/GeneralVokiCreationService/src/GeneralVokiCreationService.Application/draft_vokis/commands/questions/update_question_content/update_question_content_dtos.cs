@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
@@ -6,7 +7,7 @@ using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions.update_question_content;
 
-public abstract record BaseUnsavedQuestionContentDto(GeneralVokiAnswerType Type)
+public abstract record BaseUnsavedQuestionContentDto()
 {
     public TResult Match<TResult>(
         Func<TextOnlyUnsavedQuestionContentDto, TResult> textOnly,
@@ -16,20 +17,21 @@ public abstract record BaseUnsavedQuestionContentDto(GeneralVokiAnswerType Type)
         Func<ColorAndTextUnsavedQuestionContentDto, TResult> colorAndText,
         Func<AudioOnlyUnsavedQuestionContentDto, TResult> audioOnly,
         Func<AudioAndTextUnsavedQuestionContentDto, TResult> audioAndText
-    ) => Type.Match(
-        textOnly: () => textOnly((TextOnlyUnsavedQuestionContentDto)this),
-        imageOnly: () => imageOnly((ImageOnlyUnsavedQuestionContentDto)this),
-        imageAndText: () => imageAndText((ImageAndTextUnsavedQuestionContentDto)this),
-        colorOnly: () => colorOnly((ColorOnlyUnsavedQuestionContentDto)this),
-        colorAndText: () => colorAndText((ColorAndTextUnsavedQuestionContentDto)this),
-        audioOnly: () => audioOnly((AudioOnlyUnsavedQuestionContentDto)this),
-        audioAndText: () => audioAndText((AudioAndTextUnsavedQuestionContentDto)this)
-    );
+    ) => this switch {
+        TextOnlyUnsavedQuestionContentDto typed => textOnly(typed),
+        ImageOnlyUnsavedQuestionContentDto typed => imageOnly(typed),
+        ImageAndTextUnsavedQuestionContentDto typed => imageAndText(typed),
+        ColorOnlyUnsavedQuestionContentDto typed => colorOnly(typed),
+        ColorAndTextUnsavedQuestionContentDto typed => colorAndText(typed),
+        AudioOnlyUnsavedQuestionContentDto typed => audioOnly(typed),
+        AudioAndTextUnsavedQuestionContentDto typed => audioAndText(typed),
+        _ => throw new SwitchExpressionException()
+    };
 }
 
 public sealed record TextOnlyUnsavedQuestionContentDto(
     TextOnlyUnsavedQuestionContentDto.Answer[] Answers
-) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.TextOnly)
+) : BaseUnsavedQuestionContentDto
 {
     public sealed record Answer(
         GeneralVokiAnswerText Text,
@@ -47,7 +49,7 @@ public sealed record TextOnlyUnsavedQuestionContentDto(
 
 public record ImageOnlyUnsavedQuestionContentDto(
     ImageOnlyUnsavedQuestionContentDto.Answer[] Answers
-) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.ImageOnly)
+) : BaseUnsavedQuestionContentDto
 {
     public sealed record Answer(
         string ImageKey,
@@ -58,7 +60,7 @@ public record ImageOnlyUnsavedQuestionContentDto(
 
 public record ImageAndTextUnsavedQuestionContentDto(
     ImageAndTextUnsavedQuestionContentDto.Answer[] Answers
-) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.ImageAndText)
+) : BaseUnsavedQuestionContentDto
 {
     public sealed record Answer(
         GeneralVokiAnswerText Text,
@@ -70,7 +72,7 @@ public record ImageAndTextUnsavedQuestionContentDto(
 
 public record ColorOnlyUnsavedQuestionContentDto(
     ColorOnlyUnsavedQuestionContentDto.Answer[] Answers
-) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.ColorOnly)
+) : BaseUnsavedQuestionContentDto
 {
     public sealed record Answer(
         HexColor Color,
@@ -88,7 +90,7 @@ public record ColorOnlyUnsavedQuestionContentDto(
 
 public record ColorAndTextUnsavedQuestionContentDto(
     ColorAndTextUnsavedQuestionContentDto.Answer[] Answers
-) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.ColorAndText)
+) : BaseUnsavedQuestionContentDto
 {
     public sealed record Answer(
         GeneralVokiAnswerText Text,
@@ -107,7 +109,7 @@ public record ColorAndTextUnsavedQuestionContentDto(
 
 public record AudioOnlyUnsavedQuestionContentDto(
     AudioOnlyUnsavedQuestionContentDto.Answer[] Answers
-) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.AudioOnly)
+) : BaseUnsavedQuestionContentDto
 {
     public sealed record Answer(
         string AudioKey,
@@ -118,7 +120,7 @@ public record AudioOnlyUnsavedQuestionContentDto(
 
 public record AudioAndTextUnsavedQuestionContentDto(
     AudioAndTextUnsavedQuestionContentDto.Answer[] Answers
-) : BaseUnsavedQuestionContentDto(GeneralVokiAnswerType.AudioAndText)
+) : BaseUnsavedQuestionContentDto
 {
     public sealed record Answer(
         GeneralVokiAnswerText Text,

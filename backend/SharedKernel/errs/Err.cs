@@ -19,6 +19,11 @@ public class Err
         Details = details;
     }
 
+    public Err WithMessagePrefix(string prefix) => new Err(
+        message: $"{prefix} {Message}",
+        code: Code,
+        details: Details
+    );
 
     public void AddNext(Err next) {
         var current = this;
@@ -94,8 +99,8 @@ public class Err
 
         return sb.ToString();
     }
-    public string ToStringWithFields(params (string Name, object? Value)[] fields)
-    {
+
+    public string ToStringWithFields(params (string Name, object? Value)[] fields) {
         var sb = new StringBuilder();
         var current = this;
         int index = 1;

@@ -5,7 +5,8 @@ public class ScoringVokiInteractionSettings : ValueObject, IVokiInteractionSetti
     public bool SignedInOnlyTaking { get; }
     public override IEnumerable<object> GetEqualityComponents() => [SignedInOnlyTaking];
 
-    public ScoringVokiInteractionSettings(bool signedInOnlyTaking) {
+    public ScoringVokiInteractionSettings(bool signedInOnlyTaking)
+    {
         SignedInOnlyTaking = signedInOnlyTaking;
     }
 }

@@ -51,10 +51,11 @@ public sealed class QuestionAnswersList<T> : ValueObject where T : BaseQuestionA
         }
 
         for (var i = 0; i < expectedCount; i++) {
-            if (uniqueOrders[i] != i) {
+            int expectedOrder = i + 1;
+            if (uniqueOrders[i] != expectedOrder) {
                 return ErrFactory.IncorrectFormat(
-                    "Answer order must be sequential starting from 0",
-                    $"Expected {i}, but got {uniqueOrders[i]}. Orders: {string.Join(", ", orders)}"
+                    "Answer order must be sequential starting from 1",
+                    $"Expected {expectedOrder}, but got {uniqueOrders[i]}. Order values: {string.Join(", ", orders)}"
                 );
             }
         }

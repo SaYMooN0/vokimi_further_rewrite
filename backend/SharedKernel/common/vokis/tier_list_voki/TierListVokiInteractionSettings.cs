@@ -4,7 +4,8 @@ public class TierListVokiInteractionSettings : ValueObject, IVokiInteractionSett
 {
     public bool SignedInOnlyTaking { get; }
     public override IEnumerable<object> GetEqualityComponents() => [SignedInOnlyTaking];
-    public TierListVokiInteractionSettings(bool signedInOnlyTaking) {
+    public TierListVokiInteractionSettings(bool signedInOnlyTaking)
+    {
         SignedInOnlyTaking = signedInOnlyTaking;
     }
 }

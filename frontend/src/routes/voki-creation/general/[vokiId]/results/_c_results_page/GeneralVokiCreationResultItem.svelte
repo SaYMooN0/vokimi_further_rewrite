@@ -30,14 +30,18 @@
 			{result}
 			{vokiId}
 			{updateParentOnSave}
-			cancelEditing={() => (isEditing = false)}
+			cancelEditing={() => {
+				isEditing = false;
+			}}
 		/>
 	{:else}
 		<ResultItemViewState
 			{result}
 			{vokiId}
 			{updateParentOnDelete}
-			startEditing={() => (isEditing = true)}
+			startEditing={() => {
+				isEditing = true;
+			}}
 		/>
 	{/if}
 </div>

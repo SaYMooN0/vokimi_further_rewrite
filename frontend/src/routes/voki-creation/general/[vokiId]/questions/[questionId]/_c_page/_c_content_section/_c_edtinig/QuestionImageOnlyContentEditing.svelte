@@ -25,7 +25,7 @@
 		content.answers.push({
 			image: '',
 			relatedResultIds: [],
-			order: content.answers.length
+			order: content.answers.length + 1
 		});
 	}
 </script>

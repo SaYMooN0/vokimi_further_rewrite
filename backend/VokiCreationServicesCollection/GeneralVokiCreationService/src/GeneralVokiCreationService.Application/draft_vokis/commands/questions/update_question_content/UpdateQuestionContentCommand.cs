@@ -1,9 +1,7 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
-using SharedKernel.common.vokis.general_vokis;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
-using VokimiStorageKeysLib.extension;
 using VokimiStorageKeysLib.temp_keys;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions.update_question_content;
@@ -62,14 +60,11 @@ internal sealed class UpdateQuestionContentCommandHandler
     private async Task<ErrOr<BaseQuestionTypeSpecificContent>> SaveContent(
         VokiId vokiId, GeneralVokiQuestionId questionId, BaseUnsavedQuestionContentDto unsavedContent, CancellationToken ct
     ) => await unsavedContent.Match<Task<ErrOr<BaseQuestionTypeSpecificContent>>>(
-        textOnly: (dto) => Task.FromResult(dto.ToSavedContent()
-            .Bind<BaseQuestionTypeSpecificContent>(s => s)),
+        textOnly: (dto) => Task.FromResult(dto.ToSavedContent().Bind<BaseQuestionTypeSpecificContent>(s => s)),
         imageOnly: (dto) => CreateImageOnlyContent(vokiId, questionId, dto, ct),
         imageAndText: (dto) => CreateImageAndTextContent(vokiId, questionId, dto, ct),
-        colorOnly: (dto) => Task.FromResult(dto.ToSavedContent()
-            .Bind<BaseQuestionTypeSpecificContent>(s => s)),
-        colorAndText: (dto) => Task.FromResult(dto.ToSavedContent()
-            .Bind<BaseQuestionTypeSpecificContent>(s => s)),
+        colorOnly: (dto) => Task.FromResult(dto.ToSavedContent().Bind<BaseQuestionTypeSpecificContent>(s => s)),
+        colorAndText: (dto) => Task.FromResult(dto.ToSavedContent().Bind<BaseQuestionTypeSpecificContent>(s => s)),
         audioOnly: (dto) => CreateAudioOnlyContent(vokiId, questionId, dto, ct),
         audioAndText: (dto) => CreateAudioAndTextContent(vokiId, questionId, dto, ct)
     );
@@ -89,7 +84,7 @@ internal sealed class UpdateQuestionContentCommandHandler
             ErrOr<TempImageKey> tempKeyCreationRes = TempImageKey.FromString(answer.ImageKey);
             if (tempKeyCreationRes.IsErr(out var keyErr)) {
                 return ErrFactory.IncorrectFormat(
-                    $"Some of the answers has incorrect image data. Answer order: {answer.Order.Value + 1}",
+                    $"Some of the answers has incorrect image data. Answer order: {answer.Order.Value}",
                     $"Image key: {answer.ImageKey}. Key err: {keyErr}"
                 );
             }
@@ -118,10 +113,10 @@ internal sealed class UpdateQuestionContentCommandHandler
         }
 
         return QuestionAnswersList<BaseQuestionAnswer.ImageOnly>
-                .Create(savedAnswers)
-                .Bind<BaseQuestionTypeSpecificContent>(
-                    answersList => new BaseQuestionTypeSpecificContent.ImageOnly(answersList)
-                );
+            .Create(savedAnswers)
+            .Bind<BaseQuestionTypeSpecificContent>(
+                answersList => new BaseQuestionTypeSpecificContent.ImageOnly(answersList)
+            );
     }
 
     private async Task<ErrOr<BaseQuestionTypeSpecificContent>> CreateImageAndTextContent(
@@ -132,14 +127,15 @@ internal sealed class UpdateQuestionContentCommandHandler
         List<(ImageAndTextUnsavedQuestionContentDto.Answer, TempImageKey)> unsavedAnswers = new();
         foreach (var answer in content.Answers) {
             if (GeneralVokiAnswerImageKey.FromString(answer.ImageKey).IsSuccess(out var savedKey)) {
-                savedAnswers.Add(new BaseQuestionAnswer.ImageAndText(answer.Text, savedKey, answer.Order, answer.RelatedResultIds));
+                savedAnswers.Add(
+                    new BaseQuestionAnswer.ImageAndText(answer.Text, savedKey, answer.Order, answer.RelatedResultIds));
                 continue;
             }
 
             ErrOr<TempImageKey> tempKeyCreationRes = TempImageKey.FromString(answer.ImageKey);
             if (tempKeyCreationRes.IsErr(out var keyErr)) {
                 return ErrFactory.IncorrectFormat(
-                    $"Some of the answers has incorrect image data. Answer order: {answer.Order.Value + 1}",
+                    $"Some of the answers has incorrect image data. Answer order: {answer.Order.Value}",
                     $"Image key: {answer.ImageKey}. Key err: {keyErr}"
                 );
             }
@@ -160,7 +156,7 @@ internal sealed class UpdateQuestionContentCommandHandler
 
             foreach (var unsaved in unsavedAnswers) {
                 savedAnswers.Add(new BaseQuestionAnswer.ImageAndText(
-		            unsaved.Item1.Text,
+                    unsaved.Item1.Text,
                     tempToSavedImageKeys[unsaved.Item2],
                     unsaved.Item1.Order,
                     unsaved.Item1.RelatedResultIds
@@ -169,10 +165,10 @@ internal sealed class UpdateQuestionContentCommandHandler
         }
 
         return QuestionAnswersList<BaseQuestionAnswer.ImageAndText>
-                .Create(savedAnswers)
-                .Bind<BaseQuestionTypeSpecificContent>(
-                    answersList => new BaseQuestionTypeSpecificContent.ImageAndText(answersList)
-                );
+            .Create(savedAnswers)
+            .Bind<BaseQuestionTypeSpecificContent>(
+                answersList => new BaseQuestionTypeSpecificContent.ImageAndText(answersList)
+            );
     }
 
     private async Task<ErrOr<BaseQuestionTypeSpecificContent>> CreateAudioOnlyContent(
@@ -190,7 +186,7 @@ internal sealed class UpdateQuestionContentCommandHandler
             ErrOr<TempAudioKey> tempKeyCreationRes = TempAudioKey.FromString(answer.AudioKey);
             if (tempKeyCreationRes.IsErr(out var keyErr)) {
                 return ErrFactory.IncorrectFormat(
-                    $"Some of the answers has incorrect audio data. Answer order: {answer.Order.Value + 1}",
+                    $"Some of the answers has incorrect audio data. Answer order: {answer.Order.Value}",
                     $"Audio key: {answer.AudioKey}. Key err: {keyErr}"
                 );
             }
@@ -219,10 +215,10 @@ internal sealed class UpdateQuestionContentCommandHandler
         }
 
         return QuestionAnswersList<BaseQuestionAnswer.AudioOnly>
-                .Create(savedAnswers)
-                .Bind<BaseQuestionTypeSpecificContent>(
-                    answersList => new BaseQuestionTypeSpecificContent.AudioOnly(answersList)
-                );
+            .Create(savedAnswers)
+            .Bind<BaseQuestionTypeSpecificContent>(
+                answersList => new BaseQuestionTypeSpecificContent.AudioOnly(answersList)
+            );
     }
 
     private async Task<ErrOr<BaseQuestionTypeSpecificContent>> CreateAudioAndTextContent(
@@ -233,14 +229,15 @@ internal sealed class UpdateQuestionContentCommandHandler
         List<(AudioAndTextUnsavedQuestionContentDto.Answer, TempAudioKey)> unsavedAnswers = new();
         foreach (var answer in content.Answers) {
             if (GeneralVokiAnswerAudioKey.FromString(answer.AudioKey).IsSuccess(out var savedKey)) {
-                savedAnswers.Add(new BaseQuestionAnswer.AudioAndText(answer.Text, savedKey, answer.Order, answer.RelatedResultIds));
+                savedAnswers.Add(
+                    new BaseQuestionAnswer.AudioAndText(answer.Text, savedKey, answer.Order, answer.RelatedResultIds));
                 continue;
             }
 
             ErrOr<TempAudioKey> tempKeyCreationRes = TempAudioKey.FromString(answer.AudioKey);
             if (tempKeyCreationRes.IsErr(out var keyErr)) {
                 return ErrFactory.IncorrectFormat(
-                    $"Some of the answers has incorrect audio data. Answer order: {answer.Order.Value + 1}",
+                    $"Some of the answers has incorrect audio data. Answer order: {answer.Order.Value}",
                     $"Audio key: {answer.AudioKey}. Key err: {keyErr}"
                 );
             }
@@ -261,7 +258,7 @@ internal sealed class UpdateQuestionContentCommandHandler
 
             foreach (var unsaved in unsavedAnswers) {
                 savedAnswers.Add(new BaseQuestionAnswer.AudioAndText(
-		            unsaved.Item1.Text,
+                    unsaved.Item1.Text,
                     tempToSavedAudioKeys[unsaved.Item2],
                     unsaved.Item1.Order,
                     unsaved.Item1.RelatedResultIds
@@ -270,10 +267,9 @@ internal sealed class UpdateQuestionContentCommandHandler
         }
 
         return QuestionAnswersList<BaseQuestionAnswer.AudioAndText>
-                .Create(savedAnswers)
-                .Bind<BaseQuestionTypeSpecificContent>(
-                    answersList => new BaseQuestionTypeSpecificContent.AudioAndText(answersList)
-                );
+            .Create(savedAnswers)
+            .Bind<BaseQuestionTypeSpecificContent>(
+                answersList => new BaseQuestionTypeSpecificContent.AudioAndText(answersList)
+            );
     }
-
 }

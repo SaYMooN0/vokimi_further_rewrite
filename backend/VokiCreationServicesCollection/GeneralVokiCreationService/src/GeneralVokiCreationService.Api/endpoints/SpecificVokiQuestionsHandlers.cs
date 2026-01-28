@@ -1,5 +1,6 @@
 ﻿using GeneralVokiCreationService.Api.contracts.questions;
 using GeneralVokiCreationService.Api.contracts.questions.update_question;
+using GeneralVokiCreationService.Api.contracts.questions.update_question.update_question_content;
 using GeneralVokiCreationService.Api.extensions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 using GeneralVokiCreationService.Application.draft_vokis.commands.questions.update_question_content;
@@ -113,9 +114,7 @@ internal class SpecificVokiQuestionsHandlers : IEndpointGroup
         GeneralVokiQuestionId questionId = httpContext.GetQuestionIdFromRoute();
         var request = httpContext.GetValidatedRequest<IUpdateQuestionContentRequest>();
 
-        UpdateQuestionContentCommand command = new(
-            id, questionId, request.ParsedAnswersCountLimit, request.ShuffleAnswers
-        );
+        UpdateQuestionContentCommand command = new(id, questionId, request.ValidatedContent);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result,
