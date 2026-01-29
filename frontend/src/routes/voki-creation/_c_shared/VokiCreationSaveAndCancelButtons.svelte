@@ -1,13 +1,17 @@
 <script lang="ts">
-	let { onCancel, onSave }: { onCancel: () => void; onSave: () => void } = $props<{
+	interface Props {
 		onCancel: () => void;
 		onSave: () => void;
-	}>();
+		isSaveLoading?: boolean;
+	}
+	let { onCancel, onSave, isSaveLoading = false }: Props = $props();
 </script>
 
 <div class="btns-container">
 	<button onclick={onCancel} class="cancel-btn">Cancel</button>
-	<button onclick={onSave} class="save-btn">Save</button>
+	<button onclick={onSave} class="save-btn" class:loading={isSaveLoading}
+		>{isSaveLoading ? 'Saving...' : 'Save'}</button
+	>
 </div>
 
 <style>

@@ -68,10 +68,10 @@
 		font-size: 1rem;
 		font-weight: 450;
 		line-height: 1.1;
+		text-align: center;
 		letter-spacing: 0.2px;
 		transition: all 0.06s ease-in;
 		cursor: pointer;
-		text-align: center;
 	}
 
 	.loading-error:hover {

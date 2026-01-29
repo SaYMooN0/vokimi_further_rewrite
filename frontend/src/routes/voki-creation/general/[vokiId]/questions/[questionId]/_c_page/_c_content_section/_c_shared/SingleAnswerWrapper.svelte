@@ -31,7 +31,7 @@
 	{/if}
 	<div class="sep" />
 	<div class="content-wrapper">
-		<span class="answer-order">Answer {order}</span>
+		<span class="answer-order">Answer #{order}</span>
 		{@render answerContentSnippet?.()}
 	</div>
 </div>
@@ -44,6 +44,7 @@
 		background-color: var(--muted);
 		align-self: center;
 	}
+
 	.answer {
 		--results-width: 13rem;
 
@@ -56,29 +57,34 @@
 		border-radius: 0.75rem;
 		box-shadow: rgb(0 0 0 / 5%) 0 0 0 1px;
 	}
+
 	.results {
 		display: flex;
 		flex-direction: column;
 		gap: 0.25rem;
 	}
+
 	.related-results-label {
 		margin-bottom: 0.25rem;
 		color: var(--secondary-foreground);
 		font-size: 1.125rem;
 		font-weight: 425;
+		text-align: center;
 		text-decoration: underline;
 		text-decoration-thickness: 0.125rem;
-		text-align: center;
 	}
+
 	.content-wrapper {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 		width: 100%;
+		height: 100%;
 	}
+
 	.answer-order {
-		font-weight: 500;
 		color: var(--muted-foreground);
 		font-size: 0.9rem;
+		font-weight: 500;
 	}
 </style>

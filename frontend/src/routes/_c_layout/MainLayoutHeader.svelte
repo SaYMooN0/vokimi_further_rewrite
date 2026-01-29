@@ -19,33 +19,37 @@
 
 <style>
 	.main-layout-header {
-		display: grid;
-		left: 0;
-		right: 0;
-		top: 0;
 		position: fixed;
-		grid-template-columns: var(--side-panel-width) 1fr var(--side-panel-width);
+		top: 0;
+		right: 0;
+		left: 0;
+		z-index: 9999;
+		display: grid;
 		height: var(--layout-header-height);
 		max-height: var(--layout-header-height);
 		padding: var(--layout-header-vertical-padding) 0;
-		z-index: 9999;
+		grid-template-columns: var(--side-panel-width) 1fr var(--side-panel-width);
 	}
+
 	.side.left {
-		padding: 0 var(--sides-padding);
 		display: flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
+		padding: 0 var(--sides-padding);
 	}
+
 	.side.left > img {
-		height: 2.25rem;
 		width: fit-content;
+		height: 2.25rem;
 	}
+
 	.middle-part {
+		z-index: 9999;
 		width: calc(100% - var(--side-panel-width));
 		height: 100%;
 		margin-left: var(--side-panel-width);
-		z-index: 9999;
 	}
+
 	.side.right {
 		max-height: var(--layout-header-height);
 		padding: 0 var(--sides-padding);

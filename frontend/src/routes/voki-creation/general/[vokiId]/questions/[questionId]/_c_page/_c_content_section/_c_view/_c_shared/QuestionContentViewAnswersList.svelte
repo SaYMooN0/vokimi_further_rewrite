@@ -4,6 +4,7 @@
 	import FieldNotSetLabel from '$lib/components/FieldNotSetLabel.svelte';
 	import SingleAnswerWrapper from '../../_c_shared/SingleAnswerWrapper.svelte';
 	import type { QuestionPageResultsState } from '../../../../general-voki-creation-specific-question-page-state.svelte';
+	import QuestionContentNoAnswersMessage from '../../_c_shared/QuestionContentNoAnswersMessage.svelte';
 
 	interface Props {
 		answers: T[];
@@ -14,13 +15,14 @@
 </script>
 
 {#if answers.length === 0}
-	<FieldNotSetLabel text="answers" />
+	<QuestionContentNoAnswersMessage subtitle="Use the 'Edit content' button to add answers" />
 {:else}
 	<div class="answer-list">
 		{#each answers as answer}
 			<SingleAnswerWrapper
 				resultsIdToName={resultsIdToNameState}
 				answerRelatedResultsCount={answer.relatedResultIds.length}
+				order={answer.order}
 			>
 				{#snippet resultsViewSnippet(idToName)}
 					<div class="related-results">
@@ -54,6 +56,7 @@
 		place-items: center center;
 		width: 100%;
 	}
+
 	.related-results {
 		display: flex;
 		flex-direction: column;
@@ -68,6 +71,7 @@
 		margin: 0;
 		font-weight: 450;
 	}
+
 	.result {
 		display: block;
 		width: 100%;

@@ -25,4 +25,5 @@ public sealed class AnswerOrderInQuestion : ValueObject
     };
 
     public override IEnumerable<object> GetEqualityComponents() => [Value];
+    public override string ToString() => Value.ToString();
 }

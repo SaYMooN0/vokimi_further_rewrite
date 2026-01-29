@@ -31,9 +31,12 @@
 
 {#snippet answerMainContent(
 	answer: AnswerDataTextOnly,
-	updateOnChange: (newAnswer: AnswerDataTextOnly) => void
+	updateOnChange: (newAnswer: AnswerDataTextOnly) => void,
+	renderUpdateKey: string
 )}
-	<TextOnlyAnswerEditing {answer} {updateOnChange} />
+	{#key renderUpdateKey}
+		<TextOnlyAnswerEditing {answer} {updateOnChange} />
+	{/key}
 {/snippet}
 <div class="question-content">
 	<QuestionContentEditingAnswersList

@@ -108,7 +108,6 @@
 		align-items: center;
 		width: 100%;
 		height: 100%;
-		padding: 0 2rem;
 	}
 
 	.answer-content > :global(.err-block) {
@@ -124,6 +123,7 @@
 		width: 100%;
 		height: 100%;
 		grid-template-columns: auto 1fr;
+		padding: 0 2rem;
 	}
 
 	.change-img-btn {
@@ -152,7 +152,6 @@
 		width: 100%;
 		height: 100%;
 		min-height: 8rem;
-		max-height: 40rem;
 		animation: var(--default-fade-in-animation);
 	}
 

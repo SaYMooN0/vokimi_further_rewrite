@@ -25,6 +25,11 @@ public sealed class OnlyIncludesVisitor : ExpressionVisitor
             return base.VisitMethodCall(node);
         }
 
+        // AsSplitQuery is needed with multiple includes 
+        if (name is "AsSplitQuery") {
+            return base.VisitMethodCall(node);
+        }
+        
         HasForbiddenCalls = true;
         FirstForbiddenMethodName = name;
         return node;

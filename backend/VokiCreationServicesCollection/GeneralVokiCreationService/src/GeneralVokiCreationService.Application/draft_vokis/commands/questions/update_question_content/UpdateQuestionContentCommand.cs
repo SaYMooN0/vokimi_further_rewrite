@@ -32,7 +32,7 @@ internal sealed class UpdateQuestionContentCommandHandler
     }
 
     public async Task<ErrOr<BaseQuestionTypeSpecificContent>> Handle(UpdateQuestionContentCommand command, CancellationToken ct) {
-        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetWithQuestionsForUpdate(command.VokiId, ct);
+        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetWithQuestionsAndResultsForUpdate(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki();
         }

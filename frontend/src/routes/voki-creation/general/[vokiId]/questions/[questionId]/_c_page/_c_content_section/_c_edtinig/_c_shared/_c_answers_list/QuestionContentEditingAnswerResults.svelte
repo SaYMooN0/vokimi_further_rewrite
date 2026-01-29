@@ -64,6 +64,7 @@
 		margin: 0;
 		font-weight: 450;
 	}
+
 	.result {
 		display: grid;
 		gap: 0.25rem;

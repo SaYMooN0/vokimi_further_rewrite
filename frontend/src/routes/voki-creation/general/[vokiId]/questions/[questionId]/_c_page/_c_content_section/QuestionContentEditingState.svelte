@@ -118,3 +118,9 @@
 {/if}
 <DefaultErrBlock errList={savingErrs} class="question-content-err-block" />
 <VokiCreationSaveAndCancelButtons onCancel={() => cancelEditing()} onSave={() => saveChanges()} />
+
+<style>
+	:global(.question-content-err-block.err-block) {
+		margin: 1rem 0;
+	}
+</style>

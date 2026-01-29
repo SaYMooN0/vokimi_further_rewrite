@@ -37,6 +37,7 @@
 	}
 	function updateParentOnSave(newContent: GeneralVokiCreationQuestionContent) {
 		savedTypeSpecificContent = newContent;
+		updateSavedTypeSpecificContent(newContent);
 		isEditing = false;
 	}
 </script>

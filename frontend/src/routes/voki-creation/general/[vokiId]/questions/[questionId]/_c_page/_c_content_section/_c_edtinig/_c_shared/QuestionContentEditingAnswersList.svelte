@@ -3,13 +3,14 @@
 	import type { Snippet } from 'svelte';
 	import type { BaseGeneralVokiAnswerData } from '../../../../types';
 	import type { QuestionPageResultsState } from '../../../../general-voki-creation-specific-question-page-state.svelte';
-	import QuestionContentEditingNoAnswers from './_c_answers_list/QuestionContentEditingNoAnswers.svelte';
 	import SingleAnswerWrapper from '../../_c_shared/SingleAnswerWrapper.svelte';
 	import VokiCreationDefaultButton from '../../../../../../../../_c_shared/VokiCreationDefaultButton.svelte';
+	import QuestionContentNoAnswersMessage from '../../_c_shared/QuestionContentNoAnswersMessage.svelte';
+	import { StringUtils } from '$lib/ts/utils/string-utils';
 
 	interface Props {
 		answers: T[];
-		answerMainContent: Snippet<[T, (newAnswer: T) => void]>;
+		answerMainContent: Snippet<[T, (newAnswer: T) => void, string]>;
 		maxAnswersForQuestionCount: number;
 		addNewAnswer: () => void;
 		resultsIdToNameState: QuestionPageResultsState;
@@ -35,14 +36,22 @@
 
 	function removeAnswer(answer: T) {
 		answers = answers.filter((a) => a !== answer);
+		answers = answers.map((a, i) => ({
+			...a,
+			order: i + 1
+		}));
 	}
 </script>
 
 {#if answers.length === 0}
-	<QuestionContentEditingNoAnswers {addNewAnswer} />
+	<QuestionContentNoAnswersMessage
+		subtitle="Add some answers to this question using the button below"
+	/>
+	<button onclick={addNewAnswer} class="add-new-answer-btn">Add first answer</button>
 {:else}
 	<div class="answer-list">
 		{#each answers as answer, answerKey}
+			{JSON.stringify(answer)}
 			<SingleAnswerWrapper
 				resultsIdToName={resultsIdToNameState}
 				answerRelatedResultsCount={answer.relatedResultIds.length}
@@ -60,11 +69,16 @@
 				{/snippet}
 				{#snippet answerContentSnippet()}
 					<div class="answer-content-grid">
-						{@render answerMainContent(answer, (newAnswer) => {
-							answers[answerKey] = newAnswer;
-						})}
+						{@render answerMainContent(
+							answer,
+							(newAnswer) => {
+								answers[answerKey] = newAnswer;
+							},
+							`${12}`
+						)}
 						<button class="delete-answer-btn" onclick={() => removeAnswer(answer)}>
-							<svg><use href="#common-minus-icon" /></svg>
+							<div class="hint">Delete this answer</div>
+							<svg><use href="#common-trash-can-icon" /></svg>
 						</button>
 					</div>
 				{/snippet}
@@ -83,37 +97,101 @@
 {/if}
 
 <style>
+	.add-new-answer-btn {
+		padding: 0.25rem 1rem;
+		border: none;
+		border-radius: 0.25rem;
+		background-color: var(--primary);
+		color: var(--primary-foreground);
+		font-size: 1.125rem;
+		font-weight: 425;
+		letter-spacing: 0.15px;
+		transition: transform 0.12s ease-in;
+		cursor: pointer;
+	}
+
+	.add-new-answer-btn:hover {
+		background-color: var(--primary-hov);
+	}
+
 	.answer-content-grid {
 		display: grid;
 		grid-template-columns: 1fr auto;
 		gap: 0.5rem;
 		width: 100%;
+		height: 100%;
 	}
+
 	.delete-answer-btn {
+		position: relative;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 2rem;
-		height: 2rem;
-		padding: 0;
+		width: 1.75rem;
+		height: 1.75rem;
+		padding: 0.25rem;
 		border: none;
 		border-radius: 0.25rem;
 		background-color: var(--muted);
 		color: var(--muted-foreground);
-		cursor: pointer;
 		transition: all 0.1s ease;
+		cursor: pointer;
 	}
+
 	.delete-answer-btn:hover {
 		background-color: var(--red-1);
-		color: var(--err-foreground);
+		color: var(--red-4);
 	}
+
+	.delete-answer-btn:hover .hint {
+		opacity: 1;
+		visibility: visible;
+		transform: translateY(-50%) translateX(-0.25rem);
+	}
+
 	.delete-answer-btn svg {
 		width: 1.5rem;
 		height: 1.5rem;
 		stroke-width: 2;
 	}
+
+	.hint {
+		position: absolute;
+		top: 50%;
+		right: 100%;
+		z-index: 10;
+		display: flex;
+		align-items: center;
+		width: max-content;
+		padding: 0.25rem 0.375rem 0.25rem 0.5rem;
+		margin-right: 0.25rem;
+		border-radius: 0.25rem;
+		background-color: var(--muted);
+		color: var(--muted-foreground);
+		font-size: 0.875rem;
+		font-weight: 450;
+		opacity: 0;
+		box-shadow: var(--shadow), var(--shadow-md);
+		transition: all 0.15s ease-in-out;
+		transform: translateY(-50%);
+		visibility: hidden;
+		pointer-events: none;
+		overflow: visible;
+	}
+
+	.hint::after {
+		position: absolute;
+		top: 50%;
+		left: 100%;
+		width: 0.5rem;
+		height: 0.5rem;
+		background-color: var(--muted);
+		transform: translate(-50%, -50%) rotate(45deg);
+		content: '';
+	}
+
 	:global(.add-new-answer-btn) {
-		margin: 1rem 0 0 0 !important;
 		width: 100%;
+		margin: 1rem 0 0 !important;
 	}
 </style>

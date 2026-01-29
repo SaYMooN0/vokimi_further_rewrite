@@ -54,6 +54,7 @@
 		letter-spacing: 0.25px;
 		text-wrap: balance;
 	}
+
 	.actions {
 		display: grid;
 		gap: 2rem;
