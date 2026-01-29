@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
 using SharedKernel.common.vokis.general_vokis;
 
@@ -7,9 +8,11 @@ public abstract partial record BaseQuestionTypeSpecificContent
 {
     public abstract GeneralVokiAnswerType AnswersType { get; }
     public abstract IEnumerable<BaseQuestionAnswer> BaseAnswers { get; }
+
     [Pure]
     public abstract BaseQuestionTypeSpecificContent RemoveResult(GeneralVokiResultId resultId);
-    public  TResult Match<TResult>(
+
+    public TResult Match<TResult>(
         Func<TextOnly, TResult> textOnly,
         Func<ImageOnly, TResult> imageOnly,
         Func<ImageAndText, TResult> imageAndText,
@@ -17,15 +20,16 @@ public abstract partial record BaseQuestionTypeSpecificContent
         Func<ColorAndText, TResult> colorAndText,
         Func<AudioOnly, TResult> audioOnly,
         Func<AudioAndText, TResult> audioAndText
-    ) => AnswersType.Match(
-        textOnly: () => textOnly((TextOnly)this),
-        imageOnly: () => imageOnly((ImageOnly)this),
-        imageAndText: () => imageAndText((ImageAndText)this),
-        colorOnly: () => colorOnly((ColorOnly)this),
-        colorAndText: () => colorAndText((ColorAndText)this),
-        audioOnly: () => audioOnly((AudioOnly)this),
-        audioAndText: () => audioAndText((AudioAndText)this)
-    );
+    ) => this switch {
+        TextOnly typed => textOnly(typed),
+        ImageOnly typed => imageOnly(typed),
+        ImageAndText typed => imageAndText(typed),
+        ColorOnly typed => colorOnly(typed),
+        ColorAndText typed => colorAndText(typed),
+        AudioOnly typed => audioOnly(typed),
+        AudioAndText typed => audioAndText(typed),
+        _ => throw new SwitchExpressionException(this)
+    };
 
     public static BaseQuestionTypeSpecificContent CreateEmpty(GeneralVokiAnswerType t) =>
         t.Match<BaseQuestionTypeSpecificContent>(

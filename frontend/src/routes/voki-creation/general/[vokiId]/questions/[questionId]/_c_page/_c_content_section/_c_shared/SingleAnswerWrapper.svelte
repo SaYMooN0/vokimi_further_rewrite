@@ -7,12 +7,14 @@
 		answerContentSnippet: Snippet;
 		answerRelatedResultsCount: number;
 		resultsIdToName: QuestionPageResultsState;
+		order: number;
 	}
 	let {
 		resultsViewSnippet,
 		answerContentSnippet,
 		resultsIdToName,
-		answerRelatedResultsCount
+		answerRelatedResultsCount,
+		order
 	}: Props = $props();
 </script>
 
@@ -28,7 +30,10 @@
 		</div>
 	{/if}
 	<div class="sep" />
-	{@render answerContentSnippet?.()}
+	<div class="content-wrapper">
+		<span class="answer-order">Answer {order}</span>
+		{@render answerContentSnippet?.()}
+	</div>
 </div>
 
 <style>
@@ -64,5 +69,16 @@
 		text-decoration: underline;
 		text-decoration-thickness: 0.125rem;
 		text-align: center;
+	}
+	.content-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		width: 100%;
+	}
+	.answer-order {
+		font-weight: 500;
+		color: var(--muted-foreground);
+		font-size: 0.9rem;
 	}
 </style>

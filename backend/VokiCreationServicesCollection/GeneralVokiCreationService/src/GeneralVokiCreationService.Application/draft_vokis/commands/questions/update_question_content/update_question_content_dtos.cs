@@ -25,7 +25,7 @@ public abstract record BaseUnsavedQuestionContentDto()
         ColorAndTextUnsavedQuestionContentDto typed => colorAndText(typed),
         AudioOnlyUnsavedQuestionContentDto typed => audioOnly(typed),
         AudioAndTextUnsavedQuestionContentDto typed => audioAndText(typed),
-        _ => throw new SwitchExpressionException()
+        _ => throw new SwitchExpressionException(this)
     };
 }
 
