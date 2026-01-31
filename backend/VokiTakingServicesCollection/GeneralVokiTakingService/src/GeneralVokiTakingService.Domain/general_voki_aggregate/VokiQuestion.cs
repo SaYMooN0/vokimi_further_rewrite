@@ -1,6 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
-using SharedKernel.common.vokis.general_vokis;
-using VokimiStorageKeysLib.concrete_keys.general_voki;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.content;
 
 namespace GeneralVokiTakingService.Domain.general_voki_aggregate;
 
@@ -9,28 +8,39 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     private VokiQuestion() { }
     public string Text { get; }
     public VokiQuestionImagesSet ImageSet { get; }
-    public GeneralVokiAnswerType AnswersType { get; }
     public ushort OrderInVoki { get; }
+    public GeneralVokiQuestionContent Content { get; }
     public bool ShuffleAnswers { get; }
     public QuestionAnswersCountLimit AnswersCountLimit { get; }
-    public IReadOnlyCollection<VokiQuestionAnswer> Answers { get; }
 
 
     public VokiQuestion(
         GeneralVokiQuestionId id,
         string text,
         VokiQuestionImagesSet imageSet,
-        GeneralVokiAnswerType answersType,
         ushort orderInVoki,
-        ImmutableArray<VokiQuestionAnswer> answers,
-        bool shuffleAnswers, QuestionAnswersCountLimit answersCountLimit) {
+        bool shuffleAnswers,
+        QuestionAnswersCountLimit answersCountLimit,
+        GeneralVokiQuestionContent content
+    ) {
         Id = id;
         Text = text;
         ImageSet = imageSet;
-        AnswersType = answersType;
         OrderInVoki = orderInVoki;
-        Answers = answers;
         ShuffleAnswers = shuffleAnswers;
         AnswersCountLimit = answersCountLimit;
+        Content = content;
+    }
+
+    public string Preview() => string.IsNullOrEmpty(Text)
+        ? ""
+        : Text.Length < 30
+            ? Text
+            : Text.Substring(0, 25) + " ...";
+
+    public string ChooseExpectedNumberOfAnswersText() {
+        var min = AnswersCountLimit.MinAnswers;
+        var max = AnswersCountLimit.MaxAnswers;
+        return (min == max) ? $"Choose exactly {min} answer(s)" : $"Choose from {min} to {max} answers";
     }
 }

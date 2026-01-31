@@ -3,7 +3,6 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
-using VokiTakingServicesLib.Domain.base_voki_aggregate;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories;
 
@@ -23,9 +22,7 @@ internal class GeneralVokisRepository : IGeneralVokisRepository
 
     public Task<GeneralVoki?> GetWithQuestionAnswers(VokiId vokiId, CancellationToken ct) =>
         _db.Vokis
-            .AsNoTracking()
             .Include(v => v.Questions)
-            .ThenInclude(q => q.Answers)
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public Task<GeneralVoki?> GetWithResultsById(VokiId vokiId, CancellationToken ct) =>
@@ -45,7 +42,6 @@ internal class GeneralVokisRepository : IGeneralVokisRepository
     public Task<GeneralVoki?> GetWithQuestionAnswersAndResults(VokiId vokiId, CancellationToken ct) =>
         _db.Vokis
             .Include(v => v.Questions)
-            .ThenInclude(q => q.Answers)
             .AsSplitQuery()
             .Include(v => EF.Property<IReadOnlyCollection<VokiResult>>(v, "_results"))
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);

@@ -1,5 +1,6 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
+using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters.vokis;
 using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -20,7 +21,6 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
         builder.Property(x => x.ImageSet)
             .HasConversion<VokiQuestionImagesSetConverter>();
 
-        builder.Property(x => x.AnswersType);
         builder.Property(x => x.OrderInVoki);
         builder.Property(x => x.ShuffleAnswers);
         builder
@@ -28,10 +28,9 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .HasConversion<QuestionAnswersCountLimitConverter>();
 
         builder
-            .HasMany<VokiQuestionAnswer>("Answers")
-            .WithOne()
-            .HasForeignKey("QuestionId")
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
+            .Property(x => x.Content)
+            .HasConversion<VokiQuestionTypeSpecificContentConverter>();
+
+
     }
 }

@@ -7,8 +7,6 @@ using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
-using SharedKernel.common.vokis.general_vokis;
-using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
 
@@ -88,11 +86,9 @@ public sealed record AnswerQuestionInSequentialAnsweringVokiTakingCommandResult(
     GeneralVokiQuestionId Id,
     string Text,
     VokiQuestionImagesSet ImagesSet,
-    GeneralVokiAnswerType AnswerType,
     ushort OrderInVokiTaking,
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
-    IReadOnlyCollection<VokiQuestionAnswer> Answers,
     DateTime CurrentTime
 )
 {
@@ -102,11 +98,9 @@ public sealed record AnswerQuestionInSequentialAnsweringVokiTakingCommandResult(
         question.Id,
         question.Text,
         question.ImageSet,
-        question.AnswersType,
         orderInVokiTaking,
         question.AnswersCountLimit.MinAnswers,
         question.AnswersCountLimit.MaxAnswers,
-        question.Answers,
         currentTime
     );
 }

@@ -4,6 +4,7 @@ using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.content;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
 using SharedKernel.common.vokis;
@@ -39,7 +40,6 @@ internal sealed class StartVokiTakingCommandHandler :
     public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(
         StartVokiTakingCommand command, CancellationToken ct
     ) {
-
         var vokiTakerCtx = _userCtxProvider.Current;
         var voki = await _generalVokisRepository.GetWithQuestionAnswers(command.VokiId, ct);
         if (voki is null) {
@@ -51,7 +51,7 @@ internal sealed class StartVokiTakingCommandHandler :
         if (voki.CheckUserAccessToTake(vokiTakerCtx).IsErr(out var err)) {
             return err;
         }
-        
+
         BaseVokiTakingSession takingSession;
         if (voki.ForceSequentialAnswering) {
             takingSession = SessionWithSequentialAnswering.Create(
@@ -106,11 +106,9 @@ public record VokiTakingQuestionData(
     GeneralVokiQuestionId Id,
     string Text,
     VokiQuestionImagesSet ImagesSet,
-    GeneralVokiAnswerType AnswerType,
     ushort OrderInVokiTaking,
     ushort MinAnswersCount,
-    ushort MaxAnswersCount,
-    VokiQuestionAnswer[] Answers
+    ushort MaxAnswersCount
 )
 {
     public static VokiTakingQuestionData Create(
@@ -119,10 +117,8 @@ public record VokiTakingQuestionData(
         question.Id,
         question.Text,
         question.ImageSet,
-        question.AnswersType,
         orderInVokiTaking,
         question.AnswersCountLimit.MinAnswers,
-        question.AnswersCountLimit.MaxAnswers,
-        question.Answers.ToArray()
+        question.AnswersCountLimit.MaxAnswers
     );
 }

@@ -46,7 +46,8 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
     }
 
     private static bool CheckIfVokiHasAnyAudios(GeneralVokiPublishedIntegrationEvent v) {
-        bool anyAudioAnswers = v.Questions.Any(q => q.AnswersType.HasAudio());
-        return anyAudioAnswers;
+        throw new();
+        // bool anyAudioAnswers = v.Questions.Any(q => q.AnswersType.HasAudio());
+        // return anyAudioAnswers;
     }
 }

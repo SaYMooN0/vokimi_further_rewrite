@@ -1,6 +1,7 @@
 ﻿using GeneralVokiTakingService.Domain.common.dtos;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.answers;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.exceptions;
 using VokimiStorageKeysLib.base_keys;
@@ -61,16 +62,12 @@ public sealed class GeneralVoki : BaseVoki
     ) {
         List<BaseStorageKey> keys = results
             .Select(r => r.Image)
-            .OfType<BaseStorageKey>() //skipping nulls and casting
+            .OfType<BaseStorageKey>() //skipping nulls and casting to non-nullable
             .ToList();
 
         foreach (var question in questions) {
             keys.AddRange(question.ImageSet.Keys.Select(k => k as BaseStorageKey));
-            var answerKeys = question.Answers
-                .Select(a => a.TypeData)
-                .OfType<IVokiAnswerTypeDataWithStorageKey>()
-                .Select(data => data.Key);
-            keys.AddRange(answerKeys);
+            keys.AddRange(question.Content.GatherContentKeys());
         }
 
         keys.Add(coverKey);
@@ -103,34 +100,22 @@ public sealed class GeneralVoki : BaseVoki
                 || provided is null
                 || provided.Count == 0
             ) {
-                var preview = string.IsNullOrEmpty(q.Text)
-                    ? ""
-                    : (q.Text.Length < 30 ? q.Text : q.Text.Substring(0, 25) + " ...");
-                var min = q.AnswersCountLimit.MinAnswers;
-                var max = q.AnswersCountLimit.MaxAnswers;
-                var expectedText = (min == max) ? $"exactly {min} answer(s)" : $"from {min} to {max} answers";
                 return ErrFactory.NoValue.Common(
-                    $"You did not answer the question: \"{preview}\". Choose {expectedText}");
+                    $"You did not answer the question: \"{q.Preview()}\". {q.ChooseExpectedNumberOfAnswersText()}"
+                );
             }
 
             var count = provided.Count;
             if (count < q.AnswersCountLimit.MinAnswers || count > q.AnswersCountLimit.MaxAnswers) {
-                var preview = string.IsNullOrEmpty(q.Text)
-                    ? ""
-                    : (q.Text.Length < 30 ? q.Text : q.Text.Substring(0, 25) + " ...");
-                var min = q.AnswersCountLimit.MinAnswers;
-                var max = q.AnswersCountLimit.MaxAnswers;
-                var expectedText = (min == max) ? $"exactly {min} answer(s)" : $"from {min} to {max} answers";
-                return ErrFactory.ValueOutOfRange($"Incorrect answers count for \"{preview}\". Choose {expectedText}");
+                return ErrFactory.ValueOutOfRange(
+                    $"Incorrect answers count for \"{q.Preview()}\". {q.ChooseExpectedNumberOfAnswersText()}"
+                );
             }
 
-            var allowedIds = q.Answers.Select(a => a.Id).ToImmutableHashSet();
-            if (!provided.IsSubsetOf(allowedIds)) {
-                var preview = string.IsNullOrEmpty(q.Text)
-                    ? ""
-                    : (q.Text.Length < 30 ? q.Text : q.Text.Substring(0, 25) + " ...");
+            if (!provided.IsSubsetOf(q.Content.AnswerIds)) {
                 return ErrFactory.IncorrectFormat(
-                    $"Your selection includes an option that is not available for \"{preview}\". Please select only from the shown options");
+                    $"Your selection includes an option that is not available for \"{q.Preview()}\". Please select only from the shown options"
+                );
             }
         }
 
@@ -138,7 +123,7 @@ public sealed class GeneralVoki : BaseVoki
         foreach (var q in Questions) {
             ImmutableHashSet<GeneralVokiAnswerId> answersForQuestion = chosenAnswers[q.Id];
 
-            var answersById = q.Answers.ToDictionary(a => a.Id);
+            ImmutableDictionary<GeneralVokiAnswerId, BaseQuestionAnswer> answersById = q.Content.AnswerByIds;
             foreach (var ansId in answersForQuestion) {
                 foreach (var resultId in answersById[ansId].RelatedResultIds) {
                     resultsScore[resultId] = resultsScore.GetValueOrDefault(resultId, 0) + 1;

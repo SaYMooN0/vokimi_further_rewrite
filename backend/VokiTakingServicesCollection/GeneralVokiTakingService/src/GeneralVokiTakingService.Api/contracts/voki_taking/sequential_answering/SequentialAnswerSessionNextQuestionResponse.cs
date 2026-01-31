@@ -8,11 +8,9 @@ public record class SequentialAnswerSessionNextQuestionResponse(
     string Text,
     string[] ImageKeys,
     double ImagesAspectRatio,
-    GeneralVokiAnswerType AnswerType,
     ushort OrderInVokiTaking,
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
-    GeneralVokiTakingResponseAnswerData[] Answers,
     DateTime ServerShownAt
 ) : ICreatableResponse<AnswerQuestionInSequentialAnsweringVokiTakingCommandResult>
 {
@@ -23,11 +21,9 @@ public record class SequentialAnswerSessionNextQuestionResponse(
         commandRes.Text,
         commandRes.ImagesSet.Keys.Select(k => k.ToString()).ToArray(),
         commandRes.ImagesSet.AspectRatio,
-        commandRes.AnswerType,
         commandRes.OrderInVokiTaking,
         commandRes.MinAnswersCount,
         commandRes.MaxAnswersCount,
-        commandRes.Answers.Select(GeneralVokiTakingResponseAnswerData.Create).ToArray(),
         ServerShownAt: commandRes.CurrentTime
     );
 }

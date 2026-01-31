@@ -1,15 +1,13 @@
 ﻿using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.answers;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.answers.type_specific_data;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.content;
 using MassTransit;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.integration_events.voki_publishing;
 using VokimiStorageKeysLib.concrete_keys;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
-using static SharedKernel.integration_events.voki_publishing.GeneralVokiAnswerTypeDataIntegrationEventDto;
 
 namespace GeneralVokiTakingService.Application.general_vokis.integration_event_handlers;
 
@@ -49,49 +47,18 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
     private static VokiQuestion QuestionFromEventDto(GeneralVokiQuestionIntegrationEventDto q) => new(
         q.Id, q.Text,
         ImageSetFromEventDto(q.Images, q.ImagesAspectRatio),
-        q.AnswersType, q.OrderInVoki,
-        q.Answers.Select(a => AnswerFromEventDto(a, q.AnswersType)).ToImmutableArray(),
-        q.ShuffleAnswers,
-        new QuestionAnswersCountLimit(minAnswers: q.MinAnswersCount, maxAnswers: q.MaxAnswersCount)
+        q.OrderInVoki, q.ShuffleAnswers,
+        new QuestionAnswersCountLimit(minAnswers: q.MinAnswersCount, maxAnswers: q.MaxAnswersCount),
+        QuestionContentFromEventDto(q.Content)
     );
 
     private static VokiQuestionImagesSet ImageSetFromEventDto(string[] images, double aspectRatio) =>
         new(images.Select(key => new GeneralVokiQuestionImageKey(key)).ToImmutableArray(), aspectRatio);
 
-    private static VokiQuestionAnswer AnswerFromEventDto(
-        GeneralVokiAnswerIntegrationEventDto a,
-        GeneralVokiAnswerType type
-    ) => new(
-        a.Id, a.OrderInQuestion,
-        ParseAnswerTypeDataFromDto(type, a.TypeData.Fields),
-        a.RelatedResultIds.ToImmutableHashSet()
-    );
+    private static GeneralVokiQuestionContent QuestionContentFromEventDto(
+        IQuestionContentIntegrationEventDto content
+    ) => content switch {
+        _ => throw new()
+    };
 
-    private static BaseVokiAnswerTypeData ParseAnswerTypeDataFromDto(
-        GeneralVokiAnswerType type, Dictionary<string, string> f
-    ) => type.Match(
-        textOnly: () => GeneralVokiAnswerText
-            .Create(f[Keys.Text])
-            .Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.TextOnly(text)),
-        imageOnly: () => new BaseVokiAnswerTypeData.ImageOnly(new(f[Keys.Image])),
-        imageAndText: () => GeneralVokiAnswerText
-            .Create(f[Keys.Text])
-            .Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.ImageAndText(
-                text, new GeneralVokiAnswerImageKey(f[Keys.Image])
-            )),
-        colorOnly: () => HexColor
-            .Create(f[Keys.Color])
-            .Bind<BaseVokiAnswerTypeData>(color => new BaseVokiAnswerTypeData.ColorOnly(color)),
-        colorAndText: () => GeneralVokiAnswerText
-            .Create(f[Keys.Text])
-            .Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.ColorAndText(
-                text, new HexColor(f[Keys.Color])
-            )),
-        audioOnly: () => new BaseVokiAnswerTypeData.AudioOnly(new(f[Keys.Audio])),
-        audioAndText: () => GeneralVokiAnswerText
-            .Create(f[Keys.Text])
-            .Bind<BaseVokiAnswerTypeData>(text => new BaseVokiAnswerTypeData.AudioAndText(
-                text, new GeneralVokiAnswerAudioKey(f[Keys.Audio])
-            ))
-    ).AsSuccess();
 }

@@ -39,7 +39,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
                 OrderInVokiTaking: i,
                 question.AnswersCountLimit.MinAnswers,
                 question.AnswersCountLimit.MaxAnswers,
-                question.Answers.Select(a => a.Id).ToImmutableHashSet()
+                question.Content.AnswerIds.ToImmutableHashSet()
             ));
         }
 
