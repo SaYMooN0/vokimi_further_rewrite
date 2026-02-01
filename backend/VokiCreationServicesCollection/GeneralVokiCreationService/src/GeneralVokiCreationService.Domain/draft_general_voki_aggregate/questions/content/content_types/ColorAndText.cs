@@ -10,7 +10,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
         QuestionAnswersList<BaseQuestionAnswer.ColorAndText> Answers
     ) : BaseQuestionTypeSpecificContent
     {
-        public override GeneralVokiAnswerType AnswersType => GeneralVokiAnswerType.ColorAndText;
+        public override GeneralVokiQuestionContentType Type => GeneralVokiQuestionContentType.ColorAndText;
         public override IEnumerable<BaseQuestionAnswer> BaseAnswers => Answers.AsIEnumerable;
 
 

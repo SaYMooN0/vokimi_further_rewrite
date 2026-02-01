@@ -7,7 +7,7 @@ public class UpdateImageOnlyQuestionContentRequest : IUpdateQuestionContentReque
     public Answer[] Answers { get; init; } = [];
 
     public sealed record Answer(
-        string ImageKey,
+        string Image,
         ushort Order,
         string[] RelatedResultIds
     ) : IUpdateQuestionContentRequestAnswer;
@@ -21,11 +21,11 @@ public class UpdateImageOnlyQuestionContentRequest : IUpdateQuestionContentReque
             .ParseAnswers<ImageOnlyUnsavedQuestionContentDto.Answer, Answer>(
                 Answers,
                 createParsed: (answer, order, results) => {
-                    if (string.IsNullOrWhiteSpace(answer.ImageKey)) {
+                    if (string.IsNullOrWhiteSpace(answer.Image)) {
                         return ErrFactory.NoValue.Common($"Image key is required for answer {order.Value}");
                     }
 
-                    return new ImageOnlyUnsavedQuestionContentDto.Answer(answer.ImageKey, order, results);
+                    return new ImageOnlyUnsavedQuestionContentDto.Answer(answer.Image, order, results);
                 }
             );
         if (answersParseRes.IsErr(out err)) {

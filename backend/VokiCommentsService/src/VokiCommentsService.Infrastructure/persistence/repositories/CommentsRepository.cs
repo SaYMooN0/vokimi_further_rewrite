@@ -15,7 +15,6 @@ internal class CommentsRepository : ICommentsRepository
         AuthenticatedUserCtx aUserCtx, CancellationToken ct
     ) => Task.FromResult<VokiIdWithLastCommentedDateDto[]>([]);
     // _db.Comments
-    // .AsNoTracking()
     // .Where(r => r.UserId == userId)
     // .Select(r => new VokiIdWithLastCommentedDateDto(r.VokiId, r.DateTime))
     // .OrderByDescending(r => r.Date)

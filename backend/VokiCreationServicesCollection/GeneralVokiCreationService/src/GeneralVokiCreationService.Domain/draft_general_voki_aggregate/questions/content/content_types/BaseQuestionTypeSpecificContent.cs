@@ -6,7 +6,7 @@ namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questio
 
 public abstract partial record BaseQuestionTypeSpecificContent
 {
-    public abstract GeneralVokiAnswerType AnswersType { get; }
+    public abstract GeneralVokiQuestionContentType Type { get; }
     public abstract IEnumerable<BaseQuestionAnswer> BaseAnswers { get; }
 
     [Pure]
@@ -31,7 +31,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
         _ => throw new SwitchExpressionException(this)
     };
 
-    public static BaseQuestionTypeSpecificContent CreateEmpty(GeneralVokiAnswerType t) =>
+    public static BaseQuestionTypeSpecificContent CreateEmpty(GeneralVokiQuestionContentType t) =>
         t.Match<BaseQuestionTypeSpecificContent>(
             textOnly: TextOnly.Empty,
             imageOnly: ImageOnly.Empty,

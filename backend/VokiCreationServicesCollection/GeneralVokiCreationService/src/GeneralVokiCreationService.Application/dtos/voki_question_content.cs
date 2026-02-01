@@ -5,13 +5,13 @@ using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiCreationService.Application.dtos;
 
-[JsonDerivedType(typeof(TextOnlyQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiAnswerType.TextOnly))]
-[JsonDerivedType(typeof(ImageOnlyQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiAnswerType.ImageOnly))]
-[JsonDerivedType(typeof(ImageAndTextQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiAnswerType.ImageAndText))]
-[JsonDerivedType(typeof(ColorOnlyQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiAnswerType.ColorOnly))]
-[JsonDerivedType(typeof(ColorAndTextQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiAnswerType.ColorAndText))]
-[JsonDerivedType(typeof(AudioOnlyQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiAnswerType.AudioOnly))]
-[JsonDerivedType(typeof(AudioAndTextQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiAnswerType.AudioAndText))]
+[JsonDerivedType(typeof(TextOnlyQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiQuestionContentType.TextOnly))]
+[JsonDerivedType(typeof(ImageOnlyQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiQuestionContentType.ImageOnly))]
+[JsonDerivedType(typeof(ImageAndTextQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiQuestionContentType.ImageAndText))]
+[JsonDerivedType(typeof(ColorOnlyQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiQuestionContentType.ColorOnly))]
+[JsonDerivedType(typeof(ColorAndTextQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiQuestionContentType.ColorAndText))]
+[JsonDerivedType(typeof(AudioOnlyQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiQuestionContentType.AudioOnly))]
+[JsonDerivedType(typeof(AudioAndTextQuestionContentPrimitiveDto), typeDiscriminator: nameof(GeneralVokiQuestionContentType.AudioAndText))]
 public interface IQuestionContentPrimitiveDto
 {
     [JsonIgnore] public IReadOnlyCollection<IQuestionAnswerPrimitiveDto> BaseAnswers { get; }

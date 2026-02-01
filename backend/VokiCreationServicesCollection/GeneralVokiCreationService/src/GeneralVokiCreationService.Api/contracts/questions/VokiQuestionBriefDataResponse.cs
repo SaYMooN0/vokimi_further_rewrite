@@ -8,7 +8,7 @@ public record class VokiQuestionBriefDataResponse(
     string Id,
     string Text,
     string[] Images,
-    GeneralVokiAnswerType AnswersType,
+    GeneralVokiQuestionContentType ContentType,
     ushort OrderInVoki,
     bool ShuffleAnswers,
     bool IsMultipleChoice
@@ -18,7 +18,7 @@ public record class VokiQuestionBriefDataResponse(
         question.Id.ToString(),
         question.Text.ToString(),
         question.ImageSet.Keys.Select(k => k.ToString()).ToArray(),
-        question.Content.AnswersType,
+        question.Content.Type,
         question.OrderInVoki,
         ShuffleAnswers: question.ShuffleAnswers,
         question.AnswersCountLimit.IsMultipleChoice

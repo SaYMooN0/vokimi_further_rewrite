@@ -7,7 +7,7 @@ public class UpdateAudioOnlyQuestionContentRequest : IUpdateQuestionContentReque
     public Answer[] Answers { get; init; } = [];
 
     public sealed record Answer(
-        string AudioKey,
+        string Audio,
         ushort Order,
         string[] RelatedResultIds
     ) : IUpdateQuestionContentRequestAnswer;
@@ -21,11 +21,11 @@ public class UpdateAudioOnlyQuestionContentRequest : IUpdateQuestionContentReque
             .ParseAnswers<AudioOnlyUnsavedQuestionContentDto.Answer, Answer>(
                 Answers,
                 createParsed: (answer, order, results) => {
-                    if (string.IsNullOrWhiteSpace(answer.AudioKey)) {
+                    if (string.IsNullOrWhiteSpace(answer.Audio)) {
                         return ErrFactory.NoValue.Common($"Audio key is required for answer {order.Value}");
                     }
 
-                    return new AudioOnlyUnsavedQuestionContentDto.Answer(answer.AudioKey, order, results);
+                    return new AudioOnlyUnsavedQuestionContentDto.Answer(answer.Audio, order, results);
                 }
             );
         if (answersParseRes.IsErr(out err)) {

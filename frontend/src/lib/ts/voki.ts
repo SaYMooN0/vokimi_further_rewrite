@@ -3,7 +3,7 @@ import type { Language } from "./language";
 import type { VokiType } from "./voki-type";
 
 
-export type GeneralVokiAnswerType =
+export type GeneralVokiQuestionContentType =
     | "TextOnly"
     | "ImageOnly"
     | "ImageAndText"

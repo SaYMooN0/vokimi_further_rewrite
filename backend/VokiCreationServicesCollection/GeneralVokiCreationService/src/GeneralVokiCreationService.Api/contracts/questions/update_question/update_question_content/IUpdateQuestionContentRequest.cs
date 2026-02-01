@@ -6,13 +6,13 @@ using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiCreationService.Api.contracts.questions.update_question.update_question_content;
 
-[JsonDerivedType(typeof(UpdateTextOnlyQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiAnswerType.TextOnly))]
-[JsonDerivedType(typeof(UpdateImageOnlyQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiAnswerType.ImageOnly))]
-[JsonDerivedType(typeof(UpdateImageAndTextQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiAnswerType.ImageAndText))]
-[JsonDerivedType(typeof(UpdateColorOnlyQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiAnswerType.ColorOnly))]
-[JsonDerivedType(typeof(UpdateColorAndTextQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiAnswerType.ColorAndText))]
-[JsonDerivedType(typeof(UpdateAudioOnlyQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiAnswerType.AudioOnly))]
-[JsonDerivedType(typeof(UpdateAudioAndTextQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiAnswerType.AudioAndText))]
+[JsonDerivedType(typeof(UpdateTextOnlyQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiQuestionContentType.TextOnly))]
+[JsonDerivedType(typeof(UpdateImageOnlyQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiQuestionContentType.ImageOnly))]
+[JsonDerivedType(typeof(UpdateImageAndTextQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiQuestionContentType.ImageAndText))]
+[JsonDerivedType(typeof(UpdateColorOnlyQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiQuestionContentType.ColorOnly))]
+[JsonDerivedType(typeof(UpdateColorAndTextQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiQuestionContentType.ColorAndText))]
+[JsonDerivedType(typeof(UpdateAudioOnlyQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiQuestionContentType.AudioOnly))]
+[JsonDerivedType(typeof(UpdateAudioAndTextQuestionContentRequest), typeDiscriminator: nameof(GeneralVokiQuestionContentType.AudioAndText))]
 public interface IUpdateQuestionContentRequest : IRequestWithValidationNeeded
 {
     public BaseUnsavedQuestionContentDto ValidatedContent { get; }

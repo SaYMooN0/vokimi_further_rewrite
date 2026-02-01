@@ -9,7 +9,9 @@ public record class VokiQuestionsOverviewResponse(
     int MaxVokiQuestionsCount
 ) : ICreatableResponse<GetVokiQuestionsOverviewQueryResult>
 {
-    public static ICreatableResponse<GetVokiQuestionsOverviewQueryResult> Create(GetVokiQuestionsOverviewQueryResult voki) =>
+    public static ICreatableResponse<GetVokiQuestionsOverviewQueryResult> Create(
+        GetVokiQuestionsOverviewQueryResult voki
+    ) =>
         new VokiQuestionsOverviewResponse(
             voki.Questions
                 .Select(VokiQuestionBriefDataResponse.Create)

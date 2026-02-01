@@ -10,17 +10,11 @@
 
 	interface Props {
 		answer: AnswerDataImageAndText;
-		updateOnChange: (newAnswer: AnswerDataImageAndText) => void;
+		onTextChange: (newText: string) => void;
+		onImageChange: (newImage: string) => void;
 	}
-	let { answer, updateOnChange }: Props = $props();
-	let text = $state(answer.text);
-	let image = $state(answer.image);
-	watch(
-		() => [text, image],
-		() => {
-			updateOnChange({ ...answer, text, image });
-		}
-	);
+	let { answer, onTextChange, onImageChange }: Props = $props();
+
 	let uploadingErrs = $state<Err[]>([]);
 	let isLoading = $state(false);
 
@@ -41,7 +35,7 @@
 		formData.append('file', file);
 		const response = await StorageBucketMain.uploadTempImage(file);
 		if (response.isSuccess) {
-			image = response.data;
+			onImageChange(response.data);
 		} else {
 			uploadingErrs = response.errs;
 		}
@@ -51,12 +45,12 @@
 
 <div class="answer-content">
 	<div class="main">
-		<AnswerEditingTextArea bind:text />
+		<AnswerEditingTextArea bind:text={() => answer.text, onTextChange} />
 		<div class="image-part">
 			{#if isLoading}
 				<CubesLoader sizeRem={4} color="var(--primary)" />
-			{:else if image}
-				<GeneralVokiCreationAnswerDisplayImage src={image} maxWidth={20} />
+			{:else if answer.image}
+				<GeneralVokiCreationAnswerDisplayImage src={answer.image} maxWidth={20} />
 				<label class="img-button unselectable">
 					<span>Change image</span>
 					<input type="file" accept="image/*" onchange={handleInputChange} hidden />

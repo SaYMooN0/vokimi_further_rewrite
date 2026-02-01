@@ -5,23 +5,16 @@
 	import AnswerEditingBasicColorInput from './_c_shared/AnswerEditingBasicColorInput.svelte';
 	interface Props {
 		answer: AnswerDataColorOnly;
-		updateOnChange: (newAnswer: AnswerDataColorOnly) => void;
+		onColorChange: (newColor: string) => void;
 	}
-	let { answer, updateOnChange }: Props = $props();
-	let color = $state(answer.color);
-	watch(
-		() => color,
-		() => {
-			updateOnChange({ ...answer, color });
-		}
-	);
+	let { answer, onColorChange }: Props = $props();
 
 	function normalizeForShades(v: string): string {
 		let t = (v ?? '').trim();
 		if (!t.startsWith('#')) t = '#' + t;
 		return ColorUtils.isHex6(t) ? t.toUpperCase() : '#000000';
 	}
-	let base = $derived(normalizeForShades(color));
+	let base = $derived(normalizeForShades(answer.color));
 	let shades = $derived([
 		ColorUtils.adjustLightness(base, +21),
 		ColorUtils.adjustLightness(base, +14),
@@ -34,12 +27,10 @@
 </script>
 
 <div class="answer-content">
-	<AnswerEditingBasicColorInput bind:color />
+	<AnswerEditingBasicColorInput bind:color={() => answer.color, onColorChange} />
 	<div class="shades">
 		{#each shades as shade}
-			<div class="shade" style="
-
---shade:{shade}" onclick={() => (color = shade)}></div>
+			<div class="shade" style="--shade:{shade}" onclick={() => onColorChange(shade)}></div>
 		{/each}
 	</div>
 	<div class="divider"></div>
@@ -47,9 +38,7 @@
 		Choose from presets
 		<div class="presets-list">
 			{#each ColorUtils.colorPresets as p}
-				<div class="preset" style="
-
---preset:{p}" onclick={() => (color = p)}></div>
+				<div class="preset" style="--preset:{p}" onclick={() => onColorChange(p)}></div>
 			{/each}
 		</div>
 	</div>

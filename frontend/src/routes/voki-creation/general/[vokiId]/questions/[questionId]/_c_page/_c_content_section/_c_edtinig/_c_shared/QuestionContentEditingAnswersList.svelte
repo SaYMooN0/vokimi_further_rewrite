@@ -6,11 +6,10 @@
 	import SingleAnswerWrapper from '../../_c_shared/SingleAnswerWrapper.svelte';
 	import VokiCreationDefaultButton from '../../../../../../../../_c_shared/VokiCreationDefaultButton.svelte';
 	import QuestionContentNoAnswersMessage from '../../_c_shared/QuestionContentNoAnswersMessage.svelte';
-	import { StringUtils } from '$lib/ts/utils/string-utils';
 
 	interface Props {
 		answers: T[];
-		answerMainContent: Snippet<[T, (newAnswer: T) => void, string]>;
+		answerMainContent: Snippet<[() => T]>;
 		maxAnswersForQuestionCount: number;
 		addNewAnswer: () => void;
 		resultsIdToNameState: QuestionPageResultsState;
@@ -50,8 +49,7 @@
 	<button onclick={addNewAnswer} class="add-new-answer-btn">Add first answer</button>
 {:else}
 	<div class="answer-list">
-		{#each answers as answer, answerKey}
-			{JSON.stringify(answer)}
+		{#each answers as answer}
 			<SingleAnswerWrapper
 				resultsIdToName={resultsIdToNameState}
 				answerRelatedResultsCount={answer.relatedResultIds.length}
@@ -68,19 +66,18 @@
 					/>
 				{/snippet}
 				{#snippet answerContentSnippet()}
-					<div class="answer-content-grid">
-						{@render answerMainContent(
-							answer,
-							(newAnswer) => {
-								answers[answerKey] = newAnswer;
-							},
-							`${12}`
-						)}
-						<button class="delete-answer-btn" onclick={() => removeAnswer(answer)}>
-							<div class="hint">Delete this answer</div>
-							<svg><use href="#common-trash-can-icon" /></svg>
-						</button>
-					</div>
+					{#key answer.order}
+						<div
+							class="answer-content-grid"
+							{@attach () => console.log('rerender: ', answer.order)}
+						>
+							{@render answerMainContent(() => answer)}
+							<button class="delete-answer-btn" onclick={() => removeAnswer(answer)}>
+								<div class="hint">Delete this answer</div>
+								<svg><use href="#common-trash-can-icon" /></svg>
+							</button>
+						</div>
+					{/key}
 				{/snippet}
 			</SingleAnswerWrapper>
 		{/each}

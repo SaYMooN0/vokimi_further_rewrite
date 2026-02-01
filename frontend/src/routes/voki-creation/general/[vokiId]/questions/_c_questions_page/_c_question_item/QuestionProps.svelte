@@ -1,12 +1,16 @@
 <script lang="ts">
 	import type { QuestionBriefInfo } from '../../types';
 
-	const { question }: { question: QuestionBriefInfo } = $props<{
+	interface Props {
 		question: QuestionBriefInfo;
-	}>();
+	}
+	const { question }: Props = $props();
 </script>
 
 <div class="props">
+	<div class="property">
+		{question.contentType}
+	</div>
 	<div class="property">
 		{#if question.images.length == 0}
 			<svg><use href="#no-image-icon" /></svg>

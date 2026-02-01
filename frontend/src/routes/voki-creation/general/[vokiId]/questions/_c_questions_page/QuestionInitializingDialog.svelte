@@ -5,13 +5,13 @@
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
-	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
-	import AnswersTypeSelectionCard from './_c_initializing_dialog/AnswersTypeSelectionCard.svelte';
+	import type { GeneralVokiQuestionContentType } from '$lib/ts/voki';
 	import { RJO } from '$lib/ts/backend-communication/backend-services';
+	import QuestionContentTypeSelectionCard from './_c_initializing_dialog/QuestionContentTypeSelectionCard.svelte';
 
 	const { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	let dialog = $state<DialogWithCloseButton>()!;
-	let selectedAnswersType = $state<GeneralVokiAnswerType>('TextOnly');
+	let selectedType = $state<GeneralVokiQuestionContentType>('TextOnly');
 	let errs: Err[] = $state([]);
 
 	export function open() {
@@ -21,7 +21,7 @@
 	async function submitCreate() {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ id: string }>(
 			`/vokis/${vokiId}/questions/add-new`,
-			RJO.POST({ questionAnswersType: selectedAnswersType })
+			RJO.POST({ questionContentType: selectedType })
 		);
 		if (response.isSuccess) {
 			goto(`/voki-creation/general/${vokiId}/questions/${response.data.id}`);
@@ -34,16 +34,16 @@
 <DialogWithCloseButton
 	dialogId="general-voki-question-initializing-dialog"
 	bind:this={dialog}
-	subheading="Choose new answers type for the new question"
+	subheading="Choose answers type of the new question"
 >
 	<div class="types-container">
 		<div class="type-subset-column">
 			<svg><use href="#text-general-voki-answer-type-icon" /></svg>
 			<div class="subset-container">
-				<AnswersTypeSelectionCard
+				<QuestionContentTypeSelectionCard
 					label="Text only"
-					isSelected={selectedAnswersType === 'TextOnly'}
-					onClick={() => (selectedAnswersType = 'TextOnly')}
+					isSelected={selectedType === 'TextOnly'}
+					onClick={() => (selectedType = 'TextOnly')}
 				/>
 			</div>
 		</div>
@@ -53,15 +53,15 @@
 		<div class="type-subset-column">
 			<svg><use href="#color-general-voki-answer-type-icon" /></svg>
 			<div class="subset-container">
-				<AnswersTypeSelectionCard
+				<QuestionContentTypeSelectionCard
 					label="Color only"
-					isSelected={selectedAnswersType === 'ColorOnly'}
-					onClick={() => (selectedAnswersType = 'ColorOnly')}
+					isSelected={selectedType === 'ColorOnly'}
+					onClick={() => (selectedType = 'ColorOnly')}
 				/>
-				<AnswersTypeSelectionCard
+				<QuestionContentTypeSelectionCard
 					label="Color and Text"
-					isSelected={selectedAnswersType === 'ColorAndText'}
-					onClick={() => (selectedAnswersType = 'ColorAndText')}
+					isSelected={selectedType === 'ColorAndText'}
+					onClick={() => (selectedType = 'ColorAndText')}
 				/>
 			</div>
 		</div>
@@ -71,15 +71,15 @@
 		<div class="type-subset-column">
 			<svg><use href="#image-general-voki-answer-type-icon" /></svg>
 			<div class="subset-container">
-				<AnswersTypeSelectionCard
+				<QuestionContentTypeSelectionCard
 					label="Image only"
-					isSelected={selectedAnswersType === 'ImageOnly'}
-					onClick={() => (selectedAnswersType = 'ImageOnly')}
+					isSelected={selectedType === 'ImageOnly'}
+					onClick={() => (selectedType = 'ImageOnly')}
 				/>
-				<AnswersTypeSelectionCard
+				<QuestionContentTypeSelectionCard
 					label="Image and Text"
-					isSelected={selectedAnswersType === 'ImageAndText'}
-					onClick={() => (selectedAnswersType = 'ImageAndText')}
+					isSelected={selectedType === 'ImageAndText'}
+					onClick={() => (selectedType = 'ImageAndText')}
 				/>
 			</div>
 		</div>
@@ -89,15 +89,15 @@
 		<div class="type-subset-column">
 			<svg><use href="#audio-general-voki-answer-type-icon" /></svg>
 			<div class="subset-container">
-				<AnswersTypeSelectionCard
+				<QuestionContentTypeSelectionCard
 					label="Audio only"
-					isSelected={selectedAnswersType === 'AudioOnly'}
-					onClick={() => (selectedAnswersType = 'AudioOnly')}
+					isSelected={selectedType === 'AudioOnly'}
+					onClick={() => (selectedType = 'AudioOnly')}
 				/>
-				<AnswersTypeSelectionCard
+				<QuestionContentTypeSelectionCard
 					label="Audio and Text"
-					isSelected={selectedAnswersType === 'AudioAndText'}
-					onClick={() => (selectedAnswersType = 'AudioAndText')}
+					isSelected={selectedType === 'AudioAndText'}
+					onClick={() => (selectedType = 'AudioAndText')}
 				/>
 			</div>
 		</div>

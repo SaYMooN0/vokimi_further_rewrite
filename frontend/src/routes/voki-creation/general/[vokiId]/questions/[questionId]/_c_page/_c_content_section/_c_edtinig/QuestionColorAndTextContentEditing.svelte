@@ -31,11 +31,12 @@
 	}
 </script>
 
-{#snippet answerMainContent(
-	answer: AnswerDataColorAndText,
-	updateOnChange: (newAnswer: AnswerDataColorAndText) => void
-)}
-	<ColorAndTextAnswerEditing {answer} {updateOnChange} />
+{#snippet answerMainContent(getAnswer: () => AnswerDataColorAndText)}
+	<ColorAndTextAnswerEditing
+		answer={getAnswer()}
+		onTextChange={(newText) => (getAnswer().text = newText)}
+		onColorChange={(newColor) => (getAnswer().color = newColor)}
+	/>
 {/snippet}
 <div class="question-content">
 	<QuestionContentEditingAnswersList

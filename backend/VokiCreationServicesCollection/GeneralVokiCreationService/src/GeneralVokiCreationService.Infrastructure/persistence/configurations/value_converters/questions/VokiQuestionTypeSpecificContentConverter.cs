@@ -29,21 +29,21 @@ public sealed class VokiQuestionTypeSpecificContentConverter
     };
 
     private static string ToString(BaseQuestionTypeSpecificContent content) {
-        var type = content.AnswersType;
+        var type = content.Type;
         var json = JsonSerializer.Serialize(IQuestionContentPrimitiveDto.FromQuestionContent(content), JsonOpts);
         return $"{type}{TypeAndJsonDivider}{json}";
     }
 
     private static BaseQuestionTypeSpecificContent FromString(string value) {
         var parts = value.Split(TypeAndJsonDivider, 2);
-        var type = Enum.Parse<GeneralVokiAnswerType>(parts[0]);
+        var type = Enum.Parse<GeneralVokiQuestionContentType>(parts[0]);
         var json = parts[1];
         return FromDbStore(type, json);
     }
 
 
     private static BaseQuestionTypeSpecificContent FromDbStore(
-        GeneralVokiAnswerType type,
+        GeneralVokiQuestionContentType type,
         string json
     ) => type.Match<BaseQuestionTypeSpecificContent>(
         textOnly: () => {

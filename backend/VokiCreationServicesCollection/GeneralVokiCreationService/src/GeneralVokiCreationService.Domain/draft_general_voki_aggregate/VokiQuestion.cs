@@ -24,24 +24,24 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         VokiQuestionText text,
         VokiQuestionImagesSet imageSet,
         ushort orderInVoki,
-        GeneralVokiAnswerType answersType,
+        GeneralVokiQuestionContentType contentType,
         QuestionAnswersCountLimit answersCountLimit
     ) {
         Id = id;
         Text = text;
         ImageSet = imageSet;
-        Content = BaseQuestionTypeSpecificContent.CreateEmpty(answersType);
+        Content = BaseQuestionTypeSpecificContent.CreateEmpty(contentType);
         OrderInVoki = orderInVoki;
         AnswersCountLimit = answersCountLimit;
         ShuffleAnswers = false;
     }
 
-    public static VokiQuestion CreateNew(ushort orderInVoki, GeneralVokiAnswerType answersType) => new(
+    public static VokiQuestion CreateNew(ushort orderInVoki, GeneralVokiQuestionContentType contentType) => new(
         GeneralVokiQuestionId.CreateNew(),
         GeneralVokiPresets.GetRandomQuestionText(),
         VokiQuestionImagesSet.Default,
         orderInVoki,
-        answersType,
+        contentType,
         QuestionAnswersCountLimit.SingleChoice()
     );
 
@@ -71,7 +71,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
 
     public ErrOrNothing UpdateAnswerSettings(QuestionAnswersCountLimit newCountLimit, bool shuffleAnswers) {
         if (newCountLimit.MaxAnswers > MaxAnswersCount) {
-                return ErrFactory.LimitExceeded($"Maximum answers count cannot be greater than {MaxAnswersCount}");
+            return ErrFactory.LimitExceeded($"Maximum answers count cannot be greater than {MaxAnswersCount}");
         }
 
         AnswersCountLimit = newCountLimit;
@@ -87,56 +87,56 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         string preview = questionText.Length > 15
             ? questionText[..15] + "..."
             : questionText;
-
-        if (Content.BaseAnswers.Count() < MinAnswersCount) {
+        var answersCount = Content.BaseAnswers.Count();
+        if (answersCount < MinAnswersCount) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
-                    $"[\"{preview}\"] question has too few answers ({Content.BaseAnswers.Count()}). Minimum required is {MinAnswersCount}",
+                    $"[\"{preview}\"] question has too few answers ({answersCount}). Minimum required is {MinAnswersCount}",
                     source: "Question answers",
-                    fixRecommendation: $"Add at least {MinAnswersCount - Content.BaseAnswers.Count()} more answer(s)"
+                    fixRecommendation: $"Add at least {MinAnswersCount - answersCount} more answer(s)"
                 )
             ];
         }
 
-        if (Content.BaseAnswers.Count() > MaxAnswersCount) {
+        if (answersCount > MaxAnswersCount) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
-                    $"[\"{preview}\"] question has too many answers ({Content.BaseAnswers.Count()}). Maximum allowed is {MaxAnswersCount}",
+                    $"[\"{preview}\"] question has too many answers ({answersCount}). Maximum allowed is {MaxAnswersCount}",
                     source: "Question answers",
-                    fixRecommendation: $"Remove {Content.BaseAnswers.Count() - MaxAnswersCount} answer(s) to meet the limit"
+                    fixRecommendation: $"Remove {answersCount - MaxAnswersCount} answer(s) to meet the limit"
                 )
             ];
         }
 
-        if (Content.BaseAnswers.Count() < AnswersCountLimit.MinAnswers) {
+        if (answersCount < AnswersCountLimit.MinAnswers) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
                     $"[\"{preview}\"] question's answer count is below the configured minimum ({AnswersCountLimit.MinAnswers})",
                     source: "Question answers",
                     fixRecommendation:
-                    $"Decrease the minimum limit or add at least {AnswersCountLimit.MinAnswers - Content.BaseAnswers.Count()} more answer(s)"
+                    $"Decrease the minimum limit or add at least {AnswersCountLimit.MinAnswers - answersCount} more answer(s)"
                 )
             ];
         }
 
-        if (Content.BaseAnswers.Count() < AnswersCountLimit.MaxAnswers) {
+        if (answersCount < AnswersCountLimit.MaxAnswers) {
             return [
                 VokiPublishingIssue.Problem(
                     message:
                     $"[\"{preview}\"] question's answer count is below the configured maximum({AnswersCountLimit.MaxAnswers})",
                     source: "Question answers",
                     fixRecommendation:
-                    $"Decrease the maximum limit or add at least {AnswersCountLimit.MaxAnswers - Content.BaseAnswers.Count()} answer(s)"
+                    $"Decrease the maximum limit or add at least {AnswersCountLimit.MaxAnswers - answersCount} answer(s)"
                 )
             ];
         }
 
         if (
             AnswersCountLimit.MinAnswers == AnswersCountLimit.MaxAnswers
-            && Content.BaseAnswers.Count() == AnswersCountLimit.MinAnswers
+            && answersCount == AnswersCountLimit.MinAnswers
         ) {
             return [
                 VokiPublishingIssue.Problem(

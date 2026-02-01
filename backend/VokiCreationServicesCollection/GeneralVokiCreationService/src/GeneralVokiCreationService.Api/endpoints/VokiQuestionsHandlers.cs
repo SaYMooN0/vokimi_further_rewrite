@@ -35,7 +35,7 @@ internal class VokiQuestionsHandlers : IEndpointGroup
         VokiId id = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<AddNewQuestionToVokiRequest>();
 
-        AddNewQuestionToVokiCommand command = new(id, request.QuestionAnswersType);
+        AddNewQuestionToVokiCommand command = new(id, request.QuestionContentType);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOr(result, (questionId) => Results.Json(

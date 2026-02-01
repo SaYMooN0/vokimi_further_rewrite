@@ -90,20 +90,20 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return ErrFactory.NoAccess("To access Voki results user must have access to Voki");
     }
 
-    public ErrOr<GeneralVokiQuestionId> AddNewQuestion(AuthenticatedUserCtx aUserCtx, GeneralVokiAnswerType answersType) {
+    public ErrOr<GeneralVokiQuestionId> AddNewQuestion(AuthenticatedUserCtx aUserCtx, GeneralVokiQuestionContentType contentType) {
         if (!HasUserAccess(aUserCtx)) {
             return ErrFactory.NoAccess("To modify Voki you must be its author");
         }
 
-        GeneralVokiAnswerType[] supportedTyped = [
-            GeneralVokiAnswerType.TextOnly,
-            GeneralVokiAnswerType.ColorOnly,
-            GeneralVokiAnswerType.ColorAndText,
-            GeneralVokiAnswerType.ImageOnly,
-            GeneralVokiAnswerType.ImageAndText,
+        GeneralVokiQuestionContentType[] supportedTyped = [
+            GeneralVokiQuestionContentType.TextOnly,
+            GeneralVokiQuestionContentType.ColorOnly,
+            GeneralVokiQuestionContentType.ColorAndText,
+            GeneralVokiQuestionContentType.ImageOnly,
+            GeneralVokiQuestionContentType.ImageAndText,
         ];
 
-        if (!supportedTyped.Contains(answersType)) {
+        if (!supportedTyped.Contains(contentType)) {
             return ErrFactory.NotImplemented("Selected type is not implemented yet");
         }
 
@@ -113,7 +113,7 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        VokiQuestion question = VokiQuestion.CreateNew((ushort)_questions.Count, answersType);
+        VokiQuestion question = VokiQuestion.CreateNew((ushort)_questions.Count, contentType);
         _questions.Add(question);
         return question.Id;
     }

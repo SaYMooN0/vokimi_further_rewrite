@@ -1,4 +1,4 @@
-import type { GeneralVokiAnswerType } from "$lib/ts/voki";
+import type { GeneralVokiQuestionContentType } from "$lib/ts/voki";
 
 export type GeneralVokiTakingData = {
     id: string;
@@ -14,15 +14,13 @@ export type GeneralVokiTakingQuestionData = {
     text: string;
     imageKeys: string[];
     imagesAspectRatio: number;
-    answerType: GeneralVokiAnswerType;
+    answerType: GeneralVokiQuestionContentType;
     orderInVokiTaking: number;
     minAnswersCount: number;
     maxAnswersCount: number;
-    answers: GeneralVokiTakingAnswerData[]
 }
 export type GeneralVokiTakingAnswerData = {
     id: string;
-    typeData: GeneralVokiAnswerTypeData;
 }
 
 export type GeneralVokiAnswerTextOnly = { text: string; };

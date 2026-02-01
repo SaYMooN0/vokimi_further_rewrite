@@ -25,7 +25,6 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
 
 
     public Task<DraftGeneralVoki?> GetById(VokiId vokiId, CancellationToken ct) => _db.Vokis
-        .AsNoTracking()
         .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
 

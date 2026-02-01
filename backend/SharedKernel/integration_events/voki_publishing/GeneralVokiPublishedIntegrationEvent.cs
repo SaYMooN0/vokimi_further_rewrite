@@ -92,7 +92,7 @@ public sealed record ImageOnlyQuestionIntegrationEventDto(
         GeneralVokiAnswerId Id,
         ushort Order,
         GeneralVokiResultId[] RelatedResultIds,
-        string ImageKey
+        string Image
     ) : IQuestionAnswerIntegrationEventDto;
 }
 
@@ -105,7 +105,7 @@ public sealed record ImageAndTextQuestionIntegrationEventDto(
         ushort Order,
         GeneralVokiResultId[] RelatedResultIds,
         string Text,
-        string ImageKey
+        string Image
     ) : IQuestionAnswerIntegrationEventDto;
 }
 
@@ -142,7 +142,7 @@ public sealed record AudioOnlyQuestionIntegrationEventDto(
         GeneralVokiAnswerId Id,
         ushort Order,
         GeneralVokiResultId[] RelatedResultIds,
-        string AudioKey
+        string Audio
     ) : IQuestionAnswerIntegrationEventDto;
 }
 
@@ -155,6 +155,6 @@ public sealed record AudioAndTextQuestionIntegrationEventDto(
         ushort Order,
         GeneralVokiResultId[] RelatedResultIds,
         string Text,
-        string AudioKey
+        string Audio
     ) : IQuestionAnswerIntegrationEventDto;
 }

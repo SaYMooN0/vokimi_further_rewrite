@@ -10,7 +10,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
         QuestionAnswersList<BaseQuestionAnswer.ImageAndText> Answers
     ) : BaseQuestionTypeSpecificContent, IContentWithStorageKeys
     {
-        public override GeneralVokiAnswerType AnswersType => GeneralVokiAnswerType.ImageAndText;
+        public override GeneralVokiQuestionContentType Type => GeneralVokiQuestionContentType.ImageAndText;
         public override IEnumerable<BaseQuestionAnswer> BaseAnswers => Answers.AsIEnumerable;
 
         public override BaseQuestionTypeSpecificContent RemoveResult(GeneralVokiResultId resultId) => new ImageAndText(

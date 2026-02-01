@@ -29,14 +29,11 @@
 	}
 </script>
 
-{#snippet answerMainContent(
-	answer: AnswerDataTextOnly,
-	updateOnChange: (newAnswer: AnswerDataTextOnly) => void,
-	renderUpdateKey: string
-)}
-	{#key renderUpdateKey}
-		<TextOnlyAnswerEditing {answer} {updateOnChange} />
-	{/key}
+{#snippet answerMainContent(getAnswer: () => AnswerDataTextOnly)}
+	<TextOnlyAnswerEditing
+		answer={getAnswer()}
+		onTextChange={(newText) => (getAnswer().text = newText)}
+	/>
 {/snippet}
 <div class="question-content">
 	<QuestionContentEditingAnswersList

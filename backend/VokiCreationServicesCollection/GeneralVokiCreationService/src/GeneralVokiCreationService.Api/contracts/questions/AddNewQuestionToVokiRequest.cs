@@ -4,6 +4,6 @@ namespace GeneralVokiCreationService.Api.contracts.questions;
 
 public class AddNewQuestionToVokiRequest : IRequestWithValidationNeeded
 {
-    public  GeneralVokiAnswerType QuestionAnswersType { get; init; }
+    public  GeneralVokiQuestionContentType QuestionContentType { get; init; }
     public ErrOrNothing Validate() => ErrOrNothing.Nothing;
 }

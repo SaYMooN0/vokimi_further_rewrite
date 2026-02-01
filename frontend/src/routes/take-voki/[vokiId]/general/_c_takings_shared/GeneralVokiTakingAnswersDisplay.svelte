@@ -1,6 +1,5 @@
 <script lang="ts">
-	import type { GeneralVokiAnswerType } from '$lib/ts/voki';
-	import type { SvelteComponent } from 'svelte';
+	import type { GeneralVokiQuestionContentType } from '$lib/ts/voki';
 	import type { GeneralVokiAnswerTypeData } from '../types';
 	import GeneralVokiTakingAudioAndTextAnswer from './_c_answers_display/GeneralVokiTakingAudioAndTextAnswer.svelte';
 	import GeneralVokiTakingAudioOnlyAnswer from './_c_answers_display/GeneralVokiTakingAudioOnlyAnswer.svelte';
@@ -11,7 +10,7 @@
 	import GeneralVokiTakingTextOnlyAnswer from './_c_answers_display/GeneralVokiTakingTextOnlyAnswer.svelte';
 
 	interface Props {
-		answerType: GeneralVokiAnswerType;
+		answerType: GeneralVokiQuestionContentType;
 		answers: { typeData: GeneralVokiAnswerTypeData; id: string }[];
 		chosenAnswers: Record<string, boolean>;
 		isMultipleChoice: boolean;

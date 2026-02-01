@@ -11,7 +11,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
     )
         : BaseQuestionTypeSpecificContent, IContentWithStorageKeys
     {
-        public override GeneralVokiAnswerType AnswersType => GeneralVokiAnswerType.AudioOnly;
+        public override GeneralVokiQuestionContentType Type => GeneralVokiQuestionContentType.AudioOnly;
         public override IEnumerable<BaseQuestionAnswer> BaseAnswers => Answers.AsIEnumerable;
 
         public override BaseQuestionTypeSpecificContent RemoveResult(GeneralVokiResultId resultId) => new AudioOnly(

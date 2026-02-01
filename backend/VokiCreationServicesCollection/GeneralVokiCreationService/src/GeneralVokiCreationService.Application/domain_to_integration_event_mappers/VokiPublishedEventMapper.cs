@@ -53,7 +53,7 @@ public static class VokiPublishedEventMapper
                 Id: GeneralVokiAnswerId.CreateNew(),
                 Order: a.Order.Value,
                 RelatedResultIds: a.RelatedResultIds.ToArray(),
-                ImageKey: a.Image.ToString()
+                Image: a.Image.ToString()
             ))
             .ToArray()
         ),
@@ -63,7 +63,7 @@ public static class VokiPublishedEventMapper
                 Order: a.Order.Value,
                 RelatedResultIds: a.RelatedResultIds.ToArray(),
                 Text: a.Text.ToString(),
-                ImageKey: a.Image.ToString()
+                Image: a.Image.ToString()
             ))
             .ToArray()
         ),
@@ -91,7 +91,7 @@ public static class VokiPublishedEventMapper
                 Id: GeneralVokiAnswerId.CreateNew(),
                 Order: a.Order.Value,
                 RelatedResultIds: a.RelatedResultIds.ToArray(),
-                AudioKey: a.Audio.ToString()
+                Audio: a.Audio.ToString()
             ))
             .ToArray()
         ),
@@ -101,7 +101,7 @@ public static class VokiPublishedEventMapper
                 Order: a.Order.Value,
                 RelatedResultIds: a.RelatedResultIds.ToArray(),
                 Text: a.Text.ToString(),
-                AudioKey: a.Audio.ToString()
+                Audio: a.Audio.ToString()
             ))
             .ToArray()
         )

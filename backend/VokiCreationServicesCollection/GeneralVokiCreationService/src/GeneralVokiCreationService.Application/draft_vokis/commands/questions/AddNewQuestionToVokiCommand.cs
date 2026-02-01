@@ -4,7 +4,7 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands.questions;
 
 public sealed record AddNewQuestionToVokiCommand(
     VokiId VokiId,
-    GeneralVokiAnswerType AnswersType
+    GeneralVokiQuestionContentType ContentType
 ) :
     ICommand<GeneralVokiQuestionId>,
     IWithAuthCheckStep;
@@ -28,7 +28,7 @@ internal sealed class AddNewQuestionToVokiCommandHandler :
             return ErrFactory.NotFound.Voki();
         }
 
-        var res = voki.AddNewQuestion(command.UserCtx(_userCtxProvider), command.AnswersType);
+        var res = voki.AddNewQuestion(command.UserCtx(_userCtxProvider), command.ContentType);
         if (res.IsErr(out var err)) {
             return err;
         }

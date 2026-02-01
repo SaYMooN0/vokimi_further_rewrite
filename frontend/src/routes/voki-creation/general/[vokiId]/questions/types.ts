@@ -1,10 +1,10 @@
-import type { GeneralVokiAnswerType } from "$lib/ts/voki";
+import type { GeneralVokiQuestionContentType } from "$lib/ts/voki";
 
 export type QuestionBriefInfo = {
     id: string;
     text: string;
     images: string[];
-    answersType: GeneralVokiAnswerType;
+    contentType: GeneralVokiQuestionContentType;
     orderInVoki: number;
     shuffleAnswers: boolean;
     isMultipleChoice: boolean;

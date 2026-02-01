@@ -7,10 +7,11 @@
 	import { getConfirmActionDialogOpenFunction } from '../../../../../_c_layout/_ts_layout_contexts/confirm-action-dialog-context';
 	import { RJO } from '$lib/ts/backend-communication/backend-services';
 
-	let { questionsProps, vokiId }: { questionsProps: QuestionBriefInfo[]; vokiId: string } = $props<{
+	interface Props {
 		questionsProps: QuestionBriefInfo[];
 		vokiId: string;
-	}>();
+	}
+	let { questionsProps, vokiId }: Props = $props();
 	let questions = $state(questionsProps);
 	async function moveQuestionUpInOrder(questionId: string) {
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{

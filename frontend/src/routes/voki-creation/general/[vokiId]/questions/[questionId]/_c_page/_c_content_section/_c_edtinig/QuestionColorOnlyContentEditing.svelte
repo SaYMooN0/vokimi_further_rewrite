@@ -30,11 +30,11 @@
 	}
 </script>
 
-{#snippet answerMainContent(
-	answer: AnswerDataColorOnly,
-	updateOnChange: (newAnswer: AnswerDataColorOnly) => void
-)}
-	<ColorOnlyAnswerEditing {answer} {updateOnChange} />
+{#snippet answerMainContent(getAnswer: () => AnswerDataColorOnly)}
+	<ColorOnlyAnswerEditing
+		answer={getAnswer()}
+		onColorChange={(newColor) => (getAnswer().color = newColor)}
+	/>
 {/snippet}
 <div class="question-content">
 	<QuestionContentEditingAnswersList

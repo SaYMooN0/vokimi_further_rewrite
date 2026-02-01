@@ -30,11 +30,11 @@
 	}
 </script>
 
-{#snippet answerMainContent(
-	answer: AnswerDataImageOnly,
-	updateOnChange: (newAnswer: AnswerDataImageOnly) => void
-)}
-	<ImageOnlyAnswerEditing {answer} {updateOnChange} />
+{#snippet answerMainContent(getAnswer: () => AnswerDataImageOnly)}
+	<ImageOnlyAnswerEditing
+		answer={getAnswer()}
+		onImageChange={(newImage) => (getAnswer().image = newImage)}
+	/>
 {/snippet}
 <div class="question-content">
 	<QuestionContentEditingAnswersList

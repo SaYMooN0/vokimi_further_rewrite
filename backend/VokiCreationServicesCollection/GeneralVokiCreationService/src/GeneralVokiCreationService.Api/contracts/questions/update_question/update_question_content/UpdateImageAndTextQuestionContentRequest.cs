@@ -9,7 +9,7 @@ public class UpdateImageAndTextQuestionContentRequest : IUpdateQuestionContentRe
 
     public sealed record Answer(
         string Text,
-        string ImageKey,
+        string Image,
         ushort Order,
         string[] RelatedResultIds
     ) : IUpdateQuestionContentRequestAnswer;
@@ -23,14 +23,14 @@ public class UpdateImageAndTextQuestionContentRequest : IUpdateQuestionContentRe
             .ParseAnswers<ImageAndTextUnsavedQuestionContentDto.Answer, Answer>(
                 Answers,
                 createParsed: (answer, order, results) => {
-                    if (string.IsNullOrWhiteSpace(answer.ImageKey)) {
+                    if (string.IsNullOrWhiteSpace(answer.Image)) {
                         return ErrFactory.NoValue.Common($"Image key is required for answer {order.Value}");
                     }
 
                     return GeneralVokiAnswerText.Create(answer.Text)
                         .Match<ErrOr<ImageAndTextUnsavedQuestionContentDto.Answer>>(
                             successFunc: (text) =>
-                                new ImageAndTextUnsavedQuestionContentDto.Answer(text, answer.ImageKey, order, results),
+                                new ImageAndTextUnsavedQuestionContentDto.Answer(text, answer.Image, order, results),
                             errorFunc: (e) => e.WithMessagePrefix($"Error in the answer with order: {order}. Error:")
                         );
                 }

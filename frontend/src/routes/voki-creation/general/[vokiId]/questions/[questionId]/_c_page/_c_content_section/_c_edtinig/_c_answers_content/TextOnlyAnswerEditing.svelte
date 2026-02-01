@@ -1,24 +1,16 @@
 <script lang="ts">
-	import { watch } from 'runed';
 	import type { AnswerDataTextOnly } from '../../../../types';
 	import AnswerEditingTextArea from './_c_shared/AnswerEditingTextArea.svelte';
 
 	interface Props {
 		answer: AnswerDataTextOnly;
-		updateOnChange: (newAnswer: AnswerDataTextOnly) => void;
+		onTextChange: (newText: string) => void;
 	}
-	let { answer = $bindable(), updateOnChange }: Props = $props();
-	let text = $state(answer.text);
-	watch(
-		() => text,
-		() => {
-			updateOnChange({ ...answer, text });
-		}
-	);
+	let { answer, onTextChange }: Props = $props();
 </script>
 
 <div class="answer-content">
-	<AnswerEditingTextArea bind:text />
+	<AnswerEditingTextArea bind:text={() => answer.text, onTextChange} />
 </div>
 
 <style>

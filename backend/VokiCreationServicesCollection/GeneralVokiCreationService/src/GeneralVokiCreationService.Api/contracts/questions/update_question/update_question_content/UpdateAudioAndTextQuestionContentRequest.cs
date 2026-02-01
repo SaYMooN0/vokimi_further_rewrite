@@ -9,7 +9,7 @@ public class UpdateAudioAndTextQuestionContentRequest : IUpdateQuestionContentRe
 
     public sealed record Answer(
         string Text,
-        string AudioKey,
+        string Audio,
         ushort Order,
         string[] RelatedResultIds
     ) : IUpdateQuestionContentRequestAnswer;
@@ -23,14 +23,14 @@ public class UpdateAudioAndTextQuestionContentRequest : IUpdateQuestionContentRe
             .ParseAnswers<AudioAndTextUnsavedQuestionContentDto.Answer, Answer>(
                 Answers,
                 createParsed: (answer, order, results) => {
-                    if (string.IsNullOrWhiteSpace(answer.AudioKey)) {
+                    if (string.IsNullOrWhiteSpace(answer.Audio)) {
                         return ErrFactory.NoValue.Common($"Audio key is required for answer {order.Value}");
                     }
 
                     return GeneralVokiAnswerText.Create(answer.Text)
                         .Match<ErrOr<AudioAndTextUnsavedQuestionContentDto.Answer>>(
                             successFunc: (text) =>
-                                new AudioAndTextUnsavedQuestionContentDto.Answer(text, answer.AudioKey, order, results),
+                                new AudioAndTextUnsavedQuestionContentDto.Answer(text, answer.Audio, order, results),
                             errorFunc: (e) => e.WithMessagePrefix($"Error in the answer with order: {order}. Error:")
                         );
                 }

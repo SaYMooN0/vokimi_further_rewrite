@@ -1,6 +1,9 @@
-﻿using GeneralVokiTakingService.Application.common.repositories;
+﻿using System.Runtime.CompilerServices;
+using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.answers;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
+using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.answers;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.content;
 using MassTransit;
 using SharedKernel.common.vokis;
@@ -58,7 +61,78 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
     private static GeneralVokiQuestionContent QuestionContentFromEventDto(
         IQuestionContentIntegrationEventDto content
     ) => content switch {
-        _ => throw new()
+        TextOnlyQuestionIntegrationEventDto t => new GeneralVokiQuestionContent.TextOnly(
+            t.Answers
+                .Select(a => new BaseQuestionAnswer.TextOnly(
+                    GeneralVokiAnswerText.Create(a.Text).AsSuccess(),
+                    a.Id,
+                    a.Order,
+                    a.RelatedResultIds.ToImmutableHashSet()
+                ))
+                .ToImmutableArray()),
+        ImageOnlyQuestionIntegrationEventDto t => new GeneralVokiQuestionContent.ImageOnly(
+            t.Answers
+                .Select(a => new BaseQuestionAnswer.ImageOnly(
+                    new GeneralVokiAnswerImageKey(a.Image),
+                    a.Id,
+                    a.Order,
+                    a.RelatedResultIds.ToImmutableHashSet()
+                ))
+                .ToImmutableArray()
+        ),
+        ImageAndTextQuestionIntegrationEventDto t => new GeneralVokiQuestionContent.ImageAndText(
+            t.Answers
+                .Select(a => new BaseQuestionAnswer.ImageAndText(
+                    new GeneralVokiAnswerImageKey(a.Image),
+                    GeneralVokiAnswerText.Create(a.Text).AsSuccess(),
+                    a.Id,
+                    a.Order,
+                    a.RelatedResultIds.ToImmutableHashSet()
+                ))
+                .ToImmutableArray()
+        ),
+        ColorOnlyQuestionIntegrationEventDto t => new GeneralVokiQuestionContent.ColorOnly(
+            t.Answers
+                .Select(a => new BaseQuestionAnswer.ColorOnly(
+                    new HexColor(a.Color),
+                    a.Id,
+                    a.Order,
+                    a.RelatedResultIds.ToImmutableHashSet()
+                ))
+                .ToImmutableArray()
+        ),
+        ColorAndTextQuestionIntegrationEventDto t => new GeneralVokiQuestionContent.ColorAndText(
+            t.Answers
+                .Select(a => new BaseQuestionAnswer.ColorAndText(
+                    new HexColor(a.Color),
+                    GeneralVokiAnswerText.Create(a.Text).AsSuccess(),
+                    a.Id,
+                    a.Order,
+                    a.RelatedResultIds.ToImmutableHashSet()
+                ))
+                .ToImmutableArray()
+        ),
+        AudioOnlyQuestionIntegrationEventDto t => new GeneralVokiQuestionContent.AudioOnly(
+            t.Answers
+                .Select(a => new BaseQuestionAnswer.AudioOnly(
+                    new GeneralVokiAnswerAudioKey(a.Audio),
+                    a.Id,
+                    a.Order,
+                    a.RelatedResultIds.ToImmutableHashSet()
+                ))
+                .ToImmutableArray()
+        ),
+        AudioAndTextQuestionIntegrationEventDto t => new GeneralVokiQuestionContent.AudioAndText(
+            t.Answers
+                .Select(a => new BaseQuestionAnswer.AudioAndText(
+                    new GeneralVokiAnswerAudioKey(a.Audio),
+                    GeneralVokiAnswerText.Create(a.Text).AsSuccess(),
+                    a.Id,
+                    a.Order,
+                    a.RelatedResultIds.ToImmutableHashSet()
+                ))
+                .ToImmutableArray()
+        ),
+        _ => throw new SwitchExpressionException(content)
     };
-
 }
