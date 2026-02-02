@@ -10,20 +10,12 @@
 	import QuestionImagesAspectRationInput from './_c_images_dialog/QuestionImagesAspectRationInput.svelte';
 	import AddedImagesView from './_c_images_dialog/QuestionAddedImagesView.svelte';
 	import { RJO } from '$lib/ts/backend-communication/backend-services';
-
-	let {
-		questionId,
-		vokiId,
-		updateParent
-	}: {
+	interface Props {
 		questionId: string;
 		vokiId: string;
 		updateParent: (imageSet: GeneralVokiCreationQuestionImageSet) => void;
-	} = $props<{
-		questionId: string;
-		vokiId: string;
-		updateParent: (imageSet: GeneralVokiCreationQuestionImageSet) => void;
-	}>();
+	}
+	let { questionId, vokiId, updateParent }: Props = $props();
 
 	let images: string[] = $state<string[]>([]);
 	let aspectRatio: { width: number; height: number } = $state({ width: 1, height: 1 });
@@ -116,7 +108,7 @@
 	}
 
 	.subheading {
-		margin: 0 0 0.5rem ;
+		margin: 0 0 0.5rem;
 		color: var(--text);
 		font-size: 1.5rem;
 		font-weight: 550;

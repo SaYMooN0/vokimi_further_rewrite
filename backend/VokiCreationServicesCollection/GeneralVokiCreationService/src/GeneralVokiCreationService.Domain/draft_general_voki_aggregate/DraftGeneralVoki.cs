@@ -583,9 +583,11 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
     private void AddVokiPublishedDomainEvent(DateTime utcNow) {
         QuestionDomainEventDto ParseQuestionToDto(VokiQuestion q) {
+
+            
             return new QuestionDomainEventDto(
                 q.Id, q.Text, q.ImageSet, q.OrderInVoki,
-                q.ShuffleAnswers, q.AnswersCountLimit, q.Content
+                q.ShuffleAnswers, q.AnswersCountLimit, q.Content.ToIntegrationEventDto(), HasAnyAudio: q.HasAudio()
             );
         }
 

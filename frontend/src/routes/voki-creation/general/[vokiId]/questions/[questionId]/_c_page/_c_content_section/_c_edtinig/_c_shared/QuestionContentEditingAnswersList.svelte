@@ -67,10 +67,7 @@
 				{/snippet}
 				{#snippet answerContentSnippet()}
 					{#key answer.order}
-						<div
-							class="answer-content-grid"
-							{@attach () => console.log('rerender: ', answer.order)}
-						>
+						<div class="answer-content-grid">
 							{@render answerMainContent(() => answer)}
 							<button class="delete-answer-btn" onclick={() => removeAnswer(answer)}>
 								<div class="hint">Delete this answer</div>

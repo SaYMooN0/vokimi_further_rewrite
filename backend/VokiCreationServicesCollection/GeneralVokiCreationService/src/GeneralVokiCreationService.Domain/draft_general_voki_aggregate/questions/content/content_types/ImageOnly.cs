@@ -1,6 +1,8 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
 using SharedKernel.common.vokis.general_vokis;
 
+using SharedKernel.integration_events.voki_publishing;
+
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 
 
@@ -18,6 +20,16 @@ public abstract partial record BaseQuestionTypeSpecificContent
             Answers: Answers.ApplyForEach(a => (BaseQuestionAnswer.ImageOnly)a.RemoveRelatedResult(resultId))
         );
 
+        public override IQuestionContentIntegrationEventDto ToIntegrationEventDto() => new ImageOnlyQuestionIntegrationEventDto(Answers
+            .Select(a => new ImageOnlyQuestionIntegrationEventDto.Answer(
+                Id: GeneralVokiAnswerId.CreateNew(),
+                Order: a.Order.Value,
+                RelatedResultIds: a.RelatedResultIds.ToArray(),
+                Image: a.Image.ToString()
+            ))
+            .ToArray()
+        );
+
         public static ImageOnly Empty() => new(
             Answers: QuestionAnswersList<BaseQuestionAnswer.ImageOnly>.Empty()
         );
@@ -25,5 +37,5 @@ public abstract partial record BaseQuestionTypeSpecificContent
         public bool IsAllForCorrectVokiQuestion(VokiId vokiId, GeneralVokiQuestionId questionId) =>
             Answers.All(a => a.IsForCorrectVokiQuestion(vokiId, questionId));
     }
-    
+
 }

@@ -1,5 +1,6 @@
 ﻿using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
+using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters.vokis;
 using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

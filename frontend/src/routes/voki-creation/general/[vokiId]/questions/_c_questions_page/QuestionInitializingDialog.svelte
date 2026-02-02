@@ -11,7 +11,7 @@
 
 	const { vokiId }: { vokiId: string } = $props<{ vokiId: string }>();
 	let dialog = $state<DialogWithCloseButton>()!;
-	let selectedType = $state<GeneralVokiQuestionContentType>('TextOnly');
+	let selectedType: GeneralVokiQuestionContentType = $state('TextOnly');
 	let errs: Err[] = $state([]);
 
 	export function open() {
@@ -40,11 +40,7 @@
 		<div class="type-subset-column">
 			<svg><use href="#text-general-voki-answer-type-icon" /></svg>
 			<div class="subset-container">
-				<QuestionContentTypeSelectionCard
-					label="Text only"
-					isSelected={selectedType === 'TextOnly'}
-					onClick={() => (selectedType = 'TextOnly')}
-				/>
+				<QuestionContentTypeSelectionCard type="TextOnly" bind:selectedType />
 			</div>
 		</div>
 
@@ -53,16 +49,8 @@
 		<div class="type-subset-column">
 			<svg><use href="#color-general-voki-answer-type-icon" /></svg>
 			<div class="subset-container">
-				<QuestionContentTypeSelectionCard
-					label="Color only"
-					isSelected={selectedType === 'ColorOnly'}
-					onClick={() => (selectedType = 'ColorOnly')}
-				/>
-				<QuestionContentTypeSelectionCard
-					label="Color and Text"
-					isSelected={selectedType === 'ColorAndText'}
-					onClick={() => (selectedType = 'ColorAndText')}
-				/>
+				<QuestionContentTypeSelectionCard type="ColorOnly" bind:selectedType />
+				<QuestionContentTypeSelectionCard type="ColorAndText" bind:selectedType />
 			</div>
 		</div>
 
@@ -71,16 +59,8 @@
 		<div class="type-subset-column">
 			<svg><use href="#image-general-voki-answer-type-icon" /></svg>
 			<div class="subset-container">
-				<QuestionContentTypeSelectionCard
-					label="Image only"
-					isSelected={selectedType === 'ImageOnly'}
-					onClick={() => (selectedType = 'ImageOnly')}
-				/>
-				<QuestionContentTypeSelectionCard
-					label="Image and Text"
-					isSelected={selectedType === 'ImageAndText'}
-					onClick={() => (selectedType = 'ImageAndText')}
-				/>
+				<QuestionContentTypeSelectionCard type="ImageOnly" bind:selectedType />
+				<QuestionContentTypeSelectionCard type="ImageAndText" bind:selectedType />
 			</div>
 		</div>
 
@@ -89,16 +69,8 @@
 		<div class="type-subset-column">
 			<svg><use href="#audio-general-voki-answer-type-icon" /></svg>
 			<div class="subset-container">
-				<QuestionContentTypeSelectionCard
-					label="Audio only"
-					isSelected={selectedType === 'AudioOnly'}
-					onClick={() => (selectedType = 'AudioOnly')}
-				/>
-				<QuestionContentTypeSelectionCard
-					label="Audio and Text"
-					isSelected={selectedType === 'AudioAndText'}
-					onClick={() => (selectedType = 'AudioAndText')}
-				/>
+				<QuestionContentTypeSelectionCard type="AudioOnly" bind:selectedType />
+				<QuestionContentTypeSelectionCard type="AudioAndText" bind:selectedType />
 			</div>
 		</div>
 	</div>

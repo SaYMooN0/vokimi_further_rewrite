@@ -51,7 +51,8 @@
 	}
 
 	.property {
-		display: grid;
+		display: flex;
+		flex-direction: row;
 		align-items: center;
 		gap: 0.25rem;
 		width: fit-content;
@@ -64,11 +65,10 @@
 		letter-spacing: 0.2px;
 		box-shadow: var(--shadow-xs);
 		cursor: default;
-		grid-template-columns: 1.125rem 1fr;
 	}
 
 	.property > svg {
-		width: 100%;
+		width: 1.125rem;
 		aspect-ratio: 1/1;
 		stroke-width: 2.2;
 	}

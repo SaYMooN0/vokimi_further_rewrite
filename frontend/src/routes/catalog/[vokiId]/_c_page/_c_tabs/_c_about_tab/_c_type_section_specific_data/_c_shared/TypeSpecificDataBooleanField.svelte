@@ -2,16 +2,18 @@
 	interface Props {
 		fieldName: string;
 		value: boolean;
+		trueLabel?: string;
+		falseLabel?: string;
 	}
-	let { fieldName, value }: Props = $props();
+	let { fieldName, value, trueLabel = 'Yes', falseLabel = 'No' }: Props = $props();
 </script>
 
 <div class="field-line">
-	<div class="type-value">
+	<div class="name">
 		<span>{fieldName}</span>
 	</div>
 	<div class="value">
-		{value ? 'Yes' : 'No'}
+		{value ? trueLabel : falseLabel}
 	</div>
 </div>
 
@@ -20,16 +22,22 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		margin: 0;
 		cursor: default;
 	}
 
-	.field-line .type-value {
+	.name {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		margin-left: 0.5rem;
 		font-size: 1.125rem;
-		font-weight: 500;
+		font-weight: 425;
+		color: var(--muted-foreground);
+	}
+
+	.value {
+		font-size: 1.125rem;
+		font-weight: 425;
+		margin-left: 0.5rem;
+		font-weight: 450;
 	}
 </style>

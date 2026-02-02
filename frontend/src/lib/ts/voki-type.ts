@@ -19,6 +19,5 @@ export namespace VokiTypeUtils {
     }
     export function all(): VokiType[] {
         return ['General', 'Scoring', 'TierList'];
-
     }
 }

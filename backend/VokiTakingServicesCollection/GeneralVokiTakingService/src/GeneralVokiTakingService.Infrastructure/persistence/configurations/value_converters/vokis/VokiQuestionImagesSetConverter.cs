@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VokimiStorageKeysLib.concrete_keys.general_voki;
 
-namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
+namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters.vokis;
 
 public class VokiQuestionImagesSetConverter : ValueConverter<VokiQuestionImagesSet, string>
 {

@@ -7,10 +7,22 @@
 	}
 	let { data }: Props = $props();
 </script>
-{JSON.stringify(data)}
-<!-- <TypeSpecificDataBooleanField fieldName="Any audio content:" value={data.anyAudios} /> -->
-<!-- <TypeSpecificDataBooleanField
-	fieldName="Force sequential answering:"
-	value={data.forceSequentialAnswering}
+
+<TypeSpecificDataBooleanField
+	fieldName="Any audio content:"
+	value={data.anyAudios}
+	trueLabel="This Voki has audio content"
+	falseLabel="No audio content"
 />
-<TypeSpecificDataBooleanField fieldName="Shuffle questions:" value={data.shuffleQuestions} /> -->
+<TypeSpecificDataBooleanField
+	fieldName="Answering order:"
+	value={data.forceSequentialAnswering}
+	trueLabel="Sequential"
+	falseLabel="Free"
+/>
+<TypeSpecificDataBooleanField
+	fieldName="Shuffle questions:"
+	value={data.shuffleQuestions}
+	trueLabel="Shuffled"
+	falseLabel="Not shuffled"
+/>

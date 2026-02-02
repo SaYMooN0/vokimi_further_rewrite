@@ -19,7 +19,7 @@ public static class EndpointsExtensions
 
         return services;
     }
-
+    
     public static void MapEndpointGroups(this WebApplication app) =>
         app.Services
             .GetRequiredService<IEnumerable<IEndpointGroup>>()

@@ -1,7 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.answers;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.answers;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.content;

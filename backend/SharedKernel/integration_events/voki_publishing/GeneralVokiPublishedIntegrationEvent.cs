@@ -52,7 +52,8 @@ public sealed record GeneralVokiQuestionIntegrationEventDto(
     bool ShuffleAnswers,
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
-    IQuestionContentIntegrationEventDto Content
+    IQuestionContentIntegrationEventDto Content,
+    bool HasAnyAudio
 );
 // @formatter:off
 [JsonDerivedType(typeof(TextOnlyQuestionIntegrationEventDto), typeDiscriminator: nameof(TextOnlyQuestionIntegrationEventDto))]

@@ -1,21 +1,16 @@
 <script lang="ts">
-	let {
-		label,
-		isSelected,
-		onClick
-	}: {
-		label: string;
-		isSelected: boolean;
-		onClick: () => void;
-	} = $props<{
-		label: string;
-		isSelected: boolean;
-		onClick: () => void;
-	}>();
+	import { GeneralVokiUtils } from '$lib/ts/utils/general-voki-utils';
+	import type { GeneralVokiQuestionContentType } from '$lib/ts/voki';
+
+	interface Props {
+		type: GeneralVokiQuestionContentType;
+		selectedType: GeneralVokiQuestionContentType;
+	}
+	let { type, selectedType = $bindable() }: Props = $props();
 </script>
 
-<div class="type-card" class:selected={isSelected} onclick={onClick}>
-	{label}
+<div class="type-card" class:selected={type === selectedType} onclick={() => (selectedType = type)}>
+	{GeneralVokiUtils.questionContentTypeDisplayName(type)}
 </div>
 
 <style>
@@ -54,6 +49,5 @@
 		box-shadow: none;
 		transition: transform 0.18s ease-in;
 		transform: scale(1.06);
-
 	}
 </style>

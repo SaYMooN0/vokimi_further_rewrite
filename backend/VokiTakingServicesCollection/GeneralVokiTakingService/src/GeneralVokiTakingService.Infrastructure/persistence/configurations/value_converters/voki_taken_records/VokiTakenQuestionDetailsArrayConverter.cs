@@ -1,9 +1,8 @@
-﻿using GeneralVokiTakingService.Domain.common;
-using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
+﻿using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
+namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters.voki_taken_records;
 
 internal class VokiTakenQuestionDetailsArrayConverter : ValueConverter<ImmutableArray<VokiTakenQuestionDetails>, string[]>
 {

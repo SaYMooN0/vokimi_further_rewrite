@@ -1,6 +1,7 @@
 using System.Runtime.CompilerServices;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.answers.answer_types;
 using SharedKernel.common.vokis.general_vokis;
+using SharedKernel.integration_events.voki_publishing;
 
 namespace GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 
@@ -20,7 +21,8 @@ public abstract partial record BaseQuestionTypeSpecificContent
         Func<ColorAndText, TResult> colorAndText,
         Func<AudioOnly, TResult> audioOnly,
         Func<AudioAndText, TResult> audioAndText
-    ) => this switch {
+    ) => this switch
+    {
         TextOnly typed => textOnly(typed),
         ImageOnly typed => imageOnly(typed),
         ImageAndText typed => imageAndText(typed),
@@ -41,6 +43,7 @@ public abstract partial record BaseQuestionTypeSpecificContent
             audioOnly: AudioOnly.Empty,
             audioAndText: AudioAndText.Empty
         );
+    public abstract IQuestionContentIntegrationEventDto ToIntegrationEventDto();
 }
 
 public interface IContentWithStorageKeys

@@ -48,7 +48,6 @@
 	}
 
 	function submitSearch() {
-		console.log(inputValue);
 		if (!inputValue.trim()) {
 			return;
 		}
@@ -136,7 +135,6 @@
 			<button
 				class="search-page-btn"
 				onmousedown={(e: MouseEvent) => {
-					console.log('click');
 					e.stopPropagation();
 					submitSearch();
 				}}

@@ -33,77 +33,9 @@ public static class VokiPublishedEventMapper
         ShuffleAnswers: q.ShuffleAnswers,
         MinAnswersCount: q.AnswersCountLimit.MinAnswers,
         MaxAnswersCount: q.AnswersCountLimit.MaxAnswers,
-        Content: CreateContentDtoFrom(q.Content)
+        Content: q.Content,
+        HasAnyAudio: q.HasAnyAudio
     );
 
-    private static IQuestionContentIntegrationEventDto CreateContentDtoFrom(
-        BaseQuestionTypeSpecificContent content
-    ) => content.Match<IQuestionContentIntegrationEventDto>(
-        textOnly: c => new TextOnlyQuestionIntegrationEventDto(c.Answers
-            .Select(a => new TextOnlyQuestionIntegrationEventDto.Answer(
-                Id: GeneralVokiAnswerId.CreateNew(),
-                Order: a.Order.Value,
-                RelatedResultIds: a.RelatedResultIds.ToArray(),
-                Text: a.Text.ToString()
-            ))
-            .ToArray()
-        ),
-        imageOnly: c => new ImageOnlyQuestionIntegrationEventDto(c.Answers
-            .Select(a => new ImageOnlyQuestionIntegrationEventDto.Answer(
-                Id: GeneralVokiAnswerId.CreateNew(),
-                Order: a.Order.Value,
-                RelatedResultIds: a.RelatedResultIds.ToArray(),
-                Image: a.Image.ToString()
-            ))
-            .ToArray()
-        ),
-        imageAndText: c => new ImageAndTextQuestionIntegrationEventDto(c.Answers
-            .Select(a => new ImageAndTextQuestionIntegrationEventDto.Answer(
-                Id: GeneralVokiAnswerId.CreateNew(),
-                Order: a.Order.Value,
-                RelatedResultIds: a.RelatedResultIds.ToArray(),
-                Text: a.Text.ToString(),
-                Image: a.Image.ToString()
-            ))
-            .ToArray()
-        ),
-        colorOnly: c => new ColorOnlyQuestionIntegrationEventDto(c.Answers
-            .Select(a => new ColorOnlyQuestionIntegrationEventDto.Answer(
-                Id: GeneralVokiAnswerId.CreateNew(),
-                Order: a.Order.Value,
-                RelatedResultIds: a.RelatedResultIds.ToArray(),
-                Color: a.Color.ToString()
-            ))
-            .ToArray()
-        ),
-        colorAndText: c => new ColorAndTextQuestionIntegrationEventDto(c.Answers
-            .Select(a => new ColorAndTextQuestionIntegrationEventDto.Answer(
-                Id: GeneralVokiAnswerId.CreateNew(),
-                Order: a.Order.Value,
-                RelatedResultIds: a.RelatedResultIds.ToArray(),
-                Text: a.Text.ToString(),
-                Color: a.Color.ToString()
-            ))
-            .ToArray()
-        ),
-        audioOnly: c => new AudioOnlyQuestionIntegrationEventDto(c.Answers
-            .Select(a => new AudioOnlyQuestionIntegrationEventDto.Answer(
-                Id: GeneralVokiAnswerId.CreateNew(),
-                Order: a.Order.Value,
-                RelatedResultIds: a.RelatedResultIds.ToArray(),
-                Audio: a.Audio.ToString()
-            ))
-            .ToArray()
-        ),
-        audioAndText: c => new AudioAndTextQuestionIntegrationEventDto(c.Answers
-            .Select(a => new AudioAndTextQuestionIntegrationEventDto.Answer(
-                Id: GeneralVokiAnswerId.CreateNew(),
-                Order: a.Order.Value,
-                RelatedResultIds: a.RelatedResultIds.ToArray(),
-                Text: a.Text.ToString(),
-                Audio: a.Audio.ToString()
-            ))
-            .ToArray()
-        )
-    );
+    
 }

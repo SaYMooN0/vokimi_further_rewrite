@@ -20,7 +20,7 @@
 	bind:this={dialogElement}
 	{questionId}
 	{vokiId}
-	updateParent={(newImageSet) => updateSavedImageSet(newImageSet)}
+	updateParent={updateSavedImageSet}
 />
 {#if savedImageSet.keys.length === 0}
 	<div class="field">

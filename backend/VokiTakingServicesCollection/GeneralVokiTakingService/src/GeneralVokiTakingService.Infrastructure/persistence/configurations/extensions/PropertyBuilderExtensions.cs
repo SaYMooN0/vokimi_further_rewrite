@@ -3,6 +3,8 @@ using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
 using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
+using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters.voki_taken_records;
+using GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters.voki_taking_sessions;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.extensions;

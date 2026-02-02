@@ -1,4 +1,5 @@
-﻿using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
+﻿using System.Net.Mime;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions.content.content_types;
 using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate.publishing;
@@ -45,6 +46,10 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         QuestionAnswersCountLimit.SingleChoice()
     );
 
+    public bool HasAudio() {
+        return Content.Type == GeneralVokiQuestionContentType.AudioOnly
+               || Content.Type == GeneralVokiQuestionContentType.AudioAndText;
+    }
 
     public void UpdateText(VokiQuestionText questionText) {
         Text = questionText;

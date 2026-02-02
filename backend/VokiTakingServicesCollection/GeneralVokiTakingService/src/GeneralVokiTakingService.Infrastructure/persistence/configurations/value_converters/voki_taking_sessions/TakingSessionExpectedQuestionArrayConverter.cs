@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters;
+namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters.voki_taking_sessions;
 
 internal class TakingSessionExpectedQuestionsArrayConverter :
     ValueConverter<ImmutableArray<TakingSessionExpectedQuestion>, string[]>
