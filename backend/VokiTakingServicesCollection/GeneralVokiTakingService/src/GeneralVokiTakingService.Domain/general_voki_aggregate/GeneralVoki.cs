@@ -1,9 +1,10 @@
 ﻿using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.events;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.answers;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.exceptions;
+using SharedKernel.user_ctx;
 using VokimiStorageKeysLib.base_keys;
 using VokimiStorageKeysLib.concrete_keys;
 using VokiTakingServicesLib.Domain.base_voki_aggregate;
@@ -15,7 +16,7 @@ public sealed class GeneralVoki : BaseVoki
 {
     private GeneralVoki() { }
     public IReadOnlyCollection<VokiQuestion> Questions { get; }
-    public bool ForceSequentialAnswering { get; }
+    private bool ForceSequentialAnswering { get; }
     public bool ShuffleQuestions { get; }
     private IReadOnlyCollection<VokiResult> _results { get; }
     private ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; set; }
@@ -73,6 +74,19 @@ public sealed class GeneralVoki : BaseVoki
         keys.Add(coverKey);
 
         return keys;
+    }
+
+    public ErrOr<BaseVokiTakingSession> StartTaking(IUserCtx userCtx, DateTime currentTime) {
+        if (CheckUserAccessToTake(userCtx).IsErr(out var err)) {
+            return err;
+        }
+
+        if (ForceSequentialAnswering) {
+            return SessionWithSequentialAnswering.Create(Id, userCtx, currentTime, Questions, ShuffleQuestions);
+        }
+        else {
+            return SessionWithFreeAnswering.Create(Id, userCtx, currentTime, Questions, ShuffleQuestions);
+        }
     }
 
     public void AddNewVokiTakenRecord(VokiTakenRecordId newRecordId, AppUserId? vokiTakerId) {

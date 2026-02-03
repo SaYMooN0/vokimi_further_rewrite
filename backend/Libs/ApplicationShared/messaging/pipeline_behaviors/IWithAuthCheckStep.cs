@@ -38,7 +38,7 @@ public static class AuthCheckStepHandler
         }
 
         public async Task<ErrOr<TResponse>> Handle(TCommand command, CancellationToken ct) {
-            if (_userCtxProvider.Current.IsAuthenticated) {
+            if (_userCtxProvider.Current.IsAuthenticated(out  _)) {
                 return await _innerHandler.Handle(command, ct);
             }
 
@@ -60,7 +60,7 @@ public static class AuthCheckStepHandler
         }
 
         public async Task<ErrOrNothing> Handle(TCommand command, CancellationToken ct) {
-            if (_userCtxProvider.Current.IsAuthenticated) {
+            if (_userCtxProvider.Current.IsAuthenticated(out  _)) {
                 return await _innerHandler.Handle(command, ct);
             }
 
@@ -82,7 +82,7 @@ public static class AuthCheckStepHandler
         }
 
         public async Task<ErrOr<TResponse>> Handle(TQuery query, CancellationToken ct) {
-            if (_userCtxProvider.Current.IsAuthenticated) {
+            if (_userCtxProvider.Current.IsAuthenticated(out  _)) {
                 return await _innerHandler.Handle(query, ct);
             }
 

@@ -49,7 +49,7 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
     private static VokiQuestion QuestionFromEventDto(GeneralVokiQuestionIntegrationEventDto q) => new(
         q.Id, q.Text,
         ImageSetFromEventDto(q.Images, q.ImagesAspectRatio),
-        q.OrderInVoki, q.ShuffleAnswers,
+        VokiQuestionOrder.Create(q.OrderInVoki).AsSuccess(), q.ShuffleAnswers,
         new QuestionAnswersCountLimit(minAnswers: q.MinAnswersCount, maxAnswers: q.MaxAnswersCount),
         QuestionContentFromEventDto(q.Content)
     );

@@ -3,7 +3,6 @@ using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
-using SharedKernel;
 using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
@@ -12,6 +11,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 {
     private SessionWithSequentialAnswering() { }
     public override bool IsWithForceSequentialAnswering => true;
+
     private ImmutableArray<SequentialTakingAnsweredQuestion> _answered;
 
     private SessionWithSequentialAnswering(
@@ -36,7 +36,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             var question = ordered[i];
             sessionQuestion.Add(new TakingSessionExpectedQuestion(
                 question.Id,
-                OrderInVokiTaking: i,
+                OrderInVokiTaking: QuestionOrderInVokiTakingSession.Create(i + 1).AsSuccess(),
                 question.AnswersCountLimit.MinAnswers,
                 question.AnswersCountLimit.MaxAnswers,
                 question.Content.AnswerIds.ToImmutableHashSet()
@@ -50,6 +50,14 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         );
     }
 
+    //questions must be shown one by one 
+    public override ImmutableDictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession> QuestionsToShowOnStart() {
+        var firstQuestionInTaking = Questions.MinBy(q => q.OrderInVokiTaking.Value)!;
+        return new Dictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession>() {
+            [firstQuestionInTaking.QuestionId] = firstQuestionInTaking.OrderInVokiTaking
+        }.ToImmutableDictionary();
+    }
+
 
     public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
         DateTime currentTime,
@@ -57,7 +65,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         DateTime clientSessionFinishedTime,
         IUserCtx userCtx,
         GeneralVokiQuestionId lastQuestionId,
-        ushort lastQuestionOrderInVokiTaking,
+        QuestionOrderInVokiTakingSession lastQuestionOrderInVokiTaking,
         ClientServerTimePairDto lastQuestionShownAt,
         DateTime clientLastAnsweredAt,
         ImmutableHashSet<GeneralVokiAnswerId> lastChosenAnswers,
@@ -106,14 +114,15 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        ErrOrNothing answerValidationRes = ValidateAnswerForQuestion(
-            expected, lastQuestionOrderInVokiTaking,
-            lastQuestionShownAt.Server, lastQuestionShownAt.Client,
-            currentTime, clientLastAnsweredAt,
-            lastChosenAnswers
-        );
+        if (ValidateAnswerForQuestion(expected, lastQuestionOrderInVokiTaking,
+                lastQuestionShownAt,
+                currentTime, clientLastAnsweredAt,
+                lastChosenAnswers
+            ).IsErr(out err)) {
+            return err;
+        }
 
-        var answeredRecord = new SequentialTakingAnsweredQuestion(
+        SequentialTakingAnsweredQuestion answeredRecord = new SequentialTakingAnsweredQuestion(
             expected.QuestionId,
             lastQuestionOrderInVokiTaking,
             lastChosenAnswers,
@@ -161,13 +170,13 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         );
     }
 
-    public ErrOr<(GeneralVokiQuestionId NextQuestionId, ushort OrderInVokiTaking)> AnswerQuestionAndGetNext(
+    public ErrOr<(GeneralVokiQuestionId NextQuestionId, QuestionOrderInVokiTakingSession Order)> AnswerQuestionAndGetNext(
         VokiId vokiId,
         ClientServerTimePairDto shownAt,
         DateTime currentTime,
         DateTime clientQuestionAnsweredAt,
         GeneralVokiQuestionId questionId,
-        ushort questionOrderInVokiTaking,
+        QuestionOrderInVokiTakingSession questionOrderInVokiTaking,
         ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
     ) {
         if (this.VokiId != vokiId) {
@@ -195,8 +204,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 
         return HandleNotYetAnswered(
             expected,
-            shownAt.Server,
-            shownAt.Client,
+            shownAt,
             currentTime,
             clientQuestionAnsweredAt,
             questionOrderInVokiTaking,
@@ -204,20 +212,20 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         );
     }
 
-    private ErrOr<(GeneralVokiQuestionId NextQuestionId, ushort OrderInVokiTaking)> HandleAlreadyAnswered(
-        SequentialTakingAnsweredQuestion already,
-        ushort questionOrderInVokiTaking,
-        DateTime clientQuestionShownAt,
-        DateTime clientQuestionAnsweredAt,
-        ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
-    ) {
-        var same =
-            already.OrderInVokiTaking == questionOrderInVokiTaking &&
-            already.ClientShownAt == clientQuestionShownAt &&
-            already.ClientSubmittedAt == clientQuestionAnsweredAt &&
-            already.ChosenAnswerIds.SetEquals(chosenAnswers);
+    private ErrOr<(GeneralVokiQuestionId NextQuestionId, QuestionOrderInVokiTakingSession OrderInVokiTaking)>
+        HandleAlreadyAnswered(
+            SequentialTakingAnsweredQuestion already,
+            QuestionOrderInVokiTakingSession questionOrderInVokiTaking,
+            DateTime clientQuestionShownAt,
+            DateTime clientQuestionAnsweredAt,
+            ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
+        ) {
+        bool isSame = already.OrderInVokiTaking == questionOrderInVokiTaking
+                      && already.ClientShownAt == clientQuestionShownAt
+                      && already.ClientSubmittedAt == clientQuestionAnsweredAt
+                      && already.ChosenAnswerIds.SetEquals(chosenAnswers);
 
-        if (!same) {
+        if (!isSame) {
             return ErrFactory.Conflict(
                 "This question has already been answered with different data",
                 "Try reloading the page"
@@ -235,13 +243,12 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         return (firstUnanswered.QuestionId, firstUnanswered.OrderInVokiTaking);
     }
 
-    private ErrOr<(GeneralVokiQuestionId NextQuestionId, ushort OrderInVokiTaking)> HandleNotYetAnswered(
+    private ErrOr<(GeneralVokiQuestionId NextQuestionId, QuestionOrderInVokiTakingSession Order)> HandleNotYetAnswered(
         TakingSessionExpectedQuestion expected,
-        DateTime serverQuestionShownAt,
-        DateTime clientQuestionShownAt,
+        ClientServerTimePairDto shownAt,
         DateTime currentTime,
         DateTime clientQuestionAnsweredAt,
-        ushort questionOrderInVokiTaking,
+        QuestionOrderInVokiTakingSession questionOrderInVokiTaking,
         ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
     ) {
         TakingSessionExpectedQuestion? current = GetFirstUnanswered();
@@ -260,10 +267,8 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         }
 
         ErrOrNothing answerValidationRes = ValidateAnswerForQuestion(
-            expected, questionOrderInVokiTaking,
-            serverQuestionShownAt, clientQuestionShownAt,
-            currentTime, clientQuestionAnsweredAt,
-            chosenAnswers
+            expected, questionOrderInVokiTaking, shownAt,
+            currentTime, clientQuestionAnsweredAt, chosenAnswers
         );
         if (answerValidationRes.IsErr(out var err)) {
             return err;
@@ -280,7 +285,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             expected.QuestionId,
             questionOrderInVokiTaking,
             chosenAnswers,
-            clientQuestionShownAt,
+            shownAt.Client,
             clientQuestionAnsweredAt
         );
 
@@ -298,9 +303,8 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 
     private ErrOrNothing ValidateAnswerForQuestion(
         TakingSessionExpectedQuestion expected,
-        ushort receivedOrderInVokiTaking,
-        DateTime serverQuestionShownAt,
-        DateTime clientQuestionShownAt,
+        QuestionOrderInVokiTakingSession receivedOrderInVokiTaking,
+        ClientServerTimePairDto shownAt,
         DateTime currentTime,
         DateTime clientQuestionAnsweredAt,
         ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
@@ -312,14 +316,14 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        if (clientQuestionShownAt < StartTime) {
+        if (shownAt.Client < StartTime) {
             return ErrFactory.Conflict(
                 "Time sync error: question shown before the voki taking session started",
                 "Please reload the page and try again."
             );
         }
 
-        if (clientQuestionAnsweredAt < clientQuestionShownAt) {
+        if (clientQuestionAnsweredAt < shownAt.Client) {
             return ErrFactory.Conflict(
                 "Time sync error: question submitted earlier than shown",
                 "Please reload the page and try again"
@@ -334,7 +338,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        TimeSpan shownAtSkew = (serverQuestionShownAt - clientQuestionShownAt).Duration();
+        TimeSpan shownAtSkew = (shownAt.Server - shownAt.Client).Duration();
         if (shownAtSkew > MaxClockSkew) {
             return ErrFactory.Conflict(
                 "Time sync error: large difference between server and client time",

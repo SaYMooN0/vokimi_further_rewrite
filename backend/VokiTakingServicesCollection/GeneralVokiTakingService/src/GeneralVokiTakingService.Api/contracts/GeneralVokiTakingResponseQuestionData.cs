@@ -1,4 +1,4 @@
-﻿using GeneralVokiTakingService.Application.general_vokis.commands;
+﻿using GeneralVokiTakingService.Application.common.dtos;
 
 namespace GeneralVokiTakingService.Api.contracts;
 

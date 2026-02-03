@@ -43,7 +43,7 @@ internal sealed class AnswerQuestionInSequentialAnsweringVokiTakingCommandHandle
     public async Task<ErrOr<AnswerQuestionInSequentialAnsweringVokiTakingCommandResult>> Handle(
         AnswerQuestionInSequentialAnsweringVokiTakingCommand command, CancellationToken ct
     ) {
-        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestionAnswers(command.VokiId, ct);
+        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestions(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot answer the question because requested Voki does not exist");
         }

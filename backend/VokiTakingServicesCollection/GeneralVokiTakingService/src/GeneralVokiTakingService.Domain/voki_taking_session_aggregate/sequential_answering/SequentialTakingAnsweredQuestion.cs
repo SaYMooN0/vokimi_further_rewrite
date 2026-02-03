@@ -2,7 +2,7 @@
 
 public record SequentialTakingAnsweredQuestion(
     GeneralVokiQuestionId QuestionId,
-    ushort OrderInVokiTaking,
+    QuestionOrderInVokiTakingSession OrderInVokiTaking,
     ImmutableHashSet<GeneralVokiAnswerId> ChosenAnswerIds,
     DateTime ClientShownAt,
     DateTime ClientSubmittedAt

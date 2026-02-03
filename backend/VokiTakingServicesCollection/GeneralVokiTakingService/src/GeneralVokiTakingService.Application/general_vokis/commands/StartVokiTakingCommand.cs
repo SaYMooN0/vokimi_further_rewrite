@@ -1,23 +1,22 @@
 ﻿using ApplicationShared;
+using GeneralVokiTakingService.Application.common.dtos;
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.questions;
-using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.content;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
-using SharedKernel.common.vokis;
-using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
-public sealed record StartVokiTakingCommand(VokiId VokiId) :
-    ICommand<StartVokiTakingCommandResponse>;
+public sealed record StartVokiTakingCommand(
+    VokiId VokiId,
+    bool TerminateCurrentActive
+) :
+    ICommand<IStartVokiTakingCommandResult>;
 
-internal sealed class StartVokiTakingCommandHandler :
-    ICommandHandler<StartVokiTakingCommand, StartVokiTakingCommandResponse>
+internal sealed class StartVokiTakingCommandHandler : ICommandHandler<StartVokiTakingCommand, IStartVokiTakingCommandResult>
 {
     private readonly IGeneralVokisRepository _generalVokisRepository;
     private readonly IUserCtxProvider _userCtxProvider;
@@ -37,88 +36,55 @@ internal sealed class StartVokiTakingCommandHandler :
     }
 
 
-    public async Task<ErrOr<StartVokiTakingCommandResponse>> Handle(
-        StartVokiTakingCommand command, CancellationToken ct
-    ) {
-        var vokiTakerCtx = _userCtxProvider.Current;
-        var voki = await _generalVokisRepository.GetWithQuestionAnswers(command.VokiId, ct);
+    public async Task<ErrOr<IStartVokiTakingCommandResult>> Handle(StartVokiTakingCommand command, CancellationToken ct) {
+        IUserCtx currentTaker = _userCtxProvider.Current;
+        if (currentTaker.IsAuthenticated(out var aUserCtx)) {
+            var startedSession = await _baseTakingSessionsRepository.GetForVokiAndUser(command.VokiId, aUserCtx, ct);
+            if (startedSession is not null) {
+                if (command.TerminateCurrentActive) {
+                    await _baseTakingSessionsRepository.Delete(startedSession, ct);
+                }
+                else {
+                    return StartVokiTakingCommandActiveSessionResult.Create(startedSession);
+                }
+            }
+        }
+
+        GeneralVoki? voki = await _generalVokisRepository.GetWithQuestions(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki(
                 "Requested Voki was not found", $"Voki with id: {command.VokiId} does not exist"
             );
         }
 
-        if (voki.CheckUserAccessToTake(vokiTakerCtx).IsErr(out var err)) {
+        ErrOr<BaseVokiTakingSession> startRes = voki.StartTaking(currentTaker, _dateTimeProvider.UtcNow);
+        if (startRes.IsErr(out var err)) {
             return err;
         }
 
-        BaseVokiTakingSession takingSession;
-        if (voki.ForceSequentialAnswering) {
-            takingSession = SessionWithSequentialAnswering.Create(
-                voki.Id, vokiTakerCtx, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
-            );
-        }
-        else {
-            takingSession = SessionWithFreeAnswering.Create(
-                voki.Id, vokiTakerCtx, _dateTimeProvider.UtcNow, voki.Questions, voki.ShuffleQuestions
-            );
-        }
-
+        var takingSession = startRes.AsSuccess();
         await _baseTakingSessionsRepository.Add(takingSession, ct);
-        return StartVokiTakingCommandResponse.Create(voki, takingSession);
+        return SuccessStartVokiTakingCommandResult.Create(voki, takingSession);
     }
 }
 
-public record StartVokiTakingCommandResponse(
-    VokiId Id,
-    VokiName Name,
-    bool ForceSequentialAnswering,
-    VokiTakingQuestionData[] Questions,
-    VokiTakingSessionId SessionId,
+public interface IStartVokiTakingCommandResult;
+
+public record StartVokiTakingCommandActiveSessionResult(
+    VokiTakingSessionId Id,
     DateTime StartedAt,
-    ushort TotalQuestionsCount
-)
+    Dictionary<GeneralVokiQuestionId, bool> QuestionToIsAnswered
+) : IStartVokiTakingCommandResult
 {
-    public static StartVokiTakingCommandResponse Create(
-        GeneralVoki voki, BaseVokiTakingSession takingSession
-    ) {
-        VokiTakingQuestionData[] questions;
-        var idToOrder = takingSession.QuestionIdToOrder();
-        if (takingSession.IsWithForceSequentialAnswering) {
-            var firstQuestionInTaking = idToOrder.MinBy(idToOrder => idToOrder.Value);
-            var question = voki.Questions.FirstOrDefault(q => q.Id == firstQuestionInTaking.Key)!;
-            questions = [VokiTakingQuestionData.Create(question, firstQuestionInTaking.Value)];
-        }
-        else {
-            questions = voki.Questions
-                .Select(q => VokiTakingQuestionData.Create(q, idToOrder[q.Id]))
-                .ToArray();
-        }
-
-        return new StartVokiTakingCommandResponse(
-            voki.Id, voki.Name, voki.ForceSequentialAnswering, questions,
-            takingSession.Id, takingSession.StartTime, (ushort)voki.Questions.Count
-        );
-    }
+    public static StartVokiTakingCommandActiveSessionResult Create(BaseVokiTakingSession takingSession) { }
 }
 
-public record VokiTakingQuestionData(
-    GeneralVokiQuestionId Id,
-    string Text,
-    VokiQuestionImagesSet ImagesSet,
-    ushort OrderInVokiTaking,
-    ushort MinAnswersCount,
-    ushort MaxAnswersCount
-)
+public record SuccessStartVokiTakingCommandResult(
+    VokiTakingData Data
+) : IStartVokiTakingCommandResult
 {
-    public static VokiTakingQuestionData Create(
-        VokiQuestion question, ushort orderInVokiTaking
-    ) => new(
-        question.Id,
-        question.Text,
-        question.ImageSet,
-        orderInVokiTaking,
-        question.AnswersCountLimit.MinAnswers,
-        question.AnswersCountLimit.MaxAnswers
-    );
+    public static SuccessStartVokiTakingCommandResult Create(GeneralVoki voki, BaseVokiTakingSession takingSession) =>
+        new SuccessStartVokiTakingCommandResult(
+            VokiTakingData.Create(voki, takingSession)
+        );
 }

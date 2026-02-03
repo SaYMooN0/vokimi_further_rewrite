@@ -2,7 +2,6 @@
 using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
-using SharedKernel;
 using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
@@ -13,14 +12,55 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
 
     public override bool IsWithForceSequentialAnswering => false;
 
+    private SessionWithFreeAnswering(
+        VokiTakingSessionId id, VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
+        ImmutableArray<TakingSessionExpectedQuestion> questions
+    ) : base(id, vokiId, vokiTaker, startTime, questions) { }
+
+    public static SessionWithFreeAnswering Create(
+        VokiId vokiId, IUserCtx vokiTakerCtx, DateTime startTime,
+        IEnumerable<VokiQuestion> vokiQuestions, bool shuffleQuestions
+    ) {
+        VokiQuestion[] ordered = (
+            shuffleQuestions
+                ? vokiQuestions.OrderBy(_ => Guid.NewGuid())
+                : vokiQuestions.OrderBy(q => q.OrderInVoki)
+        ).ToArray();
+
+        List<TakingSessionExpectedQuestion> sessionQuestion = new(ordered.Length);
+        for (ushort i = 0; i < ordered.Length; i++) {
+            VokiQuestion question = ordered[i];
+            sessionQuestion.Add(new TakingSessionExpectedQuestion(
+                question.Id,
+                OrderInVokiTaking: QuestionOrderInVokiTakingSession.Create(i + 1).AsSuccess(),
+                question.AnswersCountLimit.MinAnswers,
+                question.AnswersCountLimit.MaxAnswers,
+                question.Content.AnswerIds.ToImmutableHashSet()
+            ));
+        }
+
+        AppUserId? vokiTakerId = vokiTakerCtx.Match<AppUserId?>(a => a.UserId, _ => null);
+        return new SessionWithFreeAnswering(
+            VokiTakingSessionId.CreateNew(), vokiId, vokiTakerId, startTime,
+            sessionQuestion.ToImmutableArray()
+        );
+    }
+
+    //all questions are available for user from the start
+    public override ImmutableDictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession> QuestionsToShowOnStart() =>
+        Questions.ToImmutableDictionary(
+            q => q.QuestionId,
+            q => q.OrderInVokiTaking
+        );
+
     public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,
         DateTime clientFinishedTime,
         IUserCtx userCtx,
         Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> chosenAnswers,
-        Func<Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>,
-            ErrOr<GeneralVokiResultId>> getResultAccordingToAnswers
+        Func<Dictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>, ErrOr<GeneralVokiResultId>>
+            getResultByToAnswers
     ) {
         if (
             ValidateStartAndFinishTime(
@@ -41,13 +81,15 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             return err;
         }
 
-        ErrOr<GeneralVokiResultId> resOrErr = getResultAccordingToAnswers(chosenAnswers);
+        ErrOr<GeneralVokiResultId> resOrErr = getResultByToAnswers(chosenAnswers);
         if (resOrErr.IsErr(out err)) {
             return err;
         }
 
-        ImmutableDictionary<GeneralVokiQuestionId, ushort> questionIdToOrder = Questions
-            .ToImmutableDictionary(q => q.QuestionId, q => q.OrderInVokiTaking);
+        var questionIdToOrder = Questions.ToImmutableDictionary(
+            q => q.QuestionId,
+            q => q.OrderInVokiTaking
+        );
 
         ImmutableArray<VokiTakenQuestionDetails> questionDetails = chosenAnswers
             .Select(qToAnswers => new VokiTakenQuestionDetails(
@@ -70,46 +112,12 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
 
     public ImmutableArray<SessionWithFreeAnsweringAnsweredQuestion> AnsweredQuestions { get; private set; }
 
-    public ErrOrNothing SaveAnswers( /*new list*/) {
+    public ErrOrNothing SaveAnswers(IUserCtx userCtx /*new list*/) {
         if (VokiTaker is null) {
             return ErrFactory.AuthRequired();
         }
 
         throw new NotImplementedException();
-    }
-
-    private SessionWithFreeAnswering(
-        VokiTakingSessionId id, VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
-        ImmutableArray<TakingSessionExpectedQuestion> questions
-    ) : base(id, vokiId, vokiTaker, startTime, questions) { }
-
-    public static SessionWithFreeAnswering Create(
-        VokiId vokiId, IUserCtx vokiTakerCtx, DateTime startTime,
-        IEnumerable<VokiQuestion> vokiQuestions, bool shuffleQuestions
-    ) {
-        VokiQuestion[] ordered = (
-            shuffleQuestions
-                ? vokiQuestions.OrderBy(_ => Guid.NewGuid())
-                : vokiQuestions.OrderBy(q => q.OrderInVoki)
-        ).ToArray();
-
-        List<TakingSessionExpectedQuestion> sessionQuestion = new(ordered.Length);
-        for (ushort i = 0; i < ordered.Length; i++) {
-            VokiQuestion question = ordered[i];
-            sessionQuestion.Add(new TakingSessionExpectedQuestion(
-                question.Id,
-                OrderInVokiTaking: i,
-                question.AnswersCountLimit.MinAnswers,
-                question.AnswersCountLimit.MaxAnswers,
-                question.Content.AnswerIds.ToImmutableHashSet()
-            ));
-        }
-
-        AppUserId? vokiTakerId = vokiTakerCtx.Match<AppUserId?>(a => a.UserId, _ => null);
-        return new SessionWithFreeAnswering(
-            VokiTakingSessionId.CreateNew(), vokiId, vokiTakerId, startTime,
-            sessionQuestion.ToImmutableArray()
-        );
     }
 
     private ErrOrNothing ValidateChosenAnswers(

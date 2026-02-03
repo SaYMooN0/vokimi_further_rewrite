@@ -12,7 +12,7 @@ public record StartTakingResponse(
     ushort TotalQuestionsCount
 )
 {
-    public static StartTakingResponse Create(StartVokiTakingCommandResponse dto) => new(
+    public static StartTakingResponse Create(SuccessStartVokiTakingCommandResult dto) => new(
         dto.Id.ToString(),
         dto.Name.ToString(),
         dto.ForceSequentialAnswering,

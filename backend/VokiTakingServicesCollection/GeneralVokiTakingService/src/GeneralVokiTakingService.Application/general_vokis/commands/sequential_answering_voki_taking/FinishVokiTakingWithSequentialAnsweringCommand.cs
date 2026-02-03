@@ -50,7 +50,7 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
         FinishVokiTakingWithSequentialAnsweringCommand command, CancellationToken ct
     ) {
         GeneralVoki? voki =
-            await _generalVokisRepository.GetWithQuestionAnswersAndResults(command.VokiId, ct);
+            await _generalVokisRepository.GetWithQuestionsAndResults(command.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki("Cannot finish voki taking because requested Voki does not exist");
         }

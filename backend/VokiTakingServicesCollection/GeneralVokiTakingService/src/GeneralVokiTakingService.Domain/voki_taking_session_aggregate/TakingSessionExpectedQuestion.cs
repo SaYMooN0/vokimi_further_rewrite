@@ -2,7 +2,7 @@
 
 public record TakingSessionExpectedQuestion(
     GeneralVokiQuestionId QuestionId,
-    ushort OrderInVokiTaking,
+    QuestionOrderInVokiTakingSession OrderInVokiTaking,
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
     ImmutableHashSet<GeneralVokiAnswerId> AnswerIds

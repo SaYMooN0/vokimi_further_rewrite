@@ -8,7 +8,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     private VokiQuestion() { }
     public string Text { get; }
     public VokiQuestionImagesSet ImageSet { get; }
-    public ushort OrderInVoki { get; }
+    public VokiQuestionOrder OrderInVoki { get; }
     public GeneralVokiQuestionContent Content { get; }
     public bool ShuffleAnswers { get; }
     public QuestionAnswersCountLimit AnswersCountLimit { get; }
@@ -18,7 +18,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         GeneralVokiQuestionId id,
         string text,
         VokiQuestionImagesSet imageSet,
-        ushort orderInVoki,
+        VokiQuestionOrder orderInVoki,
         bool shuffleAnswers,
         QuestionAnswersCountLimit answersCountLimit,
         GeneralVokiQuestionContent content

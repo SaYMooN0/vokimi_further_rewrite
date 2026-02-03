@@ -20,7 +20,7 @@ internal class GeneralVokisRepository : IGeneralVokisRepository
     }
 
 
-    public Task<GeneralVoki?> GetWithQuestionAnswers(VokiId vokiId, CancellationToken ct) =>
+    public Task<GeneralVoki?> GetWithQuestions(VokiId vokiId, CancellationToken ct) =>
         _db.Vokis
             .Include(v => v.Questions)
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
@@ -39,7 +39,7 @@ internal class GeneralVokisRepository : IGeneralVokisRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task<GeneralVoki?> GetWithQuestionAnswersAndResults(VokiId vokiId, CancellationToken ct) =>
+    public Task<GeneralVoki?> GetWithQuestionsAndResults(VokiId vokiId, CancellationToken ct) =>
         _db.Vokis
             .Include(v => v.Questions)
             .AsSplitQuery()

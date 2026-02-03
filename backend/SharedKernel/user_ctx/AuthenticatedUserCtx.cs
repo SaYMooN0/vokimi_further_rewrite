@@ -8,6 +8,10 @@ public class AuthenticatedUserCtx : IUserCtx
         UserId = userId;
     }
 
-    public bool IsAuthenticated => true;
+    public bool IsAuthenticated(out AuthenticatedUserCtx aUserCtx) {
+        aUserCtx = this;
+        return true;
+    }
+
     public ErrOr<AppUserId> TryGetUserId => UserId;
 }

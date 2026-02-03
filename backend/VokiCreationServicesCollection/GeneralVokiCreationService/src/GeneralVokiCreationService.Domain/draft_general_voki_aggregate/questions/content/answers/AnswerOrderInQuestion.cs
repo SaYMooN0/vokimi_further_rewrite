@@ -15,7 +15,7 @@ public sealed class AnswerOrderInQuestion : ValueObject
         CheckForErr(value).IsErr(out var err) ? err : new AnswerOrderInQuestion(value);
 
     private static ErrOrNothing CheckForErr(ushort val) => val switch {
-        < 1 => ErrFactory.IncorrectFormat(
+        < 1 => ErrFactory.ValueOutOfRange(
             "Answer order must start with 1"
         ),
         > VokiQuestion.MaxAnswersCount => ErrFactory.IncorrectFormat(

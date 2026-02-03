@@ -1,6 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
-using SharedKernel;
 using SharedKernel.exceptions;
 using SharedKernel.user_ctx;
 
@@ -9,11 +8,9 @@ namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
 {
     protected BaseVokiTakingSession() { }
-
-    public VokiId VokiId { get; private set; }
+    public VokiId VokiId { get; }
     public AppUserId? VokiTaker { get; }
     public DateTime StartTime { get; }
-
     public abstract bool IsWithForceSequentialAnswering { get; }
     public ImmutableArray<TakingSessionExpectedQuestion> Questions { get; }
 
@@ -37,10 +34,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
         Questions = questions;
     }
 
-    public ImmutableDictionary<GeneralVokiQuestionId, ushort> QuestionIdToOrder() => Questions.ToImmutableDictionary(
-        q => q.QuestionId,
-        q => q.OrderInVokiTaking
-    );
+    public abstract ImmutableDictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession> QuestionsToShowOnStart();
 
     protected ErrOrNothing ValidateStartAndFinishTime(
         DateTime currentTime,
@@ -90,14 +84,13 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
         ImmutableHashSet<GeneralVokiAnswerId>? providedSet
     ) {
         ErrOrNothing errs = ErrOrNothing.Nothing;
-        int questionNumber = question.OrderInVokiTaking + 1;
         string expectedText = question.MinAnswersCount == question.MaxAnswersCount
             ? $"exactly {question.MinAnswersCount} answer(s)"
             : $"from {question.MinAnswersCount} to {question.MaxAnswersCount} answers";
 
         if (providedSet is null || providedSet.Count == 0) {
             errs.AddNext(ErrFactory.NoValue.Common(
-                $"You did not answer question {questionNumber}. Choose {expectedText}"
+                $"You did not answer question {question.OrderInVokiTaking.Value}. Choose {expectedText}"
             ));
             return errs;
         }
@@ -105,13 +98,13 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
         var count = providedSet.Count;
         if (count < question.MinAnswersCount || count > question.MaxAnswersCount) {
             errs.AddNext(ErrFactory.ValueOutOfRange(
-                $"Question {questionNumber}: choose {expectedText}"
+                $"Question {question.OrderInVokiTaking.Value}: choose {expectedText}"
             ));
         }
 
         if (!providedSet.IsSubsetOf(question.AnswerIds)) {
             errs.AddNext(ErrFactory.IncorrectFormat(
-                $"Question {questionNumber}: some selected answers are not available. Please select only from the shown options"
+                $"Question {question.OrderInVokiTaking.Value}: some selected answers are not available. Please select only from the shown options"
             ));
         }
 

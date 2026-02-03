@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { GeneralVokiUtils } from '$lib/ts/utils/general-voki-utils';
 	import type { QuestionBriefInfo } from '../../types';
 
 	interface Props {
@@ -9,7 +10,7 @@
 
 <div class="props">
 	<div class="property">
-		{question.contentType}
+		{GeneralVokiUtils.questionContentTypeDisplayName(question.contentType)}
 	</div>
 	<div class="property">
 		{#if question.images.length == 0}

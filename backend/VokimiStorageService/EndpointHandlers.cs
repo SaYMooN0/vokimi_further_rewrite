@@ -41,7 +41,7 @@ internal class EndpointHandlers : IEndpointGroup
         IStorageService storageService,
         IUserCtxProvider userCtxProvider
     ) {
-        if (userCtxProvider.Current.IsAuthenticated) {
+        if (userCtxProvider.Current.IsAuthenticated(out var _)) {
             FileData fileData = new(file.OpenReadStream(), file.ContentType);
             ErrOr<TempImageKey> res = await storageService.PutTempImageFile(fileData, ct);
 
