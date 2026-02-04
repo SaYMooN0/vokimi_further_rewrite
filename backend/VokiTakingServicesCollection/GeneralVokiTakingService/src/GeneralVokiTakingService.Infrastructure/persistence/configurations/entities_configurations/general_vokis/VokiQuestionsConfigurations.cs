@@ -9,7 +9,8 @@ namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.ent
 
 public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion>
 {
-    public void Configure(EntityTypeBuilder<VokiQuestion> builder) {
+    public void Configure(EntityTypeBuilder<VokiQuestion> builder)
+    {
         builder
             .HasKey(x => x.Id);
         builder
@@ -21,7 +22,9 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
         builder.Property(x => x.ImageSet)
             .HasConversion<VokiQuestionImagesSetConverter>();
 
-        builder.Property(x => x.OrderInVoki);
+        builder
+            .Property(x => x.OrderInVoki)
+            .HasConversion<VokiQuestionOrderConverter>();
         builder.Property(x => x.ShuffleAnswers);
         builder
             .Property(x => x.AnswersCountLimit)

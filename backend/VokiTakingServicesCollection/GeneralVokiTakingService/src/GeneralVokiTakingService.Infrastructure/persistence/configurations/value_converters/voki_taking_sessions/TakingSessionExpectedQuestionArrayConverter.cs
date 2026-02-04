@@ -34,7 +34,8 @@ internal class TakingSessionExpectedQuestionsArrayConverter :
             }
 
             GeneralVokiQuestionId questionId = new(new(parts[0]));
-            ushort orderInVokiTaking = ushort.Parse(parts[1]);
+            var orderInVokiTaking = QuestionOrderInVokiTakingSession.Create( ushort.Parse(parts[1])).AsSuccess();
+
             ushort minAnswersCount = ushort.Parse(parts[2]);
             ushort maxAnswersCount = ushort.Parse(parts[3]);
             ImmutableHashSet<GeneralVokiAnswerId> chosenAnswerIds = parts[4]

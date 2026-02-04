@@ -16,7 +16,7 @@ public sealed record AnswerQuestionInSequentialAnsweringVokiTakingCommand(
     GeneralVokiQuestionId QuestionId,
     ClientServerTimePairDto ShownAt,
     DateTime ClientQuestionAnsweredAt,
-    ushort QuestionOrderInVokiTaking,
+    QuestionOrderInVokiTakingSession QuestionOrderInVokiTaking,
     ImmutableHashSet<GeneralVokiAnswerId> ChosenAnswers
 ) : ICommand<AnswerQuestionInSequentialAnsweringVokiTakingCommandResult>;
 
@@ -68,7 +68,7 @@ internal sealed class AnswerQuestionInSequentialAnsweringVokiTakingCommandHandle
             return err;
         }
 
-        (GeneralVokiQuestionId nextQuestionId, ushort orderInVokiTaking) = answeringResult.AsSuccess();
+        (GeneralVokiQuestionId nextQuestionId, QuestionOrderInVokiTakingSession orderInVokiTaking) = answeringResult.AsSuccess();
         var nextQuestion = voki.Questions.FirstOrDefault(q => q.Id == nextQuestionId);
         if (nextQuestion is null) {
             return ErrFactory.NotFound.VokiContent("Expected next question was not found in Voki");
@@ -86,14 +86,14 @@ public sealed record AnswerQuestionInSequentialAnsweringVokiTakingCommandResult(
     GeneralVokiQuestionId Id,
     string Text,
     VokiQuestionImagesSet ImagesSet,
-    ushort OrderInVokiTaking,
+    QuestionOrderInVokiTakingSession OrderInVokiTaking,
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
     DateTime CurrentTime
 )
 {
     public static AnswerQuestionInSequentialAnsweringVokiTakingCommandResult Create(
-        VokiQuestion question, ushort orderInVokiTaking, DateTime currentTime
+        VokiQuestion question, QuestionOrderInVokiTakingSession orderInVokiTaking, DateTime currentTime
     ) => new(
         question.Id,
         question.Text,

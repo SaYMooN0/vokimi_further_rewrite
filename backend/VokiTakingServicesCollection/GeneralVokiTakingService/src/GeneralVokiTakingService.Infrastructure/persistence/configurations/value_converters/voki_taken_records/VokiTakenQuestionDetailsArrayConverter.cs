@@ -1,4 +1,5 @@
 ﻿using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -33,15 +34,13 @@ internal class VokiTakenQuestionDetailsArrayConverter : ValueConverter<Immutable
             }
 
             GeneralVokiQuestionId questionId = new(new(parts[0]));
-            ushort orderInVokiTaking = ushort.Parse(parts[1]);
+            var orderInVokiTaking = QuestionOrderInVokiTakingSession.Create( ushort.Parse(parts[1])).AsSuccess();
             ImmutableHashSet<GeneralVokiAnswerId> chosenAnswerIds = parts[2]
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(aId => new GeneralVokiAnswerId(new(aId)))
                 .ToImmutableHashSet();
 
-            details.Add(new VokiTakenQuestionDetails(
-                questionId, chosenAnswerIds, orderInVokiTaking
-            ));
+            details.Add(new VokiTakenQuestionDetails(questionId, chosenAnswerIds, orderInVokiTaking));
         }
 
         return details.ToImmutableArray();

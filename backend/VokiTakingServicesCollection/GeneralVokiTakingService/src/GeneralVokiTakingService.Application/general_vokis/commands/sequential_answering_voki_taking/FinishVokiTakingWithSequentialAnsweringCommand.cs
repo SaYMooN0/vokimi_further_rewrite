@@ -17,7 +17,7 @@ public sealed record FinishVokiTakingWithSequentialAnsweringCommand(
     ClientServerTimePairDto SessionStartTime,
     DateTime ClientSessionFinishTime,
     GeneralVokiQuestionId LastQuestionId,
-    ushort LastQuestionOrderInVokiTaking,
+    QuestionOrderInVokiTakingSession LastQuestionOrder,
     ImmutableHashSet<GeneralVokiAnswerId> LastQuestionChosenAnswers,
     ClientServerTimePairDto LastQuestionShownAt,
     DateTime LastQuestionClientAnsweredAt
@@ -67,7 +67,7 @@ internal sealed class FinishVokiTakingWithSequentialAnsweringCommandHandler :
             clientSessionFinishedTime: command.ClientSessionFinishTime,
             _userCtxProvider.Current,
             lastQuestionId: command.LastQuestionId,
-            lastQuestionOrderInVokiTaking: command.LastQuestionOrderInVokiTaking,
+            lastQuestionOrderInVokiTaking: command.LastQuestionOrder,
             lastQuestionShownAt: command.LastQuestionShownAt,
             clientLastAnsweredAt: command.LastQuestionClientAnsweredAt,
             command.LastQuestionChosenAnswers,

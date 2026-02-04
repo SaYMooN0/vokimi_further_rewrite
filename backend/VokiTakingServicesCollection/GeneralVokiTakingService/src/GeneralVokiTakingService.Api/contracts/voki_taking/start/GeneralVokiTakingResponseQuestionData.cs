@@ -1,6 +1,6 @@
 ﻿using GeneralVokiTakingService.Application.common.dtos;
 
-namespace GeneralVokiTakingService.Api.contracts;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.start;
 
 public record GeneralVokiTakingResponseQuestionData(
     string Id,
@@ -17,10 +17,11 @@ public record GeneralVokiTakingResponseQuestionData(
         question.Text,
         question.ImagesSet.Keys.Select(k => k.ToString()).ToArray(),
         question.ImagesSet.AspectRatio,
-        question.OrderInVokiTaking,
+        question.OrderInVokiTaking.Value,
         question.MinAnswersCount,
         question.MaxAnswersCount
     );
 
     public static ICreatableResponse<VokiTakingQuestionData> Create(VokiTakingQuestionData question) => FromQuestion(question);
+    public  class GeneralVokiTakingResponseQuestionContentData 
 }

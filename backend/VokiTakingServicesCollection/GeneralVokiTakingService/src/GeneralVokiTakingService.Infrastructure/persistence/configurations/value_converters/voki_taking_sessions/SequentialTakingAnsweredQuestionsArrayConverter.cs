@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
+﻿using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.sequential_answering;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -34,7 +35,7 @@ internal class SequentialTakingAnsweredQuestionsArrayConverter :
             }
 
             GeneralVokiQuestionId questionId = new(new(parts[0]));
-            ushort orderInVokiTaking = ushort.Parse(parts[1]);
+            var orderInVokiTaking = QuestionOrderInVokiTakingSession.Create(ushort.Parse(parts[1])).AsSuccess();
             ImmutableHashSet<GeneralVokiAnswerId> chosenAnswerIds = parts[2]
                 .Split(',')
                 .Select(aId => new GeneralVokiAnswerId(new(aId)))
@@ -77,14 +78,12 @@ internal class SequentialTakingAnsweredQuestionsArrayComparer : ValueComparer<Im
         if (t.IsDefaultOrEmpty)
             return 0;
 
-        unchecked {
-            int hash = 17;
-            foreach (var x in t) {
-                hash = hash * 31 + (x is null ? 0 : x.GetHashCode());
-            }
-
-            return hash;
+        int hash = 17;
+        foreach (var x in t) {
+            hash = hash * 31 + (x is null ? 0 : x.GetHashCode());
         }
+
+        return hash;
     }
 
     private static ImmutableArray<SequentialTakingAnsweredQuestion> SnapshotArray(

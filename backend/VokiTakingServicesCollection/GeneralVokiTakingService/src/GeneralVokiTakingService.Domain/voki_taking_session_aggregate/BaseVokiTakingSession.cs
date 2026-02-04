@@ -36,6 +36,17 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
 
     public abstract ImmutableDictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession> QuestionsToShowOnStart();
 
+    public record VokiTakingStateToContinueFromSaved(
+        GeneralVokiQuestionId CurrentQuestionId,
+        ImmutableDictionary<
+            GeneralVokiQuestionId,
+            (QuestionOrderInVokiTakingSession Order, ImmutableHashSet<GeneralVokiAnswerId> SavedAnsweres)
+        > QuestionsToShow
+    );
+    public abstract int QuestionsWithSavedAnswersCount();
+
+    public abstract VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking();
+
     protected ErrOrNothing ValidateStartAndFinishTime(
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,
@@ -133,4 +144,5 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
 
     private static readonly TimeSpan ServerStartTolerance = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan ClientFinishTolerance = TimeSpan.FromMinutes(5);
+
 }

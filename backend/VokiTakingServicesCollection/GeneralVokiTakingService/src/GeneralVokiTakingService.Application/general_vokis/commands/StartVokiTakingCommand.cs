@@ -45,7 +45,7 @@ internal sealed class StartVokiTakingCommandHandler : ICommandHandler<StartVokiT
                     await _baseTakingSessionsRepository.Delete(startedSession, ct);
                 }
                 else {
-                    return StartVokiTakingCommandActiveSessionResult.Create(startedSession);
+                    return StartVokiTakingCommandActiveSessionExistsResult.Create(startedSession);
                 }
             }
         }
@@ -70,21 +70,24 @@ internal sealed class StartVokiTakingCommandHandler : ICommandHandler<StartVokiT
 
 public interface IStartVokiTakingCommandResult;
 
-public record StartVokiTakingCommandActiveSessionResult(
-    VokiTakingSessionId Id,
+public record StartVokiTakingCommandActiveSessionExistsResult(
+    VokiTakingSessionId SessionId,
     DateTime StartedAt,
-    Dictionary<GeneralVokiQuestionId, bool> QuestionToIsAnswered
+    int QuestionsWithSavedAnswersCount
 ) : IStartVokiTakingCommandResult
 {
-    public static StartVokiTakingCommandActiveSessionResult Create(BaseVokiTakingSession takingSession) { }
+    public static StartVokiTakingCommandActiveSessionExistsResult Create(BaseVokiTakingSession takingSession) => new(
+        takingSession.Id,
+        takingSession.StartTime,
+        takingSession.QuestionsWithSavedAnswersCount()
+    );
 }
 
 public record SuccessStartVokiTakingCommandResult(
     VokiTakingData Data
 ) : IStartVokiTakingCommandResult
 {
-    public static SuccessStartVokiTakingCommandResult Create(GeneralVoki voki, BaseVokiTakingSession takingSession) =>
-        new SuccessStartVokiTakingCommandResult(
-            VokiTakingData.Create(voki, takingSession)
-        );
+    public static SuccessStartVokiTakingCommandResult Create(GeneralVoki voki, BaseVokiTakingSession takingSession) => new(
+        VokiTakingData.Create(voki, takingSession)
+    );
 }

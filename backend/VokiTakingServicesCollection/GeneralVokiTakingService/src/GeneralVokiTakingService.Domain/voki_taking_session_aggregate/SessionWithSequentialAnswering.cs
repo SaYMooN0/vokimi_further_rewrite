@@ -59,6 +59,36 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     }
 
 
+    public override VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking() {
+        ImmutableHashSet<GeneralVokiQuestionId> answeredQuestionIds = _answered
+            .Select(q => q.QuestionId)
+            .ToImmutableHashSet();
+
+        TakingSessionExpectedQuestion? firstUnansweredQuestion = Questions
+            .Where(q => !answeredQuestionIds.Contains(q.QuestionId))
+            .MinBy(q => q.OrderInVokiTaking.Value);
+
+        if (firstUnansweredQuestion is null) {
+            //all questions are answered. Last question will be shown with its saved answers
+            var lastQuestion = _answered.MaxBy(q => q.OrderInVokiTaking.Value)!;
+            var questionsToShow = new[] { lastQuestion }.ToImmutableDictionary(
+                q => q.QuestionId,
+                q => (q.OrderInVokiTaking, q.ChosenAnswerIds)
+            );
+            return new VokiTakingStateToContinueFromSaved(lastQuestion.QuestionId, questionsToShow);
+        }
+        else {
+            var questionsToShow = new[] { firstUnansweredQuestion }.ToImmutableDictionary(
+                q => q.QuestionId,
+                q => (q.OrderInVokiTaking, ImmutableHashSet<GeneralVokiAnswerId>.Empty)
+            );
+            return new VokiTakingStateToContinueFromSaved(firstUnansweredQuestion.QuestionId, questionsToShow);
+        }
+    }
+
+    public override int QuestionsWithSavedAnswersCount() => _answered.Length;
+
+
     public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
         DateTime currentTime,
         ClientServerTimePairDto sessionStartTime,

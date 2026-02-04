@@ -1,7 +1,7 @@
 ﻿using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
 
-namespace GeneralVokiTakingService.Api.contracts.voki_taking.sequential_answering;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.finish;
 
 public class FinishVokiTakingWithSequentialAnsweringRequest : IRequestWithValidationNeeded
 {
@@ -34,13 +34,8 @@ public class FinishVokiTakingWithSequentialAnsweringRequest : IRequestWithValida
 
         ParsedLastQuestionId = new GeneralVokiQuestionId(questionGuid);
 
-        if (LastQuestionAnswersWithIsChosen is null) {
+        if (LastQuestionAnswersWithIsChosen is null || LastQuestionAnswersWithIsChosen.Count == 0) {
             return ErrFactory.NoValue.Common("Chosen answers are missing");
-        }
-
-
-        if (LastQuestionAnswersWithIsChosen is null) {
-            return ErrFactory.NoValue.Common();
         }
 
         string[] chosenAnswers = LastQuestionAnswersWithIsChosen

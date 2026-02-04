@@ -9,7 +9,7 @@ using SharedKernel.common.vokis;
 namespace GeneralVokiTakingService.Application.common.dtos;
 
 public record VokiTakingData(
-    VokiId Id,
+    VokiId VokiId,
     VokiName Name,
     bool IsWithForceSequentialAnswering,
     VokiTakingQuestionData[] Questions,
@@ -21,17 +21,11 @@ public record VokiTakingData(
     public static VokiTakingData Create(
         GeneralVoki voki, BaseVokiTakingSession takingSession
     ) {
-        ImmutableDictionary<GeneralVokiQuestionId, ushort> idToOrder = takingSession.QuestionIdToOrder();
-        VokiTakingQuestionData[] questions = takingSession.QuestionsToShowOnStart();
-        if (takingSession.IsWithForceSequentialAnswering) {
-          
-        }
-        else {
-            questions = voki.Questions
-                .Select(q => VokiTakingQuestionData.Create(q, idToOrder[q.Id]))
-                .ToArray();
-        }
-
+        var idToOrder = takingSession.QuestionsToShowOnStart();
+        VokiTakingQuestionData[] questions = voki.Questions.Where(q => idToOrder
+            .TryGetValue(q.Id, out _))
+            .Select(q => VokiTakingQuestionData.Create(q, idToOrder[q.Id]))
+            .ToArray();
         return new VokiTakingData(
             voki.Id, voki.Name, takingSession.IsWithForceSequentialAnswering, questions,
             takingSession.Id, takingSession.StartTime, (ushort)voki.Questions.Count
@@ -44,12 +38,12 @@ public record VokiTakingQuestionData(
     string Text,
     VokiQuestionImagesSet ImagesSet,
     QuestionContentDto Content,
-    ushort OrderInVokiTaking,
+    QuestionOrderInVokiTakingSession OrderInVokiTaking,
     ushort MinAnswersCount,
     ushort MaxAnswersCount
 )
 {
-    public static VokiTakingQuestionData Create(VokiQuestion question, ushort orderInVokiTaking) => new(
+    public static VokiTakingQuestionData Create(VokiQuestion question, QuestionOrderInVokiTakingSession orderInVokiTaking) => new(
         question.Id,
         question.Text,
         question.ImageSet,

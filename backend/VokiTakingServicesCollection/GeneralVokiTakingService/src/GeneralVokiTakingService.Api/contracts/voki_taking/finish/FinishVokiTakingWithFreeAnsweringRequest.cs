@@ -1,7 +1,7 @@
 ﻿using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
 
-namespace GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.finish;
 
 public class FinishVokiTakingWithFreeAnsweringRequest : IRequestWithValidationNeeded
 {

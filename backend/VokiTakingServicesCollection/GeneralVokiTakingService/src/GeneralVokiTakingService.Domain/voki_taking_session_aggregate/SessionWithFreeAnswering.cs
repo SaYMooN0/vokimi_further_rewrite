@@ -11,11 +11,15 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     private SessionWithFreeAnswering() { }
 
     public override bool IsWithForceSequentialAnswering => false;
+    private ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> _questionsWithSavedAnswers;
+
 
     private SessionWithFreeAnswering(
         VokiTakingSessionId id, VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
         ImmutableArray<TakingSessionExpectedQuestion> questions
-    ) : base(id, vokiId, vokiTaker, startTime, questions) { }
+    ) : base(id, vokiId, vokiTaker, startTime, questions) {
+        _questionsWithSavedAnswers = ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>.Empty;
+    }
 
     public static SessionWithFreeAnswering Create(
         VokiId vokiId, IUserCtx vokiTakerCtx, DateTime startTime,
@@ -52,6 +56,34 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             q => q.QuestionId,
             q => q.OrderInVokiTaking
         );
+
+    public override VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking() {
+        ImmutableHashSet<GeneralVokiQuestionId> answeredQuestionIds = _questionsWithSavedAnswers.Keys.ToImmutableHashSet();
+        TakingSessionExpectedQuestion? firstUnansweredQuestion = Questions
+            .Where(q => !answeredQuestionIds.Contains(q.QuestionId))
+            .MinBy(q => q.OrderInVokiTaking.Value);
+
+        if (firstUnansweredQuestion is null) {
+            firstUnansweredQuestion = Questions.MaxBy(q => q.OrderInVokiTaking.Value)!;
+        }
+
+        var questionsToShow = Questions.ToImmutableDictionary(
+            q => q.QuestionId,
+            q => (
+                q.OrderInVokiTaking,
+                _questionsWithSavedAnswers.TryGetValue(q.QuestionId, out var saved)
+                    ? saved
+                    : ImmutableHashSet<GeneralVokiAnswerId>.Empty
+            )
+        );
+
+        return new VokiTakingStateToContinueFromSaved(
+            firstUnansweredQuestion.QuestionId,
+            questionsToShow
+        );
+    }
+
+    public override int QuestionsWithSavedAnswersCount() => _questionsWithSavedAnswers.Count;
 
     public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
         DateTime currentTime,
@@ -110,14 +142,46 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         );
     }
 
-    public ImmutableArray<SessionWithFreeAnsweringAnsweredQuestion> AnsweredQuestions { get; private set; }
 
-    public ErrOrNothing SaveAnswers(IUserCtx userCtx /*new list*/) {
-        if (VokiTaker is null) {
-            return ErrFactory.AuthRequired();
+    public ErrOrNothing SaveAnswers(
+        IUserCtx userCtx,
+        ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> stateToSave
+    ) {
+        if (VokiTaker is not null && userCtx.IsAuthenticated(out var aUserCtx) && VokiTaker != aUserCtx.UserId) {
+            return ErrFactory.Conflict("Could not save answers because session was started by another user");
         }
 
-        throw new NotImplementedException();
+        if (stateToSave.Count > Questions.Length) {
+            return ErrFactory.Conflict(
+                "Cannot save current voki taking session state because save provides data for more questions than the Voki has",
+                $"Voki questions count: {Questions.Length}. Questions in the provided state to save: {stateToSave.Count}"
+            );
+        }
+
+        ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> existingQuestions = Questions
+            .ToImmutableDictionary(
+                q => q.QuestionId,
+                q => q.AnswerIds.ToImmutableHashSet()
+            );
+        ErrOrNothing errs = ErrOrNothing.Nothing;
+        foreach (var (qId, answerIds) in stateToSave) {
+            if (!existingQuestions.TryGetValue(qId, out var expectedAnswers)) {
+                errs.AddNext(ErrFactory.NotFound.VokiContent($"There are no question with id: {qId}"));
+            }
+            else if (answerIds.Count > expectedAnswers.Count) {
+                errs.AddNext(ErrFactory.NotFound.VokiContent($"To many answers selected for save for question with id: {qId}"));
+            }
+            else if (answerIds.Any(answerId => !expectedAnswers.Contains(answerId))) {
+                errs.AddNext(ErrFactory.NotFound.VokiContent($"There unexpected answer for question with id: {qId}"));
+            }
+        }
+
+        if (errs.IsErr(out var err)) {
+            return err;
+        }
+
+        _questionsWithSavedAnswers = stateToSave;
+        return ErrOrNothing.Nothing;
     }
 
     private ErrOrNothing ValidateChosenAnswers(

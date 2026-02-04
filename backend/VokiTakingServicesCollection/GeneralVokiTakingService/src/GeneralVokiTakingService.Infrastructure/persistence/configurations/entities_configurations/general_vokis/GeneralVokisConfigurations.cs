@@ -29,7 +29,7 @@ public class GeneralVokisConfigurations : IEntityTypeConfiguration<GeneralVoki>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Property(x => x.ForceSequentialAnswering);
+        builder.Property<bool>("ForceSequentialAnswering");
         builder.Property(x => x.ShuffleQuestions);
 
         builder
