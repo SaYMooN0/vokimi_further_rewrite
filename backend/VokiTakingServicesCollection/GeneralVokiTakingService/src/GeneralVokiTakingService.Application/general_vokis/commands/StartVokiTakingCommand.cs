@@ -71,15 +71,19 @@ internal sealed class StartVokiTakingCommandHandler : ICommandHandler<StartVokiT
 public interface IStartVokiTakingCommandResult;
 
 public record StartVokiTakingCommandActiveSessionExistsResult(
+    VokiId VokiId,
     VokiTakingSessionId SessionId,
     DateTime StartedAt,
-    int QuestionsWithSavedAnswersCount
+    ushort QuestionsWithSavedAnswersCount,
+    ushort TotalQuestionsCount
 ) : IStartVokiTakingCommandResult
 {
     public static StartVokiTakingCommandActiveSessionExistsResult Create(BaseVokiTakingSession takingSession) => new(
+        takingSession.VokiId,
         takingSession.Id,
         takingSession.StartTime,
-        takingSession.QuestionsWithSavedAnswersCount()
+        takingSession.QuestionsWithSavedAnswersCount(),
+        (ushort)takingSession.Questions.Length
     );
 }
 

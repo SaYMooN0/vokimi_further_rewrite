@@ -1,10 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using GeneralVokiTakingService.Api.contracts;
-using GeneralVokiTakingService.Api.contracts.voki_taking;
-using GeneralVokiTakingService.Api.contracts.voki_taking.finish;
-using GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
+﻿using GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
 using GeneralVokiTakingService.Api.contracts.voki_taking.sequential_answering;
-using GeneralVokiTakingService.Api.contracts.voki_taking.start;
+using GeneralVokiTakingService.Api.contracts.voki_taking.shared;
+using GeneralVokiTakingService.Api.contracts.voki_taking.shared.continue_taking;
+using GeneralVokiTakingService.Api.contracts.voki_taking.shared.start;
 using GeneralVokiTakingService.Application.general_vokis.commands;
 using GeneralVokiTakingService.Application.general_vokis.commands.free_answering_voki_taking;
 using GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
@@ -37,17 +35,6 @@ internal class SpecificVokiHandlers : IEndpointGroup
         return group;
     }
 
-    private static async Task<IResult> ContinueVokiTaking(
-        CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<ContinueVokiTakingCommand, VokiTakingData> handler
-    ) {
-        VokiId id = httpContext.GetVokiIdFromRoute();
-
-        ContinueVokiTakingCommand command = new(id);
-        var result = await handler.Handle(command, ct);
-
-        return CustomResults.FromErrOr(result, data => Results.Json(data));
-    }
 
     private static async Task<IResult> StartVokiTaking(
         CancellationToken ct, HttpContext httpContext,
@@ -59,7 +46,32 @@ internal class SpecificVokiHandlers : IEndpointGroup
         StartVokiTakingCommand command = new(id, request.TerminateCurrentActive);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrToJson<IStartVokiTakingCommandResult, StartTakingResponse>(result);
+        return CustomResults.FromErrOrToJson<IStartVokiTakingCommandResult, StartVokiTakingResponse>(result);
+    }
+
+    private static async Task<IResult> ContinueVokiTaking(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<ContinueVokiTakingCommand, VokiTakingData> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+
+        ContinueVokiTakingCommand command = new(id);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrToJson<VokiTakingData, ContinueVokiTakingResponse>(result);
+    }
+
+    private static async Task<IResult> SaveCurrentFreeVokiTakingSessionState(
+        CancellationToken ct, HttpContext httpContext,
+        ICommandHandler<SaveCurrentFreeVokiTakingSessionStateCommand> handler
+    ) {
+        VokiId vokiId = httpContext.GetVokiIdFromRoute();
+        var request = httpContext.GetValidatedRequest<SaveCurrentFreeVokiTakingSessionStateRequest>();
+
+        SaveCurrentFreeVokiTakingSessionStateCommand command = new(vokiId, request.ParsedSessionId, request.ParsedChosenAnswers);
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
 
     private static async Task<IResult> FinishVokiTakingWithFreeAnswering(
@@ -91,7 +103,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
         FinishVokiTakingWithSequentialAnsweringCommand command = new(
             vokiId, request.ParsedSessionId, request.ParsedSessionStartTime,
             ClientSessionFinishTime: request.ClientSessionFinishTime,
-            request.ParsedLastQuestionId, request.LastQuestionOrderInVokiTaking,
+            request.ParsedLastQuestionId, request.ParsedLastQuestionOrder,
             request.ParsedQuestionChosenAnswers, request.ParsedLastQuestionShownAt,
             LastQuestionClientAnsweredAt: request.ClientLastQuestionAnsweredAt
         );
@@ -114,7 +126,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
             vokiId, request.ParsedSessionId, request.ParsedQuestionId,
             ShownAt: request.ParsedShownAt,
             ClientQuestionAnsweredAt: request.ClientQuestionAnsweredAt,
-            request.QuestionOrderInVokiTaking,
+            request.ParsedQuestionOrder,
             request.ParsedChosenAnswers
         );
         var result = await handler.Handle(command, ct);

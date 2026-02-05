@@ -1,15 +1,15 @@
 ﻿using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
 
-namespace GeneralVokiTakingService.Api.contracts.voki_taking.finish;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
 
 public class FinishVokiTakingWithFreeAnsweringRequest : IRequestWithValidationNeeded
 {
+    public string SessionId { get; init; }
     public Dictionary<string, string[]> ChosenAnswers { get; init; }
     public DateTime ClientSessionStartTime { get; init; }
     public DateTime ServerSessionStartTime { get; init; }
     public DateTime ClientSessionFinishTime { get; init; }
-    public string SessionId { get; init; }
 
     private const int
         MaxQuestionsCount = 500,

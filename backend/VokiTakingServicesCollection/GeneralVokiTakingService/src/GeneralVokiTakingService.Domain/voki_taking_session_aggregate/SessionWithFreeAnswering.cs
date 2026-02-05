@@ -145,8 +145,12 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
 
     public ErrOrNothing SaveAnswers(
         IUserCtx userCtx,
+        VokiId vokiId,
         ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> stateToSave
     ) {
+        if (this.VokiId != vokiId) {
+            return ErrFactory.Conflict("Provided save data does not belong to this Voki");
+        }
         if (VokiTaker is not null && userCtx.IsAuthenticated(out var aUserCtx) && VokiTaker != aUserCtx.UserId) {
             return ErrFactory.Conflict("Could not save answers because session was started by another user");
         }

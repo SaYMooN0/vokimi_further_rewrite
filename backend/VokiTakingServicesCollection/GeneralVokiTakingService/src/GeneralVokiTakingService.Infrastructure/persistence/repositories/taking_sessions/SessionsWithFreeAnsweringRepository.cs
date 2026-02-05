@@ -20,7 +20,13 @@ internal class SessionsWithFreeAnsweringRepository : ISessionsWithFreeAnsweringR
 
     public async Task Delete(SessionWithFreeAnswering session, CancellationToken ct) {
         _db.ThrowIfDetached(session);
-        _db.BaseVokiTakingSessions.Remove(session);
+        _db.VokiTakingSessionsWithFreeAnswering.Remove(session);
+        await _db.SaveChangesAsync(ct);
+    }
+
+    public async  Task Update(SessionWithFreeAnswering session, CancellationToken ct) {
+        _db.ThrowIfDetached(session);
+        _db.VokiTakingSessionsWithFreeAnswering.Update(session);
         await _db.SaveChangesAsync(ct);
     }
 }

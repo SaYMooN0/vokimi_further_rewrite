@@ -25,8 +25,8 @@ internal sealed class FinishVokiTakingWithFreeAnsweringCommandHandler :
     private readonly IGeneralVokisRepository _generalVokisRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ISessionsWithFreeAnsweringRepository _sessionsWithFreeAnsweringRepository;
-    private readonly IGeneralVokiTakenRecordsRepository _generalVokiTakenRecordsRepository;
     private readonly IUserCtxProvider _userCtxProvider;
+    private readonly IGeneralVokiTakenRecordsRepository _generalVokiTakenRecordsRepository;
 
     public FinishVokiTakingWithFreeAnsweringCommandHandler(
         IGeneralVokisRepository generalVokisRepository,

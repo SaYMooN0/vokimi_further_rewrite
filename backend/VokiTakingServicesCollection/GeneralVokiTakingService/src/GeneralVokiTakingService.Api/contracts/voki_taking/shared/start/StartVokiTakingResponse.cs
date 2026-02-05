@@ -1,11 +1,13 @@
 ﻿using System.Runtime.CompilerServices;
 using GeneralVokiTakingService.Application.general_vokis.commands;
 
-namespace GeneralVokiTakingService.Api.contracts.voki_taking.start;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.shared.start;
 
-public abstract record StartTakingResponse(
+public abstract record StartVokiTakingResponse(
+    string VokiId,
     string SessionId,
-    DateTime StartedAt
+    DateTime StartedAt,
+    ushort TotalQuestionsCount
 ) : ICreatableResponse<IStartVokiTakingCommandResult>
 {
     public abstract bool NewSessionStarted { get; }
@@ -17,14 +19,14 @@ public abstract record StartTakingResponse(
     };
 
     public sealed record VokiTakingSuccessfullyStartedResponse(
-        string Id,
+        string VokiId,
         string VokiName,
         bool IsWithForceSequentialAnswering,
         GeneralVokiTakingResponseQuestionData[] Questions,
         string SessionId,
         DateTime StartedAt,
         ushort TotalQuestionsCount
-    ) : StartTakingResponse(SessionId, StartedAt)
+    ) : StartVokiTakingResponse(VokiId, SessionId, StartedAt, TotalQuestionsCount)
     {
         public override bool NewSessionStarted => true;
 
@@ -40,18 +42,22 @@ public abstract record StartTakingResponse(
     }
 
     public sealed record StartVokiTakingActiveSessionExistsResponse(
+        string VokiId,
         string SessionId,
         DateTime StartedAt,
-        int QuestionsWithSavedAnswersCount
-    ) : StartTakingResponse(SessionId, StartedAt)
+        ushort QuestionsWithSavedAnswersCount,
+        ushort TotalQuestionsCount
+    ) : StartVokiTakingResponse(VokiId, SessionId, StartedAt, TotalQuestionsCount)
     {
         public override bool NewSessionStarted => false;
 
         public static StartVokiTakingActiveSessionExistsResponse Create(StartVokiTakingCommandActiveSessionExistsResult res) =>
             new(
+                res.VokiId.ToString(),
                 res.SessionId.ToString(),
                 res.StartedAt,
-                res.QuestionsWithSavedAnswersCount
+                res.QuestionsWithSavedAnswersCount,
+                res.TotalQuestionsCount
             );
     }
 }

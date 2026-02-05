@@ -1,7 +1,8 @@
 ﻿using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
-namespace GeneralVokiTakingService.Api.contracts.voki_taking.finish;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.sequential_answering;
 
 public class FinishVokiTakingWithSequentialAnsweringRequest : IRequestWithValidationNeeded
 {
@@ -32,6 +33,12 @@ public class FinishVokiTakingWithSequentialAnsweringRequest : IRequestWithValida
             return ErrFactory.IncorrectFormat("Provided last question id is invalid");
         }
 
+        var orderRes = QuestionOrderInVokiTakingSession.Create(LastQuestionOrderInVokiTaking);
+        if (orderRes.IsErr(out var err)) {
+            return err;
+        }
+
+        ParsedLastQuestionOrder = orderRes.AsSuccess();
         ParsedLastQuestionId = new GeneralVokiQuestionId(questionGuid);
 
         if (LastQuestionAnswersWithIsChosen is null || LastQuestionAnswersWithIsChosen.Count == 0) {
@@ -42,7 +49,7 @@ public class FinishVokiTakingWithSequentialAnsweringRequest : IRequestWithValida
             .Where(kvp => kvp.Value)
             .Select(kvp => kvp.Key)
             .ToArray();
-        
+
         if (chosenAnswers.Length > MaxAnswersInQuestionCount) {
             return ErrFactory.ValueOutOfRange();
         }
@@ -75,11 +82,14 @@ public class FinishVokiTakingWithSequentialAnsweringRequest : IRequestWithValida
             return ErrFactory.ValueOutOfRange("Last question order cannot be zero or negative");
         }
 
+
         return ErrOrNothing.Nothing;
     }
 
     public VokiTakingSessionId ParsedSessionId { get; private set; }
     public GeneralVokiQuestionId ParsedLastQuestionId { get; private set; }
+    public QuestionOrderInVokiTakingSession ParsedLastQuestionOrder { get; private set; }
+
     public ImmutableHashSet<GeneralVokiAnswerId> ParsedQuestionChosenAnswers { get; private set; }
 
     public ClientServerTimePairDto ParsedLastQuestionShownAt =>

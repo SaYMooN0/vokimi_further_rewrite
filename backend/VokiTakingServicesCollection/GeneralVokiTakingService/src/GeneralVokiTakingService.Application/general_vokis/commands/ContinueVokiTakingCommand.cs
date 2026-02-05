@@ -24,30 +24,26 @@ internal sealed class ContinueVokiTakingCommandHandler : ICommandHandler<Continu
         IUserCtxProvider userCtxProvider,
         IGeneralVokisRepository generalVokisRepository,
         IBaseTakingSessionsRepository baseTakingSessionsRepository
-    )
-    {
+    ) {
         _userCtxProvider = userCtxProvider;
         _generalVokisRepository = generalVokisRepository;
         _baseTakingSessionsRepository = baseTakingSessionsRepository;
     }
 
-    public async Task<ErrOr<VokiTakingData>> Handle(ContinueVokiTakingCommand command, CancellationToken ct)
-    {
+    public async Task<ErrOr<VokiTakingData>> Handle(ContinueVokiTakingCommand command, CancellationToken ct) {
         var vokiTakerCtx = _userCtxProvider.Current;
-        if (!vokiTakerCtx.IsAuthenticated(out var aUserCtx))
-        {
+        if (!vokiTakerCtx.IsAuthenticated(out var aUserCtx)) {
             return ErrFactory.AuthRequired("You must be authenticated to continue voki taking");
         }
 
-        var session = await _baseTakingSessionsRepository.GetForVokiAndUser(command.VokiId, aUserCtx, ct);
-        if (session is null)
-        {
-            return ErrFactory.NotFound.Voki("Active session not found", "No active voki taking session found for this user and voki");
+        BaseVokiTakingSession? session = await _baseTakingSessionsRepository.GetForVokiAndUser(command.VokiId, aUserCtx, ct);
+        if (session is null) {
+            return ErrFactory.NotFound.Voki("Active session not found",
+                "No active voki taking session found for this user and voki");
         }
 
         var voki = await _generalVokisRepository.GetWithQuestions(command.VokiId, ct);
-        if (voki is null)
-        {
+        if (voki is null) {
             return ErrFactory.NotFound.Voki("Voki not found", $"Voki with id: {command.VokiId} does not exist");
         }
 

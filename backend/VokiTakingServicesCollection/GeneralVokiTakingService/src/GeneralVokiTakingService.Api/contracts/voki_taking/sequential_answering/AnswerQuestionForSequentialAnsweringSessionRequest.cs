@@ -1,5 +1,6 @@
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
 namespace GeneralVokiTakingService.Api.contracts.voki_taking.sequential_answering;
 
@@ -43,6 +44,12 @@ public class AnswerQuestionForSequentialAnsweringSessionRequest : IRequestWithVa
             );
         }
 
+        var orderRes = QuestionOrderInVokiTakingSession.Create(QuestionOrderInVokiTaking);
+        if (orderRes.IsErr(out var err)) {
+            return err;
+        }
+
+        ParsedQuestionOrder = orderRes.AsSuccess();
 
         string[] chosenAnswers = AnswersWithIsChosen
             .Where(kvp => kvp.Value)
@@ -62,8 +69,6 @@ public class AnswerQuestionForSequentialAnsweringSessionRequest : IRequestWithVa
         }
 
         ParsedChosenAnswers = parsedAnswers;
-
-
         if (ClientQuestionAnsweredAt < ClientQuestionShownAt) {
             return ErrFactory.Conflict("Client answered before the question was shown");
         }
@@ -73,6 +78,7 @@ public class AnswerQuestionForSequentialAnsweringSessionRequest : IRequestWithVa
 
     public VokiTakingSessionId ParsedSessionId { get; private set; }
     public GeneralVokiQuestionId ParsedQuestionId { get; private set; }
+    public QuestionOrderInVokiTakingSession ParsedQuestionOrder { get; private set; }
     public ImmutableHashSet<GeneralVokiAnswerId> ParsedChosenAnswers { get; private set; }
     public ClientServerTimePairDto ParsedShownAt => new(Client: ClientQuestionShownAt, Server: ServerQuestionShownAt);
 }

@@ -43,7 +43,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
             (QuestionOrderInVokiTakingSession Order, ImmutableHashSet<GeneralVokiAnswerId> SavedAnsweres)
         > QuestionsToShow
     );
-    public abstract int QuestionsWithSavedAnswersCount();
+    public abstract ushort QuestionsWithSavedAnswersCount();
 
     public abstract VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking();
 

@@ -1,5 +1,5 @@
 
-namespace GeneralVokiTakingService.Api.contracts.voki_taking.start;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.shared.start;
 
 public record StartVokiTakingRequest(
     bool TerminateCurrentActive
