@@ -1,7 +1,7 @@
 ﻿using ApplicationShared;
-using GeneralVokiTakingService.Application.common.dtos;
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
+using GeneralVokiTakingService.Application.dtos;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
@@ -83,15 +83,15 @@ public record StartVokiTakingCommandActiveSessionExistsResult(
         takingSession.Id,
         takingSession.StartTime,
         takingSession.QuestionsWithSavedAnswersCount(),
-        (ushort)takingSession.Questions.Length
+        takingSession.TotalQuestionsCount
     );
 }
 
 public record SuccessStartVokiTakingCommandResult(
-    VokiTakingData Data
+    VokiTakingSessionDto Data
 ) : IStartVokiTakingCommandResult
 {
     public static SuccessStartVokiTakingCommandResult Create(GeneralVoki voki, BaseVokiTakingSession takingSession) => new(
-        VokiTakingData.Create(voki, takingSession)
+        VokiTakingSessionDto.Create(voki, takingSession)
     );
 }

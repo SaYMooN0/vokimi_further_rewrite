@@ -28,8 +28,9 @@ public class BaseVokiTakingSessionsConfigurations : IEntityTypeConfiguration<Bas
 
         builder.Property(x => x.StartTime);
 
+        builder.Ignore(x => x.TotalQuestionsCount);
         builder
-            .Property(x => x.Questions)
+            .Property<ImmutableArray<TakingSessionExpectedQuestion>>("Questions")
             .HasSessionExpectedQuestionsConversion();
     }
 }

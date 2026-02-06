@@ -1,20 +1,16 @@
 using ApplicationShared;
-using GeneralVokiTakingService.Application.common.dtos;
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
-using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using GeneralVokiTakingService.Application.dtos;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
-using SharedKernel;
-using SharedKernel.common.vokis;
-using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
 public sealed record ContinueVokiTakingCommand(
     VokiId VokiId
-) : ICommand<VokiTakingData>;
+) : ICommand<VokiTakingSessionDto>;
 
-internal sealed class ContinueVokiTakingCommandHandler : ICommandHandler<ContinueVokiTakingCommand, VokiTakingData>
+internal sealed class ContinueVokiTakingCommandHandler : ICommandHandler<ContinueVokiTakingCommand, VokiTakingSessionDto>
 {
     private readonly IUserCtxProvider _userCtxProvider;
     private readonly IGeneralVokisRepository _generalVokisRepository;
@@ -30,7 +26,7 @@ internal sealed class ContinueVokiTakingCommandHandler : ICommandHandler<Continu
         _baseTakingSessionsRepository = baseTakingSessionsRepository;
     }
 
-    public async Task<ErrOr<VokiTakingData>> Handle(ContinueVokiTakingCommand command, CancellationToken ct) {
+    public async Task<ErrOr<VokiTakingSessionDto>> Handle(ContinueVokiTakingCommand command, CancellationToken ct) {
         var vokiTakerCtx = _userCtxProvider.Current;
         if (!vokiTakerCtx.IsAuthenticated(out var aUserCtx)) {
             return ErrFactory.AuthRequired("You must be authenticated to continue voki taking");
@@ -47,6 +43,6 @@ internal sealed class ContinueVokiTakingCommandHandler : ICommandHandler<Continu
             return ErrFactory.NotFound.Voki("Voki not found", $"Voki with id: {command.VokiId} does not exist");
         }
 
-        return VokiTakingData.Create(voki, session);
+        return VokiTakingSessionDto.Create(voki, session);
     }
 }

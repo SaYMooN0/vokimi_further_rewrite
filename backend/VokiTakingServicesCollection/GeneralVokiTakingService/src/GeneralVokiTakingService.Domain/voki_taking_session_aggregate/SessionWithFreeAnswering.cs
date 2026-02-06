@@ -39,7 +39,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
                 OrderInVokiTaking: QuestionOrderInVokiTakingSession.Create(i + 1).AsSuccess(),
                 question.AnswersCountLimit.MinAnswers,
                 question.AnswersCountLimit.MaxAnswers,
-                question.Content.AnswerIds.ToImmutableHashSet()
+                question.GetAnswerOrderForVokiTakingSession()
             ));
         }
 
@@ -51,11 +51,8 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     }
 
     //all questions are available for user from the start
-    public override ImmutableDictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession> QuestionsToShowOnStart() =>
-        Questions.ToImmutableDictionary(
-            q => q.QuestionId,
-            q => q.OrderInVokiTaking
-        );
+    public override ImmutableArray<TakingSessionExpectedQuestion> QuestionsToShowOnStart() =>
+        Questions.ToImmutableArray();
 
     public override VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking() {
         ImmutableHashSet<GeneralVokiQuestionId> answeredQuestionIds = _questionsWithSavedAnswers.Keys.ToImmutableHashSet();
@@ -83,7 +80,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         );
     }
 
-    public override int QuestionsWithSavedAnswersCount() => _questionsWithSavedAnswers.Count;
+    public override ushort QuestionsWithSavedAnswersCount() => (ushort)_questionsWithSavedAnswers.Count;
 
     public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
         DateTime currentTime,
@@ -165,7 +162,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> existingQuestions = Questions
             .ToImmutableDictionary(
                 q => q.QuestionId,
-                q => q.AnswerIds.ToImmutableHashSet()
+                q => q.AnswersIdToOrderInQuestion.Keys.ToImmutableHashSet()
             );
         ErrOrNothing errs = ErrOrNothing.Nothing;
         foreach (var (qId, answerIds) in stateToSave) {

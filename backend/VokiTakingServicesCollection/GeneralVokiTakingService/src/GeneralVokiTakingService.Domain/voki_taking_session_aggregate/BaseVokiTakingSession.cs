@@ -12,7 +12,8 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
     public AppUserId? VokiTaker { get; }
     public DateTime StartTime { get; }
     public abstract bool IsWithForceSequentialAnswering { get; }
-    public ImmutableArray<TakingSessionExpectedQuestion> Questions { get; }
+    protected ImmutableArray<TakingSessionExpectedQuestion> Questions { get; }
+    public ushort TotalQuestionsCount => (ushort)Questions.Length;
 
     protected BaseVokiTakingSession(
         VokiTakingSessionId vokiTakingSessionId,
@@ -34,7 +35,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
         Questions = questions;
     }
 
-    public abstract ImmutableDictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession> QuestionsToShowOnStart();
+    public abstract ImmutableArray<TakingSessionExpectedQuestion> QuestionsToShowOnStart();
 
     public record VokiTakingStateToContinueFromSaved(
         GeneralVokiQuestionId CurrentQuestionId,
@@ -43,6 +44,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
             (QuestionOrderInVokiTakingSession Order, ImmutableHashSet<GeneralVokiAnswerId> SavedAnsweres)
         > QuestionsToShow
     );
+
     public abstract ushort QuestionsWithSavedAnswersCount();
 
     public abstract VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking();
@@ -113,7 +115,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
             ));
         }
 
-        if (!providedSet.IsSubsetOf(question.AnswerIds)) {
+        if (!providedSet.IsSubsetOf(question.AnswersIdToOrderInQuestion.Keys)) {
             errs.AddNext(ErrFactory.IncorrectFormat(
                 $"Question {question.OrderInVokiTaking.Value}: some selected answers are not available. Please select only from the shown options"
             ));
@@ -144,5 +146,4 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
 
     private static readonly TimeSpan ServerStartTolerance = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan ClientFinishTolerance = TimeSpan.FromMinutes(5);
-
 }

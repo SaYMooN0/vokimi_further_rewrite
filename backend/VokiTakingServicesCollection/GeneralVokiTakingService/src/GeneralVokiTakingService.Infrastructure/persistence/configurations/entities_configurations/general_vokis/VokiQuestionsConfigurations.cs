@@ -25,7 +25,7 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
         builder
             .Property(x => x.OrderInVoki)
             .HasConversion<VokiQuestionOrderConverter>();
-        builder.Property(x => x.ShuffleAnswers);
+        builder.Property<bool>("ShuffleAnswers");
         builder
             .Property(x => x.AnswersCountLimit)
             .HasConversion<QuestionAnswersCountLimitConverter>();

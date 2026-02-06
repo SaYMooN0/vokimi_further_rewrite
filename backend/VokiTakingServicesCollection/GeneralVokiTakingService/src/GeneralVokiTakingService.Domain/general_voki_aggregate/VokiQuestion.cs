@@ -10,7 +10,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     public VokiQuestionImagesSet ImageSet { get; }
     public VokiQuestionOrder OrderInVoki { get; }
     public GeneralVokiQuestionContent Content { get; }
-    public bool ShuffleAnswers { get; }
+    private bool ShuffleAnswers { get; }
     public QuestionAnswersCountLimit AnswersCountLimit { get; }
 
 
@@ -41,6 +41,22 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     public string ChooseExpectedNumberOfAnswersText() {
         var min = AnswersCountLimit.MinAnswers;
         var max = AnswersCountLimit.MaxAnswers;
-        return (min == max) ? $"Choose exactly {min} answer(s)" : $"Choose from {min} to {max} answers";
+        return min == max
+            ? $"Choose exactly {min} answer(s)"
+            : $"Choose from {min} to {max} answers";
+    }
+
+    public ImmutableDictionary<GeneralVokiAnswerId, ushort> GetAnswerOrderForVokiTakingSession() {
+        ;
+        if (ShuffleAnswers) {
+            return Content.AnswerIds
+                .OrderBy(_ => Random.Shared.Next())
+                .Select((a, i) => (Id: a, Order: (ushort)i))
+                .ToImmutableDictionary(a => a.Id, a => a.Order);
+        }
+
+        return Content.AnswerByIds
+            .Select(a => (Id: a.Key, a.Value.Order))
+            .ToImmutableDictionary(a => a.Id, a => a.Order);
     }
 }

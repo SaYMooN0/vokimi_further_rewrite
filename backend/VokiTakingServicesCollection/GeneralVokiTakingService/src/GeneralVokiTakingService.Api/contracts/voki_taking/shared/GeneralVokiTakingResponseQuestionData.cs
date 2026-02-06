@@ -12,7 +12,8 @@ public record GeneralVokiTakingResponseQuestionData(
     double ImagesAspectRatio,
     ushort OrderInVokiTaking,
     ushort MinAnswersCount,
-    ushort MaxAnswersCount
+    ushort MaxAnswersCount,
+    VokiTakingQuestionContentDto Content
 ) : ICreatableResponse<VokiTakingQuestionData>
 {
     public static GeneralVokiTakingResponseQuestionData FromQuestion(VokiTakingQuestionData question) => new(
@@ -27,28 +28,28 @@ public record GeneralVokiTakingResponseQuestionData(
 
     public static ICreatableResponse<VokiTakingQuestionData> Create(VokiTakingQuestionData question) => FromQuestion(question);
 
-    // [JsonDerivedType(typeof(TextOnlyContentDto), typeDiscriminator: nameof(GeneralVokiQuestionContent.TextOnly))]
-    // public abstract record GeneralVokiTakingResponseQuestionContentData()
-    //
-    // {
-    //     public static GeneralVokiTakingResponseQuestionContentData Create(GeneralVokiQuestionContent content) => new();
-    //
-    //     public sealed record TextOnlyContent(
-    //     ) : GeneralVokiTakingResponseQuestionContentData
-    //     {
-    //         public sealed record
-    //     }
-    // }
-    //
-    // public abstract record BaseContentAnswerData(string Id, ushort OrderInQuestion)
-    // {
-    //     public sealed record TextOnly(string Id, ushort OrderInQuestion, string Text) : BaseContentAnswerData(Id, OrderInQuestion)
-    //     {
-    //         public static TextOnly Create(GeneralVokiAnswerText text,GeneralVokiAnswerId id,ushort orderInQuestion) => new(
-    //             Id: id.ToString(),
-    //             OrderInQuestion: orderInQuestion,
-    //             Text: text.ToString()
-    //         );
-    //     }
-    // }
+    [JsonDerivedType(typeof(TextOnlyContentDto), typeDiscriminator: nameof(GeneralVokiQuestionContent.TextOnly))]
+    public abstract record GeneralVokiTakingResponseQuestionContentData()
+    
+    {
+        public static GeneralVokiTakingResponseQuestionContentData Create(GeneralVokiQuestionContent content) => new();
+    
+        public sealed record TextOnlyContent(
+        ) : GeneralVokiTakingResponseQuestionContentData
+        {
+            public sealed record
+        }
+    }
+    
+    public abstract record BaseContentAnswerData(string Id, ushort OrderInQuestion)
+    {
+        public sealed record TextOnly(string Id, ushort OrderInQuestion, string Text) : BaseContentAnswerData(Id, OrderInQuestion)
+        {
+            public static TextOnly Create(GeneralVokiAnswerText text,GeneralVokiAnswerId id,ushort orderInQuestion) => new(
+                Id: id.ToString(),
+                OrderInQuestion: orderInQuestion,
+                Text: text.ToString()
+            );
+        }
+    }
 }

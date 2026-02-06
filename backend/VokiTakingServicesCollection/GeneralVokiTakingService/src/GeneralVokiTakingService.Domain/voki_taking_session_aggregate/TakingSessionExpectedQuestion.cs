@@ -5,5 +5,5 @@ public record TakingSessionExpectedQuestion(
     QuestionOrderInVokiTakingSession OrderInVokiTaking,
     ushort MinAnswersCount,
     ushort MaxAnswersCount,
-    ImmutableHashSet<GeneralVokiAnswerId> AnswerIds
+    ImmutableDictionary<GeneralVokiAnswerId, ushort> AnswersIdToOrderInQuestion
 );

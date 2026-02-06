@@ -39,7 +39,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
                 OrderInVokiTaking: QuestionOrderInVokiTakingSession.Create(i + 1).AsSuccess(),
                 question.AnswersCountLimit.MinAnswers,
                 question.AnswersCountLimit.MaxAnswers,
-                question.Content.AnswerIds.ToImmutableHashSet()
+                question.GetAnswerOrderForVokiTakingSession()
             ));
         }
 
@@ -51,10 +51,10 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     }
 
     //questions must be shown one by one 
-    public override ImmutableDictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession> QuestionsToShowOnStart() {
+    public override ImmutableArray<TakingSessionExpectedQuestion> QuestionsToShowOnStart() {
         var firstQuestionInTaking = Questions.MinBy(q => q.OrderInVokiTaking.Value)!;
-        return new Dictionary<GeneralVokiQuestionId, QuestionOrderInVokiTakingSession>() {
-            [firstQuestionInTaking.QuestionId] = firstQuestionInTaking.OrderInVokiTaking
+        return new Dictionary<GeneralVokiQuestionId, TakingSessionExpectedQuestion>() {
+            [firstQuestionInTaking.QuestionId] = firstQuestionInTaking
         }.ToImmutableDictionary();
     }
 
@@ -86,7 +86,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         }
     }
 
-    public override int QuestionsWithSavedAnswersCount() => _answered.Length;
+    public override ushort QuestionsWithSavedAnswersCount() => (ushort)_answered.Length;
 
 
     public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
@@ -391,8 +391,11 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        var allowed = expected.AnswerIds.ToImmutableHashSet();
-        var invalidChosen = chosenAnswers.Where(a => !allowed.Contains(a)).ToArray();
+        ImmutableHashSet<GeneralVokiAnswerId> allowedAnswerIds = expected.AnswersIdToOrderInQuestion.Keys.ToImmutableHashSet();
+        GeneralVokiAnswerId[] invalidChosen = chosenAnswers
+            .Where(a => !allowedAnswerIds.Contains(a))
+            .ToArray();
+        
         if (invalidChosen.Length > 0) {
             return ErrFactory.Conflict(
                 "Some selected options are not allowed for this question",
