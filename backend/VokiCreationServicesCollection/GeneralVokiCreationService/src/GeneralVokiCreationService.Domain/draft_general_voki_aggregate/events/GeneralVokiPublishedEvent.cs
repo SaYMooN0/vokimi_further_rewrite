@@ -31,7 +31,7 @@ public record QuestionDomainEventDto(
     GeneralVokiQuestionId Id,
     VokiQuestionText Text,
     VokiQuestionImagesSet ImageSet,
-    ushort OrderInVoki,
+    VokiQuestionOrder OrderInVoki,
     bool ShuffleAnswers,
     QuestionAnswersCountLimit AnswersCountLimit,
     IQuestionContentIntegrationEventDto Content,

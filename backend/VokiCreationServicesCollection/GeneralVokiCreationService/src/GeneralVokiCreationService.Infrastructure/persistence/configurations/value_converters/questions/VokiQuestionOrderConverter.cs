@@ -1,7 +1,7 @@
-using GeneralVokiTakingService.Domain.general_voki_aggregate;
+using GeneralVokiCreationService.Domain.draft_general_voki_aggregate.questions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.value_converters.vokis;
+namespace GeneralVokiCreationService.Infrastructure.persistence.configurations.value_converters.questions;
 
 public class VokiQuestionOrderConverter : ValueConverter<VokiQuestionOrder, int>
 {

@@ -30,11 +30,7 @@
 			<svg bind:this={iconElement}><use href="#common-toggle-content-arrow" /></svg>
 		</div>
 	</div>
-	<div
-		class="type-specific-data"
-		class:hidden={hideTypeSpecificData}
-		style="	interpolate-size: allow-keywords;"
-	>
+	<div class="type-specific-data" class:hidden={hideTypeSpecificData}>
 		{#if typeWithData.type === 'General'}
 			<GeneralVokiTypeSpecificDataContent data={typeWithData.typeSpecificData} />
 		{:else}
@@ -105,8 +101,8 @@
 		opacity: 1;
 		interpolate-size: allow-keywords;
 		transition:
-			all 0.6s ease,
-			opacity 0.6s ease-out;
+			all 0.4s ease,
+			opacity 0.4s ease-out;
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;

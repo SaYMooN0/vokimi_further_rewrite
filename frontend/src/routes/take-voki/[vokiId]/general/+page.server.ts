@@ -4,6 +4,7 @@ import type { GeneralVokiTakingData } from "./types";
 import { VokiCatalogVisitMarkerCookie } from "$lib/ts/cookies/voki-catalog-visit-marker-cookie";
 
 export const load: ServerLoad = async ({ cookies, params, fetch }) => {
+    params.terminateCurrentActive
     const vokiId = params.vokiId;
     if (!vokiId) {
         throw redirect(302, `/`);

@@ -64,15 +64,15 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             firstUnansweredQuestion = Questions.MaxBy(q => q.OrderInVokiTaking.Value)!;
         }
 
-        var questionsToShow = Questions.ToImmutableDictionary(
-            q => q.QuestionId,
-            q => (
-                q.OrderInVokiTaking,
-                _questionsWithSavedAnswers.TryGetValue(q.QuestionId, out var saved)
-                    ? saved
-                    : ImmutableHashSet<GeneralVokiAnswerId>.Empty
+        var questionsToShow = Questions
+            .Select(q => (
+                    q,
+                    _questionsWithSavedAnswers.TryGetValue(q.QuestionId, out var saved)
+                        ? saved
+                        : ImmutableHashSet<GeneralVokiAnswerId>.Empty
+                )
             )
-        );
+            .ToImmutableArray();
 
         return new VokiTakingStateToContinueFromSaved(
             firstUnansweredQuestion.QuestionId,
@@ -148,6 +148,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         if (this.VokiId != vokiId) {
             return ErrFactory.Conflict("Provided save data does not belong to this Voki");
         }
+
         if (VokiTaker is not null && userCtx.IsAuthenticated(out var aUserCtx) && VokiTaker != aUserCtx.UserId) {
             return ErrFactory.Conflict("Could not save answers because session was started by another user");
         }

@@ -30,7 +30,7 @@
 	async function saveChanges() {
 		const response = await vokiCreationApi.updateVokiName(vokiId, nameEditingValue);
 		if (response.isSuccess) {
-			updateSavedVokiName(response.data.newName);
+			updateSavedVokiName(response.data.newVokiName);
 			isEditing = false;
 			savingErrs = [];
 			headerVokiName.invalidate();

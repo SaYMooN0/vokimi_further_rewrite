@@ -4,14 +4,14 @@
 		strokePx?: number;
 		speedSec?: number;
 		color: string;
+		class?: string;
 	}
-	let { sizeRem = 3, strokePx = 3, speedSec = 1.5, color }: Props = $props();
+	let { sizeRem = 3, strokePx = 3, speedSec = 1.5, color, class: className }: Props = $props();
 </script>
 
 <div
-	class="container"
+	class="container {className}"
 	style="
-
 --size: {sizeRem}rem; 
 --speed: {speedSec}s; 
 --line-stroke: {strokePx}px;

@@ -76,8 +76,8 @@
 		transform: scale(1.02);
 	}
 
-	.buttons-container > :global(a > :nth-child(1)),
-	.buttons-container > :global(button > :nth-child(1)) {
+	.buttons-container > :global(a > .icon-item:nth-child(1)),
+	.buttons-container > :global(button > .icon-item:nth-child(1)) {
 		width: 1.75rem;
 		height: 1.75rem;
 		margin-right: 0.5rem;

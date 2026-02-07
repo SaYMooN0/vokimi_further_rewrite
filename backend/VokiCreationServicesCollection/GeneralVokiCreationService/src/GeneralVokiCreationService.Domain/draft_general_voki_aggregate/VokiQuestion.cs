@@ -15,7 +15,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     private VokiQuestion() { }
     public VokiQuestionText Text { get; private set; }
     public VokiQuestionImagesSet ImageSet { get; private set; }
-    public ushort OrderInVoki { get; private set; }
+    public VokiQuestionOrder OrderInVoki { get; private set; }
     public BaseQuestionTypeSpecificContent Content { get; private set; }
     public bool ShuffleAnswers { get; private set; }
     public QuestionAnswersCountLimit AnswersCountLimit { get; private set; }
@@ -24,7 +24,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         GeneralVokiQuestionId id,
         VokiQuestionText text,
         VokiQuestionImagesSet imageSet,
-        ushort orderInVoki,
+        VokiQuestionOrder orderInVoki,
         GeneralVokiQuestionContentType contentType,
         QuestionAnswersCountLimit answersCountLimit
     ) {
@@ -37,7 +37,7 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         ShuffleAnswers = false;
     }
 
-    public static VokiQuestion CreateNew(ushort orderInVoki, GeneralVokiQuestionContentType contentType) => new(
+    public static VokiQuestion CreateNew(VokiQuestionOrder orderInVoki, GeneralVokiQuestionContentType contentType) => new(
         GeneralVokiQuestionId.CreateNew(),
         GeneralVokiPresets.GetRandomQuestionText(),
         VokiQuestionImagesSet.Default,
@@ -55,14 +55,24 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
         Text = questionText;
     }
 
-    public void MoveOrderUp() {
-        if (OrderInVoki > 0) {
-            OrderInVoki--;
+    public ErrOrNothing MoveOrderUp() {
+        ErrOr<VokiQuestionOrder> newOrder = OrderInVoki.MinusOne();
+        if (newOrder.IsErr(out var err)) {
+            return err;
         }
+
+        OrderInVoki = newOrder.AsSuccess();
+        return ErrOrNothing.Nothing;
     }
 
-    public void MoveOrderDown() {
-        OrderInVoki++;
+    public ErrOrNothing MoveOrderDown() {
+        ErrOr<VokiQuestionOrder> newOrder = OrderInVoki.PlusOne();
+        if (newOrder.IsErr(out var err)) {
+            return err;
+        }
+
+        OrderInVoki = newOrder.AsSuccess();
+        return ErrOrNothing.Nothing;
     }
 
     public ErrOrNothing UpdateImages(VokiQuestionImagesSet images) {

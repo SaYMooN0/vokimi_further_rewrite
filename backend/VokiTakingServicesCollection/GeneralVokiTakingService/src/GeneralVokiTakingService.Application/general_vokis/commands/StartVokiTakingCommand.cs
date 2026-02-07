@@ -6,6 +6,7 @@ using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel;
+using SharedKernel.common.vokis;
 using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
@@ -71,27 +72,24 @@ internal sealed class StartVokiTakingCommandHandler : ICommandHandler<StartVokiT
 public interface IStartVokiTakingCommandResult;
 
 public record StartVokiTakingCommandActiveSessionExistsResult(
-    VokiId VokiId,
-    VokiTakingSessionId SessionId,
-    DateTime StartedAt,
-    ushort QuestionsWithSavedAnswersCount,
-    ushort TotalQuestionsCount
+    SavedActiveVokiTakingSessionDto SessionData
 ) : IStartVokiTakingCommandResult
 {
     public static StartVokiTakingCommandActiveSessionExistsResult Create(BaseVokiTakingSession takingSession) => new(
-        takingSession.VokiId,
-        takingSession.Id,
-        takingSession.StartTime,
-        takingSession.QuestionsWithSavedAnswersCount(),
-        takingSession.TotalQuestionsCount
+        SavedActiveVokiTakingSessionDto.Create(takingSession)
     );
 }
 
 public record SuccessStartVokiTakingCommandResult(
-    VokiTakingSessionDto Data
+    CurrentVokiTakingSessionDto SessionData
 ) : IStartVokiTakingCommandResult
 {
     public static SuccessStartVokiTakingCommandResult Create(GeneralVoki voki, BaseVokiTakingSession takingSession) => new(
-        VokiTakingSessionDto.Create(voki, takingSession)
+        CurrentVokiTakingSessionDto.Create(
+            vokiName: voki.Name,
+            vokiQuestionsById: voki.Questions.ToDictionary(q => q.Id, q => q),
+            takingSession,
+            questionsToShow: takingSession.QuestionsToShowOnStart()
+        )
     );
 }

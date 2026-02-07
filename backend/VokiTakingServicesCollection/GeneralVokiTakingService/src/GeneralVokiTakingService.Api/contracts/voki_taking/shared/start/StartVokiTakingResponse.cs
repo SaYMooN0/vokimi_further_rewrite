@@ -31,13 +31,13 @@ public abstract record StartVokiTakingResponse(
         public override bool NewSessionStarted => true;
 
         public static VokiTakingSuccessfullyStartedResponse Create(SuccessStartVokiTakingCommandResult res) => new(
-            res.Data.VokiId.ToString(),
-            res.Data.Name.ToString(),
-            res.Data.IsWithForceSequentialAnswering,
-            res.Data.Questions.Select(GeneralVokiTakingResponseQuestionData.FromQuestion).ToArray(),
-            res.Data.SessionId.ToString(),
-            res.Data.StartedAt,
-            res.Data.TotalQuestionsCount
+            res.SessionData.VokiId.ToString(),
+            res.SessionData.VokiName.ToString(),
+            res.SessionData.IsWithForceSequentialAnswering,
+            res.SessionData.QuestionsToShow.Select(GeneralVokiTakingResponseQuestionData.FromQuestion).ToArray(),
+            res.SessionData.SessionId.ToString(),
+            res.SessionData.StartedAt,
+            res.SessionData.TotalQuestionsCount
         );
     }
 

@@ -29,13 +29,11 @@ public static class VokiPublishedEventMapper
         q.Text.ToString(),
         Images: q.ImageSet.Keys.Select(i => i.ToString()).ToArray(),
         ImagesAspectRatio: q.ImageSet.AspectRatio.GetRatio(),
-        q.OrderInVoki,
+        q.OrderInVoki.Value,
         ShuffleAnswers: q.ShuffleAnswers,
         MinAnswersCount: q.AnswersCountLimit.MinAnswers,
         MaxAnswersCount: q.AnswersCountLimit.MaxAnswers,
         Content: q.Content,
         HasAnyAudio: q.HasAnyAudio
     );
-
-    
 }

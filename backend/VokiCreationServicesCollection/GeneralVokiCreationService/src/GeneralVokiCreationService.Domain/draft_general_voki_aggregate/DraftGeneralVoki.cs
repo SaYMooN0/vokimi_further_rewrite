@@ -90,7 +90,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return ErrFactory.NoAccess("To access Voki results user must have access to Voki");
     }
 
-    public ErrOr<GeneralVokiQuestionId> AddNewQuestion(AuthenticatedUserCtx aUserCtx, GeneralVokiQuestionContentType contentType) {
+    public ErrOr<GeneralVokiQuestionId> AddNewQuestion(
+        AuthenticatedUserCtx aUserCtx,
+        GeneralVokiQuestionContentType contentType
+    ) {
         if (!HasUserAccess(aUserCtx)) {
             return ErrFactory.NoAccess("To modify Voki you must be its author");
         }
@@ -113,7 +116,12 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        VokiQuestion question = VokiQuestion.CreateNew((ushort)_questions.Count, contentType);
+        ErrOr<VokiQuestionOrder> orderCreationRes = VokiQuestionOrder.Create(_questions.Count + 1);
+        if (orderCreationRes.IsErr(out var err)) {
+            return err;
+        }
+
+        VokiQuestion question = VokiQuestion.CreateNew(orderCreationRes.AsSuccess(), contentType);
         _questions.Add(question);
         return question.Id;
     }
@@ -268,8 +276,10 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOr<ImmutableArray<VokiQuestion>> MoveQuestionUpInOrder(AuthenticatedUserCtx aUserCtx,
-        GeneralVokiQuestionId questionId) {
+    public ErrOr<ImmutableArray<VokiQuestion>> MoveQuestionUpInOrder(
+        AuthenticatedUserCtx aUserCtx,
+        GeneralVokiQuestionId questionId
+    ) {
         if (!HasUserAccess(aUserCtx)) {
             return ErrFactory.NoAccess("To move question up you must have access to the Voki");
         }
@@ -282,20 +292,27 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        if (question.OrderInVoki == 0) {
+        if (question.OrderInVoki.IsFirst()) {
             return _questions.ToImmutableArray();
         }
 
-        var neighbor = _questions.FirstOrDefault(q => q.OrderInVoki == question.OrderInVoki - 1);
+        VokiQuestion? neighbor = _questions.FirstOrDefault(q => q.OrderInVoki.Value == question.OrderInVoki.Value - 1);
         if (neighbor is null) {
             return ErrFactory.Conflict(
                 "Cannot move question up",
-                $"No neighbor with order {question.OrderInVoki - 1} found. Voki id: {Id}, question id: {questionId}"
+                $"No neighbor with order {question.OrderInVoki.Value - 1} found. Voki id: {Id}, question id: {questionId}"
             );
         }
 
-        question.MoveOrderUp();
-        neighbor.MoveOrderDown();
+        ErrOrNothing moveUpRes = question.MoveOrderUp();
+        if (moveUpRes.IsErr(out var err)) {
+            return err;
+        }
+
+        ErrOrNothing moveDownRes = neighbor.MoveOrderDown();
+        if (moveDownRes.IsErr(out err)) {
+            return err;
+        }
 
         return _questions.ToImmutableArray();
     }
@@ -314,20 +331,27 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        if (question.OrderInVoki == _questions.Count - 1) {
+        if (question.OrderInVoki.Value == _questions.Count) {
             return _questions.ToImmutableArray();
         }
 
-        var neighbor = _questions.FirstOrDefault(q => q.OrderInVoki == question.OrderInVoki + 1);
+        VokiQuestion? neighbor = _questions.FirstOrDefault(q => q.OrderInVoki.Value == question.OrderInVoki.Value + 1);
         if (neighbor is null) {
             return ErrFactory.Conflict(
                 "Cannot move question down",
-                $"No neighbor with order {question.OrderInVoki + 1} found. Voki id: {Id}, question id: {questionId}"
+                $"No neighbor with order {question.OrderInVoki.Value + 1} found. Voki id: {Id}, question id: {questionId}"
             );
         }
 
-        question.MoveOrderDown();
-        neighbor.MoveOrderUp();
+        ErrOrNothing moveDownRes = question.MoveOrderDown();
+        if (moveDownRes.IsErr(out var err)) {
+            return err;
+        }
+
+        ErrOrNothing moveUpRes = neighbor.MoveOrderUp();
+        if (moveUpRes.IsErr(out err)) {
+            return err;
+        }
 
         return _questions.ToImmutableArray();
     }
@@ -345,11 +369,14 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             );
         }
 
-        var order = question.OrderInVoki;
+        VokiQuestionOrder order = question.OrderInVoki;
         _questions.Remove(question);
 
-        foreach (var q in _questions.Where(q => q.OrderInVoki > order)) {
-            q.MoveOrderUp();
+        foreach (var q in _questions.Where(q => q.OrderInVoki.Value > order.Value)) {
+            ErrOrNothing moveUpRes = q.MoveOrderUp();
+            if (moveUpRes.IsErr(out var err)) {
+                return err.WithMessagePrefix("Cannot delete question due to moving other question order error: ");
+            }
         }
 
         return _questions.ToImmutableArray();
@@ -583,8 +610,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
 
     private void AddVokiPublishedDomainEvent(DateTime utcNow) {
         QuestionDomainEventDto ParseQuestionToDto(VokiQuestion q) {
-
-            
             return new QuestionDomainEventDto(
                 q.Id, q.Text, q.ImageSet, q.OrderInVoki,
                 q.ShuffleAnswers, q.AnswersCountLimit, q.Content.ToIntegrationEventDto(), HasAnyAudio: q.HasAudio()

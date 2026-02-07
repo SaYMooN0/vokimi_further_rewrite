@@ -19,7 +19,7 @@ public record class VokiQuestionBriefDataResponse(
         question.Text.ToString(),
         question.ImageSet.Keys.Select(k => k.ToString()).ToArray(),
         question.Content.Type,
-        question.OrderInVoki,
+        question.OrderInVoki.Value,
         ShuffleAnswers: question.ShuffleAnswers,
         question.AnswersCountLimit.IsMultipleChoice
     );

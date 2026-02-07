@@ -11,6 +11,7 @@
 	import VokiTakingHeader from '../_c_types_shared/VokiTakingHeader.svelte';
 
 	let { data }: PageProps = $props();
+	console.log(data);
 	function vokiTakingCase(
 		vokiTakingData: GeneralVokiTakingData
 	): 'default' | 'sequentialAnswering' {

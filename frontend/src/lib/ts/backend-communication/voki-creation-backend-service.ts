@@ -31,7 +31,7 @@ export type VokiSuccessfullyPublishedData = {
 export interface IVokiCreationBackendService {
     setVokiCoverToDefault(vokiId: string): Promise<ResponseResult<{ newCover: string; }>>;
     updateVokiCover(vokiId: string, newCover: string): Promise<ResponseResult<{ newCover: string; }>>;
-    updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newName: string; }>>;
+    updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newVokiName: string; }>>;
     getVokiName(vokiId: string): Promise<ResponseResult<{ vokiName: string; }>>;
     updateVokiTags(vokiId: string, tags: string[]): Promise<ResponseResult<{ newTags: string[]; }>>;
     updateVokiDetails(vokiId: string, details: VokiDetails): Promise<ResponseResult<VokiDetails>>;
@@ -66,8 +66,8 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
         );
     }
 
-    public async updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newName: string; }>> {
-        return await this.fetchJsonResponse<{ newName: string; }>(
+    public async updateVokiName(vokiId: string, newName: string): Promise<ResponseResult<{ newVokiName: string; }>> {
+        return await this.fetchJsonResponse<{ newVokiName: string; }>(
             `/vokis/${vokiId}/update-name`,
             RJO.PATCH({ newName })
         );

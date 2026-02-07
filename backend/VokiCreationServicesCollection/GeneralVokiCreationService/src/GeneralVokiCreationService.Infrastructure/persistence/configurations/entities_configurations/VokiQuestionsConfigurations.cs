@@ -24,7 +24,6 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
             .Property(x => x.ImageSet)
             .HasConversion<VokiQuestionImagesSetConverter>();
 
-        
         builder
             .Property(x => x.Content)
             .HasConversion<VokiQuestionTypeSpecificContentConverter>();
@@ -32,5 +31,9 @@ public class VokiQuestionsConfigurations : IEntityTypeConfiguration<VokiQuestion
         builder
             .Property(x => x.AnswersCountLimit)
             .HasConversion<QuestionAnswersCountLimitConverter>();
+            
+        builder
+            .Property(x => x.OrderInVoki)
+            .HasConversion<VokiQuestionOrderConverter>();
     }
 }

@@ -1,9 +1,8 @@
 using GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
-using SharedKernel.common.vokis.general_vokis;
 
 namespace GeneralVokiTakingService.Api.contracts.voki_taking.sequential_answering;
 
-public record class SequentialAnswerSessionNextQuestionResponse(
+public record SequentialAnswerSessionNextQuestionResponse(
     string Id,
     string Text,
     string[] ImageKeys,
@@ -21,7 +20,7 @@ public record class SequentialAnswerSessionNextQuestionResponse(
         commandRes.Text,
         commandRes.ImagesSet.Keys.Select(k => k.ToString()).ToArray(),
         commandRes.ImagesSet.AspectRatio,
-        commandRes.OrderInVokiTaking,
+        commandRes.OrderInVokiTaking.Value,
         commandRes.MinAnswersCount,
         commandRes.MaxAnswersCount,
         ServerShownAt: commandRes.CurrentTime

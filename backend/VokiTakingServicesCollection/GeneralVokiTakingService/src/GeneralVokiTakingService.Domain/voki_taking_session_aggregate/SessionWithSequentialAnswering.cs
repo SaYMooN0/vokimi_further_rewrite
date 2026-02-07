@@ -53,9 +53,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     //questions must be shown one by one 
     public override ImmutableArray<TakingSessionExpectedQuestion> QuestionsToShowOnStart() {
         var firstQuestionInTaking = Questions.MinBy(q => q.OrderInVokiTaking.Value)!;
-        return new Dictionary<GeneralVokiQuestionId, TakingSessionExpectedQuestion>() {
-            [firstQuestionInTaking.QuestionId] = firstQuestionInTaking
-        }.ToImmutableDictionary();
+        return [firstQuestionInTaking];
     }
 
 
@@ -68,22 +66,22 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             .Where(q => !answeredQuestionIds.Contains(q.QuestionId))
             .MinBy(q => q.OrderInVokiTaking.Value);
 
-        if (firstUnansweredQuestion is null) {
-            //all questions are answered. Last question will be shown with its saved answers
-            var lastQuestion = _answered.MaxBy(q => q.OrderInVokiTaking.Value)!;
-            var questionsToShow = new[] { lastQuestion }.ToImmutableDictionary(
-                q => q.QuestionId,
-                q => (q.OrderInVokiTaking, q.ChosenAnswerIds)
+        if (firstUnansweredQuestion is not null) {
+            return new VokiTakingStateToContinueFromSaved(
+                firstUnansweredQuestion.QuestionId,
+                QuestionsToShow: [(firstUnansweredQuestion, ImmutableHashSet<GeneralVokiAnswerId>.Empty)]
             );
-            return new VokiTakingStateToContinueFromSaved(lastQuestion.QuestionId, questionsToShow);
         }
-        else {
-            var questionsToShow = new[] { firstUnansweredQuestion }.ToImmutableDictionary(
-                q => q.QuestionId,
-                q => (q.OrderInVokiTaking, ImmutableHashSet<GeneralVokiAnswerId>.Empty)
-            );
-            return new VokiTakingStateToContinueFromSaved(firstUnansweredQuestion.QuestionId, questionsToShow);
-        }
+
+        //all questions are answered. Last question will be shown with its saved answers
+        var lastQuestion = Questions.MaxBy(q => q.OrderInVokiTaking.Value)!;
+        var lastQuestionSavedAnswers = _answered
+            .FirstOrDefault(a => a.QuestionId == lastQuestion.QuestionId)
+            ?.ChosenAnswerIds ?? ImmutableHashSet<GeneralVokiAnswerId>.Empty;
+        return new VokiTakingStateToContinueFromSaved(
+            lastQuestion.QuestionId,
+            QuestionsToShow: [(lastQuestion, lastQuestionSavedAnswers)]
+        );
     }
 
     public override ushort QuestionsWithSavedAnswersCount() => (ushort)_answered.Length;
@@ -154,7 +152,6 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 
         SequentialTakingAnsweredQuestion answeredRecord = new SequentialTakingAnsweredQuestion(
             expected.QuestionId,
-            lastQuestionOrderInVokiTaking,
             lastChosenAnswers,
             lastQuestionShownAt.Client,
             clientLastAnsweredAt
@@ -181,11 +178,17 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         }
 
         _answered = _answered.Add(answeredRecord);
-        ImmutableArray<VokiTakenQuestionDetails> details = _answered
+
+        var questionIdToOrder = Questions.ToImmutableDictionary(
+            q => q.QuestionId,
+            q => q.OrderInVokiTaking
+        );
+
+        ImmutableArray<VokiTakenQuestionDetails> questionDetails = _answered
             .Select(q => new VokiTakenQuestionDetails(
                 q.QuestionId,
                 q.ChosenAnswerIds,
-                q.OrderInVokiTaking
+                questionIdToOrder[q.QuestionId]
             ))
             .ToImmutableArray();
 
@@ -196,7 +199,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             clientSessionFinishedTime,
             WasSessionWithForcedSequentialOrder: true,
             ReceivedResultId: resOrErr.AsSuccess(),
-            details
+            questionDetails
         );
     }
 
@@ -221,15 +224,9 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        SequentialTakingAnsweredQuestion? already = _answered.FirstOrDefault(a => a.QuestionId == questionId);
-        if (already is not null) {
-            return HandleAlreadyAnswered(
-                already,
-                questionOrderInVokiTaking,
-                shownAt.Client,
-                clientQuestionAnsweredAt,
-                chosenAnswers
-            );
+        var alreadyAnswered = _answered.FirstOrDefault(a => a.QuestionId == questionId);
+        if (alreadyAnswered is not null) {
+            return ErrFactory.Conflict("This question has already been answered", "Try reloading the page");
         }
 
         return HandleNotYetAnswered(
@@ -242,36 +239,6 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         );
     }
 
-    private ErrOr<(GeneralVokiQuestionId NextQuestionId, QuestionOrderInVokiTakingSession OrderInVokiTaking)>
-        HandleAlreadyAnswered(
-            SequentialTakingAnsweredQuestion already,
-            QuestionOrderInVokiTakingSession questionOrderInVokiTaking,
-            DateTime clientQuestionShownAt,
-            DateTime clientQuestionAnsweredAt,
-            ImmutableHashSet<GeneralVokiAnswerId> chosenAnswers
-        ) {
-        bool isSame = already.OrderInVokiTaking == questionOrderInVokiTaking
-                      && already.ClientShownAt == clientQuestionShownAt
-                      && already.ClientSubmittedAt == clientQuestionAnsweredAt
-                      && already.ChosenAnswerIds.SetEquals(chosenAnswers);
-
-        if (!isSame) {
-            return ErrFactory.Conflict(
-                "This question has already been answered with different data",
-                "Try reloading the page"
-            );
-        }
-
-        var firstUnanswered = GetFirstUnanswered();
-        if (firstUnanswered is null) {
-            return ErrFactory.Conflict(
-                "There are no questions left to answer",
-                "Use the finish-taking action to complete the attempt"
-            );
-        }
-
-        return (firstUnanswered.QuestionId, firstUnanswered.OrderInVokiTaking);
-    }
 
     private ErrOr<(GeneralVokiQuestionId NextQuestionId, QuestionOrderInVokiTakingSession Order)> HandleNotYetAnswered(
         TakingSessionExpectedQuestion expected,
@@ -313,7 +280,6 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 
         SequentialTakingAnsweredQuestion answeredRecord = new SequentialTakingAnsweredQuestion(
             expected.QuestionId,
-            questionOrderInVokiTaking,
             chosenAnswers,
             shownAt.Client,
             clientQuestionAnsweredAt
@@ -395,7 +361,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         GeneralVokiAnswerId[] invalidChosen = chosenAnswers
             .Where(a => !allowedAnswerIds.Contains(a))
             .ToArray();
-        
+
         if (invalidChosen.Length > 0) {
             return ErrFactory.Conflict(
                 "Some selected options are not allowed for this question",

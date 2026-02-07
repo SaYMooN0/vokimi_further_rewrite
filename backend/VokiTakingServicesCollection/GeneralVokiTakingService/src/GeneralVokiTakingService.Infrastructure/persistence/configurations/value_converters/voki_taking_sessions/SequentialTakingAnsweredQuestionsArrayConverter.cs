@@ -14,12 +14,13 @@ internal class SequentialTakingAnsweredQuestionsArrayConverter :
     ) { }
 
     private const char Sep = '|';
+    public const int Parts = 4;
 
     private static string[] ToStringArray(ImmutableArray<SequentialTakingAnsweredQuestion> questions) =>
         questions.IsDefaultOrEmpty ? [] : questions.Select(QuestionToString).ToArray();
 
     private static string QuestionToString(SequentialTakingAnsweredQuestion q) =>
-        $"{q.QuestionId}{Sep}{q.OrderInVokiTaking}{Sep}{QuestionAnswersToString(q.ChosenAnswerIds)}{Sep}{q.ClientShownAt}{Sep}{q.ClientSubmittedAt}";
+        $"{q.QuestionId}{Sep}{QuestionAnswersToString(q.ChosenAnswerIds)}{Sep}{q.ClientShownAt}{Sep}{q.ClientSubmittedAt}";
 
     private static string QuestionAnswersToString(ImmutableHashSet<GeneralVokiAnswerId> answers) =>
         string.Join(',', answers.Select(a => a.ToString()));
@@ -28,23 +29,22 @@ internal class SequentialTakingAnsweredQuestionsArrayConverter :
         List<SequentialTakingAnsweredQuestion> questions = new(strs.Length);
         foreach (var str in strs) {
             var parts = str.Split(Sep);
-            if (parts.Length != 5) {
+            if (parts.Length != Parts) {
                 UnexpectedBehaviourException.ThrowErr(ErrFactory.IncorrectFormat(
-                    $"Wrong number of parts {strs.Length}"
+                    $"Wrong number of parts {strs.Length}. Expected: {Parts}"
                 ));
             }
 
             GeneralVokiQuestionId questionId = new(new(parts[0]));
-            var orderInVokiTaking = QuestionOrderInVokiTakingSession.Create(ushort.Parse(parts[1])).AsSuccess();
-            ImmutableHashSet<GeneralVokiAnswerId> chosenAnswerIds = parts[2]
+            ImmutableHashSet<GeneralVokiAnswerId> chosenAnswerIds = parts[1]
                 .Split(',')
                 .Select(aId => new GeneralVokiAnswerId(new(aId)))
                 .ToImmutableHashSet();
-            DateTime shownAt = DateTime.Parse(parts[3]);
-            DateTime submittedAt = DateTime.Parse(parts[4]);
-            questions.Add(new SequentialTakingAnsweredQuestion(
-                questionId, orderInVokiTaking, chosenAnswerIds, shownAt, submittedAt
-            ));
+            
+            DateTime shownAt = DateTime.Parse(parts[2]);
+            DateTime submittedAt = DateTime.Parse(parts[3]);
+            
+            questions.Add(new SequentialTakingAnsweredQuestion(questionId, chosenAnswerIds, shownAt, submittedAt));
         }
 
         return questions.ToImmutableArray();

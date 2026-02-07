@@ -11,28 +11,32 @@ using VokimiStorageKeysLib.concrete_keys.general_voki;
 
 namespace GeneralVokiTakingService.Application.dtos;
 
-public record VokiTakingSessionDto(
+public record CurrentVokiTakingSessionDto(
     VokiId VokiId,
-    VokiName Name,
+    VokiName VokiName,
     bool IsWithForceSequentialAnswering,
-    VokiTakingQuestionData[] Questions,
+    VokiTakingQuestionData[] QuestionsToShow,
     VokiTakingSessionId SessionId,
     DateTime StartedAt,
     ushort TotalQuestionsCount
 )
 {
-    public static VokiTakingSessionDto Create(GeneralVoki voki, BaseVokiTakingSession takingSession) {
-        var vokiQuestionById = voki.Questions.ToDictionary(q => q.Id, q => q);
-        VokiTakingQuestionData[] questions = takingSession.QuestionsToShowOnStart()
+    public static CurrentVokiTakingSessionDto Create(
+        VokiName vokiName,
+        IDictionary<GeneralVokiQuestionId, VokiQuestion> vokiQuestionsById,
+        BaseVokiTakingSession takingSession,
+        IEnumerable<TakingSessionExpectedQuestion> questionsToShow
+    ) {
+        VokiTakingQuestionData[] questions = questionsToShow
             .Select((q) => VokiTakingQuestionData.Create(
-                vokiQuestionById[q.QuestionId],
+                vokiQuestionsById[q.QuestionId],
                 q.OrderInVokiTaking,
                 q.AnswersIdToOrderInQuestion
             ))
             .ToArray();
-        return new VokiTakingSessionDto(
-            voki.Id, voki.Name, takingSession.IsWithForceSequentialAnswering, questions,
-            takingSession.Id, takingSession.StartTime, (ushort)voki.Questions.Count
+        return new CurrentVokiTakingSessionDto(
+            takingSession.VokiId, vokiName, takingSession.IsWithForceSequentialAnswering, questions,
+            takingSession.Id, takingSession.StartTime, takingSession.TotalQuestionsCount
         );
     }
 }
