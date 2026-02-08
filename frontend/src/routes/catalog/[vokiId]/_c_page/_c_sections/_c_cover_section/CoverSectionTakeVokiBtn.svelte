@@ -1,11 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { navigating } from '$app/state';
-	import AuthView from '$lib/components/AuthView.svelte';
 	import LinesLoader from '$lib/components/loaders/LinesLoader.svelte';
+	import { ApiVokiTakingGeneral, RJO } from '$lib/ts/backend-communication/backend-services';
 	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
+	import type { ExistingActiveSessionForVokiData } from '$lib/ts/voki-taking-session';
 	import type { VokiType } from '$lib/ts/voki-type';
+	import { onMount } from 'svelte';
+	import { toast } from 'svelte-sonner';
+	import ActiveSessionExistsDialog from './_c_dialogs/ActiveSessionExistsDialog.svelte';
 	import AuthNeededToTakeVokiDialog from './_c_dialogs/AuthNeededToTakeVokiDialog.svelte';
 
 	interface Props {
@@ -15,10 +19,12 @@
 	}
 	let { vokiId, vokiType, signedInOnlyTaking }: Props = $props();
 
-	let authNeededToTakeVokiDialog = $state<AuthNeededToTakeVokiDialog>()!;
+	let authNeededToTakeVokiDialog: AuthNeededToTakeVokiDialog = $state()!;
+	let activeSessionExistsDialog: ActiveSessionExistsDialog = $state()!;
 	let isBtnOnclickLoading = $state<boolean>(false);
+	let takeVokiPageLink = $derived(`/take-voki/${vokiId}/${StringUtils.pascalToKebab(vokiType)}`);
 	let isNavigatingToTakeVoki = $derived<boolean>(
-		(navigating && navigating.to?.url.pathname.includes(`/take-voki/${vokiId}`)) ?? false
+		(navigating && navigating.to?.url.pathname.includes(takeVokiPageLink)) ?? false
 	);
 	let showBtnSpinner = $derived<boolean>(isBtnOnclickLoading || isNavigatingToTakeVoki);
 	async function onBtnClick(e: MouseEvent) {
@@ -36,15 +42,48 @@
 			authNeededToTakeVokiDialog.open();
 			return;
 		}
-		if (e.button == 1) {
-			window.open(`/take-voki/${vokiId}/${StringUtils.pascalToKebab(vokiType)}`, '_blank');
+
+		if (anyActiveSession.state === 'success' && anyActiveSession.data.doesActiveSessionExist) {
+			activeSessionExistsDialog.open(anyActiveSession.data.sessionData);
+
 			return;
 		}
-		goto(`/take-voki/${vokiId}/${StringUtils.pascalToKebab(vokiType)}`);
+		if (e.button == 1) {
+			window.open(takeVokiPageLink, '_blank');
+			return;
+		}
+		goto(takeVokiPageLink);
 	}
+	type AnyActiveSessionSuccessStateData =
+		| { doesActiveSessionExist: false }
+		| { doesActiveSessionExist: true; sessionData: ExistingActiveSessionForVokiData };
+	let anyActiveSession:
+		| { state: 'loading' }
+		| { state: 'error' }
+		| { state: 'success'; data: AnyActiveSessionSuccessStateData } = $state({ state: 'loading' });
+	async function checkAnyActiveSession(vokiType: 'General') {
+		anyActiveSession = { state: 'loading' };
+		const response = await ApiVokiTakingGeneral.fetchJsonResponse<AnyActiveSessionSuccessStateData>(
+			`/vokis/${vokiId}/does-user-have-active-session`,
+			{ method: 'POST' }
+		);
+		if (response.isSuccess) {
+			anyActiveSession = { state: 'success', data: response.data };
+		} else {
+			anyActiveSession = { state: 'error' };
+		}
+	}
+	onMount(() => {
+		if (vokiType === 'General') {
+			checkAnyActiveSession(vokiType);
+		} else {
+			toast.error('This voki type is not supported yet');
+		}
+	});
 </script>
 
 <AuthNeededToTakeVokiDialog bind:this={authNeededToTakeVokiDialog} />
+<ActiveSessionExistsDialog bind:this={activeSessionExistsDialog} {takeVokiPageLink} />
 <button class="take-voki-btn" onmousedown={(e) => onBtnClick(e)}>
 	{#if showBtnSpinner}
 		<LinesLoader color="var(--primary-foreground)" sizeRem={1.25} strokePx={2} class="loader" />

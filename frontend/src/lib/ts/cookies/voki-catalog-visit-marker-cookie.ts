@@ -13,7 +13,7 @@ export namespace VokiCatalogVisitMarkerCookie {
     export function clear(vokiId: string) {
         CookieUtils.deleteCookie(cookieName(vokiId));
     }
-       export function checkIfSeen(cookies: Cookies, vokiId: string): boolean {
+    export function checkIfSeen(cookies: Cookies, vokiId: string): boolean {
         return cookies.get(cookieName(vokiId)) !== undefined;
     }
 }

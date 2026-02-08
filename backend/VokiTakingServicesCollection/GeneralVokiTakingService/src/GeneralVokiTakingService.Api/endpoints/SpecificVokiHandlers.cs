@@ -1,4 +1,5 @@
-﻿using GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
+﻿using GeneralVokiTakingService.Api.contracts.voki_taking;
+using GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
 using GeneralVokiTakingService.Api.contracts.voki_taking.sequential_answering;
 using GeneralVokiTakingService.Api.contracts.voki_taking.shared;
 using GeneralVokiTakingService.Api.contracts.voki_taking.shared.continue_taking;
@@ -6,6 +7,7 @@ using GeneralVokiTakingService.Api.contracts.voki_taking.shared.start;
 using GeneralVokiTakingService.Application.general_vokis.commands;
 using GeneralVokiTakingService.Application.general_vokis.commands.free_answering_voki_taking;
 using GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
+using GeneralVokiTakingService.Application.general_vokis.queries;
 
 namespace GeneralVokiTakingService.Api.endpoints;
 
@@ -14,8 +16,8 @@ internal class SpecificVokiHandlers : IEndpointGroup
     public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
-        group.MapPost("/does-user-have-active-session", DoesUserHaveActiveTakingSessionForThisVoki);
-        
+        group.MapGet("/does-user-have-active-session", DoesUserHaveActiveTakingSessionForThisVoki);
+
         group.MapPost("/start-taking", StartVokiTaking)
             .WithRequestValidation<StartVokiTakingRequest>();
 
@@ -35,18 +37,19 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
         return group;
     }
+
     private static async Task<IResult> DoesUserHaveActiveTakingSessionForThisVoki(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<CheckIfUserHasActiveSessionForVoki, CheckIfUserHasActiveSessionForVokiResult> handler
+        IQueryHandler<CheckIfUserHasActiveSessionForVokiQuery, CheckIfUserHasActiveSessionForVokiQueryResult> handler
     ) {
-        //extract from cookies
         VokiId id = httpContext.GetVokiIdFromRoute();
-        var request = httpContext.GetValidatedRequest<StartVokiTakingRequest>();
 
-        StartVokiTakingCommand command = new(id, request.TerminateCurrentActive);
-        var result = await handler.Handle(command, ct);
+        CheckIfUserHasActiveSessionForVokiQuery query = new(id);
+        var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<IStartVokiTakingCommandResult, StartVokiTakingResponse>(result);
+        return CustomResults.FromErrOrToJson<
+            CheckIfUserHasActiveSessionForVokiQueryResult, ExistingActiveSessionCheckResponse
+        >(result);
     }
 
     private static async Task<IResult> StartVokiTaking(
@@ -56,7 +59,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
         VokiId id = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<StartVokiTakingRequest>();
 
-        StartVokiTakingCommand command = new(id, request.TerminateCurrentActive);
+        StartVokiTakingCommand command = new(id, request.TerminateExistingActiveSession);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrToJson<IStartVokiTakingCommandResult, StartVokiTakingResponse>(result);

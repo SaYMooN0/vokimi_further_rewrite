@@ -47,17 +47,17 @@ public abstract record StartVokiTakingResponse(
         DateTime StartedAt,
         ushort QuestionsWithSavedAnswersCount,
         ushort TotalQuestionsCount
-    ) : StartVokiTakingResponse(VokiId, SessionId, StartedAt, TotalQuestionsCount)
+    ) : StartVokiTakingResponse(VokiId, SessionId, StartedAt, TotalQuestionsCount), IExistingActiveSessionResponse
     {
         public override bool NewSessionStarted => false;
 
         public static StartVokiTakingActiveSessionExistsResponse Create(StartVokiTakingCommandActiveSessionExistsResult res) =>
             new(
-                res.VokiId.ToString(),
-                res.SessionId.ToString(),
-                res.StartedAt,
-                res.QuestionsWithSavedAnswersCount,
-                res.TotalQuestionsCount
+                res.SessionData.VokiId.ToString(),
+                res.SessionData.SessionId.ToString(),
+                res.SessionData.StartedAt,
+                res.SessionData.QuestionsWithSavedAnswersCount,
+                res.SessionData.TotalQuestionsCount
             );
     }
 }

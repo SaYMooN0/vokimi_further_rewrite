@@ -13,7 +13,7 @@ namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
 public sealed record StartVokiTakingCommand(
     VokiId VokiId,
-    bool TerminateCurrentActive
+    bool TerminateExistingActiveSession
 ) :
     ICommand<IStartVokiTakingCommandResult>;
 
@@ -42,7 +42,7 @@ internal sealed class StartVokiTakingCommandHandler : ICommandHandler<StartVokiT
         if (currentTaker.IsAuthenticated(out var aUserCtx)) {
             var startedSession = await _baseTakingSessionsRepository.GetForVokiAndUser(command.VokiId, aUserCtx, ct);
             if (startedSession is not null) {
-                if (command.TerminateCurrentActive) {
+                if (command.TerminateExistingActiveSession) {
                     await _baseTakingSessionsRepository.Delete(startedSession, ct);
                 }
                 else {

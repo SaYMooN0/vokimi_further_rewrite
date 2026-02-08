@@ -31,7 +31,7 @@
 	/>
 	<div class="question-content">
 		<p class="text">
-			<span class="order">{question.orderInVoki + 1}.</span>
+			<span class="order">{question.orderInVoki}.</span>
 			{question.text}
 		</p>
 		<div class="question-bottom">
