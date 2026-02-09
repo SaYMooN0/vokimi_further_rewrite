@@ -37,8 +37,8 @@ internal sealed class ContinueVokiTakingCommandHandler
 
         BaseVokiTakingSession? session = await _baseTakingSessionsRepository.GetForVokiAndUser(command.VokiId, aUserCtx, ct);
         if (session is null) {
-            return ErrFactory.NotFound.Voki("Active session not found",
-                "No active voki taking session found for this user and voki");
+            return ErrFactory.NotFound.Voki("Unfinished session not found",
+                "No unfinished voki taking session found for this user and voki");
         }
 
         var voki = await _generalVokisRepository.GetWithQuestions(command.VokiId, ct);

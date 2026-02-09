@@ -13,8 +13,10 @@ public abstract record StartVokiTakingResponse(
     public abstract bool NewSessionStarted { get; }
 
     public static ICreatableResponse<IStartVokiTakingCommandResult> Create(IStartVokiTakingCommandResult res) => res switch {
-        SuccessStartVokiTakingCommandResult success => VokiTakingSuccessfullyStartedResponse.Create(success),
-        StartVokiTakingCommandActiveSessionExistsResult active => StartVokiTakingActiveSessionExistsResponse.Create(active),
+        SuccessStartVokiTakingCommandResult success =>
+            VokiTakingSuccessfullyStartedResponse.Create(success),
+        StartVokiTakingCommandUnfinishedSessionExistsResult unfinished =>
+            StartVokiTakingVokiTakingSessionExistsResponse.Create(unfinished),
         _ => throw new SwitchExpressionException(res),
     };
 
@@ -41,23 +43,24 @@ public abstract record StartVokiTakingResponse(
         );
     }
 
-    public sealed record StartVokiTakingActiveSessionExistsResponse(
+    public sealed record StartVokiTakingVokiTakingSessionExistsResponse(
         string VokiId,
         string SessionId,
         DateTime StartedAt,
         ushort QuestionsWithSavedAnswersCount,
         ushort TotalQuestionsCount
-    ) : StartVokiTakingResponse(VokiId, SessionId, StartedAt, TotalQuestionsCount), IExistingActiveSessionResponse
+    ) : StartVokiTakingResponse(VokiId, SessionId, StartedAt, TotalQuestionsCount), IExistingUnfinishedVokiTakingSessionResponse
     {
         public override bool NewSessionStarted => false;
 
-        public static StartVokiTakingActiveSessionExistsResponse Create(StartVokiTakingCommandActiveSessionExistsResult res) =>
-            new(
-                res.SessionData.VokiId.ToString(),
-                res.SessionData.SessionId.ToString(),
-                res.SessionData.StartedAt,
-                res.SessionData.QuestionsWithSavedAnswersCount,
-                res.SessionData.TotalQuestionsCount
-            );
+        public static StartVokiTakingVokiTakingSessionExistsResponse Create(
+            StartVokiTakingCommandUnfinishedSessionExistsResult res
+        ) => new(
+            res.SessionData.VokiId.ToString(),
+            res.SessionData.SessionId.ToString(),
+            res.SessionData.StartedAt,
+            res.SessionData.QuestionsWithSavedAnswersCount,
+            res.SessionData.TotalQuestionsCount
+        );
     }
 }

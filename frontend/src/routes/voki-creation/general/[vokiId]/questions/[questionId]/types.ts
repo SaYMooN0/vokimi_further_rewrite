@@ -11,15 +11,6 @@ export type QuestionFullInfo = {
     maxResultsForAnswerCount: number;
 }
 
-export type GeneralVokiCreationQuestionContent =
-    | { '$type': 'TextOnly', answers: AnswerDataTextOnly[] }
-    | { '$type': 'ImageOnly', answers: AnswerDataImageOnly[] }
-    | { '$type': 'ImageAndText', answers: AnswerDataImageAndText[] }
-    | { '$type': 'ColorOnly', answers: AnswerDataColorOnly[] }
-    | { '$type': 'ColorAndText', answers: AnswerDataColorAndText[] }
-    | { '$type': 'AudioOnly', answers: AnswerDataAudioOnly[] }
-    | { '$type': 'AudioAndText', answers: AnswerDataAudioAndText[] };
-
 export type QuestionAnswersSettings = {
     shuffleAnswers: boolean;
     minAnswersCount: number;
@@ -31,6 +22,16 @@ export type GeneralVokiCreationQuestionImageSet = {
     height: number;
     keys: string[]
 }
+
+export type GeneralVokiCreationQuestionContent =
+    | { '$type': 'TextOnly', answers: AnswerDataTextOnly[] }
+    | { '$type': 'ImageOnly', answers: AnswerDataImageOnly[] }
+    | { '$type': 'ImageAndText', answers: AnswerDataImageAndText[] }
+    | { '$type': 'ColorOnly', answers: AnswerDataColorOnly[] }
+    | { '$type': 'ColorAndText', answers: AnswerDataColorAndText[] }
+    | { '$type': 'AudioOnly', answers: AnswerDataAudioOnly[] }
+    | { '$type': 'AudioAndText', answers: AnswerDataAudioAndText[] };
+
 export type BaseGeneralVokiAnswerData = {
     relatedResultIds: string[]
     order: number

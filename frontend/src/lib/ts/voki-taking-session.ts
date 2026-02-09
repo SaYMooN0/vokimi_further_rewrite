@@ -1,4 +1,4 @@
-export type ExistingActiveSessionForVokiData = {
+export type ExistingUnfinishedSessionForVokiData = {
     vokiId: string;
     sessionId: string;
     startedAt: Date;

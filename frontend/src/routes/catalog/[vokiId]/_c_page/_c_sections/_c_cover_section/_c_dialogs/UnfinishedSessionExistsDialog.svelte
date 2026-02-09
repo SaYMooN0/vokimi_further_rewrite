@@ -2,23 +2,23 @@
 	import { goto } from '$app/navigation';
 	import DialogWithCloseButton from '$lib/components/dialogs/DialogWithCloseButton.svelte';
 	import { ContinueVokiTakingSessionMarkerCookie } from '$lib/ts/cookies/continue-voki-taking-session-marker';
-	import type { ExistingActiveSessionForVokiData } from '$lib/ts/voki-taking-session';
+	import type { ExistingUnfinishedSessionForVokiData } from '$lib/ts/voki-taking-session';
 	import { relativeTime } from 'svelte-relative-time';
 	import { toast } from 'svelte-sonner';
 	interface Props {
 		takeVokiPageLink: string;
 	}
 	let { takeVokiPageLink }: Props = $props();
-	export function open(data: ExistingActiveSessionForVokiData) {
+	export function open(data: ExistingUnfinishedSessionForVokiData) {
 		sessionData = data;
 		dialog.open();
 	}
 	let dialog: DialogWithCloseButton = $state()!;
-	let sessionData = $state<ExistingActiveSessionForVokiData>();
+	let sessionData = $state<ExistingUnfinishedSessionForVokiData>();
 	function onContinueBtnClick() {
 		if (sessionData) {
 			ContinueVokiTakingSessionMarkerCookie.markFor2Min(sessionData.vokiId, sessionData.sessionId);
-			goto(`${takeVokiPageLink}?continueSession=true`);
+			goto(`${takeVokiPageLink}?continueExistingUnfinishedSession=true`);
 		} else {
 			toast.error('Session data not found. Please reload the page');
 		}
@@ -28,7 +28,7 @@
 	}
 </script>
 
-<DialogWithCloseButton bind:this={dialog} dialogId="active-session-exists-dialog">
+<DialogWithCloseButton bind:this={dialog} dialogId="unfinished-session-exists-dialog">
 	<p class="title">You have an unfinished session for this Voki</p>
 	{#if sessionData}
 		<div class="info">
@@ -44,12 +44,12 @@
 	<span class="note"
 		>You can continue where you left off or terminate the current session and start a new one</span
 	>
-	<button class="continue-btn">Continue</button>
-	<button class="terminate-btn">Terminate old and start new</button>
+	<button class="continue-btn" onclick={onContinueBtnClick}>Continue</button>
+	<button class="terminate-btn" onclick={onTerminateBtnClick}>Terminate old and start new</button>
 </DialogWithCloseButton>
 
 <style>
-	:global(#active-session-exists-dialog > .dialog-content) {
+	:global(#unfinished-session-exists-dialog > .dialog-content) {
 		display: flex;
 		flex-direction: column;
 		align-items: center;

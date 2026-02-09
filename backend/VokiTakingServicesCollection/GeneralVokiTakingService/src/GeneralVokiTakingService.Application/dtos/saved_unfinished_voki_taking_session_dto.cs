@@ -3,7 +3,7 @@ using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
 namespace GeneralVokiTakingService.Application.dtos;
 
-public record SavedActiveVokiTakingSessionDto(
+public record SavedUnfinishedVokiTakingSessionDto(
     VokiId VokiId,
     VokiTakingSessionId SessionId,
     DateTime StartedAt,
@@ -11,7 +11,7 @@ public record SavedActiveVokiTakingSessionDto(
     ushort TotalQuestionsCount
 )
 {
-    public static SavedActiveVokiTakingSessionDto Create(BaseVokiTakingSession takingSession) => new(
+    public static SavedUnfinishedVokiTakingSessionDto Create(BaseVokiTakingSession takingSession) => new(
         takingSession.VokiId,
         takingSession.Id,
         takingSession.StartTime,

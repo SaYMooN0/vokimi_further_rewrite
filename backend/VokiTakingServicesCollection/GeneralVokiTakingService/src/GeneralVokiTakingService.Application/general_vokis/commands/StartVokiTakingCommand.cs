@@ -13,7 +13,7 @@ namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
 public sealed record StartVokiTakingCommand(
     VokiId VokiId,
-    bool TerminateExistingActiveSession
+    bool TerminateExistingUnfinishedSession
 ) :
     ICommand<IStartVokiTakingCommandResult>;
 
@@ -42,11 +42,11 @@ internal sealed class StartVokiTakingCommandHandler : ICommandHandler<StartVokiT
         if (currentTaker.IsAuthenticated(out var aUserCtx)) {
             var startedSession = await _baseTakingSessionsRepository.GetForVokiAndUser(command.VokiId, aUserCtx, ct);
             if (startedSession is not null) {
-                if (command.TerminateExistingActiveSession) {
+                if (command.TerminateExistingUnfinishedSession) {
                     await _baseTakingSessionsRepository.Delete(startedSession, ct);
                 }
                 else {
-                    return StartVokiTakingCommandActiveSessionExistsResult.Create(startedSession);
+                    return StartVokiTakingCommandUnfinishedSessionExistsResult.Create(startedSession);
                 }
             }
         }
@@ -71,12 +71,12 @@ internal sealed class StartVokiTakingCommandHandler : ICommandHandler<StartVokiT
 
 public interface IStartVokiTakingCommandResult;
 
-public record StartVokiTakingCommandActiveSessionExistsResult(
-    SavedActiveVokiTakingSessionDto SessionData
+public record StartVokiTakingCommandUnfinishedSessionExistsResult(
+    SavedUnfinishedVokiTakingSessionDto SessionData
 ) : IStartVokiTakingCommandResult
 {
-    public static StartVokiTakingCommandActiveSessionExistsResult Create(BaseVokiTakingSession takingSession) => new(
-        SavedActiveVokiTakingSessionDto.Create(takingSession)
+    public static StartVokiTakingCommandUnfinishedSessionExistsResult Create(BaseVokiTakingSession takingSession) => new(
+        SavedUnfinishedVokiTakingSessionDto.Create(takingSession)
     );
 }
 

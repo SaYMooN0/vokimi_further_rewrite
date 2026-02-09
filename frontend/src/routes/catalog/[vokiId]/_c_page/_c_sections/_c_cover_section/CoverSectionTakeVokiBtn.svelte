@@ -65,7 +65,7 @@
 		anyActiveSession = { state: 'loading' };
 		const response = await ApiVokiTakingGeneral.fetchJsonResponse<AnyActiveSessionSuccessStateData>(
 			`/vokis/${vokiId}/does-user-have-active-session`,
-			{ method: 'POST' }
+			{ method: 'GET' }
 		);
 		if (response.isSuccess) {
 			anyActiveSession = { state: 'success', data: response.data };

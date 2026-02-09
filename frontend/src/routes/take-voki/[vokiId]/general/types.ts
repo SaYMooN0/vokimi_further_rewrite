@@ -1,41 +1,56 @@
-import type { GeneralVokiQuestionContentType } from "$lib/ts/voki";
-
-export type GeneralVokiTakingData = {
-    id: string;
-    vokiName: string;
-    forceSequentialAnswering: boolean;
-    questions: GeneralVokiTakingQuestionData[];
+export type BaseVokiTakingSessionData = {
+    vokiId: string;
     sessionId: string;
     startedAt: Date;
     totalQuestionsCount: number;
+}
+export type StartGeneralVokiTakingData = BaseVokiTakingSessionData & {
+    vokiName: string;
+    isWithForceSequentialAnswering: boolean;
+    questions: GeneralVokiTakingQuestionData[];
+}
+export type ContinueGeneralVokiTakingData = BaseVokiTakingSessionData & {
+    vokiName: string;
+    isWithForceSequentialAnswering: boolean;
+    questions: GeneralVokiTakingQuestionData[];
+    savedChosenAnswers: Record<string, string[]>;
+    currentQuestionId: string;
 }
 export type GeneralVokiTakingQuestionData = {
     id: string;
     text: string;
     imageKeys: string[];
     imagesAspectRatio: number;
-    answerType: GeneralVokiQuestionContentType;
     orderInVokiTaking: number;
     minAnswersCount: number;
     maxAnswersCount: number;
+
+    content: GeneralVokiTakingQuestionContent;
 }
-export type GeneralVokiTakingAnswerData = {
+export type GeneralVokiTakingQuestionContent =
+    | { '$type': 'TextOnly', answers: GeneralVokiTakingAnswerTextOnly[] }
+    | { '$type': 'ImageOnly', answers: GeneralVokiTakingAnswerImageOnly[] }
+    | { '$type': 'ImageAndText', answers: GeneralVokiTakingAnswerImageAndText[] }
+    | { '$type': 'ColorOnly', answers: GeneralVokiTakingAnswerColorOnly[] }
+    | { '$type': 'ColorAndText', answers: GeneralVokiTakingAnswerColorAndText[] }
+    | { '$type': 'AudioOnly', answers: GeneralVokiTakingAnswerAudioOnly[] }
+    | { '$type': 'AudioAndText', answers: GeneralVokiTakingAnswerAudioAndText[] };
+
+export type BaseGeneralVokiTakingAnswerData = {
     id: string;
+    orderInQuestionInSession: number;
 }
-
-export type GeneralVokiAnswerTextOnly = { text: string; };
-export type GeneralVokiAnswerImageOnly = { image: string; };
-export type GeneralVokiAnswerImageAndText = { image: string; text: string; };
-export type GeneralVokiAnswerColorOnly = { color: string; };
-export type GeneralVokiAnswerColorAndText = { color: string; text: string; };
-export type GeneralVokiAnswerAudioOnly = { audio: string; };
-export type GeneralVokiAnswerAudioAndText = { audio: string; text: string; };
-
-export type GeneralVokiAnswerTypeData =
-    | GeneralVokiAnswerTextOnly
-    | GeneralVokiAnswerImageOnly
-    | GeneralVokiAnswerImageAndText
-    | GeneralVokiAnswerColorOnly
-    | GeneralVokiAnswerColorAndText
-    | GeneralVokiAnswerAudioOnly
-    | GeneralVokiAnswerAudioAndText;
+export type GeneralVokiTakingAnswerTextOnly = { text: string; }
+    & BaseGeneralVokiTakingAnswerData
+export type GeneralVokiTakingAnswerImageOnly = { image: string }
+    & BaseGeneralVokiTakingAnswerData
+export type GeneralVokiTakingAnswerImageAndText = { image: string; text: string }
+    & BaseGeneralVokiTakingAnswerData
+export type GeneralVokiTakingAnswerColorOnly = { color: string }
+    & BaseGeneralVokiTakingAnswerData
+export type GeneralVokiTakingAnswerColorAndText = { color: string; text: string }
+    & BaseGeneralVokiTakingAnswerData
+export type GeneralVokiTakingAnswerAudioOnly = { audio: string }
+    & BaseGeneralVokiTakingAnswerData
+export type GeneralVokiTakingAnswerAudioAndText = { audio: string; text: string }
+    & BaseGeneralVokiTakingAnswerData;

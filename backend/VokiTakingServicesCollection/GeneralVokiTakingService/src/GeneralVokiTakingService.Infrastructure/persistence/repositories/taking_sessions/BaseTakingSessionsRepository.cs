@@ -11,19 +11,16 @@ internal class BaseTakingSessionsRepository : IBaseTakingSessionsRepository
 {
     private readonly GeneralVokiTakingDbContext _db;
 
-    public BaseTakingSessionsRepository(GeneralVokiTakingDbContext db)
-    {
+    public BaseTakingSessionsRepository(GeneralVokiTakingDbContext db) {
         _db = db;
     }
 
-    public async Task Add(BaseVokiTakingSession session, CancellationToken ct)
-    {
+    public async Task Add(BaseVokiTakingSession session, CancellationToken ct) {
         await _db.BaseVokiTakingSessions.AddAsync(session, ct);
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task Delete(BaseVokiTakingSession session, CancellationToken ct)
-    {
+    public async Task Delete(BaseVokiTakingSession session, CancellationToken ct) {
         _db.ThrowIfDetached(session);
         _db.BaseVokiTakingSessions.Remove(session);
         await _db.SaveChangesAsync(ct);
@@ -31,8 +28,7 @@ internal class BaseTakingSessionsRepository : IBaseTakingSessionsRepository
 
     public Task<BaseVokiTakingSession?> GetForVokiAndUser(
         VokiId commandVokiId, AuthenticatedUserCtx aUserCtx, CancellationToken ct
-    )
-    {
+    ) {
         return _db.BaseVokiTakingSessions
             .FirstOrDefaultAsync(s => s.VokiId == commandVokiId && s.VokiTaker == aUserCtx.UserId, ct);
     }

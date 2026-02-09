@@ -1,10 +1,14 @@
 namespace GeneralVokiTakingService.Api.contracts.voki_taking;
 
-public interface IExistingActiveSessionResponse
+public interface IVokiTakingSessionResponse
 {
     public string VokiId { get; }
     public string SessionId { get; }
-    public DateTime StartedAt { get; }
-    public ushort QuestionsWithSavedAnswersCount { get; }
     public ushort TotalQuestionsCount { get; }
+    public DateTime StartedAt { get; }
+}
+
+public interface IExistingUnfinishedVokiTakingSessionResponse : IVokiTakingSessionResponse
+{
+    public ushort QuestionsWithSavedAnswersCount { get; }
 }

@@ -16,7 +16,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
     public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
-        group.MapGet("/does-user-have-active-session", DoesUserHaveActiveTakingSessionForThisVoki);
+        group.MapGet("/does-user-have-unfinished-session", DoesUserHaveUnfinishedTakingSessionForThisVoki);
 
         group.MapPost("/start-taking", StartVokiTaking)
             .WithRequestValidation<StartVokiTakingRequest>();
@@ -38,17 +38,17 @@ internal class SpecificVokiHandlers : IEndpointGroup
         return group;
     }
 
-    private static async Task<IResult> DoesUserHaveActiveTakingSessionForThisVoki(
+    private static async Task<IResult> DoesUserHaveUnfinishedTakingSessionForThisVoki(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<CheckIfUserHasActiveSessionForVokiQuery, CheckIfUserHasActiveSessionForVokiQueryResult> handler
+        IQueryHandler<CheckIfUserHasUnfinishedSessionForVokiQuery, CheckIfUserHasUnfinishedSessionForVokiQueryResult> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
-        CheckIfUserHasActiveSessionForVokiQuery query = new(id);
+        CheckIfUserHasUnfinishedSessionForVokiQuery query = new(id);
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOrToJson<
-            CheckIfUserHasActiveSessionForVokiQueryResult, ExistingActiveSessionCheckResponse
+            CheckIfUserHasUnfinishedSessionForVokiQueryResult, ExistingUnfinishedSessionCheckResponse
         >(result);
     }
 
@@ -59,7 +59,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
         VokiId id = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<StartVokiTakingRequest>();
 
-        StartVokiTakingCommand command = new(id, request.TerminateExistingActiveSession);
+        StartVokiTakingCommand command = new(id, request.TerminateExistingUnfinishedSession);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrToJson<IStartVokiTakingCommandResult, StartVokiTakingResponse>(result);

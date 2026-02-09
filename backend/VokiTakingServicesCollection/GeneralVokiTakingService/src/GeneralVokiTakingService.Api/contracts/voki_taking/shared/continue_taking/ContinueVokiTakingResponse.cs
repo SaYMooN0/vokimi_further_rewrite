@@ -8,10 +8,11 @@ public record ContinueVokiTakingResponse(
     bool IsWithForceSequentialAnswering,
     GeneralVokiTakingResponseQuestionData[] Questions,
     string SessionId,
+    DateTime StartedAt,
     ushort TotalQuestionsCount,
-    Dictionary<string, string[]> ChosenAnswers,
+    Dictionary<string, string[]> SavedChosenAnswers,
     string CurrentQuestionId
-) : ICreatableResponse<ContinueVokiTakingCommandResult>
+) : ICreatableResponse<ContinueVokiTakingCommandResult>, IVokiTakingSessionResponse
 {
     public static ICreatableResponse<ContinueVokiTakingCommandResult> Create(ContinueVokiTakingCommandResult res) =>
         new ContinueVokiTakingResponse(
@@ -20,6 +21,7 @@ public record ContinueVokiTakingResponse(
             res.SessionData.IsWithForceSequentialAnswering,
             res.SessionData.QuestionsToShow.Select(GeneralVokiTakingResponseQuestionData.FromQuestion).ToArray(),
             res.SessionData.SessionId.ToString(),
+            res.SessionData.StartedAt,
             res.SessionData.TotalQuestionsCount,
             res.SavedChosenAnswers.ToDictionary(
                 qToAnsw => qToAnsw.Key.ToString(),
