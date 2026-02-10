@@ -1,28 +1,23 @@
 <script lang="ts">
 	import type { PageProps } from './$types';
-	import DefaultGeneralVokiTaking from './DefaultGeneralVokiTaking.svelte';
-	import CouldNotContinueExistingSession from '../_c_shared/CouldNotContinueExistingSession.svelte';
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
+	import SessionIdNotProvided from '../_c_shared/SessionIdNotProvided.svelte';
+	import UnfinishedSessionExists from './_c_page/UnfinishedSessionExists.svelte';
+	import GeneralVokiTaking from './_c_page/GeneralVokiTaking.svelte';
 
 	let { data }: PageProps = $props();
 	console.log(data);
 </script>
 
-{#if data.sessionActionResult === 'ContinueErr:NoSessionId'}
-	<CouldNotContinueExistingSession vokiId={data.vokiId} />
-{:else if !data.response.isSuccess}
-	<PageLoadErrView
-		defaultMessage="Unable to load voki data"
-		errs={data.response.errs}
-		additionalParams={[
-			{ name: 'Voki id', value: data.vokiId },
-			{ name: 'Voki type', value: data.vokiType }
-		]}
-	/>
-{:else if data.sessionActionResult === 'NewStarted' && !data.response.data.newSessionStarted}
-	<DefaultGeneralVokiTaking
-		takingData={data.response.data}
-		clearVokiSeenUpdateTimer={() => {}}
-		onResultReceived={() => {}}
-	/>
+{#if !data.isSuccess}
+	<PageLoadErrView errs={data.errs} />
+{:else if data.data.serverResultType === 'ContinueErr:NoSessionId'}
+	<SessionIdNotProvided vokiId={data.vokiId} />
+{:else if data.data.serverResultType === 'StartNewErr:UnfinishedSessionExists'}
+	<UnfinishedSessionExists {...data.data.sessionData} />
+{:else if data.data.serverResultType === 'Success'}
+	<GeneralVokiTaking sessionData={data.data.sessionData} saveData={data.data.savedData} />
+{:else}
+	<h1>Something went wrong</h1>
+	<a href={`/catalog/${data.vokiId}`}>Go to catalog page</a>
 {/if}

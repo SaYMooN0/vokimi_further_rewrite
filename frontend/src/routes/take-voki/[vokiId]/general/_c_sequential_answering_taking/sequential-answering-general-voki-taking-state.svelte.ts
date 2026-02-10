@@ -26,11 +26,11 @@ export class SequentialAnsweringGeneralVokiTakingState {
     }
 
     constructor(data: GeneralVokiTakingData, clearVokiSeenUpdateTimer: () => void) {
-        if (!data.forceSequentialAnswering) {
+        if (!data.isWithForceSequentialAnswering) {
             throw new Error("Cannot create voki taking state, because voki is with free answering");
         }
 
-        this.vokiId = data.id;
+        this.vokiId = data.vokiId;
         this.#sessionId = data.sessionId;
         this.#serverSessionStartTime = data.startedAt;
         this.#clientSessionStartTime = new Date();
@@ -136,7 +136,7 @@ export class SequentialAnsweringGeneralVokiTakingState {
     }
     #resetCurrentAnswers() {
         this.currentQuestionChosenAnswers = Object.fromEntries(
-            this.currentQuestion!.answers.map(a => [a.id, false])
+            this.currentQuestion!.content.answers.map(a => [a.id, false])
         );
     }
 

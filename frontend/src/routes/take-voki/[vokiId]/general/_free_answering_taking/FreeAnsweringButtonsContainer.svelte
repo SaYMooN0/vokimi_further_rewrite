@@ -1,9 +1,9 @@
 <script lang="ts">
 	import LinesLoader from '$lib/components/loaders/LinesLoader.svelte';
 	import type { Err } from '$lib/ts/err';
-	import type { DefaultGeneralVokiTakingState } from './default-general-voki-taking-state.svelte';
+	import type { FreeAnsweringGeneralVokiTakingState } from './free-answering-general-voki-taking-state.svelte';
 	interface Props {
-		vokiTakingState: DefaultGeneralVokiTakingState;
+		vokiTakingState: FreeAnsweringGeneralVokiTakingState;
 		vokiTakingErrs: (Err & { questionOrder?: number })[];
 		onResultReceived: (receivedResultId: string) => void;
 	}

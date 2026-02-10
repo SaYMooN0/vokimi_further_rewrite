@@ -1,12 +1,11 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
 	import { onMount, onDestroy } from 'svelte';
-	import { DefaultGeneralVokiTakingState } from './_c_default_taking/default-general-voki-taking-state.svelte';
-	import { createQuestionsKeyHandler } from './_c_default_taking/default-voki-taking-questions-nav';
-	import DefaultGeneralVokiTakingErrsList from './_c_default_taking/DefaultGeneralVokiTakingErrsList.svelte';
-	import DefaultTakingButtonsContainer from './_c_default_taking/DefaultTakingButtonsContainer.svelte';
-	import DefaultTakingCurrentQuestionView from './_c_default_taking/DefaultTakingCurrentQuestionView.svelte';
+	import { createQuestionsKeyHandler } from './_free_answering_taking/free-answering-voki-taking-questions-nav';
 	import type { GeneralVokiTakingData } from './types';
+	import { FreeAnsweringGeneralVokiTakingState } from './_free_answering_taking/free-answering-general-voki-taking-state.svelte';
+	import FreeAnsweringCurrentQuestionView from './_free_answering_taking/FreeAnsweringCurrentQuestionView.svelte';
+	import FreeAnsweringVokiTakingErrsList from './_free_answering_taking/FreeAnsweringVokiTakingErrsList.svelte';
 
 	interface Props {
 		takingData: GeneralVokiTakingData;
@@ -15,7 +14,10 @@
 	}
 	let { takingData, clearVokiSeenUpdateTimer, onResultReceived }: Props = $props();
 
-	let vokiTakingState = new DefaultGeneralVokiTakingState(takingData, clearVokiSeenUpdateTimer);
+	let vokiTakingState = new FreeAnsweringGeneralVokiTakingState(
+		takingData,
+		clearVokiSeenUpdateTimer
+	);
 
 	type ErrWithOrder = Err & { questionOrder?: number };
 	let vokiTakingErrs = $state<ErrWithOrder[]>([]);
@@ -43,7 +45,7 @@
 
 <div class="taking-container">
 	{#if vokiTakingState.currentQuestion}
-		<DefaultTakingCurrentQuestionView
+		<FreeAnsweringCurrentQuestionView
 			bind:this={answersContainer}
 			question={vokiTakingState.currentQuestion}
 			bind:chosenAnswers={vokiTakingState.chosenAnswers[vokiTakingState.currentQuestion.id]}
@@ -54,9 +56,9 @@
 		<button onclick={() => vokiTakingState.jumpToSpecificQuestion(1)}>Go to first question</button>
 	{/if}
 
-	<DefaultGeneralVokiTakingErrsList
+	<FreeAnsweringVokiTakingErrsList
 		errs={vokiTakingErrs}
 		jumpToSpecificQuestion={jumpToSpecificQuestionFromErrsList}
 	/>
-	<DefaultTakingButtonsContainer {vokiTakingState} bind:vokiTakingErrs {onResultReceived} />
+	<FreeAnsweringVokiTakingErrsList {vokiTakingState} bind:vokiTakingErrs {onResultReceived} />
 </div>

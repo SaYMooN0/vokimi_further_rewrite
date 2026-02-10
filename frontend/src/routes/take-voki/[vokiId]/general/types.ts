@@ -4,18 +4,18 @@ export type BaseVokiTakingSessionData = {
     startedAt: Date;
     totalQuestionsCount: number;
 }
-export type StartGeneralVokiTakingData = BaseVokiTakingSessionData & {
+export type GeneralVokiTakingData = BaseVokiTakingSessionData & {
     vokiName: string;
     isWithForceSequentialAnswering: boolean;
     questions: GeneralVokiTakingQuestionData[];
 }
-export type ContinueGeneralVokiTakingData = BaseVokiTakingSessionData & {
-    vokiName: string;
-    isWithForceSequentialAnswering: boolean;
-    questions: GeneralVokiTakingQuestionData[];
-    savedChosenAnswers: Record<string, string[]>;
-    currentQuestionId: string;
-}
+export type PosssibleGeneralVokiTakingDataSaveData =
+    | {
+        anySave: true,
+        savedChosenAnswers: Record<string, string[]>;
+        currentQuestionId: string;
+    }
+    | { anySave: false }
 export type GeneralVokiTakingQuestionData = {
     id: string;
     text: string;

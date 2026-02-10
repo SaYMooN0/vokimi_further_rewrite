@@ -3,7 +3,7 @@ import type { ResponseResult } from "$lib/ts/backend-communication/result-types"
 import type { Err } from "$lib/ts/err";
 import type { GeneralVokiTakingQuestionData, GeneralVokiTakingData } from "../types";
 
-export class DefaultGeneralVokiTakingState {
+export class FreeAnsweringGeneralVokiTakingState {
     readonly vokiId: string;
     readonly #sessionId: string;
     readonly #serverSessionStartTime: Date;
@@ -18,12 +18,12 @@ export class DefaultGeneralVokiTakingState {
     currentQuestion: GeneralVokiTakingQuestionData | undefined;
 
     constructor(data: GeneralVokiTakingData, clearVokiSeenUpdateTimer: () => void) {
-        if (data.forceSequentialAnswering) {
+        if (data.isWithForceSequentialAnswering) {
             throw new Error("Cannot create voki taking state, because voki is with sequential answering");
 
         }
 
-        this.vokiId = data.id;
+        this.vokiId = data.vokiId;
         this.#sessionId = data.sessionId;
         this.#serverSessionStartTime = data.startedAt;
         this.#clientSessionStartTime = new Date();
@@ -39,7 +39,7 @@ export class DefaultGeneralVokiTakingState {
 
         this.#questions.forEach(q => {
             this.chosenAnswers[q.id] = Object.fromEntries(
-                q.answers.map(a => [a.id, false])
+                q.content.answers.map(a => [a.id, false])
             ) as Record<string, boolean>;
         });
 
