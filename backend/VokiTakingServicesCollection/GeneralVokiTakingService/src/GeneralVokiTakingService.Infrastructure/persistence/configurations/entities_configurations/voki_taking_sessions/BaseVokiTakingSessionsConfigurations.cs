@@ -9,6 +9,8 @@ namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.ent
 public class BaseVokiTakingSessionsConfigurations : IEntityTypeConfiguration<BaseVokiTakingSession>
 {
     public void Configure(EntityTypeBuilder<BaseVokiTakingSession> builder) {
+        builder.UseTptMappingStrategy();
+
         builder
             .HasKey(x => x.Id);
         builder

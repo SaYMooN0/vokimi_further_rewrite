@@ -32,7 +32,7 @@ public sealed class GeneralVokiTakenRecord : BaseVokiTakenRecord
         GeneralVokiTakenRecord newRecord = new(
             VokiTakenRecordId.CreateNew(), dto.TakenVokiId, dto.VokiTakerId,
             dto.SessionStartTime, dto.SessionFinishTime,
-            dto.ReceivedResultId, dto.QuestionDetails, dto.WasSessionWithForcedSequentialOrder
+            dto.ReceivedResultId, dto.QuestionDetails, dto.WasSessionWithForceSequentialOrder
         );
         newRecord.AddDomainEvent(new VokiTakenRecordCreatedEvent(
             newRecord.Id,

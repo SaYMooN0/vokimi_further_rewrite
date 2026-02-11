@@ -7,6 +7,5 @@ public interface ISessionsWithFreeAnsweringRepository
 {
     Task<SessionWithFreeAnswering?> GetByIdForUpdate(VokiTakingSessionId sessionId, CancellationToken ct);
     Task Delete(SessionWithFreeAnswering session, CancellationToken ct);
-
     Task Update(SessionWithFreeAnswering session, CancellationToken ct);
 }

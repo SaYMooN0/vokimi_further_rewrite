@@ -1,7 +1,7 @@
 import { ApiVokiTakingGeneral, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
-import type { GeneralVokiTakingData, GeneralVokiTakingQuestionData } from "../types";
+import type { GeneralVokiTakingData, GeneralVokiTakingQuestionData, PosssibleGeneralVokiTakingDataSaveData } from "../types";
 
 export class SequentialAnsweringGeneralVokiTakingState {
     readonly vokiId: string;
@@ -25,7 +25,7 @@ export class SequentialAnsweringGeneralVokiTakingState {
         return false;
     }
 
-    constructor(data: GeneralVokiTakingData, clearVokiSeenUpdateTimer: () => void) {
+    constructor(data: GeneralVokiTakingData, saveData: PosssibleGeneralVokiTakingDataSaveData, clearVokiSeenUpdateTimer: () => void) {
         if (!data.isWithForceSequentialAnswering) {
             throw new Error("Cannot create voki taking state, because voki is with free answering");
         }
@@ -43,6 +43,25 @@ export class SequentialAnsweringGeneralVokiTakingState {
         const firstQuestion = data.questions[0];
         this.currentQuestion = { ...firstQuestion, clientShownAt: new Date(), serverShownAt: data.startedAt };
         this.#resetCurrentAnswers();
+
+        // Load from save if available
+        if (saveData.anySave) {
+            const currentQuestionId = this.currentQuestion.id;
+            const savedAnswers = saveData.savedChosenAnswers[currentQuestionId];
+
+            if (savedAnswers) {
+                // Reset all to false first
+                for (const answerId in this.currentQuestionChosenAnswers) {
+                    this.currentQuestionChosenAnswers[answerId] = false;
+                }
+                // Set saved answers to true
+                for (const answerId of savedAnswers) {
+                    if (this.currentQuestionChosenAnswers[answerId] !== undefined) {
+                        this.currentQuestionChosenAnswers[answerId] = true;
+                    }
+                }
+            }
+        }
     }
     async goToNextQuestion(): Promise<Err[]> {
         if (this.currentQuestion === undefined) {

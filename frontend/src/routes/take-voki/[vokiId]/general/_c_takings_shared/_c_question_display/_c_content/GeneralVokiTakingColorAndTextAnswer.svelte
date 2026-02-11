@@ -1,8 +1,8 @@
-<script lang="ts">
+<!-- <script lang="ts">
 	import { ColorUtils } from '$lib/ts/utils/color-utils';
-	import { onDestroy, onMount } from 'svelte';
-	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerColorOnly } from '../../types';
-	import { type AnswerRef, answersKeyboardNav } from './answers-keyboard-nav.svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import type { GeneralVokiAnswerColorAndText, GeneralVokiAnswerTypeData } from '../../types';
+	import { answersKeyboardNav, type AnswerRef } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './_c_shared/GeneralTakingAnswerChosenIndicator.svelte';
 
 	let {
@@ -11,7 +11,7 @@
 		isAnswerChosen,
 		chooseAnswer
 	}: {
-		answers: { typeData: GeneralVokiAnswerColorOnly; id: string }[];
+		answers: { typeData: GeneralVokiAnswerColorAndText; id: string }[];
 		isMultipleChoice: boolean;
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
@@ -53,58 +53,58 @@
 			tabindex="0"
 			role={isMultipleChoice ? 'checkbox' : 'radio'}
 			aria-checked={isAnswerChosen(answer.id)}
+			style={`
+        --chip:${ColorUtils.normalizeHex6(answer.typeData.color) ?? answer.typeData.color};
+        --chip-text:${ColorUtils.contrastTextColor(answer.typeData.color)};
+      `}
 		>
-			<div
-				class="color-div"
-				style="background-color:{ColorUtils.normalizeHex6(answer.typeData.color) ??
-					answer.typeData.color};"
-			>
-				<div class="indicator-container">
-					<GeneralTakingAnswerChosenIndicator
-						{isMultipleChoice}
-						isChosen={isAnswerChosen(answer.id)}
-					/>
-				</div>
-			</div>
+			<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
+			<div class="color-chip"><span class="chip-text">{answer.typeData.color}</span></div>
+			<label class="text">{answer.typeData.text}</label>
+			<div class="color-chip-thin"></div>
 		</div>
 	{/each}
 </div>
 
 <style>
 	.answers-container {
-		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 2rem;
+		display: grid;
+		gap: 0.75rem;
 	}
 
 	.answer {
 		display: grid;
-		gap: 0.5rem;
-		height: 7rem;
-		padding: 1rem;
-		border-radius: 1rem;
-		flex: 0 1 18rem;
+		align-items: center;
+		gap: 0.75rem;
+		height: fit-content;
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		grid-template-columns: auto 1fr;
+		grid-template-columns: auto auto 1fr auto;
 	}
 
-	.color-div {
-		--color-div-border-radius: 0.675rem;
+	.color-chip {
+		display: grid;
+		width: 10rem;
+		height: 3rem;
+		padding: 0 0.5rem;
+		border-radius: 0.5rem;
+		background: var(--chip);
+		color: var(--chip-text);
+		place-items: center;
+		white-space: nowrap;
+	}
 
-		position: relative;
-		width: 100%;
+	.chip-text {
+		font-size: 0.75rem;
+		font-weight: 600;
+		opacity: 0.95;
+	}
+
+	.color-chip-thin {
+		width: 1rem;
 		height: 100%;
-		border: 1px solid var(--muted);
-		border-radius: var(--color-div-border-radius);
+		border-radius: 0.5rem;
+		background: var(--chip);
 	}
-
-	.indicator-container {
-		position: absolute;
-		bottom: -0.75rem;
-		left: 50%;
-		padding: 0.5rem 0.5rem 0.25rem;
-		border-radius: var(--color-div-border-radius);
-		background-color: var(--back);
-		transform: translateX(-50%);
-		border-top: 1px solid var(--muted);
-	}
-</style>
+</style> -->

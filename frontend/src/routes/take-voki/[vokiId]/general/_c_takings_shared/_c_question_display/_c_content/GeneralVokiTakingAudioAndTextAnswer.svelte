@@ -1,5 +1,5 @@
-<script lang="ts">
-	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerAudioOnly } from '../../types';
+<!-- <script lang="ts">
+	import type { GeneralVokiAnswerAudioAndText, GeneralVokiAnswerTypeData } from '../../types';
 	import GeneralTakingAnswerChosenIndicator from './_c_shared/GeneralTakingAnswerChosenIndicator.svelte';
 
 	let {
@@ -8,7 +8,7 @@
 		isAnswerChosen,
 		chooseAnswer
 	}: {
-		answers: { typeData: GeneralVokiAnswerAudioOnly; id: string }[];
+		answers: { typeData: GeneralVokiAnswerAudioAndText; id: string }[];
 		isMultipleChoice: boolean;
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
@@ -18,6 +18,8 @@
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
 	}>();
+
+	
 </script>
 
 <div class="answers-container">
@@ -25,4 +27,4 @@
 		{JSON.stringify(answer)}
 		<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
 	{/each}
-</div>
+</div> -->

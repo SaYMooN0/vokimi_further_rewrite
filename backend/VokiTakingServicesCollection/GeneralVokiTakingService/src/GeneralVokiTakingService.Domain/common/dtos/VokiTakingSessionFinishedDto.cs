@@ -7,7 +7,7 @@ public record class VokiTakingSessionFinishedDto(
     AppUserId? VokiTakerId,
     DateTime SessionStartTime,
     DateTime SessionFinishTime,
-    bool WasSessionWithForcedSequentialOrder,
+    bool WasSessionWithForceSequentialOrder,
     GeneralVokiResultId ReceivedResultId,
     ImmutableArray<VokiTakenQuestionDetails> QuestionDetails
 ) { }

@@ -18,7 +18,7 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
         VokiId vokiId,
         CancellationToken ct
     ) => _db.FindForUpdateAsync<VokiRatingsSnapshot>(
-        predicate: s => s.VokiId == vokiId,
+        findPredicate: s => s.VokiId == vokiId,
         ct,
         orderBy: q => q.OrderByDescending(s => s.Date)
     );

@@ -1,21 +1,24 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
 	import { onMount, onDestroy } from 'svelte';
-	import { createQuestionsKeyHandler } from './_free_answering_taking/free-answering-voki-taking-questions-nav';
-	import type { GeneralVokiTakingData } from './types';
-	import { FreeAnsweringGeneralVokiTakingState } from './_free_answering_taking/free-answering-general-voki-taking-state.svelte';
-	import FreeAnsweringCurrentQuestionView from './_free_answering_taking/FreeAnsweringCurrentQuestionView.svelte';
-	import FreeAnsweringVokiTakingErrsList from './_free_answering_taking/FreeAnsweringVokiTakingErrsList.svelte';
+	import { createQuestionsKeyHandler } from './_c_free_answering_taking/free-answering-voki-taking-questions-nav';
+	import type { GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from './types';
+	import { FreeAnsweringGeneralVokiTakingState } from './_c_free_answering_taking/free-answering-general-voki-taking-state.svelte';
+	import FreeAnsweringCurrentQuestionView from './_c_free_answering_taking/FreeAnsweringCurrentQuestionView.svelte';
+	import FreeAnsweringVokiTakingErrsList from './_c_free_answering_taking/FreeAnsweringVokiTakingErrsList.svelte';
+	import FreeAnsweringButtonsContainer from './_c_free_answering_taking/FreeAnsweringButtonsContainer.svelte';
 
 	interface Props {
 		takingData: GeneralVokiTakingData;
+		saveData: PosssibleGeneralVokiTakingDataSaveData;
 		clearVokiSeenUpdateTimer: () => void;
 		onResultReceived: (resultId: string) => void;
 	}
-	let { takingData, clearVokiSeenUpdateTimer, onResultReceived }: Props = $props();
+	let { takingData, saveData, clearVokiSeenUpdateTimer, onResultReceived }: Props = $props();
 
 	let vokiTakingState = new FreeAnsweringGeneralVokiTakingState(
 		takingData,
+		saveData,
 		clearVokiSeenUpdateTimer
 	);
 
@@ -60,5 +63,5 @@
 		errs={vokiTakingErrs}
 		jumpToSpecificQuestion={jumpToSpecificQuestionFromErrsList}
 	/>
-	<FreeAnsweringVokiTakingErrsList {vokiTakingState} bind:vokiTakingErrs {onResultReceived} />
+	<FreeAnsweringButtonsContainer {vokiTakingState} bind:vokiTakingErrs {onResultReceived} />
 </div>

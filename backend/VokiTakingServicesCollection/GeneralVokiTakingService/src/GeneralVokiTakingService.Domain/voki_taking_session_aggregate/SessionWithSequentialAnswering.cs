@@ -197,7 +197,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             vokiTakerId,
             sessionStartTime.Client,
             clientSessionFinishedTime,
-            WasSessionWithForcedSequentialOrder: true,
+            WasSessionWithForceSequentialOrder: true,
             ReceivedResultId: resOrErr.AsSuccess(),
             questionDetails
         );

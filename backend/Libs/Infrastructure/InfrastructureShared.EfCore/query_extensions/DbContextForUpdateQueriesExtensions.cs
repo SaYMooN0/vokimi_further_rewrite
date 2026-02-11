@@ -55,7 +55,7 @@ public static class DbContextLockExtensions
 
     public static Task<T?> FindForUpdateAsync<T>(
         this DbContext db,
-        Expression<Func<T, bool>> predicate,
+        Expression<Func<T, bool>> findPredicate,
         CancellationToken ct,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null
     ) where T : class, IAggregateRoot {
@@ -67,7 +67,7 @@ public static class DbContextLockExtensions
 
         return q.TagWith(ForUpdateTagValue)
             .AsTracking()
-            .FirstOrDefaultAsync(predicate, ct);
+            .FirstOrDefaultAsync(findPredicate, ct);
     }
 
 

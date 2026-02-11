@@ -133,7 +133,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             vokiTakerId,
             sessionStartTime.Client,
             clientFinishedTime,
-            WasSessionWithForcedSequentialOrder: false,
+            WasSessionWithForceSequentialOrder: false,
             ReceivedResultId: resOrErr.AsSuccess(),
             questionDetails
         );

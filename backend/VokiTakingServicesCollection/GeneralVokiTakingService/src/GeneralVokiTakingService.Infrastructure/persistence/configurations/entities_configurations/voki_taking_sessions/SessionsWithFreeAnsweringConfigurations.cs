@@ -7,13 +7,11 @@ namespace GeneralVokiTakingService.Infrastructure.persistence.configurations.ent
 
 public class SessionsWithFreeAnsweringConfigurations : IEntityTypeConfiguration<SessionWithFreeAnswering>
 {
-    public void Configure(EntityTypeBuilder<SessionWithFreeAnswering> builder)
-    {
-        builder.ToTable("SessionsWithFreeAnswering");
-        builder.HasBaseType<BaseVokiTakingSession>();
-
+    public void Configure(EntityTypeBuilder<SessionWithFreeAnswering> builder) {
         builder
-            .Property<ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>>("_questionsWithSavedAnswers")
-            .HasFreeTakingSavedQuestionsConversion();
+            .Property<ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>>(
+                "_questionsWithSavedAnswers")
+            .HasFreeTakingSavedQuestionsConversion()
+            .HasColumnName("QuestionsWithSavedAnswers");
     }
 }

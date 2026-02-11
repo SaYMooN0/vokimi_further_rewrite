@@ -1,5 +1,4 @@
 <script lang="ts">
-	import GeneralVokiTakingAnswersDisplay from '../_c_takings_shared/GeneralVokiTakingAnswersDisplay.svelte';
 	import GeneralVokiTakingQuestionDisplay from '../_c_takings_shared/GeneralVokiTakingQuestionDisplay.svelte';
 	import type { GeneralVokiTakingQuestionData } from '../types';
 
@@ -21,18 +20,9 @@
 </script>
 
 <GeneralVokiTakingQuestionDisplay
-	text={question.text}
-	imageKeys={question.imageKeys}
-	imagesAspectRatio={question.imagesAspectRatio}
-	minAnswersCount={question.minAnswersCount}
-	maxAnswersCount={question.maxAnswersCount}
+	{question}
 	{totalQuestionsCount}
-	questionNumber={question.orderInVokiTaking + 1}
-/>
-<GeneralVokiTakingAnswersDisplay
-	bind:this={answersContainer}
-	answerType={question.answerType}
-	answers={question.answers}
-	bind:chosenAnswers
-	{isMultipleChoice}
+	questionChosenAnswers={chosenAnswers}
+	isQuestionMultipleChoice={isMultipleChoice}
+	content={question.content}
 />

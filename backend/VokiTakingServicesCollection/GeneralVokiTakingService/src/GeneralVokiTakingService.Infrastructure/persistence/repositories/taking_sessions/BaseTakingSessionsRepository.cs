@@ -1,7 +1,9 @@
 ﻿using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
+using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate.questions.answers;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.user_ctx;
 
@@ -20,11 +22,20 @@ internal class BaseTakingSessionsRepository : IBaseTakingSessionsRepository
         await _db.SaveChangesAsync(ct);
     }
 
-    public async Task Delete(BaseVokiTakingSession session, CancellationToken ct) {
-        _db.ThrowIfDetached(session);
-        _db.BaseVokiTakingSessions.Remove(session);
-        await _db.SaveChangesAsync(ct);
+    public async Task<(VokiTakingSessionId Id, bool IsWithForceSequentialAnswering)?> GetUserUnfinishedSessionBriefData(
+        VokiId commandVokiId, AuthenticatedUserCtx aUserCtx, CancellationToken ct
+    ) {
+        var res = await _db.BaseVokiTakingSessions
+            .Select(s => new { s.Id, s.VokiId, s.VokiTaker, s.IsWithForceSequentialAnswering })
+            .FirstOrDefaultAsync(s => s.VokiId == commandVokiId && s.VokiTaker == aUserCtx.UserId, ct);
+        if (res is null) {
+            return null;
+        }
+
+        return (res.Id, res.IsWithForceSequentialAnswering);
     }
+
+    
 
     public Task<BaseVokiTakingSession?> GetForVokiAndUser(
         VokiId commandVokiId, AuthenticatedUserCtx aUserCtx, CancellationToken ct

@@ -24,7 +24,6 @@ export type GeneralVokiTakingQuestionData = {
     orderInVokiTaking: number;
     minAnswersCount: number;
     maxAnswersCount: number;
-
     content: GeneralVokiTakingQuestionContent;
 }
 export type GeneralVokiTakingQuestionContent =

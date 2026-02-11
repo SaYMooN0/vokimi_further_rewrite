@@ -1,7 +1,7 @@
-<script lang="ts">
-	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import { onMount, onDestroy } from 'svelte';
-	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerImageOnly } from '../../types';
+<!-- <script lang="ts">
+	import { ColorUtils } from '$lib/ts/utils/color-utils';
+	import { onDestroy, onMount } from 'svelte';
+	import type { GeneralVokiAnswerTypeData, GeneralVokiAnswerColorOnly } from '../../types';
 	import { type AnswerRef, answersKeyboardNav } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './_c_shared/GeneralTakingAnswerChosenIndicator.svelte';
 
@@ -11,7 +11,7 @@
 		isAnswerChosen,
 		chooseAnswer
 	}: {
-		answers: { typeData: GeneralVokiAnswerImageOnly; id: string }[];
+		answers: { typeData: GeneralVokiAnswerColorOnly; id: string }[];
 		isMultipleChoice: boolean;
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
@@ -54,54 +54,57 @@
 			role={isMultipleChoice ? 'checkbox' : 'radio'}
 			aria-checked={isAnswerChosen(answer.id)}
 		>
-			<div class="img-container">
-				<img
-					class="unselectable"
-					src={StorageBucketMain.fileSrc(answer.typeData.image)}
-					alt="Answer"
-					draggable="false"
-				/>
+			<div
+				class="color-div"
+				style="background-color:{ColorUtils.normalizeHex6(answer.typeData.color) ??
+					answer.typeData.color};"
+			>
+				<div class="indicator-container">
+					<GeneralTakingAnswerChosenIndicator
+						{isMultipleChoice}
+						isChosen={isAnswerChosen(answer.id)}
+					/>
+				</div>
 			</div>
-
-			<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
 		</div>
 	{/each}
 </div>
 
 <style>
 	.answers-container {
-		display: grid;
+		display: flex;
+		flex-wrap: wrap;
 		justify-content: center;
-		gap: 1.5rem;
-		grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+		gap: 2rem;
 	}
 
 	.answer {
 		display: grid;
 		gap: 0.5rem;
-		padding: 1rem 0.5rem;
+		height: 7rem;
+		padding: 1rem;
 		border-radius: 1rem;
-		background-color: var(--back);
-		grid-template-rows: 1fr auto;
-		justify-items: center;
+		flex: 0 1 18rem;
 	}
 
-	.img-container {
-		display: flex;
-		justify-content: center;
-		align-items: center;
+	.color-div {
+		--color-div-border-radius: 0.675rem;
+
+		position: relative;
 		width: 100%;
-		width: fit-content;
 		height: 100%;
+		border: 1px solid var(--muted);
+		border-radius: var(--color-div-border-radius);
 	}
 
-	img {
-		min-width: 16rem;
-		max-width: 25rem;
-		max-height: 18rem;
-		border-radius: 0.75rem;
-		object-fit: contain;
-		-webkit-user-drag: none;
-		box-shadow: var(--shadow-xs);
+	.indicator-container {
+		position: absolute;
+		bottom: -0.75rem;
+		left: 50%;
+		padding: 0.5rem 0.5rem 0.25rem;
+		border-radius: var(--color-div-border-radius);
+		background-color: var(--back);
+		transform: translateX(-50%);
+		border-top: 1px solid var(--muted);
 	}
-</style>
+</style> -->

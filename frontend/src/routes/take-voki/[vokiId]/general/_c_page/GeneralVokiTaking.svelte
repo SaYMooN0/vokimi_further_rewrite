@@ -12,7 +12,7 @@
 		sessionData: GeneralVokiTakingData;
 		saveData: PosssibleGeneralVokiTakingDataSaveData;
 	}
-	let { sessionData: vokiTakingData }: Props = $props();
+	let { sessionData: vokiTakingData, saveData }: Props = $props();
 	function onResultReceived(receivedResultId: string) {
 		goto(`/take-voki/${vokiTakingData.vokiId}/general/results/${receivedResultId}`, {
 			replaceState: true
@@ -42,12 +42,14 @@
 {#if vokiTakingData.isWithForceSequentialAnswering}
 	<SequentialAnsweringGeneralVokiTaking
 		takingData={vokiTakingData}
+		{saveData}
 		clearVokiSeenUpdateTimer={clearMarkerCookie}
 		{onResultReceived}
 	/>
 {:else}
 	<FreeAnsweringGeneralVokiTaking
 		takingData={vokiTakingData}
+		{saveData}
 		clearVokiSeenUpdateTimer={clearMarkerCookie}
 		{onResultReceived}
 	/>

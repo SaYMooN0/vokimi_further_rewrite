@@ -1,48 +1,51 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import type { GeneralVokiTakingQuestionContent, GeneralVokiTakingQuestionData } from '../types';
+	import GeneralVokiTakingQuestionContentDisplay from './_c_question_display/GeneralVokiTakingQuestionContentDisplay.svelte';
 
 	interface Props {
-		text: string;
-		imageKeys: string[];
-		imagesAspectRatio: number;
-		minAnswersCount: number;
-		maxAnswersCount: number;
+		question: GeneralVokiTakingQuestionData;
 		totalQuestionsCount: number;
-		questionNumber: number;
+		questionChosenAnswers: Record<string, boolean>;
+		isQuestionMultipleChoice: boolean;
+		content: GeneralVokiTakingQuestionContent;
 	}
 	let {
-		text,
-		imageKeys,
-		imagesAspectRatio,
-		minAnswersCount,
-		maxAnswersCount,
+		question,
 		totalQuestionsCount,
-		questionNumber
+		questionChosenAnswers,
+		isQuestionMultipleChoice,
+		content
 	}: Props = $props();
 </script>
 
 <div class="question-display-container">
 	<label class="question-num">
-		Question #{questionNumber} out of {totalQuestionsCount}
+		Question #{question.orderInVokiTaking} out of {totalQuestionsCount}
 	</label>
-	<h2 class="question-text">{text}</h2>
+	<h2 class="question-text">{question.text}</h2>
 	<div class="images-container">
-		{#each imageKeys as image}
+		{#each question.imageKeys as image}
 			<img
 				src={StorageBucketMain.fileSrc(image)}
 				alt="question-img"
-				style="aspect-ratio: {imagesAspectRatio}"
+				style="aspect-ratio: {question.imagesAspectRatio}"
 			/>
 		{/each}
 	</div>
 	<label class="answers-count-label">
-		{#if minAnswersCount === maxAnswersCount}
-			Choose {minAnswersCount} answer
+		{#if question.minAnswersCount === question.maxAnswersCount}
+			Choose {question.minAnswersCount} answer
 		{:else}
-			Choose from {minAnswersCount} to {maxAnswersCount} answers
+			Choose from {question.minAnswersCount} to {question.maxAnswersCount} answers
 		{/if}
 	</label>
 </div>
+<GeneralVokiTakingQuestionContentDisplay
+	{content}
+	{isQuestionMultipleChoice}
+	{questionChosenAnswers}
+/>
 
 <style>
 	.question-display-container {

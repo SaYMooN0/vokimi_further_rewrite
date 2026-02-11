@@ -1,7 +1,7 @@
 import { ApiVokiTakingGeneral, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
-import type { GeneralVokiTakingQuestionData, GeneralVokiTakingData } from "../types";
+import type { GeneralVokiTakingQuestionData, GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from "../types";
 
 export class FreeAnsweringGeneralVokiTakingState {
     readonly vokiId: string;
@@ -17,7 +17,7 @@ export class FreeAnsweringGeneralVokiTakingState {
     currentQuestionOrder = $state(0);
     currentQuestion: GeneralVokiTakingQuestionData | undefined;
 
-    constructor(data: GeneralVokiTakingData, clearVokiSeenUpdateTimer: () => void) {
+    constructor(data: GeneralVokiTakingData, saveData: PosssibleGeneralVokiTakingDataSaveData, clearVokiSeenUpdateTimer: () => void) {
         if (data.isWithForceSequentialAnswering) {
             throw new Error("Cannot create voki taking state, because voki is with sequential answering");
 
@@ -37,11 +37,37 @@ export class FreeAnsweringGeneralVokiTakingState {
             );
         }
 
+        // Initialize answers for all questions
         this.#questions.forEach(q => {
             this.chosenAnswers[q.id] = Object.fromEntries(
                 q.content.answers.map(a => [a.id, false])
             ) as Record<string, boolean>;
         });
+
+        // Load from save if available
+        if (saveData.anySave) {
+            // Restore chosen answers from save
+            for (const [questionId, answerIds] of Object.entries(saveData.savedChosenAnswers)) {
+                if (this.chosenAnswers[questionId]) {
+                    // Reset all to false first
+                    for (const answerId in this.chosenAnswers[questionId]) {
+                        this.chosenAnswers[questionId][answerId] = false;
+                    }
+                    // Set saved answers to true
+                    for (const answerId of answerIds) {
+                        if (this.chosenAnswers[questionId][answerId] !== undefined) {
+                            this.chosenAnswers[questionId][answerId] = true;
+                        }
+                    }
+                }
+            }
+
+            // Set current question from save
+            const savedQuestion = this.#questions.find(q => q.id === saveData.currentQuestionId);
+            if (savedQuestion) {
+                this.currentQuestionOrder = savedQuestion.orderInVokiTaking;
+            }
+        }
 
         this.currentQuestion = $derived<GeneralVokiTakingQuestionData | undefined>(
             this.#questions.find(
