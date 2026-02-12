@@ -1,5 +1,6 @@
 ﻿using GeneralVokiTakingService.Api.contracts.voki_taking;
 using GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
+using GeneralVokiTakingService.Api.contracts.voki_taking.free_answering.save_state;
 using GeneralVokiTakingService.Api.contracts.voki_taking.sequential_answering;
 using GeneralVokiTakingService.Api.contracts.voki_taking.shared;
 using GeneralVokiTakingService.Api.contracts.voki_taking.shared.continue_taking;
@@ -8,6 +9,7 @@ using GeneralVokiTakingService.Application.general_vokis.commands;
 using GeneralVokiTakingService.Application.general_vokis.commands.free_answering_voki_taking;
 using GeneralVokiTakingService.Application.general_vokis.commands.sequential_answering_voki_taking;
 using GeneralVokiTakingService.Application.general_vokis.queries;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.free_answering;
 
 namespace GeneralVokiTakingService.Api.endpoints;
 
@@ -79,7 +81,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
     private static async Task<IResult> SaveCurrentFreeVokiTakingSessionState(
         CancellationToken ct, HttpContext httpContext,
-        ICommandHandler<SaveCurrentFreeVokiTakingSessionStateCommand> handler
+        ICommandHandler<SaveCurrentFreeVokiTakingSessionStateCommand, SessionWithFreeAnsweringSavedState> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
         var request = httpContext.GetValidatedRequest<SaveCurrentFreeVokiTakingSessionStateRequest>();
@@ -87,7 +89,7 @@ internal class SpecificVokiHandlers : IEndpointGroup
         SaveCurrentFreeVokiTakingSessionStateCommand command = new(vokiId, request.ParsedSessionId, request.ParsedChosenAnswers);
         var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
+        return CustomResults.FromErrOrToJson<SessionWithFreeAnsweringSavedState, SaveFreeVokiTakingSessionStateResponse>(result);
     }
 
     private static async Task<IResult> FinishVokiTakingWithFreeAnswering(

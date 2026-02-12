@@ -10,7 +10,7 @@ public class TierListVokisConfigurations : IEntityTypeConfiguration<TierListVoki
 {
     public void Configure(EntityTypeBuilder<TierListVoki> builder) {
         builder.ToTable("VokisTierList");
-        builder.HasBaseType<BaseVoki>();
+
         builder.HasInteractionSettingsAsComplexProperty(x => x.InteractionSettings);
     }
 }

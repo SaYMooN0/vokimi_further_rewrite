@@ -18,17 +18,6 @@ public static class PropertyBuilderExtensions
             new SequentialTakingAnsweredQuestionsArrayComparer()
         );
     }
-
-    public static PropertyBuilder<ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>>
-        HasFreeTakingSavedQuestionsConversion(
-            this PropertyBuilder<ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>> builder
-        ) {
-        return builder.HasConversion(
-            new FreeTakingSavedQuestionsConverter(),
-            new FreeTakingSavedQuestionsComparer()
-        );
-    }
-
     public static PropertyBuilder<ImmutableArray<TakingSessionExpectedQuestion>> HasSessionExpectedQuestionsConversion(
         this PropertyBuilder<ImmutableArray<TakingSessionExpectedQuestion>> builder
     ) {

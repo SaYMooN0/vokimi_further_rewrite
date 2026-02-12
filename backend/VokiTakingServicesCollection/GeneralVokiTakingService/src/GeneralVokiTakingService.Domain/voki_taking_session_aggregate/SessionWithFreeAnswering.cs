@@ -2,6 +2,7 @@
 using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taken_record_aggregate;
+using GeneralVokiTakingService.Domain.voki_taking_session_aggregate.free_answering;
 using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
@@ -11,14 +12,14 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     private SessionWithFreeAnswering() { }
 
     public override bool IsWithForceSequentialAnswering => false;
-    private ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> _questionsWithSavedAnswers;
+    private SessionWithFreeAnsweringSavedState _savedState;
 
 
     private SessionWithFreeAnswering(
         VokiTakingSessionId id, VokiId vokiId, AppUserId? vokiTaker, DateTime startTime,
         ImmutableArray<TakingSessionExpectedQuestion> questions
     ) : base(id, vokiId, vokiTaker, startTime, questions) {
-        _questionsWithSavedAnswers = ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>.Empty;
+        _savedState = SessionWithFreeAnsweringSavedState.CreateEmpty(questions, startTime);
     }
 
     public static SessionWithFreeAnswering Create(
@@ -27,8 +28,8 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     ) {
         VokiQuestion[] ordered = (
             shuffleQuestions
-                ? vokiQuestions.OrderBy(_ => Guid.NewGuid())
-                : vokiQuestions.OrderBy(q => q.OrderInVoki)
+                ? vokiQuestions.OrderBy(_ => Random.Shared.Next())
+                : vokiQuestions.OrderBy(q => q.OrderInVoki.Value)
         ).ToArray();
 
         List<TakingSessionExpectedQuestion> sessionQuestion = new(ordered.Length);
@@ -55,7 +56,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         Questions.ToImmutableArray();
 
     public override VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking() {
-        ImmutableHashSet<GeneralVokiQuestionId> answeredQuestionIds = _questionsWithSavedAnswers.Keys.ToImmutableHashSet();
+        ImmutableHashSet<GeneralVokiQuestionId> answeredQuestionIds = _savedState.QuestionsWithAnswers.Keys.ToImmutableHashSet();
         TakingSessionExpectedQuestion? firstUnansweredQuestion = Questions
             .Where(q => !answeredQuestionIds.Contains(q.QuestionId))
             .MinBy(q => q.OrderInVokiTaking.Value);
@@ -67,7 +68,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         var questionsToShow = Questions
             .Select(q => (
                     q,
-                    _questionsWithSavedAnswers.TryGetValue(q.QuestionId, out var saved)
+                    _savedState.QuestionsWithAnswers.TryGetValue(q.QuestionId, out var saved)
                         ? saved
                         : ImmutableHashSet<GeneralVokiAnswerId>.Empty
                 )
@@ -80,7 +81,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         );
     }
 
-    public override ushort QuestionsWithSavedAnswersCount() => (ushort)_questionsWithSavedAnswers.Count;
+    public override ushort QuestionsWithSavedAnswersCount() => (ushort)_savedState.QuestionsWithAnswers.Count;
 
     public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
         DateTime currentTime,
@@ -140,10 +141,11 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     }
 
 
-    public ErrOrNothing SaveAnswers(
+    public ErrOr<SessionWithFreeAnsweringSavedState> SaveAnswers(
         IUserCtx userCtx,
         VokiId vokiId,
-        ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> stateToSave
+        ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> stateToSave,
+        DateTime saveTime
     ) {
         if (this.VokiId != vokiId) {
             return ErrFactory.Conflict("Provided save data does not belong to this Voki");
@@ -151,6 +153,10 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
 
         if (VokiTaker is not null && userCtx.IsAuthenticated(out var aUserCtx) && VokiTaker != aUserCtx.UserId) {
             return ErrFactory.Conflict("Could not save answers because session was started by another user");
+        }
+
+        if (saveTime < this._savedState.SaveTime) {
+            return ErrFactory.Conflict("Provide save is earlier than the time of the last save");
         }
 
         if (stateToSave.Count > Questions.Length) {
@@ -182,8 +188,8 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             return err;
         }
 
-        _questionsWithSavedAnswers = stateToSave;
-        return ErrOrNothing.Nothing;
+        _savedState = new SessionWithFreeAnsweringSavedState(stateToSave, saveTime);
+        return _savedState;
     }
 
     private ErrOrNothing ValidateChosenAnswers(
@@ -217,8 +223,3 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         return errs;
     }
 }
-
-public record SessionWithFreeAnsweringAnsweredQuestion(
-    GeneralVokiQuestionId QuestionId,
-    ImmutableHashSet<GeneralVokiAnswerId> ChosenAnswerIds
-);

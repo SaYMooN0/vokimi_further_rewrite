@@ -10,7 +10,7 @@ public class ScoringVokisConfigurations : IEntityTypeConfiguration<ScoringVoki>
 {
     public void Configure(EntityTypeBuilder<ScoringVoki> builder) {
         builder.ToTable("VokisScoring");
-        builder.HasBaseType<BaseVoki>();
+
         builder.HasInteractionSettingsAsComplexProperty(x => x.InteractionSettings);
     }
 }

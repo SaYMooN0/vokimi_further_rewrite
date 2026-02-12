@@ -12,6 +12,8 @@ namespace VokisCatalogService.Infrastructure.persistence.configurations.entities
 public class BaseVokisConfigurations : IEntityTypeConfiguration<BaseVoki>
 {
     public void Configure(EntityTypeBuilder<BaseVoki> builder) {
+        builder.UseTptMappingStrategy();
+        
         builder
             .HasKey(x => x.Id);
         builder

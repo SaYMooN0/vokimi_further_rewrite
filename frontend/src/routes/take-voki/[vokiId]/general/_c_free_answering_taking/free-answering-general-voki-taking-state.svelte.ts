@@ -8,14 +8,18 @@ export class FreeAnsweringGeneralVokiTakingState {
     readonly #sessionId: string;
     readonly #serverSessionStartTime: Date;
     readonly #clientSessionStartTime: Date;
-    readonly #questions: GeneralVokiTakingQuestionData[];
+    readonly #questions: GeneralVokiTakingQuestionData[] = $state()!;
     readonly totalQuestionsCount: number;
     readonly #clearVokiSeenUpdateTimer: () => void;
 
     readonly chosenAnswers = $state<Record<string, Record<string, boolean>>>({});
 
-    currentQuestionOrder = $state(0);
-    currentQuestion: GeneralVokiTakingQuestionData | undefined;
+    currentQuestionOrder = $state<number>()!;
+    currentQuestion: GeneralVokiTakingQuestionData | undefined = $derived<GeneralVokiTakingQuestionData | undefined>(
+        this.#questions.find(
+            q => q.orderInVokiTaking === this.currentQuestionOrder
+        )
+    );
 
     constructor(data: GeneralVokiTakingData, saveData: PosssibleGeneralVokiTakingDataSaveData, clearVokiSeenUpdateTimer: () => void) {
         if (data.isWithForceSequentialAnswering) {
@@ -29,8 +33,6 @@ export class FreeAnsweringGeneralVokiTakingState {
         this.#clientSessionStartTime = new Date();
         this.#questions = data.questions;
         this.totalQuestionsCount = data.totalQuestionsCount;
-
-
         if (this.#questions.length !== this.totalQuestionsCount) {
             throw new Error(
                 `GeneralVokiTakingState inconsistency: questions length (${this.#questions.length}) != totalQuestionsCount (${this.totalQuestionsCount})`
@@ -62,24 +64,33 @@ export class FreeAnsweringGeneralVokiTakingState {
                 }
             }
 
-            // Set current question from save
-            const savedQuestion = this.#questions.find(q => q.id === saveData.currentQuestionId);
-            if (savedQuestion) {
-                this.currentQuestionOrder = savedQuestion.orderInVokiTaking;
+            const questionToSetAsCurrent = this.#questions.find(q => q.id === saveData.currentQuestionId);
+            if (questionToSetAsCurrent) {
+                this.currentQuestionOrder = questionToSetAsCurrent.orderInVokiTaking;
             }
+            else {
+                this.currentQuestionOrder = Math.min(...this.#questions.map((q) => q.orderInVokiTaking));
+            }
+
+
+        }
+        else {
+            this.currentQuestionOrder = Math.min(...this.#questions.map((q) => q.orderInVokiTaking));
         }
 
-        this.currentQuestion = $derived<GeneralVokiTakingQuestionData | undefined>(
-            this.#questions.find(
-                q => q.orderInVokiTaking === this.currentQuestionOrder
-            )
+        this.#lastSavedState = Object.fromEntries(saveData.anySave
+            ? Object.entries(this.chosenAnswers).map(([qId, answers]) => [qId, { ...answers }])
+            : this.#questions.map(q => [q.id, Object.fromEntries(q.content.answers.map(a =>
+                [a.id, false]
+            ))])
         );
 
         this.#clearVokiSeenUpdateTimer = clearVokiSeenUpdateTimer;
+        console.log(this.#lastSavedState);
     }
 
     goToPreviousQuestion(): boolean {
-        if (this.currentQuestionOrder > 0) {
+        if (this.currentQuestionOrder > 1) {
             this.currentQuestionOrder -= 1;
             return true;
         }
@@ -87,7 +98,7 @@ export class FreeAnsweringGeneralVokiTakingState {
     }
 
     goToNextQuestion(): boolean {
-        if (this.currentQuestionOrder < this.totalQuestionsCount - 1) {
+        if (this.currentQuestionOrder < this.totalQuestionsCount) {
             this.currentQuestionOrder += 1;
             return true;
         }
@@ -110,11 +121,11 @@ export class FreeAnsweringGeneralVokiTakingState {
 
 
     get isCurrentQuestionLast() {
-        return this.currentQuestionOrder === this.totalQuestionsCount - 1;
+        return this.currentQuestionOrder === this.totalQuestionsCount;
     }
 
     get isCurrentQuestionFirst() {
-        return this.currentQuestionOrder === 0;
+        return this.currentQuestionOrder === 1;
     }
 
     async finishTakingAndReceiveResult(): Promise<
@@ -195,7 +206,38 @@ export class FreeAnsweringGeneralVokiTakingState {
 
         return errs;
     }
-
+    #lastSavedState: Record<string, Record<string, boolean>>; //questionId:(answerId:isChosen)
+    async saveCurrentStateInTheBackground() {
+        let anySavedNeeded = false;
+        for (const [qId, answers] of Object.entries(this.chosenAnswers)) {
+            const savedAnswers = this.#lastSavedState[qId];
+            if (!savedAnswers) {
+                anySavedNeeded = true;
+                break;
+            }
+            for (const [answerId, isChosen] of Object.entries(answers)) {
+                if (savedAnswers[answerId] !== isChosen) {
+                    anySavedNeeded = true;
+                    break;
+                }
+            }
+        }
+        if (!anySavedNeeded) {
+            return;
+        }
+        const response = await ApiVokiTakingGeneral.fetchJsonResponse<{ savedChosenAnswers: Record<string, string[]> }>(
+            `/vokis/${this.vokiId}/free-answering/save-current-state`, RJO.POST(this.createVokiTakenData()));
+        if (response.isSuccess) {
+            this.#lastSavedState = Object.fromEntries(
+                Object.entries(response.data.savedChosenAnswers)
+                    .map(([qId, answerIds]) => [
+                        qId,
+                        Object.fromEntries(answerIds.map(answerId => [answerId, true]))
+                    ])
+            );
+        }
+        console.log(response, this.#lastSavedState);
+    }
 
 }
 type ErrMessageWithQuestionOrder = { message: string, questionOrder: number };
