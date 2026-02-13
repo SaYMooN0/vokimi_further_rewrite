@@ -27,11 +27,12 @@ public class SessionWithFreeAnsweringSavedStateConverter : ValueConverter<Sessio
     private static SessionWithFreeAnsweringSavedState FromString(string s) {
         if (string.IsNullOrWhiteSpace(s)) {
             return new SessionWithFreeAnsweringSavedState(
-                ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>.Empty, DateTime.MinValue);
+                ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>>.Empty, DateTime.MinValue
+            );
         }
 
         string[] parts = s.Split(MainSeparator);
-        DateTime saveTime = DateTime.Parse(parts[0]);
+        DateTime saveTime =DateTimeOffset.Parse(parts[0]).UtcDateTime;
 
         if (parts.Length <= 1 || string.IsNullOrWhiteSpace(parts[1])) {
             return new SessionWithFreeAnsweringSavedState(

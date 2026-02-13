@@ -57,7 +57,11 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     }
 
 
-    public override VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking() {
+    public override ErrOr<VokiTakingStateToContinueFromSaved> GetSavedStateToContinueTaking(AuthenticatedUserCtx userCtx) {
+        if (this.ValidateProvidedTaker(userCtx).IsErr(out var err)) {
+            return err;
+        }
+
         ImmutableHashSet<GeneralVokiQuestionId> answeredQuestionIds = _answered
             .Select(q => q.QuestionId)
             .ToImmutableHashSet();
@@ -108,7 +112,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             return err;
         }
 
-        if (ValidateVokiTaker(userCtx, out var vokiTakerId).IsErr(out err)) {
+        if (ValidateProvidedTakerAndSetIfOk(userCtx).IsErr(out err)) {
             return err;
         }
 
@@ -194,7 +198,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
 
         return new VokiTakingSessionFinishedDto(
             VokiId,
-            vokiTakerId,
+            VokiTaker,
             sessionStartTime.Client,
             clientSessionFinishedTime,
             WasSessionWithForceSequentialOrder: true,

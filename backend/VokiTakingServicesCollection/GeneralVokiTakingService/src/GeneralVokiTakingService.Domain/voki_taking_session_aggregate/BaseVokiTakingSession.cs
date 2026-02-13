@@ -9,7 +9,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
 {
     protected BaseVokiTakingSession() { }
     public VokiId VokiId { get; }
-    public AppUserId? VokiTaker { get; }
+    public AppUserId? VokiTaker { get; private set; }
     public DateTime StartTime { get; }
     public abstract bool IsWithForceSequentialAnswering { get; }
     protected ImmutableArray<TakingSessionExpectedQuestion> Questions { get; }
@@ -44,7 +44,7 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
 
     public abstract ushort QuestionsWithSavedAnswersCount();
 
-    public abstract VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking();
+    public abstract ErrOr<VokiTakingStateToContinueFromSaved> GetSavedStateToContinueTaking(AuthenticatedUserCtx userCtx);
 
     protected ErrOrNothing ValidateStartAndFinishTime(
         DateTime currentTime,
@@ -121,25 +121,37 @@ public abstract class BaseVokiTakingSession : AggregateRoot<VokiTakingSessionId>
         return errs;
     }
 
-    protected ErrOrNothing ValidateVokiTaker(
-        IUserCtx userCtx,
-        out AppUserId? resolvedVokiTaker
-    ) {
-        AppUserId? contextId = userCtx.TryGetUserId.IsSuccess(out var id) ? id : null;
-        if (
-            this.VokiTaker is not null
-            && contextId is not null
-            && contextId != this.VokiTaker
-        ) {
-            resolvedVokiTaker = null;
-            return ErrFactory.Conflict("Could not finish voki taking because it was started by another user");
+    protected ErrOrNothing ValidateProvidedTaker(IUserCtx userCtx) {
+        if (userCtx.IsAuthenticated(out var aUserCtx)) {
+            if (VokiTaker is null) {
+                return ErrOrNothing.Nothing;
+            }
+
+            if (VokiTaker == aUserCtx.UserId) {
+                return ErrOrNothing.Nothing;
+            }
+
+            return ErrFactory.Conflict("Session was started by another user");
         }
 
-        resolvedVokiTaker = contextId ?? this.VokiTaker;
+        if (VokiTaker is null) {
+            return ErrOrNothing.Nothing;
+        }
+
+        return ErrFactory.Conflict("Session was started by a signed in account. If it was you please check your login state");
+    }
+
+    protected ErrOrNothing ValidateProvidedTakerAndSetIfOk(IUserCtx userCtx) {
+        if (ValidateProvidedTaker(userCtx).IsErr(out var err)) {
+            return err;
+        }
+
+        if (VokiTaker is null && userCtx.IsAuthenticated(out var aUserCtx)) {
+            VokiTaker = aUserCtx.UserId;
+        }
 
         return ErrOrNothing.Nothing;
     }
-
 
     private static readonly TimeSpan ServerStartTolerance = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan ClientFinishTolerance = TimeSpan.FromMinutes(5);

@@ -55,8 +55,14 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     public override ImmutableArray<TakingSessionExpectedQuestion> QuestionsToShowOnStart() =>
         Questions.ToImmutableArray();
 
-    public override VokiTakingStateToContinueFromSaved GetSavedStateToContinueTaking() {
-        ImmutableHashSet<GeneralVokiQuestionId> answeredQuestionIds = _savedState.QuestionsWithAnswers.Keys.ToImmutableHashSet();
+    public override ErrOr<VokiTakingStateToContinueFromSaved> GetSavedStateToContinueTaking(AuthenticatedUserCtx userCtx) {
+        if (this.ValidateProvidedTaker(userCtx).IsErr(out var err)) {
+            return err;
+        }
+        ImmutableHashSet<GeneralVokiQuestionId> answeredQuestionIds = _savedState.QuestionsWithAnswers
+            .Where(qWithA => qWithA.Value.Count > 0)
+            .Select(qWithA => qWithA.Key)
+            .ToImmutableHashSet();
         TakingSessionExpectedQuestion? firstUnansweredQuestion = Questions
             .Where(q => !answeredQuestionIds.Contains(q.QuestionId))
             .MinBy(q => q.OrderInVokiTaking.Value);
@@ -81,7 +87,9 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         );
     }
 
-    public override ushort QuestionsWithSavedAnswersCount() => (ushort)_savedState.QuestionsWithAnswers.Count;
+    public override ushort QuestionsWithSavedAnswersCount() =>
+        (ushort)_savedState.QuestionsWithAnswers
+            .Count(a => a.Value.Count > 0);
 
     public ErrOr<VokiTakingSessionFinishedDto> FinishAndReceiveResult(
         DateTime currentTime,
@@ -103,7 +111,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
         }
 
 
-        if (ValidateVokiTaker(userCtx, out var vokiTakerId).IsErr(out err)) {
+        if (ValidateProvidedTakerAndSetIfOk(userCtx).IsErr(out err)) {
             return err;
         }
 
@@ -131,7 +139,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
 
         return new VokiTakingSessionFinishedDto(
             VokiId,
-            vokiTakerId,
+            VokiTaker,
             sessionStartTime.Client,
             clientFinishedTime,
             WasSessionWithForceSequentialOrder: false,
@@ -141,7 +149,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
     }
 
 
-    public ErrOr<SessionWithFreeAnsweringSavedState> SaveAnswers(
+    public ErrOr<SessionWithFreeAnsweringSavedState> SaveCurrentState(
         IUserCtx userCtx,
         VokiId vokiId,
         ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> stateToSave,
@@ -151,12 +159,12 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             return ErrFactory.Conflict("Provided save data does not belong to this Voki");
         }
 
-        if (VokiTaker is not null && userCtx.IsAuthenticated(out var aUserCtx) && VokiTaker != aUserCtx.UserId) {
-            return ErrFactory.Conflict("Could not save answers because session was started by another user");
+        if (ValidateProvidedTakerAndSetIfOk(userCtx).IsErr(out var err)) {
+            return err.WithMessagePrefix("Could not save answers. ");
         }
 
         if (saveTime < this._savedState.SaveTime) {
-            return ErrFactory.Conflict("Provide save is earlier than the time of the last save");
+            return ErrFactory.Conflict("Provided save is earlier than the time of the last save");
         }
 
         if (stateToSave.Count > Questions.Length) {
@@ -184,7 +192,7 @@ public sealed class SessionWithFreeAnswering : BaseVokiTakingSession
             }
         }
 
-        if (errs.IsErr(out var err)) {
+        if (errs.IsErr(out err)) {
             return err;
         }
 

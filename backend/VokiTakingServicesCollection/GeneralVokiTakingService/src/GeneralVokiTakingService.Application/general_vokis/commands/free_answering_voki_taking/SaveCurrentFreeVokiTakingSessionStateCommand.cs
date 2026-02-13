@@ -39,7 +39,7 @@ internal sealed class SaveCurrentFreeVokiTakingSessionStateCommandHandler
         }
 
 
-        ErrOr<SessionWithFreeAnsweringSavedState> saveRes = session.SaveAnswers(
+        ErrOr<SessionWithFreeAnsweringSavedState> saveRes = session.SaveCurrentState(
             _userCtxProvider.Current,
             command.VokiId,
             command.ChosenAnswers,

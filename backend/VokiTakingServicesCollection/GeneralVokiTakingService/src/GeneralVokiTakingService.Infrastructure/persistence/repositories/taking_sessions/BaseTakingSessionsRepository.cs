@@ -35,12 +35,15 @@ internal class BaseTakingSessionsRepository : IBaseTakingSessionsRepository
         return (res.Id, res.IsWithForceSequentialAnswering);
     }
 
-    
 
     public Task<BaseVokiTakingSession?> GetForVokiAndUser(
-        VokiId commandVokiId, AuthenticatedUserCtx aUserCtx, CancellationToken ct
+        VokiId vokiId, AuthenticatedUserCtx aUserCtx, CancellationToken ct
     ) {
         return _db.BaseVokiTakingSessions
-            .FirstOrDefaultAsync(s => s.VokiId == commandVokiId && s.VokiTaker == aUserCtx.UserId, ct);
+            .FirstOrDefaultAsync(s => s.VokiId == vokiId && s.VokiTaker == aUserCtx.UserId, ct);
     }
+
+    public Task<BaseVokiTakingSession?> GetById(VokiTakingSessionId sessionId, CancellationToken ct) =>
+        _db.BaseVokiTakingSessions
+            .FirstOrDefaultAsync(s => s.Id == sessionId, ct);
 }

@@ -2,7 +2,7 @@
 	import { relativeTime } from 'svelte-relative-time';
 	import type { ExistingUnfinishedSessionForVokiData } from '$lib/ts/voki-taking-session';
 	import { goto } from '$app/navigation';
-	import { ContinueVokiTakingSessionMarkerCookie } from '$lib/ts/cookies/continue-voki-taking-session-marker';
+	import { VokiTakingSessionMarkerCookie } from '$lib/ts/cookies/voki-taking-session-marker';
 
 	interface Props {
 		sessionData: ExistingUnfinishedSessionForVokiData;
@@ -10,10 +10,11 @@
 	}
 	let { sessionData, takeVokiPageLink }: Props = $props();
 	function onContinueBtnClick(vokiId: string, sessionId: string) {
-		ContinueVokiTakingSessionMarkerCookie.markFor2Min(vokiId, sessionId);
+		VokiTakingSessionMarkerCookie.markContinueFor2Min(vokiId, sessionId);
 		goto(`${takeVokiPageLink}?continueExistingUnfinishedSession=true`);
 	}
 	function onTerminateBtnClick() {
+		VokiTakingSessionMarkerCookie.markTerminateFor2Min(sessionData.vokiId, sessionData.sessionId);
 		goto(`${takeVokiPageLink}?terminateExistingUnfinishedSession=true`);
 	}
 </script>

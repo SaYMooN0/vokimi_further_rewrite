@@ -2,20 +2,39 @@ import { ApiVokiTakingGeneral, RJO } from "$lib/ts/backend-communication/backend
 import { redirect, type Cookies, type ServerLoad } from "@sveltejs/kit";
 import type { BaseVokiTakingSessionData, GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from "./types";
 import { VokiCatalogVisitMarkerCookie } from "$lib/ts/cookies/voki-catalog-visit-marker-cookie";
-import { ContinueVokiTakingSessionMarkerCookie } from "$lib/ts/cookies/continue-voki-taking-session-marker";
+import { VokiTakingSessionMarkerCookie } from "$lib/ts/cookies/voki-taking-session-marker";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { VokiType } from "$lib/ts/voki-type";
 
 export const load: ServerLoad = async ({ cookies, params, fetch, url }): ServerFullReturtnType => {
+
     const vokiId = params.vokiId;
     if (!vokiId) {
         throw redirect(302, `/`);
     }
+    const sessionMarker = VokiTakingSessionMarkerCookie.get(cookies, vokiId);
+    VokiTakingSessionMarkerCookie.clear(vokiId);
     if (url.searchParams.get('terminateExistingUnfinishedSession') === 'true') {
+        if (!sessionMarker || sessionMarker.action !== "TERMINATE") {
+            return {
+                vokiId: vokiId,
+                vokiType: "General",
+                isSuccess: true,
+                data: { serverResultType: "TerminateErr:NoSessionId" }
+            }
+        }
         return startNewSessionResult(fetch, vokiId, true);
     }
     if (url.searchParams.get('continueExistingUnfinishedSession') === 'true') {
-        return continueExistingUnfinishedSessionResult(fetch, vokiId, cookies);
+        if (!sessionMarker || sessionMarker.action !== "CONTINUE") {
+            return {
+                vokiId: vokiId,
+                vokiType: "General",
+                isSuccess: true,
+                data: { serverResultType: "ContinueErr:NoSessionId" }
+            }
+        }
+        return continueExistingUnfinishedSessionResult(fetch, vokiId);
     }
     if (!VokiCatalogVisitMarkerCookie.checkIfSeen(cookies, vokiId)) {
         throw redirect(302, `/catalog/${vokiId}`);
@@ -25,21 +44,9 @@ export const load: ServerLoad = async ({ cookies, params, fetch, url }): ServerF
 
 async function continueExistingUnfinishedSessionResult(
     fetchFunc: typeof fetch,
-    vokiId: string,
-    cookies: Cookies
+    vokiId: string
 ): ServerFullReturtnType {
-    const continueSessionId = ContinueVokiTakingSessionMarkerCookie.get(cookies, vokiId);
-    if (!continueSessionId) {
-        return {
-            vokiId: vokiId,
-            vokiType: "General",
-            isSuccess: true,
-            data: {
-                serverResultType: "ContinueErr:NoSessionId"
-            }
-        }
-    }
-    ContinueVokiTakingSessionMarkerCookie.clear(vokiId);
+
     const response = await ApiVokiTakingGeneral.serverFetchJsonResponse<ContinueTakingServerSuccessResponse>(
         fetchFunc, `/vokis/${vokiId}/continue-taking`, RJO.POST({})
     );
@@ -118,6 +125,7 @@ type ServerFullReturtnType = Promise<
 type ServerSuccessType =
     (
         | { serverResultType: "ContinueErr:NoSessionId" }
+        | { serverResultType: "TerminateErr:NoSessionId" }
         | {
             serverResultType: "StartNewErr:UnfinishedSessionExists",
             sessionData: { questionsWithSavedAnswersCount: number; } & BaseVokiTakingSessionData

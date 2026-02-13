@@ -12,5 +12,6 @@ public interface IBaseTakingSessionsRepository
         VokiId commandVokiId, AuthenticatedUserCtx aUserCtx, CancellationToken ct
     );
 
-    Task<BaseVokiTakingSession?> GetForVokiAndUser(VokiId queryVokiId, AuthenticatedUserCtx aUserCtx, CancellationToken ct);
+    Task<BaseVokiTakingSession?> GetForVokiAndUser(VokiId vokiId, AuthenticatedUserCtx aUserCtx, CancellationToken ct);
+    Task<BaseVokiTakingSession?> GetById(VokiTakingSessionId sessionId, CancellationToken ct);
 }

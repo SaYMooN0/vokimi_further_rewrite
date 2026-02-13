@@ -23,7 +23,8 @@ internal class SpecificVokiHandlers : IEndpointGroup
         group.MapPost("/start-taking", StartVokiTaking)
             .WithRequestValidation<StartVokiTakingRequest>();
 
-        group.MapPost("/continue-taking", ContinueVokiTaking);
+        group.MapPost("/continue-taking", ContinueVokiTaking)
+            .WithRequestValidation<ContinueVokiTakingRequest>();
 
         group.MapPost("/free-answering/save-current-state", SaveCurrentFreeVokiTakingSessionState)
             .WithRequestValidation<SaveCurrentFreeVokiTakingSessionStateRequest>();
@@ -72,8 +73,10 @@ internal class SpecificVokiHandlers : IEndpointGroup
         ICommandHandler<ContinueVokiTakingCommand, ContinueVokiTakingCommandResult> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
+        var request = httpContext.GetValidatedRequest<ContinueVokiTakingRequest>();
 
-        ContinueVokiTakingCommand command = new(id);
+
+        ContinueVokiTakingCommand command = new(id, request.ParsedSessionId);
         var result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrToJson<ContinueVokiTakingCommandResult, ContinueVokiTakingResponse>(result);

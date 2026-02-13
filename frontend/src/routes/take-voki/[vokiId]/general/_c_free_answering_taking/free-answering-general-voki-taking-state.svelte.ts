@@ -46,16 +46,13 @@ export class FreeAnsweringGeneralVokiTakingState {
             ) as Record<string, boolean>;
         });
 
-        // Load from save if available
         if (saveData.anySave) {
             // Restore chosen answers from save
             for (const [questionId, answerIds] of Object.entries(saveData.savedChosenAnswers)) {
                 if (this.chosenAnswers[questionId]) {
-                    // Reset all to false first
                     for (const answerId in this.chosenAnswers[questionId]) {
                         this.chosenAnswers[questionId][answerId] = false;
                     }
-                    // Set saved answers to true
                     for (const answerId of answerIds) {
                         if (this.chosenAnswers[questionId][answerId] !== undefined) {
                             this.chosenAnswers[questionId][answerId] = true;
@@ -86,7 +83,6 @@ export class FreeAnsweringGeneralVokiTakingState {
         );
 
         this.#clearVokiSeenUpdateTimer = clearVokiSeenUpdateTimer;
-        console.log(this.#lastSavedState);
     }
 
     goToPreviousQuestion(): boolean {
@@ -99,6 +95,7 @@ export class FreeAnsweringGeneralVokiTakingState {
 
     goToNextQuestion(): boolean {
         if (this.currentQuestionOrder < this.totalQuestionsCount) {
+            this.saveCurrentStateInTheBackground();
             this.currentQuestionOrder += 1;
             return true;
         }
@@ -116,6 +113,7 @@ export class FreeAnsweringGeneralVokiTakingState {
             }];
         }
         this.currentQuestionOrder = q.orderInVokiTaking;
+        this.saveCurrentStateInTheBackground();
         return [];
     }
 
@@ -149,14 +147,7 @@ export class FreeAnsweringGeneralVokiTakingState {
     }
     createVokiTakenData() {
         return {
-            chosenAnswers: Object.fromEntries(
-                Object.entries(this.chosenAnswers).map(([qId, answers]) => [
-                    qId,
-                    Object.entries(answers)
-                        .filter(([, isSelected]) => isSelected)
-                        .map(([answerId]) => answerId)
-                ])
-            ),
+            chosenAnswers: this.#questionIdToChosenAnswerIds(),
             serverSessionStartTime: this.#serverSessionStartTime,
             clientSessionStartTime: this.#clientSessionStartTime,
             clientSessionFinishTime: new Date(),
@@ -225,8 +216,16 @@ export class FreeAnsweringGeneralVokiTakingState {
         if (!anySavedNeeded) {
             return;
         }
-        const response = await ApiVokiTakingGeneral.fetchJsonResponse<{ savedChosenAnswers: Record<string, string[]> }>(
-            `/vokis/${this.vokiId}/free-answering/save-current-state`, RJO.POST(this.createVokiTakenData()));
+
+        const response = await ApiVokiTakingGeneral.fetchJsonResponse<
+            { savedChosenAnswers: Record<string, string[]> }
+        >(
+            `/vokis/${this.vokiId}/free-answering/save-current-state`, RJO.POST({
+                sessionId: this.#sessionId,
+                questionIdToChosenAnswers: this.#questionIdToChosenAnswerIds()
+            })
+        );
+
         if (response.isSuccess) {
             this.#lastSavedState = Object.fromEntries(
                 Object.entries(response.data.savedChosenAnswers)
@@ -236,8 +235,17 @@ export class FreeAnsweringGeneralVokiTakingState {
                     ])
             );
         }
-        console.log(response, this.#lastSavedState);
     }
 
+    #questionIdToChosenAnswerIds() {
+        return Object.fromEntries(
+            Object.entries(this.chosenAnswers).map(([qId, answers]) => [
+                qId,
+                Object.entries(answers)
+                    .filter(([, isSelected]) => isSelected)
+                    .map(([answerId]) => answerId)
+            ])
+        );
+    }
 }
 type ErrMessageWithQuestionOrder = { message: string, questionOrder: number };

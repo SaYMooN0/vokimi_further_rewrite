@@ -2,14 +2,17 @@ using ApplicationShared;
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
 using GeneralVokiTakingService.Application.dtos;
+using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using SharedKernel.common.vokis;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Application.general_vokis.commands;
 
 public sealed record ContinueVokiTakingCommand(
-    VokiId VokiId
+    VokiId VokiId,
+    VokiTakingSessionId SessionId
 ) : ICommand<ContinueVokiTakingCommandResult>;
 
 internal sealed class ContinueVokiTakingCommandHandler
@@ -35,10 +38,12 @@ internal sealed class ContinueVokiTakingCommandHandler
             return ErrFactory.AuthRequired("You must be authenticated to continue voki taking");
         }
 
-        BaseVokiTakingSession? session = await _baseTakingSessionsRepository.GetForVokiAndUser(command.VokiId, aUserCtx, ct);
+        BaseVokiTakingSession? session = await _baseTakingSessionsRepository.GetById(command.SessionId, ct);
         if (session is null) {
-            return ErrFactory.NotFound.Voki("Unfinished session not found",
-                "No unfinished voki taking session found for this user and voki");
+            return ErrFactory.NotFound.Voki(
+                "Unfinished session not found",
+                "No unfinished voki taking session found for this user and voki"
+            );
         }
 
         var voki = await _generalVokisRepository.GetWithQuestions(command.VokiId, ct);
@@ -47,6 +52,7 @@ internal sealed class ContinueVokiTakingCommandHandler
         }
 
         return ContinueVokiTakingCommandResult.Create(
+            aUserCtx,
             voki.Name,
             vokiQuestionsById: voki.Questions.ToDictionary(q => q.Id, q => q),
             session
@@ -60,12 +66,18 @@ public record ContinueVokiTakingCommandResult(
     ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> SavedChosenAnswers
 )
 {
-    public static ContinueVokiTakingCommandResult Create(
+    public static ErrOr<ContinueVokiTakingCommandResult> Create(
+        AuthenticatedUserCtx aUserCtx,
         VokiName vokiName,
         IDictionary<GeneralVokiQuestionId, VokiQuestion> vokiQuestionsById,
         BaseVokiTakingSession session
     ) {
-        var savedState = session.GetSavedStateToContinueTaking();
+        var savedStateRes = session.GetSavedStateToContinueTaking(aUserCtx);
+        if (savedStateRes.IsErr(out var err)) {
+            return err;
+        }
+
+        var savedState = savedStateRes.AsSuccess();
         var questions = savedState.QuestionsToShow;
 
         CurrentVokiTakingSessionDto sessionDto = CurrentVokiTakingSessionDto.Create(
