@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { SequentialAnsweringGeneralVokiTakingState } from './_c_sequential_answering_taking/sequential-answering-general-voki-taking-state.svelte';
-	import SequentialAnsweringCurrentQuestionView from './_c_sequential_answering_taking/SequentialAnsweringCurrentQuestionView.svelte';
 	import SequentialAnsweringNavigationContainer from './_c_sequential_answering_taking/SequentialAnsweringNavigationContainer.svelte';
+	import GeneralVokiTakingQuestionDisplay from './_c_takings_shared/GeneralVokiTakingQuestionDisplay.svelte';
 	import type { GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from './types';
 
 	interface Props {
@@ -20,10 +20,10 @@
 </script>
 
 {#if vokiTakingState.currentQuestion}
-	<SequentialAnsweringCurrentQuestionView
+	<GeneralVokiTakingQuestionDisplay
 		question={vokiTakingState.currentQuestion}
-		bind:chosenAnswers={vokiTakingState.currentQuestionChosenAnswers}
 		totalQuestionsCount={vokiTakingState.totalQuestionsCount}
+		bind:questionChosenAnswers={vokiTakingState.currentQuestionChosenAnswers}
 	/>
 	<SequentialAnsweringNavigationContainer {vokiTakingState} {onResultReceived} />
 {:else}

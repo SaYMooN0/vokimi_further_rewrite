@@ -7,16 +7,9 @@
 		question: GeneralVokiTakingQuestionData;
 		totalQuestionsCount: number;
 		questionChosenAnswers: Record<string, boolean>;
-		isQuestionMultipleChoice: boolean;
-		content: GeneralVokiTakingQuestionContent;
 	}
-	let {
-		question,
-		totalQuestionsCount,
-		questionChosenAnswers,
-		isQuestionMultipleChoice,
-		content
-	}: Props = $props();
+	let { question, totalQuestionsCount, questionChosenAnswers = $bindable() }: Props = $props();
+	let isMultipleChoice = $derived(question.minAnswersCount != 1 || question.maxAnswersCount != 1);
 </script>
 
 <div class="question-display-container">
@@ -42,9 +35,9 @@
 	</label>
 </div>
 <GeneralVokiTakingQuestionContentDisplay
-	{content}
-	{isQuestionMultipleChoice}
-	{questionChosenAnswers}
+	content={question.content}
+	isQuestionMultipleChoice={isMultipleChoice}
+	bind:questionChosenAnswers
 />
 
 <style>

@@ -4,9 +4,9 @@
 	import { createQuestionsKeyHandler } from './_c_free_answering_taking/free-answering-voki-taking-questions-nav';
 	import type { GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from './types';
 	import { FreeAnsweringGeneralVokiTakingState } from './_c_free_answering_taking/free-answering-general-voki-taking-state.svelte';
-	import FreeAnsweringCurrentQuestionView from './_c_free_answering_taking/FreeAnsweringCurrentQuestionView.svelte';
 	import FreeAnsweringVokiTakingErrsList from './_c_free_answering_taking/FreeAnsweringVokiTakingErrsList.svelte';
 	import FreeAnsweringButtonsContainer from './_c_free_answering_taking/FreeAnsweringButtonsContainer.svelte';
+	import GeneralVokiTakingQuestionDisplay from './_c_takings_shared/GeneralVokiTakingQuestionDisplay.svelte';
 
 	interface Props {
 		takingData: GeneralVokiTakingData;
@@ -23,16 +23,14 @@
 	);
 
 	type ErrWithOrder = Err & { questionOrder?: number };
-	let vokiTakingErrs = $state<ErrWithOrder[]>([]);
+	let vokiTakingErrs: ErrWithOrder[] = $state([]);
 
 	function jumpToSpecificQuestionFromErrsList(questionOrder: number): Err[] {
 		vokiTakingErrs = [];
 		return vokiTakingState.jumpToSpecificQuestion(questionOrder);
 	}
 
-	let answersContainer: { focusFirstAnswerCard: () => void } = $state<{
-		focusFirstAnswerCard: () => void;
-	}>()!;
+	let answersContainer: { focusFirstAnswerCard: () => void } = $state()!;
 
 	onMount(() => {
 		const handler = createQuestionsKeyHandler({
@@ -48,11 +46,10 @@
 
 <div class="taking-container">
 	{#if vokiTakingState.currentQuestion}
-		<FreeAnsweringCurrentQuestionView
-			bind:this={answersContainer}
+		<GeneralVokiTakingQuestionDisplay
 			question={vokiTakingState.currentQuestion}
-			bind:chosenAnswers={vokiTakingState.chosenAnswers[vokiTakingState.currentQuestion.id]}
 			totalQuestionsCount={vokiTakingState.totalQuestionsCount}
+			bind:questionChosenAnswers={vokiTakingState.chosenAnswers[vokiTakingState.currentQuestion.id]}
 		/>
 	{:else}
 		<h1>Question error</h1>

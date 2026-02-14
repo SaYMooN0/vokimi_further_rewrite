@@ -13,7 +13,7 @@
 		isQuestionMultipleChoice: boolean;
 		content: GeneralVokiTakingQuestionContent;
 	}
-	let { questionChosenAnswers, isQuestionMultipleChoice, content }: Props = $props();
+	let { questionChosenAnswers = $bindable(), isQuestionMultipleChoice, content }: Props = $props();
 
 	function chooseAnswer(answerId: string) {
 		if (isQuestionMultipleChoice) {

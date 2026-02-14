@@ -164,11 +164,12 @@ export class FreeAnsweringGeneralVokiTakingState {
             const min = q.minAnswersCount ?? 0;
             const max = q.maxAnswersCount ?? Number.POSITIVE_INFINITY;
 
-            const orderHuman = (q.orderInVokiTaking ?? 0) + 1;
             const preview =
-                !q.text || q.text.length < 40 ? (q.text ?? '') : `${q.text.slice(0, 30)}…`;
+                !q.text || q.text.length < 40
+                    ? (q.text ?? '')
+                    : `${q.text.slice(0, 30)}…`;
 
-            const title = `#${orderHuman} '${preview}'`;
+            const title = `#${q.orderInVokiTaking} '${preview}'`;
 
             if (chosenCount === 0 && min > 0) {
                 errs.push({

@@ -49,8 +49,10 @@ public class VokiQuestion : Entity<GeneralVokiQuestionId>
     public ImmutableDictionary<GeneralVokiAnswerId, ushort> GetAnswerOrderForVokiTakingSession() {
         ;
         if (ShuffleAnswers) {
-            return Content.AnswerIds
-                .OrderBy(_ => Random.Shared.Next())
+            GeneralVokiAnswerId[] shuffled = Content.AnswerIds
+                .OrderBy(_ => Random.Shared.Next()).
+                ToArray();
+            return shuffled
                 .Select((a, i) => (Id: a, Order: (ushort)i))
                 .ToImmutableDictionary(a => a.Id, a => a.Order);
         }

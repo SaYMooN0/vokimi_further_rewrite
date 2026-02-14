@@ -1,66 +1,37 @@
 import { ApiVokiTakingGeneral, RJO } from "$lib/ts/backend-communication/backend-services";
-import { redirect, type Cookies, type ServerLoad } from "@sveltejs/kit";
+import { type ServerLoad } from "@sveltejs/kit";
 import type { BaseVokiTakingSessionData, GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from "./types";
-import { VokiCatalogVisitMarkerCookie } from "$lib/ts/cookies/voki-catalog-visit-marker-cookie";
-import { VokiTakingSessionMarkerCookie } from "$lib/ts/cookies/voki-taking-session-marker";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
-import type { VokiType } from "$lib/ts/voki-type";
+import { VokiTakingServerLoad } from "../shared-page-server-load";
 
-export const load: ServerLoad = async ({ cookies, params, fetch, url }): ServerFullReturtnType => {
-
-    const vokiId = params.vokiId;
-    if (!vokiId) {
-        throw redirect(302, `/`);
-    }
-    const sessionMarker = VokiTakingSessionMarkerCookie.get(cookies, vokiId);
-    VokiTakingSessionMarkerCookie.clear(vokiId);
-    if (url.searchParams.get('terminateExistingUnfinishedSession') === 'true') {
-        if (!sessionMarker || sessionMarker.action !== "TERMINATE") {
-            return {
-                vokiId: vokiId,
-                vokiType: "General",
-                isSuccess: true,
-                data: { serverResultType: "TerminateErr:NoSessionId" }
-            }
-        }
-        return startNewSessionResult(fetch, vokiId, true);
-    }
-    if (url.searchParams.get('continueExistingUnfinishedSession') === 'true') {
-        if (!sessionMarker || sessionMarker.action !== "CONTINUE") {
-            return {
-                vokiId: vokiId,
-                vokiType: "General",
-                isSuccess: true,
-                data: { serverResultType: "ContinueErr:NoSessionId" }
-            }
-        }
-        return continueExistingUnfinishedSessionResult(fetch, vokiId);
-    }
-    if (!VokiCatalogVisitMarkerCookie.checkIfSeen(cookies, vokiId)) {
-        throw redirect(302, `/catalog/${vokiId}`);
-    }
-    return startNewSessionResult(fetch, vokiId, false);
+export const load: ServerLoad = async ({ cookies, params, fetch, url }) => {
+    return VokiTakingServerLoad.LoadVokiTakingSession<ServerSuccessType>(
+        params,
+        cookies,
+        url,
+        continueExistingUnfinishedSessionFunc,
+        startNewSessionFunc
+    );
 }
 
-async function continueExistingUnfinishedSessionResult(
+async function continueExistingUnfinishedSessionFunc(
     fetchFunc: typeof fetch,
-    vokiId: string
-): ServerFullReturtnType {
+    vokiId: string,
+    sessionId: string
+): Promise<ResponseResult<VokiTakingServerLoad.ServerBaseResultSuccessErrType | ServerSuccessType>> {
 
     const response = await ApiVokiTakingGeneral.serverFetchJsonResponse<ContinueTakingServerSuccessResponse>(
-        fetchFunc, `/vokis/${vokiId}/continue-taking`, RJO.POST({})
+        fetchFunc, `/vokis/${vokiId}/continue-taking`, RJO.POST({
+            sessionId: sessionId
+        })
     );
     if (!response.isSuccess) {
         return {
-            vokiId: vokiId,
-            vokiType: "General",
             isSuccess: false,
             errs: response.errs
         }
     }
     return {
-        vokiId: vokiId,
-        vokiType: "General",
         isSuccess: true,
         data: {
             serverResultType: "Success",
@@ -74,11 +45,11 @@ async function continueExistingUnfinishedSessionResult(
         }
     };
 }
-async function startNewSessionResult(
+async function startNewSessionFunc(
     fetchFunc: typeof fetch,
     vokiId: string,
     terminateExistingUnfinishedSession: boolean
-): ServerFullReturtnType {
+): Promise<ResponseResult<VokiTakingServerLoad.ServerBaseResultSuccessErrType | ServerSuccessType>> {
 
     const response = await ApiVokiTakingGeneral.serverFetchJsonResponse<StartTakingServerSuccessResponse>(
         fetchFunc, `/vokis/${vokiId}/start-taking`, RJO.POST({
@@ -87,16 +58,12 @@ async function startNewSessionResult(
     );
     if (!response.isSuccess) {
         return {
-            vokiId: vokiId,
-            vokiType: "General",
             isSuccess: false,
             errs: response.errs
         }
     }
     if (response.data.newSessionStarted) {
         return {
-            vokiId: vokiId,
-            vokiType: "General",
             isSuccess: true,
             data: {
                 serverResultType: "Success",
@@ -107,8 +74,6 @@ async function startNewSessionResult(
     }
     else {
         return {
-            vokiId: vokiId,
-            vokiType: "General",
             isSuccess: true,
             data: {
                 serverResultType: "StartNewErr:UnfinishedSessionExists",
@@ -118,20 +83,17 @@ async function startNewSessionResult(
     }
 
 }
-type ServerFullReturtnType = Promise<
-    ResponseResult<ServerSuccessType>
-    & { vokiId: string; vokiType: VokiType }
->
+
 type ServerSuccessType =
-    (
-        | { serverResultType: "ContinueErr:NoSessionId" }
-        | { serverResultType: "TerminateErr:NoSessionId" }
-        | {
-            serverResultType: "StartNewErr:UnfinishedSessionExists",
-            sessionData: { questionsWithSavedAnswersCount: number; } & BaseVokiTakingSessionData
-        }
-        | { serverResultType: "Success", sessionData: GeneralVokiTakingData, savedData: PosssibleGeneralVokiTakingDataSaveData }
-    )
+    | {
+        serverResultType: "StartNewErr:UnfinishedSessionExists",
+        sessionData: { questionsWithSavedAnswersCount: number; } & BaseVokiTakingSessionData
+    }
+    | {
+        serverResultType: "Success",
+        sessionData: GeneralVokiTakingData,
+        savedData: PosssibleGeneralVokiTakingDataSaveData
+    }
 type ContinueTakingServerSuccessResponse = GeneralVokiTakingData & {
     savedChosenAnswers: Record<string, string[]>;
     currentQuestionId: string;
