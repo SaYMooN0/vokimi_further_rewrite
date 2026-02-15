@@ -18,7 +18,7 @@
 <DialogWithCloseButton bind:this={dialog} dialogId="unfinished-session-exists-dialog">
 	<p class="title">You have an unfinished session for this Voki</p>
 	{#if sessionData}
-		<GeneralVokiUnfinishedSessionView {sessionData} {takeVokiPageLink} />
+		<GeneralVokiUnfinishedSessionView {sessionData} {takeVokiPageLink} replaceStateOnGoto={false} />
 	{:else}
 		<p>Something went wrong. Please reload the page</p>
 	{/if}

@@ -19,16 +19,18 @@
 </script>
 
 <div class="answer">
-	{#if resultsIdToName.state === 'error'}
-		<div class="error">error</div>
-	{:else if resultsIdToName.state === 'loading'}
-		<div class="loading">loading</div>
-	{:else if resultsIdToName.state === 'ok'}
-		<div class="results">
-			<label class="related-results-label">Related results ({answerRelatedResultsCount})</label>
-			{@render resultsViewSnippet?.(resultsIdToName.resultsIdToName)}
-		</div>
-	{/if}
+	<div class="results-part-container">
+		{#if resultsIdToName.state === 'error'}
+			<div class="error">error</div>
+		{:else if resultsIdToName.state === 'loading'}
+			<div class="loading">loading</div>
+		{:else if resultsIdToName.state === 'ok'}
+			<div class="results">
+				<label class="related-results-label">Related results ({answerRelatedResultsCount})</label>
+				{@render resultsViewSnippet?.(resultsIdToName.resultsIdToName)}
+			</div>
+		{/if}
+	</div>
 	<div class="sep" />
 	<div class="content-wrapper">
 		<span class="answer-order">Answer #{order}</span>
@@ -57,7 +59,14 @@
 		border-radius: 0.75rem;
 		box-shadow: rgb(0 0 0 / 5%) 0 0 0 1px;
 	}
-
+	.results-part-container {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		width: 100%;
+		min-height: 3rem;
+	}
 	.results {
 		display: flex;
 		flex-direction: column;

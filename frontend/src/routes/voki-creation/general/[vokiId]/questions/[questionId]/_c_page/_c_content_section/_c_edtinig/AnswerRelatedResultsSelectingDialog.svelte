@@ -57,9 +57,27 @@
 		</div>
 		<PrimaryButton onclick={() => fetchResultNames()} class="refetch">Refetch</PrimaryButton>
 	{:else if Object.keys(allResults.resultsIdToName).length === 0}
-		<div>This Voki has no results</div>
-		<div>Please save changes and go to results page to create new results</div>
-		<PrimaryButton onclick={() => fetchResultNames()} class="refetch">Refetch</PrimaryButton>
+		<div class="no-results">
+			<div class="text">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					fill="none"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<path d="M15 2L21 8M21 2L15 8" />
+					<circle cx="6" cy="19" r="3" />
+					<path
+						d="M12 5H8.5C6.567 5 5 6.567 5 8.5C5 10.433 6.567 12 8.5 12H15.5C17.433 12 19 13.567 19 15.5C19 17.433 17.433 19 15.5 19H12"
+					/>
+				</svg>
+				<p class="title">This Voki has no results</p>
+				<p class="subtitle">Please save changes and go to results page to create new results</p>
+			</div>
+			<PrimaryButton onclick={() => fetchResultNames()} class="refetch">Refetch</PrimaryButton>
+		</div>
 	{:else}
 		<div class="results">
 			{#each Object.entries(allResults.resultsIdToName) as [resultId, resultName]}
@@ -75,8 +93,8 @@
 
 <style>
 	:global(#general-voki-answer-related-results-selecting-dialog .dialog-content) {
-		min-width: 40rem;
-		min-height: 20rem;
+		width: 40rem;
+		min-height: 28rem;
 	}
 
 	.loader {
@@ -110,9 +128,42 @@
 		margin-top: 4rem;
 	}
 
-	:global(#general-voki-answer-related-results-selecting-dialog .no-results) {
+	.no-results {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		margin: auto;
 		animation: var(--default-fade-in-animation);
+	}
+
+	.no-results svg {
+		width: 4rem;
+		height: 4rem;
+		color: var(--secondary-foreground);
+		stroke-width: 1.75;
+	}
+
+	.no-results .text {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.5rem;
+		text-align: center;
+	}
+
+	.no-results .title {
+		color: var(--foreground);
+		font-size: 1.5rem;
+		font-weight: 550;
+	}
+
+	.no-results .subtitle {
+		color: var(--secondary-foreground);
+		font-size: 1.25rem;
+		font-weight: 450;
+		text-wrap: balance;
+		line-height: 1.25;
+		letter-spacing: 0.25px;
 	}
 
 	.results {

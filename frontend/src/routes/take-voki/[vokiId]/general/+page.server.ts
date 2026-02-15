@@ -6,6 +6,7 @@ import { VokiTakingServerLoad } from "../shared-page-server-load";
 
 export const load: ServerLoad = async ({ cookies, params, fetch, url }) => {
     return VokiTakingServerLoad.LoadVokiTakingSession<ServerSuccessType>(
+        fetch,
         params,
         cookies,
         url,
@@ -19,7 +20,6 @@ async function continueExistingUnfinishedSessionFunc(
     vokiId: string,
     sessionId: string
 ): Promise<ResponseResult<VokiTakingServerLoad.ServerBaseResultSuccessErrType | ServerSuccessType>> {
-
     const response = await ApiVokiTakingGeneral.serverFetchJsonResponse<ContinueTakingServerSuccessResponse>(
         fetchFunc, `/vokis/${vokiId}/continue-taking`, RJO.POST({
             sessionId: sessionId

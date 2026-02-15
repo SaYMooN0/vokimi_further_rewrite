@@ -6,6 +6,7 @@ import { redirect, type Cookies } from "@sveltejs/kit";
 
 export namespace VokiTakingServerLoad {
     export async function LoadVokiTakingSession<T extends { serverResultType: string; }>(
+        fetchFunc: typeof fetch,
         params: { vokiId?: string },
         cookies: Cookies,
         url: URL,
@@ -35,7 +36,7 @@ export namespace VokiTakingServerLoad {
                     data: { serverResultType: "TerminateErr:NoSessionId" }
                 }
             }
-            const response = await startNewSessionFunc(fetch, vokiId, true);
+            const response = await startNewSessionFunc(fetchFunc, vokiId, true);
             return {
                 vokiId: vokiId,
                 vokiType: "General",
@@ -51,7 +52,7 @@ export namespace VokiTakingServerLoad {
                     data: { serverResultType: "ContinueErr:NoSessionId" }
                 }
             }
-            const response = await continueExistingUnfinishedSessionFunc(fetch, vokiId, sessionMarker.sessionId);
+            const response = await continueExistingUnfinishedSessionFunc(fetchFunc, vokiId, sessionMarker.sessionId);
             return {
                 vokiId: vokiId,
                 vokiType: "General",
@@ -61,7 +62,7 @@ export namespace VokiTakingServerLoad {
         if (!VokiCatalogVisitMarkerCookie.checkIfSeen(cookies, vokiId)) {
             throw redirect(302, `/catalog/${vokiId}`);
         }
-        const response = await startNewSessionFunc(fetch, vokiId, false);
+        const response = await startNewSessionFunc(fetchFunc, vokiId, false);
         return {
             vokiId: vokiId,
             vokiType: "General",

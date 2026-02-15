@@ -5,8 +5,24 @@
 	import GeneralVokiTaking from './_c_page/GeneralVokiTaking.svelte';
 	import ContinueErrNoSessionId from '../_c_shared/ContinueErrNoSessionId.svelte';
 	import TerminateErrNoSessionId from '../_c_shared/TerminateErrNoSessionId.svelte';
+	import { page } from '$app/state';
+	import { replaceState } from '$app/navigation';
 
 	let { data }: PageProps = $props();
+
+	$effect(() => {
+		const hasParam =
+			page.url.searchParams.has('continueExistingUnfinishedSession') ||
+			page.url.searchParams.has('terminateExistingUnfinishedSession');
+
+		if (hasParam) {
+			const cleanUrl = new URL(page.url);
+			cleanUrl.searchParams.delete('continueExistingUnfinishedSession');
+			cleanUrl.searchParams.delete('terminateExistingUnfinishedSession');
+
+			replaceState(cleanUrl, {});
+		}
+	});
 </script>
 
 {#if !data.isSuccess}

@@ -36,7 +36,7 @@
 	role={isMultipleChoice ? 'group' : 'radiogroup'}
 	aria-label="Answer choices"
 >
-	{#each content.answers as answer}
+	{#each content.answers.toSorted((a, b) => a.orderInQuestionInSession - b.orderInQuestionInSession) as answer}
 		<div
 			class="answer"
 			class:chosen={isAnswerChosen(answer.id)}

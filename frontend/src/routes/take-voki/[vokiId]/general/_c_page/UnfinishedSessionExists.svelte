@@ -14,13 +14,24 @@
 	let takeVokiPageLink = $derived(`/take-voki/${vokiId}/general`);
 </script>
 
-<GeneralVokiUnfinishedSessionView
-	sessionData={{
-		vokiId,
-		sessionId,
-		startedAt,
-		questionsWithSavedAnswersCount,
-		totalQuestionsCount
-	}}
-	{takeVokiPageLink}
-/>
+<div class="unfinished-session-exists">
+	<GeneralVokiUnfinishedSessionView
+		sessionData={{
+			vokiId,
+			sessionId,
+			startedAt,
+			questionsWithSavedAnswersCount,
+			totalQuestionsCount
+		}}
+		{takeVokiPageLink}
+		replaceStateOnGoto={true}
+	/>
+</div>
+
+<style>
+	.unfinished-session-exists {
+		margin: 2rem auto;
+		display: flex;
+		justify-content: center;
+	}
+</style>
