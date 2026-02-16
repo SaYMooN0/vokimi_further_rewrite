@@ -1,6 +1,8 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
+	import { getErrsViewDialogOpenFunction } from '../../../../../../../../_c_layout/_ts_layout_contexts/errs-view-dialog-context';
+	import LinesLoader from '$lib/components/loaders/LinesLoader.svelte';
 
 	interface Props {
 		resultsViewSnippet: Snippet<[Record<string, string>]>;
@@ -16,14 +18,17 @@
 		answerRelatedResultsCount,
 		order
 	}: Props = $props();
+	const openErrsViewDialog = getErrsViewDialogOpenFunction();
 </script>
 
 <div class="answer">
 	<div class="results-part-container">
 		{#if resultsIdToName.state === 'error'}
-			<div class="error">error</div>
+			<div class="results-error" onclick={() => openErrsViewDialog(resultsIdToName.errs)}>
+				Results loading error
+			</div>
 		{:else if resultsIdToName.state === 'loading'}
-			<div class="loading">loading</div>
+			<LinesLoader color="var(--secondary-foreground)" sizeRem={1.75} strokePx={2} class="loader" />
 		{:else if resultsIdToName.state === 'ok'}
 			<div class="results">
 				<label class="related-results-label">Related results ({answerRelatedResultsCount})</label>
@@ -65,7 +70,7 @@
 		justify-content: center;
 		height: 100%;
 		width: 100%;
-		min-height: 3rem;
+		min-height: 3.75rem;
 	}
 	.results {
 		display: flex;
@@ -82,7 +87,24 @@
 		text-decoration: underline;
 		text-decoration-thickness: 0.125rem;
 	}
-
+	.results-error {
+		width: 100%;
+		padding: 0.5rem 0;
+		border-radius: 0.5rem;
+		background-color: var(--red-1);
+		color: var(--red-3);
+		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		font-weight: 450;
+	}
+	.results-error:hover {
+		background-color: var(--red-2);
+		color: var(--red-4);
+	}
+	.results-error:active {
+		transform: scale(0.98);
+	}
 	.content-wrapper {
 		display: flex;
 		flex-direction: column;

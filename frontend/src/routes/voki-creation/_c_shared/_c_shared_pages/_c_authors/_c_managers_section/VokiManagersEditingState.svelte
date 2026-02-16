@@ -3,7 +3,6 @@
 	import DefaultErrBlock from '$lib/components/errs/DefaultErrBlock.svelte';
 	import { ApiVokiCreationCore, RJO } from '$lib/ts/backend-communication/backend-services';
 	import type { Err } from '$lib/ts/err';
-	import Error from '../../../../../+error.svelte';
 	import VokiCreationFieldName from '../../../VokiCreationFieldName.svelte';
 	import VokiCreationOneOfMultipleChoicesInput from '../../../VokiCreationOneOfMultipleChoicesInput.svelte';
 	import VokiCreationSaveAndCancelButtons from '../../../VokiCreationSaveAndCancelButtons.svelte';
@@ -31,7 +30,7 @@
 		| { name: 'all' }
 		| { name: 'selected'; userIds: string[] }
 		| { name: 'none' };
-	let expectedManagers: ExpectedManagersType = $state(
+	let expectedManagers: ExpectedManagersType = $derived(
 		initialMakeAllManagers
 			? { name: 'all' }
 			: savedSelectedUserIds.length > 0
@@ -40,6 +39,7 @@
 	);
 	let dialog = $state<CoAuthorsToBecomeManagersChoosingDialog>()!;
 	let savingErrs: Err[] = $state([]);
+	let isLoading = $state(false);
 	function onCoAuthorRemoveBtnClick(coAuthorId: string) {
 		if (expectedManagers.name === 'selected') {
 			expectedManagers.userIds = expectedManagers.userIds.filter((id) => id !== coAuthorId);
@@ -53,11 +53,12 @@
 				: expectedManagers.name === 'selected'
 					? { makeAllCoAuthorsManagers: false, userIdsToBecomeManagers: expectedManagers.userIds }
 					: { makeAllCoAuthorsManagers: false, userIdsToBecomeManagers: [] };
-
+		isLoading = true;
 		const response = await ApiVokiCreationCore.fetchJsonResponse<VokiExpectedManagersSetting>(
 			`/vokis/${vokiId}/update-expected-managers`,
 			RJO.PATCH(bodyObj)
 		);
+		isLoading = false;
 		if (response.isSuccess) {
 			updateParent(response.data);
 			cancelEditing();
@@ -128,7 +129,11 @@
 	choseCoAuthors={(coAuthorIds) => (expectedManagers = { name: 'selected', userIds: coAuthorIds })}
 />
 <DefaultErrBlock errList={savingErrs} />
-<VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
+<VokiCreationSaveAndCancelButtons
+	onCancel={cancelEditing}
+	onSave={() => saveChanges()}
+	isSaveLoading={isLoading}
+/>
 
 <style>
 	.managers-input-p {

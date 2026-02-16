@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Routing;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Api.contracts;
 using VokiCreationServicesLib.Api.contracts.update_requests;
+using VokiCreationServicesLib.Api.contracts.voki_publishing;
 using VokiCreationServicesLib.Application.draft_vokis.commands;
 using VokiCreationServicesLib.Application.draft_vokis.queries;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
@@ -33,8 +34,11 @@ public abstract class BaseSpecificVokiHandlers
             .WithRequestValidation<UpdateVokiTagsRequest>();
 
         group.MapGet("/publishing-data", GetVokiPublishingData);
-        group.MapPost("/publish-with-no-issues", PublishVokiWithNoIssuesHandler);
-        group.MapPost("/publish-with-warnings-ignored", PublishVokiWithWarningsIgnoredHandler);
+        
+        group.MapPost("/publish-with-no-issues", PublishVokiWithNoIssuesHandler)
+            .WithRequestValidation<PublishVokiRequest>();
+        group.MapPost("/publish-with-warnings-ignored", PublishVokiWithWarningsIgnoredHandler)
+            .WithRequestValidation<PublishVokiRequest>();
 
 
         return group;

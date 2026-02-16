@@ -36,21 +36,27 @@
 		maxResultsForAnswerCount,
 		fetchResultNames
 	}: Props = $props();
-	let savingErrs = $state<Err[]>([]);
+
 	let answerRelatedResultsSelectingDialog = $state<AnswerRelatedResultsSelectingDialog>()!;
+
+	let content = $derived(savedContent);
+
+	let savingErrs: Err[] = $state([]);
+	let isLoading = $state(false);
 	async function saveChanges() {
+		isLoading = true;
 		const response =
 			await ApiVokiCreationGeneral.fetchJsonResponse<GeneralVokiCreationQuestionContent>(
 				`vokis/${vokiId}/questions/${questionId}/update-content`,
 				RJO.PATCH(content)
 			);
+		isLoading = false;
 		if (response.isSuccess) {
 			updateParentOnSave(response.data);
 		} else {
 			savingErrs = response.errs;
 		}
 	}
-	let content = $state(savedContent);
 </script>
 
 <AnswerRelatedResultsSelectingDialog
@@ -117,7 +123,11 @@
 	<IncorrectContentTypeMessage type={content.$type} />
 {/if}
 <DefaultErrBlock errList={savingErrs} class="question-content-err-block" />
-<VokiCreationSaveAndCancelButtons onCancel={() => cancelEditing()} onSave={() => saveChanges()} />
+<VokiCreationSaveAndCancelButtons
+	onCancel={() => cancelEditing()}
+	onSave={() => saveChanges()}
+	isSaveLoading={isLoading}
+/>
 
 <style>
 	:global(.question-content-err-block.err-block) {

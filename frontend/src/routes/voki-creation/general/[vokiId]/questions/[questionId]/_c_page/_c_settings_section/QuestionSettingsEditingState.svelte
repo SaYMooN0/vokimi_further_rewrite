@@ -16,12 +16,14 @@
 		updateParent: (newSettings: QuestionAnswersSettings) => void;
 	}
 	let { savedSettings, questionId, vokiId, cancelEditing, updateParent }: Props = $props();
-	let minAnswers = $state(savedSettings.minAnswersCount);
-	let maxAnswers = $state(savedSettings.maxAnswersCount);
-	let shuffleAnswers = $state(savedSettings.shuffleAnswers);
+	let minAnswers = $derived(savedSettings.minAnswersCount);
+	let maxAnswers = $derived(savedSettings.maxAnswersCount);
+	let shuffleAnswers = $derived(savedSettings.shuffleAnswers);
 
 	let isMultipleChoice = $derived(minAnswers > 1 || maxAnswers > 1);
-	let savingErrs = $state<Err[]>([]);
+	let savingErrs: Err[] = $state([]);
+	let isSaveLoading = $state(false);
+
 	async function saveChanges() {
 		if (minAnswers > maxAnswers) {
 			savingErrs = [
@@ -30,7 +32,7 @@
 			return;
 		}
 		savingErrs = [];
-
+		isSaveLoading = true;
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{
 			minAnswers: number;
 			maxAnswers: number;
@@ -44,7 +46,7 @@
 				maxAnswersCountLimit: maxAnswers
 			})
 		);
-
+		isSaveLoading = false;
 		if (response.isSuccess) {
 			updateParent({
 				shuffleAnswers: response.data.shuffleAnswers,
@@ -90,7 +92,11 @@
 	</div>
 </div>
 <DefaultErrBlock errList={savingErrs} class="question-answers-settings-err-block" />
-<VokiCreationSaveAndCancelButtons onCancel={() => cancelEditing()} onSave={() => saveChanges()} />
+<VokiCreationSaveAndCancelButtons
+	onCancel={() => cancelEditing()}
+	onSave={() => saveChanges()}
+	{isSaveLoading}
+/>
 
 <style>
 	.field {

@@ -17,9 +17,11 @@
 		updateSavedText: (newText: string) => void;
 	}
 	let { savedText, questionId, vokiId, isEditing = $bindable(), updateSavedText }: Props = $props();
-	let textarea = $state<HTMLTextAreaElement>()!;
-	let newText = $state(savedText);
+	let textarea: HTMLTextAreaElement = $state()!;
+	let newText = $derived(savedText);
+
 	let savingErrs = $state<Err[]>([]);
+	let isSaveLoading = $state(false);
 
 	new TextareaAutosize({ element: () => textarea, input: () => newText });
 
@@ -29,10 +31,13 @@
 		savingErrs = [];
 	}
 	async function saveChanges() {
+		isSaveLoading = true;
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<{ newText: string }>(
 			`/vokis/${vokiId}/questions/${questionId}/update-text`,
 			RJO.PATCH({ newText: newText })
 		);
+		isSaveLoading = false;
+
 		if (response.isSuccess) {
 			updateSavedText(response.data.newText);
 			isEditing = false;
@@ -58,6 +63,7 @@
 	<VokiCreationSaveAndCancelButtons
 		onCancel={() => (isEditing = false)}
 		onSave={() => saveChanges()}
+		{isSaveLoading}
 	/>
 {:else}
 	<p class="question-text-p">

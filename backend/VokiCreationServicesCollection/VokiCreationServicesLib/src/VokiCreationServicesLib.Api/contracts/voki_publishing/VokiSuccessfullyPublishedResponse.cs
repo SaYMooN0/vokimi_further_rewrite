@@ -1,6 +1,6 @@
 ﻿using VokiCreationServicesLib.Application;
 
-namespace VokiCreationServicesLib.Api.contracts;
+namespace VokiCreationServicesLib.Api.contracts.voki_publishing;
 
 public record class VokiSuccessfullyPublishedResponse(
     string Id,

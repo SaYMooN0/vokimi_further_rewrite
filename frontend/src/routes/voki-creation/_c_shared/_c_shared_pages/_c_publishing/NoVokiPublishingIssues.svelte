@@ -1,10 +1,13 @@
 <script lang="ts">
+	import AuthView from '$lib/components/AuthView.svelte';
 	import PrimaryButton from '$lib/components/buttons/PrimaryButton.svelte';
+	import OnlyPrimaryAuthorCanPublishMessage from './_c_publishing_shared/OnlyPrimaryAuthorCanPublishMessage.svelte';
 
 	interface Props {
 		openPublishingConfirmationDialog: () => void;
+		isUserPrimaryAuthor: (userId: string) => boolean;
 	}
-	let { openPublishingConfirmationDialog }: Props = $props();
+	let { openPublishingConfirmationDialog, isUserPrimaryAuthor }: Props = $props();
 </script>
 
 <div class="ready-section">
@@ -15,10 +18,17 @@
 
 		<h2 class="ready-title">Voki is ready to be published</h2>
 		<p class="ready-subtitle">This voki has no publishing issues and is ready to be published</p>
-
-		<PrimaryButton onclick={() => openPublishingConfirmationDialog()}>
-			Publish this voki
-		</PrimaryButton>
+		<AuthView>
+			{#snippet children(authState)}
+				{#if isUserPrimaryAuthor(authState.isAuthenticated ? authState.userId : '')}
+					<PrimaryButton onclick={() => openPublishingConfirmationDialog()}>
+						Publish this voki
+					</PrimaryButton>
+				{:else}
+					<OnlyPrimaryAuthorCanPublishMessage />
+				{/if}
+			{/snippet}
+		</AuthView>
 	</div>
 </div>
 

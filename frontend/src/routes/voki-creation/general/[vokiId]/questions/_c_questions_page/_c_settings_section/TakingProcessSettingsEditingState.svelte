@@ -24,15 +24,20 @@
 		updateParent: (settings: GeneralVokiTakingProcessSettings) => void;
 		cancelEditing: () => void;
 	}>();
-	let editableSettings = $state<GeneralVokiTakingProcessSettings>(settings);
-	let errs = $state<Err[]>([]);
+
+	let editableSettings = $derived<GeneralVokiTakingProcessSettings>(settings);
+	let errs: Err[] = $state([]);
+	let isLoading = $state(false);
+
 	async function saveChanges() {
 		errs = [];
+		isLoading = true;
 		const response =
 			await ApiVokiCreationGeneral.fetchJsonResponse<GeneralVokiTakingProcessSettings>(
 				`/vokis/${vokiId}/update-voki-taking-process-settings`,
 				RJO.PATCH(editableSettings)
 			);
+		isLoading = false;
 		if (response.isSuccess) {
 			updateParent(response.data);
 			cancelEditing();
@@ -65,7 +70,11 @@
 {#if errs.length > 0}
 	<DefaultErrBlock errList={errs} class="voki-taking-process-settings-err-block" />
 {/if}
-<VokiCreationSaveAndCancelButtons onSave={() => saveChanges()} onCancel={cancelEditing} />
+<VokiCreationSaveAndCancelButtons
+	onSave={() => saveChanges()}
+	onCancel={cancelEditing}
+	isSaveLoading={isLoading}
+/>
 
 <style>
 	.field-p {

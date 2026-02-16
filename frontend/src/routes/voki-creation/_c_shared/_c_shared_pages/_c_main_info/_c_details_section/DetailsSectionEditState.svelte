@@ -17,19 +17,23 @@
 	}
 	let { vokiId, savedDetails, updateSavedDetails, cancelEditing }: Props = $props();
 
-	let descriptionTextarea = $state<HTMLTextAreaElement>()!;
-	let description = $state(savedDetails.description);
-	let language = $state(savedDetails.language);
-	let hasMatureContent = $state(savedDetails.hasMatureContent);
-	let savingErrs = $state<Err[]>([]);
 	const vokiCreationCtx = getVokiCreationPageContext();
+	let descriptionTextarea: HTMLTextAreaElement = $state()!;
 
+	let description = $derived(savedDetails.description);
+	let language = $derived(savedDetails.language);
+	let hasMatureContent = $derived(savedDetails.hasMatureContent);
+
+	let isLoading = $state(false);
+	let savingErrs: Err[] = $state([]);
 	async function saveChanges() {
+		isLoading = true;
 		const response = await vokiCreationCtx.vokiCreationApi.updateVokiDetails(vokiId, {
 			description,
 			language,
 			hasMatureContent
 		});
+		isLoading = false;
 		if (response.isSuccess) {
 			updateSavedDetails({
 				description: response.data.description,
@@ -61,7 +65,11 @@
 	<DefaultCheckBox bind:checked={hasMatureContent} />
 </p>
 <DefaultErrBlock errList={savingErrs} />
-<VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
+<VokiCreationSaveAndCancelButtons
+	onCancel={cancelEditing}
+	onSave={() => saveChanges()}
+	isSaveLoading={isLoading}
+/>
 
 <style>
 	.description-input {

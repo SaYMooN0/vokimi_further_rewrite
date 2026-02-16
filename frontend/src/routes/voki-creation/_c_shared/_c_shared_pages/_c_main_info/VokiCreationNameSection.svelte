@@ -16,7 +16,8 @@
 	let { savedName, vokiId, isEditing = $bindable(), updateSavedVokiName }: Props = $props();
 
 	let textarea = $state<HTMLTextAreaElement>()!;
-	let nameEditingValue = $state(savedName);
+	let nameEditingValue = $derived(savedName);
+	let isLoading = $state(false);
 	let savingErrs = $state<Err[]>([]);
 	const { vokiCreationApi, headerVokiName } = getVokiCreationPageContext();
 
@@ -28,7 +29,9 @@
 		savingErrs = [];
 	}
 	async function saveChanges() {
+		isLoading = true;
 		const response = await vokiCreationApi.updateVokiName(vokiId, nameEditingValue);
+		isLoading = false;
 		if (response.isSuccess) {
 			updateSavedVokiName(response.data.newVokiName);
 			isEditing = false;
@@ -56,6 +59,7 @@
 		<VokiCreationSaveAndCancelButtons
 			onCancel={() => (isEditing = false)}
 			onSave={() => saveChanges()}
+			isSaveLoading={isLoading}
 		/>
 	{:else}
 		<p class="voki-name-p">

@@ -5,39 +5,51 @@
 	import { toast } from 'svelte-sonner';
 	import VokiCreationSaveAndCancelButtons from '../../../VokiCreationSaveAndCancelButtons.svelte';
 	import CoverImageInput from './CoverImageInput.svelte';
-
-	let { updateCoverToNew }: { updateCoverToNew: (newKey: string) => Promise<void> } = $props<{
+	interface Props {
 		updateCoverToNew: (newKey: string) => Promise<void>;
-	}>();
-	let dialogState = $state<{ newKey: string; isInput: false } | { errs: Err[]; isInput: true }>({
+	}
+	let { updateCoverToNew }: Props = $props();
+	type DialogStateType =
+		| { isInput: false; newKey: string; isLoading: boolean }
+		| { isInput: true; errs: Err[] };
+	let dialogState = $state<DialogStateType>({
 		isInput: true,
 		errs: []
 	});
 	let dialog = $state<DialogWithCloseButton>()!;
+	let isLoading = false;
 	export function open() {
 		dialogState = { isInput: true, errs: [] };
+		isLoading = false;
 		dialog.open();
 	}
 	function onDialogSaveButtonClick() {
 		if (dialogState.isInput) {
 			toast.error('An error has occurred. Please refresh the page');
 		} else {
-			updateCoverToNew(dialogState.newKey);
+			dialogState.isLoading = true;
+			updateCoverToNew(dialogState.newKey).then(() => {
+				if (!dialogState.isInput) {
+					dialogState.isLoading = false;
+				}
+			});
 		}
 		dialog.close();
+	}
+	function onImageUploaded(tempKey: string) {
+		dialogState = { isInput: false, newKey: tempKey, isLoading: false };
 	}
 </script>
 
 <DialogWithCloseButton bind:this={dialog} dialogId="voki-creation-cover-changing-dialog">
 	{#if dialogState.isInput}
-		<CoverImageInput
-			onImageUploaded={(tempKey) => (dialogState = { isInput: false, newKey: tempKey })}
-		/>
+		<CoverImageInput {onImageUploaded} />
 	{:else}
 		<img src={StorageBucketMain.fileSrcWithVersion(dialogState.newKey)} alt="voki cover" />
 		<VokiCreationSaveAndCancelButtons
 			onCancel={() => dialog.close()}
 			onSave={() => onDialogSaveButtonClick()}
+			isSaveLoading={dialogState.isLoading}
 		/>
 	{/if}
 </DialogWithCloseButton>

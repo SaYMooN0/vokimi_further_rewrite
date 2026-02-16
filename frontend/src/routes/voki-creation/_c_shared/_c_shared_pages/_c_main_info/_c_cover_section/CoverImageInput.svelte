@@ -8,9 +8,9 @@
 		onImageUploaded: (tempKey: string) => void;
 	}
 	let { onImageUploaded }: Props = $props();
-	
+
 	let isLoading = $state(false);
-	let errs = $state<Err[]>([]);
+	let errs: Err[] = $state([]);
 
 	async function handleFile(file: File) {
 		if (!file.type.startsWith('image/')) {
@@ -65,7 +65,7 @@
 >
 	{#if isLoading}
 		<div class="loading-container">
-			<CubesLoader sizeRem={5} color= 'var(--primary)' />
+			<CubesLoader sizeRem={5} color="var(--primary)" />
 		</div>
 	{:else}
 		<h1>Select new Voki cover</h1>

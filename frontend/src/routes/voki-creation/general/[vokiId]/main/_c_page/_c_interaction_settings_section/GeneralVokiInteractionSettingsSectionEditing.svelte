@@ -17,9 +17,11 @@
 		updateParent: (newSettings: GeneralVokiInteractionSettings) => void;
 	}
 	let { vokiId, savedInteractionSettings, cancelEditing, updateParent }: Props = $props();
-	let editingSettingsState = $state(savedInteractionSettings);
+	let editingSettingsState = $derived(savedInteractionSettings);
 	let savingErrs: Err[] = $state([]);
+	let isLoading = $state(false);
 	async function saveChanges() {
+		isLoading = true;
 		const response = await ApiVokiCreationGeneral.fetchJsonResponse<GeneralVokiInteractionSettings>(
 			`/vokis/${vokiId}/update-interaction-settings`,
 			RJO.PATCH({
@@ -28,6 +30,7 @@
 				showResultsDistribution: editingSettingsState.showResultsDistribution
 			})
 		);
+		isLoading = false;
 		if (response.isSuccess) {
 			updateParent(response.data);
 			savingErrs = [];
@@ -84,7 +87,11 @@
 {#if savingErrs.length > 0}
 	<DefaultErrBlock errList={savingErrs} />
 {/if}
-<VokiCreationSaveAndCancelButtons onCancel={cancelEditing} onSave={() => saveChanges()} />
+<VokiCreationSaveAndCancelButtons
+	onCancel={cancelEditing}
+	onSave={() => saveChanges()}
+	isSaveLoading={isLoading}
+/>
 
 <style>
 	.field-p {

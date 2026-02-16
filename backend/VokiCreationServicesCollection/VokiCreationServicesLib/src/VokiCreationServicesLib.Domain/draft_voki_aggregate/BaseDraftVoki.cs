@@ -89,6 +89,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         if (!HasUserAccess(aUserCtx)) {
             return ErrFactory.NoAccess("To update Voki name you need to be the Voki author");
         }
+
         Name = newVokiName;
         AddDomainEvent(new VokiNameUpdatedEvent(Id, Name));
         return ErrOrNothing.Nothing;
@@ -115,19 +116,22 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         if (!HasUserAccess(aUserCtx)) {
             return ErrFactory.NoAccess("To update Voki details you need to be the Voki author");
         }
+
         this.Details = newDetails;
         return ErrOrNothing.Nothing;
-
     }
 
     public ErrOrNothing UpdateTags(AuthenticatedUserCtx aUserCtx, VokiTagsSet newTags) {
         if (!HasUserAccess(aUserCtx)) {
             return ErrFactory.NoAccess("To update Voki tags you need to be the Voki author");
         }
+
         this.Tags = newTags;
         return ErrOrNothing.Nothing;
-
     }
+
+    protected bool AreCoAuthorsEqualToCurrent(ISet<AppUserId> coAuthorIds) =>
+        this.CoAuthors.SetEquals(coAuthorIds);
 
     protected List<VokiPublishingIssue> CheckCoverForPublishingIssues() {
         if (!Cover.IsWithId(Id)) {

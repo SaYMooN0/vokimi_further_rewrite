@@ -44,6 +44,10 @@
 	function switchToPublishedSuccessfully(vokiData: VokiSuccessfullyPublishedData) {
 		pageState = { name: 'published', vokiData };
 	}
+
+	function isUserPrimaryAuthor(userId: string) {
+		return userId === primaryAuthorId;
+	}
 </script>
 
 <ConfirmVokiPublishingDialog
@@ -52,6 +56,7 @@
 	refetchIssues={() => loadPublishingIssues()}
 	{switchToPublishedSuccessfully}
 	{vokiId}
+	{coAuthorIds}
 />
 
 {#if pageState.name === 'loading'}
@@ -65,17 +70,16 @@
 		<PrimaryButton onclick={() => loadPublishingIssues()} class="refetch">Refetch</PrimaryButton>
 	</div>
 {:else if pageState.name === 'issues' && pageState.issues.length != 0}
-	<AuthView>
-		<VokiPublishingIssuesList
-			issues={pageState.issues}
-			refetch={() => loadPublishingIssues()}
-			openPublishingConfirmationDialog={() => confirmVokiPublishedDialog.open()}
-			isUserPrimaryAuthor={(uId) => uId === primaryAuthorId}
-		/>
-	</AuthView>
+	<VokiPublishingIssuesList
+		issues={pageState.issues}
+		refetch={() => loadPublishingIssues()}
+		openPublishingConfirmationDialog={() => confirmVokiPublishedDialog.open()}
+		{isUserPrimaryAuthor}
+	/>
 {:else if pageState.name === 'issues' && pageState.issues.length === 0}
 	<NoVokiPublishingIssues
 		openPublishingConfirmationDialog={() => confirmVokiPublishedDialog.open()}
+		{isUserPrimaryAuthor}
 	/>
 {:else if pageState.name === 'published'}
 	<VokiSuccessfullyPublishedMessage vokiData={pageState.vokiData} />
@@ -98,8 +102,6 @@
 		box-shadow: var(--shadow);
 		animation: var(--default-fade-in-animation);
 	}
-
-	
 
 	.msg-container > :global(.check-for-issues-btn) {
 		margin-top: auto;

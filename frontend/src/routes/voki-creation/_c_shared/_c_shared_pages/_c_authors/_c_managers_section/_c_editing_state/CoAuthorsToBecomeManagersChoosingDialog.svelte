@@ -32,14 +32,18 @@
 	dialogId="co-authors-to-become-managers-dialog"
 	bind:this={dialog}
 >
-	<div class="co-authors">
-		{#each allCoAuthors as coAuthorId}
-			<div class="co-author" onclick={() => toggleCoAuthor(coAuthorId)}>
-				<BasicUserDisplay userId={coAuthorId} interactionLevel={'JustDisplay'} />
-				<DefaultCheckBox bind:checked={idToIsSelected[coAuthorId]} parentOnlyControl={true} />
-			</div>
-		{/each}
-	</div>
+	{#if allCoAuthors.length === 0}
+		<div class="no-co-authors-message">No co-authors to choose from for now</div>
+	{:else}
+		<div class="co-authors">
+			{#each allCoAuthors as coAuthorId}
+				<div class="co-author" onclick={() => toggleCoAuthor(coAuthorId)}>
+					<BasicUserDisplay userId={coAuthorId} interactionLevel={'JustDisplay'} />
+					<DefaultCheckBox bind:checked={idToIsSelected[coAuthorId]} parentOnlyControl={true} />
+				</div>
+			{/each}
+		</div>
+	{/if}
 	<PrimaryButton onclick={onSubmit}>Choose</PrimaryButton>
 </DialogWithCloseButton>
 
@@ -53,6 +57,13 @@
 	:global(#co-authors-to-become-managers-dialog > .dialog-content > .subheading) {
 		width: max-content;
 		padding: 0 2rem 1rem;
+	}
+
+	.no-co-authors-message {
+		padding: 0 2rem 1rem;
+		color: var(--muted-foreground);
+		font-size: 1.25rem;
+		font-weight: 425;
 	}
 
 	.co-authors {

@@ -1,16 +1,22 @@
 <script lang="ts">
+	import LinesLoader from '$lib/components/loaders/LinesLoader.svelte';
+
 	interface Props {
 		onCancel: () => void;
 		onSave: () => void;
-		isSaveLoading?: boolean;
+		isSaveLoading: boolean;
 	}
-	let { onCancel, onSave, isSaveLoading = false }: Props = $props();
+	let { onCancel, onSave, isSaveLoading }: Props = $props();
 </script>
 
-<div class="btns-container">
+<div class="btns-container" class:loading={isSaveLoading}>
 	<button onclick={onCancel} class="cancel-btn">Cancel</button>
 	<button onclick={onSave} class="save-btn" class:loading={isSaveLoading}
-		>{isSaveLoading ? 'Saving...' : 'Save'}</button
+		>{#if isSaveLoading}
+			<LinesLoader color="var(--primary-foreground)" sizeRem={1.25} strokePx={2} />
+		{:else}
+			Save
+		{/if}</button
 	>
 </div>
 
@@ -34,8 +40,13 @@
 		letter-spacing: 0.2px;
 		transition: transform 0.12s ease-in;
 		cursor: pointer;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
-
+	.btns-container.loading button {
+		pointer-events: none;
+	}
 	.cancel-btn {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
@@ -54,5 +65,8 @@
 
 	.save-btn:hover {
 		background-color: var(--primary-hov);
+	}
+	.save-btn.loading {
+		opacity: 0.9;
 	}
 </style>

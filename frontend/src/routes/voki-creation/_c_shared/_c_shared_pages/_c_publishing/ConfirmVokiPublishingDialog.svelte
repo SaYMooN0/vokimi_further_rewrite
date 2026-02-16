@@ -13,6 +13,7 @@
 		refetchIssues: () => void;
 		switchToPublishedSuccessfully: (data: VokiSuccessfullyPublishedData) => void;
 		vokiId: string;
+		coAuthorIds: string[];
 	}
 	let { issues, switchToPublishedSuccessfully, vokiId }: Props = $props();
 	export function open() {

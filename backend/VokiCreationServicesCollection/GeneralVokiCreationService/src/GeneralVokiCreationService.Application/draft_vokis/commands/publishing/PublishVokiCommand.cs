@@ -1,10 +1,12 @@
-﻿
-using SharedKernel;
+﻿using SharedKernel;
 using VokiCreationServicesLib.Application;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.publishing;
 
-public record class PublishVokiWithNoIssuesCommand(VokiId VokiId) :
+public record class PublishVokiWithNoIssuesCommand(
+    VokiId VokiId,
+    ISet<AppUserId> CoAuthorIdsToPublishWith
+) :
     ICommand<VokiSuccessfullyPublishedResult>,
     IWithAuthCheckStep;
 
@@ -28,9 +30,16 @@ internal sealed class PublishVokiWithNoIssuesCommandHandler :
     public async Task<ErrOr<VokiSuccessfullyPublishedResult>> Handle(
         PublishVokiWithNoIssuesCommand command, CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsAndResultsForUpdate(command.VokiId, ct))!;
+        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetWithQuestionsAndResultsForUpdate(command.VokiId, ct);
+        if (voki is null) {
+            return ErrFactory.NotFound.Voki("Voki you are trying to publish doesn't exist. Maybe it has been already published");
+        }
 
-        var publishingRes = voki.PublishWithNoIssues(command.UserCtx(_userCtxProvider), _dateTimeProvider.UtcNow);
+        ErrOrNothing publishingRes = voki.PublishWithNoIssues(
+            command.UserCtx(_userCtxProvider),
+            _dateTimeProvider.UtcNow,
+            command.CoAuthorIdsToPublishWith
+        );
         if (publishingRes.IsErr(out var err)) {
             return err;
         }

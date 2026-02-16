@@ -6,6 +6,7 @@ using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using SharedKernel.common.vokis.general_vokis;
 using VokiCreationServicesLib.Api;
 using VokiCreationServicesLib.Api.contracts;
+using VokiCreationServicesLib.Api.contracts.voki_publishing;
 using VokiCreationServicesLib.Application;
 
 namespace GeneralVokiCreationService.Api.endpoints;
@@ -54,9 +55,12 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
         ICommandHandler<UpdateVokiTakingProcessSettingsCommand, VokiTakingProcessSettings> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
-        var req = httpContext.GetValidatedRequest<UpdateVokiTakingProcessSettingsRequest>();
+        var request = httpContext.GetValidatedRequest<UpdateVokiTakingProcessSettingsRequest>();
 
-        var result = await handler.Handle(new UpdateVokiTakingProcessSettingsCommand(id, req.ParsedSettings), ct);
+        var result = await handler.Handle(
+            new UpdateVokiTakingProcessSettingsCommand(id, request.ParsedSettings),
+            ct
+        );
         return CustomResults.FromErrOr(result, settings => Results.Json(settings));
     }
 
@@ -75,7 +79,11 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
         ICommandHandler<PublishVokiWithNoIssuesCommand, VokiSuccessfullyPublishedResult> handler
     ) => {
         VokiId id = httpContext.GetVokiIdFromRoute();
-        var result = await handler.Handle(new PublishVokiWithNoIssuesCommand(id), ct);
+        var request = httpContext.GetValidatedRequest<PublishVokiRequest>();
+
+        var result = await handler.Handle(
+            new PublishVokiWithNoIssuesCommand(id, request.ParsedCoAuthorIds), ct
+        );
 
         return CustomResults.FromErrOrToJson<VokiSuccessfullyPublishedResult, VokiSuccessfullyPublishedResponse>(result);
     };
@@ -85,7 +93,11 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
         ICommandHandler<PublishVokiWithWarningsIgnoredCommand, VokiSuccessfullyPublishedResult> handler
     ) => {
         VokiId id = httpContext.GetVokiIdFromRoute();
-        var result = await handler.Handle(new PublishVokiWithWarningsIgnoredCommand(id), ct);
+        var request = httpContext.GetValidatedRequest<PublishVokiRequest>();
+
+        var result = await handler.Handle(
+            new PublishVokiWithWarningsIgnoredCommand(id, request.ParsedCoAuthorIds), ct
+        );
 
         return CustomResults.FromErrOrToJson<VokiSuccessfullyPublishedResult, VokiSuccessfullyPublishedResponse>(result);
     };

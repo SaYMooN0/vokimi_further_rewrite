@@ -3,7 +3,10 @@ using VokiCreationServicesLib.Application;
 
 namespace GeneralVokiCreationService.Application.draft_vokis.commands.publishing;
 
-public sealed record PublishVokiWithWarningsIgnoredCommand(VokiId VokiId) :
+public sealed record PublishVokiWithWarningsIgnoredCommand(
+    VokiId VokiId,
+    ISet<AppUserId> CoAuthorIdsToPublishWith
+) :
     ICommand<VokiSuccessfullyPublishedResult>,
     IWithAuthCheckStep;
 
@@ -28,8 +31,17 @@ internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
         PublishVokiWithWarningsIgnoredCommand command,
         CancellationToken ct
     ) {
-        DraftGeneralVoki voki = (await _draftGeneralVokisRepository.GetWithQuestionsAndResultsForUpdate(command.VokiId, ct))!;
-        var publishingRes = voki.PublishWithWarningsIgnored(command.UserCtx(_userCtxProvider), _dateTimeProvider.UtcNow);
+        DraftGeneralVoki? voki = await _draftGeneralVokisRepository.GetWithQuestionsAndResultsForUpdate(command.VokiId, ct);
+        if (voki is null) {
+            return ErrFactory.NotFound.Voki("Voki you are trying to publish doesn't exist. Maybe it has been already published");
+        }
+
+        ErrOrNothing publishingRes = voki.PublishWithWarningsIgnored(
+            command.UserCtx(_userCtxProvider),
+            _dateTimeProvider.UtcNow,
+            command.CoAuthorIdsToPublishWith
+        );
+
         if (publishingRes.IsErr(out var err)) {
             return err;
         }

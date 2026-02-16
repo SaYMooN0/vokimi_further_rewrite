@@ -1,6 +1,6 @@
 using GeneralVokiTakingService.Domain.common;
 
-namespace GeneralVokiTakingService.Api.contracts.voki_taking.free_answering;
+namespace GeneralVokiTakingService.Api.contracts.voki_taking.free_answering.save_state;
 
 public class SaveCurrentFreeVokiTakingSessionStateRequest : IRequestWithValidationNeeded
 {

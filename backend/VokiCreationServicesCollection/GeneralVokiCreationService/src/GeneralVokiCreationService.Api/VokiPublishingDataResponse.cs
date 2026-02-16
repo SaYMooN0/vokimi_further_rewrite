@@ -1,5 +1,6 @@
 using GeneralVokiCreationService.Application.draft_vokis.queries;
 using VokiCreationServicesLib.Api.contracts;
+using VokiCreationServicesLib.Api.contracts.voki_publishing;
 
 namespace GeneralVokiCreationService.Api;
 

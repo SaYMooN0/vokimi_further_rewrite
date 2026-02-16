@@ -41,9 +41,9 @@ public class VokiCoAuthorIdsSet : ValueObject
 
         return new VokiCoAuthorIdsSet(newIds);
     }
+
     [Pure]
-    public ErrOr<VokiCoAuthorIdsSet> Remove(AppUserId id)
-    {
+    public ErrOr<VokiCoAuthorIdsSet> Remove(AppUserId id) {
         if (!_ids.Contains(id)) {
             return this;
         }
@@ -56,6 +56,7 @@ public class VokiCoAuthorIdsSet : ValueObject
 
         return new VokiCoAuthorIdsSet(newIds);
     }
+
     private static ErrOrNothing CheckForErr(ImmutableHashSet<AppUserId>? ids) =>
         ids is null ? ErrFactory.NoValue.Common("Co-author list is null")
         : ids.Count > VokiRules.MaxCoAuthors ? ErrFactory.LimitExceeded(
@@ -65,4 +66,7 @@ public class VokiCoAuthorIdsSet : ValueObject
 
     public AppUserId[] ToArray() => _ids.ToArray();
     public ImmutableHashSet<AppUserId> ToImmutableHashSet() => _ids.ToImmutableHashSet();
+
+    public bool SetEquals(ISet<AppUserId> idsToCheck) =>
+        _ids.SetEquals(idsToCheck);
 }

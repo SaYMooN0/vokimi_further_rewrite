@@ -567,9 +567,19 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         ]);
     }
 
-    public ErrOrNothing PublishWithWarningsIgnored(AuthenticatedUserCtx aUserCtx, DateTime now) {
+    public ErrOrNothing PublishWithWarningsIgnored(
+        AuthenticatedUserCtx aUserCtx,
+        DateTime now,
+        ISet<AppUserId> coAuthorIdsToPublishWith
+    ) {
         if (aUserCtx.UserId != this.PrimaryAuthorId) {
             return ErrFactory.NoAccess("Only primary author can publish Voki");
+        }
+
+        if (!this.AreCoAuthorsEqualToCurrent(coAuthorIdsToPublishWith)) {
+            return ErrFactory.Conflict(
+                "Voki co-authords were changed and now differ from the one you selected. Please refresh the page and try again"
+            );
         }
 
         ErrOr<ImmutableArray<VokiPublishingIssue>> issuesRes = GatherAllPublishingIssues(aUserCtx);
@@ -587,9 +597,19 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
         return ErrOrNothing.Nothing;
     }
 
-    public ErrOrNothing PublishWithNoIssues(AuthenticatedUserCtx aUserCtx, DateTime now) {
+    public ErrOrNothing PublishWithNoIssues(
+        AuthenticatedUserCtx aUserCtx,
+        DateTime now,
+        ISet<AppUserId> coAuthorIdsToPublishWith
+    ) {
         if (aUserCtx.UserId != this.PrimaryAuthorId) {
             return ErrFactory.NoAccess("Only primary author can publish Voki");
+        }
+
+        if (!this.AreCoAuthorsEqualToCurrent(coAuthorIdsToPublishWith)) {
+            return ErrFactory.Conflict(
+                "Voki co-authords were changed and now differ from the one you selected. Please refresh the page and try again"
+            );
         }
 
         ErrOr<ImmutableArray<VokiPublishingIssue>> issuesRes = GatherAllPublishingIssues(aUserCtx);

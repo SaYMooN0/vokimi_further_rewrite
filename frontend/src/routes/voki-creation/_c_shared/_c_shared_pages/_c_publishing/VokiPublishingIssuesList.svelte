@@ -1,11 +1,10 @@
 <script lang="ts">
-	import type {
-		VokiPublishingIssue,
-	} from '$lib/ts/backend-communication/voki-creation-backend-service';
+	import type { VokiPublishingIssue } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import ErrView from '$lib/components/errs/ErrView.svelte';
 	import VokiCreationBasicHeader from '../../VokiCreationBasicHeader.svelte';
 	import ReloadButton from '$lib/components/buttons/ReloadButton.svelte';
 	import AuthView from '$lib/components/AuthView.svelte';
+	import OnlyPrimaryAuthorCanPublishMessage from './_c_publishing_shared/OnlyPrimaryAuthorCanPublishMessage.svelte';
 	interface Props {
 		issues: VokiPublishingIssue[];
 		refetch: () => void;
@@ -17,35 +16,35 @@
 	const warnings = issues.filter((issue) => issue.type === 'Warning');
 </script>
 
+<VokiCreationBasicHeader header={`Voki publishing issues (${issues.length})`} />
+<ReloadButton onclick={() => refetch()} />
+<div class="all-issues-container">
+	{#each problems as problem}
+		<div class="issue problem">
+			<div class="type">
+				<svg><use href="#common-error-icon" /></svg>
+				Problem
+			</div>
+			<div class="source">{problem.source}</div>
+			<div class="message">{problem.message}</div>
+			<div class="recommendation">{problem.fixRecommendation}</div>
+		</div>
+	{/each}
+
+	{#each warnings as warning}
+		<div class="issue warning">
+			<div class="type">
+				<svg><use href="#common-warning-icon" /></svg>
+				Warning
+			</div>
+			<div class="source">{warning.source}</div>
+			<div class="message">{warning.message}</div>
+			<div class="recommendation">{warning.fixRecommendation}</div>
+		</div>
+	{/each}
+</div>
 <AuthView>
 	{#snippet children(authState)}
-		<VokiCreationBasicHeader header={`Voki publishing issues (${issues.length})`} />
-		<ReloadButton onclick={() => refetch()} />
-		<div class="all-issues-container">
-			{#each problems as problem}
-				<div class="issue problem">
-					<div class="type">
-						<svg><use href="#common-error-icon" /></svg>
-						Problem
-					</div>
-					<div class="source">{problem.source}</div>
-					<div class="message">{problem.message}</div>
-					<div class="recommendation">{problem.fixRecommendation}</div>
-				</div>
-			{/each}
-
-			{#each warnings as warning}
-				<div class="issue warning">
-					<div class="type">
-						<svg><use href="#common-warning-icon" /></svg>
-						Warning
-					</div>
-					<div class="source">{warning.source}</div>
-					<div class="message">{warning.message}</div>
-					<div class="recommendation">{warning.fixRecommendation}</div>
-				</div>
-			{/each}
-		</div>
 		{#if isUserPrimaryAuthor(authState.isAuthenticated ? authState.userId : '')}
 			{#if problems.length > 0}
 				<p class="fix-msg">Please fix all problems before publishing</p>
@@ -57,9 +56,7 @@
 				<ErrView err={{ message: 'An error has occurred, please reload the page' }} />
 			{/if}
 		{:else}
-			<p class="only-primary-author unselectable">
-				<svg><use href="#common-info-icon" /></svg> Only primary author can publish Voki
-			</p>
+			<OnlyPrimaryAuthorCanPublishMessage />
 		{/if}
 	{/snippet}
 </AuthView>
@@ -146,27 +143,5 @@
 		color: var(--primary);
 		letter-spacing: 0.25px;
 		cursor: pointer;
-	}
-
-	.only-primary-author {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		gap: 0.25rem;
-		width: fit-content;
-		padding: 0.25rem 1rem;
-		margin: 1rem auto 0.25rem;
-		border-radius: 0.5rem;
-		background-color: var(--secondary);
-		color: var(--secondary-foreground);
-		font-size: 1.125rem;
-		font-weight: 450;
-		cursor: default;
-	}
-
-	.only-primary-author > svg {
-		width: 1.25rem;
-		height: 1.25rem;
-		stroke-width: 2;
 	}
 </style>
