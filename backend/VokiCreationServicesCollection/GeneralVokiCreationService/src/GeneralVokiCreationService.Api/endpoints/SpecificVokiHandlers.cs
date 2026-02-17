@@ -82,7 +82,8 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
         var request = httpContext.GetValidatedRequest<PublishVokiRequest>();
 
         var result = await handler.Handle(
-            new PublishVokiWithNoIssuesCommand(id, request.ParsedCoAuthorIds), ct
+            new PublishVokiWithNoIssuesCommand(id, request.ParsedCoAuthorIds, request.ParsedUserIdsToBecomeManagers),
+            ct
         );
 
         return CustomResults.FromErrOrToJson<VokiSuccessfullyPublishedResult, VokiSuccessfullyPublishedResponse>(result);
@@ -96,7 +97,8 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
         var request = httpContext.GetValidatedRequest<PublishVokiRequest>();
 
         var result = await handler.Handle(
-            new PublishVokiWithWarningsIgnoredCommand(id, request.ParsedCoAuthorIds), ct
+            new PublishVokiWithWarningsIgnoredCommand(id, request.ParsedCoAuthorIds, request.ParsedUserIdsToBecomeManagers),
+            ct
         );
 
         return CustomResults.FromErrOrToJson<VokiSuccessfullyPublishedResult, VokiSuccessfullyPublishedResponse>(result);

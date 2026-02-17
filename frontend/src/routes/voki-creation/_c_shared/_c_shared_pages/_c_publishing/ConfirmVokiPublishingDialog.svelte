@@ -8,14 +8,22 @@
 	} from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { getVokiCreationPageContext } from '../../../voki-creation-page-context';
+	import ConfirmCoAuthorsAndManagersMsg from './_c_confirm_dialog/ConfirmCoAuthorsAndManagersMsg.svelte';
 	interface Props {
 		issues: VokiPublishingIssue[];
 		refetchIssues: () => void;
 		switchToPublishedSuccessfully: (data: VokiSuccessfullyPublishedData) => void;
 		vokiId: string;
 		coAuthorIds: string[];
+		userIdsToBecomeManagers: string[];
 	}
-	let { issues, switchToPublishedSuccessfully, vokiId }: Props = $props();
+	let {
+		issues,
+		switchToPublishedSuccessfully,
+		vokiId,
+		coAuthorIds,
+		userIdsToBecomeManagers
+	}: Props = $props();
 	export function open() {
 		publishingErrs = [];
 		dialog.open();
@@ -24,7 +32,11 @@
 	let publishingErrs: Err[] = $state([]);
 	const vokiCreationCtx = getVokiCreationPageContext();
 	async function publishWithIssuesIgnored() {
-		const response = await vokiCreationCtx.vokiCreationApi.publishWithWarningsIgnored(vokiId);
+		const response = await vokiCreationCtx.vokiCreationApi.publishWithWarningsIgnored(
+			vokiId,
+			coAuthorIds,
+			userIdsToBecomeManagers
+		);
 		if (response.isSuccess) {
 			switchToPublishedSuccessfully(response.data);
 			dialog.close();
@@ -34,7 +46,11 @@
 	}
 
 	async function publishWithNoIssues() {
-		const response = await vokiCreationCtx.vokiCreationApi.publishWithNoIssues(vokiId);
+		const response = await vokiCreationCtx.vokiCreationApi.publishWithNoIssues(
+			vokiId,
+			coAuthorIds,
+			userIdsToBecomeManagers
+		);
 		if (response.isSuccess) {
 			switchToPublishedSuccessfully(response.data);
 			dialog.close();
@@ -51,6 +67,8 @@
 		most parts can’t be changed, so make sure it’s ready. Click the button below to run the check.
 		We’ll scan your Voki for issues and show you if anything needs fixing.
 	</p>
+
+	<ConfirmCoAuthorsAndManagersMsg {coAuthorIds} {userIdsToBecomeManagers} />
 	<DefaultErrBlock errList={publishingErrs} />
 	{#if issues.length > 0}
 		<div class="issues-msg">
@@ -75,9 +93,8 @@
 	}
 
 	.warning-text {
-		width: 50ch;
+		width: 55ch;
 		margin-top: 1rem;
-		margin-bottom: 1rem;
 		font-size: 1.25rem;
 		font-weight: 425;
 		line-height: 1.375;

@@ -35,6 +35,7 @@ internal sealed class GetVokiPublishingDataQueryHandler :
         return new GetVokiPublishingDataQueryResult(
             voki.PrimaryAuthorId,
             voki.CoAuthors,
+            voki.UserIdsToBecomeManagers,
             issuesOrErr.AsSuccess()
         );
     }
@@ -43,5 +44,6 @@ internal sealed class GetVokiPublishingDataQueryHandler :
 public record GetVokiPublishingDataQueryResult(
     AppUserId PrimaryAuthorId,
     VokiCoAuthorIdsSet CoAuthors,
+    ImmutableHashSet<AppUserId> UserIdsToBecomeManagers,
     ImmutableArray<VokiPublishingIssue> Issues
 );

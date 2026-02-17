@@ -5,7 +5,8 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands.publishing
 
 public sealed record PublishVokiWithWarningsIgnoredCommand(
     VokiId VokiId,
-    ISet<AppUserId> CoAuthorIdsToPublishWith
+    ISet<AppUserId> ConfirmedCoAuthorIds,
+    ISet<AppUserId> ConfirmedManagerIds
 ) :
     ICommand<VokiSuccessfullyPublishedResult>,
     IWithAuthCheckStep;
@@ -39,7 +40,8 @@ internal sealed class PublishVokiWithWarningsIgnoredCommandHandler :
         ErrOrNothing publishingRes = voki.PublishWithWarningsIgnored(
             command.UserCtx(_userCtxProvider),
             _dateTimeProvider.UtcNow,
-            command.CoAuthorIdsToPublishWith
+            confirmedCoAuthorIds: command.ConfirmedCoAuthorIds,
+            confirmedManagerIds: command.ConfirmedManagerIds
         );
 
         if (publishingRes.IsErr(out var err)) {

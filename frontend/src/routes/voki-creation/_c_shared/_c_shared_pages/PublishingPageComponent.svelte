@@ -19,8 +19,10 @@
 		initialIssues: VokiPublishingIssue[];
 		primaryAuthorId: string;
 		coAuthorIds: string[];
+		userIdsToBecomeManagers: string[];
 	}
-	let { vokiId, initialIssues, primaryAuthorId, coAuthorIds }: Props = $props();
+	let { vokiId, initialIssues, primaryAuthorId, coAuthorIds, userIdsToBecomeManagers }: Props =
+		$props();
 	const vokiCreationCtx = getVokiCreationPageContext();
 
 	let pageState = $state<PageState>({ name: 'issues', issues: initialIssues });
@@ -57,6 +59,7 @@
 	{switchToPublishedSuccessfully}
 	{vokiId}
 	{coAuthorIds}
+	{userIdsToBecomeManagers}
 />
 
 {#if pageState.name === 'loading'}

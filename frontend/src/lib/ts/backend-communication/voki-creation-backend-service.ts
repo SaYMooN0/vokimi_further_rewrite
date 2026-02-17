@@ -14,6 +14,7 @@ export type DraftVokiPublishingData = {
     issues: VokiPublishingIssue[]
     primaryAuthorId: string
     coAuthorIds: string[]
+    userIdsToBecomeManagers: string[]
 }
 export type VokiPublishingIssueType = 'Problem' | 'Warning';
 export type VokiPublishingIssue = {
@@ -37,8 +38,8 @@ export interface IVokiCreationBackendService {
     updateVokiDetails(vokiId: string, details: VokiDetails): Promise<ResponseResult<VokiDetails>>;
 
     loadPublishingData(vokiId: string): Promise<ResponseResult<DraftVokiPublishingData>>;
-    publishWithNoIssues(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
-    publishWithWarningsIgnored(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
+    publishWithNoIssues(vokiId: string, coAuthorIds: string[], userIdsToBecomeManagers: string[]): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
+    publishWithWarningsIgnored(vokiId: string, coAuthorIds: string[], userIdsToBecomeManagers: string[]): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
 }
 class VokiCreationBackendService extends BackendService implements IVokiCreationBackendService {
     constructor(baseUrl: string) {
@@ -95,14 +96,20 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
             `/vokis/${vokiId}/publishing-data`, { method: 'GET' }
         );
     }
-    public async publishWithNoIssues(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>> {
+    public async publishWithNoIssues(vokiId: string, coAuthorIds: string[], userIdsToBecomeManagers: string[]): Promise<ResponseResult<VokiSuccessfullyPublishedData>> {
         return await this.fetchJsonResponse<VokiSuccessfullyPublishedData>(
-            `/vokis/${vokiId}/publish-with-no-issues`, RJO.POST({})
+            `/vokis/${vokiId}/publish-with-no-issues`, RJO.POST({
+                coAuthorIdsToPublishWith: coAuthorIds,
+                managerIdsToPublishWith: userIdsToBecomeManagers
+            })
         );
     }
-    public async publishWithWarningsIgnored(vokiId: string): Promise<ResponseResult<VokiSuccessfullyPublishedData>> {
+    public async publishWithWarningsIgnored(vokiId: string, coAuthorIds: string[], userIdsToBecomeManagers: string[]): Promise<ResponseResult<VokiSuccessfullyPublishedData>> {
         return await this.fetchJsonResponse<VokiSuccessfullyPublishedData>(
-            `/vokis/${vokiId}/publish-with-warnings-ignored`, RJO.POST({})
+            `/vokis/${vokiId}/publish-with-warnings-ignored`, RJO.POST({
+                coAuthorIdsToPublishWith: coAuthorIds,
+                managerIdsToPublishWith: userIdsToBecomeManagers
+            })
         );
     }
 }

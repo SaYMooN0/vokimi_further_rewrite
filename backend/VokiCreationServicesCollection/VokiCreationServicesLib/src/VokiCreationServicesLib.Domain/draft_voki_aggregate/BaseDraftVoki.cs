@@ -13,7 +13,7 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
     protected BaseDraftVoki() { }
     public AppUserId PrimaryAuthorId { get; }
     public VokiCoAuthorIdsSet CoAuthors { get; private set; }
-    protected ImmutableHashSet<AppUserId> UserIdsToBecomeManagers { get; private set; }
+    public ImmutableHashSet<AppUserId> UserIdsToBecomeManagers { get; private set; }
     public VokiName Name { get; private set; }
     public VokiCoverKey Cover { get; private set; }
     public VokiDetails Details { get; private set; }
@@ -130,9 +130,24 @@ public abstract class BaseDraftVoki : AggregateRoot<VokiId>
         return ErrOrNothing.Nothing;
     }
 
-    protected bool AreCoAuthorsEqualToCurrent(ISet<AppUserId> coAuthorIds) =>
-        this.CoAuthors.SetEquals(coAuthorIds);
+    protected ErrOrNothing CheckConfirmedCoAuthorsAndManagers(
+        ISet<AppUserId> confirmedCoAuthorIds, ISet<AppUserId> confirmedManagerIds
+    ) {
+        ErrOrNothing errs = ErrOrNothing.Nothing;
+        if (!CoAuthors.SetEquals(confirmedCoAuthorIds)) {
+            errs.AddNext(ErrFactory.Conflict(
+                "Voki co-authors were changed and now differ from the confirmed. Please refresh the page and try again"
+            ));
+        }
 
+        if (!UserIdsToBecomeManagers.SetEquals(confirmedManagerIds)) {
+            errs.AddNext(ErrFactory.Conflict(
+                "Users to become managers were changed and now differ from the confirmed. Please refresh the page and try again"
+            ));
+        }
+
+        return errs;
+    }
     protected List<VokiPublishingIssue> CheckCoverForPublishingIssues() {
         if (!Cover.IsWithId(Id)) {
             return [

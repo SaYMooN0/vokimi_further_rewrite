@@ -56,7 +56,7 @@
 		<label class="error-label">Error in loading<svg><use href="#common-info-icon" /></svg></label>
 	</div>
 {:else if user.state === 'loading'}
-	<div class="user-display loading">
+	<div class="user-display loading {className}">
 		<div class="profile-pic skeleton-anim"></div>
 		<div class="names-container-loading">
 			<label class="skeleton-anim" />
@@ -85,7 +85,7 @@
 
 		display: inline-grid;
 		align-items: center;
-		gap: 0.25rem;
+		gap: calc(var(--profile-pic-width) / 11);
 		width: fit-content;
 		min-width: 0;
 		border-radius: 100vw;
@@ -120,7 +120,7 @@
 		flex-direction: column;
 		align-content: center;
 		min-width: 0;
-		padding-top: 0.125rem;
+		padding-top: calc(var(--profile-pic-width) / 22);
 		line-height: 1;
 		text-indent: 0;
 		overflow: hidden;
@@ -128,7 +128,7 @@
 
 	.user-display.ok .display-name {
 		color: var(--text);
-		font-size: 1rem;
+		font-size: calc(var(--profile-pic-width) / 2.5);
 		font-weight: 450;
 		overflow: hidden;
 		white-space: nowrap;
@@ -137,7 +137,7 @@
 
 	.user-display.ok .unique-name {
 		color: var(--muted-foreground);
-		font-size: 0.875rem;
+		font-size: calc(var(--profile-pic-width) / 3);
 		font-weight: 440;
 		overflow: hidden;
 		white-space: nowrap;
@@ -155,14 +155,14 @@
 
 	.names-container-loading {
 		display: grid;
-		gap: 0.5rem;
-		width: 8rem;
+		gap: calc(var(--profile-pic-width) / 6);
+		width: calc(var(--profile-pic-width) * 3);
 	}
 
 	.names-container-loading > label {
 		border-radius: 0.375rem;
 
-		--loading-name-label-height: 1rem;
+		--loading-name-label-height: calc(var(--profile-pic-width) / 3);
 	}
 
 	.names-container-loading > label:nth-child(1) {
@@ -214,18 +214,18 @@
 
 	.error .error-label {
 		width: max-content;
-		padding: 0.125rem 0.5rem;
+		padding: calc(var(--profile-pic-width) / 22) calc(var(--profile-pic-width) / 5.5);
 		border-radius: 0.375rem;
-		font-size: 1rem;
+		font-size: calc(var(--profile-pic-width) / 2.75);
 		font-weight: 450;
 	}
 
 	.error-label > svg {
-		width: 1.25rem;
-		height: 1.25rem;
+		width: calc(var(--profile-pic-width) / 2.2);
+		height: calc(var(--profile-pic-width) / 2.2);
 		padding: 0;
-		padding-bottom: 0.125rem;
-		margin-left: 0.125rem;
+		padding-bottom: calc(var(--profile-pic-width) / 22);
+		margin-left: calc(var(--profile-pic-width) / 22);
 		color: inherit;
 		stroke-width: 2;
 		vertical-align: middle;

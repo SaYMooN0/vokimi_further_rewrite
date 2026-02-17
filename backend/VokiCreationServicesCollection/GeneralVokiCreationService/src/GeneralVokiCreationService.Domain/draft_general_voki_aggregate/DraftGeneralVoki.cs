@@ -568,22 +568,19 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
     public ErrOrNothing PublishWithWarningsIgnored(
-        AuthenticatedUserCtx aUserCtx,
-        DateTime now,
-        ISet<AppUserId> coAuthorIdsToPublishWith
+        AuthenticatedUserCtx aUserCtx, DateTime now,
+        ISet<AppUserId> confirmedCoAuthorIds, ISet<AppUserId> confirmedManagerIds
     ) {
         if (aUserCtx.UserId != this.PrimaryAuthorId) {
             return ErrFactory.NoAccess("Only primary author can publish Voki");
         }
 
-        if (!this.AreCoAuthorsEqualToCurrent(coAuthorIdsToPublishWith)) {
-            return ErrFactory.Conflict(
-                "Voki co-authords were changed and now differ from the one you selected. Please refresh the page and try again"
-            );
+        if (CheckConfirmedCoAuthorsAndManagers(confirmedCoAuthorIds, confirmedManagerIds).IsErr(out var err)) {
+            return err;
         }
 
         ErrOr<ImmutableArray<VokiPublishingIssue>> issuesRes = GatherAllPublishingIssues(aUserCtx);
-        if (issuesRes.IsErr(out var err)) {
+        if (issuesRes.IsErr(out err)) {
             return err;
         }
 
@@ -598,22 +595,20 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
     }
 
     public ErrOrNothing PublishWithNoIssues(
-        AuthenticatedUserCtx aUserCtx,
-        DateTime now,
-        ISet<AppUserId> coAuthorIdsToPublishWith
+        AuthenticatedUserCtx aUserCtx, DateTime now,
+        ISet<AppUserId> confirmedCoAuthorIds, ISet<AppUserId> confirmedManagerIds
     ) {
         if (aUserCtx.UserId != this.PrimaryAuthorId) {
             return ErrFactory.NoAccess("Only primary author can publish Voki");
         }
 
-        if (!this.AreCoAuthorsEqualToCurrent(coAuthorIdsToPublishWith)) {
-            return ErrFactory.Conflict(
-                "Voki co-authords were changed and now differ from the one you selected. Please refresh the page and try again"
-            );
+
+        if (CheckConfirmedCoAuthorsAndManagers(confirmedCoAuthorIds, confirmedManagerIds).IsErr(out var err)) {
+            return err;
         }
 
         ErrOr<ImmutableArray<VokiPublishingIssue>> issuesRes = GatherAllPublishingIssues(aUserCtx);
-        if (issuesRes.IsErr(out var err)) {
+        if (issuesRes.IsErr(out err)) {
             return err;
         }
 

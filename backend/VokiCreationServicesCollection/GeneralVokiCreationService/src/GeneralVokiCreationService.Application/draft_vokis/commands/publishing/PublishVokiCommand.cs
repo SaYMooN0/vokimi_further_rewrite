@@ -5,7 +5,8 @@ namespace GeneralVokiCreationService.Application.draft_vokis.commands.publishing
 
 public record class PublishVokiWithNoIssuesCommand(
     VokiId VokiId,
-    ISet<AppUserId> CoAuthorIdsToPublishWith
+    ISet<AppUserId> ConfirmedCoAuthorIds,
+    ISet<AppUserId> ConfirmedManagerIds
 ) :
     ICommand<VokiSuccessfullyPublishedResult>,
     IWithAuthCheckStep;
@@ -38,7 +39,8 @@ internal sealed class PublishVokiWithNoIssuesCommandHandler :
         ErrOrNothing publishingRes = voki.PublishWithNoIssues(
             command.UserCtx(_userCtxProvider),
             _dateTimeProvider.UtcNow,
-            command.CoAuthorIdsToPublishWith
+            confirmedCoAuthorIds: command.ConfirmedCoAuthorIds,
+            confirmedManagerIds: command.ConfirmedManagerIds
         );
         if (publishingRes.IsErr(out var err)) {
             return err;

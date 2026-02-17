@@ -16,6 +16,7 @@
 		vokiId={data.vokiId}
 		primaryAuthorId={data.response.data.primaryAuthorId}
 		coAuthorIds={data.response.data.coAuthorIds}
+		userIdsToBecomeManagers={data.response.data.userIdsToBecomeManagers}
 		initialIssues={data.response.data.issues}
 	/>
 {/if}
