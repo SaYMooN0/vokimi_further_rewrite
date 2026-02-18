@@ -43,7 +43,7 @@ internal sealed class ViewAllVokiResultsQueryHandler : IQueryHandler<ViewAllVoki
 
         return await _userCtxProvider.Current.Match<Task<ErrOr<ViewAllVokiResultsQueryResult>>>(
             authenticatedFunc: async (aUserCtx) => {
-                AppUser? user = await _appUsersRepository.GetById(aUserCtx.UserId, ct);
+                AppUser? user = await _appUsersRepository.GetCurrent(aUserCtx, ct);
                 if (user is null) {
                     return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
                 }

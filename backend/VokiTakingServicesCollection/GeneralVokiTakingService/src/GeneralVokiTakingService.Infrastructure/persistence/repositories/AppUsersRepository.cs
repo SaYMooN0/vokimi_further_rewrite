@@ -3,6 +3,7 @@ using GeneralVokiTakingService.Domain.app_user_aggregate;
 using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel.user_ctx;
 
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories;
 
@@ -27,6 +28,9 @@ internal class AppUsersRepository : IAppUsersRepository
         _db.Update(user);
         await _db.SaveChangesAsync(ct);
     }
+
+    public Task<AppUser?> GetCurrent(AuthenticatedUserCtx aUserCtx, CancellationToken ct) =>
+        _db.AppUsers.FirstOrDefaultAsync(u => u.Id == aUserCtx.UserId, ct);
 
     public async Task<AppUser?> GetById(AppUserId userId, CancellationToken ct) =>
         await _db.AppUsers

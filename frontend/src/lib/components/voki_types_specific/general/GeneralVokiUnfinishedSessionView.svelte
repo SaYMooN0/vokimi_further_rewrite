@@ -59,27 +59,27 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		max-width: 32rem;
 		gap: 0.5rem;
+		max-width: 32rem;
 	}
 
 	h1 {
+		margin: 0;
+		color: var(--text);
 		font-size: 1.75rem;
 		font-weight: 600;
-		color: var(--text);
-		margin: 0;
 	}
 
 	.session-details {
 		display: grid;
-		grid-template-columns: 1fr auto 1fr;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		gap: 1.5rem;
 		width: 100%;
 		padding: 1rem;
-		background-color: var(--secondary);
 		border-radius: 0.75rem;
+		background-color: var(--secondary);
+		grid-template-columns: 1fr auto 1fr;
 	}
 
 	.detail-item {
@@ -97,24 +97,24 @@
 	}
 
 	.label {
-		font-size: 0.875rem;
 		color: var(--muted-foreground);
+		font-size: 0.875rem;
+		font-weight: 500;
 		text-transform: uppercase;
 		letter-spacing: 0.05em;
-		font-weight: 500;
 	}
 
 	.value {
+		color: var(--text);
 		font-size: 1.125rem;
 		font-weight: 600;
-		color: var(--text);
 	}
 
 	.description {
+		margin: 0.5rem 0;
+		color: var(--secondary-foreground);
 		font-size: 1rem;
 		line-height: 1.25;
-		color: var(--secondary-foreground);
-		margin: 0.5rem 0;
 		text-align: center;
 	}
 
@@ -127,25 +127,25 @@
 	}
 
 	:global(.continue-btn) {
-		width: 100% !important;
 		justify-content: center;
+		width: 100% !important;
 	}
 
 	.terminate-btn {
 		width: 100%;
 		padding: 0.75rem;
 		border: none;
+		border-radius: 0.5rem;
 		background: none;
 		color: var(--muted-foreground);
 		font-size: 1rem;
 		font-weight: 500;
-		cursor: pointer;
 		transition: all 0.2s ease;
-		border-radius: 0.5rem;
+		cursor: pointer;
 	}
 
 	.terminate-btn:hover {
-		color: var(--red-5);
 		background-color: var(--red-1);
+		color: var(--red-5);
 	}
 </style>

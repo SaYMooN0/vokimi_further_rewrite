@@ -96,21 +96,21 @@
 	}
 
 	.type-specific-data {
-		margin: 0 0 0 1rem;
-		height: max-content;
-		opacity: 1;
-		interpolate-size: allow-keywords;
-		transition:
-			all 0.4s ease,
-			opacity 0.4s ease-out;
-		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 		gap: 0.25rem;
+		height: max-content;
+		margin: 0 0 0 1rem;
+		opacity: 1;
+		transition:
+			all 0.4s ease,
+			opacity 0.4s ease-out;
+		interpolate-size: allow-keywords;
+		overflow: hidden;
 	}
 
 	.type-specific-data.hidden {
-		height: 0rem;
+		height: 0;
 		opacity: 0;
 	}
 

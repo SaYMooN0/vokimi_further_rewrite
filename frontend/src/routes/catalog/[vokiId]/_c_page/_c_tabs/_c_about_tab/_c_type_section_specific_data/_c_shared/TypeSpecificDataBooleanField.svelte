@@ -29,15 +29,14 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		color: var(--muted-foreground);
 		font-size: 1.125rem;
 		font-weight: 425;
-		color: var(--muted-foreground);
 	}
 
 	.value {
-		font-size: 1.125rem;
-		font-weight: 425;
 		margin-left: 0.5rem;
+		font-size: 1.125rem;
 		font-weight: 450;
 	}
 </style>

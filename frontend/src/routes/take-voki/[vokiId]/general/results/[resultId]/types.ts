@@ -8,5 +8,6 @@ export type GeneralVokiSingleResultViewData = {
     resultsVisibility: GeneralVokiResultsVisibility;
     resultsCount: number;
     vokiName: string;
+    hasUserTakenThisVoki: boolean;
 }
 

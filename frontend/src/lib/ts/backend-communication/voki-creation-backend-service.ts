@@ -40,6 +40,7 @@ export interface IVokiCreationBackendService {
     loadPublishingData(vokiId: string): Promise<ResponseResult<DraftVokiPublishingData>>;
     publishWithNoIssues(vokiId: string, coAuthorIds: string[], userIdsToBecomeManagers: string[]): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
     publishWithWarningsIgnored(vokiId: string, coAuthorIds: string[], userIdsToBecomeManagers: string[]): Promise<ResponseResult<VokiSuccessfullyPublishedData>>;
+    ensureVokiExists(vokiId: string): Promise<boolean>;
 }
 class VokiCreationBackendService extends BackendService implements IVokiCreationBackendService {
     constructor(baseUrl: string) {
@@ -111,6 +112,12 @@ class VokiCreationBackendService extends BackendService implements IVokiCreation
                 managerIdsToPublishWith: userIdsToBecomeManagers
             })
         );
+    }
+    public async ensureVokiExists(vokiId: string): Promise<boolean> {
+        let res = await this.fetchVoidResponse(
+            `/vokis/${vokiId}/ensure-exists`, { method: 'GET' }
+        );
+        return res.isSuccess;
     }
 }
 

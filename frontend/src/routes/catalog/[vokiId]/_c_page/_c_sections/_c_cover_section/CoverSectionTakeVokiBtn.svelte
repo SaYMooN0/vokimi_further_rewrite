@@ -114,14 +114,17 @@
 	.take-voki-btn {
 		background-color: var(--primary);
 		color: var(--primary-foreground);
+
 		&:hover,
 		&:focus {
 			background-color: var(--primary-hov);
 		}
 	}
+
 	.take-voki-btn > :global(.loader) {
 		margin-right: 0.5rem;
 	}
+
 	.icon-item {
 		position: relative;
 		width: auto;

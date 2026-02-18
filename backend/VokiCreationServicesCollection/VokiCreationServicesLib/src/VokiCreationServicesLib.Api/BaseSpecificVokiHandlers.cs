@@ -18,6 +18,8 @@ public abstract class BaseSpecificVokiHandlers
     protected RouteGroupBuilder CreateGroupWithBaseEndpoint(IEndpointRouteBuilder routeBuilder) {
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/");
 
+        group.MapGet("/ensure-exists", CheckIfVokiExists);
+
         group.MapGet("/voki-name", GetVokiName);
 
         group.MapPatch("/set-cover-to-default", SetVokiCoverToDefault);
@@ -34,7 +36,7 @@ public abstract class BaseSpecificVokiHandlers
             .WithRequestValidation<UpdateVokiTagsRequest>();
 
         group.MapGet("/publishing-data", GetVokiPublishingData);
-        
+
         group.MapPost("/publish-with-no-issues", PublishVokiWithNoIssuesHandler)
             .WithRequestValidation<PublishVokiRequest>();
         group.MapPost("/publish-with-warnings-ignored", PublishVokiWithWarningsIgnoredHandler)
@@ -42,6 +44,17 @@ public abstract class BaseSpecificVokiHandlers
 
 
         return group;
+    }
+
+    private static async Task<IResult> CheckIfVokiExists(
+        CancellationToken ct, HttpContext httpContext,
+        [FromServices] IQueryHandler<EnsureVokiExistsQuery, VokiId> handler
+    ) {
+        VokiId id = httpContext.GetVokiIdFromRoute();
+
+        var result = await handler.Handle(new EnsureVokiExistsQuery(id), ct);
+
+        return CustomResults.FromErrOr(result, _ => Results.Ok());
     }
 
     private static async Task<IResult> GetVokiName(

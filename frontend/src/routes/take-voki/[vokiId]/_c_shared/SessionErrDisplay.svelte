@@ -15,38 +15,38 @@
 <style>
 	.session-err-container {
 		display: flex;
-		justify-content: center;
 		flex-direction: column;
+		justify-content: center;
 		align-items: center;
-		margin: 2rem auto;
+		gap: 1rem;
+		max-width: 40rem;
 		min-height: 60vh;
 		padding: 1rem;
-		max-width: 40rem;
-		gap: 1rem;
+		margin: 2rem auto;
 	}
 
 	.err-icon {
-		background-color: var(--accent);
-		color: var(--accent-foreground);
 		width: 4rem;
 		height: 4rem;
 		padding: 0.675rem;
 		border-radius: 30%;
+		background-color: var(--accent);
+		color: var(--accent-foreground);
 		stroke-width: 1.5;
 	}
+
 	.message {
 		color: var(--text);
 		font-size: 1.25rem;
-		line-height: 1.25;
-		font-weight: 400;
-		text-align: center;
 		font-weight: 425;
+		line-height: 1.25;
+		text-align: center;
 	}
 
 	.back-link {
 		display: inline-flex;
-		align-items: center;
 		justify-content: center;
+		align-items: center;
 		padding: 0.75rem 1.5rem;
 		border-radius: 0.5rem;
 		background-color: var(--primary);

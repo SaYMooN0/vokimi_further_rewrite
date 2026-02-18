@@ -31,56 +31,88 @@ internal sealed class ViewVokiResultQueryHandler : IQueryHandler<ViewVokiResultQ
             return ErrFactory.NotFound.GeneralVoki();
         }
 
-        ErrOr<VokiResult> resultOrErr = await voki.InteractionSettings.ResultsVisibility.Match(
-            anyone: () => Task.FromResult(voki.GetResultToViewByAnyOne(query.ResultId)),
+        return await voki.InteractionSettings.ResultsVisibility.Match(
+            anyone: () => ResultToViewByAnyOne(voki, query.ResultId, ct),
             afterTaking: () => ResultToViewByUserAfterTaking(voki, query.ResultId, ct),
             onlyReceived: () => OnlyReceivedResultToViewByUser(voki, query.ResultId, ct)
         );
-        return resultOrErr.Bind<ViewVokiResultQueryResult>(result =>
-            new ViewVokiResultQueryResult(result, voki.InteractionSettings.ResultsVisibility, voki.Name, voki.ResultsCount)
+    }
+
+    private async Task<ErrOr<ViewVokiResultQueryResult>> ResultToViewByAnyOne(
+        GeneralVoki voki, GeneralVokiResultId resultId, CancellationToken ct
+    ) {
+        ErrOr<VokiResult> resultOrErr = voki.GetResultToViewByAnyOne(resultId);
+        if (resultOrErr.IsErr(out var err)) {
+            return err;
+        }
+
+        VokiResult r = resultOrErr.AsSuccess();
+        bool hasUserTakenThisVoki = false;
+        if (_userCtxProvider.Current.IsAuthenticated(out var aUserCtx)) {
+            AppUser? user = await _appUsersRepository.GetCurrent(aUserCtx, ct);
+            if (user is null) {
+                return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
+            }
+
+            hasUserTakenThisVoki = voki.UserHasTakenThisVoki(user.ReceivedResultIds);
+        }
+
+        return new ViewVokiResultQueryResult(
+            r, voki.InteractionSettings.ResultsVisibility, voki.Name,
+            voki.ResultsCount, hasUserTakenThisVoki
         );
     }
 
-    private async Task<ErrOr<VokiResult>> ResultToViewByUserAfterTaking(
+    private Task<ErrOr<ViewVokiResultQueryResult>> ResultToViewByUserAfterTaking(
         GeneralVoki voki,
         GeneralVokiResultId resultId,
         CancellationToken ct
-    ) {
-        var idOrErr = _userCtxProvider.Current.TryGetUserId;
-        if (idOrErr.IsErr(out _)) {
-            return ErrFactory.NoAccess("To see this voki results you need to login and take this voki at least once");
-        }
+    ) => _userCtxProvider.Current.Match<Task<ErrOr<ViewVokiResultQueryResult>>>(
+        authenticatedFunc: async aUserCtx => {
+            AppUser? user = await _appUsersRepository.GetCurrent(aUserCtx, ct);
+            if (user is null) {
+                return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
+            }
 
-        AppUser? user = await _appUsersRepository.GetById(idOrErr.AsSuccess(), ct);
-        if (user is null) {
-            return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
-        }
+            return voki.GetResultToViewByUserAfterTaking(resultId, user.ReceivedResultIds).Bind<ViewVokiResultQueryResult>(
+                r => new ViewVokiResultQueryResult(
+                    r, voki.InteractionSettings.ResultsVisibility, voki.Name,
+                    voki.ResultsCount, voki.UserHasTakenThisVoki(user.ReceivedResultIds)
+                )
+            );
+        }, _ => Task.FromResult<ErrOr<ViewVokiResultQueryResult>>(
+            ErrFactory.NoAccess("To see this voki results you need to login and take this voki at least once")
+        )
+    );
 
-        return voki.GetResultToViewByUserAfterTaking(resultId, user.ReceivedResultIds);
-    }
 
-    private async Task<ErrOr<VokiResult>> OnlyReceivedResultToViewByUser(
+    private Task<ErrOr<ViewVokiResultQueryResult>> OnlyReceivedResultToViewByUser(
         GeneralVoki voki,
         GeneralVokiResultId resultId,
         CancellationToken ct
-    ) {
-        var idOrErr = _userCtxProvider.Current.TryGetUserId;
-        if (idOrErr.IsErr(out _)) {
-            return ErrFactory.NoAccess("To see this voki results you need to login and take this voki at least once");
-        }
+    ) => _userCtxProvider.Current.Match<Task<ErrOr<ViewVokiResultQueryResult>>>(
+        authenticatedFunc: async aUserCtx => {
+            AppUser? user = await _appUsersRepository.GetCurrent(aUserCtx, ct);
+            if (user is null) {
+                return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
+            }
 
-        AppUser? user = await _appUsersRepository.GetById(idOrErr.AsSuccess(), ct);
-        if (user is null) {
-            return ErrFactory.NotFound.User("Cannot find user account. Please log out and login again");
-        }
-
-        return voki.GetOnlyReceivedResultToViewByUser(resultId, user.ReceivedResultIds);
-    }
+            return voki.GetOnlyReceivedResultToViewByUser(resultId, user.ReceivedResultIds).Bind<ViewVokiResultQueryResult>(
+                r => new ViewVokiResultQueryResult(
+                    r, voki.InteractionSettings.ResultsVisibility, voki.Name,
+                    voki.ResultsCount, voki.UserHasTakenThisVoki(user.ReceivedResultIds)
+                )
+            );
+        }, _ => Task.FromResult<ErrOr<ViewVokiResultQueryResult>>(
+            ErrFactory.NoAccess("To see this voki results you need to login and take this voki at least once")
+        )
+    );
 }
 
 public sealed record ViewVokiResultQueryResult(
     VokiResult Result,
     GeneralVokiResultsVisibility ResultsVisibility,
     VokiName VokiName,
-    uint TotalResultsCount
+    uint TotalResultsCount,
+    bool HasUserTakenThisVoki
 );

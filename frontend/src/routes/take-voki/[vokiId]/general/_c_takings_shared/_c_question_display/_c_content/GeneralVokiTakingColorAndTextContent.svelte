@@ -80,8 +80,8 @@
 	.color-div {
 		width: 3rem;
 		height: 3rem;
-		border-radius: 0.5rem;
 		border: 1px solid var(--muted);
+		border-radius: 0.5rem;
 	}
 
 	.text-indicator-wrapper {

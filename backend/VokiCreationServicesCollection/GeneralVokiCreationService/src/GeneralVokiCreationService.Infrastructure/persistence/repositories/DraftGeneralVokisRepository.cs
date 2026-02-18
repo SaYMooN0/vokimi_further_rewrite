@@ -73,12 +73,8 @@ internal class DraftGeneralVokisRepository : IDraftGeneralVokisRepository
         return _db.SaveChangesAsync(ct);
     }
 
-
-    async Task<BaseDraftVoki?> IDraftVokiRepository.GetById(
-        VokiId vokiId, CancellationToken ct
-    ) => await _db.Vokis
-        .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
-
+    public Task<bool> AnyVokiWithId(VokiId vokiId, CancellationToken ct) =>
+        _db.Vokis.AnyAsync(v => v.Id == vokiId, cancellationToken: ct);
 
     public Task<DraftGeneralVoki?> GetByIdForUpdate(
         VokiId generalVokiId, CancellationToken ct

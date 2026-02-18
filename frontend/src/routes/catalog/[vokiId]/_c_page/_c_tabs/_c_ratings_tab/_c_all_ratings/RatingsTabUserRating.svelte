@@ -12,7 +12,7 @@
 	}
 
 	let { ratingState, saveNewRating }: Props = $props();
-	let ratingView = $state(ratingState.name === 'rated' ? ratingState.value : 0);
+	let ratingView = $derived(ratingState.name === 'rated' ? ratingState.value : 0);
 
 	let savingErrs = $state<Err[]>([]);
 	let updatingRatingValue = $state(false);
@@ -118,7 +118,6 @@
 		cursor: pointer;
 		aspect-ratio: 1/1;
 		stroke-width: 2.2;
-
 	}
 
 	.clear-errs-btn:hover {

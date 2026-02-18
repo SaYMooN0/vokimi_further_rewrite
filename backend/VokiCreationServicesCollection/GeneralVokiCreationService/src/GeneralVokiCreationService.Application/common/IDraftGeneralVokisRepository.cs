@@ -1,13 +1,12 @@
-﻿using GeneralVokiCreationService.Application.draft_vokis.queries;
-using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
-using VokiCreationServicesLib.Application.common;
+﻿using VokiCreationServicesLib.Application.common;
 using VokiCreationServicesLib.Domain.draft_voki_aggregate;
 
 namespace GeneralVokiCreationService.Application.common;
 
 public interface IDraftGeneralVokisRepository : IDraftVokiRepository
 {
-    new Task<DraftGeneralVoki?> GetById(VokiId generalVokiId, CancellationToken ct);
+    Task<DraftGeneralVoki?> GetById(VokiId generalVokiId, CancellationToken ct);
+
     new Task<DraftGeneralVoki?> GetByIdForUpdate(VokiId generalVokiId, CancellationToken ct);
 
     async Task<BaseDraftVoki?> IDraftVokiRepository.GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>

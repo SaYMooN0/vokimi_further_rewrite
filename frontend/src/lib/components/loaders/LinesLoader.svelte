@@ -12,6 +12,7 @@
 <div
 	class="container {className}"
 	style="
+
 --size: {sizeRem}rem; 
 --speed: {speedSec}s; 
 --line-stroke: {strokePx}px;

@@ -30,8 +30,8 @@
 
 <style>
 	.unfinished-session-exists {
-		margin: 2rem auto;
 		display: flex;
 		justify-content: center;
+		margin: 2rem auto;
 	}
 </style>

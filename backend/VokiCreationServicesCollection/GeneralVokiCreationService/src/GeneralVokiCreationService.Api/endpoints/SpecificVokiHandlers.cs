@@ -26,7 +26,7 @@ internal class SpecificVokiHandlers : BaseSpecificVokiHandlers, IEndpointGroup
 
         return group;
     }
-
+ 
 
     private static async Task<IResult> GetVokiMainInfo(
         CancellationToken ct, HttpContext httpContext,

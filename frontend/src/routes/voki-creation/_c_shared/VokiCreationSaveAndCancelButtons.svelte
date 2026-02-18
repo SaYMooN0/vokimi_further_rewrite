@@ -31,6 +31,9 @@
 	}
 
 	.btns-container button {
+		display: flex;
+		justify-content: center;
+		align-items: center;
 		width: 7rem;
 		height: 2rem;
 		border: none;
@@ -40,13 +43,12 @@
 		letter-spacing: 0.2px;
 		transition: transform 0.12s ease-in;
 		cursor: pointer;
-		display: flex;
-		justify-content: center;
-		align-items: center;
 	}
+
 	.btns-container.loading button {
 		pointer-events: none;
 	}
+
 	.cancel-btn {
 		background-color: var(--muted);
 		color: var(--muted-foreground);
@@ -66,6 +68,7 @@
 	.save-btn:hover {
 		background-color: var(--primary-hov);
 	}
+
 	.save-btn.loading {
 		opacity: 0.9;
 	}

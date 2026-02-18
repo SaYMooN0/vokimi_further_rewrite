@@ -23,12 +23,12 @@
 <style>
 	.co-authors-label {
 		width: 100%;
-		text-align: center;
-		text-wrap: balance;
 		margin: 1rem 0 0.5rem;
+		color: var(--muted-foreground);
 		font-size: 1rem;
 		font-weight: 425;
 		line-height: 1.25;
-		color: var(--muted-foreground);
+		text-align: center;
+		text-wrap: balance;
 	}
 </style>

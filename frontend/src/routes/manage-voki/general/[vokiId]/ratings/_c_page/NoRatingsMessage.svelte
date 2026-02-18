@@ -7,8 +7,8 @@
 	}
 	let { vokiId }: Props = $props();
 
-	const rateVokiPath = `/catalog/${vokiId}?tab=ratings`;
-	const catalogPath = `/catalog/${vokiId}`;
+	const rateVokiPath = $derived(`/catalog/${vokiId}?tab=ratings`);
+	const catalogPath = $derived(`/catalog/${vokiId}`);
 
 	let resetCopiedTimeout: ReturnType<typeof setTimeout> | null = null;
 

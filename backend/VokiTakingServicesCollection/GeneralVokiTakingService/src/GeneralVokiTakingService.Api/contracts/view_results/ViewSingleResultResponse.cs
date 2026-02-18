@@ -10,17 +10,19 @@ public record class ViewSingleResultResponse(
     string? Image,
     GeneralVokiResultsVisibility ResultsVisibility,
     string VokiName,
-    uint ResultsCount
+    uint ResultsCount,
+    bool HasUserTakenThisVoki
 ) : ICreatableResponse<ViewVokiResultQueryResult>
 {
-    public static ICreatableResponse<ViewVokiResultQueryResult> Create(ViewVokiResultQueryResult queryResult) =>
+    public static ICreatableResponse<ViewVokiResultQueryResult> Create(ViewVokiResultQueryResult res) =>
         new ViewSingleResultResponse(
-            queryResult.Result.Id.ToString(),
-            queryResult.Result.Name,
-            queryResult.Result.Text,
-            queryResult.Result.Image?.ToString() ?? null,
-            queryResult.ResultsVisibility,
-            queryResult.VokiName.ToString(),
-            queryResult.TotalResultsCount
+            res.Result.Id.ToString(),
+            res.Result.Name,
+            res.Result.Text,
+            res.Result.Image?.ToString() ?? null,
+            res.ResultsVisibility,
+            res.VokiName.ToString(),
+            res.TotalResultsCount,
+            res.HasUserTakenThisVoki
         );
 }

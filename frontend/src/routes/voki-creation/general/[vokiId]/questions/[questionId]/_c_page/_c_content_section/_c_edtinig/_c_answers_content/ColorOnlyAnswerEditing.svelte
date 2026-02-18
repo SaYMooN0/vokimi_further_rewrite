@@ -30,7 +30,9 @@
 	<AnswerEditingBasicColorInput bind:color={() => answer.color, onColorChange} />
 	<div class="shades">
 		{#each shades as shade}
-			<div class="shade" style="--shade:{shade}" onclick={() => onColorChange(shade)}></div>
+			<div class="shade" style="
+
+--shade:{shade}" onclick={() => onColorChange(shade)}></div>
 		{/each}
 	</div>
 	<div class="divider"></div>
@@ -38,7 +40,9 @@
 		Choose from presets
 		<div class="presets-list">
 			{#each ColorUtils.colorPresets as p}
-				<div class="preset" style="--preset:{p}" onclick={() => onColorChange(p)}></div>
+				<div class="preset" style="
+
+--preset:{p}" onclick={() => onColorChange(p)}></div>
 			{/each}
 		</div>
 	</div>

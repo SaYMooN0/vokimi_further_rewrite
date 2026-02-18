@@ -64,14 +64,16 @@
 		border-radius: 0.75rem;
 		box-shadow: rgb(0 0 0 / 5%) 0 0 0 1px;
 	}
+
 	.results-part-container {
 		display: flex;
-		align-items: center;
 		justify-content: center;
-		height: 100%;
+		align-items: center;
 		width: 100%;
+		height: 100%;
 		min-height: 3.75rem;
 	}
+
 	.results {
 		display: flex;
 		flex-direction: column;
@@ -87,24 +89,28 @@
 		text-decoration: underline;
 		text-decoration-thickness: 0.125rem;
 	}
+
 	.results-error {
+		display: flex;
+		justify-content: center;
 		width: 100%;
 		padding: 0.5rem 0;
 		border-radius: 0.5rem;
 		background-color: var(--red-1);
 		color: var(--red-3);
-		cursor: pointer;
-		display: flex;
-		justify-content: center;
 		font-weight: 450;
+		cursor: pointer;
 	}
+
 	.results-error:hover {
 		background-color: var(--red-2);
 		color: var(--red-4);
 	}
+
 	.results-error:active {
 		transform: scale(0.98);
 	}
+
 	.content-wrapper {
 		display: flex;
 		flex-direction: column;
