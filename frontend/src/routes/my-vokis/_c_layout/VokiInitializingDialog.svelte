@@ -5,29 +5,26 @@
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import type { Err } from '$lib/ts/err';
 	import { StringUtils } from '$lib/ts/utils/string-utils';
-	import VokiInitializingDialogInputsState from './_c_initializing_dialog/VokiInitializingDialogInputsState.svelte';
-	import VokiInitializingDialogLoadingState from './_c_initializing_dialog/VokiInitializingDialogLoadingState.svelte';
-	import VokiInitializingDialogSuccessState from './_c_initializing_dialog/VokiInitializingDialogSuccessState.svelte';
-	import VokiInitializingDialogExistsCheckFailedState from './_c_initializing_dialog/VokiInitializingDialogExistsCheckFailedState.svelte';
+	import VokiDialogInititalizingState from './_c_initializing_dialog/VokiDialogInititalizingState.svelte';
+	import VokiDialogInputsState from './_c_initializing_dialog/VokiDialogInputsState.svelte';
 
 	let dialog = $state<DialogWithCloseButton>()!;
 
 	type DialogState =
-		| { state: 'input' }
-		| { state: 'initLoading' }
-		| { state: 'existsCheckLoading' }
-		| { state: 'existsCheckFailed'; vokiId: string }
-		| { state: 'initialized'; vokiId: string; vokiType: VokiType; vokiName: string };
+		| { name: 'input' }
+		| { name: 'initLoading' }
+		| { name: 'existsCheckLoading' }
+		| { name: 'existsCheckFailed'; vokiId: string }
+		| { name: 'success'; vokiId: string; vokiType: VokiType; vokiName: string };
 
-	let dialogState = $state<DialogState>({ state: 'input' });
+	let dialogState = $state<DialogState>({ name: 'input' });
 
 	let selectedVokiType = $state<VokiType>('General');
 	let vokiName = $state('');
 	let errs: Err[] = $state([]);
 
 	export function open() {
-		// Reset state on open
-		dialogState = { state: 'input' };
+		dialogState = { name: 'input' };
 		selectedVokiType = 'General';
 		vokiName = '';
 		errs = [];
@@ -39,7 +36,7 @@
 		if (errs.length > 0) {
 			return;
 		}
-		dialogState = { state: 'initLoading' };
+		dialogState = { name: 'initLoading' };
 		const response = await ApiVokiCreationCore.fetchJsonResponse<{
 			id: string;
 			name: string;
@@ -52,7 +49,7 @@
 				onNewVokiInitialized(response.data);
 			}
 		} else {
-			dialogState = { state: 'input' };
+			dialogState = { name: 'input' };
 			errs = response.errs;
 		}
 	}
@@ -62,7 +59,7 @@
 		name: string;
 		type: VokiType;
 	}) {
-		dialogState = { state: 'existsCheckLoading' };
+		dialogState = { name: 'existsCheckLoading' };
 		const vokiId = vokiData.id;
 		const startTime = Date.now();
 		const timeout = 5000;
@@ -76,12 +73,12 @@
 			await new Promise((resolve) => setTimeout(resolve, 500));
 		}
 
-		dialogState = { state: 'existsCheckFailed', vokiId };
+		dialogState = { name: 'existsCheckFailed', vokiId };
 	}
 
 	function onNewVokiInitialized(newVokiData: { id: string; name: string; type: VokiType }) {
 		dialogState = {
-			state: 'initialized',
+			name: 'success',
 			vokiId: newVokiData.id,
 			vokiType: newVokiData.type,
 			vokiName: newVokiData.name
@@ -101,36 +98,24 @@
 </script>
 
 <DialogWithCloseButton dialogId="voki-initializing-dialog" bind:this={dialog}>
-	{#if dialogState.state === 'input'}
-		<VokiInitializingDialogInputsState
+	{#if dialogState.name === 'input'}
+		<VokiDialogInputsState
 			bind:vokiName
 			bind:selectedVokiType
 			{errs}
 			onSubmit={onSubmitBtnClicked}
 		/>
-	{:else if dialogState.state === 'initLoading'}
-		<VokiInitializingDialogLoadingState text="Initializing new voki" />
-	{:else if dialogState.state === 'existsCheckLoading'}
-		<VokiInitializingDialogLoadingState text="Verifying voki creation..." />
-	{:else if dialogState.state === 'existsCheckFailed'}
-		<VokiInitializingDialogExistsCheckFailedState vokiId={dialogState.vokiId} />
-	{:else if dialogState.state === 'initialized'}
-		<VokiInitializingDialogSuccessState
-			id={dialogState.vokiId}
-			type={dialogState.vokiType}
-			name={dialogState.vokiName}
-		/>
+	{:else if dialogState.name === 'initLoading' || dialogState.name === 'existsCheckLoading' || dialogState.name === 'existsCheckFailed' || dialogState.name === 'success'}
+		<VokiDialogInititalizingState state={dialogState} />
+	{:else}
+		<p>Unknown state</p>
+		<button onclick={() => (dialogState = { name: 'input' })}>Refresh</button>
 	{/if}
 </DialogWithCloseButton>
 
 <style>
-	:global(#voki-initializing-dialog .dialog-content) {
+	:global(#voki-initializing-dialog > .dialog-content) {
 		width: 48rem;
-		min-height: 38rem;
-	}
-
-	:global(#voki-initializing-dialog .dialog-content:has(.voki-initialized-container)) {
-		width: unset;
-		height: unset;
+		height: 38rem;
 	}
 </style>

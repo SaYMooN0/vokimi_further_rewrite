@@ -71,6 +71,6 @@
 	}
 
 	a:active .arrow {
-		transform:translate(2px, -2px) scale(0.9) ;
+		transform: translate(2px, -2px) scale(0.9);
 	}
 </style>
