@@ -8,10 +8,8 @@
 	import { MyDraftVokisPageState } from './my-draft-vokis-page-state.svelte';
 	import { registerCurrentPageApi } from '../my-vokis-page-context';
 
-	import { page } from '$app/state';
-	import { replaceState } from '$app/navigation';
-
 	const pageState = new MyDraftVokisPageState();
+
 	onMount(() => {
 		const registerPageApi = registerCurrentPageApi();
 
@@ -22,15 +20,6 @@
 				path: 'co-author-invites'
 			}
 		});
-	});
-
-	$effect(() => {
-		if (page.data.vokiHighlight) {
-			console.log('page.data.vokiHighlight', page.data.vokiHighlight);
-			const cleanUrl = new URL(page.url);
-			cleanUrl.searchParams.delete('vokiHighlight');
-			replaceState(cleanUrl, {});
-		}
 	});
 </script>
 

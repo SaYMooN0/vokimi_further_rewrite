@@ -6,6 +6,7 @@
 		data: GeneralVokiTypeSpecificData;
 	}
 	let { data }: Props = $props();
+	console.log(data);
 </script>
 
 <TypeSpecificDataBooleanField

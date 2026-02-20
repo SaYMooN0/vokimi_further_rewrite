@@ -48,8 +48,8 @@ public record class VokiOverviewResponse(
         BaseVoki v
     ) => v.MatchOnType<VokiTypeWithSpecificDataResponse>(
         (g) => new GeneralVokiTypeWithSpecificDataResponse(
-            ForceSequentialAnswering: false,
-            ShuffleQuestions: false,
+            ForceSequentialAnswering: g.ForceSequentialAnswering,
+            ShuffleQuestions: g.ShuffleQuestions,
             AnyAudios: g.AnyAudios
         ),
         (t) => new TierListVokiTypeWithSpecificDataResponse(),

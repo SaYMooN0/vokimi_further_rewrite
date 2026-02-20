@@ -26,27 +26,33 @@
 		align-items: center;
 		gap: 2.5rem;
 		width: 100%;
-		max-width: 36rem;
 		margin: 0 auto;
-		padding: 0 1rem;
 		text-align: center;
+		overflow-y: auto;
 	}
 
 	.initialized-msg {
 		margin: 0;
 		color: var(--text);
-		font-size: 2.5rem;
-		font-weight: 800;
+		font-size: 2.125rem;
+		font-weight: 700;
 		text-align: center;
 		letter-spacing: -0.025em;
-		line-height: 1.1;
+		line-height: 1.25;
 		text-wrap: balance;
+		overflow-wrap: anywhere;
+		word-break: break-word;
+		max-width: 40rem;
 	}
 
 	.name {
 		color: var(--primary);
-		padding: 0 0.25rem;
 		overflow-wrap: anywhere;
-		word-break: break-word;
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
+		line-clamp: 4;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 </style>

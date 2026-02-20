@@ -18,7 +18,7 @@
 		currentPage = curPage;
 	});
 
-	async function handleRefreshClick() {
+	async function refreshCurrentPageVokis() {
 		if (!currentPage) {
 			toast.error('Something went wrong. Could not refresh the page');
 			return;
@@ -73,7 +73,7 @@
 					></path>
 				</svg>
 			</PrimaryButton>
-			<VokiInitializingDialog bind:this={vokiInitializingDialog} />
+			<VokiInitializingDialog bind:this={vokiInitializingDialog} {refreshCurrentPageVokis} />
 		</div>
 	{/if}
 {/snippet}

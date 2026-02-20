@@ -9,9 +9,7 @@
 	<h3>Voki Initialized with Delay</h3>
 	<p>
 		Your voki has been initialized, but it might take a bit of time for it to become accessible to
-		edit. You can access it from your <a href="/my-vokis/draft-vokis?vokiHighlight={vokiId}"
-			>Drafts</a
-		>
+		edit. You can access it from your <a href="/my-vokis/draft-vokis">Drafts</a>
 	</p>
 </div>
 

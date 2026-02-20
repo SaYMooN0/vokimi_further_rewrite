@@ -8,16 +8,18 @@
 	import VokiDialogInititalizingState from './_c_initializing_dialog/VokiDialogInititalizingState.svelte';
 	import VokiDialogInputsState from './_c_initializing_dialog/VokiDialogInputsState.svelte';
 
+	interface Props {
+		refreshCurrentPageVokis: () => void;
+	}
+	let { refreshCurrentPageVokis }: Props = $props();
 	let dialog = $state<DialogWithCloseButton>()!;
-
+	let dialogState = $state<DialogState>({ name: 'input' });
 	type DialogState =
 		| { name: 'input' }
 		| { name: 'initLoading' }
 		| { name: 'existsCheckLoading' }
 		| { name: 'existsCheckFailed'; vokiId: string }
 		| { name: 'success'; vokiId: string; vokiType: VokiType; vokiName: string };
-
-	let dialogState = $state<DialogState>({ name: 'input' });
 
 	let selectedVokiType = $state<VokiType>('General');
 	let vokiName = $state('');
@@ -43,6 +45,7 @@
 			type: VokiType;
 		}>('/initialize-new-voki', RJO.POST({ newVokiName: vokiName, vokiType: selectedVokiType }));
 		if (response.isSuccess) {
+			refreshCurrentPageVokis();
 			if (response.data.type === 'General') {
 				checkIfVokiExistsInSpecificService(response.data);
 			} else {
