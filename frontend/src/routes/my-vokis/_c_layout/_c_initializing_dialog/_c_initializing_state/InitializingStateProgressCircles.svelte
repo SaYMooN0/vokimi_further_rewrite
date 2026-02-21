@@ -9,18 +9,15 @@
 	type CircleType = 'loading' | 'success' | 'failed' | 'empty';
 
 	const circle1Type = $derived<CircleType>(state === 'initLoading' ? 'loading' : 'success');
-	const circle2Type = $derived.by<CircleType>(() => {
-		if (state === 'initLoading') {
-			return 'empty';
-		}
-		if (state === 'existsCheckLoading') {
-			return 'loading';
-		}
-		if (state === 'existsCheckFailed') {
-			return 'failed';
-		}
-		return 'success';
-	});
+	const circle2Type = $derived<CircleType>(
+		state === 'initLoading'
+			? 'empty'
+			: state === 'existsCheckLoading'
+				? 'loading'
+				: state === 'existsCheckFailed'
+					? 'failed'
+					: 'success'
+	);
 </script>
 
 <div class="stepper">
@@ -38,7 +35,7 @@
 		<span class="step-label">Verify</span>
 	</div>
 
-	<div class="connector" class:active={state === 'success' || state === 'existsCheckFailed'}></div>
+	<div class="connector" class:active={state === 'success'}></div>
 </div>
 
 {#snippet circle(type: CircleType)}
@@ -63,12 +60,13 @@
 
 <style>
 	.stepper {
-		display: grid;
-		grid-template-columns: 4rem 4.375rem 4rem 4.375rem 4rem;
+		display: flex;
 		align-items: flex-start;
 		justify-content: center;
+		width: 100%;
+		max-width: 24rem;
 		margin: 0 auto;
-		--circle-size: 3.5rem;
+		padding: 2rem 0;
 	}
 
 	.step {
@@ -80,8 +78,8 @@
 	}
 
 	.step-label {
-		font-size: 0.75rem;
-		font-weight: 550;
+		font-size: 0.6875rem;
+		font-weight: 600;
 		color: var(--muted-foreground);
 		letter-spacing: 0.06em;
 		text-transform: uppercase;
@@ -89,12 +87,12 @@
 	}
 
 	.connector {
-		width: 100%;
+		flex: 1;
 		height: 0.125rem;
-		margin-top: calc(var(--circle-size) / 2);
+		margin-top: 1.5625rem;
 		background-color: var(--muted);
 		border-radius: 100vmax;
-		transition: background-color 0.5s ease;
+		transition: background-color 0.6s ease;
 	}
 
 	.connector.active {
@@ -102,8 +100,8 @@
 	}
 
 	.circle {
-		width: var(--circle-size);
-		height: var(--circle-size);
+		width: 3.5rem;
+		height: 3.5rem;
 		border-radius: 50%;
 		border: 0.125rem solid var(--muted);
 		display: flex;
@@ -125,7 +123,8 @@
 
 	.circle.loading {
 		border-color: var(--primary);
-		box-shadow: 0 0 0 0.25rem var(--accent);
+		box-shadow: 0 0 0 0.3rem var(--accent);
+		transform: scale(1.1);
 	}
 
 	.circle.success {
@@ -133,6 +132,7 @@
 		border-color: var(--primary);
 		color: var(--primary-foreground);
 		box-shadow: var(--shadow-md);
+		transform: scale(1.05);
 	}
 
 	.circle.failed {
@@ -142,14 +142,15 @@
 	}
 
 	.circle.empty {
-		opacity: 0.75;
+		opacity: 0.45;
+		transform: scale(0.88);
 		border-style: dashed;
 	}
 	.icon {
-		width: 2rem;
-		height: 2rem;
+		width: 1.75rem;
+		height: 1.75rem;
 		flex-shrink: 0;
-		stroke-width: 1.675;
+		stroke-width: 1.75;
 	}
 
 	.circle.success .icon {

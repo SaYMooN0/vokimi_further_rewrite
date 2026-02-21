@@ -1,38 +1,32 @@
 <script lang="ts">
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
-	import GeneralVokiResultPagesHeader from '../_c_shared/GeneralVokiResultPagesHeader.svelte';
-	import GeneralVokiResultPagesVokiNameSpan from '../_c_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
+	import GeneralVokiResultPagesHeader from '../_c_pages_shared/GeneralVokiResultPagesHeader.svelte';
+	import GeneralVokiResultPagesVokiNameSpan from '../_c_pages_shared/GeneralVokiResultPagesVokiNameSpan.svelte';
 	import type { PageProps } from './$types';
 	import GeneralVokiResultMainData from './_c_page/GeneralVokiResultMainData.svelte';
 	import GeneralVokiResultViewActions from './_c_page/GeneralVokiResultViewActions.svelte';
-	import VokiNotTakenSpoilerWrapper from '../_c_shared/VokiNotTakenSpoilerWrapper.svelte';
 
 	let { data }: PageProps = $props();
 </script>
 
 {#if data.response.isSuccess}
-	<VokiNotTakenSpoilerWrapper
-		hasUserTaken={data.response.data.hasUserTakenThisVoki}
-		vokiId={data.vokiId!}
-	>
-		<GeneralVokiResultPagesHeader>
-			Result of the
-			<GeneralVokiResultPagesVokiNameSpan vokiName={data.response.data.vokiName} />
-			general Voki
-		</GeneralVokiResultPagesHeader>
-		<div class="view-result">
-			<GeneralVokiResultMainData
-				image={data.response.data.image}
-				name={data.response.data.name}
-				text={data.response.data.text}
-			/>
-			<GeneralVokiResultViewActions
-				resultsCount={data.response.data.resultsCount}
-				resultsVisibility={data.response.data.resultsVisibility}
-				vokiId={data.vokiId!}
-			/>
-		</div>
-	</VokiNotTakenSpoilerWrapper>
+	<GeneralVokiResultPagesHeader>
+		Result of the
+		<GeneralVokiResultPagesVokiNameSpan vokiName={data.response.data.vokiName} />
+		general Voki
+	</GeneralVokiResultPagesHeader>
+	<div class="view-result">
+		<GeneralVokiResultMainData
+			image={data.response.data.image}
+			name={data.response.data.name}
+			text={data.response.data.text}
+		/>
+		<GeneralVokiResultViewActions
+			resultsCount={data.response.data.resultsCount}
+			resultsVisibility={data.response.data.resultsVisibility}
+			vokiId={data.vokiId!}
+		/>
+	</div>
 {:else}
 	<PageLoadErrView
 		defaultMessage="Unable to load voki result "
