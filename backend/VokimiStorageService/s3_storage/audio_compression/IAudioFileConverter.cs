@@ -1,5 +1,3 @@
-using ApiShared;
-
 namespace VokimiStorageService.s3_storage.audio_compression;
 
 public interface IAudioFileConverter

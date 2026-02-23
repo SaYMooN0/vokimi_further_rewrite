@@ -18,7 +18,7 @@ internal static class ImageCompressionPolicy
                 ShouldTranscode: true,
                 TargetFormat: TargetImageFormat.WebpLossless,
                 Quality: null,
-                Reason: "PNG → WebP lossless (≤ 3 MB)"
+                Reason: "PNG -> WebP lossless (≤ 3 MB)"
             );
         }
 
@@ -27,7 +27,7 @@ internal static class ImageCompressionPolicy
             ShouldTranscode: true,
             TargetFormat: TargetImageFormat.WebpLossy,
             Quality: q,
-            Reason: $"PNG → WebP lossy q={q} (> 3 MB)"
+            Reason: $"PNG -> WebP lossy q={q} (> 3 MB)"
         );
     }
 

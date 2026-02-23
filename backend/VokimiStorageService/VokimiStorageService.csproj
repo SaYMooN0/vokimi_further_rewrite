@@ -9,7 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
         <PackageReference Include="AWSSDK.S3" />
-        <PackageReference Include="SixLabors.ImageSharp" />
+        <PackageReference Include="Xabe.FFmpeg" />
     </ItemGroup>
 
     <ItemGroup>

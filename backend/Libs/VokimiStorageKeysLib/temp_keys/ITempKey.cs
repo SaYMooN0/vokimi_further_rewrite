@@ -6,8 +6,8 @@ public interface ITempKey : IEquatable<ITempKey>
 {
     public string Value { get; }
     public IFileExtension Extension { get; }
-    public static bool IsStringWithTempPrefix(string? value) => 
-        !string.IsNullOrWhiteSpace(value) 
-        && value.StartsWith(KeyConsts.TempFolder);
 
+    public static bool IsStringWithTempPrefix(string? value) =>
+        !string.IsNullOrWhiteSpace(value)
+        && value.StartsWith(KeyConsts.TempFolder);
 }

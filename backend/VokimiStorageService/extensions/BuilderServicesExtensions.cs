@@ -22,7 +22,7 @@ internal static class BuilderServicesExtensions
         services.AddSingleton(s3Config.MainBucket); //S3MainBucketConf
         services.AddScoped<IS3MainBucketClient, S3MainBucketClient>();
         services.AddScoped<IStorageService, StorageService>();
-        services.AddScoped<IImageFileCompressor, ImageFileCompressor>();
+        services.AddScoped<IImageFileConverter, ImageFileConverter>();
         
         return services;
     }

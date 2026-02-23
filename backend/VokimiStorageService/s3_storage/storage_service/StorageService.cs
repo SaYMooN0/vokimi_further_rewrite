@@ -6,7 +6,7 @@ namespace VokimiStorageService.s3_storage.storage_service;
 internal sealed class StorageService : IStorageService
 {
     private readonly IS3MainBucketClient _s3;
-    private readonly IImageFileCompressor _compressor;
+    private readonly IImageFileConverter _converter;
     private readonly ILogger<StorageService> _logger;
 
     private const long MB = 1024L * 1024L;
@@ -14,11 +14,11 @@ internal sealed class StorageService : IStorageService
 
     public StorageService(
         IS3MainBucketClient s3,
-        IImageFileCompressor compressor,
+        IImageFileConverter converter,
         ILogger<StorageService> logger
     ) {
         _s3 = s3;
-        _compressor = compressor;
+        _converter = converter;
         _logger = logger;
     }
 
@@ -32,7 +32,7 @@ internal sealed class StorageService : IStorageService
                 return ErrFactory.Conflict($"Image exceeds {MaxUploadBytes / MB} MB limit");
             }
 
-            var compressedOrErr = await _compressor.CompressAsync(seekableData, ct);
+            var compressedOrErr = await _converter.CompressAsync(seekableData, ct);
             if (compressedOrErr.IsErr(out var err)) {
                 _logger.LogError("PutTempImageFile: compression failed: {Error}", err.Message);
                 return err;
