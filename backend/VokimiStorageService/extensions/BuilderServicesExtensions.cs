@@ -1,5 +1,6 @@
 ﻿using Amazon.Runtime;
 using Amazon.S3;
+using VokimiStorageService.s3_storage.audio_compression;
 using VokimiStorageService.s3_storage.images_compression;
 using VokimiStorageService.s3_storage.s3;
 using VokimiStorageService.s3_storage.storage_service;
@@ -23,6 +24,7 @@ internal static class BuilderServicesExtensions
         services.AddScoped<IS3MainBucketClient, S3MainBucketClient>();
         services.AddScoped<IStorageService, StorageService>();
         services.AddScoped<IImageFileConverter, ImageFileConverter>();
+        services.AddScoped<IAudioFileConverter, AudioFileConverter>();
         
         return services;
     }

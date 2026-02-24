@@ -1,11 +1,11 @@
 <script lang="ts" generics="T extends BaseGeneralVokiAnswerData">
-	import QuestionContentEditingAnswerResults from './_c_answers_list/QuestionContentEditingAnswerResults.svelte';
 	import type { Snippet } from 'svelte';
 	import type { BaseGeneralVokiAnswerData } from '../../../../types';
 	import type { QuestionPageResultsState } from '../../../../general-voki-creation-specific-question-page-state.svelte';
 	import SingleAnswerWrapper from '../../_c_shared/SingleAnswerWrapper.svelte';
 	import VokiCreationDefaultButton from '../../../../../../../../_c_shared/VokiCreationDefaultButton.svelte';
 	import QuestionContentNoAnswersMessage from '../../_c_shared/QuestionContentNoAnswersMessage.svelte';
+	import QuestionContentEditingAnswerResults from './_c_answers_list/QuestionContentEditingAnswerResults.svelte';
 
 	interface Props {
 		answers: T[];

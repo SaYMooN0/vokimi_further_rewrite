@@ -30,7 +30,7 @@ internal static class AudioCompressionPolicy
         int bitrate = GetBitrate(sizeBytes);
         return new AudioCompressionDecision(
             ShouldTranscode: true,
-            TargetFormat: TargetAudioFormat.M4a,
+            TargetFormat: TargetAudioFormat.M4A,
             Bitrate: bitrate,
             Reason: $"Transcode to m4a with {bitrate} kbps (Size: {sizeBytes / (double)MB:F1} MB)"
         );

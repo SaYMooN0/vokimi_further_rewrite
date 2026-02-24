@@ -98,18 +98,6 @@ public sealed class DraftGeneralVoki : BaseDraftVoki
             return ErrFactory.NoAccess("To modify Voki you must be its author");
         }
 
-        GeneralVokiQuestionContentType[] supportedTyped = [
-            GeneralVokiQuestionContentType.TextOnly,
-            GeneralVokiQuestionContentType.ColorOnly,
-            GeneralVokiQuestionContentType.ColorAndText,
-            GeneralVokiQuestionContentType.ImageOnly,
-            GeneralVokiQuestionContentType.ImageAndText,
-        ];
-
-        if (!supportedTyped.Contains(contentType)) {
-            return ErrFactory.NotImplemented("Selected type is not implemented yet");
-        }
-
         if (_questions.Count >= MaxQuestionsCount) {
             return ErrFactory.LimitExceeded(
                 $"General voki cannot have more than {MaxQuestionsCount} questions. Current count: {_questions.Count}"

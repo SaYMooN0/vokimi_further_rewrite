@@ -10,12 +10,15 @@ namespace VokimiStorageService;
 
 internal class EndpointHandlers : IEndpointGroup
 {
-    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder) {
+    public RouteGroupBuilder MapEndpoints(IEndpointRouteBuilder routeBuilder)
+    {
         var group = routeBuilder.MapGroup("/main");
 
         group.MapGet("/{*fileKey}", GetFileFromStorage)
             .DisableAntiforgery();
         group.MapPut("/upload-temp-image", UploadTempImage)
+            .DisableAntiforgery();
+        group.MapPut("/upload-temp-audio", UploadTempAudio)
             .DisableAntiforgery();
 
         return group;
@@ -25,7 +28,8 @@ internal class EndpointHandlers : IEndpointGroup
         CancellationToken ct,
         string fileKey,
         IS3MainBucketClient s3MainBucketClient
-    ) {
+    )
+    {
         ErrOr<FileData> result = await s3MainBucketClient.GetFile(fileKey, ct);
         return CustomResults.FromErrOr(result, (file) => Results.Stream(
                 stream: file.Stream,
@@ -40,10 +44,31 @@ internal class EndpointHandlers : IEndpointGroup
         [FromForm] IFormFile file,
         IStorageService storageService,
         IUserCtxProvider userCtxProvider
-    ) {
-        if (userCtxProvider.Current.IsAuthenticated(out var _)) {
+    )
+    {
+        if (userCtxProvider.Current.IsAuthenticated(out var _))
+        {
             FileData fileData = new(file.OpenReadStream(), file.ContentType);
             ErrOr<TempImageKey> res = await storageService.PutTempImageFile(fileData, ct);
+
+            return CustomResults.FromErrOr(res, (key) => Results.Json(
+                new { TempKey = key.ToString() }
+            ));
+        }
+
+        return CustomResults.ErrorResponse(ErrFactory.AuthRequired());
+    }
+    private static async Task<IResult> UploadTempAudio(
+        CancellationToken ct,
+        [FromForm] IFormFile file,
+        IStorageService storageService,
+        IUserCtxProvider userCtxProvider
+    )
+    {
+        if (userCtxProvider.Current.IsAuthenticated(out var _))
+        {
+            FileData fileData = new(file.OpenReadStream(), file.ContentType);
+            ErrOr<TempAudioKey> res = await storageService.PutTempAudioFile(fileData, ct);
 
             return CustomResults.FromErrOr(res, (key) => Results.Json(
                 new { TempKey = key.ToString() }

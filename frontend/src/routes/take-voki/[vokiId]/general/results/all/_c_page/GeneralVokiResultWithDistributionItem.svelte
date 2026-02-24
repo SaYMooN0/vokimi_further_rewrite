@@ -1,5 +1,5 @@
 <script lang="ts">
-	import GeneralVokiResultPreviewImage from '../../_c_pages_shared/GeneralVokiResultPreviewImage.svelte';
+	import GeneralVokiResultPreviewImage from '../../_c_shared/GeneralVokiResultPreviewImage.svelte';
 	import type { VokiResultWithDistributionPercent } from '../types';
 
 	interface Props {

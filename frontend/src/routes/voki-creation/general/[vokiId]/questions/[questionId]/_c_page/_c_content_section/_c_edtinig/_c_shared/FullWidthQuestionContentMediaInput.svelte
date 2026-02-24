@@ -7,12 +7,11 @@
 
 	interface Props {
 		type: 'image' | 'audio';
-		variant?: 'full' | 'compact';
 		mediaUrl: string;
 		onUploadSuccess: (newUrl: string) => void;
 		mediaDisplay: Snippet;
 	}
-	let { type, variant = 'full', mediaUrl, onUploadSuccess, mediaDisplay }: Props = $props();
+	let { type, mediaUrl, onUploadSuccess, mediaDisplay }: Props = $props();
 
 	let isLoading = $state(false);
 	let isDragging = $state(false);
@@ -71,28 +70,20 @@
 	}
 </script>
 
-<div class="media-input" class:compact={variant === 'compact'}>
+<div class="media-input">
 	{#if isLoading}
-		<div class="loading" class:compact={variant === 'compact'}>
-			<CubesLoader sizeRem={variant === 'compact' ? 3 : 4} color="var(--primary)" />
+		<div class="loading">
+			<CubesLoader sizeRem={4} color="var(--primary)" />
 		</div>
 	{:else if mediaUrl}
-		<div class="media-selected" class:compact={variant === 'compact'}>
-			{#if variant === 'full'}
-				<label class="change-media-btn unselectable">
-					<span>Change {type}</span>
-					<input type="file" accept={acceptString} onchange={handleInputChange} hidden />
-				</label>
-				{@render mediaDisplay()}
-			{:else}
-				{@render mediaDisplay()}
-				<label class="compact-btn unselectable">
-					<span>Change {type}</span>
-					<input type="file" accept={acceptString} onchange={handleInputChange} hidden />
-				</label>
-			{/if}
+		<div class="media-selected">
+			<label class="change-media-btn unselectable">
+				<span>Change {type}</span>
+				<input type="file" accept={acceptString} onchange={handleInputChange} hidden />
+			</label>
+			{@render mediaDisplay()}
 		</div>
-	{:else if variant === 'full'}
+	{:else}
 		<div
 			class="file-input-container"
 			class:dragging={isDragging}
@@ -111,21 +102,12 @@
 				<input type="file" accept={acceptString} onchange={handleInputChange} hidden />
 			</label>
 		</div>
-	{:else}
-		<label class="compact-btn unselectable">
-			{#if type === 'image'}
-				<svg><use href="#add-image-icon" /></svg>
-			{:else}
-				{@render micIcon()}
-			{/if}
-			<span>Add {type}</span>
-			<input type="file" accept={acceptString} onchange={handleInputChange} hidden />
-		</label>
 	{/if}
 	{#if uploadingErrs.length > 0}
 		<DefaultErrBlock errList={uploadingErrs} />
 	{/if}
 </div>
+
 {#snippet micIcon()}
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
@@ -154,19 +136,11 @@
 		border-radius: 1rem;
 	}
 
-	.media-input.compact {
-		justify-content: center;
-		gap: 0.5rem;
-		min-width: 12rem;
-		transition:
-			height 0.12s ease,
-			width 0.12s ease;
-	}
-
 	.media-input > :global(.err-block) {
 		width: 100%;
 		margin-top: 0.5rem;
 	}
+
 	.loading,
 	.file-input-container {
 		display: flex;
@@ -178,11 +152,6 @@
 		min-height: 8rem;
 		animation: var(--default-fade-in-animation);
 		border-radius: 1rem;
-	}
-
-	.loading.compact {
-		min-height: auto;
-		background-color: transparent;
 	}
 
 	.file-input-container {
@@ -249,15 +218,6 @@
 		padding: 0 2rem;
 	}
 
-	.media-selected.compact {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 0.5rem;
-		padding: 0;
-	}
-
 	.change-media-btn {
 		height: fit-content;
 		padding: 0.375rem 0.75rem;
@@ -273,33 +233,5 @@
 	.change-media-btn:hover {
 		background-color: var(--accent);
 		color: var(--accent-foreground);
-	}
-
-	/* Compact variant button */
-	.compact-btn {
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		gap: 0.5rem;
-		width: 100%;
-		padding: 0.375rem 0;
-		border-radius: 0.375rem;
-		background-color: var(--primary);
-		color: var(--primary-foreground);
-		font-size: 1.25rem;
-		font-weight: 420;
-		text-align: center;
-		cursor: pointer;
-	}
-
-	.compact-btn > svg {
-		width: 1.25rem;
-		height: 1.25rem;
-		stroke-width: 2;
-	}
-
-	.compact-btn:hover {
-		background-color: var(--primary-hov);
 	}
 </style>

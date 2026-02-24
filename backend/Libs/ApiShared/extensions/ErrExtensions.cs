@@ -5,7 +5,7 @@ namespace ApiShared.extensions;
 public static class ErrExtensions
 {
     public static ErrDto[] ToDtoArray(this Err err) {
-        var list = new List<ErrDto>();
+        List<ErrDto> list = [];
 
         var current = err;
         while (current != null) {
@@ -21,10 +21,10 @@ public static class ErrExtensions
         ErrCodes.NoAccess => StatusCodes.Status403Forbidden,
         ErrCodes.AuthRequired => StatusCodes.Status401Unauthorized,
 
-        >= 11_000 and < 14_000 => StatusCodes.Status400BadRequest,                 // Validation
+        >= 11_000 and < 14_000 => StatusCodes.Status400BadRequest, // Validation
         >= 21_000 and < ErrCodes.NotFound.Common => StatusCodes.Status409Conflict, // Business Logic
         >= ErrCodes.NotFound.Common and < 30_000 => StatusCodes.Status404NotFound, // NotFound
-        >= 31_000 and < 33_000 => StatusCodes.Status403Forbidden,                  // Access/Auth
+        >= 31_000 and < 33_000 => StatusCodes.Status403Forbidden, // Access/Auth
 
         _ => StatusCodes.Status500InternalServerError
     };

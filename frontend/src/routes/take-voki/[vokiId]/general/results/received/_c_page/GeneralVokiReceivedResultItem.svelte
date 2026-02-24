@@ -1,6 +1,6 @@
 <script lang="ts">
-	import GeneralVokiResultPreviewImage from '../../_c_pages_shared/GeneralVokiResultPreviewImage.svelte';
 	import { DateUtils } from '$lib/ts/utils/date-utils';
+	import GeneralVokiResultPreviewImage from '../../_c_shared/GeneralVokiResultPreviewImage.svelte';
 
 	interface Props {
 		result: {

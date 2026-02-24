@@ -22,19 +22,18 @@ class VokimiStorageBucket {
         }
         return `${this.fileSrc(key)}?v=${version}`;
     }
-    public async uploadTempImage(file: Blob | File): Promise<ResponseResult<string>> {
+    public async uploadTempFile(endpoint: string, file: Blob | File): Promise<ResponseResult<string>> {
         try {
             const formData = new FormData();
             formData.append('file', file);
 
-            const response = await fetch(`${this._baseUrl}/upload-temp-image`, {
+            const response = await fetch(`${this._baseUrl}/${endpoint}`, {
                 method: 'PUT',
                 body: formData
             });
             if (response.ok) {
                 const data = await response.json();
                 return { isSuccess: true, data: data.tempKey };
-
             }
 
             const errs = await this.parseErrResponse(response);
@@ -47,6 +46,14 @@ class VokimiStorageBucket {
             };
         }
     }
+
+    public async uploadTempImage(file: Blob | File): Promise<ResponseResult<string>> {
+        return this.uploadTempFile("upload-temp-image", file);
+    }
+    public async uploadTempAudio(file: Blob | File): Promise<ResponseResult<string>> {
+        return this.uploadTempFile("upload-temp-audio", file);
+    }
+
     private async parseErrResponse(response: Response): Promise<Err[]> {
         const contentType = response.headers.get("content-type");
 

@@ -2,7 +2,8 @@
 	import type { AnswerDataAudioOnly, GeneralVokiCreationQuestionContent } from '../../../types';
 	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
 	import QuestionContentEditingAnswersList from './_c_shared/QuestionContentEditingAnswersList.svelte';
-	import AudioOnlyAnswerEditing from './_c_answers_content/AudioOnlyAnswerEditing.svelte';
+	import FullWidthQuestionContentMediaInput from './_c_shared/FullWidthQuestionContentMediaInput.svelte';
+	import GeneralVokiCreationAnswerDisplayAudio from '../_c_shared/GeneralVokiCreationAnswerDisplayAudio.svelte';
 
 	interface Props {
 		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'AudioOnly' }>;
@@ -21,6 +22,7 @@
 		maxResultsForAnswerCount,
 		openRelatedResultsSelectingDialog
 	}: Props = $props();
+
 	function addNewAnswer() {
 		content.answers.push({
 			audio: '',
@@ -31,11 +33,18 @@
 </script>
 
 {#snippet answerMainContent(getAnswer: () => AnswerDataAudioOnly)}
-	<AudioOnlyAnswerEditing
-		answer={getAnswer()}
-		onAudioChange={(newAudio) => (getAnswer().audio = newAudio)}
+	{@const answer = getAnswer()}
+	<FullWidthQuestionContentMediaInput
+		type="audio"
+		mediaUrl={answer.audio}
+		onUploadSuccess={(newAudio) => (answer.audio = newAudio)}
+		mediaDisplay={audioDisplaySnippet}
 	/>
+	{#snippet audioDisplaySnippet()}
+		<GeneralVokiCreationAnswerDisplayAudio src={answer.audio} />
+	{/snippet}
 {/snippet}
+
 <div class="question-content">
 	<QuestionContentEditingAnswersList
 		bind:answers={content.answers}

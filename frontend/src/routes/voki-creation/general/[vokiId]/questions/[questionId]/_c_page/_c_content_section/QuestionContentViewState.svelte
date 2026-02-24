@@ -8,6 +8,8 @@
 	import QuestionImageAndTextContentView from './_c_view/QuestionImageAndTextContentView.svelte';
 	import QuestionColorOnlyContentView from './_c_view/QuestionColorOnlyContentView.svelte';
 	import QuestionColorAndTextContentView from './_c_view/QuestionColorAndTextContentView.svelte';
+	import QuestionAudioAndTextContentView from './_c_view/QuestionAudioAndTextContentView.svelte';
+	import QuestionAudioOnlyContentView from './_c_view/QuestionAudioOnlyContentView.svelte';
 
 	interface Props {
 		content: GeneralVokiCreationQuestionContent;
@@ -27,12 +29,12 @@
 	<QuestionColorOnlyContentView {content} {resultsIdToName} />
 {:else if content.$type === 'ColorAndText'}
 	<QuestionColorAndTextContentView {content} {resultsIdToName} />
-	<!-- {:else if answer.type === 'AudioOnly'}
-	<AudioOnlyAnswerView {answer} />
-{:else if answer.type === 'AudioAndText'}
-	<AudioAndTextAnswerView {answer} /> -->
+{:else if content.$type === 'AudioOnly'}
+	<QuestionAudioOnlyContentView {content} {resultsIdToName} />
+{:else if content.$type === 'AudioAndText'}
+	<QuestionAudioAndTextContentView {content} {resultsIdToName} />
 {:else}
-	<IncorrectContentTypeMessage type={content.$type} />
+	<IncorrectContentTypeMessage type={(content as any).$type} />
 {/if}
 
 <VokiCreationDefaultButton text="Edit content" onclick={startEditing} />

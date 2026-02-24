@@ -20,8 +20,8 @@ internal sealed class PasswordHasher : IPasswordHasher
     }
 
     public string Hash(string password) {
-        var salt = RandomNumberGenerator.GetBytes(CurrentSaltSize);
-        var derived = Derive(password, salt, CurrentIterations, CurrentAlg, CurrentHashSize);
+        byte[] salt = RandomNumberGenerator.GetBytes(CurrentSaltSize);
+        byte[] derived = Derive(password, salt, CurrentIterations, CurrentAlg, CurrentHashSize);
 
         string algName = (CurrentAlg.Name ?? "sha512").ToLowerInvariant();
 
@@ -45,7 +45,7 @@ internal sealed class PasswordHasher : IPasswordHasher
             return false;
         }
 
-        var p = parseResult.AsSuccess();
+        ParsedHash p = parseResult.AsSuccess();
 
         var calc = Derive(password, p.Salt, p.Iterations, p.Alg, p.HashLen);
         return CryptographicOperations.FixedTimeEquals(calc, p.Hash);
@@ -96,18 +96,17 @@ internal sealed class PasswordHasher : IPasswordHasher
             return ErrFactory.IncorrectFormat($"Salt base64 parse error: {ex.Message}");
         }
 
-        if (!parts[6].StartsWith("h=", StringComparison.Ordinal))
+        if (!parts[6].StartsWith("h=", StringComparison.Ordinal)) {
             return ErrFactory.IncorrectFormat($"Invalid hash segment prefix: {parts[6]}");
+        }
 
-        byte[] hash;
         try {
-            hash = Convert.FromBase64String(parts[6].Substring(2));
+            byte[] hash = Convert.FromBase64String(parts[6].Substring(2));
+            return new ParsedHash(version, kdf, alg, iterations, hashLen, salt, hash);
         }
         catch (Exception ex) {
             return ErrFactory.IncorrectFormat($"Hash base64 parse error: {ex.Message}");
         }
-
-        return new ParsedHash(version, kdf, alg, iterations, hashLen, salt, hash);
     }
 
     private readonly record struct ParsedHash(

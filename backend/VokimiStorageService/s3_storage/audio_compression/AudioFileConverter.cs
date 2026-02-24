@@ -70,14 +70,14 @@ internal sealed class AudioFileConverter : IAudioFileConverter
                 );
             }
 
-            string outputExt = decision.TargetFormat == TargetAudioFormat.M4a ? ".m4a" : ".mp3";
+            string outputExt = decision.TargetFormat == TargetAudioFormat.M4A ? ".m4a" : ".mp3";
             string outputTempPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + outputExt);
 
             var conversion = FFmpeg.Conversions.New()
                 .AddStream(audioStream)
                 .SetOutput(outputTempPath);
 
-            if (decision.TargetFormat == TargetAudioFormat.M4a)
+            if (decision.TargetFormat == TargetAudioFormat.M4A)
             {
                 audioStream.SetCodec(AudioCodec.aac);
             }
@@ -99,8 +99,8 @@ internal sealed class AudioFileConverter : IAudioFileConverter
 
             return new AudioFileAfterConversion(
                 Stream: convertedStream,
-                ContentType: decision.TargetFormat == TargetAudioFormat.M4a ? "audio/mp4" : "audio/mpeg",
-                Extension: decision.TargetFormat == TargetAudioFormat.M4a ? "m4a" : "mp3",
+                ContentType: decision.TargetFormat == TargetAudioFormat.M4A ? "audio/mp4" : "audio/mpeg",
+                Extension: decision.TargetFormat == TargetAudioFormat.M4A ? "m4a" : "mp3",
                 Changed: true,
                 OriginalBytes: originalSizeBytes,
                 ResultBytes: resultBytes

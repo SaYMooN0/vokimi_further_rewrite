@@ -10,6 +10,5 @@ internal sealed record AudioCompressionDecision(
 internal enum TargetAudioFormat
 {
     Passthrough,
-    M4a,
-    Mp3
+    M4A
 }

@@ -13,6 +13,8 @@
 	import IncorrectContentTypeMessage from './_c_shared/IncorrectContentTypeMessage.svelte';
 	import { ApiVokiCreationGeneral } from '$lib/ts/backend-communication/voki-creation-backend-service';
 	import { RJO } from '$lib/ts/backend-communication/backend-services';
+	import QuestionAudioAndTextContentEditing from './_c_edtinig/QuestionAudioAndTextContentEditing.svelte';
+	import QuestionAudioOnlyContentEditing from './_c_edtinig/QuestionAudioOnlyContentEditing.svelte';
 
 	interface Props {
 		savedContent: GeneralVokiCreationQuestionContent;
@@ -115,12 +117,28 @@
 			answerRelatedResultsSelectingDialog.open(selectedResultIds, setSelected);
 		}}
 	/>
-	<!--{:else if answer.type === 'AudioOnly'}
-	<AudioOnlyAnswerView {answer} />
-{:else if answer.type === 'AudioAndText'}
-	<AudioAndTextAnswerView {answer} /> -->
+{:else if content.$type === 'AudioOnly'}
+	<QuestionAudioOnlyContentEditing
+		bind:content
+		{resultsIdToNameState}
+		{maxResultsForAnswerCount}
+		{maxAnswersForQuestionCount}
+		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
+			answerRelatedResultsSelectingDialog.open(selectedResultIds, setSelected);
+		}}
+	/>
+{:else if content.$type === 'AudioAndText'}
+	<QuestionAudioAndTextContentEditing
+		bind:content
+		{resultsIdToNameState}
+		{maxResultsForAnswerCount}
+		{maxAnswersForQuestionCount}
+		openRelatedResultsSelectingDialog={(selectedResultIds, setSelected) => {
+			answerRelatedResultsSelectingDialog.open(selectedResultIds, setSelected);
+		}}
+	/>
 {:else}
-	<IncorrectContentTypeMessage type={content.$type} />
+	<IncorrectContentTypeMessage type={(content as any).$type} />
 {/if}
 <DefaultErrBlock errList={savingErrs} class="question-content-err-block" />
 <VokiCreationSaveAndCancelButtons

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using System.Collections.Immutable;
 using SharedKernel.errs.utils;
 
 namespace VokimiStorageKeysLib.extension;
@@ -7,7 +8,8 @@ public readonly struct AudioFileExtension : IFileExtension
 {
     public string Value { get; }
 
-    private AudioFileExtension(string value) {
+    private AudioFileExtension(string value)
+    {
         InvalidConstructorArgumentException.ThrowIfErr(this, Validate(value));
         Value = value;
     }
@@ -15,19 +17,23 @@ public readonly struct AudioFileExtension : IFileExtension
 
     public static readonly Regex ExtPattern =
         new("[a-z0-9]{1,10}", RegexOptions.Compiled | RegexOptions.CultureInvariant);
-    private static readonly ImmutableHashSet<string> WhiteList = ["mp3"];
+    private static readonly ImmutableHashSet<string> WhiteList = ["mp3", "m4a", "wav", "ogg", "webm"];
 
-    public static ErrOrNothing Validate(string input) {
-        if (string.IsNullOrWhiteSpace(input)) {
+    public static ErrOrNothing Validate(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input))
+        {
             return ErrFactory.IncorrectFormat("Extension is empty");
         }
 
         var norm = Normalize(input);
-        if (!ExtPattern.IsMatch(norm)) {
+        if (!ExtPattern.IsMatch(norm))
+        {
             return ErrFactory.IncorrectFormat($"Invalid extension '{input}'. Only letters/digits allowed");
         }
 
-        if (!WhiteList.Contains(norm)) {
+        if (!WhiteList.Contains(norm))
+        {
             return ErrFactory.IncorrectFormat(
                 $"Extension '.{norm}' is not supported",
                 $"Supported: {string.Join(", ", WhiteList.Select(e => "." + e))}"

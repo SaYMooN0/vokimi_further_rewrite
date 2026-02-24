@@ -2,7 +2,7 @@
 
 public record ErrResponseObject(ErrDto[] Errs);
 
-public record class ErrDto(
+public record ErrDto(
     string Message,
     ushort Code,
     string? Details
