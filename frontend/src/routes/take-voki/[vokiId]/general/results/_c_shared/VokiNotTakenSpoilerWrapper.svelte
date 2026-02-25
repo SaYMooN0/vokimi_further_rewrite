@@ -29,8 +29,8 @@
 </script>
 
 {#if showVokiNotTaken}
-	<div class="wrap" role="region" aria-label="Spoiler warning">
-		<div class="content">
+	<div>
+		<div class="content appear-with-delay">
 			<div class="icon" aria-hidden="true">
 				<svg viewBox="0 0 24 24">
 					<use href="#common-warning-icon" />
@@ -51,15 +51,6 @@
 {/if}
 
 <style>
-	.wrap {
-		width: 100%;
-		min-height: 100%;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 2rem 1.25rem;
-	}
-
 	.content {
 		width: 100%;
 		max-width: 34rem;
@@ -68,14 +59,20 @@
 		align-items: center;
 		text-align: center;
 		gap: 0.75rem;
+		margin: 4rem auto;
 	}
 
 	.icon {
 		display: grid;
 		place-items: center;
-		width: 3.5rem;
-		height: 3.5rem;
+		width: 4rem;
+		height: 4rem;
 		color: var(--warn-foreground);
+		background-color: var(--warn-back);
+		border-radius: 50%;
+		padding: 0.75rem;
+		border: 0.125rem solid var(--warn-foreground);
+		stroke-width: 1.5;
 	}
 
 	.icon > svg {
@@ -119,6 +116,7 @@
 		font-weight: 600;
 		line-height: 1;
 		cursor: pointer;
+		border: none;
 	}
 
 	.primary {
@@ -133,13 +131,11 @@
 	.secondary {
 		background: var(--secondary);
 		color: var(--text);
-		border: 0.0625rem solid var(--muted);
 	}
 
 	.secondary:hover {
 		background: var(--accent);
 		color: var(--accent-foreground);
-		border-color: var(--accent);
 	}
 
 	.primary:focus-visible,

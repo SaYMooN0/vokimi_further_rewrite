@@ -57,9 +57,7 @@
 	{:else}
 		<div class="profile-pic"></div>
 		<div class="main-content">
-			Something went wrong. Could not load user data <svg>
-				<use href="#common-info-icon" /></svg
-			>
+			Something went wrong. Could not load user data <svg> <use href="#common-info-icon" /></svg>
 		</div>
 	{/if}
 </div>
@@ -188,7 +186,7 @@
 	}
 
 	.primary-author-container.err {
-		border: 0.125rem solid var(--err-foreground);
+		border: 0.125rem solid var(--red-5);
 		background-color: var(--secondary);
 		box-shadow: var(--err-shadow);
 		cursor: pointer;

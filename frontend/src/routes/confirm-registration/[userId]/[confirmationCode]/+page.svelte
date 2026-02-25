@@ -79,7 +79,7 @@
 	}
 
 	.error-h {
-		color: var(--err-foreground);
+		color: var(--red-5);
 	}
 
 	.err-view {
@@ -87,13 +87,13 @@
 		margin-top: 1rem;
 		border-radius: 0.5rem;
 		background-color: var(--red-1);
-		color: var(--err-foreground);
+		color: var(--red-5);
 		font-size: 1.25rem;
 	}
 
 	.err-view p {
 		margin: 0.5rem 0 0 0.25rem;
-		color: var(--err-foreground);
+		color: var(--red-5);
 	}
 
 	.view-container > :global(.login-btn) {

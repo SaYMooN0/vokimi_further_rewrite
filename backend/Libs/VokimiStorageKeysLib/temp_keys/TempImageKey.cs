@@ -11,7 +11,9 @@ public class TempImageKey : ITempKey
 
     IFileExtension ITempKey.Extension => Extension;
 
-    public TempImageKey(string value) {
+    private const string TypeSpecificSubFolder = "image";
+
+    private TempImageKey(string value) {
         InvalidConstructorArgumentException.ThrowIfErr(
             this, CheckAndExtractExtension(value, out var ext)
         );
@@ -19,32 +21,42 @@ public class TempImageKey : ITempKey
         Extension = ext;
     }
 
-    public static TempImageKey CreateWithExtension(ImageFileExtension ext) => new(
-        $"{KeyConsts.TempFolder}/{Guid.NewGuid()}-{Guid.NewGuid()}.{ext}"
+    public static TempImageKey CreateNew(ImageFileExtension ext) => new(
+        $"{ITempKey.TempFolder}/{TypeSpecificSubFolder}/{Guid.NewGuid()}.{ext}"
     );
+
+    public static bool IsPossiblySuitable(string val) =>
+        val.Split('/') is [ITempKey.TempFolder, TypeSpecificSubFolder, _];
 
     public static ErrOr<TempImageKey> FromString(string value) =>
         CheckAndExtractExtension(value, out _).IsErr(out var err)
             ? err
             : new TempImageKey(value);
 
-    public static ErrOrNothing CheckAndExtractExtension(string value, out ImageFileExtension ext) {
+
+    private static ErrOrNothing CheckAndExtractExtension(string value, out ImageFileExtension ext) {
         ext = default;
 
         if (string.IsNullOrWhiteSpace(value)) {
             return ErrFactory.IncorrectFormat("Key cannot be null or empty");
         }
 
-        var parts = value.Split('/');
-        if (parts.Length != 2) {
-            return ErrFactory.IncorrectFormat("Key must be in format '{TempFolder}/filename.ext'");
+        string[] parts = value.Split('/');
+        if (parts.Length != 3) {
+            return ErrFactory.IncorrectFormat("Key must be in format '{temp_folder}/{type_specific}/filename.ext'");
         }
 
-        if (!string.Equals(parts[0], KeyConsts.TempFolder, StringComparison.Ordinal)) {
-            return ErrFactory.IncorrectFormat($"Key must start with '{KeyConsts.TempFolder}/'");
+        if (!string.Equals(parts[0], ITempKey.TempFolder, StringComparison.Ordinal)) {
+            return ErrFactory.IncorrectFormat($"Key must start with '{ITempKey.TempFolder}'");
         }
 
-        var fileName = parts[1];
+        if (!string.Equals(parts[1], TypeSpecificSubFolder, StringComparison.Ordinal)) {
+            return ErrFactory.IncorrectFormat(
+                $"Provided type specific subfolder is incorrect. Correct name is '{TypeSpecificSubFolder}''"
+            );
+        }
+
+        var fileName = parts[2];
         var dotIndex = fileName.LastIndexOf('.');
         if (dotIndex <= 0 || dotIndex == fileName.Length - 1) {
             return ErrFactory.IncorrectFormat("Key must contain a valid filename and extension");
@@ -67,7 +79,8 @@ public class TempImageKey : ITempKey
     }
 
     public bool Equals(ITempKey? other) =>
-        other is not null && string.Equals(Value, other.Value, StringComparison.Ordinal);
+        other is not null
+        && string.Equals(Value, other.Value, StringComparison.Ordinal);
 
     public override string ToString() => Value;
 }

@@ -30,12 +30,12 @@
 		padding: 2rem 1rem;
 		border-radius: 0.5rem;
 		background-color: var(--red-1);
-		color: var(--err-foreground);
+		color: var(--red-5);
 		place-self: center center;
 		aspect-ratio: var(--voki-cover-aspect-ratio);
 	}
 
-	.unable-to-load  * {
+	.unable-to-load * {
 		cursor: default;
 	}
 
@@ -44,7 +44,7 @@
 		font-weight: 450;
 	}
 
-	.voki-not-found  {
+	.voki-not-found {
 		font-size: 2rem;
 		font-weight: 500;
 	}

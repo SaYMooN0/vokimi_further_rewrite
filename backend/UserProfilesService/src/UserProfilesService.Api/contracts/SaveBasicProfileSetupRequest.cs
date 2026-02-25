@@ -26,12 +26,12 @@ public class SaveBasicProfileSetupRequest : IRequestWithValidationNeeded
         ErrOrNothing errs = ErrOrNothing.Nothing;
         if (
             !UserProfilePicKey.IsStringWithPicsPrefix(ProfilePic)
-            && !ITempKey.IsStringWithTempPrefix(ProfilePic)
+            && !TempImageKey.IsPossiblySuitable(ProfilePic)
             && !PresetProfilePicKey.IsStringPresetKey(ProfilePic)
         ) {
             return ErrFactory.IncorrectFormat(
                 "Incorrect profile picture format",
-                $"Provided path should be either {nameof(UserProfilePicKey)}, {nameof(ITempKey)} or {nameof(PresetProfilePicKey)}"
+                $"Provided path should be either {nameof(UserProfilePicKey)}, {nameof(TempImageKey)} or {nameof(PresetProfilePicKey)}"
             );
         }
 
@@ -39,6 +39,7 @@ public class SaveBasicProfileSetupRequest : IRequestWithValidationNeeded
         if (displayNameCreation.IsErr(out var err)) {
             return err;
         }
+
         ParsedDisplayName = displayNameCreation.AsSuccess();
 
         string[] incorrectTags = Tags.Where(t => !VokiTagId.IsStringValidTag(t)).ToArray();

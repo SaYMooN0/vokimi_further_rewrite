@@ -8,16 +8,17 @@
 		message: string;
 		iconHref: string | null;
 	};
-	export type ActionsContextMenuActionsContent = { type: 'actions'; items: ActionsContextMenuActionContentItem[] };
+	export type ActionsContextMenuActionsContent = {
+		type: 'actions';
+		items: ActionsContextMenuActionContentItem[];
+	};
 
 	type ActionType = 'default' | 'red';
 	export type ActionsContextMenuActionContentItem = 'divider' | ActionsContextMenuAction;
 	export type ActionsContextMenuAction = {
 		label: string;
 		iconHref: string | null;
-		action:
-			| { isLink: true; href: string }
-			| { isLink: false; onclick: () => void };
+		action: { isLink: true; href: string } | { isLink: false; onclick: () => void };
 		type: ActionType;
 	};
 
@@ -40,7 +41,12 @@
 	}
 </script>
 
-<BaseContextMenu bind:this={menu} class="context-menu-with-actions unselectable {className}" {onAfterClose} {id}>
+<BaseContextMenu
+	bind:this={menu}
+	class="context-menu-with-actions unselectable {className}"
+	{onAfterClose}
+	{id}
+>
 	{#if content.type === 'actions'}
 		{#each content.items as item}
 			{#if item === 'divider'}
@@ -125,7 +131,7 @@
 
 	.action.red:hover {
 		background-color: var(--red-1);
-		color: var(--err-foreground);
+		color: var(--red-3);
 	}
 
 	:global(.context-menu-with-actions:has(.message-container)) {

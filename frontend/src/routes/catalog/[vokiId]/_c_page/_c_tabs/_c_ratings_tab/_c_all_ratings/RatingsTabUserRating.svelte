@@ -113,7 +113,7 @@
 		height: 1.25rem;
 		padding: 0.125rem;
 		border-radius: 1rem;
-		color: var(--err-foreground);
+		color: var(--red-5);
 		transition: all 0.04s ease-in;
 		cursor: pointer;
 		aspect-ratio: 1/1;
@@ -121,12 +121,12 @@
 	}
 
 	.clear-errs-btn:hover {
-		background-color: var(--err-foreground);
+		background-color: var(--red-5);
 		color: var(--red-1);
 	}
 
 	.err-item {
-		color: var(--err-foreground);
+		color: var(--red-5);
 		font-size: 1rem;
 		font-weight: 500;
 	}

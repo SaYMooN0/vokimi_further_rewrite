@@ -50,7 +50,7 @@ internal sealed class StorageService : IStorageService
                 compressed.Extension, compressed.ContentType
             );
 
-            TempImageKey tempKey = TempImageKey.CreateWithExtension(compressed.Extension);
+            TempImageKey tempKey = TempImageKey.CreateNew(compressed.Extension);
 
             if (compressed.Stream.CanSeek) {
                 compressed.Stream.Position = 0;
@@ -107,7 +107,7 @@ internal sealed class StorageService : IStorageService
                 converted.Extension, converted.ContentType
             );
 
-            TempAudioKey tempKey = TempAudioKey.CreateWithExtension(
+            TempAudioKey tempKey = TempAudioKey.CreateNew(
                 AudioFileExtension.Create(converted.Extension).AsSuccess()
             );
 

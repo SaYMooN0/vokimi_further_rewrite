@@ -122,7 +122,7 @@
 	}
 
 	.delete-btn:hover {
-		background-color: var(--err-foreground);
+		background-color: var(--red-5);
 		color: var(--primary-foreground);
 		stroke-width: 1.8;
 	}

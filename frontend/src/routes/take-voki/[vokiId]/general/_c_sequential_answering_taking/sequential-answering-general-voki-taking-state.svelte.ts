@@ -16,11 +16,11 @@ export class SequentialAnsweringGeneralVokiTakingState {
     isLoadingNextQuestion = $state(false);
 
     get isCurrentQuestionLast() {
-        return this.currentQuestion?.orderInVokiTaking === this.totalQuestionsCount - 1;
+        return this.currentQuestion?.orderInVokiTaking === this.totalQuestionsCount;
     }
     get isCurrentQuestionFirst() {
         if (this.currentQuestion) {
-            return this.currentQuestion?.orderInVokiTaking === 0
+            return this.currentQuestion?.orderInVokiTaking === 1;
         }
         return false;
     }

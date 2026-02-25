@@ -71,7 +71,6 @@
 		transform: scale(1.02) translateX(-1px);
 	}
 
-
 	.album-icon {
 		width: 2rem;
 		height: 2rem;
@@ -86,7 +85,7 @@
 	}
 
 	.error {
-		color: var(--err-foreground);
+		color: var(--red-5);
 		font-weight: 550;
 	}
 </style>

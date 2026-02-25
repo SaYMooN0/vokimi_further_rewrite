@@ -25,7 +25,7 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
         ErrOrNothing parsingErrs = ErrOrNothing.Nothing;
 
         ErrOr<TempImageKey>[] possibleTemp = NewImages
-            .Where(ITempKey.IsStringWithTempPrefix)
+            .Where(TempImageKey.IsPossiblySuitable)
             .Select(TempImageKey.FromString)
             .ToArray();
         foreach (var possibleErr in possibleTemp) {
@@ -33,7 +33,7 @@ public class UpdateQuestionImagesRequest : IRequestWithValidationNeeded
         }
 
         var possibleSaved = NewImages
-            .Where(k => !ITempKey.IsStringWithTempPrefix(k))
+            .Where(k => !TempImageKey.IsPossiblySuitable(k))
             .Select(GeneralVokiQuestionImageKey.FromString)
             .ToArray();
         foreach (var possibleErr in possibleSaved) {

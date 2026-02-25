@@ -98,7 +98,7 @@ public abstract class BaseSpecificVokiHandlers
         VokiId id = httpContext.GetVokiIdFromRoute();
         var req = httpContext.GetValidatedRequest<UpdateVokiCoverRequest>();
 
-        var result = await handler.Handle(new UpdateVokiCoverCommand(id, new(req.NewCover)), ct);
+        var result = await handler.Handle(new UpdateVokiCoverCommand(id, req.ParsedCover), ct);
         return CustomResults.FromErrOr(result, key => Results.Json(new { NewCover = key.ToString() }));
     }
 

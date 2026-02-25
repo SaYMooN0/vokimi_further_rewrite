@@ -66,7 +66,7 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
             return ErrOr<GeneralVokiResultImageKey?>.Success(null);
         }
 
-        if (ITempKey.IsStringWithTempPrefix(resultImageKey)) {
+        if (TempImageKey.IsPossiblySuitable(resultImageKey)) {
             return await HandleTempKey(resultImageKey, vokiId, resultId, ct);
         }
 
@@ -86,7 +86,7 @@ internal sealed class UpdateResultTextCommandHandler : ICommandHandler<UpdateVok
     private async Task<ErrOr<GeneralVokiResultImageKey?>> HandleTempKey(
         string stringTempKey, VokiId vokiId, GeneralVokiResultId resultId, CancellationToken ct
     ) {
-        var creationRes = TempImageKey.FromString(stringTempKey);
+        ErrOr<TempImageKey> creationRes = TempImageKey.FromString(stringTempKey);
         if (creationRes.IsErr(out var creationErr)) {
             return creationErr;
         }

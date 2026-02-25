@@ -170,7 +170,7 @@
 	}
 
 	.user-item.err {
-		border: 0.125rem solid var(--err-foreground);
+		border: 0.125rem solid var(--red-5);
 		background-color: var(--secondary);
 		box-shadow: var(--err-shadow);
 	}

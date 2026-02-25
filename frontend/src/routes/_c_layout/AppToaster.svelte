@@ -97,7 +97,7 @@
 <style>
 	:global(.my-toaster) {
 		--error-bg: var(--red-1) !important;
-		--error-text: var(--err-foreground) !important;
+		--error-text: var(--red-5) !important;
 	}
 
 	:global .my-toaster {

@@ -9,5 +9,4 @@ internal static class KeyConsts
     internal const string CommonFolder = "common";
     internal const string DefaultVokiCover = $"{CommonFolder}/default-voki-cover.webp";
 
-    internal const string TempFolder = "temp";
 }

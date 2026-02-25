@@ -76,7 +76,7 @@
 	}
 
 	.remove-btn:hover {
-		background-color: var(--err-foreground);
+		background-color: var(--red-5);
 		color: var(--red-1);
 	}
 </style>

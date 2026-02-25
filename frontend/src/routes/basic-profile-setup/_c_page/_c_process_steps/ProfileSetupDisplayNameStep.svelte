@@ -90,7 +90,7 @@
 	}
 
 	.len-count .current.err {
-		color: var(--err-foreground);
+		color: var(--red-5);
 		font-weight: 500;
 	}
 

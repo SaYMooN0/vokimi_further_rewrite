@@ -123,7 +123,7 @@
 	}
 
 	.msg-container.error {
-		border: 0.125rem dashed var(--err-foreground);
+		border: 0.125rem dashed var(--red-5);
 		background-color: var(--back);
 		box-shadow: var(--err-shadow);
 	}
