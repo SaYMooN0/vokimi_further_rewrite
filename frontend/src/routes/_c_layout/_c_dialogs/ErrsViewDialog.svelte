@@ -66,7 +66,7 @@
 		padding: 0.75rem;
 		border-radius: 0.75rem;
 		background-color: var(--red-1);
-		color: var(--err-foreground);
+		color: var(--red-5);
 		box-shadow: var(--err-shadow);
 	}
 

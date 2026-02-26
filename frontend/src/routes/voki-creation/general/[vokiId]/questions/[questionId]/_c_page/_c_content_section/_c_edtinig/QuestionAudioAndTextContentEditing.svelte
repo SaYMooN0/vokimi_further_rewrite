@@ -4,7 +4,7 @@
 	import QuestionContentEditingAnswersList from './_c_shared/QuestionContentEditingAnswersList.svelte';
 	import CompactQuestionContentMediaInput from './_c_shared/CompactQuestionContentMediaInput.svelte';
 	import AnswerEditingTextArea from './_c_answers_content/_c_shared/AnswerEditingTextArea.svelte';
-	import GeneralVokiCreationAnswerDisplayAudio from '../_c_shared/GeneralVokiCreationAnswerDisplayAudio.svelte';
+	import BasicAudio from '$lib/components/BasicAudio.svelte';
 
 	interface Props {
 		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'AudioAndText' }>;
@@ -48,7 +48,7 @@
 		</div>
 	</div>
 	{#snippet audioDisplaySnippet()}
-		<GeneralVokiCreationAnswerDisplayAudio src={answer.audio} />
+		<BasicAudio src={answer.audio} />
 	{/snippet}
 {/snippet}
 

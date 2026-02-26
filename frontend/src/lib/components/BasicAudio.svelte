@@ -4,58 +4,31 @@
 	interface Props {
 		src: string;
 	}
+
 	let { src }: Props = $props();
 
-	let fullSrc = $derived(src.startsWith('blob:') ? src : StorageBucketMain.fileSrc(src));
+	const fullSrc = $derived(src.startsWith('blob:') ? src : StorageBucketMain.fileSrc(src));
 
-	let audio: HTMLAudioElement;
-	let isPlaying = $state(false);
+	let audio: HTMLAudioElement | undefined = $state();
+
+	let paused = $state(true);
 	let currentTime = $state(0);
 	let duration = $state(0);
 
+	const isPlaying = $derived(!paused);
+
+	const progressPercent = $derived(duration > 0 ? (currentTime / duration) * 100 : 0);
+
 	function togglePlay() {
 		if (!audio) return;
-		if (isPlaying) {
-			audio.pause();
-		} else {
-			audio.play();
-		}
+		paused = !paused;
 	}
 
 	function formatTime(seconds: number) {
-		if (!seconds || isNaN(seconds)) return '0:00';
+		if (!Number.isFinite(seconds)) return '0:00';
 		const mins = Math.floor(seconds / 60);
 		const secs = Math.floor(seconds % 60);
 		return `${mins}:${secs.toString().padStart(2, '0')}`;
-	}
-
-	function onTimeUpdate() {
-		if (audio) {
-			currentTime = audio.currentTime;
-		}
-	}
-
-	function onLoadedMetadata() {
-		if (audio) {
-			duration = audio.duration;
-			if (duration === Infinity) {
-				audio.currentTime = Number.MAX_SAFE_INTEGER;
-				audio.ontimeupdate = () => {
-					audio.ontimeupdate = onTimeUpdate;
-					duration = audio.duration;
-					audio.currentTime = 0;
-				};
-			}
-		}
-	}
-
-	function onSeek(e: Event) {
-		const target = e.target as HTMLInputElement;
-		if (audio) {
-			const time = Number(target.value);
-			audio.currentTime = time;
-			currentTime = time;
-		}
 	}
 </script>
 
@@ -63,13 +36,11 @@
 	<audio
 		bind:this={audio}
 		src={fullSrc}
-		onplay={() => (isPlaying = true)}
-		onpause={() => (isPlaying = false)}
-		ontimeupdate={onTimeUpdate}
-		onloadedmetadata={onLoadedMetadata}
-		onended={() => (isPlaying = false)}
+		bind:paused
+		bind:currentTime
+		bind:duration
 		preload="metadata"
-	></audio>
+	/>
 
 	<button
 		class="play-btn unselectable"
@@ -77,10 +48,31 @@
 		aria-label={isPlaying ? 'Pause' : 'Play'}
 	>
 		{#if isPlaying}
-			<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" /></svg
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 24 24"
+				fill="currentColor"
+				stroke="currentColor"
 			>
+				<path
+					d="M4 7C4 5.58579 4 4.87868 4.43934 4.43934C4.87868 4 5.58579 4 7 4C8.41421 4 9.12132 4 9.56066 4.43934C10 4.87868 10 5.58579 10 7V17C10 18.4142 10 19.1213 9.56066 19.5607C9.12132 20 8.41421 20 7 20C5.58579 20 4.87868 20 4.43934 19.5607C4 19.1213 4 18.4142 4 17V7Z"
+				/>
+				<path
+					d="M14 7C14 5.58579 14 4.87868 14.4393 4.43934C14.8787 4 15.5858 4 17 4C18.4142 4 19.1213 4 19.5607 4.43934C20 4.87868 20 5.58579 20 7V17C20 18.4142 20 19.1213 19.5607 19.5607C19.1213 20 18.4142 20 17 20C15.5858 20 14.8787 20 14.4393 19.5607C14 19.1213 14 18.4142 14 17V7Z"
+				/>
+			</svg>
 		{:else}
-			<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z" /></svg>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				viewBox="0 0 24 24"
+				fill="currentColor"
+				stroke="currentColor"
+				stroke-linejoin="round"
+			>
+				<path
+					d="M18.8906 12.846C18.5371 14.189 16.8667 15.138 13.5257 17.0361C10.296 18.8709 8.6812 19.7884 7.37983 19.4196C6.8418 19.2671 6.35159 18.9776 5.95624 18.5787C5 17.6139 5 15.7426 5 12C5 8.2574 5 6.3861 5.95624 5.42132C6.35159 5.02245 6.8418 4.73288 7.37983 4.58042C8.6812 4.21165 10.296 5.12907 13.5257 6.96393C16.8667 8.86197 18.5371 9.811 18.8906 11.154C19.0365 11.7084 19.0365 12.2916 18.8906 12.846Z"
+				/>
+			</svg>
 		{/if}
 	</button>
 
@@ -90,9 +82,15 @@
 			type="range"
 			min="0"
 			max={duration || 1}
-			step="0.01"
+			step="any"
 			value={currentTime}
-			oninput={onSeek}
+			oninput={(e: Event) => {
+				const target = e.target as HTMLInputElement;
+				if (audio && duration > 0 && duration !== Infinity) {
+					const time = Number(target.value);
+					audio.currentTime = time;
+				}
+			}}
 			class="progress-bar"
 			style="--progress: {(currentTime / (duration || 1)) * 100}%"
 		/>
@@ -116,9 +114,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 3rem;
-		height: 3rem;
-		min-width: 3rem;
+		width: 2.5rem;
+		height: 2.5rem;
 		border-radius: 50%;
 		background-color: var(--primary);
 		color: var(--primary-foreground);
@@ -126,25 +123,21 @@
 		transition:
 			transform 0.15s ease,
 			background-color 0.15s ease;
+		border: none;
 	}
 
 	.play-btn:hover {
 		background-color: var(--primary-hov);
-		transform: scale(1.05);
-	}
-
-	.play-btn:active {
-		transform: scale(0.95);
 	}
 
 	.play-btn svg {
-		width: 1.5rem;
-		height: 1.5rem;
-		margin-left: 0.125rem; /* Visual center for play icon */
+		width: 1.25rem;
+		height: 1.25rem;
+		margin-left: 0.125rem;
+		stroke-width: 0;
 	}
-
-	.play-btn svg:has(path[d='M6 19h4V5H6v14zm8-14v14h4V5h-4z']) {
-		margin-left: 0; /* Clear margin for pause icon */
+	.play-btn:active svg {
+		transform: scale(0.94);
 	}
 
 	.progress-container {
@@ -168,7 +161,8 @@
 		flex: 1;
 		-webkit-appearance: none;
 		appearance: none;
-		height: 0.375rem;
+		height: 0.5rem;
+
 		border-radius: 0.25rem;
 		outline: none;
 		background: linear-gradient(var(--primary), var(--primary)) 0 / var(--progress, 0%) 100%
@@ -177,11 +171,6 @@
 		transition: height 0.1s ease;
 	}
 
-	.progress-bar:hover {
-		height: 0.5rem;
-	}
-
-	/* Thumb */
 	.progress-bar::-webkit-slider-thumb {
 		-webkit-appearance: none;
 		appearance: none;
@@ -191,10 +180,6 @@
 		background: var(--primary);
 		cursor: pointer;
 		transition: transform 0.1s ease;
-	}
-
-	.progress-bar::-webkit-slider-thumb:hover {
-		transform: scale(1.2);
 	}
 
 	.progress-bar::-moz-range-thumb {

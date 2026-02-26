@@ -116,12 +116,12 @@
 	}
 
 	.btn:hover {
-transform: scale(1.05);
-	}	
+		transform: scale(1.05);
+	}
 
 	.btn-decline {
 		background: var(--red-1);
-		color: var(--err-foreground);
+		color: var(--red-5);
 	}
 
 	.btn-cancel {

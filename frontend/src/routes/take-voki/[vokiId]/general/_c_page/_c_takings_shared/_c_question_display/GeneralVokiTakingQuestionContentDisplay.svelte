@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { GeneralVokiTakingQuestionContent } from '../../types';
 	import GeneralVokiTakingTextOnlyContent from './_c_content/GeneralVokiTakingTextOnlyContent.svelte';
 	import GeneralVokiTakingImageOnlyContent from './_c_content/GeneralVokiTakingImageOnlyContent.svelte';
 	import GeneralVokiTakingImageAndTextContent from './_c_content/GeneralVokiTakingImageAndTextContent.svelte';
@@ -7,6 +6,7 @@
 	import GeneralVokiTakingColorAndTextContent from './_c_content/GeneralVokiTakingColorAndTextContent.svelte';
 	import GeneralVokiTakingAudioOnlyContent from './_c_content/GeneralVokiTakingAudioOnlyContent.svelte';
 	import GeneralVokiTakingAudioAndTextContent from './_c_content/GeneralVokiTakingAudioAndTextContent.svelte';
+	import type { GeneralVokiTakingQuestionContent } from '../../../types';
 
 	interface Props {
 		questionChosenAnswers: Record<string, boolean>;

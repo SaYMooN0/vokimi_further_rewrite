@@ -2,8 +2,8 @@
 	import type { AnswerDataAudioAndText, GeneralVokiCreationQuestionContent } from '../../../types';
 	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
 	import QuestionContentViewAnswersList from './_c_shared/QuestionContentViewAnswersList.svelte';
-	import GeneralVokiCreationAnswerDisplayAudio from '../_c_shared/GeneralVokiCreationAnswerDisplayAudio.svelte';
 	import AnswersViewTextDisplay from './_c_shared/AnswersViewTextDisplay.svelte';
+	import BasicAudio from '$lib/components/BasicAudio.svelte';
 
 	interface Props {
 		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'AudioAndText' }>;
@@ -23,7 +23,7 @@
 	<div class="answer-content">
 		<AnswersViewTextDisplay text={answer.text} />
 		<div class="audio-container">
-			<GeneralVokiCreationAnswerDisplayAudio src={answer.audio} />
+			<BasicAudio src={answer.audio} />
 		</div>
 	</div>
 {/snippet}

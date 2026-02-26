@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { AnswerDataAudioOnly } from '../../../../types';
 	import FullWidthQuestionContentMediaInput from '../_c_shared/FullWidthQuestionContentMediaInput.svelte';
-	import GeneralVokiCreationAnswerDisplayAudio from '../../_c_shared/GeneralVokiCreationAnswerDisplayAudio.svelte';
+	import BasicAudio from '$lib/components/BasicAudio.svelte';
 
 	interface Props {
 		answer: AnswerDataAudioOnly;
@@ -20,7 +20,7 @@
 </div>
 
 {#snippet audioDisplay()}
-	<GeneralVokiCreationAnswerDisplayAudio src={answer.audio} />
+	<BasicAudio src={answer.audio} />
 {/snippet}
 
 <style>

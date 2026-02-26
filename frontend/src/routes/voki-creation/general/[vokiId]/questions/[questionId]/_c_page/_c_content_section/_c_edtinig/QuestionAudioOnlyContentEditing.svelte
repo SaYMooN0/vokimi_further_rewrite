@@ -3,7 +3,7 @@
 	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
 	import QuestionContentEditingAnswersList from './_c_shared/QuestionContentEditingAnswersList.svelte';
 	import FullWidthQuestionContentMediaInput from './_c_shared/FullWidthQuestionContentMediaInput.svelte';
-	import GeneralVokiCreationAnswerDisplayAudio from '../_c_shared/GeneralVokiCreationAnswerDisplayAudio.svelte';
+	import BasicAudio from '$lib/components/BasicAudio.svelte';
 
 	interface Props {
 		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'AudioOnly' }>;
@@ -41,7 +41,7 @@
 		mediaDisplay={audioDisplaySnippet}
 	/>
 	{#snippet audioDisplaySnippet()}
-		<GeneralVokiCreationAnswerDisplayAudio src={answer.audio} />
+		<BasicAudio src={answer.audio} />
 	{/snippet}
 {/snippet}
 

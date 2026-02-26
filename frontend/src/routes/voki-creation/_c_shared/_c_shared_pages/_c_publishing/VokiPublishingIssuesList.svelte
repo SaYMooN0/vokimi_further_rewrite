@@ -79,7 +79,7 @@
 
 	.problem > .type {
 		background-color: var(--red-1);
-		color: var(--err-foreground);
+		color: var(--red-5);
 	}
 
 	.warning > .type {

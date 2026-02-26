@@ -5,8 +5,8 @@
 	import { goto } from '$app/navigation';
 	import type { GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from '../types';
 	import VokiTakingHeader from '../../_c_shared/VokiTakingHeader.svelte';
-	import SequentialAnsweringGeneralVokiTaking from '../SequentialAnsweringGeneralVokiTaking.svelte';
-	import FreeAnsweringGeneralVokiTaking from '../FreeAnsweringGeneralVokiTaking.svelte';
+	import SequentialAnsweringGeneralVokiTaking from './SequentialAnsweringGeneralVokiTaking.svelte';
+	import FreeAnsweringGeneralVokiTaking from './FreeAnsweringGeneralVokiTaking.svelte';
 
 	interface Props {
 		sessionData: GeneralVokiTakingData;

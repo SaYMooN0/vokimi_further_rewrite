@@ -17,30 +17,23 @@
 	let isDragging = $state(false);
 	let uploadingErrs = $state<Err[]>([]);
 
-	let acceptString = $derived(type === 'image' ? 'image/*' : 'audio/*');
-	let mimePrefix = $derived(type === 'image' ? 'image/' : 'audio/');
+	let mimePrefix: 'image/' | 'audio/' = $derived(type === 'image' ? 'image/' : 'audio/');
+	let acceptString: 'image/*' | 'audio/*' = $derived(type === 'image' ? 'image/*' : 'audio/*');
 
 	async function uploadFile(file: File) {
 		if (!file.type.startsWith(mimePrefix)) {
 			uploadingErrs = [{ message: `Selected file is not an ${type}` }];
 			return;
 		}
-		isLoading = true;
 		uploadingErrs = [];
-
-		let response;
-		if (type === 'image') {
-			response = await StorageBucketMain.uploadTempImage(file);
-		} else {
-			response = await StorageBucketMain.uploadTempAudio(file);
-		}
-
+		isLoading = true;
+		const response = await StorageBucketMain.uploadTempFile(type, file);
+		isLoading = false;
 		if (response.isSuccess) {
 			onUploadSuccess(response.data);
 		} else {
 			uploadingErrs = response.errs;
 		}
-		isLoading = false;
 	}
 
 	async function handleInputChange(event: Event) {

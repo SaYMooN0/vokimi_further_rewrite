@@ -1,8 +1,8 @@
 <script lang="ts">
+	import type { GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from '../types';
+	import GeneralVokiTakingQuestionDisplay from './_c_takings_shared/GeneralVokiTakingQuestionDisplay.svelte';
 	import { SequentialAnsweringGeneralVokiTakingState } from './_c_sequential_answering_taking/sequential-answering-general-voki-taking-state.svelte';
 	import SequentialAnsweringNavigationContainer from './_c_sequential_answering_taking/SequentialAnsweringNavigationContainer.svelte';
-	import GeneralVokiTakingQuestionDisplay from './_c_takings_shared/GeneralVokiTakingQuestionDisplay.svelte';
-	import type { GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from './types';
 
 	interface Props {
 		takingData: GeneralVokiTakingData;

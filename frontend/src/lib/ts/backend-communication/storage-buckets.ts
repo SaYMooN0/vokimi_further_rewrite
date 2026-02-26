@@ -22,11 +22,21 @@ class VokimiStorageBucket {
         }
         return `${this.fileSrc(key)}?v=${version}`;
     }
-    public async uploadTempFile(endpoint: string, file: Blob | File): Promise<ResponseResult<string>> {
+    fileTypeToUploadEndpoint = {
+        'image': "upload-temp-image",
+        'audio': "upload-temp-audio"
+    }
+    public async uploadTempFile(fileType: 'image' | 'audio', file: Blob | File): Promise<ResponseResult<string>> {
         try {
             const formData = new FormData();
             formData.append('file', file);
-
+            const endpoint = this.fileTypeToUploadEndpoint[fileType];
+            if (!endpoint) {
+                return {
+                    isSuccess: false,
+                    errs: [{ message: `Could not upload file becuse of unexpected file type: ${fileType}` }]
+                }
+            }
             const response = await fetch(`${this._baseUrl}/${endpoint}`, {
                 method: 'PUT',
                 body: formData
@@ -48,10 +58,10 @@ class VokimiStorageBucket {
     }
 
     public async uploadTempImage(file: Blob | File): Promise<ResponseResult<string>> {
-        return this.uploadTempFile("upload-temp-image", file);
+        return this.uploadTempFile('image', file);
     }
     public async uploadTempAudio(file: Blob | File): Promise<ResponseResult<string>> {
-        return this.uploadTempFile("upload-temp-audio", file);
+        return this.uploadTempFile('audio', file);
     }
 
     private async parseErrResponse(response: Response): Promise<Err[]> {

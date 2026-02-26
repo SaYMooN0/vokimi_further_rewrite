@@ -2,7 +2,7 @@
 	import type { AnswerDataAudioOnly, GeneralVokiCreationQuestionContent } from '../../../types';
 	import type { QuestionPageResultsState } from '../../../general-voki-creation-specific-question-page-state.svelte';
 	import QuestionContentViewAnswersList from './_c_shared/QuestionContentViewAnswersList.svelte';
-	import GeneralVokiCreationAnswerDisplayAudio from '../_c_shared/GeneralVokiCreationAnswerDisplayAudio.svelte';
+	import BasicAudio from '$lib/components/BasicAudio.svelte';
 
 	interface Props {
 		content: Extract<GeneralVokiCreationQuestionContent, { $type: 'AudioOnly' }>;
@@ -20,7 +20,7 @@
 </div>
 {#snippet answerMainContent(answer: AnswerDataAudioOnly)}
 	<div class="answer-content">
-		<GeneralVokiCreationAnswerDisplayAudio src={answer.audio} />
+		<BasicAudio src={answer.audio} />
 	</div>
 {/snippet}
 

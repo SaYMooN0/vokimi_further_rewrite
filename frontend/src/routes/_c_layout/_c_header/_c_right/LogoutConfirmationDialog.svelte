@@ -78,7 +78,7 @@
 
 	.main-err-msg {
 		margin-bottom: 0.25rem;
-		color: var(--err-foreground);
+		color: var(--red-5);
 		font-size: 1.25rem;
 		font-weight: 500;
 	}

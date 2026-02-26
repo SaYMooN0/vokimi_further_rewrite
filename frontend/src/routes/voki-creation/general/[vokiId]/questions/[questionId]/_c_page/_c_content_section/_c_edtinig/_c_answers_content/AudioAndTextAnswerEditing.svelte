@@ -2,7 +2,7 @@
 	import AnswerEditingTextArea from './_c_shared/AnswerEditingTextArea.svelte';
 	import type { AnswerDataAudioAndText } from '../../../../types';
 	import CompactQuestionContentMediaInput from '../_c_shared/CompactQuestionContentMediaInput.svelte';
-	import GeneralVokiCreationAnswerDisplayAudio from '../../_c_shared/GeneralVokiCreationAnswerDisplayAudio.svelte';
+	import BasicAudio from '$lib/components/BasicAudio.svelte';
 
 	interface Props {
 		answer: AnswerDataAudioAndText;
@@ -27,7 +27,7 @@
 </div>
 
 {#snippet audioDisplay()}
-	<GeneralVokiCreationAnswerDisplayAudio src={answer.audio} />
+	<BasicAudio src={answer.audio} />
 {/snippet}
 
 <style>

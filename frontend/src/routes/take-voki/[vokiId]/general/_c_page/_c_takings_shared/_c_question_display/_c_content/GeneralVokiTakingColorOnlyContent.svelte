@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { ColorUtils } from '$lib/ts/utils/color-utils';
 	import { onDestroy, onMount } from 'svelte';
-	import type { GeneralVokiTakingQuestionContent } from '../../../types';
+	import type { GeneralVokiTakingQuestionContent } from '../../../../types';
 	import { answersKeyboardNav } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './_c_shared/GeneralTakingAnswerChosenIndicator.svelte';
-	import GeneralTakingAnswerText from './_c_shared/GeneralTakingAnswerText.svelte';
 
 	interface Props {
-		content: Extract<GeneralVokiTakingQuestionContent, { $type: 'ColorAndText' }>;
+		content: Extract<GeneralVokiTakingQuestionContent, { $type: 'ColorOnly' }>;
 		isMultipleChoice: boolean;
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
@@ -49,13 +48,13 @@
 			<div
 				class="color-div"
 				style="background-color:{ColorUtils.normalizeHex6(answer.color) ?? answer.color};"
-			></div>
-			<div class="text-indicator-wrapper">
-				<GeneralTakingAnswerChosenIndicator
-					{isMultipleChoice}
-					isChosen={isAnswerChosen(answer.id)}
-				/>
-				<GeneralTakingAnswerText text={answer.text} />
+			>
+				<div class="indicator-container">
+					<GeneralTakingAnswerChosenIndicator
+						{isMultipleChoice}
+						isChosen={isAnswerChosen(answer.id)}
+					/>
+				</div>
 			</div>
 		</div>
 	{/each}
@@ -64,30 +63,38 @@
 <style>
 	.answers-container {
 		display: flex;
-		flex-direction: column;
-		gap: 1rem;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 2rem;
 	}
 
 	.answer {
 		display: grid;
-		align-items: center;
 		gap: 0.5rem;
-		padding: 0.5rem 1rem;
-		border-radius: 0.5rem;
-		grid-template-columns: auto 1fr;
+		height: 7rem;
+		padding: 1rem;
+		border-radius: 1rem;
+		flex: 0 1 18rem;
 	}
 
 	.color-div {
-		width: 3rem;
-		height: 3rem;
+		--color-div-border-radius: 0.675rem;
+
+		position: relative;
+		width: 100%;
+		height: 100%;
 		border: 1px solid var(--muted);
-		border-radius: 0.5rem;
+		border-radius: var(--color-div-border-radius);
 	}
 
-	.text-indicator-wrapper {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		align-items: center;
-		gap: 0.5rem;
+	.indicator-container {
+		position: absolute;
+		bottom: -0.75rem;
+		left: 50%;
+		padding: 0.5rem 0.5rem 0.25rem;
+		border-radius: var(--color-div-border-radius);
+		background-color: var(--back);
+		transform: translateX(-50%);
+		border-top: 1px solid var(--muted);
 	}
 </style>

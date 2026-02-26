@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import GeneralTakingAnswerChosenIndicator from './_c_shared/GeneralTakingAnswerChosenIndicator.svelte';
-	import type { GeneralVokiTakingQuestionContent } from '../../../types';
+	import type { GeneralVokiTakingQuestionContent } from '../../../../types';
 	import { answersKeyboardNav } from './answers-keyboard-nav.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 

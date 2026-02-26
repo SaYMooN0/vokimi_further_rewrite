@@ -1,7 +1,7 @@
 import { ApiVokiTakingGeneral, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import type { Err } from "$lib/ts/err";
-import type { GeneralVokiTakingQuestionData, GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from "../types";
+import type { GeneralVokiTakingQuestionData, GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from "../../types";
 
 export class FreeAnsweringGeneralVokiTakingState {
     readonly vokiId: string;

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import type { GeneralVokiTakingQuestionContent, GeneralVokiTakingQuestionData } from '../types';
+	import type { GeneralVokiTakingQuestionData } from '../../types';
 	import GeneralVokiTakingQuestionContentDisplay from './_c_question_display/GeneralVokiTakingQuestionContentDisplay.svelte';
 
 	interface Props {

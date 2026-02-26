@@ -1,12 +1,12 @@
 <script lang="ts">
 	import type { Err } from '$lib/ts/err';
 	import { onMount, onDestroy } from 'svelte';
-	import { createQuestionsKeyHandler } from './_c_free_answering_taking/free-answering-voki-taking-questions-nav';
-	import type { GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from './types';
-	import { FreeAnsweringGeneralVokiTakingState } from './_c_free_answering_taking/free-answering-general-voki-taking-state.svelte';
-	import FreeAnsweringVokiTakingErrsList from './_c_free_answering_taking/FreeAnsweringVokiTakingErrsList.svelte';
-	import FreeAnsweringButtonsContainer from './_c_free_answering_taking/FreeAnsweringButtonsContainer.svelte';
+	import type { GeneralVokiTakingData, PosssibleGeneralVokiTakingDataSaveData } from '../types';
 	import GeneralVokiTakingQuestionDisplay from './_c_takings_shared/GeneralVokiTakingQuestionDisplay.svelte';
+	import FreeAnsweringVokiTakingErrsList from './_c_free_answering_taking/FreeAnsweringVokiTakingErrsList.svelte';
+	import { FreeAnsweringGeneralVokiTakingState } from './_c_free_answering_taking/free-answering-general-voki-taking-state.svelte';
+	import { createQuestionsKeyHandler } from './_c_free_answering_taking/free-answering-voki-taking-questions-nav';
+	import FreeAnsweringButtonsContainer from './_c_free_answering_taking/FreeAnsweringButtonsContainer.svelte';
 
 	interface Props {
 		takingData: GeneralVokiTakingData;

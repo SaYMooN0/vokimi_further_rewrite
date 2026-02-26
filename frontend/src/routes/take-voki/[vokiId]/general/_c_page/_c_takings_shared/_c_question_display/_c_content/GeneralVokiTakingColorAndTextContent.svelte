@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
-	import { onMount, onDestroy } from 'svelte';
-	import type { GeneralVokiTakingQuestionContent } from '../../../types';
+	import { ColorUtils } from '$lib/ts/utils/color-utils';
+	import { onDestroy, onMount } from 'svelte';
+	import type { GeneralVokiTakingQuestionContent } from '../../../../types';
 	import { answersKeyboardNav } from './answers-keyboard-nav.svelte';
 	import GeneralTakingAnswerChosenIndicator from './_c_shared/GeneralTakingAnswerChosenIndicator.svelte';
+	import GeneralTakingAnswerText from './_c_shared/GeneralTakingAnswerText.svelte';
 
 	interface Props {
-		content: Extract<GeneralVokiTakingQuestionContent, { $type: 'ImageOnly' }>;
+		content: Extract<GeneralVokiTakingQuestionContent, { $type: 'ColorAndText' }>;
 		isMultipleChoice: boolean;
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
@@ -45,54 +46,48 @@
 			role={isMultipleChoice ? 'checkbox' : 'radio'}
 			aria-checked={isAnswerChosen(answer.id)}
 		>
-			<div class="img-container">
-				<img
-					class="unselectable"
-					src={StorageBucketMain.fileSrc(answer.image)}
-					alt="Answer"
-					draggable="false"
+			<div
+				class="color-div"
+				style="background-color:{ColorUtils.normalizeHex6(answer.color) ?? answer.color};"
+			></div>
+			<div class="text-indicator-wrapper">
+				<GeneralTakingAnswerChosenIndicator
+					{isMultipleChoice}
+					isChosen={isAnswerChosen(answer.id)}
 				/>
+				<GeneralTakingAnswerText text={answer.text} />
 			</div>
-
-			<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
 		</div>
 	{/each}
 </div>
 
 <style>
 	.answers-container {
-		display: grid;
-		justify-content: center;
-		gap: 1.5rem;
-		grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
 	.answer {
 		display: grid;
-		gap: 0.5rem;
-		padding: 1rem 0.5rem;
-		border-radius: 1rem;
-		background-color: var(--back);
-		grid-template-rows: 1fr auto;
-		justify-items: center;
-	}
-
-	.img-container {
-		display: flex;
-		justify-content: center;
 		align-items: center;
-		width: 100%;
-		width: fit-content;
-		height: 100%;
+		gap: 0.5rem;
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		grid-template-columns: auto 1fr;
 	}
 
-	img {
-		min-width: 16rem;
-		max-width: 25rem;
-		max-height: 18rem;
-		border-radius: 0.75rem;
-		object-fit: contain;
-		-webkit-user-drag: none;
-		box-shadow: var(--shadow-xs);
+	.color-div {
+		width: 3rem;
+		height: 3rem;
+		border: 1px solid var(--muted);
+		border-radius: 0.5rem;
+	}
+
+	.text-indicator-wrapper {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		align-items: center;
+		gap: 0.5rem;
 	}
 </style>

@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { ColorUtils } from '$lib/ts/utils/color-utils';
-	import { onDestroy, onMount } from 'svelte';
-	import type { GeneralVokiTakingQuestionContent } from '../../../types';
-	import { answersKeyboardNav } from './answers-keyboard-nav.svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import GeneralTakingAnswerChosenIndicator from './_c_shared/GeneralTakingAnswerChosenIndicator.svelte';
+	import GeneralTakingAnswerText from './_c_shared/GeneralTakingAnswerText.svelte';
+	import { answersKeyboardNav } from './answers-keyboard-nav.svelte';
+	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import type { GeneralVokiTakingQuestionContent } from '../../../../types';
 
 	interface Props {
-		content: Extract<GeneralVokiTakingQuestionContent, { $type: 'ColorOnly' }>;
+		content: Extract<GeneralVokiTakingQuestionContent, { $type: 'AudioAndText' }>;
 		isMultipleChoice: boolean;
 		isAnswerChosen: (answerId: string) => boolean;
 		chooseAnswer: (answerId: string) => void;
@@ -45,15 +46,13 @@
 			role={isMultipleChoice ? 'checkbox' : 'radio'}
 			aria-checked={isAnswerChosen(answer.id)}
 		>
-			<div
-				class="color-div"
-				style="background-color:{ColorUtils.normalizeHex6(answer.color) ?? answer.color};"
-			>
-				<div class="indicator-container">
-					<GeneralTakingAnswerChosenIndicator
-						{isMultipleChoice}
-						isChosen={isAnswerChosen(answer.id)}
-					/>
+			<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
+			<div class="content-wrapper">
+				<GeneralTakingAnswerText text={answer.text} />
+				<div class="audio-container">
+					<audio controls src={StorageBucketMain.fileSrc(answer.audio)}>
+						<track kind="captions" />
+					</audio>
 				</div>
 			</div>
 		</div>
@@ -63,38 +62,33 @@
 <style>
 	.answers-container {
 		display: flex;
-		flex-wrap: wrap;
-		justify-content: center;
-		gap: 2rem;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
 	.answer {
 		display: grid;
+		align-items: center;
 		gap: 0.5rem;
-		height: 7rem;
-		padding: 1rem;
-		border-radius: 1rem;
-		flex: 0 1 18rem;
+		padding: 0.5rem 1rem;
+		border-radius: 0.5rem;
+		grid-template-columns: auto 1fr;
 	}
 
-	.color-div {
-		--color-div-border-radius: 0.675rem;
-
-		position: relative;
+	.content-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
 		width: 100%;
-		height: 100%;
-		border: 1px solid var(--muted);
-		border-radius: var(--color-div-border-radius);
 	}
 
-	.indicator-container {
-		position: absolute;
-		bottom: -0.75rem;
-		left: 50%;
-		padding: 0.5rem 0.5rem 0.25rem;
-		border-radius: var(--color-div-border-radius);
-		background-color: var(--back);
-		transform: translateX(-50%);
-		border-top: 1px solid var(--muted);
+	.audio-container {
+		display: flex;
+		align-items: center;
+		width: 100%;
+	}
+
+	audio {
+		width: 100%;
 	}
 </style>
