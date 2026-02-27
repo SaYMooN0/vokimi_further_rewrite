@@ -1,6 +1,7 @@
 using ApplicationShared;
 using GeneralVokiTakingService.Application.common.repositories;
 using GeneralVokiTakingService.Application.common.repositories.taking_sessions;
+using GeneralVokiTakingService.Application.dtos;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.common.dtos;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
@@ -48,14 +49,15 @@ internal sealed class AnswerQuestionInSequentialAnsweringVokiTakingCommandHandle
             return ErrFactory.NotFound.Voki("Cannot answer the question because requested Voki does not exist");
         }
 
-        SessionWithSequentialAnswering? session = await _sessionsWithSequentialAnsweringRepository.GetByIdForUpdate(command.SessionId, ct);
+        SessionWithSequentialAnswering? session =
+            await _sessionsWithSequentialAnsweringRepository.GetByIdForUpdate(command.SessionId, ct);
         if (session is null) {
             return ErrFactory.NotFound.Common(
                 "Cannot answer the question because Voki taking session with sequential answering was not found "
             );
         }
 
-        var answeringResult = session.AnswerQuestionAndGetNext(
+        ErrOr<TakingSessionExpectedQuestion> answeringResult = session.AnswerQuestionAndGetNext(
             command.VokiId,
             shownAt: command.ShownAt,
             currentTime: _dateTimeProvider.UtcNow,
@@ -68,39 +70,34 @@ internal sealed class AnswerQuestionInSequentialAnsweringVokiTakingCommandHandle
             return err;
         }
 
-        (GeneralVokiQuestionId nextQuestionId, QuestionOrderInVokiTakingSession orderInVokiTaking) = answeringResult.AsSuccess();
-        var nextQuestion = voki.Questions.FirstOrDefault(q => q.Id == nextQuestionId);
-        if (nextQuestion is null) {
+        TakingSessionExpectedQuestion nextQuestion = answeringResult.AsSuccess();
+        VokiQuestion? vokiQuestion = voki.Questions.FirstOrDefault(q => q.Id == nextQuestion.QuestionId);
+        if (vokiQuestion is null) {
             return ErrFactory.NotFound.VokiContent("Expected next question was not found in Voki");
         }
 
         await _sessionsWithSequentialAnsweringRepository.Update(session, ct);
 
         return AnswerQuestionInSequentialAnsweringVokiTakingCommandResult.Create(
-            nextQuestion, orderInVokiTaking, _dateTimeProvider.UtcNow
+            vokiQuestion, nextQuestion, _dateTimeProvider.UtcNow
         );
     }
 }
 
 public sealed record AnswerQuestionInSequentialAnsweringVokiTakingCommandResult(
-    GeneralVokiQuestionId Id,
-    string Text,
-    VokiQuestionImagesSet ImagesSet,
-    QuestionOrderInVokiTakingSession OrderInVokiTaking,
-    ushort MinAnswersCount,
-    ushort MaxAnswersCount,
+    VokiTakingQuestionData Question,
     DateTime CurrentTime
 )
 {
     public static AnswerQuestionInSequentialAnsweringVokiTakingCommandResult Create(
-        VokiQuestion question, QuestionOrderInVokiTakingSession orderInVokiTaking, DateTime currentTime
+        VokiQuestion vokiQuestion,
+        TakingSessionExpectedQuestion questionDataInSession, DateTime currentTime
     ) => new(
-        question.Id,
-        question.Text,
-        question.ImageSet,
-        orderInVokiTaking,
-        question.AnswersCountLimit.MinAnswers,
-        question.AnswersCountLimit.MaxAnswers,
+        VokiTakingQuestionData.Create(
+            vokiQuestion,
+            questionDataInSession.OrderInVokiTaking,
+            questionDataInSession.AnswersIdToOrderInQuestion
+        ),
         currentTime
     );
 }

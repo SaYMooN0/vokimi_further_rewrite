@@ -14,6 +14,7 @@ export type PosssibleGeneralVokiTakingDataSaveData =
         anySave: true,
         savedChosenAnswers: Record<string, string[]>;
         currentQuestionId: string;
+        continuedAt: Date;
     }
     | { anySave: false }
 export type GeneralVokiTakingQuestionData = {

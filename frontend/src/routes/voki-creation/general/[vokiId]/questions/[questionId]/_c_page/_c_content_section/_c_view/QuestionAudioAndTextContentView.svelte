@@ -31,7 +31,7 @@
 <style>
 	.answer-content {
 		display: grid;
-		grid-template-columns: 1fr auto;
+		grid-template-columns: 1fr 20rem;
 		gap: 1rem;
 		align-items: center;
 		margin-inline: auto;
@@ -39,6 +39,6 @@
 	}
 
 	.audio-container {
-		width: 18rem;
+		width: 100%;
 	}
 </style>

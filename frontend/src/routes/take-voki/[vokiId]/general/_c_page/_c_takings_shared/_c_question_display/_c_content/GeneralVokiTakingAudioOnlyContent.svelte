@@ -4,6 +4,7 @@
 	import type { GeneralVokiTakingQuestionContent } from '../../../../types';
 	import { answersKeyboardNav } from './answers-keyboard-nav.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
+	import BasicAudio from '$lib/components/BasicAudio.svelte';
 
 	interface Props {
 		content: Extract<GeneralVokiTakingQuestionContent, { $type: 'AudioOnly' }>;
@@ -45,12 +46,8 @@
 			role={isMultipleChoice ? 'checkbox' : 'radio'}
 			aria-checked={isAnswerChosen(answer.id)}
 		>
-			<div class="audio-container">
-				<audio controls src={StorageBucketMain.fileSrc(answer.audio)}>
-					<track kind="captions" />
-				</audio>
-			</div>
 			<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
+			<BasicAudio src={answer.audio} />
 		</div>
 	{/each}
 </div>
@@ -68,16 +65,6 @@
 		gap: 0.5rem;
 		padding: 0.5rem 1rem;
 		border-radius: 0.5rem;
-		grid-template-columns: 1fr auto;
-	}
-
-	.audio-container {
-		display: flex;
-		align-items: center;
-		width: 100%;
-	}
-
-	audio {
-		width: 100%;
+		grid-template-columns: auto 1fr;
 	}
 </style>

@@ -5,6 +5,7 @@
 	import { answersKeyboardNav } from './answers-keyboard-nav.svelte';
 	import { StorageBucketMain } from '$lib/ts/backend-communication/storage-buckets';
 	import type { GeneralVokiTakingQuestionContent } from '../../../../types';
+	import BasicAudio from '$lib/components/BasicAudio.svelte';
 
 	interface Props {
 		content: Extract<GeneralVokiTakingQuestionContent, { $type: 'AudioAndText' }>;
@@ -49,11 +50,7 @@
 			<GeneralTakingAnswerChosenIndicator {isMultipleChoice} isChosen={isAnswerChosen(answer.id)} />
 			<div class="content-wrapper">
 				<GeneralTakingAnswerText text={answer.text} />
-				<div class="audio-container">
-					<audio controls src={StorageBucketMain.fileSrc(answer.audio)}>
-						<track kind="captions" />
-					</audio>
-				</div>
+				<BasicAudio src={answer.audio} />
 			</div>
 		</div>
 	{/each}
@@ -79,16 +76,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		width: 100%;
-	}
-
-	.audio-container {
-		display: flex;
-		align-items: center;
-		width: 100%;
-	}
-
-	audio {
 		width: 100%;
 	}
 </style>

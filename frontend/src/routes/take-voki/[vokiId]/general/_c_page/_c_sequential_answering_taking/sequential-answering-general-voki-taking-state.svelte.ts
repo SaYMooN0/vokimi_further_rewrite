@@ -91,7 +91,9 @@ export class SequentialAnsweringGeneralVokiTakingState {
         );
         this.isLoadingNextQuestion = false;
         if (response.isSuccess) {
+            console.log("Next question:", response.data);
             this.currentQuestion = { ...response.data, clientShownAt: new Date() };
+            console.log("Current question:", this.currentQuestion);
             this.#resetCurrentAnswers();
 
             return [];
@@ -125,6 +127,7 @@ export class SequentialAnsweringGeneralVokiTakingState {
             clientSessionStartTime: this.#clientSessionStartTime,
             clientSessionFinishTime: new Date()
         };
+        console.log(bodyContentObj);
         const response = await ApiVokiTakingGeneral.fetchJsonResponse<{ receivedResultId: string }>(
             `/vokis/${this.vokiId}/sequential-answering/finish`, RJO.POST(bodyContentObj)
         );

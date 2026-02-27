@@ -2,7 +2,7 @@ using SharedKernel.exceptions;
 
 namespace GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 
-public class QuestionOrderInVokiTakingSession : ValueObject
+public class QuestionOrderInVokiTakingSession : ValueObject, IComparable
 {
     public ushort Value { get; }
 
@@ -24,4 +24,5 @@ public class QuestionOrderInVokiTakingSession : ValueObject
 
     public override IEnumerable<object> GetEqualityComponents() => [Value];
     public override string ToString() => Value.ToString();
+    public int CompareTo(object? obj) => Value.CompareTo(obj is QuestionOrderInVokiTakingSession other ? other.Value : null);
 }

@@ -5,6 +5,7 @@ using GeneralVokiTakingService.Application.dtos;
 using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.general_voki_aggregate;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
+using SharedKernel;
 using SharedKernel.common.vokis;
 using SharedKernel.user_ctx;
 
@@ -21,15 +22,18 @@ internal sealed class ContinueVokiTakingCommandHandler
     private readonly IUserCtxProvider _userCtxProvider;
     private readonly IGeneralVokisRepository _generalVokisRepository;
     private readonly IBaseTakingSessionsRepository _baseTakingSessionsRepository;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public ContinueVokiTakingCommandHandler(
         IUserCtxProvider userCtxProvider,
         IGeneralVokisRepository generalVokisRepository,
-        IBaseTakingSessionsRepository baseTakingSessionsRepository
+        IBaseTakingSessionsRepository baseTakingSessionsRepository,
+        IDateTimeProvider dateTimeProvider
     ) {
         _userCtxProvider = userCtxProvider;
         _generalVokisRepository = generalVokisRepository;
         _baseTakingSessionsRepository = baseTakingSessionsRepository;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<ErrOr<ContinueVokiTakingCommandResult>> Handle(ContinueVokiTakingCommand command, CancellationToken ct) {
@@ -55,7 +59,8 @@ internal sealed class ContinueVokiTakingCommandHandler
             aUserCtx,
             voki.Name,
             vokiQuestionsById: voki.Questions.ToDictionary(q => q.Id, q => q),
-            session
+            session,
+            _dateTimeProvider.UtcNow
         );
     }
 }
@@ -63,14 +68,16 @@ internal sealed class ContinueVokiTakingCommandHandler
 public record ContinueVokiTakingCommandResult(
     GeneralVokiQuestionId CurrentQuestionId,
     CurrentVokiTakingSessionDto SessionData,
-    ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> SavedChosenAnswers
+    ImmutableDictionary<GeneralVokiQuestionId, ImmutableHashSet<GeneralVokiAnswerId>> SavedChosenAnswers,
+    DateTime CurrentDateTime
 )
 {
     public static ErrOr<ContinueVokiTakingCommandResult> Create(
         AuthenticatedUserCtx aUserCtx,
         VokiName vokiName,
         IDictionary<GeneralVokiQuestionId, VokiQuestion> vokiQuestionsById,
-        BaseVokiTakingSession session
+        BaseVokiTakingSession session,
+        DateTime currentDateTime
     ) {
         var savedStateRes = session.GetSavedStateToContinueTaking(aUserCtx);
         if (savedStateRes.IsErr(out var err)) {
@@ -91,7 +98,8 @@ public record ContinueVokiTakingCommandResult(
             questions.ToImmutableDictionary(
                 q => q.Item1.QuestionId,
                 q => q.savedAnswerIds
-            )
+            ),
+            currentDateTime
         );
     }
 }

@@ -26,8 +26,7 @@
 
 <style>
 	.answer-content {
-		margin-inline: auto;
-		width: 100%;
-		max-width: 24rem;
+		width: calc(100% - 4rem);
+		margin: auto 2rem;
 	}
 </style>

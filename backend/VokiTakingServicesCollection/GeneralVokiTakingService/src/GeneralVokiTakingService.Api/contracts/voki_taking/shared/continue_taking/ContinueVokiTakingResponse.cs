@@ -9,6 +9,7 @@ public record ContinueVokiTakingResponse(
     GeneralVokiTakingResponseQuestionData[] Questions,
     string SessionId,
     DateTime StartedAt,
+    DateTime ContinuedAt,
     ushort TotalQuestionsCount,
     Dictionary<string, string[]> SavedChosenAnswers,
     string CurrentQuestionId
@@ -22,6 +23,7 @@ public record ContinueVokiTakingResponse(
             res.SessionData.QuestionsToShow.Select(GeneralVokiTakingResponseQuestionData.FromQuestion).ToArray(),
             res.SessionData.SessionId.ToString(),
             res.SessionData.StartedAt,
+            res.CurrentDateTime,
             res.SessionData.TotalQuestionsCount,
             res.SavedChosenAnswers.ToDictionary(
                 qToAnsw => qToAnsw.Key.ToString(),

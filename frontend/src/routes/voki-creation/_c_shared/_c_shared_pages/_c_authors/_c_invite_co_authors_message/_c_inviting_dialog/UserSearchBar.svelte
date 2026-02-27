@@ -12,7 +12,7 @@
 
 	let { searchedUsers = $bindable(), searchBarInputVal = $bindable() }: Props = $props();
 
-	let errs = $state<Err[]>([]);
+	let errs: Err[] = $state([]);
 	let inputEl: HTMLInputElement;
 
 	function onResetClick(event: MouseEvent) {

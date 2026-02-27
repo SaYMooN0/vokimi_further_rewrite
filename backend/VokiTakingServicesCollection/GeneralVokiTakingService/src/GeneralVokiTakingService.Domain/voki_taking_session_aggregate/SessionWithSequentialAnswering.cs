@@ -207,7 +207,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
         );
     }
 
-    public ErrOr<(GeneralVokiQuestionId NextQuestionId, QuestionOrderInVokiTakingSession Order)> AnswerQuestionAndGetNext(
+    public ErrOr<TakingSessionExpectedQuestion> AnswerQuestionAndGetNext(
         VokiId vokiId,
         ClientServerTimePairDto shownAt,
         DateTime currentTime,
@@ -244,7 +244,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
     }
 
 
-    private ErrOr<(GeneralVokiQuestionId NextQuestionId, QuestionOrderInVokiTakingSession Order)> HandleNotYetAnswered(
+    private ErrOr<TakingSessionExpectedQuestion> HandleNotYetAnswered(
         TakingSessionExpectedQuestion expected,
         ClientServerTimePairDto shownAt,
         DateTime currentTime,
@@ -298,7 +298,7 @@ public sealed class SessionWithSequentialAnswering : BaseVokiTakingSession
             );
         }
 
-        return (next.QuestionId, next.OrderInVokiTaking);
+        return next;
     }
 
     private ErrOrNothing ValidateAnswerForQuestion(
