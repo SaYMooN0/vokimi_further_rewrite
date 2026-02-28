@@ -1,3 +1,4 @@
+using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Application.common.repositories;

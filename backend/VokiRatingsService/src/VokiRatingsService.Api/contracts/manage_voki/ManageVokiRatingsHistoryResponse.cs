@@ -1,4 +1,5 @@
 using VokiRatingsService.Application.vokis.queries;
+using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Api.contracts.manage_voki;

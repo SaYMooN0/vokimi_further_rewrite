@@ -1,6 +1,7 @@
 ﻿using InfrastructureShared.EfCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Infrastructure.persistence.configurations.entities_configurations;

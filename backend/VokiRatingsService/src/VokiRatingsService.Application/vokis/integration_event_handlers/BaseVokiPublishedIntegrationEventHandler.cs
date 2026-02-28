@@ -5,6 +5,7 @@ using SharedKernel.integration_events.voki_publishing;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_aggregate;
+using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Application.vokis.integration_event_handlers;

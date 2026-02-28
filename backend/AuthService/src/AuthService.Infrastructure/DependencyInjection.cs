@@ -1,8 +1,8 @@
 ﻿using ApplicationShared;
 using AuthService.Application.abstractions;
+using AuthService.Application.background_services;
 using AuthService.Application.common.repositories;
 using AuthService.Infrastructure.auth;
-using AuthService.Infrastructure.background_services;
 using AuthService.Infrastructure.email_service;
 using AuthService.Infrastructure.persistence;
 using AuthService.Infrastructure.persistence.repositories;

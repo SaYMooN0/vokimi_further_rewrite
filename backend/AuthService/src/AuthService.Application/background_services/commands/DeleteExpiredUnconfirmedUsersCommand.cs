@@ -1,7 +1,6 @@
 ﻿using AuthService.Application.common.repositories;
-using SharedKernel;
 
-namespace AuthService.Application.unconfirmed_users.commands;
+namespace AuthService.Application.background_services.commands;
 
 public sealed record DeleteExpiredUnconfirmedUsersCommand() : ICommand<int>
 {

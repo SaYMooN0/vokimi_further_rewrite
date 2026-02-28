@@ -1,9 +1,9 @@
-﻿using ApplicationShared.messaging;
+﻿using AuthService.Application.background_services.commands;
 using AuthService.Application.unconfirmed_users.commands;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace AuthService.Infrastructure.background_services;
+namespace AuthService.Application.background_services;
 
 public class UnconfirmedUsersCleanupBackgroundService : BackgroundService
 {

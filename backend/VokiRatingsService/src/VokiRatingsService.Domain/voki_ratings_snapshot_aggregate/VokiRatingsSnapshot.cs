@@ -1,7 +1,7 @@
 using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_ratings_snapshot.events;
 
-namespace VokiRatingsService.Domain.voki_ratings_snapshot;
+namespace VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 
 public class VokiRatingsSnapshot : AggregateRoot<VokiRatingsSnapshotId>
 {

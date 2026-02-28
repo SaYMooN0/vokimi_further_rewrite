@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using VokiRatingsService.Application.background_services;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Infrastructure.persistence;
 using VokiRatingsService.Infrastructure.persistence.repositories;
@@ -28,7 +29,8 @@ public static class DependencyInjection
             .AddPersistence(configuration, env)
             .AddAuth(configuration)
             .AddMassTransitWithIntegrationEventHandlers(configuration, typeof(Application.DependencyInjection).Assembly)
-            .AddIntegrationEventsPublisher();
+            .AddIntegrationEventsPublisher()
+            .AddBackgroundServices();
     }
 
     private static IServiceCollection AddDefaultServices(this IServiceCollection services) => services
@@ -56,13 +58,20 @@ public static class DependencyInjection
     ) {
         string dbConnectionString = configuration.GetConnectionString("VokiRatingsServiceDb")
                                     ?? throw new Exception("Database connection string is not provided.");
-        services.AddPgSqlDbContext<VokiRatingsDbContext>(env,dbConnectionString);
+        services.AddPgSqlDbContext<VokiRatingsDbContext>(env, dbConnectionString);
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
         services.AddScoped<IVokisRepository, VokisRepository>();
         services.AddScoped<IRatingsRepository, RatingsRepository>();
         services.AddScoped<IVokiRatingsSnapshotRepository, VokiRatingsSnapshotRepository>();
+        services.AddScoped<IUpdateRatingsSnapshotMarkerRepository, UpdateRatingsSnapshotMarkerRepository>();
 
+
+        return services;
+    }
+
+    private static IServiceCollection AddBackgroundServices(this IServiceCollection services) {
+        services.AddHostedService<RatingsSnapshotUpdaterBackgroundService>();
         return services;
     }
 }

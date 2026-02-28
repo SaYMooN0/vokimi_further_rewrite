@@ -29,7 +29,7 @@ public class VokiRating : AggregateRoot<VokiRatingId>
 
     public static VokiRating CreateNew(AppUserId userId, VokiId vokiId, RatingValue value, DateTime now) {
         VokiRating rating = new(VokiRatingId.CreateNew(), userId, vokiId, value, now);
-        rating.AddDomainEvent(new NewVokiRatingCreatedEvent(rating.Id, vokiId, userId, rating.CurrentValue));
+        rating.AddDomainEvent(new VokiRatingsSetChangedEvent(vokiId));
         return rating;
     }
 
@@ -52,14 +52,14 @@ public class VokiRating : AggregateRoot<VokiRatingId>
             );
         }
 
-        // no-op update
         if (newValue == CurrentValue) {
             return ErrOrNothing.Nothing;
         }
 
+        var oldValue = CurrentValue;
         CurrentValue = newValue;
         LastUpdated = now;
-        AddDomainEvent(new VokiRatingUpdatedEvent(VokiId));
+        AddDomainEvent(new VokiRatingsSetChangedEvent(VokiId));
         return ErrOrNothing.Nothing;
     }
 }

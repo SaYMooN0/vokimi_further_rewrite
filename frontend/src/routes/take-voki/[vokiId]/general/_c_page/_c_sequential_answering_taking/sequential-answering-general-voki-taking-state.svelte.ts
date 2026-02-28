@@ -41,7 +41,8 @@ export class SequentialAnsweringGeneralVokiTakingState {
             throw new Error("Cannot create voki taking state, because data contains incorrect questions count");
         }
         const firstQuestion = data.questions[0];
-        this.currentQuestion = { ...firstQuestion, clientShownAt: new Date(), serverShownAt: data.startedAt };
+        const serverShownAt = saveData.anySave ? saveData.continuedAt : data.startedAt;
+        this.currentQuestion = { ...firstQuestion, clientShownAt: new Date(), serverShownAt: serverShownAt };
         this.#resetCurrentAnswers();
 
         // Load from save if available

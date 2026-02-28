@@ -50,8 +50,8 @@ internal class SpecificVokiHandlers : IEndpointGroup
         var request = httpContext.GetValidatedRequest<RateVokiRequest>();
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        RateVokiCommand command = new(vokiId, request.RatingValue);
-        var result = await handler.Handle(command, ct);
+        RateVokiCommand command = new(vokiId, request.ParsedRating);
+        ErrOr<VokiRating> result = await handler.Handle(command, ct);
 
         return CustomResults.FromErrOrToJson<VokiRating, VokiRatingDataResponse>(result);
     }

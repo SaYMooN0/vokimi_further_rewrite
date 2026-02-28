@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Domain.app_user_aggregate;
 using VokiRatingsService.Domain.voki_aggregate;
 using VokiRatingsService.Domain.voki_rating_aggregate;
+using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
+using VokiRatingsService.Domain.update_ratings_snapshot_marker_aggregate;
 
 namespace VokiRatingsService.Infrastructure.persistence;
 
@@ -13,7 +15,8 @@ public class VokiRatingsDbContext : DbContext
 
     public VokiRatingsDbContext(
         DbContextOptions<VokiRatingsDbContext> options, IDomainEventsPublisher publisher
-    ) : base(options) {
+    ) : base(options)
+    {
         _publisher = publisher;
     }
 
@@ -21,13 +24,16 @@ public class VokiRatingsDbContext : DbContext
     public DbSet<Voki> Vokis { get; init; } = null!;
     public DbSet<VokiRating> Ratings { get; init; } = null!;
     public DbSet<VokiRatingsSnapshot> VokiRatingsSnapshots { get; init; } = null!;
+    public DbSet<UpdateRatingsSnapshotMarker> UpdateRatingsSnapshotMarkers { get; init; } = null!;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(VokiRatingsDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 
-    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
         var domainEvents = ChangeTracker.Entries()
             .Where(e => e.Entity is IAggregateRoot)
             .SelectMany(e => ((IAggregateRoot)e.Entity).PopAndClearDomainEvents())
@@ -37,8 +43,10 @@ public class VokiRatingsDbContext : DbContext
         return await base.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task PublishDomainEvents(List<IDomainEvent> domainEvents, CancellationToken ct) {
-        foreach (var domainEvent in domainEvents) {
+    private async Task PublishDomainEvents(List<IDomainEvent> domainEvents, CancellationToken ct)
+    {
+        foreach (var domainEvent in domainEvents)
+        {
             await _publisher.Publish(domainEvent, ct);
         }
     }

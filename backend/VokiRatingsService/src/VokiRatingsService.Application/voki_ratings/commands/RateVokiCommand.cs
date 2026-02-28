@@ -11,7 +11,7 @@ namespace VokiRatingsService.Application.voki_ratings.commands;
 
 public sealed record RateVokiCommand(
     VokiId VokiId,
-    ushort NewRating
+    RatingValue NewRating
 ) : ICommand<VokiRating>,
     IWithAuthCheckStep;
 
@@ -44,23 +44,16 @@ internal sealed class RateVokiCommandHandler : ICommandHandler<RateVokiCommand, 
             );
         }
 
-        ErrOr<RatingValue> creationRes = RatingValue.Create(command.NewRating);
 
-        if (creationRes.IsErr(out var err)) {
-            return err;
-        }
-
-        var ratingValue = creationRes.AsSuccess();
-        VokiRating? rating = await _ratingsRepository.GetUserRatingForVokiForUpdate(aUserCtx, command.VokiId, ct
-        );
+        VokiRating? rating = await _ratingsRepository.GetUserRatingForVokiForUpdate(aUserCtx, command.VokiId, ct);
 
 
         if (rating is null) {
-            rating = VokiRating.CreateNew(aUserCtx.UserId, command.VokiId, ratingValue, _dateTimeProvider.UtcNow);
+            rating = VokiRating.CreateNew(aUserCtx.UserId, command.VokiId, command.NewRating, _dateTimeProvider.UtcNow);
             await _ratingsRepository.Add(rating, ct);
         }
         else {
-            ErrOrNothing res = rating.Update(ratingValue, _dateTimeProvider.UtcNow);
+            ErrOrNothing res = rating.Update(command.NewRating, _dateTimeProvider.UtcNow);
             if (res.IsErr(out var updateRatingErr)) {
                 return updateRatingErr;
             }
