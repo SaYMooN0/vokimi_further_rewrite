@@ -1,4 +1,5 @@
 ﻿using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.db_extensions;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.user_ctx;
@@ -56,5 +57,26 @@ internal class RatingsRepository : IRatingsRepository
             .ToArrayAsync(ct);
 
         return VokiRatingsDistribution.FromRatingsArray(ratings);
+    }
+
+    public async Task<Dictionary<VokiId, VokiRatingsDistribution>> GetRatingsDistributionForVokis(
+        IEnumerable<VokiId> vokiIds,
+        CancellationToken ct
+    ) {
+        var ids = vokiIds.ToArray();
+
+        var grouped = await _db.Ratings
+            .Where(r => ids.Contains(r.VokiId))
+            .GroupBy(r => r.VokiId)
+            .Select(g => new {
+                VokiId = g.Key,
+                Ratings = g.Select(x => x.CurrentValue).ToArray()
+            })
+            .ToListAsync(ct);
+
+        return grouped.ToDictionary(
+            x => x.VokiId,
+            x => VokiRatingsDistribution.FromRatingsArray(x.Ratings)
+        );
     }
 }

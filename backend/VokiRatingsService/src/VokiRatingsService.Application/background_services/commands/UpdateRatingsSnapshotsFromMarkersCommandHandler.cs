@@ -1,75 +1,81 @@
 using Microsoft.Extensions.Logging;
 using SharedKernel;
 using VokiRatingsService.Application.common.repositories;
+using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 
 namespace VokiRatingsService.Application.background_services.commands;
 
-public record UpdateRatingsSnapshotsFromMarkersCommand() : ICommand<int>
+public record UpdateRatingsSnapshotsFromMarkersCommand() : ICommand<UpdateRatingsSnapshotsFromMarkersCommandResult>
 {
-    bool ICommand<int>.RequireTransaction => false;
+    bool ICommand<UpdateRatingsSnapshotsFromMarkersCommandResult>.RequireTransaction => false;
 }
 
-internal class UpdateRatingsSnapshotsFromMarkersCommandHandler : ICommandHandler<UpdateRatingsSnapshotsFromMarkersCommand, int>
+internal class UpdateRatingsSnapshotsFromMarkersCommandHandler :
+    ICommandHandler<UpdateRatingsSnapshotsFromMarkersCommand, UpdateRatingsSnapshotsFromMarkersCommandResult>
 {
     private readonly IUpdateRatingsSnapshotMarkerRepository _updateRatingsSnapshotMarkerRepository;
     private readonly IRatingsRepository _ratingsRepository;
     private readonly IVokiRatingsSnapshotRepository _vokiRatingsSnapshotRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ILogger<UpdateRatingsSnapshotsFromMarkersCommandHandler> _logger;
 
     public UpdateRatingsSnapshotsFromMarkersCommandHandler(
         IUpdateRatingsSnapshotMarkerRepository updateRatingsSnapshotMarkerRepository,
         IRatingsRepository ratingsRepository,
         IVokiRatingsSnapshotRepository vokiRatingsSnapshotRepository,
-        IDateTimeProvider dateTimeProvider,
-        ILogger<UpdateRatingsSnapshotsFromMarkersCommandHandler> logger
+        IDateTimeProvider dateTimeProvider
     ) {
         _updateRatingsSnapshotMarkerRepository = updateRatingsSnapshotMarkerRepository;
         _ratingsRepository = ratingsRepository;
         _vokiRatingsSnapshotRepository = vokiRatingsSnapshotRepository;
         _dateTimeProvider = dateTimeProvider;
-        _logger = logger;
     }
 
-    public async Task<ErrOr<int>> Handle(UpdateRatingsSnapshotsFromMarkersCommand request, CancellationToken cancellationToken) {
-        var markers = await _updateRatingsSnapshotMarkerRepository.GetBatch(100, cancellationToken);
+    public async Task<ErrOr<UpdateRatingsSnapshotsFromMarkersCommandResult>> Handle(
+        UpdateRatingsSnapshotsFromMarkersCommand request, CancellationToken ct
+    ) {
+        HashSet<VokiId> vokiIds = await _updateRatingsSnapshotMarkerRepository.GetIdsOfMarkedVokis(100, ct);
 
-        if (markers.Length == 0) {
+        if (vokiIds.Count == 0) {
             return 0;
         }
 
-        var vokiIds = markers.Select(m => m.VokiId).Distinct().ToArray();
-        var now = _dateTimeProvider.UtcNow;
+        List<VokiRatingsSnapshot> snapshotsToUpdate = new();
+        List<VokiRatingsSnapshot> snapshotsToAdd = new();
+        DateTime now = _dateTimeProvider.UtcNow;
+        Dictionary<VokiId, VokiRatingsDistribution> distributions =
+            await _ratingsRepository.GetRatingsDistributionForVokis(vokiIds, ct);
+        Dictionary<VokiId, VokiRatingsSnapshot> vokiIdToLastSnapshot =
+            await _vokiRatingsSnapshotRepository.GetLastSnapshotForVokisAsTracking(vokiIds, ct);
 
         foreach (var vokiId in vokiIds) {
-            try {
-                var distribution = await _ratingsRepository.GetRatingsDistributionForVoki(vokiId, cancellationToken);
-                var lastSnapshot =
-                    await _vokiRatingsSnapshotRepository.GetLastSnapshotForVokiForUpdate(vokiId, cancellationToken);
-
-                if (lastSnapshot is null) {
-                    var newSnapshot = VokiRatingsSnapshot.CreateNew(vokiId, now, distribution);
-                    await _vokiRatingsSnapshotRepository.Add(newSnapshot, cancellationToken);
-                }
-                else {
-                    if (lastSnapshot.IsInSameDayAs(now)) {
-                        lastSnapshot.Update(now, distribution);
-                        await _vokiRatingsSnapshotRepository.Update(lastSnapshot, cancellationToken);
-                    }
-                    else {
-                        var newSnapshot = VokiRatingsSnapshot.CreateNew(vokiId, now, distribution);
-                        await _vokiRatingsSnapshotRepository.Add(newSnapshot, cancellationToken);
-                    }
-                }
+            VokiRatingsDistribution newDistribution = distributions.GetValueOrDefault(vokiId, VokiRatingsDistribution.Empty);
+            if (vokiIdToLastSnapshot.TryGetValue(vokiId, out var lastVokiSnapshot) && lastVokiSnapshot.IsInSameDayAs(now)) {
+                lastVokiSnapshot.Update(now, newDistribution);
+                snapshotsToUpdate.Add(lastVokiSnapshot);
             }
-            catch (Exception ex) {
-                _logger.LogError(ex, "Error occurred while updating snapshot for Voki {VokiId}", vokiId.Value);
+            else {
+                var newSnapshot = VokiRatingsSnapshot.CreateNew(vokiId, now, newDistribution);
+                snapshotsToAdd.Add(newSnapshot);
             }
         }
 
-        await _updateRatingsSnapshotMarkerRepository.DeleteBatch(markers, cancellationToken);
+        await _vokiRatingsSnapshotRepository.UpdateRange(snapshotsToUpdate, ct);
+        await _vokiRatingsSnapshotRepository.AddRange(snapshotsToAdd, ct);
 
-        return markers.Length;
+
+        await _updateRatingsSnapshotMarkerRepository.ExecuteDeleteByVokiIds(vokiIds, ct);
+
+        return new UpdateRatingsSnapshotsFromMarkersCommandResult(
+            SnapshotsUpdatedCount: snapshotsToUpdate.Count,
+            NewSnapshotsCount: snapshotsToAdd.Count,
+            now
+        );
     }
 }
+
+public record UpdateRatingsSnapshotsFromMarkersCommandResult(
+    int SnapshotsUpdatedCount,
+    int NewSnapshotsCount,
+    DateTime Time
+);

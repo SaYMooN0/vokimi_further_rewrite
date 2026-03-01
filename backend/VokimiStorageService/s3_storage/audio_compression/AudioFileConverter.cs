@@ -6,46 +6,38 @@ internal sealed class AudioFileConverter : IAudioFileConverter
 {
     private readonly ILogger<AudioFileConverter> _logger;
 
-    public AudioFileConverter(ILogger<AudioFileConverter> logger, IConfiguration configuration)
-    {
+    public AudioFileConverter(ILogger<AudioFileConverter> logger, IConfiguration configuration) {
         FFmpeg.SetExecutablesPath(configuration["FfmpegPath"]);
         _logger = logger;
     }
 
-    public async Task<ErrOr<AudioFileAfterConversion>> ConvertAudioAsync(FileData data, CancellationToken ct)
-    {
+    public async Task<ErrOr<AudioFileAfterConversion>> ConvertAudioAsync(FileData data, CancellationToken ct) {
         string inputTempPath = Path.GetTempFileName();
-        try
-        {
+        try {
             long originalSizeBytes = data.Stream.Length;
 
-            if (data.Stream.CanSeek)
-            {
+            if (data.Stream.CanSeek) {
                 data.Stream.Position = 0;
             }
 
-            await using (var fileStream = new FileStream(inputTempPath, FileMode.Create, FileAccess.Write))
-            {
+            await using (var fileStream = new FileStream(inputTempPath, FileMode.Create, FileAccess.Write)) {
                 await data.Stream.CopyToAsync(fileStream, ct);
             }
 
             var mediaInfo = await FFmpeg.GetMediaInfo(inputTempPath, ct);
             var audioStream = mediaInfo.AudioStreams.FirstOrDefault();
 
-            if (audioStream == null)
-            {
+            if (audioStream == null) {
                 return ErrFactory.Conflict("No audio stream found in the uploaded file.");
             }
 
             var extOrErr = GetExtensionFromContentType(data.ContentType);
-            if (extOrErr.IsErr(out var err))
-            {
+            if (extOrErr.IsErr(out var err)) {
                 return err;
             }
 
             var decisionOrErr = AudioCompressionPolicy.Decide(originalSizeBytes, extOrErr.AsSuccess(), mediaInfo.Duration);
-            if (decisionOrErr.IsErr(out err))
-            {
+            if (decisionOrErr.IsErr(out err)) {
                 _logger.LogWarning("ConvertAudioAsync: Policy rejected file. Reason: {Reason}", err.Message);
                 return err;
             }
@@ -53,10 +45,8 @@ internal sealed class AudioFileConverter : IAudioFileConverter
             AudioCompressionDecision decision = decisionOrErr.AsSuccess();
             _logger.LogInformation("ConvertAudioAsync: Policy decision: {Reason}", decision.Reason);
 
-            if (!decision.ShouldTranscode || decision.TargetFormat == TargetAudioFormat.Passthrough)
-            {
-                if (data.Stream.CanSeek)
-                {
+            if (!decision.ShouldTranscode || decision.TargetFormat == TargetAudioFormat.Passthrough) {
+                if (data.Stream.CanSeek) {
                     data.Stream.Position = 0;
                 }
 
@@ -77,13 +67,11 @@ internal sealed class AudioFileConverter : IAudioFileConverter
                 .AddStream(audioStream)
                 .SetOutput(outputTempPath);
 
-            if (decision.TargetFormat == TargetAudioFormat.M4A)
-            {
+            if (decision.TargetFormat == TargetAudioFormat.M4A) {
                 audioStream.SetCodec(AudioCodec.aac);
             }
 
-            if (decision.Bitrate.HasValue)
-            {
+            if (decision.Bitrate.HasValue) {
                 conversion.SetAudioBitrate(decision.Bitrate.Value * 1000);
             }
 
@@ -106,22 +94,18 @@ internal sealed class AudioFileConverter : IAudioFileConverter
                 ResultBytes: resultBytes
             );
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             _logger.LogError(ex, "ConvertAudioAsync: Error converting audio.");
             return ErrFactory.Conflict("Failed to convert audio file format.");
         }
-        finally
-        {
-            if (File.Exists(inputTempPath))
-            {
+        finally {
+            if (File.Exists(inputTempPath)) {
                 File.Delete(inputTempPath);
             }
         }
     }
 
-    private static ErrOr<string> GetExtensionFromContentType(string contentType)
-    {
+    private static ErrOr<string> GetExtensionFromContentType(string contentType) {
         var ct = contentType.ToLowerInvariant();
         if (ct.Contains("mpeg") || ct.Contains("mp3")) return "mp3";
         if (ct.Contains("mp4") || ct.Contains("m4a")) return "m4a";

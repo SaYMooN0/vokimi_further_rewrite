@@ -20,7 +20,7 @@ public class UnconfirmedUsersCleanupBackgroundService : BackgroundService
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
-        _logger.LogInformation("Unconfirmed users cleanup background service started.");
+        _logger.LogInformation($"Background service '{nameof(UnconfirmedUsersCleanupBackgroundService)}' started");
 
         while (!stoppingToken.IsCancellationRequested) {
             try {
@@ -34,13 +34,13 @@ public class UnconfirmedUsersCleanupBackgroundService : BackgroundService
                 }
                 else {
                     _logger.LogInformation(
-                        "Deleted {Count} expired unconfirmed users at {Time}.",
+                        "Deleted {Count} expired unconfirmed users at {Time}",
                         result.AsSuccess(), DateTime.UtcNow
                     );
                 }
             }
             catch (Exception ex) {
-                _logger.LogError(ex, "Error occurred while deleting expired unconfirmed users.");
+                _logger.LogError(ex, "Exception was thrown while deleting expired unconfirmed users");
             }
 
             try {
@@ -49,6 +49,7 @@ public class UnconfirmedUsersCleanupBackgroundService : BackgroundService
             catch (TaskCanceledException) { }
         }
 
-        _logger.LogInformation("Unconfirmed users cleanup background service stopped.");
+        _logger.LogInformation($"Background service '{nameof(UnconfirmedUsersCleanupBackgroundService)}' stopped");
+
     }
 }

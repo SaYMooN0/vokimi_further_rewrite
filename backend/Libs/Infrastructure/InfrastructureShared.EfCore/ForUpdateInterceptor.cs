@@ -1,4 +1,5 @@
 using System.Data.Common;
+using InfrastructureShared.EfCore.db_extensions;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
@@ -18,8 +19,7 @@ public sealed class ForUpdateInterceptor : DbCommandInterceptor
         }
 
 
-        if (command.CommandText.Contains(ForUpdateTag, StringComparison.Ordinal))
-        {
+        if (command.CommandText.Contains(ForUpdateTag, StringComparison.Ordinal)) {
             command.CommandText += " FOR UPDATE";
         }
     }

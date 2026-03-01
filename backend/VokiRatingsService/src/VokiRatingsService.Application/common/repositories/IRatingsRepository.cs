@@ -1,8 +1,6 @@
-﻿using SharedKernel;
-using SharedKernel.user_ctx;
+﻿using SharedKernel.user_ctx;
 using VokiRatingsService.Domain.common;
 using VokiRatingsService.Domain.voki_rating_aggregate;
-using VokiRatingsService.Domain.voki_ratings_snapshot;
 
 namespace VokiRatingsService.Application.common.repositories;
 
@@ -14,6 +12,11 @@ public interface IRatingsRepository
     Task Add(VokiRating rating, CancellationToken ct);
     Task<VokiIdWithCurrentRatingDto[]> ListIdsOfVokiRatedByUser(AuthenticatedUserCtx authenticatedUserCtx, CancellationToken ct);
     Task<VokiRatingsDistribution> GetRatingsDistributionForVoki(VokiId vokiId, CancellationToken ct);
+
+    Task<Dictionary<VokiId, VokiRatingsDistribution>> GetRatingsDistributionForVokis(
+        IEnumerable<VokiId> vokiIds,
+        CancellationToken ct
+    );
 }
 
 public record VokiIdWithCurrentRatingDto(VokiId VokiId, RatingValue Value, DateTime DateTime);

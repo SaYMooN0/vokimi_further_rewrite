@@ -1,98 +1,56 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using SharedKernel;
-using VokiRatingsService.Application.common.repositories;
+using VokiRatingsService.Application.background_services.commands;
 
 namespace VokiRatingsService.Application.background_services;
 
 public class RatingsSnapshotUpdaterBackgroundService : BackgroundService
 {
-    private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly ICommandHandler<UpdateRatingsSnapshotsFromMarkersCommand, UpdateRatingsSnapshotsFromMarkersCommandResult>
+        _updateRatingsSnapshotsCommandHandler;
+
     private readonly ILogger<RatingsSnapshotUpdaterBackgroundService> _logger;
-    private readonly IUpdateRatingsSnapshotMarkerRepository _updateRatingsSnapshotMarkerRepository;
-    private readonly IRatingsRepository _ratingsRepository;
-    private readonly IVokiRatingsSnapshotRepository _vokiRatingsSnapshotRepository;
-    private readonly TimeSpan _interval = TimeSpan.FromMinutes(1);
+    private readonly TimeSpan _interval = TimeSpan.FromMinutes(2);
 
     public RatingsSnapshotUpdaterBackgroundService(
-        IServiceScopeFactory serviceScopeFactory,
-        ILogger<RatingsSnapshotUpdaterBackgroundService> logger, IUpdateRatingsSnapshotMarkerRepository updateRatingsSnapshotMarkerRepository, IRatingsRepository ratingsRepository, IVokiRatingsSnapshotRepository vokiRatingsSnapshotRepository)
-    {
-        _serviceScopeFactory = serviceScopeFactory;
+        ICommandHandler<UpdateRatingsSnapshotsFromMarkersCommand, UpdateRatingsSnapshotsFromMarkersCommandResult>
+            updateRatingsSnapshotsCommandHandler,
+        ILogger<RatingsSnapshotUpdaterBackgroundService> logger
+    ) {
+        _updateRatingsSnapshotsCommandHandler = updateRatingsSnapshotsCommandHandler;
         _logger = logger;
-        _updateRatingsSnapshotMarkerRepository = updateRatingsSnapshotMarkerRepository;
-        _ratingsRepository = ratingsRepository;
-        _vokiRatingsSnapshotRepository = vokiRatingsSnapshotRepository;
     }
 
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        _logger.LogInformation("Ratings snapshot updater background service started.");
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
+        _logger.LogInformation($"Background service '{nameof(RatingsSnapshotUpdaterBackgroundService)}' started");
 
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                using var scope = _serviceScopeFactory.CreateScope();
-                var dateTimeProvider = scope.ServiceProvider.GetRequiredService<IDateTimeProvider>();
+        while (!stoppingToken.IsCancellationRequested) {
+            try {
+                var result = await _updateRatingsSnapshotsCommandHandler.Handle(
+                    new UpdateRatingsSnapshotsFromMarkersCommand(),
+                    stoppingToken
+                );
 
-                var markers = await markerRepo.GetBatch(100, stoppingToken);
-
-                if (markers.Length > 0)
-                {
-                    var vokiIds = markers.Select(m => m.VokiId).Distinct().ToArray();
-                    var now = dateTimeProvider.UtcNow;
-
-                    foreach (var vokiId in vokiIds)
-                    {
-                        try
-                        {
-                            var distribution = await ratingsRepo.GetRatingsDistributionForVoki(vokiId, stoppingToken);
-                            var lastSnapshot = await snapshotRepo.GetLastSnapshotForVokiForUpdate(vokiId, stoppingToken);
-
-                            if (lastSnapshot is null)
-                            {
-                                var newSnapshot = Domain.voki_ratings_snapshot_aggregate.VokiRatingsSnapshot.CreateNew(vokiId, now, distribution);
-                                await snapshotRepo.Add(newSnapshot, stoppingToken);
-                            }
-                            else
-                            {
-                                if (lastSnapshot.IsInSameDayAs(now))
-                                {
-                                    lastSnapshot.Update(now, distribution);
-                                    await snapshotRepo.Update(lastSnapshot, stoppingToken);
-                                }
-                                else
-                                {
-                                    var newSnapshot = Domain.voki_ratings_snapshot_aggregate.VokiRatingsSnapshot.CreateNew(vokiId, now, distribution);
-                                    await snapshotRepo.Add(newSnapshot, stoppingToken);
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            _logger.LogError(ex, "Error occurred while updating snapshot for Voki {VokiId}", vokiId.Value);
-                        }
-                    }
-
-                    await markerRepo.DeleteBatch(markers, stoppingToken);
-
-                    _logger.LogInformation("Processed {Count} snapshot markers at {Time}.", markers.Length, DateTime.UtcNow);
+                if (result.IsErr(out var err)) {
+                    _logger.LogWarning("Snapshots updating encountered errors: {Errors}", err.ToString());
+                }
+                else {
+                    _logger.LogInformation(
+                        "Updated {Count} Voki ratings snapshots at {Time}.",
+                        result.AsSuccess(), DateTime.UtcNow
+                    );
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error occurred in RatingsSnapshotUpdaterBackgroundService.");
+            catch (Exception ex) {
+                _logger.LogError(ex, "Exception was thrown while updating Voki ratings snapshots");
             }
 
-            try
-            {
+            try {
                 await Task.Delay(_interval, stoppingToken);
             }
             catch (TaskCanceledException) { }
         }
 
-        _logger.LogInformation("Ratings snapshot updater background service stopped.");
+        _logger.LogInformation($"Background service '{nameof(RatingsSnapshotUpdaterBackgroundService)}' stopped");
     }
 }

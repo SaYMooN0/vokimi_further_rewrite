@@ -13,23 +13,23 @@ internal class UpdateRatingsSnapshotMarkerRepository : IUpdateRatingsSnapshotMar
         _db = db;
     }
 
-    public Task<UpdateRatingsSnapshotMarker[]> GetBatch(int limit, CancellationToken ct) {
-        return _db.UpdateRatingsSnapshotMarkers
-            .Take(limit)
-            .ToArrayAsync(ct);
-    }
-
     public async Task Add(UpdateRatingsSnapshotMarker marker, CancellationToken ct) {
         _db.UpdateRatingsSnapshotMarkers.Add(marker);
         await _db.SaveChangesAsync(ct);
     }
 
-    public Task<bool> ExistsForVoki(VokiId vokiId, CancellationToken ct) {
-        return _db.UpdateRatingsSnapshotMarkers.AnyAsync(m => m.VokiId == vokiId, ct);
-    }
+    public Task<bool> ExistsForVoki(VokiId vokiId, CancellationToken ct) =>
+        _db.UpdateRatingsSnapshotMarkers.AnyAsync(m => m.VokiId == vokiId, ct);
 
-    public async Task DeleteBatch(IEnumerable<UpdateRatingsSnapshotMarker> markers, CancellationToken ct) {
-        _db.UpdateRatingsSnapshotMarkers.RemoveRange(markers);
-        await _db.SaveChangesAsync(ct);
-    }
+
+    public Task<HashSet<VokiId>> GetIdsOfMarkedVokis(int limit, CancellationToken ct) =>
+        _db.UpdateRatingsSnapshotMarkers
+            .Select(m => m.VokiId)
+            .Take(limit)
+            .ToHashSetAsync(ct);
+
+    public async Task ExecuteDeleteByVokiIds(IEnumerable<VokiId> markers, CancellationToken ct) =>
+        await _db.UpdateRatingsSnapshotMarkers
+            .Where(m => markers.Contains(m.VokiId))
+            .ExecuteDeleteAsync(ct);
 }

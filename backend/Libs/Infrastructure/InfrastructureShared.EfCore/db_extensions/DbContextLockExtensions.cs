@@ -4,7 +4,7 @@ using InfrastructureShared.EfCore.query_extensions.expression_visitors;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.domain;
 
-namespace InfrastructureShared.EfCore.query_extensions;
+namespace InfrastructureShared.EfCore.db_extensions;
 
 public static class DbContextLockExtensions
 {

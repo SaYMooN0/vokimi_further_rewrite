@@ -1,7 +1,9 @@
 using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.db_extensions;
 using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Application.common.repositories;
+using VokiRatingsService.Domain;
 using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 using VokiRatingsService.Domain.voki_ratings_snapshot;
 
@@ -15,15 +17,24 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
         _db = db;
     }
 
-    public Task<VokiRatingsSnapshot?> GetLastSnapshotForVokiForUpdate(
-        VokiId vokiId,
-        CancellationToken ct
-    ) => _db.FindForUpdateAsync<VokiRatingsSnapshot>(
-        findPredicate: s => s.VokiId == vokiId,
-        ct,
-        orderBy: q => q.OrderByDescending(s => s.Date)
-    );
+    public async Task<Dictionary<VokiId, VokiRatingsSnapshot>>
+        GetLastSnapshotForVokisAsTracking(
+            IEnumerable<VokiId> vokiIds,
+            CancellationToken ct
+        ) {
+        var ids = vokiIds.ToArray();
 
+        var snapshots = await _db.VokiRatingsSnapshots
+            .Where(x => ids.Contains(x.VokiId))
+            .GroupBy(x => x.VokiId)
+            .Select(g => g
+                .OrderByDescending(x => x.Date)
+                .First())
+            .AsTracking()
+            .ToListAsync(ct);
+
+        return snapshots.ToDictionary(x => x.VokiId);
+    }
 
 
     public async Task Add(VokiRatingsSnapshot snapshot, CancellationToken ct) {
