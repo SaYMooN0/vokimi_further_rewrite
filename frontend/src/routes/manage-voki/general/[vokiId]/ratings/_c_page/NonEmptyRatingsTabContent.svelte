@@ -38,7 +38,6 @@
 	</div>
 </div>
 
-
 <style>
 	.ratings-top-data {
 		display: grid;
@@ -57,11 +56,11 @@
 	.main-field {
 		width: 100%;
 		height: fit-content;
-		padding: 2rem;
+		padding: 1.5rem 2rem;
 		border-radius: 0.75rem;
 		color: var(--muted-foreground);
 		font-size: 2.5rem;
-		font-weight: 475;
+		font-weight: 550;
 		letter-spacing: 0.25px;
 		white-space: nowrap;
 	}
@@ -71,12 +70,12 @@
 		flex-direction: row;
 		align-items: center;
 		color: var(--primary);
-		font-weight: 500;
+		font-weight: 600;
 	}
 
 	.main-field .star-icon {
-		width: 2.5rem;
-		height: 2.5rem;
+		width: 2.675rem;
+		height: 2.675rem;
 		margin-bottom: 0.25rem;
 		margin-left: 0.25rem;
 		fill: var(--primary);

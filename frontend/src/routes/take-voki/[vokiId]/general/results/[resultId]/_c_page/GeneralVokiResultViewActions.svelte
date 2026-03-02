@@ -1,22 +1,34 @@
 <script lang="ts">
 	import AuthView from '$lib/components/AuthView.svelte';
 	import type { GeneralVokiResultsVisibility } from '$lib/ts/voki';
+	import ViewAllResultsActionButton from './_c_result_view_actions/ViewAllResultsActionButton.svelte';
 
 	interface Props {
 		resultsCount: number;
 		resultsVisibility: GeneralVokiResultsVisibility;
 		vokiId: string;
+		vokiResultIdsReceivedByUser: string[];
+		allVokiResultIds: string[];
 	}
-	let { resultsCount, resultsVisibility, vokiId }: Props = $props();
+	let {
+		resultsCount,
+		resultsVisibility,
+		vokiId,
+		vokiResultIdsReceivedByUser,
+		allVokiResultIds
+	}: Props = $props();
 </script>
 
 <AuthView>
 	{#snippet children(authState)}
-		{#if resultsVisibility === 'Anyone' || authState.name === 'authenticated'}
-			<a class="see-all-btn" href={`/take-voki/${vokiId}/general/results/all`}
-				>View all ({resultsCount}) results</a
-			>
-		{/if}
+		<ViewAllResultsActionButton
+			{authState}
+			{resultsCount}
+			{resultsVisibility}
+			{vokiId}
+			{vokiResultIdsReceivedByUser}
+			{allVokiResultIds}
+		/>
 		{#if authState.name === 'authenticated'}
 			<a class="see-received-btn" href={`/take-voki/${vokiId}/general/results/received`}
 				>See my received results</a
@@ -26,25 +38,6 @@
 </AuthView>
 
 <style>
-	.see-all-btn {
-		width: fit-content;
-		padding: 0.25rem 2rem;
-		margin-top: 1rem;
-		border-radius: 0.375rem;
-		background: var(--primary);
-		color: var(--primary-foreground);
-		font-size: 1.375rem;
-		font-weight: 400;
-		letter-spacing: 0.5px;
-		transition: all 0.12s ease;
-		cursor: pointer;
-		align-self: center;
-	}
-
-	.see-all-btn:hover {
-		background: var(--primary-hov);
-	}
-
 	.see-received-btn {
 		align-self: center;
 		width: fit-content;

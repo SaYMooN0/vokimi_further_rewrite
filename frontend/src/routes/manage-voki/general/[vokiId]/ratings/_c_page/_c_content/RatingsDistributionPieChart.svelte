@@ -39,6 +39,9 @@
 
 	function describeWedge(cx: number, cy: number, r: number, startDeg: number, endDeg: number) {
 		const sweep = endDeg - startDeg;
+		if (sweep >= 360) {
+			return `M ${cx} ${cy - r} a ${r} ${r} 0 1 1 0 ${2 * r} a ${r} ${r} 0 1 1 0 ${-2 * r}`;
+		}
 		const start = polarToCartesian(cx, cy, r, startDeg);
 		const end = polarToCartesian(cx, cy, r, endDeg);
 		const largeArc = sweep > 180 ? 1 : 0;
@@ -75,9 +78,11 @@
 	<svg class="chart" viewBox="0 0 100 100" role="img" aria-label="Rating distribution">
 		<g class="slices">
 			{#each slices as s (s.value)}
-				<path class={`slice slice-${s.value}`} d={s.path} onclick={() => highlight(s.value)}>
-					<title>{s.value}★: {s.count}</title>
-				</path>
+				{#if s.count > 0}
+					<path class={`slice slice-${s.value}`} d={s.path} onclick={() => highlight(s.value)}>
+						<title>{s.value}★: {s.count}</title>
+					</path>
+				{/if}
 			{/each}
 		</g>
 	</svg>
@@ -100,7 +105,8 @@
 		align-items: center;
 		gap: 2rem;
 		border-radius: 1rem;
-		background-color: var(--secondary);
+		background-color: var(--back);
+		box-shadow: var(--shadow-xs);
 		grid-template-columns: 1fr 10rem;
 	}
 
@@ -117,7 +123,9 @@
 	}
 
 	.slice {
+		stroke: var(--back);
 		stroke-width: 0.35;
+		stroke-linejoin: round;
 		cursor: pointer;
 	}
 

@@ -41,4 +41,21 @@ export namespace VokiUtils {
     export function canUserManageVoki(voki: PublishedVokiBriefInfo, signedInUserId: string): boolean {
         return voki.primaryAuthorId === signedInUserId || voki.managerIds.includes(signedInUserId);
     }
+    export function canUserSeeAllGeneralVokiResults(
+        resultsVisibility: GeneralVokiResultsVisibility,
+        resultIdsReceivedByUser: string[],
+        allVokiResultIds: string[]
+    ): boolean {
+        if (resultsVisibility === "Anyone") {
+            return true;
+        }
+        const receivedResultIds = new Set(resultIdsReceivedByUser);
+        if (resultsVisibility === "AfterTaking") {
+            return allVokiResultIds.some((resultId) => receivedResultIds.has(resultId));
+        }
+        if (resultsVisibility === "OnlyReceived") {
+            return allVokiResultIds.every((resultId) => receivedResultIds.has(resultId));
+        }
+        return false;
+    }
 }

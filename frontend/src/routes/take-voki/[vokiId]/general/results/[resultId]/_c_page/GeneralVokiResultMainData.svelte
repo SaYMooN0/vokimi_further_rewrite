@@ -7,8 +7,6 @@
 		text: string;
 	}
 	let { image, name, text }: Props = $props();
-
-	
 </script>
 
 {#if image}

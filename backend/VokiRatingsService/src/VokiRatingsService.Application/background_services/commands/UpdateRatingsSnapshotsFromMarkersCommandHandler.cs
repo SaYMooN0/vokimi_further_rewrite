@@ -35,14 +35,14 @@ internal class UpdateRatingsSnapshotsFromMarkersCommandHandler :
         UpdateRatingsSnapshotsFromMarkersCommand request, CancellationToken ct
     ) {
         HashSet<VokiId> vokiIds = await _updateRatingsSnapshotMarkerRepository.GetIdsOfMarkedVokis(100, ct);
+        DateTime now = _dateTimeProvider.UtcNow;
 
         if (vokiIds.Count == 0) {
-            return 0;
+            return new UpdateRatingsSnapshotsFromMarkersCommandResult(0, 0, now, 0);
         }
 
         List<VokiRatingsSnapshot> snapshotsToUpdate = new();
         List<VokiRatingsSnapshot> snapshotsToAdd = new();
-        DateTime now = _dateTimeProvider.UtcNow;
         Dictionary<VokiId, VokiRatingsDistribution> distributions =
             await _ratingsRepository.GetRatingsDistributionForVokis(vokiIds, ct);
         Dictionary<VokiId, VokiRatingsSnapshot> vokiIdToLastSnapshot =
@@ -69,7 +69,8 @@ internal class UpdateRatingsSnapshotsFromMarkersCommandHandler :
         return new UpdateRatingsSnapshotsFromMarkersCommandResult(
             SnapshotsUpdatedCount: snapshotsToUpdate.Count,
             NewSnapshotsCount: snapshotsToAdd.Count,
-            now
+            now,
+            MarkersCount: vokiIds.Count()
         );
     }
 }
@@ -77,5 +78,6 @@ internal class UpdateRatingsSnapshotsFromMarkersCommandHandler :
 public record UpdateRatingsSnapshotsFromMarkersCommandResult(
     int SnapshotsUpdatedCount,
     int NewSnapshotsCount,
-    DateTime Time
+    DateTime Time,
+    int MarkersCount
 );

@@ -25,13 +25,11 @@
 
 <style>
 	.nav-bar {
-		--hor-margin: 2rem;
-
 		display: grid;
 		gap: 1rem;
-		width: calc(100% - (var(--hor-margin) * 2));
+		width: 100%;
 		padding: 0.25rem;
-		margin: 1rem var(--hor-margin);
+		margin: 1rem 0;
 		border-radius: 100vw;
 		box-shadow: var(--shadow-xs);
 		grid-template-columns: repeat(auto-fit, minmax(0, 1fr));

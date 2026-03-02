@@ -18,34 +18,37 @@ internal sealed class TokenGenerator : ITokenGenerator
 
     private readonly RsaSecurityKey _privateKey;
     private readonly ILogger<TokenGenerator> _logger;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public TokenGenerator(JwtTokenConfig jwtTokenConfig, AuthPrivateKeyConfig privateKeyConfig, ILogger<TokenGenerator> logger) {
+    public TokenGenerator(
+        JwtTokenConfig jwtTokenConfig,
+        AuthPrivateKeyConfig privateKeyConfig,
+        ILogger<TokenGenerator> logger,
+        IDateTimeProvider dateTimeProvider
+    ) {
         _issuer = jwtTokenConfig.Issuer;
         _audience = jwtTokenConfig.Audience;
         _userIdClaimKey = jwtTokenConfig.UserIdClaimKey;
-        
+
         RSA rsa = RSA.Create();
         rsa.ImportFromPem(privateKeyConfig.PrivateKey);
         _privateKey = new RsaSecurityKey(rsa);
 
         _logger = logger;
+        _dateTimeProvider = dateTimeProvider;
     }
 
 
     public JwtTokenString CreateToken(AppUser user) {
         try {
-            Claim[] claims = [
-                new(_userIdClaimKey, user.Id.ToString())
-            ];
-
-            SigningCredentials creds =
-                new SigningCredentials(_privateKey, SecurityAlgorithms.RsaSha256);
+            Claim[] claims = [new(_userIdClaimKey, user.Id.ToString())];
+            SigningCredentials creds = new(_privateKey, SecurityAlgorithms.RsaSha256);
 
             var token = new JwtSecurityToken(
                 _issuer,
                 _audience,
                 claims,
-                expires: DateTime.UtcNow.AddDays(30),
+                expires: _dateTimeProvider.UtcNow.AddDays(30),
                 signingCredentials: creds
             );
 

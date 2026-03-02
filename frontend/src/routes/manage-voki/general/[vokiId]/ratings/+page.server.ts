@@ -6,31 +6,13 @@ import type { ApiDistributionPresentation, RatingValueToCountType } from "./type
 
 
 export const load: PageServerLoad = async ({ params, fetch }): Promise<{
-    response: ResponseResult<{ distribution: RatingValueToCountType }>,
+    response: ResponseResult<{ distribution: ApiDistributionPresentation }>,
     vokiId: string
 }> => {
     return {
-        response: await ApiVokiRatings.serverFetchJsonResponse<ApiDistributionPresentation>(
+        response: await ApiVokiRatings.serverFetchJsonResponse<{ distribution: ApiDistributionPresentation }>(
             fetch, `/vokis/${params.vokiId}/manage/overview`, { method: 'GET' }
-        ).then(r => {
-            if (!r.isSuccess) {
-                return r;
-            }
-            return {
-                isSuccess: true,
-                data: {
-                    distribution:
-                    {
-                        1: r.data.Rating1Count,
-                        2: r.data.Rating2Count,
-                        3: r.data.Rating3Count,
-                        4: r.data.Rating4Count,
-                        5: r.data.Rating5Count
-                    }
-                }
-            }
-
-        }),
+        ),
         vokiId: params.vokiId
     };
 };
