@@ -1,4 +1,5 @@
 using InfrastructureShared.EfCore;
+using InfrastructureShared.EfCore.db_extensions;
 using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Application.common.repositories;
 using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
@@ -13,11 +14,9 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
         _db = db;
     }
 
-    public async Task<Dictionary<VokiId, VokiRatingsSnapshot>>
-        GetLastSnapshotForVokisAsTracking(
-            IEnumerable<VokiId> vokiIds,
-            CancellationToken ct
-        ) {
+    public async Task<Dictionary<VokiId, VokiRatingsSnapshot>> GetLastSnapshotForVokisAsTracking(
+        IEnumerable<VokiId> vokiIds, CancellationToken ct
+    ) {
         var ids = vokiIds.ToArray();
 
         var snapshots = await _db.VokiRatingsSnapshots
@@ -30,6 +29,19 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
             .ToListAsync(ct);
 
         return snapshots.ToDictionary(x => x.VokiId);
+    }
+
+    public Task<VokiRatingsSnapshot?> GetLastSnapshotForVokiForUpdate(VokiId vokiId, CancellationToken ct) =>
+        _db.FindForUpdateAsync<VokiRatingsSnapshot>(
+            x => x.VokiId == vokiId,
+            ct,
+            orderBy: q => q.OrderByDescending(x => x.Date)
+        );
+
+    public async Task Update(VokiRatingsSnapshot snapshot, CancellationToken ct) {
+        _db.ThrowIfDetached(snapshot);
+        _db.VokiRatingsSnapshots.Update(snapshot);
+        await _db.SaveChangesAsync(ct);
     }
 
     public async Task UpdateRange(IEnumerable<VokiRatingsSnapshot> snapshots, CancellationToken ct) {
@@ -47,7 +59,7 @@ internal class VokiRatingsSnapshotRepository : IVokiRatingsSnapshotRepository
 
 
     public async Task Add(VokiRatingsSnapshot snapshot, CancellationToken ct) {
-       await _db.VokiRatingsSnapshots.AddAsync(snapshot, ct);
+        await _db.VokiRatingsSnapshots.AddAsync(snapshot, ct);
         await _db.SaveChangesAsync(ct);
     }
 

@@ -8,10 +8,11 @@ public interface IVokiRatingsSnapshotRepository
     Task<VokiRatingsSnapshot[]> ListSortedSnapshotsForVoki(VokiId vokiId, CancellationToken ct);
 
     Task<Dictionary<VokiId, VokiRatingsSnapshot>> GetLastSnapshotForVokisAsTracking(
-        IEnumerable<VokiId> vokiIds,
-        CancellationToken cancellationToken
+        IEnumerable<VokiId> vokiIds, CancellationToken ct
     );
+    Task<VokiRatingsSnapshot?> GetLastSnapshotForVokiForUpdate(VokiId vokiId, CancellationToken ct);
 
     Task UpdateRange(IEnumerable<VokiRatingsSnapshot> snapshots, CancellationToken ct);
     Task AddRange(IEnumerable<VokiRatingsSnapshot> snapshots, CancellationToken ct);
+    Task Update(VokiRatingsSnapshot snapshot, CancellationToken ct);
 }

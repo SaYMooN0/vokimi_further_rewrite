@@ -1,7 +1,7 @@
 using ApiShared.extensions;
 using VokiRatingsService.Api.contracts.manage_voki;
+using VokiRatingsService.Application.vokis.commands;
 using VokiRatingsService.Application.vokis.queries;
-using VokiRatingsService.Domain.common;
 
 namespace VokiRatingsService.Api.endpoints;
 
@@ -11,31 +11,31 @@ internal class ManageVokiEndpoints : IEndpointGroup
         var group = routeBuilder.MapGroup("/vokis/{vokiId}/manage");
 
         group.MapGet("/overview", ManageVokiRatingsOverview);
-        group.MapGet("/history", ManageVokiRatingsHistory);
+        group.MapPost("/take-snapshot", TakeAndRetrieveVokiRatingsSnapshot);
         
         return group;
     }
 
     private static async Task<IResult> ManageVokiRatingsOverview(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ManageVokiRatingsOverviewQuery, VokiRatingsDistribution> handler
+        IQueryHandler<ManageVokiRatingsOverviewQuery, ManageVokiRatingsOverviewQueryResult> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
         ManageVokiRatingsOverviewQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<VokiRatingsDistribution, ManageVokiRatingsOverviewResponse>(result);
+        return CustomResults.FromErrOrToJson<ManageVokiRatingsOverviewQueryResult, ManageVokiRatingsOverviewResponse>(result);
     }
-    private static async Task<IResult> ManageVokiRatingsHistory(
+    private static async Task<IResult> TakeAndRetrieveVokiRatingsSnapshot(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<ManageVokiRatingsHistoryQuery, ManageVokiRatingsHistoryQueryResult> handler
+        ICommandHandler<TakeVokiRatingsSnapshotCommand, ManageVokiRatingsOverviewQueryResult> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
-        ManageVokiRatingsHistoryQuery query = new(vokiId);
-        var result = await handler.Handle(query, ct);
+        TakeVokiRatingsSnapshotCommand command = new(vokiId);
+        var result = await handler.Handle(command, ct);
 
-        return CustomResults.FromErrOrToJson<ManageVokiRatingsHistoryQueryResult, ManageVokiRatingsHistoryResponse>(result);
+        return CustomResults.FromErrOrToJson<ManageVokiRatingsOverviewQueryResult, ManageVokiRatingsOverviewResponse>(result);
     }
 }

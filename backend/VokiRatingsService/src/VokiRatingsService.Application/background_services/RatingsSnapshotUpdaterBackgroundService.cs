@@ -26,7 +26,7 @@ public class RatingsSnapshotUpdaterBackgroundService : BackgroundService
 
         while (!stoppingToken.IsCancellationRequested) {
             try {
-                var result = await _updateRatingsSnapshotsCommandHandler.Handle(
+                ErrOr<UpdateRatingsSnapshotsFromMarkersCommandResult> result = await _updateRatingsSnapshotsCommandHandler.Handle(
                     new UpdateRatingsSnapshotsFromMarkersCommand(),
                     stoppingToken
                 );
@@ -35,9 +35,12 @@ public class RatingsSnapshotUpdaterBackgroundService : BackgroundService
                     _logger.LogWarning("Snapshots updating encountered errors: {Errors}", err.ToString());
                 }
                 else {
+                    UpdateRatingsSnapshotsFromMarkersCommandResult success = result.AsSuccess();
                     _logger.LogInformation(
-                        "Updated {Count} Voki ratings snapshots at {Time}.",
-                        result.AsSuccess(), DateTime.UtcNow
+                        "{ServiceName} cycle finished at {Time}. {TotalMarkersCount} markers found, {NewCreated} new snapshots created, {Updated} snapshots updated, delta: {Delta}",
+                        nameof(UpdateRatingsSnapshotsFromMarkersCommand), success.Time,
+                        success.MarkersCount, success.NewSnapshotsCount, success.SnapshotsUpdatedCount,
+                        success.MarkersCount - success.NewSnapshotsCount - success.SnapshotsUpdatedCount
                     );
                 }
             }

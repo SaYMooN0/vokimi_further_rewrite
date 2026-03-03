@@ -1,50 +1,51 @@
-import { ApiVokiRatings } from "$lib/ts/backend-communication/backend-services";
+import { ApiVokiRatings, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { Err } from "$lib/ts/err";
 import { DateUtils } from "$lib/ts/utils/date-utils";
-import type { RatingValueToCountType, VokiDailyRatingsSnapshot } from "../../types";
+import type { RatingValueToCountType, VokiDailyRatingsSnapshot } from "../types";
 
 
-export class RatingsHistoryState {
+export class VokiViewRatingsState {
 	readonly vokiId: string;
 	#publicationDate: Date;
+	#allVokiSnapshots: VokiDailyRatingsSnapshot[] = $state()!;
 
-	allSnapshotsState: AllSnapshotsState = $state({ type: 'loading' });
-
-	dateFilter: {
-		from: Date | null;
-		to: Date | null;
-	} = $state({
+	lineChartFilter: { from: Date | null; to: Date | null; } = $state({
 		from: null,
 		to: null
 	});
+	refetchingState:
+		| { name: 'ok' }
+		| { name: 'loading' }
+		| { name: 'errs', errs: Err[] } = $state()!;
 
-	constructor(vokiId: string) {
+	lastVokiSnapshot = $derived.by(() => {
+		if (this.#allVokiSnapshots.length === 0) {
+			return undefined;
+		}
+		return this.#allVokiSnapshots.reduce((max, s) => (s.date > max.date ? s : max));
+	})
+	constructor(vokiId: string, publicationDate: Date, allSnapshots: VokiDailyRatingsSnapshot[]) {
 		this.vokiId = vokiId;
-		this.#publicationDate = new Date();
-
-		this.loadAllRatingsSnapshots();
+		this.#publicationDate = publicationDate;
+		this.#allVokiSnapshots = allSnapshots;
+		this.refetchingState = { name: 'ok' };
 	}
 
-	async loadAllRatingsSnapshots() {
-		this.allSnapshotsState = { type: 'loading' };
+	async takeNewVokiSnapshot() {
+		this.refetchingState = { name: 'loading' };
 
 		const response = await ApiVokiRatings.fetchJsonResponse<{
 			vokiPublicationDate: Date;
 			snapshots: VokiDailyRatingsSnapshot[]
 		}>(
-			`/vokis/${this.vokiId}/manage/history`, { method: "GET" }
+			`/vokis/${this.vokiId}/manage/take-snapshot`, RJO.POST({})
 		)
 		if (response.isSuccess) {
-			this.allSnapshotsState = {
-				type: 'ok',
-				data: response.data.snapshots
-			};
+			this.#allVokiSnapshots = response.data.snapshots;
 			this.#publicationDate = response.data.vokiPublicationDate;
+			this.refetchingState = { name: 'ok' };
 		} else {
-			this.allSnapshotsState = {
-				type: 'errs',
-				errs: response.errs
-			};
+			this.refetchingState = { name: 'errs', errs: response.errs };
 		}
 	}
 
@@ -52,14 +53,14 @@ export class RatingsHistoryState {
 		return { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 	}
 
-	snapshotsToShow: VokiDailyRatingsSnapshot[] = $derived.by(() => {
-		if (this.allSnapshotsState.type !== 'ok') {
+	lineChartSnapshotsToShow: VokiDailyRatingsSnapshot[] = $derived.by(() => {
+		if (this.refetchingState.name !== 'ok') {
 			return [];
 		}
 
-		const { from, to } = this.dateFilter;
+		const { from, to } = this.lineChartFilter;
 
-		const sorted = [...this.allSnapshotsState.data]
+		const sorted = [...this.#allVokiSnapshots]
 			.map((s) => ({
 				...s,
 				Date: DateUtils.startOfDay(s.date)
@@ -108,9 +109,3 @@ export class RatingsHistoryState {
 		return result;
 	});
 }
-
-
-type AllSnapshotsState =
-	| { type: 'ok', data: VokiDailyRatingsSnapshot[] }
-	| { type: 'loading' }
-	| { type: 'errs', errs: Err[] }

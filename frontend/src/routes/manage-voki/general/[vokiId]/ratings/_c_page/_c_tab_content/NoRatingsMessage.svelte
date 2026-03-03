@@ -1,28 +1,24 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
+	import type { Err } from '$lib/ts/err';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		vokiId: string;
+		onTakeAndRetrieveRatingsSnapshotBtnClicked: () => void;
+		snapshotsRetrievingState: { name: 'ok' } | { name: 'loading' } | { name: 'errs'; errs: Err[] };
 	}
-	let { vokiId }: Props = $props();
+	let { vokiId, onTakeAndRetrieveRatingsSnapshotBtnClicked, snapshotsRetrievingState }: Props =
+		$props();
 
 	const rateVokiPath = $derived(`/catalog/${vokiId}?tab=ratings`);
 	const catalogPath = $derived(`/catalog/${vokiId}`);
-
-	let resetCopiedTimeout: ReturnType<typeof setTimeout> | null = null;
-
-	function getShareUrl(): string {
-		if (!browser) {
-			return rateVokiPath;
-		}
-		return `${location.origin}${rateVokiPath}`;
-	}
+	const shareUrl = $derived(browser ? `${location.origin}${rateVokiPath}` : rateVokiPath);
 
 	async function onCopyLinkClick() {
 		try {
 			if (browser && navigator?.clipboard?.writeText) {
-				await navigator.clipboard.writeText(getShareUrl());
+				await navigator.clipboard.writeText(shareUrl);
 				toast.success('Link copied to clipboard');
 			} else {
 				toast.error('Failed to copy link to clipboard');
@@ -52,7 +48,7 @@
 			<input
 				class="share-input share-row-el"
 				readonly
-				value={getShareUrl()}
+				value={shareUrl}
 				onclick={onShareInputClick}
 				aria-label="Share link"
 			/>
@@ -188,12 +184,10 @@
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		padding: 0.85rem 1.1rem;
-		border: 0.0625rem solid transparent;
-		border-radius: 1rem;
+		padding: 0.875rem 1.25rem;
+		border-radius: 0.75rem;
 		font-size: 1rem;
 		font-weight: 700;
-		box-shadow: var(--shadow-md);
 	}
 
 	.btn.primary {
@@ -206,13 +200,13 @@
 	}
 
 	.btn.secondary {
-		border-color: color-mix(in srgb, var(--muted) 70%, transparent);
 		background: var(--secondary);
 		color: var(--secondary-foreground);
-		box-shadow: var(--shadow-xs);
+		box-shadow: var(--shadow);
 	}
 
 	.btn.secondary:hover {
-		box-shadow: var(--shadow-md);
+		background: var(--muted);
+		color: var(--muted-foreground);
 	}
 </style>

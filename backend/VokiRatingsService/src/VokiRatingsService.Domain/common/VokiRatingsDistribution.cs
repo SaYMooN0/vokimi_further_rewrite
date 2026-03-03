@@ -29,7 +29,7 @@ public class VokiRatingsDistribution : ValueObject
     public uint TotalCount { get; }
     public uint TotalSum { get; }
 
-    public static VokiRatingsDistribution Empty => new (
+    public static VokiRatingsDistribution Empty => new(
         rating1Count: 0,
         rating2Count: 0,
         rating3Count: 0,

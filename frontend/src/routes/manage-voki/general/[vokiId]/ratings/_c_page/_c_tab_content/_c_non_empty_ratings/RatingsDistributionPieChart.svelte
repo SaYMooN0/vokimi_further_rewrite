@@ -1,6 +1,5 @@
 <script lang="ts">
 	import type { VokiRatingValue } from '$lib/ts/voki';
-	import type { RatingValueToCountType } from '../../types';
 
 	interface Props {
 		distribution: RatingValueToCountType;
@@ -11,18 +10,6 @@
 	const ORDER: VokiRatingValue[] = [1, 2, 3, 4, 5];
 
 	let highlighted = $state<VokiRatingValue | null>(null);
-	let clearTimer: number | null = null;
-
-	function highlight(value: VokiRatingValue) {
-		highlighted = value;
-		if (clearTimer !== null) {
-			clearTimeout(clearTimer);
-		}
-		clearTimer = window.setTimeout(() => {
-			highlighted = null;
-			clearTimer = null;
-		}, 2000);
-	}
 
 	const total = $derived.by(() => {
 		let sum = 0;
@@ -79,9 +66,7 @@
 		<g class="slices">
 			{#each slices as s (s.value)}
 				{#if s.count > 0}
-					<path class={`slice slice-${s.value}`} d={s.path} onclick={() => highlight(s.value)}>
-						<title>{s.value}★: {s.count}</title>
-					</path>
+					<path class={`slice slice-${s.value}`} d={s.path} />
 				{/if}
 			{/each}
 		</g>
@@ -112,10 +97,10 @@
 
 	.chart {
 		--slice-1: var(--primary-hov);
-		--slice-2: color-mix(in srgb, var(--primary-hov) 80%, var(--secondary));
-		--slice-3: color-mix(in srgb, var(--primary-hov) 60%, var(--secondary));
-		--slice-4: color-mix(in srgb, var(--primary-hov) 40%, var(--secondary));
-		--slice-5: color-mix(in srgb, var(--primary-hov) 20%, var(--secondary));
+		--slice-2: color-mix(in srgb, var(--primary-hov) 80%, var(--back));
+		--slice-3: color-mix(in srgb, var(--primary-hov) 60%, var(--back));
+		--slice-4: color-mix(in srgb, var(--primary-hov) 40%, var(--back));
+		--slice-5: color-mix(in srgb, var(--primary-hov) 20%, var(--back));
 
 		display: block;
 		width: 100%;
@@ -123,12 +108,13 @@
 	}
 
 	.slice {
-		stroke: var(--back);
-		stroke-width: 0.35;
-		stroke-linejoin: round;
 		cursor: pointer;
+		transition: transform 0.02s ease-in-out;
 	}
-
+	.slice:hover {
+		transform: scale(1.012);
+		transform-origin: center;
+	}
 	.slice-1 {
 		fill: var(--slice-1);
 	}
