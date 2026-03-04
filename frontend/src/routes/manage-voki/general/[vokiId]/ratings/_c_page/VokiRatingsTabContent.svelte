@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { VokiDailyRatingsSnapshot } from '../types';
 	import NonEmptyRatingsTabContent from './_c_tab_content/NonEmptyRatingsTabContent.svelte';
-	import NoRatingsMessage from './_c_tab_content/NoRatingsMessage.svelte';
+	import VokiHasNoRatings from './_c_tab_content/VokiHasNoRatings.svelte';
 	import { VokiViewRatingsState } from './voki-view-ratings-state.svelte';
 
 	interface Props {
@@ -25,7 +25,7 @@
 </script>
 
 {#if componentState.lastVokiSnapshot == undefined || noRatingsInSnapshot(componentState.lastVokiSnapshot)}
-	<NoRatingsMessage
+	<VokiHasNoRatings
 		{vokiId}
 		onTakeAndRetrieveRatingsSnapshotBtnClicked={() => componentState.takeNewVokiSnapshot()}
 		snapshotsRetrievingState={componentState.refetchingState}
@@ -35,5 +35,8 @@
 		lastSnapshot={componentState.lastVokiSnapshot}
 		onTakeAndRetrieveRatingsSnapshotBtnClicked={() => componentState.takeNewVokiSnapshot()}
 		snapshotsRetrievingState={componentState.refetchingState}
+		lineChartFilter={componentState.lineChartFilter}
+		snapshotsToShow={componentState.lineChartSnapshotsToShow}
+		{vokiPublicationDate}
 	/>
 {/if}

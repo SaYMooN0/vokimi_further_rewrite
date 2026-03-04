@@ -5,11 +5,16 @@
 
 	interface Props {
 		vokiId: string;
+		lastSnapshotDate: Date | null;
 		onTakeAndRetrieveRatingsSnapshotBtnClicked: () => void;
 		snapshotsRetrievingState: { name: 'ok' } | { name: 'loading' } | { name: 'errs'; errs: Err[] };
 	}
-	let { vokiId, onTakeAndRetrieveRatingsSnapshotBtnClicked, snapshotsRetrievingState }: Props =
-		$props();
+	let {
+		vokiId,
+		lastSnapshotDate,
+		onTakeAndRetrieveRatingsSnapshotBtnClicked,
+		snapshotsRetrievingState
+	}: Props = $props();
 
 	const rateVokiPath = $derived(`/catalog/${vokiId}?tab=ratings`);
 	const catalogPath = $derived(`/catalog/${vokiId}`);
@@ -36,8 +41,8 @@
 </script>
 
 <div class="no-ratings-message">
-	<div class="badge">No ratings yet</div>
-
+	<div class="badge">No ratings found. Last check:</div>
+	<TakeAndRetrieveNewSnapshotButton />
 	<h1 class="title">This voki doesn’t have any ratings yet</h1>
 	<p class="subtitle">Invite friends to take it and leave the first ratings.</p>
 

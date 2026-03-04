@@ -4,16 +4,23 @@
 	import RatingsDistributionPieChart from './_c_non_empty_ratings/RatingsDistributionPieChart.svelte';
 	import TakeAndRetrieveNewSnapshotButton from './_c_shared/TakeAndRetrieveNewSnapshotButton.svelte';
 	import type { Err } from '$lib/ts/err';
+	import RatingsHistoryLineCharts from './_c_non_empty_ratings/RatingsHistoryLineCharts.svelte';
 
 	interface Props {
 		lastSnapshot: VokiDailyRatingsSnapshot;
 		onTakeAndRetrieveRatingsSnapshotBtnClicked: () => void;
 		snapshotsRetrievingState: { name: 'ok' } | { name: 'loading' } | { name: 'errs'; errs: Err[] };
+		lineChartFilter: { from: Date | null; to: Date | null };
+		snapshotsToShow: VokiDailyRatingsSnapshot[];
+		vokiPublicationDate: Date;
 	}
 	let {
 		lastSnapshot,
 		onTakeAndRetrieveRatingsSnapshotBtnClicked,
-		snapshotsRetrievingState
+		snapshotsRetrievingState,
+		lineChartFilter,
+		snapshotsToShow,
+		vokiPublicationDate
 	}: Props = $props();
 	const totalSum = $derived(
 		lastSnapshot.distribution[1] * 1 +
@@ -61,6 +68,12 @@
 		<RatingsDistributionPieChart distribution={lastSnapshot.distribution} />
 	</div>
 </div>
+<RatingsHistoryLineCharts
+	bind:from={lineChartFilter.from}
+	bind:to={lineChartFilter.to}
+	{snapshotsToShow}
+	{vokiPublicationDate}
+/>
 
 <style>
 	.ratings-top-data {
