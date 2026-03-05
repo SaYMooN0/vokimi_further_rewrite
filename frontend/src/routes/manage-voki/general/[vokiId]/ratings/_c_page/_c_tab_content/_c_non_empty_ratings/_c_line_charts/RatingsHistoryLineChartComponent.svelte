@@ -10,9 +10,10 @@
 		color?: string;
 		yMin?: number;
 		yMax?: number;
+		errorMessage?: string | null;
 	}
 
-	let { data, title, color = 'var(--primary)', yMin, yMax }: Props = $props();
+	let { data, title, color = 'var(--primary)', yMin, yMax, errorMessage = null }: Props = $props();
 
 	const effectiveYMin = $derived(yMin ?? Math.min(...data.map((d) => d.yValue), 0));
 	const effectiveYMax = $derived(
@@ -78,64 +79,76 @@
 	<h3 class="chart-title">{title}</h3>
 	<div class="svg-wrapper">
 		<svg viewBox="0 0 {width} {height}" class="line-chart" role="img" aria-label={title}>
-			<g class="grid">
-				{#each yTicks as tick}
-					<line x1={paddingX} y1={tick.y} x2={width - paddingX} y2={tick.y} class="grid-line" />
-					<text
-						x={paddingX - 10}
-						y={tick.y}
-						class="y-label"
-						alignment-baseline="middle"
-						text-anchor="end">{tick.value}</text
-					>
+			{#if errorMessage}
+				<text
+					x={width / 2}
+					y={height / 2}
+					class="svg-error-message"
+					text-anchor="middle"
+					alignment-baseline="middle"
+				>
+					{errorMessage}
+				</text>
+			{:else}
+				<g class="grid">
+					{#each yTicks as tick}
+						<line x1={paddingX} y1={tick.y} x2={width - paddingX} y2={tick.y} class="grid-line" />
+						<text
+							x={paddingX - 10}
+							y={tick.y}
+							class="y-label"
+							alignment-baseline="middle"
+							text-anchor="end">{tick.value}</text
+						>
+					{/each}
+				</g>
+
+				{#if points.length > 1}
+					<polyline points={polylinePoints} class="data-line" style="stroke: {color};" />
+				{/if}
+
+				{#each points as p}
+					<circle
+						cx={p.cx}
+						cy={p.cy}
+						r={hoveredPoint === p ? 6 : 4}
+						class="data-point"
+						style="fill: {color};"
+						onmouseenter={() => (hoveredPoint = p)}
+						onmouseleave={() => (hoveredPoint = null)}
+						role="graphics-symbol"
+						tabindex="0"
+					/>
 				{/each}
-			</g>
 
-			{#if points.length > 1}
-				<polyline points={polylinePoints} class="data-line" style="stroke: {color};" />
-			{/if}
+				<g class="x-axis">
+					<line
+						x1={paddingX}
+						y1={height - paddingY}
+						x2={width - paddingX}
+						y2={height - paddingY}
+						class="axis-line"
+					/>
+					{#each xTicks as p}
+						<text x={p.cx} y={height - paddingY + 20} class="x-label" text-anchor="middle"
+							>{p.xLabel}</text
+						>
+					{/each}
+				</g>
 
-			{#each points as p}
-				<circle
-					cx={p.cx}
-					cy={p.cy}
-					r={hoveredPoint === p ? 6 : 4}
-					class="data-point"
-					style="fill: {color};"
-					onmouseenter={() => (hoveredPoint = p)}
-					onmouseleave={() => (hoveredPoint = null)}
-					role="graphics-symbol"
-					tabindex="0"
-				/>
-			{/each}
-
-			<g class="x-axis">
-				<line
-					x1={paddingX}
-					y1={height - paddingY}
-					x2={width - paddingX}
-					y2={height - paddingY}
-					class="axis-line"
-				/>
-				{#each xTicks as p}
-					<text x={p.cx} y={height - paddingY + 20} class="x-label" text-anchor="middle"
-						>{p.xLabel}</text
-					>
-				{/each}
-			</g>
-
-			{#if hoveredPoint}
-				<line
-					x1={hoveredPoint.cx}
-					y1={paddingY}
-					x2={hoveredPoint.cx}
-					y2={height - paddingY}
-					class="hover-line"
-				/>
+				{#if hoveredPoint}
+					<line
+						x1={hoveredPoint.cx}
+						y1={paddingY}
+						x2={hoveredPoint.cx}
+						y2={height - paddingY}
+						class="hover-line"
+					/>
+				{/if}
 			{/if}
 		</svg>
 
-		{#if hoveredPoint}
+		{#if hoveredPoint && !errorMessage}
 			<div
 				class="tooltip"
 				style="left: {(hoveredPoint.cx / width) * 100}%; top: {(hoveredPoint.cy / height) * 100}%;"
@@ -152,11 +165,7 @@
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
-		background-color: var(--back);
-		border-radius: 1rem;
-		padding: 1.5rem;
-		box-shadow: var(--shadow-xs);
+		gap: 1rem;
 		position: relative;
 	}
 
@@ -240,5 +249,12 @@
 		flex-direction: column;
 		align-items: center;
 		gap: 0.25rem;
+	}
+
+	.svg-error-message {
+		fill: var(--destructive);
+		font-size: 1.15rem;
+		font-weight: 600;
+		font-family: inherit;
 	}
 </style>

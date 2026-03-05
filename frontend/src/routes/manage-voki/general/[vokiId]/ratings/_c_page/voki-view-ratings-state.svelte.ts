@@ -72,35 +72,24 @@ export class VokiViewRatingsState {
 		}
 
 		const startDate = DateUtils.startOfDay(from ?? this.#publicationDate);
-
-		const endDate = DateUtils.startOfDay(to ?? sorted[sorted.length - 1].Date);
+		const endDate = DateUtils.startOfDay(to ?? new Date());
 
 		const result: VokiDailyRatingsSnapshot[] = [];
 
 		let currentDate = startDate;
-		let lastKnownDistribution: RatingValueToCountType | null = null;
+		const reversedSorted = [...sorted].reverse();
 
 		while (currentDate <= endDate) {
 			const found = sorted.find((s) => DateUtils.sameDay(s.Date, currentDate));
 
 			if (found) {
-				lastKnownDistribution = found.distribution;
 				result.push(found);
 			} else {
-				if (
-					lastKnownDistribution === null &&
-					DateUtils.sameDay(currentDate, DateUtils.startOfDay(this.#publicationDate))
-				) {
-					result.push({
-						date: currentDate,
-						distribution: this.emptyDistribution()
-					});
-				} else if (lastKnownDistribution !== null) {
-					result.push({
-						date: currentDate,
-						distribution: lastKnownDistribution
-					});
-				}
+				const previousSnapshot = reversedSorted.find((s) => s.Date < currentDate);
+				result.push({
+					date: currentDate,
+					distribution: previousSnapshot ? previousSnapshot.distribution : this.emptyDistribution()
+				});
 			}
 
 			currentDate = DateUtils.addDays(currentDate, 1);

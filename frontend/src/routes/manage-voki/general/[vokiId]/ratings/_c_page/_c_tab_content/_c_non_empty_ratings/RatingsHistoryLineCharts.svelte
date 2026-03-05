@@ -26,12 +26,32 @@
 	const publicationStartOfDay = new Date(vokiPublicationDate);
 	publicationStartOfDay.setHours(0, 0, 0, 0);
 
+	let actualFrom = $derived.by(() => {
+		if (from === null) return publicationStartOfDay;
+		const d = new Date(from);
+		d.setHours(0, 0, 0, 0);
+		return d;
+	});
+
+	let actualTo = $derived.by(() => {
+		if (to === null) return today;
+		const d = new Date(to);
+		d.setHours(0, 0, 0, 0);
+		return d;
+	});
+
 	let fromError = $derived.by(() => {
 		if (fromType === 'chosen_date' && from) {
 			const selectedFrom = new Date(from);
 			selectedFrom.setHours(0, 0, 0, 0);
 			if (selectedFrom < publicationStartOfDay) {
 				return `Cannot be before publication date (${publicationStartOfDay.toLocaleDateString()})`;
+			}
+			if (selectedFrom > today) {
+				return 'Cannot be in the future';
+			}
+			if (actualTo && selectedFrom >= actualTo) {
+				return 'Cannot be same or after end date';
 			}
 		}
 		return null;
@@ -43,6 +63,12 @@
 			selectedTo.setHours(0, 0, 0, 0);
 			if (selectedTo > today) {
 				return 'Cannot be in the future';
+			}
+			if (selectedTo < publicationStartOfDay) {
+				return `Cannot be before publication date (${publicationStartOfDay.toLocaleDateString()})`;
+			}
+			if (actualFrom && selectedTo <= actualFrom) {
+				return 'Cannot be same or before start date';
 			}
 		}
 		return null;
@@ -121,21 +147,33 @@
 
 		<div class="filters">
 			<div class="filter-group">
-				<span class="filter-label">From:</span>
+				<span class="filter-label">From</span>
 				<div class="input-container">
-					<select bind:value={fromType} class="custom-select">
-						<option value="voki_publishing">Voki publishing</option>
-						<option value="chosen_date">Chosen date</option>
-					</select>
-					{#if fromType === 'chosen_date'}
-						<input
-							type="date"
-							value={dateFormatterForNativeInput(from)}
-							onchange={handleFromDateChange}
-							class="custom-date-input"
-							class:error={fromError}
-						/>
-					{/if}
+					<div class="pill-toggle" role="group" aria-label="From date type">
+						<button
+							class="pill-btn"
+							class:active={fromType === 'voki_publishing'}
+							onclick={() => (fromType = 'voki_publishing')}
+						>
+							Since publishing
+						</button>
+						<button
+							class="pill-btn"
+							class:active={fromType === 'chosen_date'}
+							onclick={() => (fromType = 'chosen_date')}
+						>
+							Custom date
+						</button>
+					</div>
+					<input
+						type="date"
+						value={dateFormatterForNativeInput(from)}
+						onchange={handleFromDateChange}
+						class="custom-date-input"
+						class:error={fromError}
+						class:hidden-input={fromType !== 'chosen_date'}
+						tabindex={fromType === 'chosen_date' ? 0 : -1}
+					/>
 					{#if fromError}
 						<span class="error-msg">{fromError}</span>
 					{/if}
@@ -143,21 +181,33 @@
 			</div>
 
 			<div class="filter-group">
-				<span class="filter-label">To:</span>
+				<span class="filter-label">To</span>
 				<div class="input-container">
-					<select bind:value={toType} class="custom-select">
-						<option value="today">Today</option>
-						<option value="chosen_date">Chosen date</option>
-					</select>
-					{#if toType === 'chosen_date'}
-						<input
-							type="date"
-							value={dateFormatterForNativeInput(to)}
-							onchange={handleToDateChange}
-							class="custom-date-input"
-							class:error={toError}
-						/>
-					{/if}
+					<div class="pill-toggle" role="group" aria-label="To date type">
+						<button
+							class="pill-btn"
+							class:active={toType === 'today'}
+							onclick={() => (toType = 'today')}
+						>
+							Today
+						</button>
+						<button
+							class="pill-btn"
+							class:active={toType === 'chosen_date'}
+							onclick={() => (toType = 'chosen_date')}
+						>
+							Custom date
+						</button>
+					</div>
+					<input
+						type="date"
+						value={dateFormatterForNativeInput(to)}
+						onchange={handleToDateChange}
+						class="custom-date-input"
+						class:error={toError}
+						class:hidden-input={toType !== 'chosen_date'}
+						tabindex={toType === 'chosen_date' ? 0 : -1}
+					/>
 					{#if toError}
 						<span class="error-msg">{toError}</span>
 					{/if}
@@ -172,11 +222,13 @@
 			data={averageData}
 			color="var(--primary)"
 			yMax={5}
+			errorMessage={fromError || toError}
 		/>
 		<RatingsHistoryLineChartComponent
 			title="Total Ratings Count"
 			data={totalData}
 			color="var(--primary)"
+			errorMessage={fromError || toError}
 		/>
 	</div>
 </div>
@@ -185,23 +237,23 @@
 	.line-charts-wrapper {
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
-		margin-top: 1rem;
+		margin-top: 1.5rem;
+		background: var(--back);
+		border-radius: 1.25rem;
+		box-shadow: var(--shadow-xs);
+		overflow: hidden;
 	}
 
 	.header-section {
 		display: flex;
 		flex-direction: column;
-		gap: 1.5rem;
-		background: var(--back);
-		padding: 1.5rem 2rem;
-		border-radius: 1rem;
-		box-shadow: var(--shadow-xs);
+		gap: 1.25rem;
+		padding: 1.75rem 2rem;
 	}
 
 	.section-title {
-		font-size: 1.4rem;
-		font-weight: 600;
+		font-size: 1.35rem;
+		font-weight: 650;
 		color: var(--text);
 		margin: 0;
 	}
@@ -209,8 +261,8 @@
 	.filters {
 		display: flex;
 		flex-direction: row;
-		gap: 2.5rem;
-		align-items: center;
+		gap: 2rem;
+		align-items: flex-start;
 		flex-wrap: wrap;
 	}
 
@@ -222,66 +274,113 @@
 	}
 
 	.filter-label {
-		font-size: 0.95rem;
-		color: var(--text);
-		font-weight: 500;
+		font-size: 0.875rem;
+		color: var(--muted-foreground);
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		white-space: nowrap;
+		min-width: 2.5rem;
 	}
 
-	.custom-select,
-	.custom-date-input {
-		padding: 0.6rem 1rem;
-		border-radius: var(--radius);
+	.input-container {
+		display: flex;
+		flex-direction: row;
+		gap: 0.5rem;
+		position: relative;
+		align-items: center;
+	}
+
+	.pill-toggle {
+		display: flex;
+		flex-direction: row;
 		border: 1px solid var(--border);
+		border-radius: 999px;
+		overflow: hidden;
+		background: color-mix(in srgb, var(--muted) 40%, var(--back));
+		padding: 0.125rem;
+		gap: 0.125rem;
+	}
+
+	.pill-btn {
+		padding: 0.5rem 1rem;
+		border: none;
+		border-radius: 999px;
+		background: transparent;
+		color: var(--muted-foreground);
+		font-family: inherit;
+		font-size: 1rem;
+		font-weight: 500;
+		cursor: pointer;
+		transition:
+			background-color 0.18s ease,
+			color 0.18s ease,
+			box-shadow 0.18s ease;
+		white-space: nowrap;
+		outline: none;
+	}
+
+	.pill-btn:hover:not(.active) {
+		background-color: var(--muted);
+		color: var(--text);
+	}
+
+	.pill-btn.active {
+		background: var(--back);
+		color: var(--primary);
+		font-weight: 600;
+		box-shadow: var(--shadow);
+	}
+
+	.custom-date-input {
+		box-sizing: border-box;
+		padding: 0.5rem 0.875rem;
+		border-radius: 999px;
+		border: 0.125rem solid var(--muted);
 		background-color: var(--back);
 		color: var(--text);
-		font-size: 0.95rem;
+		font-family: inherit;
+		font-size: 0.875rem;
+		font-weight: 500;
 		outline: none;
 		transition:
-			border-color 0.2s,
-			box-shadow 0.2s;
+			border-color 0.18s,
+			box-shadow 0.18s,
+			background-color 0.18s,
+			opacity 0.15s;
 		cursor: pointer;
-		box-shadow: var(--shadow-xs);
 	}
 
-	.custom-select:hover,
-	.custom-date-input:hover {
-		border-color: var(--primary);
+	.custom-date-input.hidden-input {
+		visibility: hidden;
+		opacity: 0;
+		pointer-events: none;
 	}
 
-	.custom-select:focus,
-	.custom-date-input:focus {
-		border-color: var(--primary);
-		box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 20%, transparent);
+	.custom-date-input.error {
+		background-color: var(--red-1);
+		color: var(--red-3);
+		border-color: var(--red-3);
+	}
+
+	.error-msg {
+		position: absolute;
+		top: calc(100% + 0.25rem);
+		left: 0;
+		font-size: 0.875rem;
+		color: var(--red-3);
+		background-color: var(--red-1);
+		white-space: nowrap;
+		font-weight: 450;
+		pointer-events: none;
+		padding: 0.125rem 0.5rem;
+		border-radius: 999px;
 	}
 
 	.charts-grid {
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
-	}
-
-	.input-container {
-		display: flex;
-		flex-direction: column;
-		gap: 0.25rem;
-		position: relative;
-	}
-
-	.custom-date-input.error {
-		border-color: var(--destructive);
-	}
-
-	.custom-date-input.error:focus {
-		box-shadow: 0 0 0 2px color-mix(in srgb, var(--destructive) 20%, transparent);
-	}
-
-	.error-msg {
-		position: absolute;
-		top: 100%;
-		left: 0;
-		font-size: 0.75rem;
-		color: var(--destructive);
-		white-space: nowrap;
-		margin-top: 0.125rem;
+		gap: 3.5rem;
+		padding: 2.5rem;
 	}
 </style>
