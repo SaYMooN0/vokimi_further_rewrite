@@ -2,6 +2,8 @@
 	import { browser } from '$app/environment';
 	import type { Err } from '$lib/ts/err';
 	import { toast } from 'svelte-sonner';
+	import TakeAndRetrieveNewSnapshotButton from './_c_shared/TakeAndRetrieveNewSnapshotButton.svelte';
+	import { DateUtils } from '$lib/ts/utils/date-utils';
 
 	interface Props {
 		vokiId: string;
@@ -41,10 +43,17 @@
 </script>
 
 <div class="no-ratings-message">
-	<div class="badge">No ratings found. Last check:</div>
-	<TakeAndRetrieveNewSnapshotButton />
-	<h1 class="title">This voki doesn’t have any ratings yet</h1>
-	<p class="subtitle">Invite friends to take it and leave the first ratings.</p>
+	<h1 class="title">
+		Last time we checked this Voki didn’t have any ratings yet
+		<TakeAndRetrieveNewSnapshotButton
+			{onTakeAndRetrieveRatingsSnapshotBtnClicked}
+			{snapshotsRetrievingState}
+		/>
+	</h1>
+	{#if lastSnapshotDate}
+		<p class="subtitle last-check">Last check: {DateUtils.toLocale(lastSnapshotDate)}</p>
+	{/if}
+	<p class="subtitle">You can invite your friends to take the Voki and leave the first ratings</p>
 
 	<div class="share">
 		<div class="share-label">Share the ratings link</div>
@@ -82,30 +91,21 @@
 		min-height: 100%;
 		padding: 2rem 4rem;
 	}
-
-	.badge {
-		display: inline-flex;
-		align-items: center;
-		gap: 0.5rem;
-		width: fit-content;
-		padding: 0.375rem 1rem;
-		border-radius: 999rem;
-		background: var(--accent);
-		color: var(--accent-foreground);
-		font-size: 1rem;
-		font-weight: 550;
-	}
-
 	.title {
 		margin-top: 1rem;
 		color: var(--text);
 		font-size: 1.875rem;
 		font-weight: 700;
 		line-height: 1;
+		display: flex;
+		align-items: center;
+		gap: 1rem;
 	}
-
+	.last-check {
+		margin-top: 0.25rem;
+		margin-bottom: 2rem;
+	}
 	.subtitle {
-		margin-top: 0.75rem;
 		color: var(--muted-foreground);
 		font-size: 1.125rem;
 		font-weight: 425;
@@ -113,7 +113,7 @@
 
 	.share {
 		padding: 1rem;
-		margin-top: 2rem;
+		margin-top: 0.25rem;
 		border-radius: 1rem;
 		background: var(--secondary);
 		box-shadow: var(--shadow-xs);
@@ -189,10 +189,10 @@
 		display: inline-flex;
 		justify-content: center;
 		align-items: center;
-		padding: 0.875rem 1.25rem;
+		padding: 0.75rem 1.25rem;
 		border-radius: 0.75rem;
 		font-size: 1rem;
-		font-weight: 700;
+		font-weight: 550;
 	}
 
 	.btn.primary {
@@ -205,13 +205,12 @@
 	}
 
 	.btn.secondary {
-		background: var(--secondary);
-		color: var(--secondary-foreground);
-		box-shadow: var(--shadow);
+		background: var(--muted);
+		color: var(--muted-foreground);
 	}
 
 	.btn.secondary:hover {
-		background: var(--muted);
-		color: var(--muted-foreground);
+		background: var(--accent);
+		color: var(--accent-foreground);
 	}
 </style>

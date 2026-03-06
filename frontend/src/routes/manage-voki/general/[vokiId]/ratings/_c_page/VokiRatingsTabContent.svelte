@@ -27,6 +27,7 @@
 {#if componentState.lastVokiSnapshot == undefined || noRatingsInSnapshot(componentState.lastVokiSnapshot)}
 	<VokiHasNoRatings
 		{vokiId}
+		lastSnapshotDate={componentState.lastVokiSnapshot?.date ?? null}
 		onTakeAndRetrieveRatingsSnapshotBtnClicked={() => componentState.takeNewVokiSnapshot()}
 		snapshotsRetrievingState={componentState.refetchingState}
 	/>

@@ -10,10 +10,10 @@
 		color?: string;
 		yMin?: number;
 		yMax?: number;
-		errorMessage?: string | null;
+		anyInputError: boolean;
 	}
 
-	let { data, title, color = 'var(--primary)', yMin, yMax, errorMessage = null }: Props = $props();
+	let { data, title, color = 'var(--primary)', yMin, yMax, anyInputError }: Props = $props();
 
 	const effectiveYMin = $derived(yMin ?? Math.min(...data.map((d) => d.yValue), 0));
 	const effectiveYMax = $derived(
@@ -79,7 +79,7 @@
 	<h3 class="chart-title">{title}</h3>
 	<div class="svg-wrapper">
 		<svg viewBox="0 0 {width} {height}" class="line-chart" role="img" aria-label={title}>
-			{#if errorMessage}
+			{#if anyInputError}
 				<text
 					x={width / 2}
 					y={height / 2}
@@ -87,7 +87,7 @@
 					text-anchor="middle"
 					alignment-baseline="middle"
 				>
-					{errorMessage}
+					Invalid input values
 				</text>
 			{:else}
 				<g class="grid">
@@ -148,7 +148,7 @@
 			{/if}
 		</svg>
 
-		{#if hoveredPoint && !errorMessage}
+		{#if hoveredPoint && !anyInputError}
 			<div
 				class="tooltip"
 				style="left: {(hoveredPoint.cx / width) * 100}%; top: {(hoveredPoint.cy / height) * 100}%;"
