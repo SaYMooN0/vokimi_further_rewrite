@@ -64,62 +64,48 @@
 </script>
 
 <div class="header-section">
-	<h2 class="section-title">See voki ratings dynamics</h2>
-	<div class="filters">
-		<RatingsDateInput
-			label="From"
-			date={from}
-			error={fromError}
-			quickPickLabel="Voki publishing"
-			onQuickPick={() => {
-				from = null;
-			}}
-			onCustomDateSelect={() => {
-				from = vokiPublicationDate;
-			}}
-			onDateChange={(d) => {
-				from = d;
-			}}
-		/>
-
-		<RatingsDateInput
-			label="To"
-			date={to}
-			error={toError}
-			quickPickLabel="Today"
-			onQuickPick={() => {
-				to = null;
-			}}
-			onCustomDateSelect={() => {
-				to = today;
-			}}
-			onDateChange={(d) => {
-				to = d;
-			}}
-		/>
-	</div>
+	See voki ratings dynamics from
+	<RatingsDateInput
+		date={from}
+		error={fromError}
+		quickPickLabel="Voki publishing"
+		onQuickPick={() => {
+			from = null;
+		}}
+		onCustomDateSelect={() => {
+			from = vokiPublicationDate;
+		}}
+		onDateChange={(d) => {
+			from = d;
+		}}
+	/>
+	to
+	<RatingsDateInput
+		date={to}
+		error={toError}
+		quickPickLabel="Today"
+		onQuickPick={() => {
+			to = null;
+		}}
+		onCustomDateSelect={() => {
+			to = today;
+		}}
+		onDateChange={(d) => {
+			to = d;
+		}}
+	/>
 </div>
 
 <style>
 	.header-section {
 		display: flex;
-		flex-direction: column;
-		gap: 1.25rem;
-		padding: 1.75rem 2rem;
-	}
-
-	.section-title {
-		font-size: 2rem;
-		font-weight: 650;
-		color: var(--text);
-		margin: 0;
-	}
-
-	.filters {
-		display: flex;
 		flex-direction: row;
-		gap: 2rem;
-		align-items: flex-start;
-		flex-wrap: wrap;
+		gap: 1rem;
+		padding: 1.75rem 2rem;
+		align-items: center;
+		font-size: 1.375rem;
+		font-weight: 550;
+		color: var(--text);
+		margin: 0 auto;
 	}
 </style>

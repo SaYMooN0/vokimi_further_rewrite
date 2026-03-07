@@ -6,6 +6,7 @@
 	import type { Err } from '$lib/ts/err';
 	import { DateUtils } from '$lib/ts/utils/date-utils';
 	import RatingsDynamicsCharts from './_c_non_empty_ratings/RatingsDynamicsCharts.svelte';
+	import RatingsDynamicsNotEnoughData from './_c_non_empty_ratings/_c_dynamics/RatingsDynamicsNotEnoughData.svelte';
 
 	interface Props {
 		lastSnapshot: VokiDailyRatingsSnapshot;
@@ -43,6 +44,11 @@
 		}
 		return Math.round((totalSum * 100) / totalCount) / 100;
 	});
+	const today = $derived.by(() => {
+		const val = new Date();
+		val.setHours(0, 0, 0, 0);
+		return val;
+	});
 </script>
 
 <div class="ratings-top-data">
@@ -70,12 +76,17 @@
 		<RatingsDistributionPieChart distribution={lastSnapshot.distribution} />
 	</div>
 </div>
-<RatingsDynamicsCharts
-	bind:from={lineChartFilter.from}
-	bind:to={lineChartFilter.to}
-	{snapshotsToShow}
-	{vokiPublicationDate}
-/>
+{#if DateUtils.sameDay(vokiPublicationDate, today)}
+	<RatingsDynamicsNotEnoughData />
+{:else}
+	<RatingsDynamicsCharts
+		bind:from={lineChartFilter.from}
+		bind:to={lineChartFilter.to}
+		{snapshotsToShow}
+		{vokiPublicationDate}
+		{today}
+	/>
+{/if}
 
 <style>
 	.ratings-top-data {
@@ -95,7 +106,7 @@
 	.main-field {
 		width: 100%;
 		height: fit-content;
-		padding: 1.5rem 2rem;
+		padding: 1.5rem 0;
 		border-radius: 0.75rem;
 		color: var(--muted-foreground);
 		font-size: 2rem;

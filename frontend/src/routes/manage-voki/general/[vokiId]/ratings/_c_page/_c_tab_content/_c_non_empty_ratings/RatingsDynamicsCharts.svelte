@@ -8,19 +8,17 @@
 		to: Date | null;
 		snapshotsToShow: VokiDailyRatingsSnapshot[];
 		vokiPublicationDate: Date;
+		today: Date;
 	}
 	let {
 		from = $bindable(),
 		to = $bindable(),
 		snapshotsToShow,
-		vokiPublicationDate
+		vokiPublicationDate,
+		today
 	}: Props = $props();
 	let inputsComponent: RatingsDynamicsHeaderSection | null = $state(null);
-	const today = $derived.by(() => {
-		const val = new Date();
-		val.setHours(0, 0, 0, 0);
-		return val;
-	});
+
 	const formatter = new Intl.DateTimeFormat(undefined, {
 		month: 'short',
 		day: 'numeric',

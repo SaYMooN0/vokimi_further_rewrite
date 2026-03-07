@@ -1,6 +1,5 @@
 <script lang="ts">
 	interface Props {
-		label: string;
 		date: Date | null;
 		error: string | null;
 
@@ -11,7 +10,7 @@
 		onDateChange: (date: Date | null) => void;
 	}
 
-	let { label, date, error, quickPickLabel, onQuickPick, onCustomDateSelect, onDateChange }: Props =
+	let { date, error, quickPickLabel, onQuickPick, onCustomDateSelect, onDateChange }: Props =
 		$props();
 
 	const dateFormatterForNativeInput = (d: Date | null) => {
@@ -32,9 +31,8 @@
 </script>
 
 <div class="filter-group">
-	<span class="filter-label">{label}</span>
 	<div class="input-container">
-		<div class="pill-toggle" role="group" aria-label="{label} date type">
+		<div class="pill-toggle" role="group" aria-label="Date range">
 			<button class="pill-btn" class:active={date === null} onclick={onQuickPick}>
 				{quickPickLabel}
 			</button>
@@ -42,15 +40,16 @@
 				Custom date
 			</button>
 		</div>
-		<input
-			type="date"
-			value={dateFormatterForNativeInput(date)}
-			onchange={handleDateChange}
-			class="custom-date-input"
-			class:error
-			class:hidden-input={date === null}
-			tabindex={date === null ? -1 : 0}
-		/>
+		{#if date !== null}
+			<input
+				type="date"
+				value={dateFormatterForNativeInput(date)}
+				onchange={handleDateChange}
+				class="custom-date-input"
+				class:error
+				tabindex={date === null ? -1 : 0}
+			/>
+		{/if}
 		{#if error}
 			<span class="error-msg">{error}</span>
 		{/if}
@@ -63,16 +62,6 @@
 		flex-direction: row;
 		align-items: center;
 		gap: 0.75rem;
-	}
-
-	.filter-label {
-		font-size: 0.875rem;
-		color: var(--muted-foreground);
-		font-weight: 600;
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		white-space: nowrap;
-		min-width: 2.5rem;
 	}
 
 	.input-container {
@@ -89,7 +78,6 @@
 		border-radius: 999px;
 		box-shadow: var(--shadow-xs);
 		overflow: hidden;
-		background: var(--secondary);
 		gap: 0.25rem;
 		padding: 0.25rem;
 	}
@@ -118,13 +106,13 @@
 	}
 
 	.pill-btn.active {
-		background: var(--back);
+		background: var(--accent);
 		color: var(--primary);
 	}
 
 	.custom-date-input {
 		box-sizing: border-box;
-		padding: 0.5rem 0.875rem;
+		padding: 0.5rem 0.75rem;
 		border-radius: 999px;
 		border: 0.125rem solid var(--muted);
 		background-color: var(--back);
@@ -141,12 +129,6 @@
 		cursor: pointer;
 	}
 
-	.custom-date-input.hidden-input {
-		visibility: hidden;
-		opacity: 0;
-		pointer-events: none;
-	}
-
 	.custom-date-input.error {
 		background-color: var(--red-1);
 		color: var(--red-3);
@@ -155,14 +137,15 @@
 
 	.error-msg {
 		position: absolute;
-		top: calc(100% + 0.375rem);
-		left: 0;
+		top: calc(100% + 0.5rem);
+		left: 50%;
+		transform: translateX(-50%);
 		font-size: 0.875rem;
 		color: var(--red-3);
-		background-color: var(--red-1);
+		background-color: var(--red-2);
 		white-space: nowrap;
-		font-weight: 450;
-		padding: 0.125rem 0.5rem;
+		font-weight: 500;
+		padding: 0.125rem 0.75rem;
 		border-radius: 999px;
 	}
 </style>

@@ -1,15 +1,13 @@
 <script lang="ts">
 	import type { VokiRatingValue } from '$lib/ts/voki';
+	import type { RatingValueToCountType } from '../../../types';
 
 	interface Props {
 		distribution: RatingValueToCountType;
 	}
 
 	let { distribution }: Props = $props();
-
 	const ORDER: VokiRatingValue[] = [1, 2, 3, 4, 5];
-
-	let highlighted = $state<VokiRatingValue | null>(null);
 
 	const total = $derived.by(() => {
 		let sum = 0;
@@ -55,18 +53,20 @@
 			return {
 				value,
 				count,
+				pct,
 				path: describeWedge(cx, cy, r, start, end)
 			};
 		});
 	});
+	const highlightOnHover = $derived(slices.filter((s) => s.count > 0).length > 2);
 </script>
 
-<div class="root">
+<div class="root" class:hov-highlight={highlightOnHover}>
 	<svg class="chart" viewBox="0 0 100 100" role="img" aria-label="Rating distribution">
 		<g class="slices">
 			{#each slices as s (s.value)}
 				{#if s.count > 0}
-					<path class={`slice slice-${s.value}`} d={s.path} />
+					<path class={`slice highlight-val-${s.value} fill-color-${s.value}`} d={s.path} />
 				{/if}
 			{/each}
 		</g>
@@ -74,10 +74,14 @@
 
 	<div class="legend">
 		{#each slices as s (s.value)}
-			<div class="legend-row" class:highlighted={highlighted === s.value}>
-				<span class={`dot dot-${s.value}`} aria-hidden="true"></span>
-				<span class="legend-label">{s.value} <svg><use href="#common-star-icon" /></svg></span>
+			<div class="legend-row highlight-val-{s.value}">
+				<div class="stars" title={`${s.value} star${s.value === 1 ? '' : 's'}`}>
+					{#each Array.from({ length: s.value }) as _}
+						<svg class="fill-color-{s.value}"><use href="#common-star-icon" /></svg>
+					{/each}
+				</div>
 				<span class="legend-value">{s.count}</span>
+				<span class="legend-pct">({Math.round(s.pct * 100)}%)</span>
 			</div>
 		{/each}
 	</div>
@@ -89,114 +93,130 @@
 		display: grid;
 		align-items: center;
 		gap: 2rem;
+		padding: 0.5rem 2rem;
 		border-radius: 1rem;
 		background-color: var(--back);
 		box-shadow: var(--shadow-xs);
-		grid-template-columns: 1fr 10rem;
+		grid-template-columns: 1fr auto;
+		--slice-5: var(--primary-hov);
+		--slice-4: color-mix(in srgb, var(--primary-hov) 80%, var(--back));
+		--slice-3: color-mix(in srgb, var(--primary-hov) 60%, var(--back));
+		--slice-2: color-mix(in srgb, var(--primary-hov) 40%, var(--back));
+		--slice-1: color-mix(in srgb, var(--primary-hov) 20%, var(--back));
 	}
 
 	.chart {
-		--slice-1: var(--primary-hov);
-		--slice-2: color-mix(in srgb, var(--primary-hov) 80%, var(--back));
-		--slice-3: color-mix(in srgb, var(--primary-hov) 60%, var(--back));
-		--slice-4: color-mix(in srgb, var(--primary-hov) 40%, var(--back));
-		--slice-5: color-mix(in srgb, var(--primary-hov) 20%, var(--back));
-
 		display: block;
 		width: 100%;
 		aspect-ratio: 1/1;
 	}
 
 	.slice {
-		cursor: pointer;
-		transition: transform 0.02s ease-in-out;
-	}
-	.slice:hover {
-		transform: scale(1.012);
+		transition: transform 0.12s ease-in-out;
 		transform-origin: center;
 	}
-	.slice-1 {
+
+	.fill-color-1 {
 		fill: var(--slice-1);
 	}
 
-	.slice-2 {
+	.fill-color-2 {
 		fill: var(--slice-2);
 	}
 
-	.slice-3 {
+	.fill-color-3 {
 		fill: var(--slice-3);
 	}
 
-	.slice-4 {
+	.fill-color-4 {
 		fill: var(--slice-4);
 	}
 
-	.slice-5 {
+	.fill-color-5 {
 		fill: var(--slice-5);
 	}
 
 	.legend {
 		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		min-width: 10rem;
+		flex-direction: column-reverse;
+		gap: 0.75rem;
+		width: fit-content;
 	}
 
 	.legend-row {
 		display: grid;
-		grid-template-columns: 0.75rem 1fr auto;
+		grid-template-columns: auto 1fr auto;
 		align-items: center;
 		column-gap: 0.5rem;
-		padding: 0.2rem 0.4rem;
-		border-radius: var(--radius);
-		transition: background-color 0.15s ease-in-out;
+		padding: 0.125rem 0.5rem;
+		text-align: right;
+		border-radius: 0.5rem;
 	}
 
-	.legend-row.highlighted {
-		background-color: var(--secondary);
-		box-shadow: var(--shadow-xs);
+	.stars {
+		display: grid;
+		--star-size: 1.5rem;
+		grid-template-columns: repeat(5, var(--star-size));
+		margin-right: 0.5rem;
 	}
-
-	.dot {
-		width: 0.5rem;
-		height: 0.5rem;
-		border-radius: 999rem;
-		background-color: var(--muted-foreground);
-	}
-
-	.dot-1 {
-		background: var(--slice-1);
-	}
-
-	.dot-2 {
-		background: var(--slice-2);
-	}
-
-	.dot-3 {
-		background: var(--slice-3);
-	}
-
-	.dot-4 {
-		background: var(--slice-4);
-	}
-
-	.dot-5 {
-		background: var(--slice-5);
-	}
-
-	.legend-label {
-		color: var(--text);
-		font-size: 0.95rem;
-	}
-
-	.legend-label > svg {
-		width: 0.8rem;
-		height: 0.8rem;
+	.stars > svg {
+		width: 100%;
+		aspect-ratio: 1/1;
+		stroke-width: 0;
 	}
 
 	.legend-value {
 		color: var(--muted-foreground);
-		font-size: 0.95rem;
 		font-variant-numeric: tabular-nums;
+		font-size: 1.25rem;
+		cursor: default;
+	}
+
+	.legend-pct {
+		color: var(--muted-foreground);
+		font-size: 0.875rem;
+		font-style: italic;
+		cursor: default;
+		text-align: left;
+		width: 2.5rem;
+	}
+	.hov-highlight:has(.highlight-val-5:hover) .slice.highlight-val-5 {
+		transform: scale(1.04);
+	}
+	.hov-highlight:has(.highlight-val-5:hover) .legend-row.highlight-val-5 {
+		background-color: var(--secondary);
+		box-shadow: var(--shadow-xs), var(--shadow);
+	}
+
+	.hov-highlight:has(.highlight-val-4:hover) .slice.highlight-val-4 {
+		transform: scale(1.04);
+	}
+	.hov-highlight:has(.highlight-val-4:hover) .legend-row.highlight-val-4 {
+		background-color: var(--secondary);
+		box-shadow: var(--shadow-xs), var(--shadow);
+	}
+
+	.hov-highlight:has(.highlight-val-3:hover) .slice.highlight-val-3 {
+		transform: scale(1.04);
+	}
+	.hov-highlight:has(.highlight-val-3:hover) .legend-row.highlight-val-3 {
+		background-color: var(--secondary);
+		box-shadow: var(--shadow-xs), var(--shadow);
+	}
+
+	.hov-highlight:has(.highlight-val-2:hover) .slice.highlight-val-2 {
+		transform: scale(1.04);
+	}
+	.hov-highlight:has(.highlight-val-2:hover) .legend-row.highlight-val-2 {
+		background-color: var(--secondary);
+		box-shadow: var(--shadow-xs), var(--shadow);
+	}
+
+	.hov-highlight:has(.highlight-val-1:hover) .slice.highlight-val-1 {
+		transform: scale(1.04);
+	}
+	.hov-highlight:has(.highlight-val-1:hover) .legend-row.highlight-val-1 {
+		background-color: var(--secondary);
+		box-shadow: var(--shadow-xs), var(--shadow);
 	}
 </style>
