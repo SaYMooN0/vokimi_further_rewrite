@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using SharedKernel.exceptions;
 
-namespace InfrastructureShared.EfCore.query_extensions.expression_visitors;
+namespace InfrastructureShared.EfCore.db_extensions.expression_visitors;
 
 public sealed class OnlyIncludesVisitor : ExpressionVisitor
 {

@@ -2,11 +2,11 @@
 
 namespace UserProfilesService.Domain.app_user_aggregate;
 
-public record class UserSettings(
+public record class ProfileSettings(
     AllowCoAuthorInvitesSettingValue AllowCoAuthorInvites
 )
 {
-    public static UserSettings Default => new UserSettings(
+    public static ProfileSettings Default => new ProfileSettings(
         AllowCoAuthorInvitesSettingValueExtensions.Default
     );
 }

@@ -7,19 +7,19 @@ namespace VokisCatalogService.Application.vokis.integration_event_handlers;
 
 public class VokiRatingsCountChangedIntegrationEventHandler : IConsumer<VokiRatingsCountChangedIntegrationEvent>
 {
-    private readonly IBaseVokisRepository _baseVokisRepository;
+    private readonly IVokisRepository _vokisRepository;
 
-    public VokiRatingsCountChangedIntegrationEventHandler(IBaseVokisRepository baseVokisRepository) {
-        _baseVokisRepository = baseVokisRepository;
+    public VokiRatingsCountChangedIntegrationEventHandler(IVokisRepository vokisRepository) {
+        _vokisRepository = vokisRepository;
     }
 
     public async Task Consume(ConsumeContext<VokiRatingsCountChangedIntegrationEvent> context) {
-        BaseVoki? voki = await _baseVokisRepository.GetByIdForUpdate(context.Message.VokiId, context.CancellationToken);
+        Voki? voki = await _vokisRepository.GetByIdForUpdate(context.Message.VokiId, context.CancellationToken);
         if (voki is null) {
             return;
         }
 
         voki.UpdateRatingsCount(context.Message.NewRatingsCount);
-        await _baseVokisRepository.Update(voki, context.CancellationToken);
+        await _vokisRepository.Update(voki, context.CancellationToken);
     }
 }

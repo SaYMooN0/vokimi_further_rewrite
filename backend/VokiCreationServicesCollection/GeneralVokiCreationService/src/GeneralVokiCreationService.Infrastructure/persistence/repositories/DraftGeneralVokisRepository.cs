@@ -2,7 +2,6 @@
 using GeneralVokiCreationService.Domain.draft_general_voki_aggregate;
 using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.db_extensions;
-using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.common.vokis;
 using VokiCreationServicesLib.Application.common;

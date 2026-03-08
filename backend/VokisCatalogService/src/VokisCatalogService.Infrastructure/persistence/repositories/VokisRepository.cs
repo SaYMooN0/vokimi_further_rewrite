@@ -1,6 +1,5 @@
 ﻿using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.db_extensions;
-using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.user_ctx;
 using VokisCatalogService.Application.common.repositories;
@@ -8,11 +7,12 @@ using VokisCatalogService.Domain.voki_aggregate;
 
 namespace VokisCatalogService.Infrastructure.persistence.repositories;
 
-internal class BaseVokisRepository : IBaseVokisRepository
+internal class VokisRepository : IVokisRepository
 {
     private readonly VokisCatalogDbContext _db;
 
-    public BaseVokisRepository(VokisCatalogDbContext db) {
+    public VokisRepository(VokisCatalogDbContext db)
+    {
         _db = db;
     }
 
@@ -30,25 +30,32 @@ internal class BaseVokisRepository : IBaseVokisRepository
         .ToArrayAsync(cancellationToken: ct);
 
 
-    public Task<BaseVoki?> GetById(VokiId vokiId, CancellationToken ct) =>
-        _db.BaseVokis
+    public Task<Voki?> GetById(VokiId vokiId, CancellationToken ct) =>
+        _db.Vokis
             .FirstOrDefaultAsync(v => v.Id == vokiId, cancellationToken: ct);
 
-    public Task<BaseVoki[]> GetAllSorted(CancellationToken ct) => _db.BaseVokis
+    public Task<Voki[]> GetAllSorted(CancellationToken ct) => _db.Vokis
         .OrderByDescending(v => v.PublicationDate)
         .ToArrayAsync(cancellationToken: ct);
 
-    public Task<BaseVoki[]> GetMultipleById(VokiId[] queryVokiIds, CancellationToken ct) =>
-        _db.BaseVokis
+    public Task<Voki[]> GetMultipleById(VokiId[] queryVokiIds, CancellationToken ct) =>
+        _db.Vokis
             .Where(v => queryVokiIds.Contains(v.Id))
             .ToArrayAsync(cancellationToken: ct);
 
-    public Task<BaseVoki?> GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
-        _db.FindByIdForUpdateAsync<BaseVoki, VokiId>(vokiId, ct);
+    public Task<Voki?> GetByIdForUpdate(VokiId vokiId, CancellationToken ct) =>
+        _db.FindByIdForUpdateAsync<Voki, VokiId>(vokiId, ct);
 
-    public async Task Update(BaseVoki voki, CancellationToken ct) {
+    public async Task Add(Voki voki, CancellationToken ct)
+    {
+        await _db.Vokis.AddAsync(voki, ct);
+        await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task Update(Voki voki, CancellationToken ct)
+    {
         _db.ThrowIfDetached(voki);
-        _db.BaseVokis.Update(voki);
+        _db.Vokis.Update(voki);
         await _db.SaveChangesAsync(ct);
     }
 }

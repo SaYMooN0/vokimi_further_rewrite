@@ -17,13 +17,13 @@ public class ManageVokiCatalogPage : IEndpointGroup
 
     private static async Task<IResult> GetVokiCatalogPageSettings(
         HttpContext httpContext, CancellationToken ct,
-        IQueryHandler<GetVokiQuery, BaseVoki> handler
+        IQueryHandler<GetVokiQuery, Voki> handler
     ) {
         VokiId vokiId = httpContext.GetVokiIdFromRoute();
 
         GetVokiQuery query = new(vokiId);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<BaseVoki, VokiCatalogPageSettingsResponse>(result);
+        return CustomResults.FromErrOrToJson<Voki, VokiCatalogPageSettingsResponse>(result);
     }
 }

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using InfrastructureShared.EfCore.query_extensions.expression_visitors;
+using InfrastructureShared.EfCore.db_extensions.expression_visitors;
 using Microsoft.EntityFrameworkCore;
 using SharedKernel.domain;
 

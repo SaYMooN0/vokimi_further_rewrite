@@ -4,17 +4,17 @@ using VokisCatalogService.Domain.voki_aggregate;
 namespace VokisCatalogService.Application.vokis.queries;
 
 public sealed record ListVokisWithIdsQuery(VokiId[] VokiIds) :
-    IQuery<BaseVoki[]>;
+    IQuery<Voki[]>;
 
-internal sealed class ListVokisWithIdsQueryHandler : IQueryHandler<ListVokisWithIdsQuery, BaseVoki[]>
+internal sealed class ListVokisWithIdsQueryHandler : IQueryHandler<ListVokisWithIdsQuery, Voki[]>
 {
-    private readonly IBaseVokisRepository _baseVokisRepository;
+    private readonly IVokisRepository _vokisRepository;
 
-    public ListVokisWithIdsQueryHandler(IBaseVokisRepository baseVokisRepository) {
-        _baseVokisRepository = baseVokisRepository;
+    public ListVokisWithIdsQueryHandler(IVokisRepository vokisRepository) {
+        _vokisRepository = vokisRepository;
     }
 
-    public async Task<ErrOr<BaseVoki[]>> Handle(ListVokisWithIdsQuery withIdsQuery, CancellationToken ct) {
-        return await _baseVokisRepository.GetMultipleById(withIdsQuery.VokiIds, ct);
+    public async Task<ErrOr<Voki[]>> Handle(ListVokisWithIdsQuery withIdsQuery, CancellationToken ct) {
+        return await _vokisRepository.GetMultipleById(withIdsQuery.VokiIds, ct);
     }
 }

@@ -10,7 +10,7 @@
 		creationDate: Date;
 	}
 	let { viewerId, primaryAuthorId, creationDate }: Props = $props();
-	let primaryAuthor = UsersStore.Get(primaryAuthorId);
+	let primaryAuthor = UsersStore.Get('1');
 	let viewerIsPrimaryAuthor = $derived(viewerId === primaryAuthorId);
 
 	const openErrsViewDialog = getErrsViewDialogOpenFunction();

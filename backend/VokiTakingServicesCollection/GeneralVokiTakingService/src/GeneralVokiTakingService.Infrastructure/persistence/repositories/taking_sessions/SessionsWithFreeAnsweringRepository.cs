@@ -3,9 +3,6 @@ using GeneralVokiTakingService.Domain.common;
 using GeneralVokiTakingService.Domain.voki_taking_session_aggregate;
 using InfrastructureShared.EfCore;
 using InfrastructureShared.EfCore.db_extensions;
-using InfrastructureShared.EfCore.query_extensions;
-using Microsoft.EntityFrameworkCore;
-
 namespace GeneralVokiTakingService.Infrastructure.persistence.repositories.taking_sessions;
 
 internal class SessionsWithFreeAnsweringRepository : ISessionsWithFreeAnsweringRepository

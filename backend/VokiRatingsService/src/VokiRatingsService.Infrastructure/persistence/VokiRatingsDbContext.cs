@@ -1,11 +1,10 @@
 ﻿using InfrastructureShared.Base.domain_events_publisher;
 using Microsoft.EntityFrameworkCore;
 using VokiRatingsService.Domain.app_user_aggregate;
+using VokiRatingsService.Domain.update_ratings_snapshot_marker_aggregate;
 using VokiRatingsService.Domain.voki_aggregate;
 using VokiRatingsService.Domain.voki_rating_aggregate;
 using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
-using VokiRatingsService.Domain.voki_ratings_snapshot;
-using VokiRatingsService.Domain.update_ratings_snapshot_marker_aggregate;
 
 namespace VokiRatingsService.Infrastructure.persistence;
 

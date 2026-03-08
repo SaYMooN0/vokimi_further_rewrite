@@ -16,13 +16,13 @@ internal class SpecificVokiHandlers : IEndpointGroup
 
     private static async Task<IResult> GetVokiOverviewInfo(
         CancellationToken ct, HttpContext httpContext,
-        IQueryHandler<GetVokiQuery, BaseVoki> handler
+        IQueryHandler<GetVokiQuery, Voki> handler
     ) {
         VokiId id = httpContext.GetVokiIdFromRoute();
 
         GetVokiQuery query = new(id);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<BaseVoki, VokiOverviewResponse>(result);
+        return CustomResults.FromErrOrToJson<Voki, VokiOverviewResponse>(result);
     }
 }

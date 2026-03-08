@@ -21,7 +21,7 @@ public sealed class GeneralVoki : BaseVoki
     private IReadOnlyCollection<VokiResult> _results { get; }
     private ImmutableHashSet<VokiTakenRecordId> VokiTakenRecordIds { get; set; }
     public GeneralVokiInteractionSettings InteractionSettings { get; private set; }
-    protected override IVokiInteractionSettings BaseInteractionSettings => InteractionSettings;
+    protected override BaseVokiInteractionSettings BaseInteractionSettings => InteractionSettings;
 
     public GeneralVoki(
         VokiId id, VokiName name, ImmutableArray<VokiQuestion> questions, ImmutableArray<VokiResult> results,

@@ -29,7 +29,7 @@ internal class VokiHandlers : IEndpointGroup
     }
 
     private static async Task<IResult> ListAllVokis(
-        CancellationToken ct, IQueryHandler<ListAllVokisQuery, BaseVoki[]> handler
+        CancellationToken ct, IQueryHandler<ListAllVokisQuery, Voki[]> handler
     ) {
         ListAllVokisQuery query = new();
         var result = await handler.Handle(query, ct);
@@ -41,7 +41,7 @@ internal class VokiHandlers : IEndpointGroup
 
     private static async Task<IResult> ListVokisBriefInfo(
         HttpContext httpContext, CancellationToken ct,
-        IQueryHandler<ListVokisWithIdsQuery, BaseVoki[]> handler
+        IQueryHandler<ListVokisWithIdsQuery, Voki[]> handler
     ) {
         var request = httpContext.GetValidatedRequest<ListVokisBriefInfoRequest>();
 

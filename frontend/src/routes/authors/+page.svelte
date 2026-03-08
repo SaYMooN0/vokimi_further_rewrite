@@ -1,1 +1,1 @@
-<h1>Authors page is not implemented yet</h1>
+<h1>List of authors here</h1>

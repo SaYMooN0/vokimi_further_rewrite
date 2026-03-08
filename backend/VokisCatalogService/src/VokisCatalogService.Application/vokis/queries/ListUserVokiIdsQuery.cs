@@ -10,14 +10,14 @@ public sealed record ListIdsOfVokiAuthoredByUser() :
 
 internal sealed class ListIdsOfVokiAuthoredByUserHandler : IQueryHandler<ListIdsOfVokiAuthoredByUser, VokiId[]>
 {
-    private readonly IBaseVokisRepository _baseVokisRepository;
+    private readonly IVokisRepository _vokisRepository;
     private readonly IUserCtxProvider _userCtxProvider;
 
-    public ListIdsOfVokiAuthoredByUserHandler(IBaseVokisRepository baseVokisRepository, IUserCtxProvider userCtxProvider) {
-        _baseVokisRepository = baseVokisRepository;
+    public ListIdsOfVokiAuthoredByUserHandler(IVokisRepository vokisRepository, IUserCtxProvider userCtxProvider) {
+        _vokisRepository = vokisRepository;
         _userCtxProvider = userCtxProvider;
     }
 
     public async Task<ErrOr<VokiId[]>> Handle(ListIdsOfVokiAuthoredByUser query, CancellationToken ct)=>
-       await _baseVokisRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(query.UserCtx(_userCtxProvider), ct);
+       await _vokisRepository.ListVokiAuthoredByUserIdsOrderByCreationDate(query.UserCtx(_userCtxProvider), ct);
 }

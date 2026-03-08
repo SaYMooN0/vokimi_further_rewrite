@@ -9,29 +9,29 @@ namespace VokisCatalogService.Application.vokis.integration_event_handlers;
 
 public class BaseVokiTakenIntegrationEventHandler : IConsumer<BaseVokiTakenIntegrationEvent>
 {
-    private readonly IBaseVokisRepository _baseVokisRepository;
+    private readonly IVokisRepository _vokisRepository;
     private readonly IAppUsersRepository _appUsersRepository;
     private readonly IDateTimeProvider _dateTimeProvider;
 
     public BaseVokiTakenIntegrationEventHandler(
-        IBaseVokisRepository baseVokisRepository,
+        IVokisRepository vokisRepository,
         IAppUsersRepository appUsersRepository,
         IDateTimeProvider dateTimeProvider
     ) {
-        _baseVokisRepository = baseVokisRepository;
+        _vokisRepository = vokisRepository;
         _appUsersRepository = appUsersRepository;
         _dateTimeProvider = dateTimeProvider;
     }
 
 
     public async Task Consume(ConsumeContext<BaseVokiTakenIntegrationEvent> context) {
-        BaseVoki? voki = await _baseVokisRepository.GetByIdForUpdate(context.Message.VokiId, context.CancellationToken);
+        Voki? voki = await _vokisRepository.GetByIdForUpdate(context.Message.VokiId, context.CancellationToken);
         if (voki is null) {
             return;
         }
 
         voki.UpdateVokiTakingsCount(context.Message.NewVokiTakingsCount);
-        await _baseVokisRepository.Update(voki, context.CancellationToken);
+        await _vokisRepository.Update(voki, context.CancellationToken);
 
         if (context.Message.VokiTakerId is null) {
             return;

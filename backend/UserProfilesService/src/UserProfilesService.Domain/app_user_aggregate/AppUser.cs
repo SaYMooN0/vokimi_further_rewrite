@@ -18,7 +18,7 @@ public class AppUser : AggregateRoot<AppUserId>
     //not immutable because ef core doesn't want to work with it for some reason
     public HashSet<Language> PreferredLanguages { get; private set; }
     private const int MaxFavoriteTagsCount = 20;
-    public UserSettings Settings { get; private set; }
+    public ProfileSettings Settings { get; private set; }
 
     public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePicKey profilePic) {
         if (!profilePic.IsForUser(userId)) {
@@ -33,7 +33,7 @@ public class AppUser : AggregateRoot<AppUserId>
         ProfilePic = profilePic;
         FavoriteTags = [];
         PreferredLanguages = [];
-        Settings = UserSettings.Default;
+        Settings = ProfileSettings.Default;
     }
 
     private ErrOrNothing CheckIfProfilePicIsForUser(UserProfilePicKey profilePic) => profilePic.IsForUser(Id)

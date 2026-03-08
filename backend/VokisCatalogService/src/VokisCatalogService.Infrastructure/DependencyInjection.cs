@@ -56,8 +56,7 @@ public static class DependencyInjection
         services.AddPgSqlDbContext<VokisCatalogDbContext>(env,dbConnectionString);
 
         services.AddScoped<IAppUsersRepository, AppUsersRepository>();
-        services.AddScoped<IBaseVokisRepository, BaseVokisRepository>();
-        services.AddScoped<IGeneralVokisRepository, GeneralVokisRepository>();
+        services.AddScoped<IVokisRepository, VokisRepository>();
 
         return services;
     }

@@ -17,7 +17,7 @@ internal sealed record class VokiBriefInfoResponse(
     DateTime PublicationDate
 )
 {
-    public static VokiBriefInfoResponse Create(BaseVoki v) => new(
+    public static VokiBriefInfoResponse Create(Voki v) => new(
         v.Id.ToString(),
         v.Type,
         v.Name.ToString(),
@@ -27,7 +27,7 @@ internal sealed record class VokiBriefInfoResponse(
         ManagerIds: v.ManagersSet.ToArray().Select(id => id.ToString()).ToArray(),
         v.Details.HasMatureContent,
         v.Details.Language,
-        v.BaseInteractionSettings.SignedInOnlyTaking,
+        v.InteractionSettings.SignedInOnlyTaking,
         v.PublicationDate
     );
 }

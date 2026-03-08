@@ -1,8 +1,8 @@
 ﻿namespace SharedKernel.common.vokis.general_vokis;
 
-public class GeneralVokiInteractionSettings : ValueObject, IVokiInteractionSettings
+public sealed class GeneralVokiInteractionSettings : BaseVokiInteractionSettings
 {
-    public bool SignedInOnlyTaking { get; }
+    public override bool SignedInOnlyTaking { get; }
     public GeneralVokiResultsVisibility ResultsVisibility { get; }
     public bool ShowResultsDistribution { get; }
 
@@ -14,7 +14,8 @@ public class GeneralVokiInteractionSettings : ValueObject, IVokiInteractionSetti
         bool signedInOnlyTaking,
         GeneralVokiResultsVisibility resultsVisibility,
         bool showResultsDistribution
-    ) {
+    )
+    {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckResultsVisibilityForErr(
             signedInOnlyTaking, resultsVisibility
         ));
@@ -26,7 +27,8 @@ public class GeneralVokiInteractionSettings : ValueObject, IVokiInteractionSetti
     public static ErrOrNothing CheckResultsVisibilityForErr(
         bool authOnlyAccess,
         GeneralVokiResultsVisibility visibility
-    ) => (authOnlyAccess, visibility) switch {
+    ) => (authOnlyAccess, visibility) switch
+    {
         (_, GeneralVokiResultsVisibility.Anyone)
             or (authOnlyAccess: true, _) => ErrOrNothing.Nothing,
 

@@ -1,21 +1,20 @@
 using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.voki_aggregate;
-using VokisCatalogService.Domain.voki_aggregate.voki_types;
 
 namespace VokisCatalogService.Application.vokis.queries;
 
-public sealed record GetVokiQuery(VokiId VokiId) : IQuery<BaseVoki>;
+public sealed record GetVokiQuery(VokiId VokiId) : IQuery<Voki>;
 
-internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, BaseVoki>
+internal sealed class GetVokiQueryHandler : IQueryHandler<GetVokiQuery, Voki>
 {
-    private readonly IBaseVokisRepository _baseVokisRepository;
+    private readonly IVokisRepository _vokisRepository;
 
-    public GetVokiQueryHandler(IBaseVokisRepository baseVokisRepository) {
-        _baseVokisRepository = baseVokisRepository;
+    public GetVokiQueryHandler(IVokisRepository vokisRepository) {
+        _vokisRepository = vokisRepository;
     }
 
-    public async Task<ErrOr<BaseVoki>> Handle(GetVokiQuery query, CancellationToken ct) {
-        BaseVoki? voki = await _baseVokisRepository.GetById(query.VokiId, ct);
+    public async Task<ErrOr<Voki>> Handle(GetVokiQuery query, CancellationToken ct) {
+        Voki? voki = await _vokisRepository.GetById(query.VokiId, ct);
         if (voki is null) {
             return ErrFactory.NotFound.Voki(
                 "Requested voki was not found",

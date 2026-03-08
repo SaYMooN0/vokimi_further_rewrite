@@ -21,11 +21,11 @@ public record class VokiOverviewResponse(
     uint CommentsCount,
     bool SignedInOnlyTaking,
     VokiOverviewResponse.VokiTypeWithSpecificDataResponse TypeSpecificData
-) : ICreatableResponse<BaseVoki>
+) : ICreatableResponse<Voki>
 {
-    public static ICreatableResponse<BaseVoki> Create(BaseVoki voki) => FromBaseVoki(voki);
+    public static ICreatableResponse<Voki> Create(Voki voki) => FromBaseVoki(voki);
 
-    public static VokiOverviewResponse FromBaseVoki(BaseVoki v) => new(
+    public static VokiOverviewResponse FromBaseVoki(Voki v) => new(
         v.Id.ToString(),
         v.Type,
         v.Name.ToString(),
@@ -40,13 +40,13 @@ public record class VokiOverviewResponse(
         v.PublicationDate,
         v.RatingsCount,
         v.CommentsCount,
-        v.BaseInteractionSettings.SignedInOnlyTaking,
-        CreateTypeSpecificData(v)
+        v.InteractionSettings.SignedInOnlyTaking,
+        CreateTypeSpecificData(v.TypeSpecificData)
     );
 
     private static VokiTypeWithSpecificDataResponse CreateTypeSpecificData(
-        BaseVoki v
-    ) => v.MatchOnType<VokiTypeWithSpecificDataResponse>(
+        BaseVokiTypeSpecificData v
+    ) => v.Match<VokiTypeWithSpecificDataResponse>(
         (g) => new GeneralVokiTypeWithSpecificDataResponse(
             ForceSequentialAnswering: false,
             ShuffleQuestions: false,

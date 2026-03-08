@@ -1,27 +1,30 @@
-﻿using MassTransit;
+﻿using System.Collections.Immutable;
+using MassTransit;
 using SharedKernel.common.vokis;
 using SharedKernel.common.vokis.general_vokis;
 using SharedKernel.integration_events.voki_publishing;
 using VokimiStorageKeysLib.concrete_keys;
 using VokisCatalogService.Application.common.repositories;
 using VokisCatalogService.Domain.voki_aggregate;
-using VokisCatalogService.Domain.voki_aggregate.voki_types;
+using VokisCatalogService.Domain.voki_aggregate.type_specific_data;
 
 namespace VokisCatalogService.Application.vokis.integration_event_handlers;
 
 public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVokiPublishedIntegrationEvent>
 {
-    private readonly IGeneralVokisRepository _generalVokisRepository;
+    private readonly IVokisRepository _vokisRepository;
 
-    public GeneralVokiPublishedIntegrationEventHandler(IGeneralVokisRepository generalVokisRepository) {
-        _generalVokisRepository = generalVokisRepository;
+    public GeneralVokiPublishedIntegrationEventHandler(IVokisRepository vokisRepository)
+    {
+        _vokisRepository = vokisRepository;
     }
 
-    public async Task Consume(ConsumeContext<GeneralVokiPublishedIntegrationEvent> context) {
+    public async Task Consume(ConsumeContext<GeneralVokiPublishedIntegrationEvent> context)
+    {
         var e = context.Message;
         bool anyAudios = CheckIfVokiHasAnyAudios(e);
 
-        GeneralVoki voki = GeneralVoki.CreateNew(
+        Voki voki = Voki.CreateGeneral(
             e.VokiId,
             new VokiName(e.Name),
             new VokiCoverKey(e.Cover),
@@ -36,16 +39,17 @@ public class GeneralVokiPublishedIntegrationEventHandler : IConsumer<GeneralVoki
                 resultsVisibility: e.InteractionSettings.ResultsVisibility,
                 showResultsDistribution: e.InteractionSettings.ShowResultsDistribution
             ).AsSuccess(),
-            questionsCount: (ushort)e.Questions.Length,
-            resultsCount: (ushort)e.Results.Length,
-            anyAudios: anyAudios,
-            forceSequentialAnswering: e.ForceSequentialAnswering,
-            shuffleQuestions: e.ShuffleQuestions
+            new GeneralVokiTypeSpecificData(
+                questionsCount: (ushort)e.Questions.Length,
+                resultsCount: (ushort)e.Results.Length,
+                anyAudios: anyAudios,
+                forceSequentialAnswering: e.ForceSequentialAnswering,
+                shuffleQuestions: e.ShuffleQuestions
+            )
         );
-        await _generalVokisRepository.Add(voki, context.CancellationToken);
+        await _vokisRepository.Add(voki, context.CancellationToken);
     }
 
-    private static bool CheckIfVokiHasAnyAudios(GeneralVokiPublishedIntegrationEvent v) {
-        return v.Questions.Any(q => q.HasAnyAudio);
-    }
+    private static bool CheckIfVokiHasAnyAudios(GeneralVokiPublishedIntegrationEvent v)=>
+        v.Questions.Any(q => q.HasAnyAudio);
 }

@@ -1,5 +1,5 @@
 using VokiRatingsService.Domain.common;
-using VokiRatingsService.Domain.voki_ratings_snapshot.events;
+using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate.events;
 
 namespace VokiRatingsService.Domain.voki_ratings_snapshot_aggregate;
 

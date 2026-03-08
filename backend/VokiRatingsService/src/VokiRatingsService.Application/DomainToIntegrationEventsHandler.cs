@@ -1,7 +1,7 @@
 ﻿using ApplicationShared;
 using SharedKernel.domain;
 using SharedKernel.integration_events;
-using VokiRatingsService.Domain.voki_ratings_snapshot.events;
+using VokiRatingsService.Domain.voki_ratings_snapshot_aggregate.events;
 
 namespace VokiRatingsService.Application;
 

@@ -6,7 +6,7 @@ internal record class MultipleVokisBriefInfoResponse(
     VokiBriefInfoResponse[] Vokis
 )
 {
-    public static MultipleVokisBriefInfoResponse Create(IEnumerable<BaseVoki> vokis) => new(
+    public static MultipleVokisBriefInfoResponse Create(IEnumerable<Voki> vokis) => new(
         vokis.Select(VokiBriefInfoResponse.Create).ToArray()
     );
 }
