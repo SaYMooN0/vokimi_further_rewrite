@@ -1,7 +1,6 @@
 ﻿using SharedKernel.common.app_users;
 using SharedKernel.exceptions;
 using UserProfilesService.Domain.app_user_aggregate.events;
-using VokimiStorageKeysLib.concrete_keys;
 using VokimiStorageKeysLib.concrete_keys.profile_pics;
 
 namespace UserProfilesService.Domain.app_user_aggregate;
@@ -12,18 +11,28 @@ public class AppUser : AggregateRoot<AppUserId>
 
     public UserUniqueName UniqueName { get; private set; }
     public UserDisplayName DisplayName { get; private set; }
-    public UserProfilePicKey ProfilePic { get; private set; }
+    public UserBanner Banner { get; private set; }
+    public ProfilePic ProfilePic { get; private set; }
+
+    public UserStatus Status { get; private set; }
+    public UserPronouns Pronouns { get; private set; }
+    public UserAboutMe AboutMe { get; private set; }
+    public UserLanguageSettings  LanguageSettings{ get; private set; }
+    public  UserLinksList Links { get; private set; }
+
     public ImmutableHashSet<VokiTagId> FavoriteTags { get; private set; }
+    public ImmutableHashSet<AppUserId> FavoriteAuthors { get; private set; }
 
     //not immutable because ef core doesn't want to work with it for some reason
-    public HashSet<Language> PreferredLanguages { get; private set; }
     private const int MaxFavoriteTagsCount = 20;
     public ProfileSettings Settings { get; private set; }
 
-    public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePicKey profilePic) {
-        if (!profilePic.IsForUser(userId)) {
+    public AppUser(AppUserId userId, UserUniqueName uniqueName, ProfilePic profilePic)
+    {
+        if (!profilePic.Key.IsForUser(userId))
+        {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Conflict(
-                $"Given profile pic key doesn't belong to this user. User id: {userId}, profile pic id: {profilePic.UserId}"
+                $"Given profile pic key doesn't belong to this user. User id: {userId}, profile pic id: {profilePic.Key.UserId}"
             ));
         }
 
@@ -31,27 +40,42 @@ public class AppUser : AggregateRoot<AppUserId>
         UniqueName = uniqueName;
         DisplayName = UserDisplayName.FromUniqueName(uniqueName);
         ProfilePic = profilePic;
+        Banner = UserBanner.DefaultBanner;
+        Status = UserStatus.Disabled();
+        Pronouns = UserPronouns.Disabled();
+        AboutMe = UserAboutMe.Disabled();
+        KnownLanguages = UserKnownLanguages.Disabled();
+        Links = [];
         FavoriteTags = [];
+        FavoriteAuthors = [];
         PreferredLanguages = [];
         Settings = ProfileSettings.Default;
     }
 
-    private ErrOrNothing CheckIfProfilePicIsForUser(UserProfilePicKey profilePic) => profilePic.IsForUser(Id)
+    public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePicKey profilePicKey)
+        : this(userId, uniqueName, new ProfilePic(profilePicKey, ProfilePicShape.Circle))
+    {
+    }
+
+    private ErrOrNothing CheckIfProfilePicIsForUser(ProfilePic profilePic) => profilePic.Key.IsForUser(Id)
         ? ErrOrNothing.Nothing
         : ErrFactory.Conflict(
             "Given profile pic key doesn't belong to this user",
-            $" User id: {Id}, profile pic id: {profilePic.UserId}"
+            $" User id: {Id}, profile pic id: {profilePic.Key.UserId}"
         );
 
-    public ErrOrNothing UpdateProfilePic(UserProfilePicKey newProfilePic) {
-        if (CheckIfProfilePicIsForUser(newProfilePic).IsErr(out var err)) {
+    public ErrOrNothing UpdateProfilePic(ProfilePic newProfilePic)
+    {
+        if (CheckIfProfilePicIsForUser(newProfilePic).IsErr(out var err))
+        {
             return err;
         }
 
-        if (newProfilePic != ProfilePic) {
+        if (newProfilePic != ProfilePic)
+        {
             var oldPic = ProfilePic;
             ProfilePic = newProfilePic;
-            AddDomainEvent(new AppUserProfilePicChangedEvent(Id, OldKey: oldPic, NewKey: newProfilePic));
+            AddDomainEvent(new AppUserProfilePicChangedEvent(Id, OldPic: oldPic, NewPic: newProfilePic));
         }
 
         return ErrOrNothing.Nothing;
@@ -62,16 +86,18 @@ public class AppUser : AggregateRoot<AppUserId>
         : ErrOrNothing.Nothing;
 
     public ErrOrNothing ProcessBasicSetup(
-        UserProfilePicKey profilePicKey,
+        ProfilePic profilePic,
         UserDisplayName displayName,
         HashSet<Language> preferredLanguages,
         ImmutableHashSet<VokiTagId> favoriteTags
-    ) {
+    )
+    {
         if (
             CheckFavouriteTagsSetForCount(favoriteTags)
-            .WithNextIfErr(CheckIfProfilePicIsForUser(profilePicKey))
+            .WithNextIfErr(CheckIfProfilePicIsForUser(profilePic))
             .IsErr(out var err)
-        ) {
+        )
+        {
             return err;
         }
 
@@ -79,10 +105,11 @@ public class AppUser : AggregateRoot<AppUserId>
         this.PreferredLanguages = preferredLanguages;
         this.FavoriteTags = favoriteTags;
 
-        if (profilePicKey != ProfilePic) {
+        if (profilePic != ProfilePic)
+        {
             var oldPic = ProfilePic;
-            ProfilePic = profilePicKey;
-            AddDomainEvent(new AppUserProfilePicChangedEvent(Id, OldKey: oldPic, NewKey: profilePicKey));
+            ProfilePic = profilePic;
+            AddDomainEvent(new AppUserProfilePicChangedEvent(Id, OldPic: oldPic, NewPic: profilePic));
         }
 
         return ErrOrNothing.Nothing;

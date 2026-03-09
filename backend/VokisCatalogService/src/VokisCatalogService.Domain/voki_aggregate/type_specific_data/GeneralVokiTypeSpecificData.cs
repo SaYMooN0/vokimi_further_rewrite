@@ -1,6 +1,6 @@
 namespace VokisCatalogService.Domain.voki_aggregate.type_specific_data;
 
-public sealed class GeneralVokiTypeSpecificData : BaseVokiTypeSpecificData
+public class GeneralVokiTypeSpecificData : BaseVokiTypeSpecificData
 {
     private GeneralVokiTypeSpecificData() { }
 
