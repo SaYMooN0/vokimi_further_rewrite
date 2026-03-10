@@ -24,13 +24,13 @@ public record UserPreviewDto(
     AppUserId UserId,
     UserUniqueName UniqueName,
     UserDisplayName DisplayName,
-    UserProfilePicKey ProfilePicKey
+    ProfilePic ProfilePicKey
 );
 
 public record UserPreviewWithAllowInvitesSettingDto(
     AppUserId UserId,
     UserUniqueName UniqueName,
     UserDisplayName DisplayName,
-    UserProfilePicKey ProfilePicKey,
+    ProfilePic ProfilePicKey,
     AllowCoAuthorInvitesSettingValue AllowCoAuthorInvites
 );

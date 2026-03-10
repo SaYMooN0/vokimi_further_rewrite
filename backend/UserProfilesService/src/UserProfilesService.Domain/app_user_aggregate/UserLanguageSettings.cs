@@ -1,15 +1,19 @@
+using SharedKernel.exceptions;
+
 namespace UserProfilesService.Domain.app_user_aggregate;
 
 public sealed class UserLanguageSettings : ValueObject
 {
-    public ImmutableHashSet<Language> KnownLanguages { get; }
     public bool ShowInProfile { get; }
+    public ImmutableHashSet<Language> KnownLanguages { get; }
     public UnknownLanguagesSettings UnknownLanguages { get; }
 
     private UserLanguageSettings(
         ImmutableHashSet<Language> knownLanguages,
         bool showInProfile,
-        UnknownLanguagesSettings unknownLanguages) {
+        UnknownLanguagesSettings unknownLanguages
+    ) {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(knownLanguages, unknownLanguages));
         KnownLanguages = knownLanguages;
         ShowInProfile = showInProfile;
         UnknownLanguages = unknownLanguages;
@@ -22,18 +26,18 @@ public sealed class UserLanguageSettings : ValueObject
     );
 
     public static ErrOr<UserLanguageSettings> Create(
-        ImmutableHashSet<Language> knownLanguages,
         bool showOnProfile,
-        UnknownLanguagesSettings unknownLanguages) {
-        var error = CheckForErr(knownLanguages, unknownLanguages);
-        if (error.IsErr(out var err)) return err;
-
-        return new UserLanguageSettings(knownLanguages, showOnProfile, unknownLanguages);
-    }
+        ImmutableHashSet<Language> knownLanguages,
+        UnknownLanguagesSettings unknownLanguages
+    ) =>
+        CheckForErr(knownLanguages, unknownLanguages).IsErr(out var err)
+            ? err
+            : new UserLanguageSettings(knownLanguages, showOnProfile, unknownLanguages);
 
     public static ErrOrNothing CheckForErr(
         ImmutableHashSet<Language> knownLanguages,
-        UnknownLanguagesSettings unknownLanguages) {
+        UnknownLanguagesSettings unknownLanguages
+    ) {
         if (knownLanguages.Intersect(unknownLanguages.Blacklist).Any()) {
             return ErrFactory.Conflict("Known languages and blacklisted languages cannot overlap");
         }

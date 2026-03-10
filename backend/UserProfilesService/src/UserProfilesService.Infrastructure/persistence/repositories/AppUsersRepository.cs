@@ -81,7 +81,7 @@ internal class AppUsersRepository : IAppUsersRepository
             .Take(queryLimit)
             .Select(x => new UserPreviewWithAllowInvitesSettingDto(
                 x.User.Id, x.User.UniqueName, x.User.DisplayName,
-                x.User.ProfilePic, x.User.Settings.AllowCoAuthorInvites
+                x.User.ProfilePic, x.User.SocialInteractionSettings.AllowCoAuthorInvites
             ));
 
         return await query.ToArrayAsync(ct);
@@ -91,7 +91,7 @@ internal class AppUsersRepository : IAppUsersRepository
         _db.AppUsers
             .Select(u => new UserPreviewWithAllowInvitesSettingDto(
                 u.Id, u.UniqueName, u.DisplayName,
-                u.ProfilePic, u.Settings.AllowCoAuthorInvites
+                u.ProfilePic, u.SocialInteractionSettings.AllowCoAuthorInvites
             ))
             .ToArrayAsync(ct);
 }

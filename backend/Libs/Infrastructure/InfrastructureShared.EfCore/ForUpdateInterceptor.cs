@@ -1,6 +1,5 @@
 using System.Data.Common;
 using InfrastructureShared.EfCore.db_extensions;
-using InfrastructureShared.EfCore.query_extensions;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace InfrastructureShared.EfCore;
