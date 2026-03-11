@@ -9,7 +9,7 @@ export const load: ServerLoad = async ({ fetch }) => {
 };
 
 type BasicSetupInfo = {
-    userUniqueName: string,
+    uniqueName: string,
     displayName: string,
     preferredLanguages: Language[]
     favoriteTags: string[],

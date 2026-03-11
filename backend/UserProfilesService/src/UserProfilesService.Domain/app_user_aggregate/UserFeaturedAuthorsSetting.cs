@@ -7,12 +7,12 @@ public class UserFeaturedAuthorsSetting : ValueObject
     private const int MaxAuthorsCount = 5;
 
     public ImmutableHashSet<AppUserId> UserIds { get; }
-    public bool ShowInProfile { get; }
+    public bool ShowOnProfile { get; }
 
-    private UserFeaturedAuthorsSetting(ImmutableHashSet<AppUserId> userIds, bool showInProfile) {
+    private UserFeaturedAuthorsSetting(ImmutableHashSet<AppUserId> userIds, bool showOnProfile) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(userIds));
         UserIds = userIds;
-        ShowInProfile = showInProfile;
+        ShowOnProfile = showOnProfile;
     }
 
     public static UserFeaturedAuthorsSetting Default() => new([], false);
@@ -24,5 +24,5 @@ public class UserFeaturedAuthorsSetting : ValueObject
     public static ErrOr<UserFeaturedAuthorsSetting> Create(ImmutableHashSet<AppUserId> userIds, bool showInProfile) =>
         CheckForErr(userIds).IsErr(out var err) ? err : new UserFeaturedAuthorsSetting(userIds, showInProfile);
 
-    public override IEnumerable<object> GetEqualityComponents() => [UserIds, ShowInProfile];
+    public override IEnumerable<object> GetEqualityComponents() => [UserIds, ShowOnProfile];
 }

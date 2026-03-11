@@ -1,6 +1,8 @@
 using SharedKernel.common.app_users;
 using SharedKernel.exceptions;
+using UserProfilesService.Domain.app_user_aggregate.dtos;
 using UserProfilesService.Domain.app_user_aggregate.events;
+using UserProfilesService.Domain.app_user_aggregate.profile_settings;
 using VokimiStorageKeysLib.concrete_keys.profile_pics;
 
 namespace UserProfilesService.Domain.app_user_aggregate;
@@ -12,12 +14,12 @@ public class AppUser : AggregateRoot<AppUserId>
     public UserUniqueName UniqueName { get; private set; }
     public UserDisplayName DisplayName { get; private set; }
     public ProfilePic ProfilePic { get; private set; }
-    public UserFavoriteTagsSetting FavoriteTags { get; private set; }
-    public UserFeaturedAuthorsSetting FeaturedAuthors { get; private set; }
-    public UserFrontendSettings FrontendSettings { get; private set; }
+    public UserFavoriteTagsSetting FavoriteTagsSetting { get; private set; }
     public UserLanguageSettings LanguageSettings { get; private set; }
-    public UserProfileSettings ProfileSettings { get; private set; }
-    public UserSocialInteractionSettings SocialInteractionSettings { get; private set; }
+    private UserFeaturedAuthorsSetting FeaturedAuthorsSetting { get; set; }
+    private UserFrontendSettings FrontendSettings { get; set; }
+    private UserProfileSettings ProfileSettings { get; set; }
+    public UserSocialInteractionSettings SocialInteractionSettings { get;private set; }
 
     public AppUser(AppUserId userId, UserUniqueName uniqueName, ProfilePic profilePic) {
         if (!profilePic.Key.IsForUser(userId)) {
@@ -31,8 +33,8 @@ public class AppUser : AggregateRoot<AppUserId>
         DisplayName = UserDisplayName.FromUniqueName(uniqueName);
         ProfilePic = profilePic;
 
-        FavoriteTags = UserFavoriteTagsSetting.Default();
-        FeaturedAuthors = UserFeaturedAuthorsSetting.Default();
+        FavoriteTagsSetting = UserFavoriteTagsSetting.Default();
+        FeaturedAuthorsSetting = UserFeaturedAuthorsSetting.Default();
         FrontendSettings = UserFrontendSettings.Default();
         LanguageSettings = UserLanguageSettings.Default();
         ProfileSettings = UserProfileSettings.Default();
@@ -42,29 +44,25 @@ public class AppUser : AggregateRoot<AppUserId>
     public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePicKey profilePicKey)
         : this(userId, uniqueName, new ProfilePic(profilePicKey, ProfilePicShape.Circle)) { }
 
-    private ErrOrNothing CheckIfProfilePicIsForUser(ProfilePic profilePic) => profilePic.Key.IsForUser(Id)
+    private ErrOrNothing CheckIfProfilePicIsForUser(UserProfilePicKey profilePic) => profilePic.IsForUser(Id)
         ? ErrOrNothing.Nothing
         : ErrFactory.Conflict(
             "Given profile pic key doesn't belong to this user",
-            $" User id: {Id}, profile pic id: {profilePic.Key.UserId}"
+            $" User id: {Id}, profile pic id: {profilePic.UserId}"
         );
 
     public ErrOrNothing UpdateProfilePic(ProfilePic newProfilePic) {
-        if (CheckIfProfilePicIsForUser(newProfilePic).IsErr(out var err)) {
+        if (CheckIfProfilePicIsForUser(newProfilePic.Key).IsErr(out var err)) {
             return err;
         }
 
-        if (newProfilePic != ProfilePic) {
-            var oldPic = ProfilePic;
-            ProfilePic = newProfilePic;
-            AddDomainEvent(new AppUserProfilePicChangedEvent(Id, OldPic: oldPic, NewPic: newProfilePic));
-        }
+        ProfilePic = newProfilePic;
 
         return ErrOrNothing.Nothing;
     }
 
     public ErrOrNothing ProcessBasicSetup(
-        ProfilePic profilePic,
+        UserProfilePicKey profilePic,
         UserDisplayName displayName,
         UserLanguageSettings languageSettings,
         UserFavoriteTagsSetting favoriteTags
@@ -78,14 +76,43 @@ public class AppUser : AggregateRoot<AppUserId>
 
         DisplayName = displayName;
         LanguageSettings = languageSettings;
-        FavoriteTags = favoriteTags;
-
-        if (profilePic != ProfilePic) {
-            var oldPic = ProfilePic;
-            ProfilePic = profilePic;
-            AddDomainEvent(new AppUserProfilePicChangedEvent(Id, OldPic: oldPic, NewPic: profilePic));
-        }
-
+        FavoriteTagsSetting = favoriteTags;
+        ProfilePic = ProfilePic with {
+            Key = profilePic
+        };
         return ErrOrNothing.Nothing;
     }
+
+    public UserProfileViewDto GetProfileViewData() => new(
+        Banner: ProfileSettings.Banner,
+        DisplayName: DisplayName,
+        UniqueName: UniqueName,
+        ProfilePicKey: ProfilePic.Key,
+        Pronouns: new UserProfilePossiblyHiddenField<string>(
+            Value: ProfileSettings.Pronouns.Value,
+            ShowOnProfile: ProfileSettings.Pronouns.ShowOnProfile
+        ),
+        Status: new UserProfilePossiblyHiddenField<string>(
+            Value: ProfileSettings.Status.Value,
+            ShowOnProfile: ProfileSettings.Status.ShowOnProfile
+        ),
+        AboutMe: new UserProfilePossiblyHiddenField<string>(
+            Value: ProfileSettings.AboutMe.Value,
+            ShowOnProfile: ProfileSettings.AboutMe.ShowOnProfile
+        ),
+        Links: new UserProfilePossiblyHiddenField<IReadOnlyList<UserLink>>(
+            Value: ProfileSettings.Links.Links.ToArray(),
+            ShowOnProfile: ProfileSettings.Links.ShowOnProfile
+        ),
+        FavoriteTags: new UserProfilePossiblyHiddenField<IReadOnlyList<string>>(
+            Value: FavoriteTagsSetting.Tags
+                .Select(x => x.ToString())
+                .ToArray(),
+            ShowOnProfile: FavoriteTagsSetting.ShowOnProfile
+        ),
+        FavoriteAuthorIds: new UserProfilePossiblyHiddenField<IReadOnlyList<AppUserId>>(
+            Value: FeaturedAuthorsSetting.UserIds.ToArray(),
+            ShowOnProfile: FeaturedAuthorsSetting.ShowOnProfile
+        )
+    );
 }

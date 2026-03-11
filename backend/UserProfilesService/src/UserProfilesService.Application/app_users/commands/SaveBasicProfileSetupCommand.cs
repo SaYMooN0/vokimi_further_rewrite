@@ -1,4 +1,4 @@
-﻿using ApplicationShared;
+using ApplicationShared;
 using ApplicationShared.messaging.pipeline_behaviors;
 using SharedKernel.user_ctx;
 using UserProfilesService.Application.common;
@@ -55,10 +55,25 @@ internal sealed class SaveBasicProfileSetupCommandHandler : ICommandHandler<Save
             );
         }
 
+        ErrOr<UserLanguageSettings> langSettingsRes = UserLanguageSettings.Create(
+            false,
+            [..command.PreferredLanguages],
+            new UnknownLanguagesSettings(UnknownLanguagesSettingsValue.HideOnlyBlacklist, [])
+        );
+        if (langSettingsRes.IsErr(out err)) {
+            return err;
+        }
+
+        ErrOr<UserFavoriteTagsSetting> tagsSettingsRes = UserFavoriteTagsSetting.Create(command.Tags, false);
+        if (tagsSettingsRes.IsErr(out err)) {
+            return err;
+        }
+
         ErrOrNothing setupRes = user.ProcessBasicSetup(
             profilePicKey,
             command.DisplayName,
-            command.PreferredLanguages, command.Tags
+            langSettingsRes.AsSuccess(),
+            tagsSettingsRes.AsSuccess()
         );
         if (setupRes.IsErr(out err)) {
             return err;

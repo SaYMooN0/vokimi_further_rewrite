@@ -5,7 +5,7 @@ using UserProfilesService.Domain.app_user_aggregate;
 
 namespace UserProfilesService.Application.app_users.queries;
 
-public sealed record GetCurrentUserQuery() :
+public sealed record GetCurrentUserQuery :
     IQuery<AppUser>,
     IWithAuthCheckStep
 {

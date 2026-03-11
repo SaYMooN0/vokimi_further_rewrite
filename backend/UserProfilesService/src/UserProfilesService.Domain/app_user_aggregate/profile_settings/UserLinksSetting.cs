@@ -6,13 +6,13 @@ public class UserLinksSetting : ValueObject
 {
     public const int MaxLinksCount = 15;
 
-    private UserLinksSetting(bool showInProfile, ImmutableArray<UserLink> links) {
-        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(showInProfile, links));
-        ShowInProfile = showInProfile;
+    private UserLinksSetting(bool showOnProfile, ImmutableArray<UserLink> links) {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(showOnProfile, links));
+        ShowOnProfile = showOnProfile;
         Links = links;
     }
 
-    public bool ShowInProfile { get; }
+    public bool ShowOnProfile { get; }
     public ImmutableArray<UserLink> Links { get; }
 
     public static UserLinksSetting Default() => new(
@@ -20,8 +20,8 @@ public class UserLinksSetting : ValueObject
         ImmutableArray<UserLink>.Empty
     );
 
-    public static ErrOr<UserLinksSetting> Create(bool showInProfile, ImmutableArray<UserLink> links) =>
-        CheckForErr(showInProfile, links).IsErr(out var err) ? err : new UserLinksSetting(showInProfile, links);
+    public static ErrOr<UserLinksSetting> Create(bool showOnProfile, ImmutableArray<UserLink> links) =>
+        CheckForErr(showOnProfile, links).IsErr(out var err) ? err : new UserLinksSetting(showOnProfile, links);
 
     public static ErrOrNothing CheckForErr(bool showInProfile, ImmutableArray<UserLink> links) {
         if (links.Length > MaxLinksCount) {
@@ -47,7 +47,7 @@ public class UserLinksSetting : ValueObject
 
 
     public override IEnumerable<object> GetEqualityComponents() => [
-        ShowInProfile,
+        ShowOnProfile,
         Links.Select(l => (l.Value, l.Type))
     ];
 }
@@ -82,7 +82,12 @@ public class UserLink
 
 public enum UserLinkType
 {
-    Website,
-    Telegram,
-    Other
+    Other = 0,
+    Website = 1,
+    Twitter = 2,
+    Instagram = 3,
+    YouTube = 4,
+    TikTok = 6,
+    Telegram = 7,
 }
+

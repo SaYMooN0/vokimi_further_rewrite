@@ -12,7 +12,7 @@ internal sealed class UserFeaturedAuthorsSettingConverter : ValueConverter<UserF
     private static string Serialize(UserFeaturedAuthorsSetting setting) =>
         JsonSerializer.Serialize(new Dto(
             setting.UserIds.Select(id => id.Value).ToArray(),
-            setting.ShowInProfile
+            setting.ShowOnProfile
         ));
 
     private static UserFeaturedAuthorsSetting Deserialize(string json) {

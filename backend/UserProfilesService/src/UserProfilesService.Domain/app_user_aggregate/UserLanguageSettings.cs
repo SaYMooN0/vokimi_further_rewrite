@@ -4,18 +4,18 @@ namespace UserProfilesService.Domain.app_user_aggregate;
 
 public sealed class UserLanguageSettings : ValueObject
 {
-    public bool ShowInProfile { get; }
+    public bool ShowOnProfile { get; }
     public ImmutableHashSet<Language> KnownLanguages { get; }
     public UnknownLanguagesSettings UnknownLanguages { get; }
 
     private UserLanguageSettings(
         ImmutableHashSet<Language> knownLanguages,
-        bool showInProfile,
+        bool showOnProfile,
         UnknownLanguagesSettings unknownLanguages
     ) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(knownLanguages, unknownLanguages));
         KnownLanguages = knownLanguages;
-        ShowInProfile = showInProfile;
+        ShowOnProfile = showOnProfile;
         UnknownLanguages = unknownLanguages;
     }
 
@@ -47,7 +47,7 @@ public sealed class UserLanguageSettings : ValueObject
 
     public override IEnumerable<object> GetEqualityComponents() => [
         KnownLanguages,
-        ShowInProfile,
+        ShowOnProfile,
         UnknownLanguages
     ];
 }

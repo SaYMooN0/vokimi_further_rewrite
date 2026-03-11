@@ -4,13 +4,13 @@ namespace UserProfilesService.Domain.app_user_aggregate.profile_settings;
 
 public sealed class UserAboutMe : ValueObject
 {
-    public bool ShowInProfile { get; }
+    public bool ShowOnProfile { get; }
     public string Value { get; }
     public const int MaxLength = 1000;
 
-    private UserAboutMe(bool showInProfile, string value) {
-        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(showInProfile, value));
-        ShowInProfile = showInProfile;
+    private UserAboutMe(bool showOnProfile, string value) {
+        InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(showOnProfile, value));
+        ShowOnProfile = showOnProfile;
         Value = value;
     }
 
@@ -31,6 +31,6 @@ public sealed class UserAboutMe : ValueObject
         return ErrOrNothing.Nothing;
     }
 
-    public override IEnumerable<object> GetEqualityComponents() => [ShowInProfile, Value];
-    public override string ToString() => ShowInProfile ? Value : "(Hidden)";
+    public override IEnumerable<object> GetEqualityComponents() => [ShowOnProfile, Value];
+    public override string ToString() => ShowOnProfile ? Value : "(Hidden)";
 }

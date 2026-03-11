@@ -3,6 +3,7 @@ using MassTransit;
 using SharedKernel.integration_events;
 
 namespace UserProfilesService.Infrastructure;
+
 public class IntegrationEventPublisher : IIntegrationEventPublisher
 {
     private readonly IPublishEndpoint _publish;

@@ -3,7 +3,7 @@
 namespace UserProfilesService.Api.contracts;
 
 public record UserBasicProfileSetupInfoResponse(
-    string UserUniqueName,
+    string UniqueName,
     string DisplayName,
     Language[] PreferredLanguages,
     string[] FavoriteTags,
@@ -15,8 +15,8 @@ public record UserBasicProfileSetupInfoResponse(
     public static ICreatableResponse<AppUser> Create(AppUser user) => new UserBasicProfileSetupInfoResponse(
         user.UniqueName.ToString(),
         user.DisplayName.ToString(),
-        user.PreferredLanguages.ToArray(),
-        user.FavoriteTags.Select(t => t.ToString()).ToArray(),
+        user.LanguageSettings.KnownLanguages.ToArray(),
+        user.FavoriteTagsSetting.Tags.Select(t => t.ToString()).ToArray(),
         user.ProfilePic.ToString(),
         UserDisplayName.MaxLength,
         VokiTagId.MaxTagLength

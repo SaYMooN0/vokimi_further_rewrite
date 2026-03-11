@@ -11,7 +11,7 @@ internal sealed class UserFavoriteTagsSettingConverter : ValueConverter<UserFavo
     private static string Serialize(UserFavoriteTagsSetting setting) =>
         JsonSerializer.Serialize(new Dto(
             setting.Tags.Select(t => t.ToString()).ToArray(),
-            setting.ShowInProfile
+            setting.ShowOnProfile
         ));
 
     private static UserFavoriteTagsSetting Deserialize(string json) {

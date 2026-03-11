@@ -1,6 +1,7 @@
 ﻿using UserProfilesService.Api.contracts;
 using UserProfilesService.Application.app_users.queries;
 using UserProfilesService.Application.common.repositories;
+using UserProfilesService.Domain.app_user_aggregate.dtos;
 
 namespace UserProfilesService.Api.endpoints;
 
@@ -11,6 +12,8 @@ internal class UsersHandlers : IEndpointGroup
 
         group.MapPost("/preview", GetUserPreviewData)
             .WithRequestValidation<UsersPreviewRequest>();
+
+        group.MapPost("/userId/profile-view", GetUserProfileView);
 
         group.MapGet("/search-to-invite", SearchUsersToInviteByName);
         group.MapGet("/recommended-for-co-author", ListUsersRecommendedForCoAuthor);
@@ -30,6 +33,18 @@ internal class UsersHandlers : IEndpointGroup
         return CustomResults.FromErrOrToJson<UserPreviewDto[], MultipleUsersPreviewResponse>(result);
     }
 
+    private static async Task<IResult> GetUserProfileView(
+        HttpContext httpContext, CancellationToken ct,
+        IQueryHandler<GetUserProfileViewQuery, UserProfileViewDto> handler
+    ) {
+        AppUserId userId = httpContext.GetAppUserIdFromRoute();
+
+        GetUserProfileViewQuery query = new(userId);
+        var result = await handler.Handle(query, ct);
+
+        return CustomResults.FromErrOrToJson<UserProfileViewDto, UserProfileViewResponse>(result);
+    }
+
     private static async Task<IResult> SearchUsersToInviteByName(
         string searchValue, int limit,
         HttpContext httpContext, CancellationToken ct,
@@ -38,8 +53,10 @@ internal class UsersHandlers : IEndpointGroup
         SearchUsersToInviteForCoAuthorQuery query = new(searchValue, limit);
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
+        return CustomResults
+            .FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
     }
+
     private static async Task<IResult> ListUsersRecommendedForCoAuthor(
         HttpContext httpContext, CancellationToken ct,
         IQueryHandler<ListUsersRecommendedForCoAuthorQuery, UserPreviewWithAllowInvitesSettingDto[]> handler
@@ -47,6 +64,7 @@ internal class UsersHandlers : IEndpointGroup
         ListUsersRecommendedForCoAuthorQuery query = new();
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
+        return CustomResults
+            .FromErrOrToJson<UserPreviewWithAllowInvitesSettingDto[], ListUsersToInviteResponse>(result);
     }
 }

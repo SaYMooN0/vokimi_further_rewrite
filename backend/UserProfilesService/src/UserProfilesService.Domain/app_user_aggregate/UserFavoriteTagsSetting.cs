@@ -6,12 +6,12 @@ public class UserFavoriteTagsSetting : ValueObject
 {
     private const int MaxTagsCount = 20;
     public ImmutableHashSet<VokiTagId> Tags { get; }
-    public bool ShowInProfile { get; }
+    public bool ShowOnProfile { get; }
 
-    private UserFavoriteTagsSetting(ImmutableHashSet<VokiTagId> tags, bool showInProfile) {
+    private UserFavoriteTagsSetting(ImmutableHashSet<VokiTagId> tags, bool showOnProfile) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(tags));
         Tags = tags;
-        ShowInProfile = showInProfile;
+        ShowOnProfile = showOnProfile;
     }
 
     public static UserFavoriteTagsSetting Default() => new([], false);
@@ -23,5 +23,5 @@ public class UserFavoriteTagsSetting : ValueObject
     public static ErrOr<UserFavoriteTagsSetting> Create(ImmutableHashSet<VokiTagId> tags, bool showInProfile) =>
         CheckForErr(tags).IsErr(out var err) ? err : new UserFavoriteTagsSetting(tags, showInProfile);
 
-    public override IEnumerable<object> GetEqualityComponents() => [Tags, ShowInProfile];
+    public override IEnumerable<object> GetEqualityComponents() => [Tags, ShowOnProfile];
 }

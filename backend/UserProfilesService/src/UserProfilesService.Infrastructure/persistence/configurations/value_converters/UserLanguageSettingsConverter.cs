@@ -18,7 +18,7 @@ internal sealed class UserLanguageSettingsConverter : ValueConverter<UserLanguag
     private static string Serialize(UserLanguageSettings settings) =>
         JsonSerializer.Serialize(new Dto(
             settings.KnownLanguages.Select(l => l.ToString()).ToArray(),
-            settings.ShowInProfile,
+            settings.ShowOnProfile,
             new BlacklistDto(
                 settings.UnknownLanguages.Value.ToString(),
                 settings.UnknownLanguages.Blacklist.Select(l => l.ToString()).ToArray()

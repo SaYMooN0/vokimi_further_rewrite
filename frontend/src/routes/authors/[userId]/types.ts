@@ -1,29 +1,47 @@
+type PossiblyHidden<T> =
+    | {
+        showOnProfile: true;
+        value: T;
+    }
+    | {
+        showOnProfile: false;
+    };
+
 type AuthorViewData = {
     banner: AuthorBanner;
     displayName: string;
     uniqueName: string;
-    profilePic: string;
-    pronouns: string;
-    showPronouns: boolean;
-    status: string;
-    about: string;
-    links: AuthorLink[];
-    favouriteTags: string[];
-    showFavouriteTags: boolean;
-    faouriteAuthorIds: string[];
-    showFavouriteAuthors: boolean;
-}
+    profilePicKey: string;
+
+    pronouns: PossiblyHidden<string>;
+    status: PossiblyHidden<string>;
+    aboutMe: PossiblyHidden<string>;
+
+    links: PossiblyHidden<AuthorLink[]>;
+    favouriteTags: PossiblyHidden<string[]>;
+    favouriteAuthorIds: PossiblyHidden<string[]>;
+};
+
 type AuthorLink = {
     value: string;
     type: AuthorLinkType;
-}
-type AuthorLinkType = "website" | "twitter" | "instagram" | "youtube" | "tiktok" | "other";
+};
 
-type AuthorBanner = BannerFillColor | BannerDefault;
+type AuthorLinkType =
+    | 'website'
+    | 'twitter'
+    | 'instagram'
+    | 'youtube'
+    | 'tiktok'
+    | 'other';
+
+type AuthorBanner = BannerDefault | BannerFillColor;
+
 type BannerDefault = {
-    type: "default";
-}
+    $type: 'default';
+};
+
 type BannerFillColor = {
-    type: "fill-color";
+    $type: 'fill-color';
     color: string;
-}
+};
