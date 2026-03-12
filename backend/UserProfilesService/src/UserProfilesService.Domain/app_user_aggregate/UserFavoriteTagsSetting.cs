@@ -4,6 +4,7 @@ namespace UserProfilesService.Domain.app_user_aggregate;
 
 public class UserFavoriteTagsSetting : ValueObject
 {
+    private UserFavoriteTagsSetting() { }
     private const int MaxTagsCount = 20;
     public ImmutableHashSet<VokiTagId> Tags { get; }
     public bool ShowOnProfile { get; }
@@ -20,8 +21,8 @@ public class UserFavoriteTagsSetting : ValueObject
         ? ErrFactory.LimitExceeded($"Too many favourite tags chosen. Maximum count: {MaxTagsCount}")
         : ErrOrNothing.Nothing;
 
-    public static ErrOr<UserFavoriteTagsSetting> Create(ImmutableHashSet<VokiTagId> tags, bool showInProfile) =>
-        CheckForErr(tags).IsErr(out var err) ? err : new UserFavoriteTagsSetting(tags, showInProfile);
+    public static ErrOr<UserFavoriteTagsSetting> Create(ImmutableHashSet<VokiTagId> tags, bool showOnProfile) =>
+        CheckForErr(tags).IsErr(out var err) ? err : new UserFavoriteTagsSetting(tags, showOnProfile);
 
     public override IEnumerable<object> GetEqualityComponents() => [Tags, ShowOnProfile];
 }

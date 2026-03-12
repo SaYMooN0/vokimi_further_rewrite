@@ -13,7 +13,7 @@ internal class UsersHandlers : IEndpointGroup
         group.MapPost("/preview", GetUserPreviewData)
             .WithRequestValidation<UsersPreviewRequest>();
 
-        group.MapPost("/userId/profile-view", GetUserProfileView);
+        group.MapGet("/{userId}/profile-view", GetUserProfileView);
 
         group.MapGet("/search-to-invite", SearchUsersToInviteByName);
         group.MapGet("/recommended-for-co-author", ListUsersRecommendedForCoAuthor);

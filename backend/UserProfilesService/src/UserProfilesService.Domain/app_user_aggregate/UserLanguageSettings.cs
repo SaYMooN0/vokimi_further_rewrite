@@ -4,17 +4,19 @@ namespace UserProfilesService.Domain.app_user_aggregate;
 
 public sealed class UserLanguageSettings : ValueObject
 {
+    private UserLanguageSettings() { }
     public bool ShowOnProfile { get; }
-    public ImmutableHashSet<Language> KnownLanguages { get; }
+    private readonly HashSet<Language> _knownLanguages;
+    public IReadOnlySet<Language> KnownLanguages => _knownLanguages;
     public UnknownLanguagesSettings UnknownLanguages { get; }
 
     private UserLanguageSettings(
-        ImmutableHashSet<Language> knownLanguages,
+        HashSet<Language> knownLanguages,
         bool showOnProfile,
         UnknownLanguagesSettings unknownLanguages
     ) {
         InvalidConstructorArgumentException.ThrowIfErr(this, CheckForErr(knownLanguages, unknownLanguages));
-        KnownLanguages = knownLanguages;
+        _knownLanguages = knownLanguages;
         ShowOnProfile = showOnProfile;
         UnknownLanguages = unknownLanguages;
     }
@@ -27,7 +29,7 @@ public sealed class UserLanguageSettings : ValueObject
 
     public static ErrOr<UserLanguageSettings> Create(
         bool showOnProfile,
-        ImmutableHashSet<Language> knownLanguages,
+        HashSet<Language> knownLanguages,
         UnknownLanguagesSettings unknownLanguages
     ) =>
         CheckForErr(knownLanguages, unknownLanguages).IsErr(out var err)
@@ -35,7 +37,7 @@ public sealed class UserLanguageSettings : ValueObject
             : new UserLanguageSettings(knownLanguages, showOnProfile, unknownLanguages);
 
     public static ErrOrNothing CheckForErr(
-        ImmutableHashSet<Language> knownLanguages,
+        HashSet<Language> knownLanguages,
         UnknownLanguagesSettings unknownLanguages
     ) {
         if (knownLanguages.Intersect(unknownLanguages.Blacklist).Any()) {
@@ -46,16 +48,24 @@ public sealed class UserLanguageSettings : ValueObject
     }
 
     public override IEnumerable<object> GetEqualityComponents() => [
-        KnownLanguages,
+        _knownLanguages,
         ShowOnProfile,
         UnknownLanguages
     ];
 }
 
-public record UnknownLanguagesSettings(
-    UnknownLanguagesSettingsValue Value,
-    ImmutableHashSet<Language> Blacklist
-);
+public record UnknownLanguagesSettings
+{
+    private UnknownLanguagesSettings() { }
+    public UnknownLanguagesSettingsValue Value { get; }
+    private readonly HashSet<Language> _blacklist;
+    public IReadOnlySet<Language> Blacklist => _blacklist;
+
+    public UnknownLanguagesSettings(UnknownLanguagesSettingsValue value, HashSet<Language> blacklist) {
+        Value = value;
+        _blacklist = blacklist;
+    }
+}
 
 public enum UnknownLanguagesSettingsValue
 {

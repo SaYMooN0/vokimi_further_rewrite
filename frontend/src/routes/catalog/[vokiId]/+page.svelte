@@ -17,17 +17,10 @@
 	import AuthorsSection from './_c_page/_c_sections/AuthorsSection.svelte';
 	import type { VokiTypeWithSpecificData } from './types';
 
-	function getTabFromUrl() {
-		const t = page.url.searchParams.get('tab');
-		if (t === 'about' || t === 'comments' || t === 'ratings') {
-			return t;
-		}
-		return 'about';
-	}
 	let { data }: PageProps = $props();
 	let pageState = new VokiPageState(
 		data.vokiId,
-		getTabFromUrl(),
+		page.url.searchParams,
 		data.response.isSuccess ? data.response.data.ratingsCount : 0,
 		data.response.isSuccess ? data.response.data.commentsCount : 0
 	);

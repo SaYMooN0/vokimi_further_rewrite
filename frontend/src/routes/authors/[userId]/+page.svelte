@@ -1,0 +1,68 @@
+<script lang="ts">
+	import UserProfileNotLoaded from './_c_page/AuthorProfileNotLoaded.svelte';
+	import type { PageProps } from './$types';
+	import AuthorBannerDisplay from './_c_page/AuthorBannerDisplay.svelte';
+	import AuthorIdentityBlock from './_c_page/AuthorIdentityBlock.svelte';
+	import AuthorProfilePicDisplay from './_c_page/AuthorProfilePicDisplay.svelte';
+
+	let { data }: PageProps = $props();
+	console.log(data);
+</script>
+
+{#if !data.response.isSuccess}
+	<UserProfileNotLoaded errs={data.response.errs} userId={data.userId!} />
+{:else}
+	<div class="author-page">
+		<AuthorBannerDisplay banner={data.response.data.banner} />
+		<div class="author-page-body">
+			<div class="author-page-main">
+				<div class="top-part">
+					<AuthorProfilePicDisplay
+						key={data.response.data.profilePic.key}
+						shape={data.response.data.profilePic.shape}
+					/>
+					<AuthorIdentityBlock
+						displayName={data.response.data.displayName}
+						uniqueName={data.response.data.uniqueName}
+						pronouns={data.response.data.pronouns}
+						status={data.response.data.status}
+					/>
+				</div>
+			</div>
+
+			<aside class="author-page-sidebar"></aside>
+		</div>
+	</div>
+{/if}
+
+<style>
+	.author-page {
+		width: 100%;
+		margin-top: 1rem;
+	}
+
+	.author-page-body {
+		display: grid;
+		grid-template-columns: 1fr 20rem;
+		align-items: start;
+		padding: 0 1.5rem;
+	}
+
+	.author-page-main {
+		display: flex;
+		flex-direction: ro;
+		gap: 1.25rem;
+		min-width: 0;
+	}
+	.top-part {
+		display: flex;
+		flex-direction: row;
+		gap: 1.25rem;
+		min-width: 0;
+	}
+	.author-page-sidebar {
+		width: 100%;
+		height: 20rem;
+		background-color: darkblue;
+	}
+</style>

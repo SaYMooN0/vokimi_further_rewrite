@@ -16,8 +16,8 @@ public sealed class UserAboutMe : ValueObject
 
     public static UserAboutMe Default() => new(false, string.Empty);
 
-    public static ErrOr<UserAboutMe> Create(bool showInProfile, string value) =>
-        CheckForErr(showInProfile, value).IsErr(out var err) ? err : new UserAboutMe(showInProfile, value);
+    public static ErrOr<UserAboutMe> Create(bool showOnProfile, string value) =>
+        CheckForErr(showOnProfile, value).IsErr(out var err) ? err : new UserAboutMe(showOnProfile, value);
 
     public static ErrOrNothing CheckForErr(bool enabled, string value) {
         if (enabled && string.IsNullOrWhiteSpace(value)) {

@@ -26,7 +26,7 @@ public record SingleUserToInviteResponse(
         dto.UserId.ToString(),
         dto.UniqueName.ToString(),
         dto.DisplayName.ToString(),
-        dto.ProfilePicKey.ToString(),
+        dto.UserProfilePicKey.ToString(),
         dto.AllowCoAuthorInvites
     );
 }

@@ -13,15 +13,15 @@ public class AppUser : AggregateRoot<AppUserId>
 
     public UserUniqueName UniqueName { get; private set; }
     public UserDisplayName DisplayName { get; private set; }
-    public ProfilePic ProfilePic { get; private set; }
+    public UserProfilePic ProfilePic { get; private set; }
     public UserFavoriteTagsSetting FavoriteTagsSetting { get; private set; }
     public UserLanguageSettings LanguageSettings { get; private set; }
     private UserFeaturedAuthorsSetting FeaturedAuthorsSetting { get; set; }
     private UserFrontendSettings FrontendSettings { get; set; }
     private UserProfileSettings ProfileSettings { get; set; }
-    public UserSocialInteractionSettings SocialInteractionSettings { get;private set; }
+    public UserSocialInteractionSettings SocialInteractionSettings { get; private set; }
 
-    public AppUser(AppUserId userId, UserUniqueName uniqueName, ProfilePic profilePic) {
+    public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePic profilePic) {
         if (!profilePic.Key.IsForUser(userId)) {
             UnexpectedBehaviourException.ThrowErr(ErrFactory.Conflict(
                 $"Given profile pic key doesn't belong to this user. User id: {userId}, profile pic id: {profilePic.Key.UserId}"
@@ -42,7 +42,7 @@ public class AppUser : AggregateRoot<AppUserId>
     }
 
     public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePicKey profilePicKey)
-        : this(userId, uniqueName, new ProfilePic(profilePicKey, ProfilePicShape.Circle)) { }
+        : this(userId, uniqueName, new UserProfilePic(profilePicKey, ProfilePicShape.Circle)) { }
 
     private ErrOrNothing CheckIfProfilePicIsForUser(UserProfilePicKey profilePic) => profilePic.IsForUser(Id)
         ? ErrOrNothing.Nothing
@@ -51,12 +51,12 @@ public class AppUser : AggregateRoot<AppUserId>
             $" User id: {Id}, profile pic id: {profilePic.UserId}"
         );
 
-    public ErrOrNothing UpdateProfilePic(ProfilePic newProfilePic) {
-        if (CheckIfProfilePicIsForUser(newProfilePic.Key).IsErr(out var err)) {
+    public ErrOrNothing UpdateProfilePic(UserProfilePic newUserProfilePic) {
+        if (CheckIfProfilePicIsForUser(newUserProfilePic.Key).IsErr(out var err)) {
             return err;
         }
 
-        ProfilePic = newProfilePic;
+        ProfilePic = newUserProfilePic;
 
         return ErrOrNothing.Nothing;
     }
@@ -87,7 +87,11 @@ public class AppUser : AggregateRoot<AppUserId>
         Banner: ProfileSettings.Banner,
         DisplayName: DisplayName,
         UniqueName: UniqueName,
-        ProfilePicKey: ProfilePic.Key,
+        ProfilePic: ProfilePic,
+        KnownLanguages: new UserProfilePossiblyHiddenField<IReadOnlyList<Language>>(
+            Value: LanguageSettings.KnownLanguages.ToArray(),
+            ShowOnProfile: ProfileSettings.Pronouns.ShowOnProfile
+        ),
         Pronouns: new UserProfilePossiblyHiddenField<string>(
             Value: ProfileSettings.Pronouns.Value,
             ShowOnProfile: ProfileSettings.Pronouns.ShowOnProfile

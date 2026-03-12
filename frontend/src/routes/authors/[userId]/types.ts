@@ -1,17 +1,16 @@
-type PossiblyHidden<T> =
-    | {
-        showOnProfile: true;
-        value: T;
-    }
-    | {
-        showOnProfile: false;
-    };
+import type { Language } from "$lib/ts/language";
 
-type AuthorViewData = {
+
+export const AllAuthorPageTabs = ['vokis'] as const;
+export type AuthorPageTab = typeof AllAuthorPageTabs[number];
+
+export type AuthorViewData = {
     banner: AuthorBanner;
     displayName: string;
     uniqueName: string;
-    profilePicKey: string;
+    profilePic: { key: string, shape: ProfilePicShape };
+
+    knownLanguages: PossiblyHidden<Language[]>;
 
     pronouns: PossiblyHidden<string>;
     status: PossiblyHidden<string>;
@@ -21,13 +20,17 @@ type AuthorViewData = {
     favouriteTags: PossiblyHidden<string[]>;
     favouriteAuthorIds: PossiblyHidden<string[]>;
 };
+export type PossiblyHidden<T> =
+    | { showOnProfile: true; value: T }
+    | { showOnProfile: false };
 
-type AuthorLink = {
+export type ProfilePicShape = 'Circle' | 'Squircle';
+export type AuthorLink = {
     value: string;
     type: AuthorLinkType;
 };
 
-type AuthorLinkType =
+export type AuthorLinkType =
     | 'website'
     | 'twitter'
     | 'instagram'
@@ -35,13 +38,13 @@ type AuthorLinkType =
     | 'tiktok'
     | 'other';
 
-type AuthorBanner = BannerDefault | BannerFillColor;
+export type AuthorBanner = BannerDefault | BannerFillColor;
 
-type BannerDefault = {
-    $type: 'default';
+export type BannerDefault = {
+    $type: 'Default';
 };
 
-type BannerFillColor = {
-    $type: 'fill-color';
+export type BannerFillColor = {
+    $type: 'FillColor';
     color: string;
 };

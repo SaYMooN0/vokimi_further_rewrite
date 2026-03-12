@@ -2,7 +2,7 @@ using VokimiStorageKeysLib.concrete_keys.profile_pics;
 
 namespace UserProfilesService.Domain.app_user_aggregate;
 
-public record ProfilePic(
+public record UserProfilePic(
     UserProfilePicKey Key,
     ProfilePicShape Shape
 );

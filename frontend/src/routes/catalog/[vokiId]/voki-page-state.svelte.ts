@@ -1,7 +1,7 @@
 import { ApiVokiRatings, RJO } from "$lib/ts/backend-communication/backend-services";
 import type { ResponseResult } from "$lib/ts/backend-communication/result-types";
 import { toast } from "svelte-sonner";
-import type { RatingsTabDataType, VokiPageTab, VokiRatingData, VokiRatingsWithAverage } from "./types";
+import type { AllVokiPageTabs, RatingsTabDataType, VokiPageTab, VokiRatingData, VokiRatingsWithAverage } from "./types";
 
 export class VokiPageState {
     readonly vokiId: string;
@@ -11,12 +11,18 @@ export class VokiPageState {
     ratingsTabData: RatingsTabDataType = $state({ state: 'empty' });
     constructor(
         vokiId: string,
-        pageTab: VokiPageTab,
+        pageUrlSearchParams: URLSearchParams,
         ratingsCount: number,
         commentsCount: number
     ) {
         this.vokiId = vokiId;
-        this.currentTab = $state(pageTab);
+        this.currentTab = $derived.by(() => {
+            const t = pageUrlSearchParams.get('tab');
+            if (t === 'about' || t === 'comments' || t === 'ratings') {
+                return t;
+            }
+            return 'about';
+        });
         this.ratingsCount = ratingsCount;
         this.commentsCount = commentsCount;
     }

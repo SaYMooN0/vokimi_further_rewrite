@@ -4,6 +4,8 @@ namespace UserProfilesService.Domain.app_user_aggregate;
 
 public class UserFeaturedAuthorsSetting : ValueObject
 {
+    private UserFeaturedAuthorsSetting() { }
+
     private const int MaxAuthorsCount = 5;
 
     public ImmutableHashSet<AppUserId> UserIds { get; }
@@ -21,8 +23,8 @@ public class UserFeaturedAuthorsSetting : ValueObject
         ? ErrFactory.LimitExceeded($"Too many featured authors chosen. Maximum count: {MaxAuthorsCount}")
         : ErrOrNothing.Nothing;
 
-    public static ErrOr<UserFeaturedAuthorsSetting> Create(ImmutableHashSet<AppUserId> userIds, bool showInProfile) =>
-        CheckForErr(userIds).IsErr(out var err) ? err : new UserFeaturedAuthorsSetting(userIds, showInProfile);
+    public static ErrOr<UserFeaturedAuthorsSetting> Create(ImmutableHashSet<AppUserId> userIds, bool showOnProfile) =>
+        CheckForErr(userIds).IsErr(out var err) ? err : new UserFeaturedAuthorsSetting(userIds, showOnProfile);
 
     public override IEnumerable<object> GetEqualityComponents() => [UserIds, ShowOnProfile];
 }

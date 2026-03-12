@@ -7,8 +7,7 @@ namespace UserProfilesService.Infrastructure.persistence.configurations.value_co
 
 internal sealed class UserFrontendSettingsConverter : ValueConverter<UserFrontendSettings, string>
 {
-    private static readonly JsonSerializerOptions Options = new()
-    {
+    private static readonly JsonSerializerOptions Options = new() {
         Converters = { new JsonStringEnumConverter() }
     };
 

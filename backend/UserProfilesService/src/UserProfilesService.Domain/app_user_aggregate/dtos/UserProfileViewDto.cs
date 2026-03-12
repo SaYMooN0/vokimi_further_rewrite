@@ -1,6 +1,5 @@
 using SharedKernel.common.app_users;
 using UserProfilesService.Domain.app_user_aggregate.profile_settings;
-using VokimiStorageKeysLib.concrete_keys.profile_pics;
 
 namespace UserProfilesService.Domain.app_user_aggregate.dtos;
 
@@ -8,7 +7,8 @@ public sealed record UserProfileViewDto(
     UserBanner Banner,
     UserDisplayName DisplayName,
     UserUniqueName UniqueName,
-    UserProfilePicKey ProfilePicKey,
+    UserProfilePic ProfilePic,
+    UserProfilePossiblyHiddenField<IReadOnlyList<Language>> KnownLanguages,
     UserProfilePossiblyHiddenField<string> Pronouns,
     UserProfilePossiblyHiddenField<string> Status,
     UserProfilePossiblyHiddenField<string> AboutMe,

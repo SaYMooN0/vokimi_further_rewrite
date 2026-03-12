@@ -4,6 +4,7 @@ namespace UserProfilesService.Domain.app_user_aggregate.profile_settings;
 
 public class UserLinksSetting : ValueObject
 {
+    private UserLinksSetting() { }
     public const int MaxLinksCount = 15;
 
     private UserLinksSetting(bool showOnProfile, ImmutableArray<UserLink> links) {
@@ -23,7 +24,7 @@ public class UserLinksSetting : ValueObject
     public static ErrOr<UserLinksSetting> Create(bool showOnProfile, ImmutableArray<UserLink> links) =>
         CheckForErr(showOnProfile, links).IsErr(out var err) ? err : new UserLinksSetting(showOnProfile, links);
 
-    public static ErrOrNothing CheckForErr(bool showInProfile, ImmutableArray<UserLink> links) {
+    public static ErrOrNothing CheckForErr(bool showOnProfile, ImmutableArray<UserLink> links) {
         if (links.Length > MaxLinksCount) {
             return ErrFactory.LimitExceeded(
                 $"Too many links selected. User cannot specify more than {MaxLinksCount} in their profile"
@@ -38,7 +39,7 @@ public class UserLinksSetting : ValueObject
             );
         }
 
-        if (showInProfile && links.Length == 0) {
+        if (showOnProfile && links.Length == 0) {
             return ErrFactory.Conflict("No links to show in profile. Please add at least one link");
         }
 

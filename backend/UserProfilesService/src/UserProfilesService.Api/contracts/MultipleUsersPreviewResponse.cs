@@ -18,6 +18,6 @@ public record class MultipleUsersPreviewResponse(
 public record UserNameWithProfilePicResponse(string Id, string UniqueName, string DisplayName, string ProfilePic)
 {
     public static UserNameWithProfilePicResponse FromDto(UserPreviewDto dto) => new(
-        dto.UserId.ToString(), dto.UniqueName.ToString(), dto.DisplayName.ToString(), dto.ProfilePicKey.ToString()
+        dto.UserId.ToString(), dto.UniqueName.ToString(), dto.DisplayName.ToString(), dto.UserProfilePicKey.Key.ToString()
     );
 }
