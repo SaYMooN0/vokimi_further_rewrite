@@ -4,6 +4,7 @@
 	import AuthorBannerDisplay from './_c_page/AuthorBannerDisplay.svelte';
 	import AuthorIdentityBlock from './_c_page/AuthorIdentityBlock.svelte';
 	import AuthorProfilePicDisplay from './_c_page/AuthorProfilePicDisplay.svelte';
+	import AuthorProfileSidebar from './_c_page/AuthorProfileSidebar.svelte';
 
 	let { data }: PageProps = $props();
 	console.log(data);
@@ -30,7 +31,15 @@
 				</div>
 			</div>
 
-			<aside class="author-page-sidebar"></aside>
+			<aside class="author-page-sidebar">
+				<AuthorProfileSidebar
+					aboutMe={data.response.data.aboutMe}
+					knownLanguages={data.response.data.knownLanguages}
+					links={data.response.data.links}
+					favouriteTags={data.response.data.favouriteTags}
+					favouriteAuthorIds={data.response.data.favouriteAuthorIds}
+				/>
+			</aside>
 		</div>
 	</div>
 {/if}
@@ -45,7 +54,6 @@
 		display: grid;
 		grid-template-columns: 1fr 20rem;
 		align-items: start;
-		padding: 0 1.5rem;
 	}
 
 	.author-page-main {
@@ -59,6 +67,7 @@
 		flex-direction: row;
 		gap: 1.25rem;
 		min-width: 0;
+		padding: 0 3rem;
 	}
 	.author-page-sidebar {
 		width: 100%;

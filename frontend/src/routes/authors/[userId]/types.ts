@@ -24,7 +24,7 @@ export type PossiblyHidden<T> =
     | { showOnProfile: true; value: T }
     | { showOnProfile: false };
 
-export type ProfilePicShape = 'Circle' | 'Squircle';
+export type ProfilePicShape = 'Circle' | 'Squircle' | 'Square20' | 'Square30' | 'Waves';
 export type AuthorLink = {
     value: string;
     type: AuthorLinkType;
