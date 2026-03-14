@@ -147,6 +147,7 @@ export const ApiVokisCatalog = new BackendService('/api/vokis-catalog');
 export const ApiVokiComments = new BackendService('/api/voki-comments');
 export const ApiVokiRatings = new BackendService('/api/voki-ratings');
 export const ApiAlbums = new BackendService('/api/albums');
+export const ApiSubscriptions = new BackendService('/api/subscriptions');
 
 export const ApiVokiTakingGeneral = new BackendService('/api/voki-taking/general');
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { PossiblyHidden } from '../../types';
-	import ProfileSidebarSubheader from './_c_shared/ProfileSidebarSubheader.svelte';
+	import ProfileSidebarSectionContainer from './_c_shared/ProfileSidebarSectionContainer.svelte';
+	import ProfileSidebarSubheader from './_c_shared/ProfileSidebarSectionContainer.svelte';
 
 	interface Props {
 		aboutMe: Extract<PossiblyHidden<string>, { showOnProfile: true }>;
@@ -9,15 +10,17 @@
 	let { aboutMe }: Props = $props();
 </script>
 
-<div class="sidebar-about-me-section">
-	<ProfileSidebarSubheader title="About me" />
-	<p>{aboutMe.value}</p>
-</div>
+<ProfileSidebarSectionContainer title="About me">
+	<p class="value">{aboutMe.value}</p>
+</ProfileSidebarSectionContainer>
 
 <style>
-	.sidebar-about-me-section {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
+	.value {
+		word-break: break-word;
+		font-size: 1rem;
+		line-height: 1.25;
+		color: var(--muted-foreground);
+		font-weight: 450;
+		letter-spacing: 0.125px;
 	}
 </style>

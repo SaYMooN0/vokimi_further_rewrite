@@ -5,6 +5,7 @@
 	import AuthorIdentityBlock from './_c_page/AuthorIdentityBlock.svelte';
 	import AuthorProfilePicDisplay from './_c_page/AuthorProfilePicDisplay.svelte';
 	import AuthorProfileSidebar from './_c_page/AuthorProfileSidebar.svelte';
+	import AuthorProfileActions from './_c_page/AuthorProfileActions.svelte';
 
 	let { data }: PageProps = $props();
 	console.log(data);
@@ -28,6 +29,7 @@
 						pronouns={data.response.data.pronouns}
 						status={data.response.data.status}
 					/>
+					<AuthorProfileActions profileId={data.userId} />
 				</div>
 			</div>
 
@@ -58,13 +60,13 @@
 
 	.author-page-main {
 		display: flex;
-		flex-direction: ro;
+		flex-direction: column;
 		gap: 1.25rem;
 		min-width: 0;
 	}
 	.top-part {
-		display: flex;
-		flex-direction: row;
+		display: grid;
+		grid-template-columns: auto 1fr 10rem;
 		gap: 1.25rem;
 		min-width: 0;
 		padding: 0 3rem;
@@ -72,6 +74,5 @@
 	.author-page-sidebar {
 		width: 100%;
 		height: 20rem;
-		background-color: darkblue;
 	}
 </style>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PossiblyHidden } from '../../types';
-	import ProfileSidebarSubheader from './_c_shared/ProfileSidebarSubheader.svelte';
+	import ProfileSidebarSectionContainer from './_c_shared/ProfileSidebarSectionContainer.svelte';
 
 	interface Props {
 		favouriteAuthorIds: Extract<PossiblyHidden<string[]>, { showOnProfile: true }>;
@@ -9,17 +9,11 @@
 	let { favouriteAuthorIds }: Props = $props();
 </script>
 
-<div class="sidebar-about-me-section">
-	<ProfileSidebarSubheader title="Favourite authors" />
+<ProfileSidebarSectionContainer title="Favourite authors">
 	{#each favouriteAuthorIds.value as authorId}
 		<p>{authorId}</p>
 	{/each}
-</div>
+</ProfileSidebarSectionContainer>
 
 <style>
-	.sidebar-about-me-section {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
 </style>

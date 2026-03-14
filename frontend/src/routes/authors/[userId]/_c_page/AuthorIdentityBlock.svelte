@@ -6,9 +6,7 @@
 		pronouns: PossiblyHidden<string>;
 		status: PossiblyHidden<string>;
 	}
-	let { displayName, uniqueName }: Props = $props();
-	let pronouns = { showOnProfile: true, value: 'he/him' };
-	let status = { showOnProfile: true, value: 'Online' };
+	let { displayName, uniqueName, pronouns, status }: Props = $props();
 </script>
 
 <div class="identity-block">

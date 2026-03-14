@@ -133,7 +133,8 @@ export default defineConfig({
 			...createProxyEntry('/api/vokis-catalog', 5203),
 			...createProxyEntry('/api/albums', 5204),
 			...createProxyEntry('/api/voki-comments', 5205),
-			...createProxyEntry('/api/voki-ratings', 5206)
+			...createProxyEntry('/api/voki-ratings', 5206),
+			...createProxyEntry('/api/subscriptions', 5207)
 		}
 	}
 });
