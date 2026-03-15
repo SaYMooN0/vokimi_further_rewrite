@@ -7,9 +7,9 @@
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { watch } from 'runed';
 	import { ApiAlbums, RJO } from '$lib/ts/backend-communication/backend-services';
-	import { Icons } from '$lib/ts/icons';
 	import AlbumIconPicker from '../../../../lib/components/inputs/albums/AlbumIconPicker.svelte';
 	import AlbumColorInput from '../../../../lib/components/inputs/albums/AlbumColorInput.svelte';
+	import { IconUtils } from '$lib/ts/utils/icons-utils';
 
 	interface Props {
 		onAfterSave: (newAlbumId: string) => void;
@@ -39,7 +39,7 @@
 	}
 
 	function setRandom() {
-		icon = randomFrom(Icons.Album);
+		icon = randomFrom(IconUtils.AllAlbumIcons);
 		mainColorInput = randomFrom(ColorUtils.AlbumColorsPresets);
 		if (Math.random() > 0.5) {
 			let delta = Math.floor(Math.random() * (25 - 15 + 1)) + 15;
@@ -148,7 +148,7 @@
 	<div class="field">
 		<span class="label">Icon</span>
 		<AlbumIconPicker
-			icons={Icons.Album}
+			icons={IconUtils.AllAlbumIcons}
 			bind:value={icon}
 			mainColor={mainColorInput}
 			secondaryColor={secondaryColorWithIfTwoCheck}

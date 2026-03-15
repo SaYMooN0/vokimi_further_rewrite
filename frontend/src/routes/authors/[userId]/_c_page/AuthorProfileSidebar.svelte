@@ -3,6 +3,7 @@
 	import type { AuthorLink, PossiblyHidden } from '../types';
 	import SidebarAboutMeSection from './_c_sidebar/SidebarAboutMeSection.svelte';
 	import SidebarLanguagesSection from './_c_sidebar/SidebarLanguagesSection.svelte';
+	import SidebarLinksSection from './_c_sidebar/SidebarLinksSection.svelte';
 
 	interface Props {
 		aboutMe: PossiblyHidden<string>;
@@ -12,7 +13,7 @@
 		favouriteAuthorIds: PossiblyHidden<string[]>;
 	}
 
-	let { links, favouriteTags, favouriteAuthorIds }: Props = $props();
+	let { favouriteTags, favouriteAuthorIds }: Props = $props();
 	let aboutMe = {
 		showOnProfile: true,
 		value:
@@ -21,6 +22,13 @@
 	let knownLanguages = {
 		showOnProfile: true,
 		value: ['Eng', 'Rus']
+	};
+	let links = {
+		showOnProfile: true,
+		value: [
+			{ type: 'website', value: 'https://google.com' },
+			{ type: 'instagram', value: 'https://vokimi.com' }
+		]
 	};
 </script>
 
@@ -31,10 +39,10 @@
 	{#if knownLanguages.showOnProfile}
 		<SidebarLanguagesSection {knownLanguages} />
 	{/if}
-	<!--{#if links.showOnProfile}
+	{#if links.showOnProfile}
 		<SidebarLinksSection {links} />
 	{/if}
-	{#if favouriteTags.showOnProfile}
+	<!--	{#if favouriteTags.showOnProfile}
 		<SidebarFavouriteTagsSection {favouriteTags} />
 	{/if}
 	{#if favouriteAuthorIds.showOnProfile}
@@ -46,6 +54,6 @@
 	.author-sidebar {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: 0.75rem;
 	}
 </style>

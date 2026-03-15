@@ -1,4 +1,5 @@
 import type { Language } from "$lib/ts/language";
+import type { IconUtils } from "$lib/ts/utils/icons-utils";
 
 
 export const AllAuthorPageTabs = ['vokis'] as const;
@@ -24,19 +25,12 @@ export type PossiblyHidden<T> =
     | { showOnProfile: true; value: T }
     | { showOnProfile: false };
 
-export type ProfilePicShape = 'Circle' | 'Squircle' | 'Square20' | 'Square30' | 'Waves';
+export type ProfilePicShape = 'Circle' | 'Squircle' | 'RoundedSquare20' | 'RoundedSquare30' | 'Waves';
 export type AuthorLink = {
     value: string;
-    type: AuthorLinkType;
+    type: IconUtils.AuthorProfileLinkType;
 };
 
-export type AuthorLinkType =
-    | 'website'
-    | 'twitter'
-    | 'instagram'
-    | 'youtube'
-    | 'tiktok'
-    | 'other';
 
 export type AuthorBanner = BannerDefault | BannerFillColor;
 

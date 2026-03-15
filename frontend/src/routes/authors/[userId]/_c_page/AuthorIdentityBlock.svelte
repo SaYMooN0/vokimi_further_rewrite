@@ -32,6 +32,7 @@
 		flex-direction: column;
 		min-width: 0;
 		gap: 0.375rem;
+		margin-top: 0.5rem;
 	}
 
 	.display-name-row {

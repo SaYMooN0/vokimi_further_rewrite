@@ -6,6 +6,7 @@
 	import albumIconsSprite from '$lib/icons/album-icons.svg?raw';
 	import imageIconsSprite from '$lib/icons/image-icons.svg?raw';
 	import contextMenuIconsSprite from '$lib/icons/context-menu-icons.svg?raw';
+	import userProfileLinksIconsSprite from '$lib/icons/user-profile-links-icons.svg?raw';
 </script>
 
 <div class="sprites">
@@ -16,11 +17,15 @@
 	{@html albumIconsSprite}
 	{@html imageIconsSprite}
 	{@html contextMenuIconsSprite}
+	{@html userProfileLinksIconsSprite}
 </div>
 
 <style>
 	.sprites {
-		display: none;
+		position: absolute;
+		width: 0;
 		height: 0;
+		overflow: hidden;
+		pointer-events: none;
 	}
 </style>

@@ -66,7 +66,7 @@
 	}
 	.top-part {
 		display: grid;
-		grid-template-columns: auto 1fr 10rem;
+		grid-template-columns: auto 1fr 11rem;
 		gap: 1.25rem;
 		min-width: 0;
 		padding: 0 3rem;
@@ -74,5 +74,6 @@
 	.author-page-sidebar {
 		width: 100%;
 		height: 20rem;
+		margin-top: 0.75rem;
 	}
 </style>

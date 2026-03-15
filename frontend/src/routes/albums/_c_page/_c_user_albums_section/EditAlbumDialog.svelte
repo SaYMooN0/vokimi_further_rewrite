@@ -7,11 +7,11 @@
 	import { StringUtils } from '$lib/ts/utils/string-utils';
 	import { watch } from 'runed';
 	import { ApiAlbums, RJO } from '$lib/ts/backend-communication/backend-services';
-	import { Icons } from '$lib/ts/icons';
 	import type { Err } from '$lib/ts/err';
 	import type { VokiAlbumPreviewData } from '../../types';
 	import AlbumColorInput from '$lib/components/inputs/albums/AlbumColorInput.svelte';
 	import AlbumIconPicker from '$lib/components/inputs/albums/AlbumIconPicker.svelte';
+	import { IconUtils } from '$lib/ts/utils/icons-utils';
 
 	interface Props {
 		updateParent: (newData: VokiAlbumPreviewData) => void;
@@ -154,7 +154,7 @@
 			<div class="field">
 				<span class="label">Icon</span>
 				<AlbumIconPicker
-					icons={Icons.Album}
+					icons={IconUtils.AllAlbumIcons}
 					bind:value={icon}
 					mainColor={mainColorInput}
 					secondaryColor={secondaryColorWithIfTwoCheck}
@@ -253,7 +253,6 @@
 		color: var(--secondary-foreground);
 		font-weight: 320;
 	}
-
 
 	.colors-row {
 		display: flex;

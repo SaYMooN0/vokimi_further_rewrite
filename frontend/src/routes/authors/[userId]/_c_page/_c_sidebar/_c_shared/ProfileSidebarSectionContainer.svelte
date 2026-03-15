@@ -18,11 +18,12 @@
 	.section {
 		display: flex;
 		flex-direction: column;
-		gap: 0.25rem;
+		gap: 0.125rem;
 	}
 	.profile-sidebar-subheader {
-		font-size: 1.25rem;
+		font-size: 1.375rem;
 		font-weight: 700;
 		margin: 0;
+		cursor: default;
 	}
 </style>
