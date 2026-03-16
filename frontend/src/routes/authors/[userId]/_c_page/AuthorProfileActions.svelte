@@ -2,6 +2,10 @@
 	import { ApiSubscriptions } from '$lib/ts/backend-communication/backend-services';
 	import { AuthStore } from '$lib/ts/stores/auth-store.svelte';
 	import { watch } from 'runed';
+	import AuthorProfileContextMenuCurrentUser from './_c_actions/AuthorProfileContextMenuCurrentUser.svelte';
+	import AuthorProfileContextMenuOtherUser from './_c_actions/AuthorProfileContextMenuOtherUser.svelte';
+	import AuthorProfileContextMenuGuest from './_c_actions/AuthorProfileContextMenuGuest.svelte';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		profileId: string;
@@ -11,8 +15,12 @@
 	let actionsState: 'current-user' | 'loading' | 'subscribed' | 'not-subscribed' | 'error' =
 		$state('loading');
 	let authState = $state(AuthStore.Get());
+	let currentUserMenuRef: ReturnType<typeof AuthorProfileContextMenuCurrentUser>;
+	let otherUserMenuRef: ReturnType<typeof AuthorProfileContextMenuOtherUser>;
+	let guestMenuRef: ReturnType<typeof AuthorProfileContextMenuGuest>;
 
 	watch([() => authState.name], () => updateActionsState());
+
 	function updateActionsState() {
 		if (authState.name === 'loading') {
 			actionsState = 'loading';
@@ -26,6 +34,7 @@
 			actionsState = 'current-user';
 			return;
 		}
+
 		ApiSubscriptions.fetchJsonResponse<{ isFollowing: boolean }>(
 			`/is-subscribed?userId=${profileId}`,
 			{ method: 'GET' }
@@ -37,157 +46,264 @@
 			}
 		});
 	}
+
+	function handleInvite() {
+		toast.info('Co-Author invitation feature is coming soon!');
+	}
 </script>
 
-<div class="two-btn-container">
+<div class="actions-wrapper" class:loading={actionsState === 'loading'}>
 	{#if actionsState === 'error'}
-		<div class="main-item error">loading error</div>
-		<button class="small-item btn" onclick={() => updateActionsState()}>
-			<svg class="reload-arrow"><use href="#common-reload-icon" /></svg>
-		</button>
-	{:else if actionsState === 'current-user'}
-		<a href="/profile-settings" class="main-item primary-btn"
-			><svg
-				xmlns="http://www.w3.org/2000/svg"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-linecap="round"
-			>
-				<path
-					d="M21.3175 7.14139L20.8239 6.28479C20.4506 5.63696 20.264 5.31305 19.9464 5.18388C19.6288 5.05472 19.2696 5.15664 18.5513 5.36048L17.3311 5.70418C16.8725 5.80994 16.3913 5.74994 15.9726 5.53479L15.6357 5.34042C15.2766 5.11043 15.0004 4.77133 14.8475 4.37274L14.5136 3.37536C14.294 2.71534 14.1842 2.38533 13.9228 2.19657C13.6615 2.00781 13.3143 2.00781 12.6199 2.00781H11.5051C10.8108 2.00781 10.4636 2.00781 10.2022 2.19657C9.94085 2.38533 9.83106 2.71534 9.61149 3.37536L9.27753 4.37274C9.12465 4.77133 8.84845 5.11043 8.48937 5.34042L8.15249 5.53479C7.73374 5.74994 7.25259 5.80994 6.79398 5.70418L5.57375 5.36048C4.85541 5.15664 4.49625 5.05472 4.17867 5.18388C3.86109 5.31305 3.67445 5.63696 3.30115 6.28479L2.80757 7.14139C2.45766 7.74864 2.2827 8.05227 2.31666 8.37549C2.35061 8.69871 2.58483 8.95918 3.05326 9.48012L4.0843 10.6328C4.3363 10.9518 4.51521 11.5078 4.51521 12.0077C4.51521 12.5078 4.33636 13.0636 4.08433 13.3827L3.05326 14.5354C2.58483 15.0564 2.35062 15.3168 2.31666 15.6401C2.2827 15.9633 2.45766 16.2669 2.80757 16.8741L3.30114 17.7307C3.67443 18.3785 3.86109 18.7025 4.17867 18.8316C4.49625 18.9608 4.85542 18.8589 5.57377 18.655L6.79394 18.3113C7.25263 18.2055 7.73387 18.2656 8.15267 18.4808L8.4895 18.6752C8.84851 18.9052 9.12464 19.2442 9.2775 19.6428L9.61149 20.6403C9.83106 21.3003 9.94085 21.6303 10.2022 21.8191C10.4636 22.0078 10.8108 22.0078 11.5051 22.0078H12.6199C13.3143 22.0078 13.6615 22.0078 13.9228 21.8191C14.1842 21.6303 14.294 21.3003 14.5136 20.6403L14.8476 19.6428C15.0004 19.2442 15.2765 18.9052 15.6356 18.6752L15.9724 18.4808C16.3912 18.2656 16.8724 18.2055 17.3311 18.3113L18.5513 18.655C19.2696 18.8589 19.6288 18.9608 19.9464 18.8316C20.264 18.7025 20.4506 18.3785 20.8239 17.7307L21.3175 16.8741C21.6674 16.2669 21.8423 15.9633 21.8084 15.6401C21.7744 15.3168 21.5402 15.0564 21.0718 14.5354L20.0407 13.3827C19.7887 13.0636 19.6098 12.5078 19.6098 12.0077C19.6098 11.5078 19.7888 10.9518 20.0407 10.6328L21.0718 9.48012C21.5402 8.95918 21.7744 8.69871 21.8084 8.37549C21.8423 8.05227 21.6674 7.74864 21.3175 7.14139Z"
-				/>
-				<path
-					d="M15.5195 12C15.5195 13.933 13.9525 15.5 12.0195 15.5C10.0865 15.5 8.51953 13.933 8.51953 12C8.51953 10.067 10.0865 8.5 12.0195 8.5C13.9525 8.5 15.5195 10.067 15.5195 12Z"
-				/>
-			</svg>
-			Edit profile
-		</a>
-		<button class="small-item btn"
-			><svg class="show-menu-icon"><use href="#common-toggle-content-arrow" /></svg></button
-		>
+		<div class="action-item error-state">
+			<span class="error-text">Loading failed</span>
+			<button class="icon-btn refresh" onclick={() => updateActionsState()} aria-label="Retry">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+					><path d="M21 12a9 9 0 11-9-9c2.52 0 4.85.83 6.72 2.24M21 3v5h-5" /></svg
+				>
+			</button>
+		</div>
 	{:else if actionsState === 'loading'}
-		<div class="main-item skeleton-anim"></div>
-		<div class="small-btn skeleton-anim"></div>
-	{:else if actionsState === 'subscribed'}
-		<button class="small-btn" onclick={() => updateActionsState()}>
-			<svg class="show-menu-icon"><use href="#common-toggle-content-arrow" /></svg>
-		</button>
-	{:else if actionsState === 'not-subscribed'}
-		<button class="small-btn" onclick={() => updateActionsState()}>
-			<svg class="show-menu-icon"><use href="#common-toggle-content-arrow" /></svg>
-		</button>
+		<div class="skeleton main-skeleton"></div>
+		<div class="skeleton secondary-skeleton"></div>
+		<div class="skeleton icon-skeleton"></div>
+	{:else}
+		<div class="actions-group">
+			{#if actionsState === 'current-user'}
+				<a href="/profile-settings" class="btn primary edit-profile">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+						><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" /><path
+							d="M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z"
+						/></svg
+					>
+					<span>Edit Profile</span>
+				</a>
+			{:else}
+				<button
+					class="btn follow-btn"
+					class:primary={actionsState === 'not-subscribed'}
+					class:subscribed={actionsState === 'subscribed'}
+					onclick={() => updateActionsState()}
+				>
+					{#if actionsState === 'subscribed'}
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+							><path d="M20 6L9 17l-5-5" /></svg
+						>
+						<span>Following</span>
+					{:else}
+						<span>Follow</span>
+					{/if}
+				</button>
+
+				{#if authState.name === 'authenticated'}
+					<button class="btn secondary invite-btn" onclick={handleInvite}>
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+							><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" /><circle
+								cx="8.5"
+								cy="7"
+								r="4"
+							/><line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" /></svg
+						>
+						<span>Invite</span>
+					</button>
+				{/if}
+			{/if}
+
+			<button
+				class="icon-btn more-trigger"
+				onclick={() => {
+					if (actionsState === 'current-user') currentUserMenuRef?.open();
+					else if (authState.name === 'authenticated') otherUserMenuRef?.open();
+					else guestMenuRef?.open();
+				}}
+				aria-label="More options"
+			>
+				<div class="dots-layout">
+					<span></span><span></span><span></span>
+				</div>
+			</button>
+		</div>
 	{/if}
+
+	<AuthorProfileContextMenuCurrentUser {profileId} bind:this={currentUserMenuRef} />
+	<AuthorProfileContextMenuOtherUser {profileId} bind:this={otherUserMenuRef} />
+	<AuthorProfileContextMenuGuest {profileId} bind:this={guestMenuRef} />
 </div>
 
 <style>
-	.two-btn-container {
-		margin-top: 1rem;
-
-		--small-btn-size: 1.75rem;
-		display: grid;
-		height: 1.5rem;
-		grid-template-columns: 1fr var(--small-btn-size);
-		gap: 0.5rem;
-	}
-	.two-btn-container > * {
-		width: 100%;
-		height: 100%;
-		border-radius: 0.375rem !important;
-		border: none;
-		padding: 0;
-	}
-	.main-item {
+	.actions-wrapper {
+		margin-top: 1.25rem;
+		height: 2.25rem;
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		height: var(--small-btn-size);
-	}
-	.main-item.primary-btn {
-		background-color: var(--primary);
-		color: var(--primary-foreground);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.25rem;
-		font-size: 1;
-		font-weight: 415;
-		letter-spacing: 0.2px;
-	}
-	.main-item.primary-btn svg {
-		height: calc(var(--small-btn-size) - 0.5rem);
-		stroke-width: 2.125;
-	}
-	.main-item.primary-btn:hover {
-		background-color: var(--primary-hov);
-	}
-	.main-item.error {
-		background-color: var(--red-2);
-		color: var(--red-5);
-		font-weight: 450;
-		font-size: 1rem;
-		cursor: default;
-	}
-	.small-item {
-		width: var(--small-btn-size);
-		height: var(--small-btn-size);
-	}
-	.small-item svg {
-		height: 100%;
-		width: 100%;
-	}
-	svg.show-menu-icon {
-		transform: rotate(180deg);
-		stroke-width: 1.5;
-	}
-	.small-item.btn {
-		background-color: var(--muted);
-		color: var(--muted-foreground);
-	}
-	.small-item.btn:hover {
-		cursor: pointer;
-		background-color: var(--accent);
-		color: var(--accent-foreground);
-	}
-	svg.reload-arrow {
-		stroke-width: 2;
-		padding: 0.25rem;
-		transition: transform 0.2s ease-out;
-	}
-	.small-item.btn:has(.reload-arrow):hover .reload-arrow {
-		transform: rotate(60deg);
-	}
-	.small-item.btn:has(.reload-arrow):active .reload-arrow {
-		transform: rotate(180deg);
-	}
-	.skeleton-anim {
 		position: relative;
-		background-color: var(--muted);
 	}
-	.skeleton-anim::after {
-		position: absolute;
-		height: 100%;
-		background: linear-gradient(
-			120deg,
-			transparent 0%,
-			transparent 20%,
-			color-mix(in srgb, var(--secondary-foreground) 10%, var(--secondary) 10%) 50%,
-			transparent 80%,
-			transparent 100%
-		);
-		opacity: 0.9;
-		animation: shimmer 1.5s ease infinite;
-		content: '';
-		inset: 0;
-		background-size: 200% 100%;
-	}
-	@keyframes shimmer {
-		from {
-			background-position: 200% 0;
-		}
 
-		to {
-			background-position: -200% 0;
+	.actions-group {
+		display: flex;
+		gap: 0.5rem;
+		width: 100%;
+		height: 100%;
+	}
+
+	/* Buttons Base */
+	.btn {
+		flex: 1;
+		height: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5rem;
+		border-radius: 0.75rem;
+		font-size: 0.875rem;
+		font-weight: 550;
+		transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+		border: 0.0625rem solid transparent;
+		cursor: pointer;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.btn svg {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	/* Primary (Follow / Edit) */
+	.btn.primary {
+		background: var(--primary);
+		color: var(--primary-foreground);
+		box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 25%, transparent);
+	}
+
+	.btn.primary:hover {
+		background: var(--primary-hov);
+		transform: translateY(-1px);
+		box-shadow: 0 6px 16px color-mix(in srgb, var(--primary) 35%, transparent);
+	}
+
+	/* Secondary / Following */
+	.btn.secondary,
+	.btn.subscribed {
+		background: var(--muted);
+		color: var(--foreground);
+		border-color: color-mix(in srgb, var(--foreground) 10%, transparent);
+	}
+
+	.btn.secondary:hover,
+	.btn.subscribed:hover {
+		background: var(--accent);
+		border-color: color-mix(in srgb, var(--foreground) 20%, transparent);
+	}
+
+	/* More Button (Three Dots) */
+	.icon-btn {
+		width: 2.25rem;
+		height: 2.25rem;
+		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 0.75rem;
+		background: var(--muted);
+		border: 0.0625rem solid color-mix(in srgb, var(--foreground) 10%, transparent);
+		cursor: pointer;
+		transition: all 0.2s ease;
+		color: var(--foreground);
+	}
+
+	.icon-btn:hover {
+		background: var(--accent);
+		transform: scale(1.05);
+	}
+
+	.dots-layout {
+		display: flex;
+		gap: 0.125rem;
+	}
+
+	.dots-layout span {
+		width: 0.25rem;
+		height: 0.25rem;
+		border-radius: 50%;
+		background: currentColor;
+		transition: transform 0.2s ease;
+	}
+
+	.icon-btn:hover .dots-layout span:nth-child(2) {
+		transform: scale(1.25);
+	}
+
+	/* Error State */
+	.error-state {
+		display: flex;
+		align-items: center;
+		background: color-mix(in srgb, var(--red-5) 8%, transparent);
+		padding: 0 0.5rem 0 1rem;
+		border-radius: 0.75rem;
+		color: var(--red-5);
+		border: 0.0625rem solid color-mix(in srgb, var(--red-5) 20%, transparent);
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.error-text {
+		font-size: 0.8125rem;
+		font-weight: 500;
+	}
+
+	.icon-btn.refresh {
+		width: 1.75rem;
+		height: 1.75rem;
+		background: transparent;
+		border: none;
+	}
+
+	.icon-btn.refresh svg {
+		width: 0.875rem;
+	}
+
+	/* Skeleton Animations */
+	.skeleton {
+		background: var(--muted);
+		border-radius: 0.75rem;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.skeleton::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			color-mix(in srgb, var(--foreground) 5%, transparent),
+			transparent
+		);
+		animation: shimmer 1.5s infinite;
+	}
+
+	.main-skeleton {
+		flex: 2;
+		height: 100%;
+		margin-right: 0.5rem;
+	}
+	.secondary-skeleton {
+		flex: 1;
+		height: 100%;
+		margin-right: 0.5rem;
+	}
+	.icon-skeleton {
+		width: 2.25rem;
+		height: 100%;
+	}
+
+	@keyframes shimmer {
+		0% {
+			transform: translateX(-100%);
+		}
+		100% {
+			transform: translateX(100%);
 		}
 	}
 </style>

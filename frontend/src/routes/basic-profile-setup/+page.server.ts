@@ -13,7 +13,7 @@ type BasicSetupInfo = {
     displayName: string,
     preferredLanguages: Language[]
     favoriteTags: string[],
-    profilePicture: string,
+    profilePicKey: string,
     maxDisplayNameLength: number,
     maxTagLength: number
 }

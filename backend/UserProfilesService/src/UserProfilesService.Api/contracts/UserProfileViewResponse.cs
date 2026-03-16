@@ -13,7 +13,7 @@ public sealed record UserProfileViewResponse(
     PossiblyHiddenProfileFieldResponse<Language[]> KnownLanguages,
     PossiblyHiddenProfileFieldResponse<string> Pronouns,
     PossiblyHiddenProfileFieldResponse<string> Status,
-    PossiblyHiddenProfileFieldResponse<string> About,
+    PossiblyHiddenProfileFieldResponse<string> AboutMe,
     PossiblyHiddenProfileFieldResponse<UserProfileLinkResponse[]> Links,
     PossiblyHiddenProfileFieldResponse<string[]> FavouriteTags,
     PossiblyHiddenProfileFieldResponse<string[]> FavouriteAuthorIds
@@ -31,7 +31,7 @@ public sealed record UserProfileViewResponse(
             ),
             Pronouns: PossiblyHiddenProfileFieldResponse<string>.Create(d.Pronouns),
             Status: PossiblyHiddenProfileFieldResponse<string>.Create(d.Status),
-            About: PossiblyHiddenProfileFieldResponse<string>.Create(d.AboutMe),
+            AboutMe: PossiblyHiddenProfileFieldResponse<string>.Create(d.AboutMe),
             Links: PossiblyHiddenProfileFieldResponse<UserProfileLinkResponse[]>.Create(
                 d.Links, links => links
                     .Select(l => new UserProfileLinkResponse(l.Value, l.Type))

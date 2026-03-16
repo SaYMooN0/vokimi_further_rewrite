@@ -1,4 +1,5 @@
 <script lang="ts">
+	import AuthView from '$lib/components/AuthView.svelte';
 	import PageLoadErrView from '$lib/components/PageLoadErrView.svelte';
 	import type { PageProps } from './$types';
 	import ProfileSetupProcess from './_c_page/ProfileSetupProcess.svelte';
@@ -14,17 +15,23 @@
 	<div class="page-content-container">
 		{#if setupState === 'process'}
 			<ProfileSetupProcess
-				uniqueName={data.data.userUniqueName}
+				uniqueName={data.data.uniqueName}
 				initialLangs={data.data.preferredLanguages}
 				initialTags={data.data.favoriteTags}
-				initialProfilePic={data.data.profilePicture}
+				initialProfilePic={data.data.profilePicKey}
 				initialDisplayName={data.data.displayName}
 				maxDisplayNameLength={data.data.maxDisplayNameLength}
 				maxTagLength={data.data.maxTagLength}
 				changeStateToSaved={() => (setupState = 'complete')}
 			/>
 		{:else if setupState === 'complete'}
-			<SetupSavedMessage />
+			<AuthView>
+				{#snippet children(authState)}
+					{#if authState.isAuthenticated}
+						<SetupSavedMessage authenticatedUserId={authState.userId} />
+					{/if}
+				{/snippet}
+			</AuthView>
 		{:else}
 			<h1>Something went wrong. Reload the page</h1>
 		{/if}

@@ -3,7 +3,9 @@
 	import type { AuthorLink, PossiblyHidden } from '../types';
 	import SidebarAboutMeSection from './_c_sidebar/SidebarAboutMeSection.svelte';
 	import SidebarLanguagesSection from './_c_sidebar/SidebarLanguagesSection.svelte';
-	import SidebarLinksSection from './_c_sidebar/SidebarLinksSection.svelte';
+	import SidebarProfileLinksSection from './_c_sidebar/SidebarProfileLinksSection.svelte';
+	import SidebarFavouriteTagsSection from './_c_sidebar/SidebarFavouriteTagsSection.svelte';
+	import SidebarFavouriteAuthorsSection from './_c_sidebar/SidebarFavouriteAuthorsSection.svelte';
 
 	interface Props {
 		aboutMe: PossiblyHidden<string>;
@@ -13,22 +15,26 @@
 		favouriteAuthorIds: PossiblyHidden<string[]>;
 	}
 
-	let { favouriteTags, favouriteAuthorIds }: Props = $props();
+	// let { aboutMe, knownLanguages, links, favouriteTags, favouriteAuthorIds }: Props = $props();
 	let aboutMe = {
 		showOnProfile: true,
-		value:
-			'hello my name is gqterwg and i am a vokimi author. im here to share my knowledge and help others learn. i love to write about all sorts of things, from science and technology to history and culture. i also love to share my thoughts and ideas about the world around us. i hope you enjoy my content and learn something new. have a great day!'
+		value: 'About me'
 	};
 	let knownLanguages = {
 		showOnProfile: true,
-		value: ['Eng', 'Rus']
+		value: []
 	};
 	let links = {
 		showOnProfile: true,
-		value: [
-			{ type: 'website', value: 'https://google.com' },
-			{ type: 'instagram', value: 'https://vokimi.com' }
-		]
+		value: []
+	};
+	let favouriteTags = {
+		showOnProfile: true,
+		value: []
+	};
+	let favouriteAuthorIds = {
+		showOnProfile: true,
+		value: []
 	};
 </script>
 
@@ -40,14 +46,14 @@
 		<SidebarLanguagesSection {knownLanguages} />
 	{/if}
 	{#if links.showOnProfile}
-		<SidebarLinksSection {links} />
+		<SidebarProfileLinksSection {links} />
 	{/if}
-	<!--	{#if favouriteTags.showOnProfile}
+	{#if favouriteTags.showOnProfile}
 		<SidebarFavouriteTagsSection {favouriteTags} />
 	{/if}
 	{#if favouriteAuthorIds.showOnProfile}
 		<SidebarFavouriteAuthorsSection {favouriteAuthorIds} />
-	{/if} -->
+	{/if}
 </div>
 
 <style>

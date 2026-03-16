@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { PossiblyHidden } from '../../types';
 	import ProfileSidebarSectionContainer from './_c_shared/ProfileSidebarSectionContainer.svelte';
-	import ProfileSidebarSubheader from './_c_shared/ProfileSidebarSectionContainer.svelte';
 
 	interface Props {
 		aboutMe: Extract<PossiblyHidden<string>, { showOnProfile: true }>;
