@@ -10,15 +10,14 @@ namespace UserProfilesService.Domain.app_user_aggregate;
 public class AppUser : AggregateRoot<AppUserId>
 {
     private AppUser() { }
-
     public UserUniqueName UniqueName { get; private set; }
     public UserDisplayName DisplayName { get; private set; }
     public UserProfilePic ProfilePic { get; private set; }
-    public UserFavoriteTagsSetting FavoriteTagsSetting { get; private set; }
     public UserLanguageSettings LanguageSettings { get; private set; }
-    private UserFeaturedAuthorsSetting FeaturedAuthorsSetting { get; set; }
-    private UserFrontendSettings FrontendSettings { get; set; }
-    private UserProfileSettings ProfileSettings { get; set; }
+    public UserFavoriteTagsSetting FavoriteTagsSetting { get; private set; }
+    public UserFeaturedAuthorsSetting FeaturedAuthorsSetting { get; private set; }
+    public UserFrontendSettings FrontendSettings { get; private set; }
+    public UserProfileSettings ProfileSettings { get; private set; }
     public UserSocialInteractionSettings SocialInteractionSettings { get; private set; }
 
     public AppUser(AppUserId userId, UserUniqueName uniqueName, UserProfilePic profilePic) {

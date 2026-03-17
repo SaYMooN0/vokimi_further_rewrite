@@ -64,7 +64,7 @@ public class UserLink
         Type = type;
     }
 
-    public static ErrOrNothing CheckForErr(string value, UserLinkType type) {
+    private static ErrOrNothing CheckForErr(string value, UserLinkType type) {
         if (string.IsNullOrWhiteSpace(value)) {
             return ErrFactory.NoValue.Common("Link cannot be empty");
         }
@@ -90,5 +90,5 @@ public enum UserLinkType
     YouTube = 4,
     TikTok = 6,
     Telegram = 7,
+    Mangalib=8
 }
-

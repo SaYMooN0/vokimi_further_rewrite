@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using UserProfilesService.Api.contracts.shared;
 using UserProfilesService.Application.dtos;
 using UserProfilesService.Domain.app_user_aggregate.dtos;
 using UserProfilesService.Domain.app_user_aggregate.profile_settings;
@@ -24,7 +25,7 @@ public sealed record UserProfileViewResponse(
             Banner: IUserBannerPrimitiveDto.Create(d.Banner),
             DisplayName: d.DisplayName.ToString(),
             UniqueName: d.UniqueName.ToString(),
-            ProfilePic: new UserProfilePicResponse(d.ProfilePic.Key.ToString(), d.ProfilePic.Shape),
+            ProfilePic: UserProfilePicResponse.Create(d.ProfilePic),
             KnownLanguages: PossiblyHiddenProfileFieldResponse<Language[]>.Create(
                 d.KnownLanguages,
                 langs => langs.ToArray()
@@ -47,8 +48,6 @@ public sealed record UserProfileViewResponse(
             )
         );
 }
-
-public sealed record UserProfilePicResponse(string Key, ProfilePicShape Shape);
 
 public sealed record UserProfileLinkResponse(string Value, UserLinkType Type);
 

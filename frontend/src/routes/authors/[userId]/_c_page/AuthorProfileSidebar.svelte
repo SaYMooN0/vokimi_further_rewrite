@@ -15,27 +15,7 @@
 		favouriteAuthorIds: PossiblyHidden<string[]>;
 	}
 
-	// let { aboutMe, knownLanguages, links, favouriteTags, favouriteAuthorIds }: Props = $props();
-	let aboutMe = {
-		showOnProfile: true,
-		value: 'About me'
-	};
-	let knownLanguages = {
-		showOnProfile: true,
-		value: []
-	};
-	let links = {
-		showOnProfile: true,
-		value: []
-	};
-	let favouriteTags = {
-		showOnProfile: true,
-		value: []
-	};
-	let favouriteAuthorIds = {
-		showOnProfile: true,
-		value: []
-	};
+	let { aboutMe, knownLanguages, links, favouriteTags, favouriteAuthorIds }: Props = $props();
 </script>
 
 <div class="author-sidebar">

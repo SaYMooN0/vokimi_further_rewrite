@@ -1,4 +1,4 @@
-﻿using UserProfilesService.Domain.app_user_aggregate;
+﻿using UserProfilesService.Application.app_users.queries;
 
 namespace UserProfilesService.Api.contracts;
 
@@ -10,14 +10,16 @@ public record UserBasicProfileSetupInfoResponse(
     string ProfilePicKey,
     int MaxDisplayNameLength,
     int MaxTagLength
-) : ICreatableResponse<AppUser>
+) : ICreatableResponse<GetCurrentUserBasicSetupInfoQueryResult>
 {
-    public static ICreatableResponse<AppUser> Create(AppUser user) => new UserBasicProfileSetupInfoResponse(
+    public static ICreatableResponse<GetCurrentUserBasicSetupInfoQueryResult> Create(
+        GetCurrentUserBasicSetupInfoQueryResult user
+    ) => new UserBasicProfileSetupInfoResponse(
         user.UniqueName.ToString(),
         user.DisplayName.ToString(),
-        user.LanguageSettings.KnownLanguages.ToArray(),
-        user.FavoriteTagsSetting.Tags.Select(t => t.ToString()).ToArray(),
-        user.ProfilePic.Key.ToString(),
+        user.KnownLanguages.ToArray(),
+        user.FavoriteTags.Select(t => t.ToString()).ToArray(),
+        user.ProfilePicKey.ToString(),
         UserDisplayName.MaxLength,
         VokiTagId.MaxTagLength
     );

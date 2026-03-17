@@ -12,8 +12,7 @@ namespace UserProfilesService.Infrastructure.persistence.configurations.entities
 
 internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
 {
-    public void Configure(EntityTypeBuilder<AppUser> builder)
-    {
+    public void Configure(EntityTypeBuilder<AppUser> builder) {
         builder
             .HasKey(x => x.Id);
         builder
@@ -42,8 +41,7 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             .ValueGeneratedOnAddOrUpdate()
             .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
-        builder.ComplexProperty(x => x.ProfilePic, b =>
-        {
+        builder.ComplexProperty(x => x.ProfilePic, b => {
             b.Property(p => p.Key)
                 .HasConversion<AppUserProfilePicKeyConverter>()
                 .HasColumnName("ProfilePicKey");
@@ -52,16 +50,14 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
                 .HasColumnName("ProfilePicShape");
         });
 
-        builder.ComplexProperty(x => x.FavoriteTagsSetting, b =>
-        {
+        builder.ComplexProperty(x => x.FavoriteTagsSetting, b => {
             b.Property(p => p.ShowOnProfile).HasColumnName("favorite_tags_ShowOnProfile");
             b.Property(p => p.Tags)
                 .HasTagIdImmutableHashSetConversion()
                 .HasColumnName("favorite_tags_Tags");
         });
 
-        builder.ComplexProperty<UserFeaturedAuthorsSetting>("FeaturedAuthorsSetting", b =>
-        {
+        builder.ComplexProperty<UserFeaturedAuthorsSetting>(x => x.FeaturedAuthorsSetting, b => {
             b.Property(p => p.ShowOnProfile).HasColumnName("featured_authors_ShowOnProfile");
             b.Property(p => p.UserIds)
                 .HasGuidBasedIdsImmutableHashSetConversion()
@@ -69,18 +65,16 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
         });
 
         builder
-            .Property<UserFrontendSettings>("FrontendSettings")
+            .Property(x => x.FrontendSettings)
             .HasConversion<UserFrontendSettingsConverter>();
 
-        builder.ComplexProperty(x => x.LanguageSettings, b =>
-        {
+        builder.ComplexProperty(x => x.LanguageSettings, b => {
             b.Property(p => p.ShowOnProfile).HasColumnName("language_settings_ShowOnProfile");
             b.Property<HashSet<Language>>("_knownLanguages")
                 .HasLanguagesHashSetConversion()
                 .HasColumnName("language_settings_KnownLanguages");
 
-            b.ComplexProperty(p => p.UnknownLanguages, ub =>
-            {
+            b.ComplexProperty(p => p.UnknownLanguages, ub => {
                 ub.Property(u => u.Value)
                     .HasConversion<string>()
                     .HasColumnName("language_settings_UnknownLanguages_Value");
@@ -90,32 +84,27 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             });
         });
 
-        builder.ComplexProperty<UserProfileSettings>("ProfileSettings", b =>
-        {
+        builder.ComplexProperty<UserProfileSettings>(x => x.ProfileSettings, b => {
             b.Property(p => p.Banner)
                 .HasConversion<UserBannerConverter>()
                 .HasColumnName("profile_settings_Banner");
 
-            b.ComplexProperty(p => p.Status, cb =>
-            {
+            b.ComplexProperty(p => p.Status, cb => {
                 cb.Property(s => s.ShowOnProfile).HasColumnName("profile_settings_Status_ShowOnProfile");
                 cb.Property(s => s.Value).HasColumnName("profile_settings_Status_Value");
             });
 
-            b.ComplexProperty(p => p.Pronouns, cb =>
-            {
+            b.ComplexProperty(p => p.Pronouns, cb => {
                 cb.Property(s => s.ShowOnProfile).HasColumnName("profile_settings_Pronouns_ShowOnProfile");
                 cb.Property(s => s.Value).HasColumnName("profile_settings_Pronouns_Value");
             });
 
-            b.ComplexProperty(p => p.AboutMe, cb =>
-            {
+            b.ComplexProperty(p => p.AboutMe, cb => {
                 cb.Property(s => s.ShowOnProfile).HasColumnName("profile_settings_AboutMe_ShowOnProfile");
                 cb.Property(s => s.Value).HasColumnName("profile_settings_AboutMe_Value");
             });
 
-            b.ComplexProperty(p => p.Links, cb =>
-            {
+            b.ComplexProperty(p => p.Links, cb => {
                 cb.Property(s => s.ShowOnProfile).HasColumnName("profile_settings_Links_ShowOnProfile");
                 cb.Property(s => s.Links)
                     .HasLinksArrayConversion()
@@ -123,8 +112,7 @@ internal class AppUsersConfigurations : IEntityTypeConfiguration<AppUser>
             });
         });
 
-        builder.ComplexProperty<UserSocialInteractionSettings>("SocialInteractionSettings", b =>
-        {
+        builder.ComplexProperty<UserSocialInteractionSettings>("SocialInteractionSettings", b => {
             b
                 .Property(d => d.AllowCoAuthorInvites)
                 .HasConversion<string>()

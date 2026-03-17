@@ -6,8 +6,12 @@ public record UserProfilePic(
     UserProfilePicKey Key,
     ProfilePicShape Shape
 );
+
 public enum ProfilePicShape
 {
     Circle,
-    Squircle
+    Squircle,
+    RoundedSquare20,
+    RoundedSquare30,
+    Waves
 }
