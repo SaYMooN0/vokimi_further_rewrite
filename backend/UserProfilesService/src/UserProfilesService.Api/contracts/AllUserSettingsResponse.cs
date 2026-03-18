@@ -3,7 +3,7 @@ using UserProfilesService.Domain.app_user_aggregate;
 
 namespace UserProfilesService.Api.contracts;
 
-public sealed record AllUseSettingsResponse(
+public sealed record AllUserSettingsResponse(
     string UniqueName,
     string DisplayName,
     UserProfilePicResponse ProfilePic,
@@ -16,7 +16,7 @@ public sealed record AllUseSettingsResponse(
 ) : ICreatableResponse<AppUser>
 {
     public static ICreatableResponse<AppUser> Create(AppUser u) =>
-    new AllUseSettingsResponse(
+    new AllUserSettingsResponse(
             UniqueName: u.UniqueName.ToString(),
             DisplayName: u.DisplayName.ToString(),
             ProfilePic: UserProfilePicResponse.Create(u.ProfilePic),

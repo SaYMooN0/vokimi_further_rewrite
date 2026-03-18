@@ -3,7 +3,6 @@
 public enum AllowCoAuthorInvitesSettingValue
 {
     Everyone,
-    OnlyFriends,
     NoOne
 }
 

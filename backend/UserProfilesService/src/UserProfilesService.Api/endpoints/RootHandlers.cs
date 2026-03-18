@@ -15,7 +15,7 @@ internal class RootHandlers : IEndpointGroup
         group.MapPost("/save-basic-setup", SaveBasicProfileSetup)
             .WithRequestValidation<SaveBasicProfileSetupRequest>();
 
-        group.MapGet("/profile-settings", GetUserBasicSetupInfo);
+        group.MapGet("/settings", GetUserSettings);
 
 
         return group;
@@ -50,13 +50,13 @@ internal class RootHandlers : IEndpointGroup
         return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
 
-    private static async Task<IResult> GetUserProfileSettings(
+    private static async Task<IResult> GetUserSettings(
         CancellationToken ct, HttpContext httpContext,
         IQueryHandler<GetCurrentUserQuery, AppUser> handler
     ) {
         GetCurrentUserQuery query = new();
         var result = await handler.Handle(query, ct);
 
-        return CustomResults.FromErrOrToJson<AppUser, AllUseSettingsResponse>(result);
+        return CustomResults.FromErrOrToJson<AppUser, AllUserSettingsResponse>(result);
     }
 }

@@ -25,20 +25,8 @@ export type PossiblyHidden<T> =
     | { showOnProfile: true; value: T }
     | { showOnProfile: false };
 
-export type ProfilePicShape = 'Circle' | 'Squircle' | 'RoundedSquare20' | 'RoundedSquare30' | 'Waves';
 export type AuthorLink = {
     value: string;
     type: IconUtils.AuthorProfileLinkType;
 };
 
-
-export type AuthorBanner = BannerDefault | BannerFillColor;
-
-export type BannerDefault = {
-    $type: 'Default';
-};
-
-export type BannerFillColor = {
-    $type: 'FillColor';
-    color: string;
-};

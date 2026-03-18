@@ -8,7 +8,6 @@
 	import AuthorProfileActions from './_c_page/AuthorProfileActions.svelte';
 
 	let { data }: PageProps = $props();
-	console.log(data);
 </script>
 
 {#if !data.response.isSuccess}

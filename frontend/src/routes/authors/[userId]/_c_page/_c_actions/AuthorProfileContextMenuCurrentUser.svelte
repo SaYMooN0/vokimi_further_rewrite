@@ -25,7 +25,7 @@
 		{
 			text: 'Edit profile',
 			iconHref: '#context-menu-edit-icon',
-			action: { type: 'link', href: '/profile-settings' }
+			action: { type: 'link', href: '/settings' }
 		},
 		{
 			text: 'Share profile',
