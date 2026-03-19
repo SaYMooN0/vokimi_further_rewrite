@@ -1,5 +1,5 @@
 import type { Language } from "$lib/ts/language";
-import type { IconUtils } from "$lib/ts/utils/icons-utils";
+import type { AuthorBanner, AuthorProfileLinkType, UserProfilePicData } from "$lib/ts/users";
 
 
 export const AllAuthorPageTabs = ['vokis'] as const;
@@ -9,7 +9,7 @@ export type AuthorViewData = {
     banner: AuthorBanner;
     displayName: string;
     uniqueName: string;
-    profilePic: { key: string, shape: ProfilePicShape };
+    profilePic: UserProfilePicData;
 
     knownLanguages: PossiblyHidden<Language[]>;
 
@@ -27,6 +27,6 @@ export type PossiblyHidden<T> =
 
 export type AuthorLink = {
     value: string;
-    type: IconUtils.AuthorProfileLinkType;
+    type: AuthorProfileLinkType;
 };
 

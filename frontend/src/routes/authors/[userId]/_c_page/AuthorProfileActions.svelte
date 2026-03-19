@@ -15,9 +15,9 @@
 	let actionsState: 'current-user' | 'loading' | 'subscribed' | 'not-subscribed' | 'error' =
 		$state('loading');
 	let authState = $state(AuthStore.Get());
-	let currentUserMenuRef: ReturnType<typeof AuthorProfileContextMenuCurrentUser>;
-	let otherUserMenuRef: ReturnType<typeof AuthorProfileContextMenuOtherUser>;
-	let guestMenuRef: ReturnType<typeof AuthorProfileContextMenuGuest>;
+	let currentUserMenuRef = $state<AuthorProfileContextMenuCurrentUser>()!;
+	let otherUserMenuRef = $state<AuthorProfileContextMenuOtherUser>()!;
+	let guestMenuRef = $state<AuthorProfileContextMenuGuest>()!;
 
 	watch([() => authState.name], () => updateActionsState());
 
@@ -132,7 +132,7 @@
 <style>
 	.actions-wrapper {
 		margin-top: 1.25rem;
-		height: 2.25rem;
+		height: 2.125rem;
 		display: flex;
 		align-items: center;
 		position: relative;
@@ -145,7 +145,6 @@
 		height: 100%;
 	}
 
-	/* Buttons Base */
 	.btn {
 		flex: 1;
 		height: 100%;
@@ -153,11 +152,10 @@
 		align-items: center;
 		justify-content: center;
 		gap: 0.5rem;
-		border-radius: 0.75rem;
-		font-size: 0.875rem;
+		border-radius: 0.5rem;
+		font-size: 0.975rem;
 		font-weight: 550;
 		transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
-		border: 0.0625rem solid transparent;
 		cursor: pointer;
 		text-decoration: none;
 		white-space: nowrap;
@@ -168,44 +166,36 @@
 		height: 1rem;
 	}
 
-	/* Primary (Follow / Edit) */
 	.btn.primary {
 		background: var(--primary);
 		color: var(--primary-foreground);
-		box-shadow: 0 4px 12px color-mix(in srgb, var(--primary) 25%, transparent);
 	}
 
 	.btn.primary:hover {
 		background: var(--primary-hov);
-		transform: translateY(-1px);
-		box-shadow: 0 6px 16px color-mix(in srgb, var(--primary) 35%, transparent);
 	}
 
-	/* Secondary / Following */
 	.btn.secondary,
 	.btn.subscribed {
 		background: var(--muted);
 		color: var(--foreground);
-		border-color: color-mix(in srgb, var(--foreground) 10%, transparent);
 	}
 
 	.btn.secondary:hover,
 	.btn.subscribed:hover {
 		background: var(--accent);
-		border-color: color-mix(in srgb, var(--foreground) 20%, transparent);
 	}
 
-	/* More Button (Three Dots) */
 	.icon-btn {
-		width: 2.25rem;
-		height: 2.25rem;
+		height: 100%;
+		aspect-ratio: 1;
 		flex-shrink: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border-radius: 0.75rem;
+		border-radius: 0.5rem;
 		background: var(--muted);
-		border: 0.0625rem solid color-mix(in srgb, var(--foreground) 10%, transparent);
+		border: none;
 		cursor: pointer;
 		transition: all 0.2s ease;
 		color: var(--foreground);
@@ -213,7 +203,6 @@
 
 	.icon-btn:hover {
 		background: var(--accent);
-		transform: scale(1.05);
 	}
 
 	.dots-layout {
@@ -233,7 +222,6 @@
 		transform: scale(1.25);
 	}
 
-	/* Error State */
 	.error-state {
 		display: flex;
 		align-items: center;
@@ -262,7 +250,6 @@
 		width: 0.875rem;
 	}
 
-	/* Skeleton Animations */
 	.skeleton {
 		background: var(--muted);
 		border-radius: 0.75rem;

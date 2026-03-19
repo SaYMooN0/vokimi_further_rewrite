@@ -13,5 +13,5 @@ public enum ProfilePicShape
     Squircle,
     RoundedSquare20,
     RoundedSquare30,
-    Waves
+    Seal
 }

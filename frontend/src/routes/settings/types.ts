@@ -1,11 +1,17 @@
 import type { Language } from "$lib/ts/language";
-import type { LanguageFlagDisplay, AllowCoAuthorInvitesSettingValue, ProfilePicShape, AuthorBanner } from "$lib/ts/users";
-import type { IconUtils } from "$lib/ts/utils/icons-utils";
+import type {
+    LanguageFlagDisplay,
+    AllowCoAuthorInvitesSettingValue,
+    AuthorBanner,
+    AuthorProfileLinkType,
+    UserProfilePicData
+} from "$lib/ts/users";
 
 export type UserSettingsData = {
     uniqueName: string;
     displayName: string;
     profilePic: UserProfilePicData;
+    banner: AuthorBanner;
     languageSettings: UserLanguageSettingsData;
     favoriteTagsSetting: UserFavoriteTagsSettingData;
     featuredAuthorsSetting: UserFeaturedAuthorsSettingData;
@@ -14,10 +20,6 @@ export type UserSettingsData = {
     socialInteractionSettings: UserSocialInteractionSettingsData;
 };
 
-export type UserProfilePicData = {
-    key: string;
-    shape: ProfilePicShape;
-};
 export type UnknownLanguagesSettingsValue = "HideAllUnknown" | "HideOnlyBlacklist"
 export type UserLanguageSettingsData = {
     showOnProfile: boolean;
@@ -75,7 +77,7 @@ export type UserLinksSettingData = {
 
 export type UserProfileLinkData = {
     value: string;
-    type: IconUtils.AuthorProfileLinkType;
+    type: AuthorProfileLinkType;
 };
 
 export type UserSocialInteractionSettingsData = {

@@ -1,3 +1,5 @@
+import type { AuthorProfileLinkType } from "../users";
+
 export namespace IconUtils {
     export const AllAlbumIcons = [
         'albums-bookmark-1-icon',
@@ -7,16 +9,17 @@ export namespace IconUtils {
         'albums-star-1-icon',
         'albums-star-2-icon'
     ];
-    export const AllAuthorProfileLinkTypes = ['website', 'twitter', 'instagram', 'telegram', 'youtube', 'tiktok', 'other'];
-    export type AuthorProfileLinkType = typeof AllAuthorProfileLinkTypes[number];
+
     const profileLinkIconIdByTypeMap: Record<AuthorProfileLinkType, string> = {
-        'website': 'link-website-icon',
-        'twitter': 'link-twitter-icon',
-        'instagram': 'link-instagram-icon',
-        'telegram': 'link-telegram-icon',
-        'youtube': 'link-youtube-icon',
-        'tiktok': 'link-tiktok-icon',
-        'other': 'link-other-icon'
+        'Other': 'link-other-icon',
+        'Website': 'link-website-icon',
+        'X': 'link-x-icon',
+        'Instagram': 'link-instagram-icon',
+        'Youtube': 'link-youtube-icon',
+        'Tiktok': 'link-tiktok-icon',
+        'Telegram': 'link-telegram-icon',
+        'Mangalib': 'link-mangalib-icon',
+        'Reddit': 'link-reddit-icon'
     };
     export function getProfileLinkIconIdByType(type: AuthorProfileLinkType): string {
         const iconId = profileLinkIconIdByTypeMap[type];

@@ -73,6 +73,7 @@
 		opacity: 1;
 		flex-shrink: 0;
 		transition: all 0.2s ease;
+		stroke-width: 1.75;
 	}
 
 	.link-text {

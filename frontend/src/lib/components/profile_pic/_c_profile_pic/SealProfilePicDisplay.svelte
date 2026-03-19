@@ -12,7 +12,7 @@
 
 <style>
 	.border {
-		padding: var(--profile-pic-border);
+		padding: var(--profile-pic-border-width);
 		border-radius: var(--profile-pic-radius);
 		background-color: var(--back);
 		width: inherit;
@@ -20,7 +20,7 @@
 		--s: var(--profile-picture-size);
 	}
 	img {
-		--s: calc(var(--profile-picture-size) - var(--profile-pic-border) * 2);
+		--s: calc(var(--profile-picture-size) - var(--profile-pic-border-width) * 2);
 
 		display: block;
 		width: 100%;

@@ -85,10 +85,11 @@ public enum UserLinkType
 {
     Other = 0,
     Website = 1,
-    Twitter = 2,
+    X = 2,
     Instagram = 3,
     YouTube = 4,
     TikTok = 6,
     Telegram = 7,
-    Mangalib=8
+    Mangalib = 8,
+    Reddit = 9
 }

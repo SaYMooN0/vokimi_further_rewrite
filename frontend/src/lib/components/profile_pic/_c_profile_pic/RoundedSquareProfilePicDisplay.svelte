@@ -16,6 +16,6 @@
 		height: 100%;
 		object-fit: cover;
 		border-radius: var(--profile-pic-radius);
-		border: var(--profile-pic-border) solid var(--profile-pic-color);
+		border: var(--profile-pic-border-width) solid var(--profile-pic-border-color);
 	}
 </style>

@@ -34,7 +34,7 @@
 		);
 	}
 	.border {
-		padding: var(--profile-pic-border);
+		padding: var(--profile-pic-border-width);
 		border-radius: var(--profile-pic-radius);
 		background-color: var(--back);
 		width: inherit;
