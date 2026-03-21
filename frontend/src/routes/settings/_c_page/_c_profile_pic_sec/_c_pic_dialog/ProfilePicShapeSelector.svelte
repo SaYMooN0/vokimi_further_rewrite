@@ -42,3 +42,12 @@
 		</svg>
 	</ProfilePicShapeSelectorOption>
 </div>
+
+<style>
+	.selector-container {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+		width: max-content;
+		gap: 1rem;
+	}
+</style>

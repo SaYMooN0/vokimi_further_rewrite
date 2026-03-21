@@ -13,3 +13,10 @@
 	<label>{name}</label>
 	{@render icon()}
 </div>
+
+<style>
+	.option {
+		height: 5rem;
+		aspect-ratio: 1;
+	}
+</style>
