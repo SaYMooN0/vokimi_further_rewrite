@@ -9,7 +9,7 @@
 
 <style>
 	p {
-		margin-bottom: 0.5rem;
+		margin: 0;
 		color: var(--secondary-foreground);
 		font-weight: 450;
 		cursor: default;

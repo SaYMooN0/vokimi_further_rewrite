@@ -1,4 +1,4 @@
-﻿using UserProfilesService.Api.contracts;
+using UserProfilesService.Api.contracts;
 using UserProfilesService.Application.app_users.commands;
 using UserProfilesService.Application.app_users.queries;
 using UserProfilesService.Domain.app_user_aggregate;
@@ -16,6 +16,9 @@ internal class RootHandlers : IEndpointGroup
             .WithRequestValidation<SaveBasicProfileSetupRequest>();
 
         group.MapGet("/settings", GetUserSettings);
+        
+        group.MapPatch("/update-profile-pic", UpdateProfilePicture)
+            .WithRequestValidation<UpdateProfilePictureRequest>();
 
 
         return group;
@@ -58,5 +61,20 @@ internal class RootHandlers : IEndpointGroup
         var result = await handler.Handle(query, ct);
 
         return CustomResults.FromErrOrToJson<AppUser, AllUserSettingsResponse>(result);
+    }
+
+    private static async Task<IResult> UpdateProfilePicture(
+        HttpContext httpContext, CancellationToken ct,
+        ICommandHandler<UpdateProfilePictureCommand> handler
+    ) {
+        var request = httpContext.GetValidatedRequest<UpdateProfilePictureRequest>();
+
+        UpdateProfilePictureCommand command = new(
+            request.ProfilePic,
+            request.Shape
+        );
+        var result = await handler.Handle(command, ct);
+
+        return CustomResults.FromErrOrNothing(result, () => Results.Ok());
     }
 }

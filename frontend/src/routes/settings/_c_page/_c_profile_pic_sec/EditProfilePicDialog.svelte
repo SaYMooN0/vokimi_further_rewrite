@@ -89,6 +89,7 @@
 					borderWidthInRem={0.375}
 					borderColor="var(--back)"
 				/>
+				<label class="press-to-change">Press to change</label>
 				<input type="file" accept="image/*" onchange={handleInputChange} />
 			</div>
 			<EditProfilePicDialogSubheader text="Choose profile picture shape" />
@@ -118,10 +119,10 @@
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
-		border-radius: 2rem;
+		border-radius: 1.5rem;
 		text-align: center;
 		border: 0.125rem dashed var(--back);
-		padding: 0.25rem 2rem;
+		padding: 0.75rem 2rem;
 		position: relative;
 	}
 	.img-upload-container.dragging:not(.loading) {
@@ -157,7 +158,31 @@
 		position: relative;
 		width: fit-content;
 		height: fit-content;
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
+		padding: 0 1rem;
+	}
+	.press-to-change {
+		position: absolute;
+		bottom: 0;
+		width: max-content;
+		left: 50%;
+		opacity: 0;
+		transition: all 0.1s ease-in-out;
+		background-color: var(--back);
+		padding: 0.25rem 1.25rem;
+		border-radius: 0.5rem;
+		box-shadow: var(--shadow-xs), var(--shadow);
+		transform: translateX(-50%) translateY(-0.5rem);
+		font-weight: 450;
+	}
+	.input-wrapper:hover .press-to-change {
+		opacity: 1;
+		transform: translateX(-50%) translateY(-1.25rem);
+	}
+	.input-wrapper:active .press-to-change {
+		opacity: 1;
+		transform: translateX(-50%) translateY(-1.25rem) scale(0.94);
+		background-color: var(--secondary);
 	}
 	.input-wrapper > input {
 		position: absolute;
